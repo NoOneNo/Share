@@ -1,5 +1,6 @@
 package com.hengye.share;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -36,7 +37,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private RecyclerViewMainAdapter mAdapter;
-    private void initView(){
+
+    private void initView() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         TabLayout tablayout = (TabLayout) findViewById(R.id.tablayout);
@@ -65,15 +67,15 @@ public class MainActivity extends AppCompatActivity
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_main);
 //        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setLayoutManager(new GridLayoutManager(this,4));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 4));
         recyclerView.setAdapter(mAdapter = new RecyclerViewMainAdapter(this, getDatas()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
-    private ArrayList<String> getDatas(){
+    private ArrayList<String> getDatas() {
         ArrayList<String> datas = new ArrayList<String>();
-        for(int i = 'A'; i <= 'z'; i++){
-            datas.add((char)i + "");
+        for (int i = 'A'; i <= 'z'; i++) {
+            datas.add((char) i + "");
         }
         return datas;
     }
@@ -105,9 +107,12 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        }else if(id == R.id.action_add){
+        } else if (id == R.id.action_login) {
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.action_add) {
             mAdapter.addData(1, "add one");
-        }else if(id == R.id.action_remove){
+        } else if (id == R.id.action_remove) {
             mAdapter.removeData(1);
         }
 
