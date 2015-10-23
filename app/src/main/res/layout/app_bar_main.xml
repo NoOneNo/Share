@@ -11,7 +11,7 @@
     <android.support.design.widget.AppBarLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/ShareAppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -20,7 +20,7 @@
             android:background="?attr/colorPrimary"
             app:title="SNS Share Tools"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:popupTheme="@style/ShareAppTheme.PopupOverlay" />
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tablayout"
