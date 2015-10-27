@@ -7,20 +7,24 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.hengye.share.adapter.RecyclerViewMainAdapter;
 import com.hengye.share.support.ActionBarDrawerToggleCustom;
+import com.hengye.share.util.ThirdPartyUtils;
+import com.sina.weibo.sdk.auth.Oauth2AccessToken;
+import com.sina.weibo.sdk.auth.WeiboAuth;
+import com.sina.weibo.sdk.auth.WeiboAuthListener;
+import com.sina.weibo.sdk.auth.sso.SsoHandler;
+import com.sina.weibo.sdk.exception.WeiboException;
 
 import java.util.ArrayList;
 
@@ -31,8 +35,9 @@ public class MainActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         initView();
+
+        initData();
 
     }
 
@@ -80,6 +85,15 @@ public class MainActivity extends BaseActivity
         return datas;
     }
 
+    private void initData(){
+        if(mWeiboAuth == null){
+            mWeiboAuth = ThirdPartyUtils.getWeiboData(MainActivity.this);
+        }
+        if(mSsoHandler == null){
+            mSsoHandler = new SsoHandler(MainActivity.this, mWeiboAuth);
+        }
+    }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -110,7 +124,17 @@ public class MainActivity extends BaseActivity
         } else if (id == R.id.action_login) {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
-        } else if (id == R.id.action_add) {
+        } else if(id == R.id.action_login_by_third){
+//            if (isExistWeibo){
+                try {
+                    mSsoHandler.authorize(ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO, new AuthListener(), (String) null);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+//            }else{
+//                mWeiboAuth.anthorize(new AuthListener());
+//            }
+        }else if (id == R.id.action_add) {
             mAdapter.addData(1, "add one");
         } else if (id == R.id.action_remove) {
             mAdapter.removeData(1);
@@ -142,5 +166,63 @@ public class MainActivity extends BaseActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.END);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO && mSsoHandler != null) {
+            mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
+        }
+    }
+
+    /**
+     * 微博 Web 授权类，提供登陆等功能
+     */
+    private WeiboAuth mWeiboAuth;
+
+    /**
+     * 封装了 "access_token"，"expires_in"，"refresh_token"，并提供了他们的管理功能
+     */
+    private Oauth2AccessToken mAccessToken;
+
+    /**
+     * 注意：SsoHandler 仅当 SDK 支持 SSO 时有效
+     */
+    private SsoHandler mSsoHandler;
+    /**
+     * 微博认证授权回调类。
+     * 1. SSO 授权时，需要在 {@link #onActivityResult} 中调用 {@link SsoHandler#authorizeCallBack} 后，
+     * 该回调才会被执行。
+     * 2. 非 SSO 授权时，当授权结束后，该回调就会被执行。
+     * 当授权成功后，请保存该 access_token、expires_in、uid 等信息到 SharedPreferences 中。
+     */
+    class AuthListener implements WeiboAuthListener {
+
+        @Override
+        public void onComplete(Bundle values) {
+            // 从 Bundle 中解析 Token
+            mAccessToken = Oauth2AccessToken.parseAccessToken(values);
+            if (mAccessToken.isSessionValid()) {
+                L.info("sso : login by weibo success, data : {}", mAccessToken.toString());
+                //请求服务器登录或注册
+//                loginByThirdParty(mAccessToken.getUid(), mAccessToken.getToken(), ThirdPartyConstants.TYPE_FOR_WEIBO);
+            } else {
+//                L.debug("sso : login by weibo success, but key is incorrect");
+                // 当您注册的应用程序签名不正确时，就会收到 Code，请确保签名正确
+//                String code = values.getString("code");
+            }
+        }
+
+        @Override
+        public void onCancel() {
+            L.info("sso : login by weibo cancel");
+        }
+
+        @Override
+        public void onWeiboException(WeiboException e) {
+            L.info("sso : login by weibo occur exception : {}", e.toString());
+        }
     }
 }

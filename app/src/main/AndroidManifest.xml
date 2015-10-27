@@ -12,7 +12,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/ShareAppTheme" >
+        android:theme="@style/ShareAppTheme"
+        android:name=".util.BaseApplication">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
