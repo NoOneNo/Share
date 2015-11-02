@@ -16,7 +16,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.GsonRequest;
+import com.android.volley.request.StringRequest;
 import com.hengye.share.adapter.RecyclerViewMainAdapter;
 import com.hengye.share.support.ActionBarDrawerToggleCustom;
 import com.hengye.share.util.ThirdPartyUtils;
@@ -30,6 +35,11 @@ import java.util.ArrayList;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    @Override
+    protected String getRequestTag() {
+        return "MainActivity";
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,6 +186,34 @@ public class MainActivity extends BaseActivity
             mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
         }
     }
+
+//    private GsonRequest<Weather> getRequest() {
+//        return new GsonRequest<>(
+//                RequestUrl.REQUEST_GSON_URL
+//                , Weather.class
+//                , new Response.Listener<Weather>() {
+//            @Override
+//            public void onResponse(Weather response) {
+//                mProgress.setVisibility(View.GONE);
+//                TextView tv = (TextView) findViewById(R.id.tv_result);
+//                if (tv != null) {
+//                    tv.setText("request success, result : " +
+//                            response.toString());
+//                }
+//            }
+//        }, new Response.ErrorListener() {
+//
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                mProgress.setVisibility(View.GONE);
+//                TextView tv = (TextView) findViewById(R.id.tv_result);
+//                if (tv != null) {
+//                    tv.setText("request fail, result : " + error.getMessage());
+//                }
+//            }
+//
+//        });
+//    }
 
     /**
      * 微博 Web 授权类，提供登陆等功能

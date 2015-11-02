@@ -52,6 +52,11 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     private View mLoginFormView;
 
     @Override
+    protected String getRequestTag() {
+        return "LoginActivity";
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
