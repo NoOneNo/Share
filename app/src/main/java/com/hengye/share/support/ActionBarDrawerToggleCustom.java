@@ -33,9 +33,7 @@ import android.view.View;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Created by yuhengye on 2015/10/20.
- */
+
 /**
  * This class provides a handy way to tie together the functionality of
  * {@link android.support.v4.widget.DrawerLayout} and the framework <code>ActionBar</code> to

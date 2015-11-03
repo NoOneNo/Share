@@ -11,9 +11,6 @@ import com.hengye.share.R;
 
 import java.util.ArrayList;
 
-/**
- * Created by yuhengye on 2015/10/21.
- */
 public class RecyclerViewMainAdapter extends RecyclerView.Adapter<RecyclerViewMainAdapter.MainViewHolder>{
 
     private Context mContext;

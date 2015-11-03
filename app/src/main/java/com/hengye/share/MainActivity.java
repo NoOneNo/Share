@@ -24,6 +24,7 @@ import com.android.volley.request.GsonRequest;
 import com.android.volley.request.StringRequest;
 import com.hengye.share.adapter.RecyclerViewMainAdapter;
 import com.hengye.share.support.ActionBarDrawerToggleCustom;
+import com.hengye.share.util.L;
 import com.hengye.share.util.ThirdPartyUtils;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.auth.WeiboAuth;
@@ -243,7 +244,7 @@ public class MainActivity extends BaseActivity
             // 从 Bundle 中解析 Token
             mAccessToken = Oauth2AccessToken.parseAccessToken(values);
             if (mAccessToken.isSessionValid()) {
-                L.info("sso : login by weibo success, data : {}", mAccessToken.toString());
+                L.debug("sso : login by weibo success, data : {}", mAccessToken.toString());
                 //请求服务器登录或注册
 //                loginByThirdParty(mAccessToken.getUid(), mAccessToken.getToken(), ThirdPartyConstants.TYPE_FOR_WEIBO);
             } else {
@@ -255,12 +256,12 @@ public class MainActivity extends BaseActivity
 
         @Override
         public void onCancel() {
-            L.info("sso : login by weibo cancel");
+            L.debug("sso : login by weibo cancel");
         }
 
         @Override
         public void onWeiboException(WeiboException e) {
-            L.info("sso : login by weibo occur exception : {}", e.toString());
+            L.debug("sso : login by weibo occur exception : {}", e.toString());
         }
     }
 }
