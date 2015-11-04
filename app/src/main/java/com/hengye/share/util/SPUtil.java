@@ -3,6 +3,10 @@ package com.hengye.share.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
+
+import com.google.gson.JsonParseException;
+import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 
 public class SPUtil {
     private static SPUtil ourInstance = new SPUtil();
@@ -12,12 +16,8 @@ public class SPUtil {
     }
 
     private Context mContext;
-//    private SharedPreferences mSP;
-//    private SharedPreferences.Editor editor;
-//    private final static String DEFAULT_NAME = "share";
 
-    private SPUtil() {
-    }
+    private SPUtil() {}
 
     public void init(Context context){
         mContext = context;
@@ -32,13 +32,25 @@ public class SPUtil {
      */
     private final static String SINA_NAME = "sina";
 
-    public String getSinaAccessToken(){
-        return mContext.getSharedPreferences(SINA_NAME, Context.MODE_PRIVATE).getString("access_token", null);
+    public Oauth2AccessToken getSinaAccessToken(){
+        String json = mContext.getSharedPreferences(SINA_NAME, Context.MODE_PRIVATE).getString("access_token", null);
+        if(!TextUtils.isEmpty(json)){
+            try{
+                return GsonUtil.getInstance().fromJson(json, Oauth2AccessToken.class);
+            }catch (JsonParseException e){
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
-    public void setAccessToken(String value){
+    public void setSinaAccessToken(Oauth2AccessToken accessToken){
+        setSinaAccessToken(GsonUtil.getInstance().toJson(accessToken));
+    }
+    private void setSinaAccessToken(String json){
         SharedPreferences.Editor editor = mContext.getSharedPreferences(SINA_NAME, Context.MODE_PRIVATE).edit();
-        editor.putString("access_token", value);
+        editor.putString("access_token", json);
+        L.debug("save sina access_token , json : {}", json);
         editor.apply();
     }
 

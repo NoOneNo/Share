@@ -23,9 +23,15 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
 import com.android.volley.request.StringRequest;
 import com.hengye.share.adapter.RecyclerViewMainAdapter;
+import com.hengye.share.module.sina.Topic;
 import com.hengye.share.support.ActionBarDrawerToggleCustom;
+import com.hengye.share.util.CustomWeiboAuthListener;
 import com.hengye.share.util.L;
+import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.ThirdPartyUtils;
+import com.hengye.share.util.UrlBuilder;
+import com.hengye.share.util.UrlFactory;
+import com.hengye.volleyplus.toolbox.RequestManager;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.auth.WeiboAuth;
 import com.sina.weibo.sdk.auth.WeiboAuthListener;
@@ -138,12 +144,12 @@ public class MainActivity extends BaseActivity
         } else if(id == R.id.action_login_by_third){
 //            if (isExistWeibo){
                 try {
-                    mSsoHandler.authorize(ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO, new AuthListener(), (String) null);
+                    mSsoHandler.authorize(ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO, new WBAuthListener(), (String) null);
                 }catch(Exception e){
                     e.printStackTrace();
                 }
 //            }else{
-//                mWeiboAuth.anthorize(new AuthListener());
+//                mWeiboAuth.anthorize(new WBAuthListener());
 //            }
         }else if (id == R.id.action_add) {
             mAdapter.addData(1, "add one");
@@ -188,33 +194,41 @@ public class MainActivity extends BaseActivity
         }
     }
 
-//    private GsonRequest<Weather> getRequest() {
-//        return new GsonRequest<>(
-//                RequestUrl.REQUEST_GSON_URL
-//                , Weather.class
-//                , new Response.Listener<Weather>() {
+//    private StringRequest getRequest(String url) {
+//        return new StringRequest(
+//                url
+//                ,  new Response.Listener<String>() {
 //            @Override
-//            public void onResponse(Weather response) {
-//                mProgress.setVisibility(View.GONE);
-//                TextView tv = (TextView) findViewById(R.id.tv_result);
-//                if (tv != null) {
-//                    tv.setText("request success, result : " +
-//                            response.toString());
-//                }
+//            public void onResponse(String response) {
+//                L.debug("request success : {}", response);
 //            }
 //        }, new Response.ErrorListener() {
 //
 //            @Override
 //            public void onErrorResponse(VolleyError error) {
-//                mProgress.setVisibility(View.GONE);
-//                TextView tv = (TextView) findViewById(R.id.tv_result);
-//                if (tv != null) {
-//                    tv.setText("request fail, result : " + error.getMessage());
-//                }
+//                L.debug("request fail : {}", error);
 //            }
 //
 //        });
 //    }
+    private GsonRequest<Topic> getRequest(String url) {
+        return new GsonRequest<>(
+                url
+                , Topic.class
+                , new Response.Listener<Topic>() {
+            @Override
+            public void onResponse(Topic response) {
+               L.debug("request success : {}", response);
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                L.debug("request fail : {}", error);
+            }
+
+        });
+    }
 
     /**
      * 微博 Web 授权类，提供登陆等功能
@@ -222,46 +236,21 @@ public class MainActivity extends BaseActivity
     private WeiboAuth mWeiboAuth;
 
     /**
-     * 封装了 "access_token"，"expires_in"，"refresh_token"，并提供了他们的管理功能
-     */
-    private Oauth2AccessToken mAccessToken;
-
-    /**
      * 注意：SsoHandler 仅当 SDK 支持 SSO 时有效
      */
     private SsoHandler mSsoHandler;
-    /**
-     * 微博认证授权回调类。
-     * 1. SSO 授权时，需要在 {@link #onActivityResult} 中调用 {@link SsoHandler#authorizeCallBack} 后，
-     * 该回调才会被执行。
-     * 2. 非 SSO 授权时，当授权结束后，该回调就会被执行。
-     * 当授权成功后，请保存该 access_token、expires_in、uid 等信息到 SharedPreferences 中。
-     */
-    class AuthListener implements WeiboAuthListener {
+
+    class WBAuthListener extends CustomWeiboAuthListener {
 
         @Override
         public void onComplete(Bundle values) {
-            // 从 Bundle 中解析 Token
-            mAccessToken = Oauth2AccessToken.parseAccessToken(values);
+            super.onComplete(values);
             if (mAccessToken.isSessionValid()) {
-                L.debug("sso : login by weibo success, data : {}", mAccessToken.toString());
-                //请求服务器登录或注册
-//                loginByThirdParty(mAccessToken.getUid(), mAccessToken.getToken(), ThirdPartyConstants.TYPE_FOR_WEIBO);
-            } else {
-//                L.debug("sso : login by weibo success, but key is incorrect");
-                // 当您注册的应用程序签名不正确时，就会收到 Code，请确保签名正确
-//                String code = values.getString("code");
+                UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBFriendTopicUrl());
+                ub.addParameter("access_token", mAccessToken.getToken());
+                ub.addParameter("count", 2);
+                RequestManager.addToRequestQueue(getRequest(ub.toString()));
             }
-        }
-
-        @Override
-        public void onCancel() {
-            L.debug("sso : login by weibo cancel");
-        }
-
-        @Override
-        public void onWeiboException(WeiboException e) {
-            L.debug("sso : login by weibo occur exception : {}", e.toString());
         }
     }
 }
