@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    tools:showIn="@layout/item_recylerview_main">
+
+    <ImageView
+        android:id="@+id/iv_topic_portrait"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="10dp"
+        android:scaleType="fitXY"
+        android:contentDescription="@null"
+        android:src="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/tv_topic_username"
+        android:layout_toEndOf="@id/iv_topic_portrait"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="我是一只小小小鸡仔"
+        android:textSize="@dimen/topic_username"
+        android:textColor="@color/topic_username"
+        android:singleLine="true" />
+
+    <TextView
+        android:id="@+id/tv_topic_description"
+        android:layout_alignStart="@id/tv_topic_username"
+        android:layout_below="@id/tv_topic_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="11-3 来自 微博 weibo.com"
+        android:textSize="@dimen/topic_description"
+        android:textColor="@color/topic_description"
+        android:singleLine="true" />
+</RelativeLayout>

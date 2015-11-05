@@ -1,12 +1,5 @@
 package com.hengye.share.util;
 
-import android.content.Entity;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.List;
-import java.util.Map;
-
 public class UrlFactory {
     private static class UrlFactoryHolder{
         private final static UrlFactory INSTANCE = new UrlFactory();
@@ -19,17 +12,6 @@ public class UrlFactory {
     }
 
 
-    private String encodeParameters(Map<String, String> params) {
-        StringBuilder encodedParams = new StringBuilder();
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-            encodedParams.append(entry.getKey());
-            encodedParams.append('=');
-            encodedParams.append(entry.getValue());
-            encodedParams.append('&');
-        }
-        return encodedParams.toString();
-
-    }
 
 
     /**

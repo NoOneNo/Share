@@ -1,24 +1,24 @@
 package com.hengye.share.adapter;
 
 import android.content.Context;
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hengye.share.R;
+import com.hengye.share.module.Topic;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class RecyclerViewMainAdapter extends RecyclerView.Adapter<RecyclerViewMainAdapter.MainViewHolder>{
+public class RecyclerViewMainAdapter extends RecyclerViewSimpleAdapter<Topic, RecyclerViewMainAdapter.MainViewHolder>{
 
-    private Context mContext;
-    private ArrayList<String> mDatas;
 
-    public RecyclerViewMainAdapter(Context context, ArrayList<String> datas){
-        mContext = context;
-        mDatas = datas;
+    public RecyclerViewMainAdapter(Context context, List<Topic> datas){
+        super(context, datas);
     }
 
     @Override
@@ -28,7 +28,11 @@ public class RecyclerViewMainAdapter extends RecyclerView.Adapter<RecyclerViewMa
 
     @Override
     public void onBindViewHolder(MainViewHolder holder, int position) {
-        holder.tv.setText(mDatas.get(position));
+        Topic topic = mDatas.get(position);
+        holder.mUsername.setText(topic.getUsername());
+        holder.mDescription.setText("来自: " + topic.getChannel());
+        holder.mContent.setText(topic.getContent());
+
     }
 
     @Override
@@ -36,25 +40,53 @@ public class RecyclerViewMainAdapter extends RecyclerView.Adapter<RecyclerViewMa
         return mDatas.size();
     }
 
-    public void addData(int position, String data){
-        if(mDatas != null){
-            mDatas.add(position, data);
-            notifyItemInserted(position);
-        }
-    }
-
-    public void removeData(int position){
-        if(mDatas != null){
-            mDatas.remove(position);
-            notifyItemRemoved(position);
-        }
-    }
 
     class MainViewHolder extends RecyclerView.ViewHolder{
-        TextView tv;
-        public MainViewHolder(View view){
-            super(view);
-            tv = (TextView) view.findViewById(R.id.item_recylerview_main_tv);
+
+        ImageView mPortrait;
+        TextView mUsername, mDescription, mContent;
+        public MainViewHolder(View v){
+            super(v);
+            mPortrait = (ImageView) v.findViewById(R.id.iv_topic_portrait);
+            mUsername = (TextView) v.findViewById(R.id.tv_topic_username);
+            mDescription = (TextView) v.findViewById(R.id.tv_topic_description);
+            mContent = (TextView) v.findViewById(R.id.tv_topic_content);
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -4,8 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include layout="@layout/item_recylerview_main_title" />
+
+
     <TextView
-        android:id="@+id/item_recylerview_main_tv"
+        android:id="@+id/tv_topic_content"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="这是一条微博的内容"
+        android:textSize="16sp"
+        android:textColor="@color/topic_content"/>
 </LinearLayout>

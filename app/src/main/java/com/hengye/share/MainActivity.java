@@ -3,27 +3,27 @@ package com.hengye.share;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.view.View;
 
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
-import com.android.volley.request.StringRequest;
+import com.google.gson.reflect.TypeToken;
 import com.hengye.share.adapter.RecyclerViewMainAdapter;
-import com.hengye.share.module.sina.Topic;
+import com.hengye.share.module.Topic;
+import com.hengye.share.module.sina.WBTopic;
 import com.hengye.share.support.ActionBarDrawerToggleCustom;
 import com.hengye.share.util.CustomWeiboAuthListener;
 import com.hengye.share.util.L;
@@ -32,13 +32,11 @@ import com.hengye.share.util.ThirdPartyUtils;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
 import com.hengye.volleyplus.toolbox.RequestManager;
-import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.auth.WeiboAuth;
-import com.sina.weibo.sdk.auth.WeiboAuthListener;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
-import com.sina.weibo.sdk.exception.WeiboException;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -89,15 +87,16 @@ public class MainActivity extends BaseActivity
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_main);
 //        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 4));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mAdapter = new RecyclerViewMainAdapter(this, getDatas()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
-    private ArrayList<String> getDatas() {
-        ArrayList<String> datas = new ArrayList<String>();
-        for (int i = 'A'; i <= 'z'; i++) {
-            datas.add((char) i + "");
+    private ArrayList<Topic> getDatas() {
+
+        ArrayList<Topic> datas = SPUtil.getInstance().getModule(new TypeToken<ArrayList<Topic>>(){}.getType(), Topic.class.getSimpleName());
+        if(datas == null){
+            datas = new ArrayList<>();
         }
         return datas;
     }
@@ -152,9 +151,9 @@ public class MainActivity extends BaseActivity
 //                mWeiboAuth.anthorize(new WBAuthListener());
 //            }
         }else if (id == R.id.action_add) {
-            mAdapter.addData(1, "add one");
+//            mAdapter.addData(1, "add one");
         } else if (id == R.id.action_remove) {
-            mAdapter.removeData(1);
+//            mAdapter.removeData(1);
         }
 
         return super.onOptionsItemSelected(item);
@@ -194,31 +193,16 @@ public class MainActivity extends BaseActivity
         }
     }
 
-//    private StringRequest getRequest(String url) {
-//        return new StringRequest(
-//                url
-//                ,  new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//                L.debug("request success : {}", response);
-//            }
-//        }, new Response.ErrorListener() {
-//
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                L.debug("request fail : {}", error);
-//            }
-//
-//        });
-//    }
-    private GsonRequest<Topic> getRequest(String url) {
+    private GsonRequest<WBTopic> getRequest(String url) {
         return new GsonRequest<>(
                 url
-                , Topic.class
-                , new Response.Listener<Topic>() {
+                , WBTopic.class
+                , new Response.Listener<WBTopic>() {
             @Override
-            public void onResponse(Topic response) {
+            public void onResponse(WBTopic response) {
                L.debug("request success : {}", response);
+                mAdapter.refresh(Topic.getTopic(response));
+                SPUtil.getInstance().setModule(mAdapter.getDatas(), Topic.class.getSimpleName());
             }
         }, new Response.ErrorListener() {
 
@@ -248,7 +232,7 @@ public class MainActivity extends BaseActivity
             if (mAccessToken.isSessionValid()) {
                 UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBFriendTopicUrl());
                 ub.addParameter("access_token", mAccessToken.getToken());
-                ub.addParameter("count", 2);
+                ub.addParameter("count", 20);
                 RequestManager.addToRequestQueue(getRequest(ub.toString()));
             }
         }
