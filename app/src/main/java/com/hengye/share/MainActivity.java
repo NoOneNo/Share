@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
@@ -24,9 +25,11 @@ import com.hengye.share.adapter.RecyclerViewTopicAdapter;
 import com.hengye.share.module.Topic;
 import com.hengye.share.module.sina.WBTopic;
 import com.hengye.share.support.ActionBarDrawerToggleCustom;
-import com.hengye.share.util.CustomWeiboAuthListener;
+import com.hengye.share.util.ParseTokenWeiboAuthListener;
 import com.hengye.share.util.L;
+import com.hengye.share.util.RequestFactory;
 import com.hengye.share.util.SPUtil;
+import com.hengye.share.util.SaveUserInfoWeiboAuthListener;
 import com.hengye.share.util.ThirdPartyUtils;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
@@ -35,6 +38,7 @@ import com.sina.weibo.sdk.auth.WeiboAuth;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -191,22 +195,28 @@ public class MainActivity extends BaseActivity
         }
     }
 
-    private GsonRequest<WBTopic> getRequest(String url) {
+    private GsonRequest<WBTopic> getRequest(String token, int size) {
+        final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBFriendTopicUrl());
+        ub.addParameter("access_token", token);
+        ub.addParameter("count", 20);
         return new GsonRequest<>(
-                url
+                ub.getRequestUrl()
                 , WBTopic.class
                 , new Response.Listener<WBTopic>() {
             @Override
             public void onResponse(WBTopic response) {
-               L.debug("request success : {}", response);
-                mAdapter.refresh(Topic.getTopic(response));
-                SPUtil.getInstance().setModule(mAdapter.getDatas(), Topic.class.getSimpleName());
+                L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
+                List<Topic> datas = Topic.getTopic(response);
+                if(mAdapter != null) {
+                    mAdapter.refresh(datas);
+                }
+                SPUtil.getInstance().setModule(datas, Topic.class.getSimpleName());
             }
         }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                L.debug("request fail : {}", error);
+                L.debug("request fail , url : {}, error : {}", ub.getRequestUrl(), error);
             }
 
         });
@@ -222,16 +232,13 @@ public class MainActivity extends BaseActivity
      */
     private SsoHandler mSsoHandler;
 
-    class WBAuthListener extends CustomWeiboAuthListener {
+    class WBAuthListener extends SaveUserInfoWeiboAuthListener {
 
         @Override
         public void onComplete(Bundle values) {
             super.onComplete(values);
-            if (mAccessToken.isSessionValid()) {
-                UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBFriendTopicUrl());
-                ub.addParameter("access_token", mAccessToken.getToken());
-                ub.addParameter("count", 20);
-                RequestManager.addToRequestQueue(getRequest(ub.toString()));
+            if (mAccessToken != null && mAccessToken.isSessionValid()) {
+                RequestManager.addToRequestQueue(getRequest(mAccessToken.getToken(), -1));
             }
         }
     }

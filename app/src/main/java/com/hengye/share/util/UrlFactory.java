@@ -13,10 +13,6 @@ public class UrlFactory {
 
 
 
-
-    /**
-     * https://api.weibo.com/2/statuses/friends_timeline.json
-     */
 //    必选 	类型及范围 	说明
 //    source 	false 	string 	采用OAuth授权方式不需要此参数，其他授权方式为必填参数，数值为应用的AppKey。
 //    access_token 	false 	string 	采用OAuth授权方式为必填参数，其他授权方式不需要此参数，OAuth授权后获得。
@@ -31,4 +27,17 @@ public class UrlFactory {
         return "https://api.weibo.com/2/statuses/friends_timeline.json";
     }
 
+
+//    必选 	类型及范围 	说明
+//    source 	false 	string 	采用OAuth授权方式不需要此参数，其他授权方式为必填参数，数值为应用的AppKey。
+//    access_token 	false 	string 	采用OAuth授权方式为必填参数，其他授权方式不需要此参数，OAuth授权后获得。
+//    uid 	false 	int64 	需要查询的用户ID。
+//    screen_name 	false 	string 	需要查询的用户昵称。
+//    注意事项
+//
+//    参数uid与screen_name二者必选其一，且只能选其一；
+//    接口升级后，对未授权本应用的uid，将无法获取其个人简介、认证原因、粉丝数、关注数、微博数及最近一条微博内容
+    public String getWBUserInfoUrl(){
+        return "https://api.weibo.com/2/users/show.json";
+    }
 }

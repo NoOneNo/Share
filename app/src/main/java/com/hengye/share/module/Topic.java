@@ -1,13 +1,12 @@
 package com.hengye.share.module;
 
 import com.hengye.share.module.sina.WBTopic;
+import com.hengye.share.util.ThirdPartyUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Topic {
-
-    public final static int TYPE_WB = 1;
+public class Topic extends Parent{
 
     private String portrait;
     private String username;
@@ -15,16 +14,12 @@ public class Topic {
     private String channel;
     private String content;
 
-    private Object parent;
-    private int parentType;
-
     public static List<Topic> getTopic(WBTopic wbTopic){
         List<Topic> topics = new ArrayList<>();
         for(WBTopic.StatusesEntity entity : wbTopic.getStatuses()){
             Topic topic = new Topic();
             topic.setParent(entity);
-            topic.setParentType(TYPE_WB);
-//            topic.setPortrait(entity.getUser().getProfile_image_url());
+            topic.setParentType(Parent.TYPE_WEIBO);
             topic.setPortrait(entity.getUser().getAvatar_large());
             topic.setUsername(entity.getUser().getScreen_name());
             topic.setDate(entity.getCreated_at());
@@ -46,22 +41,6 @@ public class Topic {
                 ", channel='" + channel + '\'' +
                 ", content='" + content + '\'' +
                 '}';
-    }
-
-    public Object getParent() {
-        return parent;
-    }
-
-    public void setParent(Object parent) {
-        this.parent = parent;
-    }
-
-    public int getParentType() {
-        return parentType;
-    }
-
-    public void setParentType(int parentType) {
-        this.parentType = parentType;
     }
 
     public String getPortrait() {

@@ -19,12 +19,11 @@ public class ThirdPartyUtils {
 
     private Logger L = LoggerFactory.getLogger(getClass());
 
+    public static final int TYPE_FOR_WEIBO= 1;
 
-    public static final String TYPE_FOR_WECHAT= "WECHAT";
+    public static final int TYPE_FOR_QQ = 2;
 
-    public static final String TYPE_FOR_WEIBO= "SINA";
-
-    public static final String TYPE_FOR_QQ = "QQ";
+    public static final int TYPE_FOR_WECHAT= 3;
 
     public static final int REQUEST_CODE_FOR_WEIBO = 2;
     /** 当前 DEMO 应用的 APP_KEY_FOR_WEIBO，第三方应用应该使用自己的 APP_KEY_FOR_WEIBO 替换该 APP_KEY_FOR_WEIBO */
