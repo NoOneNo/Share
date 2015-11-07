@@ -1,26 +1,24 @@
 package com.hengye.share.module;
 
 import com.hengye.share.module.sina.WBTopic;
-import com.hengye.share.util.ThirdPartyUtils;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Topic extends Parent{
 
-    private String portrait;
+    private String avator;
     private String username;
     private String date;
     private String channel;
     private String content;
 
-    public static List<Topic> getTopic(WBTopic wbTopic){
-        List<Topic> topics = new ArrayList<>();
+    public static ArrayList<Topic> getTopic(WBTopic wbTopic){
+        ArrayList<Topic> topics = new ArrayList<>();
         for(WBTopic.StatusesEntity entity : wbTopic.getStatuses()){
             Topic topic = new Topic();
             topic.setParent(entity);
             topic.setParentType(Parent.TYPE_WEIBO);
-            topic.setPortrait(entity.getUser().getAvatar_large());
+            topic.setAvator(entity.getUser().getAvatar_large());
             topic.setUsername(entity.getUser().getScreen_name());
             topic.setDate(entity.getCreated_at());
             topic.setChannel(entity.getSource());
@@ -35,7 +33,7 @@ public class Topic extends Parent{
     @Override
     public String toString() {
         return "Topic{" +
-                "portrait='" + portrait + '\'' +
+                "avator='" + avator + '\'' +
                 ", username='" + username + '\'' +
                 ", date='" + date + '\'' +
                 ", channel='" + channel + '\'' +
@@ -43,12 +41,12 @@ public class Topic extends Parent{
                 '}';
     }
 
-    public String getPortrait() {
-        return portrait;
+    public String getAvator() {
+        return avator;
     }
 
-    public void setPortrait(String portrait) {
-        this.portrait = portrait;
+    public void setAvator(String avator) {
+        this.avator = avator;
     }
 
     public String getUsername() {

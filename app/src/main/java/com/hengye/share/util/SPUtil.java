@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 
@@ -71,6 +72,19 @@ public class SPUtil {
         }
         return null;
     }
+
+    public synchronized <T> T getModule(Class<T> clazz, String name){
+        String json = mContext.getSharedPreferences(MODULE_NAME, Context.MODE_PRIVATE).getString(name, null);
+        if(!TextUtils.isEmpty(json)){
+            try{
+                return GsonUtil.getInstance().fromJson(json, clazz);
+            }catch (JsonSyntaxException e){
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
 
     public synchronized <T> void setModule(T t, String name){
         SharedPreferences.Editor editor = mContext.getSharedPreferences(MODULE_NAME, Context.MODE_PRIVATE).edit();

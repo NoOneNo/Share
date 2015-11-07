@@ -116,6 +116,8 @@ public class ActionBarDrawerToggleCustom implements DrawerLayout.DrawerListener 
     private final Delegate mActivityImpl;
     private final DrawerLayout mDrawerLayout;
 
+    private DrawerLayout.DrawerListener mDrawerListener;
+
     private DrawerToggle mSlider;
     private Drawable mHomeAsUpIndicator;
     private boolean mDrawerIndicatorEnabled = true;
@@ -387,6 +389,10 @@ public class ActionBarDrawerToggleCustom implements DrawerLayout.DrawerListener 
     @Override
     public void onDrawerSlide(View drawerView, float slideOffset) {
         mSlider.setPosition(Math.min(1f, Math.max(0, slideOffset)));
+
+        if(mDrawerListener != null){
+            mDrawerListener.onDrawerSlide(drawerView, slideOffset);
+        }
     }
 
     /**
@@ -401,6 +407,10 @@ public class ActionBarDrawerToggleCustom implements DrawerLayout.DrawerListener 
         mSlider.setPosition(1);
         if (mDrawerIndicatorEnabled) {
             setActionBarDescription(mCloseDrawerContentDescRes);
+        }
+
+        if(mDrawerListener != null){
+            mDrawerListener.onDrawerOpened(drawerView);
         }
     }
 
@@ -417,6 +427,10 @@ public class ActionBarDrawerToggleCustom implements DrawerLayout.DrawerListener 
         if (mDrawerIndicatorEnabled) {
             setActionBarDescription(mOpenDrawerContentDescRes);
         }
+
+        if(mDrawerListener != null){
+            mDrawerListener.onDrawerClosed(drawerView);
+        }
     }
 
     /**
@@ -428,6 +442,17 @@ public class ActionBarDrawerToggleCustom implements DrawerLayout.DrawerListener 
      */
     @Override
     public void onDrawerStateChanged(int newState) {
+        if(mDrawerListener != null){
+            mDrawerListener.onDrawerStateChanged(newState);
+        }
+    }
+
+    public DrawerLayout.DrawerListener getDrawerListener() {
+        return mDrawerListener;
+    }
+
+    public void setDrawerListener(DrawerLayout.DrawerListener drawerListener) {
+        this.mDrawerListener = drawerListener;
     }
 
     /**

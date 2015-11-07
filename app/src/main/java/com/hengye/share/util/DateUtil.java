@@ -43,7 +43,7 @@ public class DateUtil {
         if (day == 0 && nowHour >= hour) {
             //今天
             if (hour >= 1) {
-                return hour + "小时前";
+                return "今天 " + new SimpleDateFormat("HH:mm", Locale.US).format(date);
             } else if (minute >= 1) {
                 return minute + "分钟前";
             } else {
@@ -56,6 +56,7 @@ public class DateUtil {
             } else {
                 //大于2天 显示日期
                 String pattern;
+                //如果是今年就不显示年份
                 if (calendarNow.get(Calendar.YEAR) == calendarEver.get(Calendar.YEAR)) {
                     pattern = "M-d";
                 } else {

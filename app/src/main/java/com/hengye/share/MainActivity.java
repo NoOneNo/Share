@@ -12,22 +12,24 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
+import com.android.volley.view.NetworkImageView;
 import com.google.gson.reflect.TypeToken;
 import com.hengye.share.adapter.RecyclerViewTopicAdapter;
 import com.hengye.share.module.Topic;
+import com.hengye.share.module.UserInfo;
 import com.hengye.share.module.sina.WBTopic;
+import com.hengye.share.module.sina.WBUserInfo;
 import com.hengye.share.support.ActionBarDrawerToggleCustom;
-import com.hengye.share.util.ParseTokenWeiboAuthListener;
 import com.hengye.share.util.L;
-import com.hengye.share.util.RequestFactory;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.SaveUserInfoWeiboAuthListener;
 import com.hengye.share.util.ThirdPartyUtils;
@@ -82,13 +84,21 @@ public class MainActivity extends BaseActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         toggle.setGravityCompat(GravityCompat.END);
         drawer.setDrawerListener(toggle);
+        toggle.setDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                updateNavigationView();
+            }
+        });
+
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        updateNavigationView();
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_main);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mAdapter = new RecyclerViewTopicAdapter(this, getDatas()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -96,20 +106,80 @@ public class MainActivity extends BaseActivity
 
     private ArrayList<Topic> getDatas() {
 
-        ArrayList<Topic> datas = SPUtil.getInstance().getModule(new TypeToken<ArrayList<Topic>>(){}.getType(), Topic.class.getSimpleName());
-        if(datas == null){
+        WBTopic wbTopic = SPUtil.getInstance().getModule(new TypeToken<WBTopic>() {
+        }.getType(), WBTopic.class.getSimpleName());
+        ArrayList<Topic> datas = null;
+        if (wbTopic != null) {
+            datas = Topic.getTopic(wbTopic);
+        }
+        if (datas == null) {
             datas = new ArrayList<>();
         }
         return datas;
     }
 
-    private void initData(){
-        if(mWeiboAuth == null){
+    private void initData() {
+        if (mWeiboAuth == null) {
             mWeiboAuth = ThirdPartyUtils.getWeiboData(MainActivity.this);
         }
-        if(mSsoHandler == null){
+        if (mSsoHandler == null) {
             mSsoHandler = new SsoHandler(MainActivity.this, mWeiboAuth);
         }
+    }
+
+    private void updateNavigationView() {
+        WBUserInfo wbUserInfo = SPUtil.getInstance().getModule(WBUserInfo.class, WBUserInfo.class.getSimpleName());
+        if(wbUserInfo == null){
+            //用户数据为空
+            L.debug("updateNavigationView invoke, userinfo is null");
+            return;
+        }
+
+        UserInfo userInfo = UserInfo.getUserInfo(wbUserInfo);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        String uid = (String) navigationView.getTag();
+        if(!TextUtils.isEmpty(uid) && uid.equals(userInfo.getUid())){
+            //此ID数据已经更新过
+            L.debug("updateNavigationView invoke, userinfo has updated");
+            return;
+        }
+
+        L.debug("updateNavigationView invoke, userinfo has not updated");
+        navigationView.setTag(userInfo.getUid());
+        NetworkImageView avator = (NetworkImageView) navigationView.findViewById(R.id.iv_avator);
+        TextView name = (TextView) navigationView.findViewById(R.id.tv_username);
+        TextView sign = (TextView) navigationView.findViewById(R.id.tv_sign);
+
+        avator.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());
+        name.setText(userInfo.getName());
+        sign.setText(userInfo.getSign());
+    }
+
+    private GsonRequest<WBTopic> getRequest(String token, int size) {
+        final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBFriendTopicUrl());
+        ub.addParameter("access_token", token);
+        ub.addParameter("count", 20);
+        return new GsonRequest<>(
+                ub.getRequestUrl()
+                , WBTopic.class
+                , new Response.Listener<WBTopic>() {
+            @Override
+            public void onResponse(WBTopic response) {
+                L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
+                List<Topic> datas = Topic.getTopic(response);
+                if (mAdapter != null) {
+                    mAdapter.refresh(datas);
+                }
+                SPUtil.getInstance().setModule(response, WBTopic.class.getSimpleName());
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                L.debug("request fail , url : {}, error : {}", ub.getRequestUrl(), error);
+            }
+
+        });
     }
 
     @Override
@@ -142,17 +212,17 @@ public class MainActivity extends BaseActivity
         } else if (id == R.id.action_login) {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
-        } else if(id == R.id.action_login_by_third){
+        } else if (id == R.id.action_login_by_third) {
 //            if (isExistWeibo){
-                try {
-                    mSsoHandler.authorize(ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO, new WBAuthListener(), (String) null);
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
+            try {
+                mSsoHandler.authorize(ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO, new WBAuthListener(), (String) null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 //            }else{
 //                mWeiboAuth.anthorize(new WBAuthListener());
 //            }
-        }else if (id == R.id.action_add) {
+        } else if (id == R.id.action_add) {
 //            mAdapter.addData(1, "add one");
         } else if (id == R.id.action_remove) {
 //            mAdapter.removeData(1);
@@ -193,33 +263,6 @@ public class MainActivity extends BaseActivity
         if (requestCode == ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO && mSsoHandler != null) {
             mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
         }
-    }
-
-    private GsonRequest<WBTopic> getRequest(String token, int size) {
-        final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBFriendTopicUrl());
-        ub.addParameter("access_token", token);
-        ub.addParameter("count", 20);
-        return new GsonRequest<>(
-                ub.getRequestUrl()
-                , WBTopic.class
-                , new Response.Listener<WBTopic>() {
-            @Override
-            public void onResponse(WBTopic response) {
-                L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
-                List<Topic> datas = Topic.getTopic(response);
-                if(mAdapter != null) {
-                    mAdapter.refresh(datas);
-                }
-                SPUtil.getInstance().setModule(datas, Topic.class.getSimpleName());
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                L.debug("request fail , url : {}, error : {}", ub.getRequestUrl(), error);
-            }
-
-        });
     }
 
     /**

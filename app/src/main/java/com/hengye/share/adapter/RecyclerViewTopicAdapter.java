@@ -7,17 +7,13 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.view.NetworkImageView;
 import com.hengye.share.R;
 import com.hengye.share.module.Topic;
 import com.hengye.share.util.DateUtil;
 import com.hengye.volleyplus.toolbox.RequestManager;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -44,7 +40,7 @@ public class RecyclerViewTopicAdapter extends RecyclerViewSimpleAdapter<Topic, R
             holder.mDescription.setText(time + " 来自 " + Html.fromHtml(topic.getChannel()));
         }
         holder.mContent.setText(topic.getContent());
-        holder.mPortrait.setImageUrl(topic.getPortrait(), RequestManager.getImageLoader());
+        holder.mAvator.setImageUrl(topic.getAvator(), RequestManager.getImageLoader());
     }
 
     @Override
@@ -55,11 +51,11 @@ public class RecyclerViewTopicAdapter extends RecyclerViewSimpleAdapter<Topic, R
 
     class MainViewHolder extends RecyclerView.ViewHolder{
 
-        NetworkImageView mPortrait;
+        NetworkImageView mAvator;
         TextView mUsername, mDescription, mContent;
         public MainViewHolder(View v){
             super(v);
-            mPortrait = (NetworkImageView) v.findViewById(R.id.iv_topic_portrait);
+            mAvator = (NetworkImageView) v.findViewById(R.id.iv_topic_avator);
             mUsername = (TextView) v.findViewById(R.id.tv_topic_username);
             mDescription = (TextView) v.findViewById(R.id.tv_topic_description);
             mContent = (TextView) v.findViewById(R.id.tv_topic_content);

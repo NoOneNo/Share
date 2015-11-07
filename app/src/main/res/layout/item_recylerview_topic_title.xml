@@ -6,16 +6,16 @@
     tools:showIn="@layout/item_recylerview_main">
 
     <com.android.volley.view.NetworkImageView
-        android:id="@+id/iv_topic_portrait"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_marginEnd="10dp"
+        android:id="@+id/iv_topic_avator"
+        android:layout_width="@dimen/topic_avator"
+        android:layout_height="@dimen/topic_avator"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:scaleType="fitXY"
         android:contentDescription="@null"/>
 
     <TextView
         android:id="@+id/tv_topic_username"
-        android:layout_toEndOf="@id/iv_topic_portrait"
+        android:layout_toEndOf="@id/iv_topic_avator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="我是一只小小小鸡仔"
