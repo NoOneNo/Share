@@ -9,6 +9,6 @@
 
 
     <dimen name="topic_username">14sp</dimen>
-    <dimen name="topic_description">10sp</dimen>
+    <dimen name="topic_description">11sp</dimen>
     <dimen name="topic_content">16sp</dimen>
 </resources>

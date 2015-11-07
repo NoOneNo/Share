@@ -24,7 +24,8 @@ public class Topic {
             Topic topic = new Topic();
             topic.setParent(entity);
             topic.setParentType(TYPE_WB);
-            topic.setPortrait(entity.getUser().getProfile_image_url());
+//            topic.setPortrait(entity.getUser().getProfile_image_url());
+            topic.setPortrait(entity.getUser().getAvatar_large());
             topic.setUsername(entity.getUser().getScreen_name());
             topic.setDate(entity.getCreated_at());
             topic.setChannel(entity.getSource());

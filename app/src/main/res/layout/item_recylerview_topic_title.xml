@@ -3,17 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     tools:showIn="@layout/item_recylerview_main">
 
-    <ImageView
+    <com.android.volley.view.NetworkImageView
         android:id="@+id/iv_topic_portrait"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:layout_marginEnd="10dp"
         android:scaleType="fitXY"
-        android:contentDescription="@null"
-        android:src="@mipmap/ic_launcher" />
+        android:contentDescription="@null"/>
 
     <TextView
         android:id="@+id/tv_topic_username"

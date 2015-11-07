@@ -2,9 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/activity_vertical_margin">
 
-    <include layout="@layout/item_recylerview_main_title" />
+    <include layout="@layout/item_recylerview_topic_title" />
 
 
     <TextView

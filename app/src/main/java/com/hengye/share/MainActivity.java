@@ -9,7 +9,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -21,7 +20,7 @@ import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
 import com.google.gson.reflect.TypeToken;
-import com.hengye.share.adapter.RecyclerViewMainAdapter;
+import com.hengye.share.adapter.RecyclerViewTopicAdapter;
 import com.hengye.share.module.Topic;
 import com.hengye.share.module.sina.WBTopic;
 import com.hengye.share.support.ActionBarDrawerToggleCustom;
@@ -36,7 +35,6 @@ import com.sina.weibo.sdk.auth.WeiboAuth;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -56,7 +54,7 @@ public class MainActivity extends BaseActivity
 
     }
 
-    private RecyclerViewMainAdapter mAdapter;
+    private RecyclerViewTopicAdapter mAdapter;
 
     private void initView() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -88,7 +86,7 @@ public class MainActivity extends BaseActivity
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_main);
 //        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(mAdapter = new RecyclerViewMainAdapter(this, getDatas()));
+        recyclerView.setAdapter(mAdapter = new RecyclerViewTopicAdapter(this, getDatas()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
