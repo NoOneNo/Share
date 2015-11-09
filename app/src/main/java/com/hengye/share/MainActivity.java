@@ -129,7 +129,7 @@ public class MainActivity extends BaseActivity
 
     private void updateNavigationView() {
         WBUserInfo wbUserInfo = SPUtil.getInstance().getModule(WBUserInfo.class, WBUserInfo.class.getSimpleName());
-        if(wbUserInfo == null){
+        if (wbUserInfo == null) {
             //用户数据为空
             L.debug("updateNavigationView invoke, userinfo is null");
             return;
@@ -138,7 +138,7 @@ public class MainActivity extends BaseActivity
         UserInfo userInfo = UserInfo.getUserInfo(wbUserInfo);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         String uid = (String) navigationView.getTag();
-        if(!TextUtils.isEmpty(uid) && uid.equals(userInfo.getUid())){
+        if (!TextUtils.isEmpty(uid) && uid.equals(userInfo.getUid())) {
             //此ID数据已经更新过
             L.debug("updateNavigationView invoke, userinfo has updated");
             return;
