@@ -257,9 +257,42 @@ public class WBTopic implements Serializable{
         private long biz_feature;
         private String rid;
         private int userType;
-        private List<?> pic_urls;
+        private List<Pic_urlsEntity> pic_urls;
         private List<Integer> biz_ids;
         private List<?> darwin_tags;
+
+        private StatusesEntity retweeted_status;
+
+        public static class Pic_urlsEntity{
+            //默认返回缩略图
+            //要得到高清图或者原图，把地址"http://ww1.sinaimg.cn/thumbnail/6dab804cjw1exv392snomj21kw23ukjl.jpg"
+            //中的thumbnail换成对应的bmiddle(高清)或者large(原图)
+            private String thumbnail_pic;
+
+            @Override
+            public String toString() {
+                return "Pic_urlsEntity{" +
+                        "thumbnail_pic='" + thumbnail_pic + '\'' +
+                        '}';
+            }
+
+            public String getThumbnail_pic() {
+                return thumbnail_pic;
+            }
+
+            public void setThumbnail_pic(String thumbnail_pic) {
+                this.thumbnail_pic = thumbnail_pic;
+            }
+        }
+
+
+        public StatusesEntity getRetweeted_status() {
+            return retweeted_status;
+        }
+
+        public void setRetweeted_status(StatusesEntity retweeted_status) {
+            this.retweeted_status = retweeted_status;
+        }
 
         public void setCreated_at(String created_at) {
             this.created_at = created_at;
@@ -353,7 +386,7 @@ public class WBTopic implements Serializable{
             this.userType = userType;
         }
 
-        public void setPic_urls(List<?> pic_urls) {
+        public void setPic_urls(List<Pic_urlsEntity> pic_urls) {
             this.pic_urls = pic_urls;
         }
 
@@ -457,7 +490,7 @@ public class WBTopic implements Serializable{
             return userType;
         }
 
-        public List<?> getPic_urls() {
+        public List<Pic_urlsEntity> getPic_urls() {
             return pic_urls;
         }
 
