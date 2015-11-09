@@ -49,7 +49,7 @@ public class RecyclerViewTopicAdapter extends RecyclerViewSimpleAdapter<Topic, R
     }
 
 
-    class MainViewHolder extends RecyclerView.ViewHolder{
+    class MainViewHolder extends RecyclerViewSimpleAdapter.ViewHolder{
 
         NetworkImageView mAvator;
         TextView mUsername, mDescription, mContent;
