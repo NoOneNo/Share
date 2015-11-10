@@ -5,17 +5,16 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
 import java.util.List;
 
-public class RecyclerViewSimpleAdapter<T, VH extends RecyclerViewSimpleAdapter.ViewHolder> extends RecyclerView.Adapter<VH>{
+public class RecyclerViewSimpleAdapter<T, VH extends RecyclerViewSimpleAdapter.ViewHolder> extends RecyclerView.Adapter<VH> {
 
     protected Context mContext;
     protected List<T> mDatas;
     protected OnItemClickListener mOnItemClickListener;
 
-    public RecyclerViewSimpleAdapter(Context context, List<T> datas){
+    public RecyclerViewSimpleAdapter(Context context, List<T> datas) {
         mContext = context;
         mDatas = datas;
     }
@@ -27,7 +26,6 @@ public class RecyclerViewSimpleAdapter<T, VH extends RecyclerViewSimpleAdapter.V
 
     @Override
     public void onBindViewHolder(VH holder, int position) {
-
     }
 
     @Override
@@ -35,7 +33,7 @@ public class RecyclerViewSimpleAdapter<T, VH extends RecyclerViewSimpleAdapter.V
         return mDatas.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
@@ -43,30 +41,30 @@ public class RecyclerViewSimpleAdapter<T, VH extends RecyclerViewSimpleAdapter.V
 
         @Override
         public void onClick(View v) {
-            if(mOnItemClickListener != null){
+            if (mOnItemClickListener != null) {
                 mOnItemClickListener.onItemClick(v, getAdapterPosition());
             }
         }
     }
 
-    public void add(int position, T data){
-        if(mDatas != null){
-            mDatas.add(position, data);
-            notifyItemInserted(position);
-        }
+    public T getItem(int position){
+        return mDatas.get(position);
     }
 
-    public void remove(int position){
-        if(mDatas != null){
-            mDatas.remove(position);
-            notifyItemRemoved(position);
-        }
+    public void add(int position, T data) {
+        mDatas.add(position, data);
+        notifyItemInserted(position);
     }
 
-    public void refresh(List<T> datas){
-        if(datas == null){
+    public void remove(int position) {
+        mDatas.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void refresh(List<T> datas) {
+        if (datas == null) {
             mDatas.clear();
-        }else{
+        } else {
             mDatas = datas;
         }
         notifyDataSetChanged();
@@ -97,12 +95,12 @@ public class RecyclerViewSimpleAdapter<T, VH extends RecyclerViewSimpleAdapter.V
         /**
          * Callback method to be invoked when an item in this RecyclerView has
          * been clicked.
-         * <p>
+         * <p/>
          * Implementers can call getItemAtPosition(position) if they need
          * to access the data associated with the selected item.
          *
-         * @param view The view within the AdapterView that was clicked (this
-         *            will be a view provided by the adapter)
+         * @param view     The view within the AdapterView that was clicked (this
+         *                 will be a view provided by the adapter)
          * @param position The position of the view in the adapter.
          */
         void onItemClick(View view, int position);

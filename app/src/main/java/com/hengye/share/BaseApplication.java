@@ -18,7 +18,7 @@ public class BaseApplication extends Application{
 	private void init(){
 
 		SPUtil.getInstance().init(getApplicationContext());
-		CrashHandler.getInstance().init(getApplicationContext());
+//		CrashHandler.getInstance().init(getApplicationContext());
 		RequestManager.init(this);
 	}
 }
