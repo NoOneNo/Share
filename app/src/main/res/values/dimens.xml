@@ -14,4 +14,5 @@
     <dimen name="topic_avator">35dp</dimen>
     <dimen name="topic_description">11sp</dimen>
     <dimen name="topic_content">16sp</dimen>
+    <dimen name="topic_gallery_iv_margin">4dp</dimen>
 </resources>
