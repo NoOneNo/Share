@@ -12,7 +12,7 @@ public class ViewUtil {
 //            return ViewGroup.LayoutParams.WRAP_CONTENT;
             return (maxWidth - marginLength) / 2;
         }else if(size == 2 || size == 4){
-            return (maxWidth - marginLength) / 2;
+            return (maxWidth - marginLength) / 3;
         }else{
             return (maxWidth - marginLength) / 3;
         }
