@@ -10,4 +10,8 @@ public class CommonUtil {
         }
         return false;
     }
+
+    public static <T> T getLastItem(List<T> list){
+        return list.get(list.size() - 1);
+    }
 }

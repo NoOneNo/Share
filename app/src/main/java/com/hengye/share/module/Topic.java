@@ -17,6 +17,7 @@ public class Topic extends Parent{
     private String date;
     private String channel;
     private String content;
+    private String id;
     private List<String> imageUrls;
 
     public static ArrayList<Topic> getTopic(WBTopic wbTopic){
@@ -30,6 +31,7 @@ public class Topic extends Parent{
             topic.setDate(entity.getCreated_at());
             topic.setChannel(entity.getSource());
             topic.setContent(entity.getText());
+            topic.setId(entity.getIdstr());
             if(!CommonUtil.isEmptyList(entity.getPic_urls())){
                 List<String> urls = new ArrayList<>();
                 for(WBTopic.StatusesEntity.Pic_urlsEntity urlsEntity : entity.getPic_urls()){
@@ -69,6 +71,14 @@ public class Topic extends Parent{
                 ", channel='" + channel + '\'' +
                 ", content='" + content + '\'' +
                 '}';
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getAvator() {

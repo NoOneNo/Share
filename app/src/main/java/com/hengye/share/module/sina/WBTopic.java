@@ -39,7 +39,7 @@ public class WBTopic implements Serializable{
      */
 
     private boolean hasvisible;
-    private int previous_cursor;
+    private long previous_cursor;
     private long next_cursor;
     private int total_number;
     private int interval;
@@ -84,7 +84,7 @@ public class WBTopic implements Serializable{
         this.hasvisible = hasvisible;
     }
 
-    public void setPrevious_cursor(int previous_cursor) {
+    public void setPrevious_cursor(long previous_cursor) {
         this.previous_cursor = previous_cursor;
     }
 
@@ -132,7 +132,7 @@ public class WBTopic implements Serializable{
         return hasvisible;
     }
 
-    public int getPrevious_cursor() {
+    public long getPrevious_cursor() {
         return previous_cursor;
     }
 

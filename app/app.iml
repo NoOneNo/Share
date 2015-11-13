@@ -102,5 +102,6 @@
     <orderEntry type="library" exported="" name="slf4j-api-1.7.12" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-23.0.1" level="project" />
     <orderEntry type="module" module-name="volleyplus" exported="" />
+    <orderEntry type="module" module-name="swiperefresh" exported="" />
   </component>
 </module>

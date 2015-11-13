@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecyclerViewSimpleAdapter<T, VH extends RecyclerViewSimpleAdapter.ViewHolder> extends RecyclerView.Adapter<VH> {
@@ -67,6 +68,16 @@ public class RecyclerViewSimpleAdapter<T, VH extends RecyclerViewSimpleAdapter.V
         } else {
             mDatas = datas;
         }
+        notifyDataSetChanged();
+    }
+
+    public void addAll(List<T> datas) {
+        mDatas.addAll(datas);
+        notifyDataSetChanged();
+    }
+
+    public void addAll(int position, List<T> datas) {
+        mDatas.addAll(position, datas);
         notifyDataSetChanged();
     }
 

@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="@dimen/activity_vertical_margin">
+    android:paddingTop="@dimen/activity_vertical_margin">
 
     <include layout="@layout/item_recylerview_topic_title" />
 
@@ -20,7 +20,8 @@
     <GridLayout
         android:id="@+id/gl_gallery"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/content_margin">
     </GridLayout>
 
 </LinearLayout>
