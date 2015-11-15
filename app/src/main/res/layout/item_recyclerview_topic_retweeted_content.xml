@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_topic_retweeted"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/material_grey_50"
+    android:layout_marginTop="@dimen/content_margin"
+    android:paddingTop="@dimen/content_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingBottom="@dimen/content_margin"
+    android:orientation="vertical"
+    android:visibility="visible"
+    tools:showIn="@layout/item_recyclerview_topic">
+
+    <TextView
+        android:id="@+id/tv_topic_retweeted_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="这是一条微博的内容"
+        android:textSize="16sp"
+        android:textColor="@color/topic_content" />
+
+    <GridLayout
+        android:id="@+id/gl_topic_retweeted_gallery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/content_margin"></GridLayout>
+
+</LinearLayout>

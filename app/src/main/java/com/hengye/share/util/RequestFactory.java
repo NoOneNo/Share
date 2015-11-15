@@ -80,16 +80,16 @@ public class RequestFactory {
 //                , listener, errorListener);
 //    }
 
-    public GsonRequest<WBTopicIds> getWBUnReadIdsRequest(String token, String since_id,
-                                                         Response.Listener<WBTopicIds> listener, Response.ErrorListener errorListener) {
-        final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBFriendTopicIdsUrl());
-        ub.addParameter("access_token", token);
-        ub.addParameter("since_id", since_id);
-        ub.addParameter("count", WBUtil.MAX_COUNT_REQUEST);
-        return new GsonRequest<>(
-                ub.getRequestUrl()
-                , WBTopicIds.class
-                , listener, errorListener);
-    }
+//    public GsonRequest<WBTopicIds> getWBUnReadIdsRequest(String token, String since_id,
+//                                                         Response.Listener<WBTopicIds> listener, Response.ErrorListener errorListener) {
+//        final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBFriendTopicIdsUrl());
+//        ub.addParameter("access_token", token);
+//        ub.addParameter("since_id", since_id);
+//        ub.addParameter("count", WBUtil.MAX_COUNT_REQUEST);
+//        return new GsonRequest<>(
+//                ub.getRequestUrl()
+//                , WBTopicIds.class
+//                , listener, errorListener);
+//    }
 
 }

@@ -19,29 +19,40 @@ public class Topic extends Parent{
     private String content;
     private String id;
     private List<String> imageUrls;
+    private Topic retweetedTopic;
 
-    public static ArrayList<Topic> getTopic(WBTopic wbTopic){
+    public static ArrayList<Topic> getTopics(WBTopic wbTopic){
         ArrayList<Topic> topics = new ArrayList<>();
         for(WBTopic.StatusesEntity entity : wbTopic.getStatuses()){
-            Topic topic = new Topic();
-            topic.setParent(entity);
-            topic.setParentType(Parent.TYPE_WEIBO);
-            topic.setAvator(entity.getUser().getAvatar_large());
-            topic.setUsername(entity.getUser().getScreen_name());
-            topic.setDate(entity.getCreated_at());
-            topic.setChannel(entity.getSource());
-            topic.setContent(entity.getText());
-            topic.setId(entity.getIdstr());
-            if(!CommonUtil.isEmptyList(entity.getPic_urls())){
-                List<String> urls = new ArrayList<>();
-                for(WBTopic.StatusesEntity.Pic_urlsEntity urlsEntity : entity.getPic_urls()){
-                    urls.add(getWBTopicImgUrl(urlsEntity.getThumbnail_pic(), IMAGE_TYPE_BMIDDLE));
-                }
-                topic.setImageUrls(urls);
-            }
-            topics.add(topic);
+            topics.add(getTopic(entity));
         }
         return topics;
+    }
+
+    public static Topic getTopic(WBTopic.StatusesEntity entity){
+        Topic topic = new Topic();
+        topic.setParent(entity);
+        topic.setParentType(Parent.TYPE_WEIBO);
+        topic.setAvator(entity.getUser().getAvatar_large());
+        topic.setUsername(entity.getUser().getScreen_name());
+        topic.setDate(entity.getCreated_at());
+        topic.setChannel(entity.getSource());
+        topic.setContent(entity.getText());
+        topic.setId(entity.getIdstr());
+        if(!CommonUtil.isEmptyList(entity.getPic_urls())){
+            List<String> urls = new ArrayList<>();
+            for(WBTopic.StatusesEntity.Pic_urlsEntity urlsEntity : entity.getPic_urls()){
+                urls.add(getWBTopicImgUrl(urlsEntity.getThumbnail_pic(), IMAGE_TYPE_BMIDDLE));
+            }
+            topic.setImageUrls(urls);
+        }
+
+        if(entity.getRetweeted_status() != null){
+            //获得一条转发的微博, 防止一直递归
+            entity.getRetweeted_status().setRetweeted_status(null);
+            topic.setRetweetedTopic(getTopic(entity.getRetweeted_status()));
+        }
+        return topic;
     }
 
     public static int IMAGE_TYPE_BMIDDLE = 1;//高清
@@ -71,6 +82,14 @@ public class Topic extends Parent{
                 ", channel='" + channel + '\'' +
                 ", content='" + content + '\'' +
                 '}';
+    }
+
+    public Topic getRetweetedTopic() {
+        return retweetedTopic;
+    }
+
+    public void setRetweetedTopic(Topic retweetedTopic) {
+        this.retweetedTopic = retweetedTopic;
     }
 
     public String getId() {

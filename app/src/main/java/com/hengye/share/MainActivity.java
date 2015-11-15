@@ -17,12 +17,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
 import com.android.volley.view.NetworkImageView;
 import com.google.gson.reflect.TypeToken;
+import com.hengye.share.adapter.RecyclerViewSimpleAdapter;
 import com.hengye.share.adapter.RecyclerViewTopicAdapter;
 import com.hengye.share.module.Topic;
 import com.hengye.share.module.UserInfo;
@@ -33,7 +35,6 @@ import com.hengye.share.module.sina.WBUtil;
 import com.hengye.share.support.ActionBarDrawerToggleCustom;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
-import com.hengye.share.util.RequestFactory;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.SaveUserInfoWeiboAuthListener;
 import com.hengye.share.util.ThirdPartyUtils;
@@ -136,6 +137,13 @@ public class MainActivity extends BaseActivity
                 }
             }
         });
+
+        mAdapter.setOnItemClickListener(new RecyclerViewSimpleAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Toast.makeText(MainActivity.this, "click item : " + position, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private ArrayList<Topic> getDatas() {
@@ -144,7 +152,7 @@ public class MainActivity extends BaseActivity
         }.getType(), Topic.class.getSimpleName());
 //        ArrayList<Topic> datas = null;
 //        if (wbTopic != null) {
-//            datas = Topic.getTopic(wbTopic);
+//            datas = Topic.getTopics(wbTopic);
 //        }
         if (datas == null) {
             datas = new ArrayList<>();
@@ -208,7 +216,7 @@ public class MainActivity extends BaseActivity
             @Override
             public void onResponse(WBTopic response) {
                 L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
-                List<Topic> datas = Topic.getTopic(response);
+                List<Topic> datas = Topic.getTopics(response);
                 if (isRefresh) {
                     //下拉刷新
                     mPullToRefreshLayout.setRefreshing(false);

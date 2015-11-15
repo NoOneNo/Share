@@ -31,7 +31,6 @@ public class ViewUtil {
     public static void setTopicImageViewLayoutParams(ImageView iv, int maxWidth, int margin, int position, int size){
         int imageWidth = getTopicImageWidth(maxWidth, margin, size);
 
-
         iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
         GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
         lp.width = imageWidth;
@@ -46,8 +45,5 @@ public class ViewUtil {
         iv.setLayoutParams(lp);
     }
 
-    public static ViewGroup.LayoutParams getTopicImageViewLayoutParams(int imageWidth, int position, int size){
-        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(imageWidth, imageWidth);
-        return lp;
-    }
+
 }
