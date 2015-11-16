@@ -1,25 +1,24 @@
 package com.hengye.share.module;
 
-import android.support.v7.util.AsyncListUtil;
 import android.text.TextUtils;
 
 import com.hengye.share.module.sina.WBTopic;
 import com.hengye.share.util.CommonUtil;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Topic extends Parent{
 
-    private String avator;
-    private String username;
-    private String date;
-    private String channel;
-    private String content;
-    private String id;
-    private List<String> imageUrls;
-    private Topic retweetedTopic;
+    private String avator;//头像
+    private String username;//名字
+    private String date;//创建日期
+    private String channel;//渠道，通过什么发表
+    private String content;//内容
+    private String id;//主题的唯一id
+    private List<String> imageUrls;//缩略图
+    private List<String> imageLargeUrls;//原图
+    private Topic retweetedTopic;//被转发的主题
 
     public static ArrayList<Topic> getTopics(WBTopic wbTopic){
         ArrayList<Topic> topics = new ArrayList<>();
@@ -31,20 +30,28 @@ public class Topic extends Parent{
 
     public static Topic getTopic(WBTopic.StatusesEntity entity){
         Topic topic = new Topic();
+        if(entity == null){
+            return topic;
+        }
         topic.setParent(entity);
         topic.setParentType(Parent.TYPE_WEIBO);
-        topic.setAvator(entity.getUser().getAvatar_large());
-        topic.setUsername(entity.getUser().getScreen_name());
+        if(entity.getUser() != null) {
+            topic.setAvator(entity.getUser().getAvatar_large());
+            topic.setUsername(entity.getUser().getScreen_name());
+        }
         topic.setDate(entity.getCreated_at());
         topic.setChannel(entity.getSource());
         topic.setContent(entity.getText());
         topic.setId(entity.getIdstr());
         if(!CommonUtil.isEmptyList(entity.getPic_urls())){
-            List<String> urls = new ArrayList<>();
+            List<String> imageUrls = new ArrayList<>();
+            List<String> imageLargeUrls = new ArrayList<>();
             for(WBTopic.StatusesEntity.Pic_urlsEntity urlsEntity : entity.getPic_urls()){
-                urls.add(getWBTopicImgUrl(urlsEntity.getThumbnail_pic(), IMAGE_TYPE_BMIDDLE));
+                imageUrls.add(getWBTopicImgUrl(urlsEntity.getThumbnail_pic(), IMAGE_TYPE_BMIDDLE));
+                imageLargeUrls.add(getWBTopicImgUrl(urlsEntity.getThumbnail_pic(), IMAGE_TYPE_LARGE));
             }
-            topic.setImageUrls(urls);
+            topic.setImageUrls(imageUrls);
+            topic.setImageLargeUrls(imageLargeUrls);
         }
 
         if(entity.getRetweeted_status() != null){
@@ -55,22 +62,21 @@ public class Topic extends Parent{
         return topic;
     }
 
-    public static int IMAGE_TYPE_BMIDDLE = 1;//高清
-    public static int IMAGE_TYPE_LARGE = 2;//原图
+    public static String IMAGE_TYPE_THUMBNAIL = "thumbnail";//缩略图
+    public static String IMAGE_TYPE_BMIDDLE = "bmiddle";//高清
+    public static String IMAGE_TYPE_LARGE = "large";//原图
     //默认返回缩略图
     //要得到高清图或者原图，把地址"http://ww1.sinaimg.cn/thumbnail/6dab804cjw1exv392snomj21kw23ukjl.jpg"
     //中的thumbnail换成对应的bmiddle(高清)或者large(原图)
-    public static String getWBTopicImgUrl(String url, int type){
+    public static String getWBTopicImgUrl(String url, String toType){
+        return getWBTopicImgUrl(url, IMAGE_TYPE_THUMBNAIL, toType);
+    }
+
+    public static String getWBTopicImgUrl(String url, String fromType, String toType){
         if(TextUtils.isEmpty(url)){
             return null;
         }
-        if(type == IMAGE_TYPE_BMIDDLE){
-            return url.replaceFirst("thumbnail", "bmiddle");
-        }else if(type == IMAGE_TYPE_LARGE){
-            return url.replaceFirst("thumbnail", "large");
-        }else {
-            return url;
-        }
+        return url.replaceFirst(fromType, toType);
     }
 
     @Override
@@ -146,5 +152,13 @@ public class Topic extends Parent{
 
     public void setImageUrls(List<String> imageUrls) {
         this.imageUrls = imageUrls;
+    }
+
+    public List<String> getImageLargeUrls() {
+        return imageLargeUrls;
+    }
+
+    public void setImageLargeUrls(List<String> imageLargeUrls) {
+        this.imageLargeUrls = imageLargeUrls;
     }
 }

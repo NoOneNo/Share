@@ -19,12 +19,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.view.NetworkImageView;
 import com.hengye.share.LoginActivity;
 import com.hengye.share.R;
+import com.hengye.share.TopicGalleryActivity;
 import com.hengye.share.module.Topic;
 import com.hengye.share.module.sina.WBUtil;
 import com.hengye.share.util.CommonUtil;
@@ -38,6 +40,7 @@ import com.hengye.volleyplus.toolbox.RequestManager;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -91,7 +94,8 @@ public class RecyclerViewTopicAdapter extends RecyclerViewSimpleAdapter<Topic, R
         holder.mContent.setTag(itemView);
         holder.mContent.setOnClickListener(this);
         String str;
-        if (isRetweeted) {
+        if (isRetweeted && !TextUtils.isEmpty(topic.getUsername())) {
+            //如果微博已经被删除，则没有名字
             str = "@" + topic.getUsername() + ":" + topic.getContent();
         } else {
             str = topic.getContent();
@@ -142,8 +146,14 @@ public class RecyclerViewTopicAdapter extends RecyclerViewSimpleAdapter<Topic, R
             for (int i = 0; i < topic.getImageUrls().size(); i++) {
                 String url = topic.getImageUrls().get(i);
                 NetworkImageView iv = new NetworkImageView(mContext);
-                ViewUtil.setTopicImageViewLayoutParams(iv, mImageViewMaxWidth, mImageViewMargin, i, topic.getImageUrls().size());
+                ViewUtil.setTopicImageViewLayoutParams(iv, mImageViewMaxWidth, mImageViewMargin, topic.getImageUrls().size());
+//                String key = ViewUtil.getCacheKey(url, is.width, is.height, ImageView.ScaleType.CENTER_CROP);
                 iv.setImageUrl(url, RequestManager.getImageLoader());
+                iv.setTag(R.id.gl_topic_gallery, topic.getImageUrls());
+//                iv.setTag(R.id.gl_topic_retweeted_gallery, key);
+                iv.setTag(i);
+                iv.setId(View.NO_ID);
+                iv.setOnClickListener(this);
                 holder.mGallery.addView(iv);
             }
 
@@ -161,6 +171,12 @@ public class RecyclerViewTopicAdapter extends RecyclerViewSimpleAdapter<Topic, R
             if(itemView != null){
                 itemView.performClick();
             }
+        } else if(id == View.NO_ID){
+            Intent intent = new Intent(mContext, TopicGalleryActivity.class);
+            ArrayList<String> paths = (ArrayList<String>)v.getTag(R.id.gl_topic_gallery);
+            intent.putExtra(TopicGalleryActivity.IMG_PATHS, paths);
+            intent.putExtra(TopicGalleryActivity.IMG_INDEX, (int)v.getTag());
+            mContext.startActivity(intent);
         }
     }
 

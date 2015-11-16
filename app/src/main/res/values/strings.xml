@@ -7,4 +7,7 @@
     <string name="action_settings">Settings</string>
     <string name="action_login">Login</string>
     <string name="action_login_by_third">Login By Third</string>
+
+    <string name="topic_gallery_image_large">原图</string>
+
 </resources>
