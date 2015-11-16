@@ -132,7 +132,7 @@ public class TopicGalleryActivity extends BaseActivity {
 
             RequestManager.getImageLoader().get(url, new ImageLoader.ImageListener() {
                 @Override
-                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate, boolean isFromCache) {
                     touchIv.setImageBitmap(response.getBitmap());
                 }
 
@@ -148,7 +148,7 @@ public class TopicGalleryActivity extends BaseActivity {
                     final String imageLargeUrl = Topic.getWBTopicImgUrl(url, Topic.IMAGE_TYPE_BMIDDLE, Topic.IMAGE_TYPE_LARGE);
                     RequestManager.getImageLoader().get(imageLargeUrl, new ImageLoader.ImageListener() {
                         @Override
-                        public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                        public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate, boolean isFromCache) {
                             touchIv.setImageBitmap(response.getBitmap());
                             imageLarge.setVisibility(View.GONE);
                             pb.setVisibility(View.GONE);
@@ -163,7 +163,6 @@ public class TopicGalleryActivity extends BaseActivity {
                 }
             });
 
-//            view.setOnClickListener(mOnPhotoClickListener);
             touchIv.setOnClickListener(mOnPhotoClickListener);
             container.addView(view);
             return view;
@@ -180,17 +179,5 @@ public class TopicGalleryActivity extends BaseActivity {
         }
 
     }
-//
-//    private Bitmap loadImage(Photo photo) {
-//        if (photo.getDataPath() != null) {
-//            Bitmap bitmap = mBitmapUtil.getBitmapFromMemoryCache(photo.getDataPath());
-//            if (bitmap == null) {
-//                return BitmapUtil.decodeSampledBitmapFromPath(photo.getDataPath(), mMaxWidth, mMaxHeight, photo.getOrientation());
-//            } else {
-//                return bitmap;
-//            }
-//        }
-//        return null;
-//    }
 
 }

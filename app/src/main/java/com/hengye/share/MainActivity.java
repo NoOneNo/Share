@@ -144,6 +144,13 @@ public class MainActivity extends BaseActivity
                 Toast.makeText(MainActivity.this, "click item : " + position, Toast.LENGTH_SHORT).show();
             }
         });
+
+//        recyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(this, new RecyclerViewItemClickListener.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(View view, int position) {
+//                Toast.makeText(MainActivity.this, "onItemClick : " + position, Toast.LENGTH_SHORT).show();
+//            }
+//        }));
     }
 
     private ArrayList<Topic> getDatas() {

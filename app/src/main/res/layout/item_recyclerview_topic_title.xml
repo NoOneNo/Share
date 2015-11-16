@@ -6,7 +6,7 @@
     android:layout_marginBottom="@dimen/content_margin_2"
     tools:showIn="@layout/item_recylerview_main">
 
-    <com.android.volley.view.NetworkImageView
+    <com.android.volley.view.NetworkImageViewPlus
         android:id="@+id/iv_topic_avator"
         android:layout_width="@dimen/topic_avator"
         android:layout_height="@dimen/topic_avator"

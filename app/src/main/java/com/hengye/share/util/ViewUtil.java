@@ -55,7 +55,7 @@ public class ViewUtil {
         lp.height = imageSize.height;
         lp.rightMargin = margin;
         lp.bottomMargin = margin;
-        lp.isMarginRelative();
+//        iv.setAdjustViewBounds(true);
         if(size == 1){
             iv.setMaxHeight((int)(maxWidth / 2 * 1.5));
         }

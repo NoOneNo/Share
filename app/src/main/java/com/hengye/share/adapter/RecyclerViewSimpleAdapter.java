@@ -34,11 +34,19 @@ public class RecyclerViewSimpleAdapter<T, VH extends RecyclerViewSimpleAdapter.V
         return mDatas.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
         public ViewHolder(View itemView) {
             super(itemView);
+        }
+
+        public ViewHolder(View itemView, OnItemClickListener onItemClickListener) {
+            super(itemView);
+            mOnItemClickListener = onItemClickListener;
             itemView.setOnClickListener(this);
         }
+
+        OnItemClickListener mOnItemClickListener;
 
         @Override
         public void onClick(View v) {

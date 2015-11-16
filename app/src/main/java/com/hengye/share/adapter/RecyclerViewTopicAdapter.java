@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.view.NetworkImageView;
+import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.LoginActivity;
 import com.hengye.share.R;
 import com.hengye.share.TopicGalleryActivity;
@@ -63,7 +64,7 @@ public class RecyclerViewTopicAdapter extends RecyclerViewSimpleAdapter<Topic, R
 
     @Override
     public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new MainViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_recyclerview_topic, parent, false));
+        return new MainViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_recyclerview_topic, parent, false), getOnItemClickListener());
     }
 
     @Override
@@ -87,7 +88,6 @@ public class RecyclerViewTopicAdapter extends RecyclerViewSimpleAdapter<Topic, R
             holder.mRetweetTopicLayout.setVisibility(View.GONE);
         }
     }
-
 
     private void initTopicContent(TopicContentViewHolder holder, Topic topic, boolean isRetweeted, View itemView) {
 
@@ -140,14 +140,16 @@ public class RecyclerViewTopicAdapter extends RecyclerViewSimpleAdapter<Topic, R
         });
 
         if (!CommonUtil.isEmptyList(topic.getImageUrls())) {
-
+        //加载图片
             holder.mGallery.removeAllViews();
             holder.mGallery.setColumnCount(ViewUtil.getTopicImageColumnCount(topic.getImageUrls().size()));
             for (int i = 0; i < topic.getImageUrls().size(); i++) {
                 String url = topic.getImageUrls().get(i);
-                NetworkImageView iv = new NetworkImageView(mContext);
+                NetworkImageViewPlus iv = new NetworkImageViewPlus(mContext);
                 ViewUtil.setTopicImageViewLayoutParams(iv, mImageViewMaxWidth, mImageViewMargin, topic.getImageUrls().size());
 //                String key = ViewUtil.getCacheKey(url, is.width, is.height, ImageView.ScaleType.CENTER_CROP);
+//                iv.setDefaultImageResId();
+                iv.setBackgroundColor(mContext.getResources().getColor(R.color.material_grey_300));
                 iv.setImageUrl(url, RequestManager.getImageLoader());
                 iv.setTag(R.id.gl_topic_gallery, topic.getImageUrls());
 //                iv.setTag(R.id.gl_topic_retweeted_gallery, key);
@@ -180,22 +182,22 @@ public class RecyclerViewTopicAdapter extends RecyclerViewSimpleAdapter<Topic, R
         }
     }
 
-    class MainViewHolder extends RecyclerViewSimpleAdapter.ViewHolder {
+    public static class MainViewHolder extends RecyclerViewSimpleAdapter.ViewHolder {
 
-        NetworkImageView mAvator;
+        NetworkImageViewPlus mAvator;
         TextView mUsername, mDescription;
         TopicContentViewHolder mTopic, mRetweetTopic;
         View mRetweetTopicLayout;
 
-        public MainViewHolder(View v) {
-            super(v);
+        public MainViewHolder(View v, OnItemClickListener onItemClickListener) {
+            super(v, onItemClickListener);
             if (mTopic == null) {
                 mTopic = new TopicContentViewHolder();
             }
             if (mRetweetTopic == null) {
                 mRetweetTopic = new TopicContentViewHolder();
             }
-            mAvator = (NetworkImageView) v.findViewById(R.id.iv_topic_avator);
+            mAvator = (NetworkImageViewPlus) v.findViewById(R.id.iv_topic_avator);
             mUsername = (TextView) v.findViewById(R.id.tv_topic_username);
             mDescription = (TextView) v.findViewById(R.id.tv_topic_description);
             mTopic.mContent = (TextView) v.findViewById(R.id.tv_topic_content);
