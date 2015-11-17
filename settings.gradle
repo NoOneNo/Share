@@ -1,1 +1,1 @@
-include ':app', ':swiperefresh', ':volleyplus'
+include ':app'

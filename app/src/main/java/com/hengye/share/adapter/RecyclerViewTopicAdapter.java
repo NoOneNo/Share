@@ -176,6 +176,7 @@ public class RecyclerViewTopicAdapter extends RecyclerViewSimpleAdapter<Topic, R
         } else if(id == View.NO_ID){
             Intent intent = new Intent(mContext, TopicGalleryActivity.class);
             ArrayList<String> paths = (ArrayList<String>)v.getTag(R.id.gl_topic_gallery);
+            L.debug("img url : {}", paths.get((int)v.getTag()));
             intent.putExtra(TopicGalleryActivity.IMG_PATHS, paths);
             intent.putExtra(TopicGalleryActivity.IMG_INDEX, (int)v.getTag());
             mContext.startActivity(intent);
