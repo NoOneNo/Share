@@ -48,6 +48,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.hengye.share.MainActivity" />
         </activity>
+
+        <activity
+            android:name=".TestActivity">
+        </activity>
     </application>
 
 </manifest>

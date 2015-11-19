@@ -118,6 +118,10 @@ public class MainActivity extends BaseActivity
         mPullToRefreshLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                if(mWBAccessToken == null || TextUtils.isEmpty(mWBAccessToken.getToken())){
+                    mPullToRefreshLayout.setRefreshing(false);
+                    return;
+                }
                 String id = 0 + "";
                 if (!CommonUtil.isEmptyList(mAdapter.getDatas())) {
                     id = mAdapter.getDatas().get(0).getId();
@@ -372,10 +376,9 @@ public class MainActivity extends BaseActivity
 //            }else{
 //                mWeiboAuth.anthorize(new WBAuthListener());
 //            }
-        } else if (id == R.id.action_add) {
-//            mAdapter.addData(1, "add one");
-        } else if (id == R.id.action_remove) {
-//            mAdapter.removeData(1);
+        } else if (id == R.id.action_test) {
+            Intent intent = new Intent(this, TestActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
