@@ -16,6 +16,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,7 +60,9 @@ public class MainActivity extends BaseActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         initView();
 
@@ -113,7 +116,7 @@ public class MainActivity extends BaseActivity
         recyclerView.setAdapter(mAdapter = new RecyclerViewTopicAdapter(this, getDatas()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mWBAccessToken = SPUtil.getInstance().getSinaAccessToken();
+        mWBAccessToken = SPUtil.getSinaAccessToken();
         mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.pull_to_refresh);
         mPullToRefreshLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
             @Override
@@ -149,17 +152,97 @@ public class MainActivity extends BaseActivity
             }
         });
 
-//        recyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(this, new RecyclerViewItemClickListener.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(View view, int position) {
-//                Toast.makeText(MainActivity.this, "onItemClick : " + position, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.END)) {
+            drawer.closeDrawer(GravityCompat.END);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_set1) {
+            SPUtil.setAppTheme(SPUtil.THEME_COLOR_BLUE);
+            return true;
+        } else if (id == R.id.action_set2) {
+            SPUtil.setAppTheme(SPUtil.THEME_COLOR_GREEN);
+            return true;
+        } else if (id == R.id.action_login) {
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.action_login_by_third) {
+//            if (isExistWeibo){
+            try {
+                mSsoHandler.authorize(ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO, new WBAuthListener(), (String) null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+//            }else{
+//                mWeiboAuth.anthorize(new WBAuthListener());
 //            }
-//        }));
+        } else if (id == R.id.action_test) {
+            Intent intent = new Intent(this, TestActivity.class);
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_camara) {
+            // Handle the camera action
+        } else if (id == R.id.nav_gallery) {
+
+        } else if (id == R.id.nav_slideshow) {
+
+        } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.END);
+        return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO && mSsoHandler != null) {
+            mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
+        }
     }
 
     private ArrayList<Topic> getDatas() {
 
-        ArrayList<Topic> datas = SPUtil.getInstance().getModule(new TypeToken<ArrayList<Topic>>() {
+        ArrayList<Topic> datas = SPUtil.getModule(new TypeToken<ArrayList<Topic>>() {
         }.getType(), Topic.class.getSimpleName());
 //        ArrayList<Topic> datas = null;
 //        if (wbTopic != null) {
@@ -181,7 +264,7 @@ public class MainActivity extends BaseActivity
     }
 
     private void updateNavigationView() {
-        WBUserInfo wbUserInfo = SPUtil.getInstance().getModule(WBUserInfo.class, WBUserInfo.class.getSimpleName());
+        WBUserInfo wbUserInfo = SPUtil.getModule(WBUserInfo.class, WBUserInfo.class.getSimpleName());
         if (wbUserInfo == null) {
             //用户数据为空
             L.debug("updateNavigationView invoke, userinfo is null");
@@ -256,7 +339,7 @@ public class MainActivity extends BaseActivity
                         mAdapter.refresh(datas);
                     }
                     //存储数据
-                    SPUtil.getInstance().setModule(mAdapter.getDatas(), Topic.class.getSimpleName());
+                    SPUtil.setModule(mAdapter.getDatas(), Topic.class.getSimpleName());
                 } else {
                     //上拉加载
                     mPullToRefreshLayout.setLoading(false);
@@ -334,88 +417,6 @@ public class MainActivity extends BaseActivity
                     }
 
                 });
-    }
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.END)) {
-            drawer.closeDrawer(GravityCompat.END);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        } else if (id == R.id.action_login) {
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.action_login_by_third) {
-//            if (isExistWeibo){
-            try {
-                mSsoHandler.authorize(ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO, new WBAuthListener(), (String) null);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-//            }else{
-//                mWeiboAuth.anthorize(new WBAuthListener());
-//            }
-        } else if (id == R.id.action_test) {
-            Intent intent = new Intent(this, TestActivity.class);
-            startActivity(intent);
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camara) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.END);
-        return true;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO && mSsoHandler != null) {
-            mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
-        }
     }
 
     /**

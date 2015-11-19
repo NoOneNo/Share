@@ -20,7 +20,7 @@ public class SaveUserInfoWeiboAuthListener extends ParseTokenWeiboAuthListener {
         // 从 Bundle 中解析 Token
         super.onComplete(values);
         if (mAccessToken != null && mAccessToken.isSessionValid()) {
-            SPUtil.getInstance().setSinaAccessToken(mAccessToken);
+            SPUtil.setSinaAccessToken(mAccessToken);
             RequestManager.addToRequestQueue(RequestFactory.getInstance().
                     getWBUserInfoRequest(mAccessToken.getToken(), mAccessToken.getUid()));
         } else {

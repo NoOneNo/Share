@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme. -->
+    <style name="ShareAppTheme" parent="Theme.AppCompat.Light">
+        <!-- Customize your theme here. -->
+
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <!--<item name="android:homeAsUpIndicator">@mipmap/btn_back</item>-->
+    </style>
+
+    <style name="ShareAppTheme.Blue">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+
+    <style name="ShareAppTheme.Green">
+        <item name="colorPrimary">#FF50BBA7</item>
+        <item name="colorPrimaryDark">#FF50BBA7</item>
+        <item name="android:navigationBarColor">#FF50BBA7</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!--<style name="ShareAppTheme.Green.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />-->
+    <!--<style name="ShareAppTheme.Green.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />-->
+
+
+    <!--<style name="ShareAppTheme.NoActionBar">-->
+        <!--<item name="windowActionBar">false</item>-->
+        <!--<item name="windowNoTitle">true</item>-->
+    <!--</style>-->
+
+</resources>

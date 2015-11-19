@@ -22,8 +22,8 @@
         android:name=".BaseApplication">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/ShareAppTheme.NoActionBar" >
+            android:launchMode="singleTop"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

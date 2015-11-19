@@ -8,17 +8,24 @@ import com.hengye.volleyplus.toolbox.RequestManager;
 
 public class BaseApplication extends Application{
 
+	private static BaseApplication ourInstance;
+
 	@Override
 	public void onCreate(){
 		super.onCreate();
 		
 		init();
 	}
-	
-	private void init(){
 
-		SPUtil.getInstance().init(getApplicationContext());
+	private void init() {
+
+		ourInstance = this;
+//		SPUtil.getInstance().init(getApplicationContext());
 //		CrashHandler.getInstance().init(getApplicationContext());
 		RequestManager.init(this);
+	}
+
+	public static Application getInstance(){
+		return ourInstance;
 	}
 }

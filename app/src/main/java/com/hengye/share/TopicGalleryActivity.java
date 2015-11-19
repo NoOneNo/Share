@@ -35,6 +35,11 @@ public class TopicGalleryActivity extends BaseActivity {
     private ArrayList<String> urls;
 
     @Override
+    protected boolean setCustomTheme() {
+        return false;
+    }
+
+    @Override
     protected String getRequestTag() {
         return "TopicGalleryActivity";
     }
