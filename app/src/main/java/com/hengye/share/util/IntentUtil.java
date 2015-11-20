@@ -9,6 +9,13 @@ public class IntentUtil {
 
     }
 
+    public static void startActivity(Context context, Class clazz){
+        startActivity(context, new Intent(context, clazz));
+    }
+
+    public static void startActivity(Context context, Intent intent){
+        context.startActivity(intent);
+    }
 
     public static void startActivityIfTokenValid(Context context, Intent intent){
         if(false){

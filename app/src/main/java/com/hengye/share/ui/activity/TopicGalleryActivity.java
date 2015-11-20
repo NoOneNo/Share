@@ -1,4 +1,4 @@
-package com.hengye.share;
+package com.hengye.share.ui.activity;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -8,7 +8,6 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -17,9 +16,11 @@ import android.widget.TextView;
 
 import com.android.volley.error.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.hengye.share.BaseActivity;
+import com.hengye.share.R;
 import com.hengye.share.module.Topic;
 import com.hengye.share.util.L;
-import com.hengye.share.view.TouchImageView;
+import com.hengye.share.ui.view.TouchImageView;
 import com.hengye.volleyplus.toolbox.RequestManager;
 
 import java.util.ArrayList;
@@ -33,6 +34,11 @@ public class TopicGalleryActivity extends BaseActivity {
     //默认从0开始
     private int mIndexNow = 0;
     private ArrayList<String> urls;
+
+    @Override
+    protected boolean setToolBar() {
+        return false;
+    }
 
     @Override
     protected boolean setCustomTheme() {

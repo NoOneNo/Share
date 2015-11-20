@@ -10,4 +10,23 @@
 
     <string name="topic_gallery_image_large">原图</string>
 
+    <!-- Strings related to activity title-->
+    <string name="title_activity_login">Sign in</string>
+    <string name="title_activity_setting">设置</string>
+    <!-- Strings related to activity title-->
+
+    <!-- Strings related to login -->
+
+    <string name="prompt_username">Username</string>
+    <string name="prompt_password">Password</string>
+
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+
+    <!-- Strings related to login -->
 </resources>

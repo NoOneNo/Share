@@ -1,4 +1,4 @@
-package com.hengye.share;
+package com.hengye.share.ui.activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -24,6 +24,9 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.hengye.share.BaseActivity;
+import com.hengye.share.R;
 
 import java.util.ArrayList;
 import java.util.List;

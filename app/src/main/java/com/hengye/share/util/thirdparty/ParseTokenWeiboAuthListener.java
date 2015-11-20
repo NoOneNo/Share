@@ -1,7 +1,8 @@
-package com.hengye.share.util;
+package com.hengye.share.util.thirdparty;
 
 import android.os.Bundle;
 
+import com.hengye.share.util.L;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.auth.WeiboAuthListener;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;

@@ -18,10 +18,10 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/ShareAppTheme"
+        android:theme="@style/ShareAppTheme.Green"
         android:name=".BaseApplication">
         <activity
-            android:name=".MainActivity"
+            android:name="com.hengye.share.ui.activity.MainActivity"
             android:launchMode="singleTop"
             android:label="@string/app_name">
             <intent-filter>
@@ -31,26 +31,31 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name="com.hengye.share.ui.activity.LoginActivity"
             android:label="@string/title_activity_login"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.hengye.share.ui.activity.MainActivity"
             android:windowSoftInputMode="adjustResize|stateVisible" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.hengye.share.MainActivity" />
+                android:value="com.hengye.share.ui.activity.MainActivity" />
         </activity>
 
         <activity
-            android:name=".TopicGalleryActivity"
-            android:parentActivityName=".MainActivity"
+            android:name="com.hengye.share.ui.activity.TopicGalleryActivity"
+            android:parentActivityName="com.hengye.share.ui.activity.MainActivity"
             android:theme="@style/FullScreen">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.hengye.share.MainActivity" />
+                android:value="com.hengye.share.ui.activity.MainActivity" />
         </activity>
 
         <activity
-            android:name=".TestActivity">
+            android:name="com.hengye.share.ui.activity.SettingActivity"
+            android:label="@string/title_activity_setting">
+        </activity>
+
+        <activity
+            android:name="com.hengye.share.ui.activity.TestActivity">
         </activity>
     </application>
 

@@ -1,4 +1,4 @@
-package com.hengye.share.util;
+package com.hengye.share.util.thirdparty;
 
 import android.os.Bundle;
 
@@ -8,6 +8,8 @@ import com.android.volley.request.GsonRequest;
 import com.hengye.share.module.Topic;
 import com.hengye.share.module.UserInfo;
 import com.hengye.share.module.sina.WBUserInfo;
+import com.hengye.share.util.RequestFactory;
+import com.hengye.share.util.SPUtil;
 import com.hengye.volleyplus.toolbox.RequestManager;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;

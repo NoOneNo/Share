@@ -4,46 +4,31 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.Html;
 import android.text.Selection;
-import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.TextPaint;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.view.NetworkImageView;
 import com.android.volley.view.NetworkImageViewPlus;
-import com.hengye.share.LoginActivity;
 import com.hengye.share.R;
-import com.hengye.share.TopicGalleryActivity;
+import com.hengye.share.ui.activity.TopicGalleryActivity;
 import com.hengye.share.module.Topic;
 import com.hengye.share.module.sina.WBUtil;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DateUtil;
-import com.hengye.share.util.IntentUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.SimpleClickableSpan;
 import com.hengye.share.util.SimpleLinkMovementMethod;
 import com.hengye.share.util.ViewUtil;
 import com.hengye.volleyplus.toolbox.RequestManager;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

@@ -3,6 +3,8 @@ package com.hengye.share;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.hengye.share.util.SPUtil;
 import com.hengye.volleyplus.toolbox.RequestManager;
@@ -10,13 +12,16 @@ import com.hengye.volleyplus.toolbox.RequestManager;
 public class BaseActivity extends AppCompatActivity {
 
     protected String getRequestTag(){
-        return "";
+        return null;
     }
 
     protected boolean setCustomTheme(){
         return true;
     }
 
+    protected boolean setToolBar(){
+        return true;
+    }
     private int mThemeResId = 0;
 
     @Override
@@ -34,13 +39,20 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         replaceCustomThemeIfNeeded();
+        setToolBarIfNeeded();
         super.onResume();
     }
 
     @Override
     protected void onDestroy() {
-        RequestManager.cancelPendingRequests(getRequestTag());
+        cancelPendingRequestsIfNeeded();
         super.onDestroy();
+    }
+
+    protected void cancelPendingRequestsIfNeeded(){
+        if(getRequestTag() != null){
+            RequestManager.cancelPendingRequests(getRequestTag());
+        }
     }
 
     protected void setCustomThemeIfNeeded(Bundle savedInstanceState){
@@ -68,5 +80,20 @@ public class BaseActivity extends AppCompatActivity {
         finish();
         overridePendingTransition(0, 0);
         startActivity(intent);
+    }
+
+    protected void setToolBarIfNeeded(){
+        if(setToolBar()) {
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            if (toolbar != null) {
+                toolbar.setTitle(getTitle());
+                toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onBackPressed();
+                    }
+                });
+            }
+        }
     }
 }

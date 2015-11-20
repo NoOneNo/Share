@@ -1,10 +1,13 @@
-package com.hengye.share;
+package com.hengye.share.ui.activity;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
 import android.view.View;
+
+import com.hengye.share.BaseActivity;
+import com.hengye.share.R;
 
 import java.util.concurrent.TimeUnit;
 

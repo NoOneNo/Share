@@ -1,4 +1,4 @@
-package com.hengye.share;
+package com.hengye.share.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,7 +16,6 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +24,8 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
 import com.android.volley.view.NetworkImageView;
 import com.google.gson.reflect.TypeToken;
+import com.hengye.share.BaseActivity;
+import com.hengye.share.R;
 import com.hengye.share.adapter.RecyclerViewSimpleAdapter;
 import com.hengye.share.adapter.RecyclerViewTopicAdapter;
 import com.hengye.share.module.Topic;
@@ -35,12 +36,13 @@ import com.hengye.share.module.sina.WBUserInfo;
 import com.hengye.share.module.sina.WBUtil;
 import com.hengye.share.support.ActionBarDrawerToggleCustom;
 import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.IntentUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.SPUtil;
-import com.hengye.share.util.SaveUserInfoWeiboAuthListener;
-import com.hengye.share.util.ThirdPartyUtils;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
+import com.hengye.share.util.thirdparty.SaveUserInfoWeiboAuthListener;
+import com.hengye.share.util.thirdparty.ThirdPartyUtils;
 import com.hengye.swiperefresh.PullToRefreshLayout;
 import com.hengye.volleyplus.toolbox.RequestManager;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
@@ -56,6 +58,11 @@ public class MainActivity extends BaseActivity
     @Override
     protected String getRequestTag() {
         return "MainActivity";
+    }
+
+    @Override
+    protected boolean setToolBar() {
+        return false;
     }
 
     @Override
@@ -219,7 +226,7 @@ public class MainActivity extends BaseActivity
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
-
+            IntentUtil.startActivity(this, SettingActivity.class);
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {

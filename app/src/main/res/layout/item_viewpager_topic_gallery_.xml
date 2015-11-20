@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="#000000">
      	  
-	<com.hengye.share.view.TouchImageView
+	<com.hengye.share.ui.view.TouchImageView
 	    android:id="@+id/select_photo_gallery_fragment_iv"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
