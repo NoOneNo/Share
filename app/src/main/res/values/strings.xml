@@ -60,5 +60,19 @@
     <string name="title_setting_preread">预读模式</string>
     <string name="title_setting_preread_summary">当内容快浏览到尽头时提前加载避免等待</string>
     <string name="title_setting_load_count">每次加载获取内容的条数</string>
+    <string name="title_setting_photo">图片</string>
+    <string name="title_setting_photo_download_quality">图片加载质量</string>
+    <string name="title_setting_photo_upload_quality">图片上传的默认质量</string>
+
+    <string name="title_setting_ringing">铃声设置</string>
+    <string name="title_setting_mute">静音模式</string>
+    <string name="title_setting_mute_summary">关闭一切提醒音效</string>
+    <string name="title_setting_pull_to_refresh">下拉刷新音效</string>
+    <string name="title_setting_pull_to_refresh_summary">下拉刷新成功后播放提示音</string>
+
+    <string name="title_setting_shock">震动设置</string>
+    <string name="title_setting_shock_open">开启震动</string>
+    <string name="title_setting_shock_after_send_success">震动反馈</string>
+    <string name="title_setting_shock_after_send_success_summary">内容发送成功后震动反馈</string>
     <!-- Strings related to setting -->
 </resources>

@@ -7,13 +7,13 @@
     <color name="theme_blue_primary_dark">#203F9F</color>
     <!--<color name="theme_blue_highlight">#443F51B5</color>-->
     <!--<color name="theme_blue_secondary_dark">#203F9F</color>-->
-    <color name="theme_blue_accent">#FF4081</color>
+    <color name="theme_blue_accent">#203F9F</color>
 
     <color name="theme_green_primary">#50BBA7</color>
     <color name="theme_green_primary_dark">#309887</color>
     <!--<color name="theme_green_highlight">#4450BBA7</color>-->
     <!--<color name="theme_green_secondary_dark">#309887</color>-->
-    <color name="theme_green_accent">#FF4081</color>
+    <color name="theme_green_accent">#309887</color>
     <!-- Strings related to theme-->
 
 

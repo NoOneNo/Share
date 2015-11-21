@@ -18,10 +18,6 @@ public class SettingFlowControlFragment extends BasePreferenceFragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref_setting_flow_control);
-
-
-        String str = getPreferenceManager().getSharedPreferences().getString(getString(R.string.title_setting_load_count), "not found");
-        L.debug("load count value : {}", str);
     }
 
     @Override

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.hengye.share.ui.activity.setting.SettingActivity">
+    <PreferenceCategory android:title="@string/title_setting_ringing">
+        <SwitchPreference
+            android:key="@string/title_setting_mute"
+            android:title="@string/title_setting_mute"
+            android:summary="@string/title_setting_mute_summary"
+            android:defaultValue="false"/>
+        <CheckBoxPreference
+            android:key="@string/title_setting_pull_to_refresh"
+            android:title="@string/title_setting_pull_to_refresh"
+            android:summary="@string/title_setting_pull_to_refresh_summary"
+            android:defaultValue="true"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/title_setting_shock">
+        <SwitchPreference
+            android:key="@string/title_setting_shock_open"
+            android:title="@string/title_setting_shock_open"
+            android:defaultValue="true"/>
+        <CheckBoxPreference
+            android:key="@string/title_setting_shock_after_send_success"
+            android:title="@string/title_setting_shock_after_send_success"
+            android:summary="@string/title_setting_shock_after_send_success_summary"
+            android:defaultValue="true"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

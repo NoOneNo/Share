@@ -15,8 +15,7 @@ import com.hengye.share.R;
 import com.hengye.share.ui.fragment.BasePreferenceFragment;
 import com.hengye.share.util.L;
 
-public class SettingFragment extends BasePreferenceFragment
-        implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingFragment extends BasePreferenceFragment {
 
     @Override
     public String getTitle() {
@@ -24,11 +23,14 @@ public class SettingFragment extends BasePreferenceFragment
     }
 
     @Override
+    protected boolean isRegisterOnSharedPreferenceChangeListener() {
+        return true;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref_setting);
-        PreferenceManager.getDefaultSharedPreferences(getActivity())
-                .registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -44,8 +46,6 @@ public class SettingFragment extends BasePreferenceFragment
     @Override
     public void onDetach() {
         super.onDetach();
-        PreferenceManager.getDefaultSharedPreferences(getActivity())
-                .unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -86,10 +86,10 @@ public class SettingFragment extends BasePreferenceFragment
                 getFragmentManager().
                         beginTransaction().
                         setCustomAnimations(
-                                R.anim.fragment_left_enter,
-                                R.anim.fragment_right_exit,
-                                R.anim.fragment_pop_right_enter,
-                                R.anim.fragment_pop_left_exit).
+                                R.anim.fragment_enter,
+                                R.anim.fragment_exit,
+                                R.anim.fragment_pop_enter,
+                                R.anim.fragment_pop_exit).
                         replace(R.id.content, clazz.newInstance()).
                         addToBackStack(null).
                         commit();

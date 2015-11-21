@@ -1,8 +1,10 @@
 package com.hengye.share.ui.fragment;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +12,35 @@ import android.widget.ListView;
 
 import com.hengye.share.BaseActivity;
 
-public abstract class BasePreferenceFragment extends PreferenceFragment {
+public abstract class BasePreferenceFragment extends PreferenceFragment
+        implements SharedPreferences.OnSharedPreferenceChangeListener{
 
     protected abstract String getTitle();
 
     protected boolean isHideScrollBar(){
         return true;
+    }
+
+    protected boolean isRegisterOnSharedPreferenceChangeListener(){
+        return false;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(isRegisterOnSharedPreferenceChangeListener()){
+            PreferenceManager.getDefaultSharedPreferences(getActivity())
+                    .registerOnSharedPreferenceChangeListener(this);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if(isRegisterOnSharedPreferenceChangeListener()) {
+            PreferenceManager.getDefaultSharedPreferences(getActivity())
+                    .unregisterOnSharedPreferenceChangeListener(this);
+        }
     }
 
     @Override
@@ -37,5 +62,10 @@ public abstract class BasePreferenceFragment extends PreferenceFragment {
             BaseActivity activity = (BaseActivity) getActivity();
             activity.updateToolbarTitle(getTitle());
         }
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
     }
 }

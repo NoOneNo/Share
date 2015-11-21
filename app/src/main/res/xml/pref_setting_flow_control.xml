@@ -15,30 +15,24 @@
             android:summary="%s"
             android:entries="@array/load_count"
             android:entryValues="@array/load_count_value"
-            android:defaultValue="1"/>
-        <Preference
-            android:key="@string/title_setting_common_sound_control"
-            android:title="@string/title_setting_common_sound_control"/>
-        <Preference
-            android:key="@string/title_setting_common_notify"
-            android:title="@string/title_setting_common_notify"/>
+            android:defaultValue="4"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/title_setting_show">
-        <Preference
-            android:key="@string/title_setting_show_theme"
-            android:title="@string/title_setting_show_theme"/>
-        <Preference
-            android:key="@string/title_setting_show_reading_habit"
-            android:title="@string/title_setting_show_reading_habit"/>
+    <PreferenceCategory android:title="@string/title_setting_photo">
+        <ListPreference
+            android:key="@string/title_setting_photo_download_quality"
+            android:title="@string/title_setting_photo_download_quality"
+            android:summary="%s"
+            android:entries="@array/photo_download_quality"
+            android:entryValues="@array/photo_download_quality_value"
+            android:defaultValue="5"/>
+        <ListPreference
+            android:key="@string/title_setting_photo_upload_quality"
+            android:title="@string/title_setting_photo_upload_quality"
+            android:summary="%s"
+            android:entries="@array/photo_upload_quality"
+            android:entryValues="@array/photo_upload_quality_value"
+            android:defaultValue="2"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/title_setting_other">
-        <Preference
-            android:key="@string/title_setting_other_feedback"
-            android:title="@string/title_setting_other_feedback"/>
-        <Preference
-            android:key="@string/title_setting_other_about"
-            android:title="@string/title_setting_other_about"/>
-    </PreferenceCategory>
 </PreferenceScreen>

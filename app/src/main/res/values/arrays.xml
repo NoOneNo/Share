@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- 预读模式 -->
     <string-array name="load_count">
         <item>30</item>
         <item>50</item>
@@ -13,4 +14,39 @@
         <item>3</item>
         <item>4</item>
     </string-array>
+    <!-- 预读模式 -->
+
+    <!-- 图片加载质量 -->
+    <string-array name="photo_download_quality">
+        <item>无图</item>
+        <item>缩略图</item>
+        <item>高清图</item>
+        <item>原图(加载慢，不建议选择)</item>
+        <item>自动</item>
+    </string-array>
+    <string-array name="photo_download_quality_value">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+    <!-- 图片加载质量 -->
+
+    <!-- 图片上传质量 -->
+    <string-array name="photo_upload_quality">
+        <item>压缩处理</item>
+        <item>原图</item>
+        <item>自动</item>
+    </string-array>
+    <string-array name="photo_upload_quality_value">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <!-- 图片上传质量 -->
+
+    <!-- 音效设置 -->
+
+    <!-- 音效设置 -->
 </resources>
