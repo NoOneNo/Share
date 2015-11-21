@@ -35,6 +35,7 @@ import com.hengye.share.module.sina.WBTopicIds;
 import com.hengye.share.module.sina.WBUserInfo;
 import com.hengye.share.module.sina.WBUtil;
 import com.hengye.share.support.ActionBarDrawerToggleCustom;
+import com.hengye.share.ui.activity.setting.SettingActivity;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.IntentUtil;
 import com.hengye.share.util.L;
@@ -188,10 +189,8 @@ public class MainActivity extends BaseActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_set1) {
             SPUtil.setAppTheme(SPUtil.THEME_COLOR_BLUE);
-            return true;
         } else if (id == R.id.action_set2) {
             SPUtil.setAppTheme(SPUtil.THEME_COLOR_GREEN);
-            return true;
         } else if (id == R.id.action_login) {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
@@ -233,8 +232,8 @@ public class MainActivity extends BaseActivity
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.END);
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        drawer.closeDrawer(GravityCompat.END);
         return true;
     }
 

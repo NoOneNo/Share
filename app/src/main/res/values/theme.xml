@@ -11,27 +11,32 @@
     </style>
 
     <style name="ShareAppTheme.Blue">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
-        <item name="android:navigationBarColor">@color/colorPrimary</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <!-- 用于Toolbar的颜色设置 -->
+        <item name="colorPrimary">@color/theme_blue_primary</item>
+        <!-- 用于状态栏的颜色设置 -->
+        <item name="colorPrimaryDark">@color/theme_blue_primary</item>
+        <!-- 用于侧滑页的头部变换色 -->
+        <item name="android:colorPressedHighlight">@color/theme_blue_primary_dark</item>
+        <!-- 用于控制点击波纹的颜色 -->
+        <!--<item name="colorControlHighlight">@color/theme_blue_highlight</item>-->
+        <!--<item name="android:navigationBarColor">@color/theme_blue_primary</item>-->
+        <item name="colorAccent">@color/theme_blue_accent</item>
     </style>
 
 
     <style name="ShareAppTheme.Green">
-        <item name="colorPrimary">#FF50BBA7</item>
-        <item name="colorPrimaryDark">#FF50BBA7</item>
-        <item name="android:navigationBarColor">#FF50BBA7</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/theme_green_primary</item>
+        <item name="colorPrimaryDark">@color/theme_green_primary</item>
+        <item name="android:colorPressedHighlight">@color/theme_green_primary_dark</item>
+        <!--<item name="colorControlHighlight">@color/theme_green_highlight</item>-->
+        <!--<item name="android:navigationBarColor">@color/theme_green_primary</item>-->
+        <item name="colorAccent">@color/theme_green_accent</item>
     </style>
 
-    <!--<style name="ShareAppTheme.Green.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />-->
-    <!--<style name="ShareAppTheme.Green.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />-->
-
-
-    <!--<style name="ShareAppTheme.NoActionBar">-->
-        <!--<item name="windowActionBar">false</item>-->
-        <!--<item name="windowNoTitle">true</item>-->
+    <!--<style name="ShareAppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >-->
+        <!--<item name="colorPrimary">?attr/colorPrimary</item>-->
+        <!--<item name="colorControlHighlight">?attr/colorControlHighlight</item>-->
     <!--</style>-->
+    <!--<style name="ShareAppTheme.Green.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />-->
 
 </resources>

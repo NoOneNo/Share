@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.hengye.share.ui.activity.setting.SettingActivity">
+    <PreferenceCategory android:title="@string/title_setting_common">
+        <Preference
+            android:key="@string/title_setting_common_basic"
+            android:title="@string/title_setting_common_basic">
+        </Preference>
+        <Preference
+            android:key="@string/title_setting_common_flow_control"
+            android:title="@string/title_setting_common_flow_control"/>
+        <Preference
+            android:key="@string/title_setting_common_sound_control"
+            android:title="@string/title_setting_common_sound_control"/>
+        <Preference
+            android:key="@string/title_setting_common_notify"
+            android:title="@string/title_setting_common_notify"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/title_setting_show">
+        <Preference
+            android:key="@string/title_setting_show_theme"
+            android:title="@string/title_setting_show_theme"/>
+        <Preference
+            android:key="@string/title_setting_show_reading_habit"
+            android:title="@string/title_setting_show_reading_habit"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/title_setting_other">
+        <Preference
+            android:key="@string/title_setting_other_feedback"
+            android:title="@string/title_setting_other_feedback"/>
+        <Preference
+            android:key="@string/title_setting_other_about"
+            android:title="@string/title_setting_other_about"/>
+    </PreferenceCategory>
+</PreferenceScreen>

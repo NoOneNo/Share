@@ -50,7 +50,11 @@
         </activity>
 
         <activity
-            android:name="com.hengye.share.ui.activity.SettingActivity"
+            android:name=".ui.activity.FragmentActivity">
+        </activity>
+
+        <activity
+            android:name=".ui.activity.setting.SettingActivity"
             android:label="@string/title_activity_setting">
         </activity>
 

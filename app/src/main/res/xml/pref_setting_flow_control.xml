@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.hengye.share.ui.activity.setting.SettingActivity">
+    <PreferenceCategory android:title="@string/title_setting_common">
+        <SwitchPreference
+            android:key="@string/title_setting_preread"
+            android:title="@string/title_setting_preread"
+            android:summary="@string/title_setting_preread_summary"
+            android:defaultValue="true"/>
+        <ListPreference
+            android:key="@string/title_setting_load_count"
+            android:title="@string/title_setting_load_count"
+            android:summary="%s"
+            android:entries="@array/load_count"
+            android:entryValues="@array/load_count_value"
+            android:defaultValue="1"/>
+        <Preference
+            android:key="@string/title_setting_common_sound_control"
+            android:title="@string/title_setting_common_sound_control"/>
+        <Preference
+            android:key="@string/title_setting_common_notify"
+            android:title="@string/title_setting_common_notify"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/title_setting_show">
+        <Preference
+            android:key="@string/title_setting_show_theme"
+            android:title="@string/title_setting_show_theme"/>
+        <Preference
+            android:key="@string/title_setting_show_reading_habit"
+            android:title="@string/title_setting_show_reading_habit"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/title_setting_other">
+        <Preference
+            android:key="@string/title_setting_other_feedback"
+            android:title="@string/title_setting_other_feedback"/>
+        <Preference
+            android:key="@string/title_setting_other_about"
+            android:title="@string/title_setting_other_about"/>
+    </PreferenceCategory>
+</PreferenceScreen>

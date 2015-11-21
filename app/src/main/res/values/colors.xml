@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+<resources
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Strings related to theme-->
+    <color name="theme_blue_primary">#3F51B5</color>
+    <color name="theme_blue_primary_dark">#203F9F</color>
+    <!--<color name="theme_blue_highlight">#443F51B5</color>-->
+    <!--<color name="theme_blue_secondary_dark">#203F9F</color>-->
+    <color name="theme_blue_accent">#FF4081</color>
+
+    <color name="theme_green_primary">#50BBA7</color>
+    <color name="theme_green_primary_dark">#309887</color>
+    <!--<color name="theme_green_highlight">#4450BBA7</color>-->
+    <!--<color name="theme_green_secondary_dark">#309887</color>-->
+    <color name="theme_green_accent">#FF4081</color>
+    <!-- Strings related to theme-->
+
 
     <color name="topic_username">#FF4081</color>
     <color name="topic_description">#9a9a9a</color>
@@ -10,11 +23,12 @@
 
     <color name="topic_name_at">#5061BB</color>
 
-    <color name="material_grey_900">#ff212121</color>
-    <color name="material_grey_850">#ff303030</color>
-    <color name="material_grey_800">#ff424242</color>
-    <color name="material_grey_600">#ff757575</color>
-    <color name="material_grey_300">#ffe0e0e0</color>
-    <color name="material_grey_100">#fff5f5f5</color>
-    <color name="material_grey_50">#fffafafa</color>
+
+    <color name="material_grey_900" tools:override="true">#ff212121</color>
+    <color name="material_grey_850" tools:override="true">#ff303030</color>
+    <color name="material_grey_800" tools:override="true">#ff424242</color>
+    <color name="material_grey_600" tools:override="true">#ff757575</color>
+    <color name="material_grey_300" tools:override="true">#ffe0e0e0</color>
+    <color name="material_grey_100" tools:override="true">#fff5f5f5</color>
+    <color name="material_grey_50" tools:override="true">#fffafafa</color>
 </resources>

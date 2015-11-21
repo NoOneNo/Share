@@ -15,8 +15,20 @@
     <string name="title_activity_setting">设置</string>
     <!-- Strings related to activity title-->
 
-    <!-- Strings related to login -->
+    <!-- Strings related to fragment title-->
+    <string name="title_fragment_setting">设置</string>
+    <string name="title_fragment_basic_setting">基本设置</string>
+    <string name="title_fragment_flow_control">流量控制</string>
+    <string name="title_fragment_sound_control">音效管理</string>
+    <string name="title_fragment_notify">通知设置</string>
+    <string name="title_fragment_theme">主题</string>
+    <string name="title_fragment_reading_habit">阅读习惯</string>
+    <string name="title_fragment_feedback">意见反馈</string>
+    <string name="title_fragment_about">关于</string>
+    <!-- Strings related to fragment title-->
 
+
+    <!-- Strings related to login -->
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
 
@@ -27,6 +39,26 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
-
     <!-- Strings related to login -->
+
+    <!-- Strings related to setting -->
+    <string name="title_setting_common">常规设置</string>
+    <string name="title_setting_common_basic">基本设置</string>
+    <string name="title_setting_common_flow_control">流量控制</string>
+    <string name="title_setting_common_sound_control">音效管理</string>
+    <string name="title_setting_common_notify">通知设置</string>
+
+    <string name="title_setting_show">显示设置</string>
+    <string name="title_setting_show_theme">主题</string>
+    <string name="title_setting_show_reading_habit">阅读习惯</string>
+
+    <string name="title_setting_other">其他</string>
+    <string name="title_setting_other_feedback">意见反馈</string>
+    <string name="title_setting_other_about">关于</string>
+
+
+    <string name="title_setting_preread">预读模式</string>
+    <string name="title_setting_preread_summary">当内容快浏览到尽头时提前加载避免等待</string>
+    <string name="title_setting_load_count">每次加载获取内容的条数</string>
+    <!-- Strings related to setting -->
 </resources>
