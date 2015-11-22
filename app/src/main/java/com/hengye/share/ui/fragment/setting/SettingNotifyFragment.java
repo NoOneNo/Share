@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
+import android.preference.RingtonePreference;
 import android.text.TextUtils;
 
 import com.hengye.share.BaseApplication;
@@ -57,38 +58,8 @@ public class SettingNotifyFragment extends BasePreferenceFragment {
         updateNotifyTypeSummary();
 
         mRingtone = findPreference(SettingHelper.KEY_NOTIFY_RINGTONE);
-        mRingtone.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                startActivityForResult(getRingtoneIntent(), REQUEST_RINGTONE);
-                return true;
-            }
-        });
 
         updateRingtoneSummary();
-    }
-
-    private Intent getRingtoneIntent() {
-        Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE,
-                getString(R.string.title_setting_remind_by_ringtone));
-        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, true);
-        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
-        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE,
-                RingtoneManager.TYPE_NOTIFICATION);
-        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, Uri.parse(SettingHelper.getRingtone()));
-        return intent;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == REQUEST_RINGTONE && resultCode == Activity.RESULT_OK){
-            Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-            if (uri != null) {
-                SettingHelper.setRingtone(uri.toString());
-            }
-            updateRingtoneSummary();
-        }
     }
 
     private void updateRingtoneSummary() {
@@ -105,6 +76,8 @@ public class SettingNotifyFragment extends BasePreferenceFragment {
         if (key.equals(SettingHelper.KEY_NOTIFY_OPEN)) {
             setNotifyItemsEnable(SettingHelper.isNotifyOpen());
         } else if (key.equals(SettingHelper.KEY_NOTIFY_TYPE)) {
+            updateNotifyTypeSummary();
+        } else if(key.equals(SettingHelper.KEY_NOTIFY_RINGTONE)){
             updateNotifyTypeSummary();
         }
     }

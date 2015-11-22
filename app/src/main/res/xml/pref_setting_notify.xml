@@ -31,9 +31,12 @@
             android:entryValues="@array/notify_type_value"
             android:defaultValue="@array/notify_type_default_value"/>
 
-        <Preference
+        <RingtonePreference
             android:key="remind_by_ringtone"
-            android:title="@string/title_setting_remind_by_ringtone"/>
+            android:title="@string/title_setting_remind_by_ringtone"
+            android:ringtoneType="ringtone"
+            android:showDefault="true"
+            android:showSilent="true"/>
 
         <CheckBoxPreference
             android:key="remind_by_vibration"

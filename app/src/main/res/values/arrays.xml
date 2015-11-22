@@ -83,4 +83,26 @@
         <item>5</item>
     </string-array>
     <!-- 提醒时间间隔 -->
+
+    <!-- 功能菜单显示风格 -->
+    <string-array name="menu_show_style">
+        <item>对话框</item>
+        <item>弹出菜单</item>
+    </string-array>
+    <string-array name="menu_show_style_value">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <!-- 提醒时间间隔 -->
+
+    <!-- 阅读顺序 -->
+    <string-array name="reader_order">
+        <item>顺序阅读</item>
+        <item>逆序阅读</item>
+    </string-array>
+    <string-array name="reader_order_value">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <!-- 阅读顺序 -->
 </resources>

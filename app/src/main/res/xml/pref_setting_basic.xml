@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.hengye.share.ui.activity.setting.SettingActivity">
+
+    <PreferenceCategory android:title="@string/title_setting_common">
+
+        <CheckBoxPreference
+            android:key="check_update"
+            android:title="@string/title_setting_launch_check_update"
+            android:defaultValue="true"/>
+
+        <CheckBoxPreference
+            android:key="slide_back"
+            android:title="@string/title_setting_slide_back"
+            android:summary="@string/title_setting_slide_back_summary"
+            android:defaultValue="true"/>
+
+        <SwitchPreference
+            android:key="home_back"
+            android:title="@string/title_setting_home_back"
+            android:summary="@string/title_setting_home_back_summary"
+            android:defaultValue="false"/>
+
+        <EditTextPreference
+            android:key="photo_save_path"
+            android:title="@string/title_setting_photo_save_path"/>
+
+        <CheckBoxPreference
+            android:key="click_photo_back"
+            android:title="@string/title_setting_click_photo_back"
+            android:defaultValue="true"/>
+
+        <Preference
+            android:key="clear_photo_cache"
+            android:title="@string/title_setting_clear_photo_cache"
+            android:defaultValue="true"/>
+
+        <CheckBoxPreference
+            android:key="internal_browser"
+            android:title="@string/title_setting_internal_browser"
+            android:defaultValue="true"/>
+
+    </PreferenceCategory>
+</PreferenceScreen>

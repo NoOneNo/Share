@@ -56,6 +56,15 @@
     <string name="title_setting_other_feedback">意见反馈</string>
     <string name="title_setting_other_about">关于</string>
 
+    <string name="title_setting_launch_check_update">启动时检查更新</string>
+    <string name="title_setting_slide_back">滑动后退</string>
+    <string name="title_setting_slide_back_summary">二级页面向右滑动执行返回操作</string>
+    <string name="title_setting_home_back">首页按返回键退出</string>
+    <string name="title_setting_home_back_summary">首页按返回键退出应用，不在后台运行</string>
+    <string name="title_setting_photo_save_path">图片保存路径</string>
+    <string name="title_setting_click_photo_back">点击图片返回</string>
+    <string name="title_setting_clear_photo_cache">清除图片缓存</string>
+    <string name="title_setting_internal_browser">使用内置浏览器</string>
 
     <string name="title_setting_preread">预读模式</string>
     <string name="title_setting_preread_summary">当内容快浏览到尽头时提前加载避免等待</string>
@@ -90,5 +99,15 @@
     <string name="title_setting_no_remind_at_night">夜间免打扰</string>
     <string name="title_setting_no_remind_at_night_summary">凌晨1点到早上8点关闭通知提醒</string>
     <string name="title_setting_notify_frequency">提醒时间间隔</string>
+
+    <string name="title_setting_font_zoom">字体缩放</string>
+    <string name="title_setting_menu_show_style">功能菜单显示风格</string>
+    <string name="title_setting_show_avator">显示头像</string>
+    <string name="title_setting_show_avator_summary">关闭可以节省流量</string>
+    <string name="title_setting_browse">浏览设置</string>
+    <string name="title_setting_read_order">阅读顺序</string>
+    <string name="title_setting_read_order_summary">「顺序阅读」表示刷新时总是从最新微博开始阅读，「逆序阅读」表示刷新时保留上次的阅读位置，从加载新微博的最后一条向最新阅读</string>
+    <string name="title_setting_auto_night_mode">自动进入夜间模式</string>
+
     <!-- Strings related to setting -->
 </resources>
