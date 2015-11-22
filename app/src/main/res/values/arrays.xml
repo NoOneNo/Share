@@ -46,7 +46,41 @@
     </string-array>
     <!-- 图片上传质量 -->
 
-    <!-- 音效设置 -->
+    <!-- 提醒类型 -->
+    <string-array name="notify_type">
+        <item>评论</item>
+        <item>\@我</item>
+        <item>私信</item>
+        <item>新粉丝</item>
+    </string-array>
+    <string-array name="notify_type_value">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+    <string-array name="notify_type_default_value">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+    <!-- 提醒类型 -->
 
-    <!-- 音效设置 -->
+    <!-- 提醒时间间隔 -->
+    <string-array name="notify_frequency">
+        <item>1分钟</item>
+        <item>5分钟</item>
+        <item>15分钟</item>
+        <item>半小时</item>
+        <item>1小时</item>
+    </string-array>
+    <string-array name="notify_frequency_value">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+    <!-- 提醒时间间隔 -->
 </resources>

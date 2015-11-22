@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.hengye.share.ui.activity.setting.SettingActivity">
+    <SwitchPreference
+        android:key="notify_open"
+        android:title="@string/title_setting_notify_open"
+        android:defaultValue="true"/>
+
+    <PreferenceCategory android:title="@string/title_setting_remind">
+
+        <CheckBoxPreference
+            android:key="no_remind_at_night"
+            android:title="@string/title_setting_no_remind_at_night"
+            android:summary="@string/title_setting_no_remind_at_night_summary"
+            android:defaultValue="true"/>
+
+        <ListPreference
+            android:key="notify_frequency"
+            android:title="@string/title_setting_notify_frequency"
+            android:entries="@array/notify_frequency"
+            android:entryValues="@array/notify_frequency_value"
+            android:summary="%s"
+            android:defaultValue="1"/>
+
+        <MultiSelectListPreference
+            android:key="remind_type"
+            android:title="@string/title_setting_remind_type"
+            android:entries="@array/notify_type"
+            android:entryValues="@array/notify_type_value"
+            android:defaultValue="@array/notify_type_default_value"/>
+
+        <Preference
+            android:key="remind_by_ringtone"
+            android:title="@string/title_setting_remind_by_ringtone"/>
+
+        <CheckBoxPreference
+            android:key="remind_by_vibration"
+            android:title="@string/title_setting_remind_by_vibration"
+            android:defaultValue="true"/>
+
+        <CheckBoxPreference
+            android:key="remind_by_lights"
+            android:title="@string/title_setting_remind_by_lights"
+            android:defaultValue="true"/>
+    </PreferenceCategory>
+</PreferenceScreen>

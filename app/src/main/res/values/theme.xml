@@ -11,6 +11,8 @@
     </style>
 
     <style name="ShareAppTheme.Blue">
+        <!-- 用于虚拟按键的颜色设置 -->
+        <item name="android:navigationBarColor">@color/theme_blue_primary</item>
         <!-- 用于Toolbar的颜色设置 -->
         <item name="colorPrimary">@color/theme_blue_primary</item>
         <!-- 用于状态栏的颜色设置 -->
@@ -19,17 +21,16 @@
         <item name="android:colorPressedHighlight">@color/theme_blue_primary_dark</item>
         <!-- 用于控制点击波纹的颜色 -->
         <!--<item name="colorControlHighlight">@color/theme_blue_highlight</item>-->
-        <!--<item name="android:navigationBarColor">@color/theme_blue_primary</item>-->
         <item name="colorAccent">@color/theme_blue_accent</item>
     </style>
 
 
     <style name="ShareAppTheme.Green">
+        <item name="android:navigationBarColor">@color/theme_green_primary</item>
         <item name="colorPrimary">@color/theme_green_primary</item>
         <item name="colorPrimaryDark">@color/theme_green_primary</item>
         <item name="android:colorPressedHighlight">@color/theme_green_primary_dark</item>
         <!--<item name="colorControlHighlight">@color/theme_green_highlight</item>-->
-        <!--<item name="android:navigationBarColor">@color/theme_green_primary</item>-->
         <item name="colorAccent">@color/theme_green_accent</item>
     </style>
 

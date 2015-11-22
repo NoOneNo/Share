@@ -134,7 +134,7 @@ public class MainActivity extends BaseActivity
                     return;
                 }
                 String id = 0 + "";
-                if (!CommonUtil.isEmptyList(mAdapter.getDatas())) {
+                if (!CommonUtil.isEmptyCollection(mAdapter.getDatas())) {
                     id = mAdapter.getDatas().get(0).getId();
                 }
                 RequestManager.addToRequestQueue(getWBTopicIdsRequest(mWBAccessToken.getToken(), id));
@@ -143,7 +143,7 @@ public class MainActivity extends BaseActivity
         mPullToRefreshLayout.setOnLoadListener(new PullToRefreshLayout.OnLoadListener() {
             @Override
             public void onLoad() {
-                if (!CommonUtil.isEmptyList(mAdapter.getDatas())) {
+                if (!CommonUtil.isEmptyCollection(mAdapter.getDatas())) {
                     String id = CommonUtil.getLastItem(mAdapter.getDatas()).getId();
                     RequestManager.addToRequestQueue(getWBTopicRequest(mWBAccessToken.getToken(), id, false));
                 } else {
@@ -320,9 +320,9 @@ public class MainActivity extends BaseActivity
                 if (isRefresh) {
                     //下拉刷新
                     mPullToRefreshLayout.setRefreshing(false);
-                    if (!CommonUtil.isEmptyList(mAdapter.getDatas())) {
+                    if (!CommonUtil.isEmptyCollection(mAdapter.getDatas())) {
                         //微博属于刷新
-                        if (CommonUtil.isEmptyList(datas)) {
+                        if (CommonUtil.isEmptyCollection(datas)) {
                             //没有内容更新
                             Snackbar.make(mPullToRefreshLayout, "没有新的微博", Snackbar.LENGTH_SHORT).show();
                             return;
@@ -338,7 +338,7 @@ public class MainActivity extends BaseActivity
                         }
                     } else {
                         //属于第一次加载
-                        if (CommonUtil.isEmptyList(datas)) {
+                        if (CommonUtil.isEmptyCollection(datas)) {
                             //内容为空
                             mPullToRefreshLayout.setLoadEnable(false);
                         }
@@ -349,7 +349,7 @@ public class MainActivity extends BaseActivity
                 } else {
                     //上拉加载
                     mPullToRefreshLayout.setLoading(false);
-                    if (CommonUtil.isEmptyList(datas)) {
+                    if (CommonUtil.isEmptyCollection(datas)) {
                         //没有数据可供加载
                         mPullToRefreshLayout.setLoadEnable(false);
                         Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
@@ -397,7 +397,7 @@ public class MainActivity extends BaseActivity
                     @Override
                     public void onResponse(WBTopicIds response) {
                         L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
-                        if (response == null || CommonUtil.isEmptyList(response.getStatuses())) {
+                        if (response == null || CommonUtil.isEmptyCollection(response.getStatuses())) {
                             //没有新的微博
                             mPullToRefreshLayout.setRefreshing(false);
                             Snackbar.make(mPullToRefreshLayout, "没有新的微博", Snackbar.LENGTH_SHORT).show();

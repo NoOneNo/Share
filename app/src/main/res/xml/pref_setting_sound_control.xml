@@ -3,28 +3,33 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.hengye.share.ui.activity.setting.SettingActivity">
-    <PreferenceCategory android:title="@string/title_setting_ringing">
+    <PreferenceCategory android:title="@string/title_setting_ringtone">
         <SwitchPreference
-            android:key="@string/title_setting_mute"
-            android:title="@string/title_setting_mute"
-            android:summary="@string/title_setting_mute_summary"
+            android:key="sound_off"
+            android:title="@string/title_setting_sound_off"
+            android:summary="@string/title_setting_sound_off_summary"
             android:defaultValue="false"/>
         <CheckBoxPreference
-            android:key="@string/title_setting_pull_to_refresh"
-            android:title="@string/title_setting_pull_to_refresh"
-            android:summary="@string/title_setting_pull_to_refresh_summary"
+            android:key="refresh_ringtone"
+            android:title="@string/title_setting_refresh_ringtone"
+            android:summary="@string/title_setting_refresh_ringtone_summary"
             android:defaultValue="true"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/title_setting_shock">
+    <PreferenceCategory android:title="@string/title_setting_vibration">
         <SwitchPreference
-            android:key="@string/title_setting_shock_open"
-            android:title="@string/title_setting_shock_open"
+            android:key="vibration_on"
+            android:title="@string/title_setting_vibration_on"
             android:defaultValue="true"/>
         <CheckBoxPreference
-            android:key="@string/title_setting_shock_after_send_success"
-            android:title="@string/title_setting_shock_after_send_success"
-            android:summary="@string/title_setting_shock_after_send_success_summary"
+            android:key="vibration_feedback"
+            android:title="@string/title_setting_vibration_feedback"
+            android:summary="@string/title_setting_vibration_feedback_summary"
+            android:defaultValue="true"/>
+        <CheckBoxPreference
+            android:key="remind_by_vibration"
+            android:title="@string/title_setting_vibration_remind"
+            android:summary="@string/title_setting_vibration_remind_summary"
             android:defaultValue="true"/>
     </PreferenceCategory>
 

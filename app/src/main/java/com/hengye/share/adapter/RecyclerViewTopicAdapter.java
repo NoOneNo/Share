@@ -124,7 +124,7 @@ public class RecyclerViewTopicAdapter extends RecyclerViewSimpleAdapter<Topic, R
             }
         });
 
-        if (!CommonUtil.isEmptyList(topic.getImageUrls())) {
+        if (!CommonUtil.isEmptyCollection(topic.getImageUrls())) {
         //加载图片
             holder.mGallery.removeAllViews();
             holder.mGallery.setColumnCount(ViewUtil.getTopicImageColumnCount(topic.getImageUrls().size()));

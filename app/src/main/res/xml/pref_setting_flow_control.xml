@@ -5,12 +5,12 @@
     tools:context="com.hengye.share.ui.activity.setting.SettingActivity">
     <PreferenceCategory android:title="@string/title_setting_common">
         <SwitchPreference
-            android:key="@string/title_setting_preread"
+            android:key="preread"
             android:title="@string/title_setting_preread"
             android:summary="@string/title_setting_preread_summary"
             android:defaultValue="true"/>
         <ListPreference
-            android:key="@string/title_setting_load_count"
+            android:key="load_count"
             android:title="@string/title_setting_load_count"
             android:summary="%s"
             android:entries="@array/load_count"
@@ -20,14 +20,14 @@
 
     <PreferenceCategory android:title="@string/title_setting_photo">
         <ListPreference
-            android:key="@string/title_setting_photo_download_quality"
+            android:key="photo_download_quality"
             android:title="@string/title_setting_photo_download_quality"
             android:summary="%s"
             android:entries="@array/photo_download_quality"
             android:entryValues="@array/photo_download_quality_value"
             android:defaultValue="5"/>
         <ListPreference
-            android:key="@string/title_setting_photo_upload_quality"
+            android:key="photo_upload_quality"
             android:title="@string/title_setting_photo_upload_quality"
             android:summary="%s"
             android:entries="@array/photo_upload_quality"

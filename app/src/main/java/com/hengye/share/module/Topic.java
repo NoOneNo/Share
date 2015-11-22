@@ -43,7 +43,7 @@ public class Topic extends Parent{
         topic.setChannel(entity.getSource());
         topic.setContent(entity.getText());
         topic.setId(entity.getIdstr());
-        if(!CommonUtil.isEmptyList(entity.getPic_urls())){
+        if(!CommonUtil.isEmptyCollection(entity.getPic_urls())){
             List<String> imageUrls = new ArrayList<>();
             List<String> imageLargeUrls = new ArrayList<>();
             for(WBTopic.StatusesEntity.Pic_urlsEntity urlsEntity : entity.getPic_urls()){

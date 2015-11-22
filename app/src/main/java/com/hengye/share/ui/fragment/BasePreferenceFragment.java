@@ -26,24 +26,6 @@ public abstract class BasePreferenceFragment extends PreferenceFragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if(isRegisterOnSharedPreferenceChangeListener()){
-            PreferenceManager.getDefaultSharedPreferences(getActivity())
-                    .registerOnSharedPreferenceChangeListener(this);
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        if(isRegisterOnSharedPreferenceChangeListener()) {
-            PreferenceManager.getDefaultSharedPreferences(getActivity())
-                    .unregisterOnSharedPreferenceChangeListener(this);
-        }
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         if(isHideScrollBar() && view != null){
@@ -61,6 +43,21 @@ public abstract class BasePreferenceFragment extends PreferenceFragment
         if(getActivity() instanceof BaseActivity){
             BaseActivity activity = (BaseActivity) getActivity();
             activity.updateToolbarTitle(getTitle());
+        }
+
+        if(isRegisterOnSharedPreferenceChangeListener()){
+            PreferenceManager.getDefaultSharedPreferences(getActivity())
+                    .registerOnSharedPreferenceChangeListener(this);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if(isRegisterOnSharedPreferenceChangeListener()) {
+            PreferenceManager.getDefaultSharedPreferences(getActivity())
+                    .unregisterOnSharedPreferenceChangeListener(this);
         }
     }
 

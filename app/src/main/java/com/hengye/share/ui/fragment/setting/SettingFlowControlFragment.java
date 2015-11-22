@@ -20,9 +20,4 @@ public class SettingFlowControlFragment extends BasePreferenceFragment{
         addPreferencesFromResource(R.xml.pref_setting_flow_control);
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
 }

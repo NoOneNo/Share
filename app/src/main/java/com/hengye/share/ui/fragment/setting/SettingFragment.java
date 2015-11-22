@@ -23,29 +23,9 @@ public class SettingFragment extends BasePreferenceFragment {
     }
 
     @Override
-    protected boolean isRegisterOnSharedPreferenceChangeListener() {
-        return true;
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref_setting);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
     }
 
     @Override
@@ -103,35 +83,4 @@ public class SettingFragment extends BasePreferenceFragment {
         return super.onPreferenceTreeClick(preferenceScreen, preference);
     }
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-//        if (key.equals(SettingActivity.LIST_AVATAR_MODE)) {
-//            String value = sharedPreferences.getString(key, "1");
-//            if (value.equals("1")) {
-//                SettingUtility.setEnableBigAvatar(false);
-//            }
-//            if (value.equals("2")) {
-//                SettingUtility.setEnableBigAvatar(true);
-//            }
-//            if (value.equals("3")) {
-//                SettingUtility.setEnableBigAvatar(Utility.isWifi(getActivity()));
-//            }
-//        }
-//
-//        if (key.equals(SettingActivity.LIST_PIC_MODE)) {
-//            String value = sharedPreferences.getString(key, "1");
-//            if (value.equals("1")) {
-//                SettingUtility.setEnableBigPic(false);
-//            }
-//            if (value.equals("2")) {
-//                SettingUtility.setEnableBigPic(true);
-//            }
-//            if (value.equals("3")) {
-//                SettingUtility.setEnableBigPic(Utility.isWifi(getActivity()));
-//            }
-//        }
-//        if (key.equals(SettingActivity.LIST_HIGH_PIC_MODE)) {
-//            GlobalContext.getInstance().getBitmapCache().evictAll();
-//        }
-    }
 }

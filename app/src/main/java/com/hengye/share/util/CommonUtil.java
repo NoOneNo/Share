@@ -1,16 +1,25 @@
 package com.hengye.share.util;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public class CommonUtil {
 
-    public static boolean isEmptyList(List list){
-        if(list == null || list.isEmpty()){
+    public static boolean isEmptyCollection(Collection collection){
+        if(collection == null || collection.isEmpty()){
             return true;
         }
         return false;
     }
+
+//    public static boolean isEmptyColection(Collection collection){
+//        if(collection == null || collection.isEmpty()){
+//            return true;
+//        }
+//        return false;
+//    }
 
     public static boolean isEmptyMap(Map map){
         if(map == null || map.isEmpty()){
