@@ -35,37 +35,37 @@ public class SPUtil {
     private final static String MODULE_NAME = "module";
 
 
-    public static String getAppTheme(){
-        return BaseApplication.getInstance().getSharedPreferences(APP_THEME, Context.MODE_PRIVATE).getString("color", THEME_COLOR_DEFAULT);
-    }
-
-    public static void setAppTheme(String color){
-        SharedPreferences.Editor editor = BaseApplication.getInstance().getSharedPreferences(APP_THEME, Context.MODE_PRIVATE).edit();
-        editor.putString("color", color);
-        L.debug("save theme, color : {}", color);
-        editor.apply();
-    }
-
-    public final static String THEME_COLOR_BLUE= "blue";
-    public final static String THEME_COLOR_GREEN = "green";
-    public final static String THEME_COLOR_DEFAULT = THEME_COLOR_BLUE;
-    public final static int THEME_RES_ID_DEFAULT = R.style.ShareAppTheme_Blue;
-
-    public static int getAppThemeResId(){
-        return getAppThemeResId(getAppTheme());
-    }
-
-    public static int getAppThemeResId(String color){
-        if(TextUtils.isEmpty(color)){
-            return THEME_RES_ID_DEFAULT;
-        }else if(color.equals(THEME_COLOR_BLUE)){
-            return R.style.ShareAppTheme_Blue;
-        }else if(color.equals(THEME_COLOR_GREEN)){
-            return R.style.ShareAppTheme_Green;
-        }else{
-            return THEME_RES_ID_DEFAULT;
-        }
-    }
+//    public static String getAppTheme(){
+//        return BaseApplication.getInstance().getSharedPreferences(APP_THEME, Context.MODE_PRIVATE).getString("color", THEME_COLOR_DEFAULT);
+//    }
+//
+//    public static void setAppTheme(String color){
+//        SharedPreferences.Editor editor = BaseApplication.getInstance().getSharedPreferences(APP_THEME, Context.MODE_PRIVATE).edit();
+//        editor.putString("color", color);
+//        L.debug("save theme, color : {}", color);
+//        editor.apply();
+//    }
+//
+//    public final static String THEME_COLOR_BLUE= "blue";
+//    public final static String THEME_COLOR_GREEN = "green";
+//    public final static String THEME_COLOR_DEFAULT = THEME_COLOR_GREEN;
+//    public final static int THEME_RES_ID_DEFAULT = R.style.ShareAppTheme_Green;
+//
+//    public static int getAppThemeResId(){
+//        return getAppThemeResId(getAppTheme());
+//    }
+//
+//    public static int getAppThemeResId(String color){
+//        if(TextUtils.isEmpty(color)){
+//            return THEME_RES_ID_DEFAULT;
+//        }else if(color.equals(THEME_COLOR_BLUE)){
+//            return R.style.ShareAppTheme_Blue;
+//        }else if(color.equals(THEME_COLOR_GREEN)){
+//            return R.style.ShareAppTheme_Green;
+//        }else{
+//            return THEME_RES_ID_DEFAULT;
+//        }
+//    }
 
 
 

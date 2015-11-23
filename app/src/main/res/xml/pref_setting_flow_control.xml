@@ -13,8 +13,8 @@
             android:key="load_count"
             android:title="@string/title_setting_load_count"
             android:summary="%s"
-            android:entries="@array/load_count"
-            android:entryValues="@array/load_count_value"
+            android:entries="@array/load_count_entries"
+            android:entryValues="@array/load_count_values"
             android:defaultValue="4"/>
     </PreferenceCategory>
 
@@ -23,15 +23,15 @@
             android:key="photo_download_quality"
             android:title="@string/title_setting_photo_download_quality"
             android:summary="%s"
-            android:entries="@array/photo_download_quality"
-            android:entryValues="@array/photo_download_quality_value"
+            android:entries="@array/photo_download_quality_entries"
+            android:entryValues="@array/photo_download_quality_values"
             android:defaultValue="5"/>
         <ListPreference
             android:key="photo_upload_quality"
             android:title="@string/title_setting_photo_upload_quality"
             android:summary="%s"
-            android:entries="@array/photo_upload_quality"
-            android:entryValues="@array/photo_upload_quality_value"
+            android:entries="@array/photo_upload_quality_entries"
+            android:entryValues="@array/photo_upload_quality_values"
             android:defaultValue="2"/>
     </PreferenceCategory>
 

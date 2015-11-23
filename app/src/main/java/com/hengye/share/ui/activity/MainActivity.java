@@ -40,6 +40,7 @@ import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.IntentUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.SPUtil;
+import com.hengye.share.util.SettingHelper;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.thirdparty.SaveUserInfoWeiboAuthListener;
@@ -187,11 +188,7 @@ public class MainActivity extends BaseActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_set1) {
-            SPUtil.setAppTheme(SPUtil.THEME_COLOR_BLUE);
-        } else if (id == R.id.action_set2) {
-            SPUtil.setAppTheme(SPUtil.THEME_COLOR_GREEN);
-        } else if (id == R.id.action_login) {
+        if (id == R.id.action_login) {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
         } else if (id == R.id.action_login_by_third) {

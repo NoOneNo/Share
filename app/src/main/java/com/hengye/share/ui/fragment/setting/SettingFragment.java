@@ -47,16 +47,19 @@ public class SettingFragment extends BasePreferenceFragment {
             clazz = SettingNotifyFragment.class;
         }else if(title.equals(getString(R.string.title_setting_show_theme))){
             //主题
-            clazz = SettingThemeFragment.class;
+//            clazz = SettingThemeFragment.class;
+            clazz = null;
         }else if(title.equals(getString(R.string.title_setting_show_reading_habit))){
             //阅读习惯
             clazz = SettingReadingHabitFragment.class;
         }else if(title.equals(getString(R.string.title_setting_other_feedback))){
             //意见反馈
-            clazz = SettingFeedbackFragment.class;
+//            clazz = SettingFeedbackFragment.class;
+            clazz = null;
         }else if(title.equals(getString(R.string.title_setting_other_about))){
             //关于
-            clazz = SettingAboutFragment.class;
+//            clazz = SettingAboutFragment.class;
+            clazz = null;
         }else{
             L.debug("preference title not found");
         }

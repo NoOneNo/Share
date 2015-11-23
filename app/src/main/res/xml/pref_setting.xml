@@ -20,9 +20,11 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/title_setting_show">
-        <Preference
-            android:key="@string/title_setting_show_theme"
-            android:title="@string/title_setting_show_theme"/>
+        <ListPreference
+            android:key="theme_app"
+            android:title="@string/title_setting_show_theme"
+            android:entries="@array/theme_app_entries"
+            android:entryValues="@array/theme_app_values"/>
         <Preference
             android:key="@string/title_setting_show_reading_habit"
             android:title="@string/title_setting_show_reading_habit"/>

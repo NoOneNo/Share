@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.hengye.share.util.SPUtil;
+import com.hengye.share.util.SettingHelper;
 import com.hengye.volleyplus.toolbox.RequestManager;
 
 public class BaseActivity extends AppCompatActivity {
@@ -70,7 +71,7 @@ public class BaseActivity extends AppCompatActivity {
     protected void setCustomThemeIfNeeded(Bundle savedInstanceState){
         if(setCustomTheme()){
             if (savedInstanceState == null) {
-                mThemeResId = SPUtil.getAppThemeResId();
+                mThemeResId = SettingHelper.getAppThemeResId();
             } else {
                 mThemeResId = savedInstanceState.getInt("theme");
             }
@@ -80,7 +81,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void replaceCustomThemeIfNeeded(){
-        if (setCustomTheme() && mThemeResId != SPUtil.getAppThemeResId()) {
+        if (setCustomTheme() && mThemeResId != SettingHelper.getAppThemeResId()) {
             reStartActivity();
         }
     }

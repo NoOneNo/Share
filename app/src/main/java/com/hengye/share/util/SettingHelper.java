@@ -2,10 +2,10 @@ package com.hengye.share.util;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 
 import com.hengye.share.BaseApplication;
 import com.hengye.share.R;
-import com.hengye.share.ui.fragment.BasePreferenceFragment;
 
 import java.util.Set;
 
@@ -35,9 +35,50 @@ public class SettingHelper {
     public final static String KEY_NOTIFY_LIGHTS = "remind_by_lights";
     //通知设置
 
+    //主题
+    public final static String KEY_THEME_APP = "theme_app";
+    //主题
+
+    //阅读习惯
+    public final static String KEY_HABIT_FONT_ZOOM = "font_zoom";
+    public final static String KEY_HABIT_MENU_STYLE = "menu_show_style";
+    public final static String KEY_HABIT_SHOW_AVATOR = "show_avator";
+    public final static String KEY_HABIT_AUTO_NIGHT = "auto_night_mode";
+    public final static String KEY_HABIT_READ_ORDER = "read_order";
+    //阅读习惯
 
     public static SharedPreferences getPreferences(){
         return PreferenceManager.getDefaultSharedPreferences(BaseApplication.getInstance());
+    }
+
+    public final static String THEME_COLOR_BLUE= "blue";
+    public final static String THEME_COLOR_GREEN = "green";
+    public final static String THEME_COLOR_DEFAULT = THEME_COLOR_GREEN;
+    public final static int THEME_RES_ID_DEFAULT = R.style.ShareAppTheme_Green;
+
+    //主题颜色
+    public static String getAppThemeColor(){
+        return getPreferences().getString(KEY_THEME_APP, null);
+    }
+
+    public static void setAppThemeColor(String color){
+        getPreferences().edit().putString(KEY_THEME_APP, color).apply();
+    }
+
+    public static int getAppThemeResId(){
+        return getAppThemeResId(getAppThemeColor());
+    }
+
+    public static int getAppThemeResId(String color){
+        if(TextUtils.isEmpty(color)){
+            return THEME_RES_ID_DEFAULT;
+        }else if(color.equals(THEME_COLOR_BLUE)){
+            return R.style.ShareAppTheme_Blue;
+        }else if(color.equals(THEME_COLOR_GREEN)){
+            return R.style.ShareAppTheme_Green;
+        }else{
+            return THEME_RES_ID_DEFAULT;
+        }
     }
 
     //预读模式
@@ -126,5 +167,30 @@ public class SettingHelper {
     //呼吸灯提醒
     public static boolean isNotifyLightsOn(){
         return getPreferences().getBoolean(KEY_NOTIFY_LIGHTS, true);
+    }
+
+    //字体大小
+    public static String getFontZoom(){
+        return getPreferences().getString(KEY_HABIT_FONT_ZOOM, null);
+    }
+
+    //功能菜单风格
+    public static String getMenuStyle(){
+        return getPreferences().getString(KEY_HABIT_MENU_STYLE, null);
+    }
+
+    //显示头像
+    public static boolean isShowAvator(){
+        return getPreferences().getBoolean(KEY_HABIT_SHOW_AVATOR, true);
+    }
+
+    //自动进入夜间模式
+    public static boolean isAutoNightMode(){
+        return getPreferences().getBoolean(KEY_HABIT_AUTO_NIGHT, true);
+    }
+
+    //阅读顺序
+    public static String getReadingOrder(){
+        return getPreferences().getString(KEY_HABIT_READ_ORDER, null);
     }
 }

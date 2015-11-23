@@ -8,16 +8,6 @@
         android:orderInCategory="180"
         app:showAsAction="ifRoom"/>
     <item
-        android:id="@+id/action_set1"
-        android:title="set theme blue"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_set2"
-        android:title="set theme green"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/action_login"
         android:title="@string/action_login"
         android:orderInCategory="120"
