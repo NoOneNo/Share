@@ -10,6 +10,8 @@ public class BaseApplication extends Application{
 
 	private static BaseApplication ourInstance;
 
+	public final static int MAX_NETWORK_CACHE_SIZE = 200 * 1024 * 1024;
+
 	@Override
 	public void onCreate(){
 		super.onCreate();
@@ -22,7 +24,7 @@ public class BaseApplication extends Application{
 		ourInstance = this;
 //		SPUtil.getInstance().init(getApplicationContext());
 //		CrashHandler.getInstance().init(getApplicationContext());
-		RequestManager.init(this);
+		RequestManager.init(this, null, MAX_NETWORK_CACHE_SIZE);
 	}
 
 	public static Application getInstance(){

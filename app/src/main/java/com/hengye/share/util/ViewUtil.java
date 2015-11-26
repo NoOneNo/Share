@@ -28,7 +28,7 @@ public class ViewUtil {
         int marginLength = margin * 2;
         if(size == 1){
 //            return ViewGroup.LayoutParams.WRAP_CONTENT;
-            return new ImageSize((maxWidth - marginLength) / 2, ViewGroup.LayoutParams.WRAP_CONTENT);
+            return new ImageSize((maxWidth - marginLength) / 2, (maxWidth - marginLength) / 2);
         }else if(size == 2 || size == 4){
             return new ImageSize((maxWidth - marginLength) / 3);
         }else{
@@ -49,7 +49,7 @@ public class ViewUtil {
     public static ImageSize setTopicImageViewLayoutParams(ImageView iv, int maxWidth, int margin, int size){
         ImageSize imageSize = getTopicImageWidth(maxWidth, margin, size);
 
-        iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        iv.setScaleType(ImageView.ScaleType.FIT_XY);
         GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
         lp.width = imageSize.width;
         lp.height = imageSize.height;
