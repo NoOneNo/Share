@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ import com.hengye.share.R;
 import com.hengye.share.ui.activity.TopicGalleryActivity;
 import com.hengye.share.module.Topic;
 import com.hengye.share.module.sina.WBUtil;
+import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DateUtil;
 import com.hengye.share.util.L;
@@ -128,6 +130,7 @@ public class RecyclerViewTopicAdapter extends RecyclerViewSimpleAdapter<Topic, R
         //加载图片
             holder.mGallery.removeAllViews();
             holder.mGallery.setColumnCount(ViewUtil.getTopicImageColumnCount(topic.getImageUrls().size()));
+            holder.mGallery.setTag(topic.getImageUrls());
             for (int i = 0; i < topic.getImageUrls().size(); i++) {
                 String url = topic.getImageUrls().get(i);
                 NetworkImageViewPlus iv = new NetworkImageViewPlus(mContext);
@@ -136,9 +139,10 @@ public class RecyclerViewTopicAdapter extends RecyclerViewSimpleAdapter<Topic, R
 //                iv.setDefaultImageResId();
                 iv.setBackgroundColor(mContext.getResources().getColor(R.color.material_grey_300));
                 iv.setImageUrl(url, RequestManager.getImageLoader());
-                iv.setTag(R.id.gl_topic_gallery, topic.getImageUrls());
+                iv.setTag(R.id.gl_topic_gallery, holder.mGallery);
 //                iv.setTag(R.id.gl_topic_retweeted_gallery, key);
                 iv.setTag(i);
+//                iv.setTag(View.NO_ID, topic.getImageUrls());
                 iv.setId(View.NO_ID);
                 iv.setOnClickListener(this);
                 holder.mGallery.addView(iv);
@@ -150,6 +154,7 @@ public class RecyclerViewTopicAdapter extends RecyclerViewSimpleAdapter<Topic, R
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onClick(View v) {
         int id = v.getId();
@@ -159,12 +164,29 @@ public class RecyclerViewTopicAdapter extends RecyclerViewSimpleAdapter<Topic, R
                 itemView.performClick();
             }
         } else if(id == View.NO_ID){
-            Intent intent = new Intent(mContext, TopicGalleryActivity.class);
-            ArrayList<String> paths = (ArrayList<String>)v.getTag(R.id.gl_topic_gallery);
-            L.debug("img url : {}", paths.get((int)v.getTag()));
-            intent.putExtra(TopicGalleryActivity.IMG_PATHS, paths);
-            intent.putExtra(TopicGalleryActivity.IMG_INDEX, (int)v.getTag());
-            mContext.startActivity(intent);
+//            Intent intent = new Intent(mContext, TopicGalleryActivity.class);
+//            ArrayList<String> paths = (ArrayList<String>)v.getTag(View.NO_ID);
+//            L.debug("img url : {}", paths.get((int) v.getTag()));
+//            intent.putExtra(TopicGalleryActivity.IMG_URLS, paths);
+//            intent.putExtra(TopicGalleryActivity.IMG_INDEX, (int) v.getTag());
+//            mContext.startActivity(intent);
+
+            GridLayout gridLayout = (GridLayout) v.getTag(R.id.gl_topic_gallery);
+            ArrayList<String> urls = (ArrayList<String>)gridLayout.getTag();
+            int index = (int) v.getTag();
+            ArrayList<AnimationRect> animationRectArrayList
+                    = new ArrayList<>();
+            for (int i = 0; i < urls.size(); i++) {
+                final ImageView imageView = (ImageView) gridLayout
+                        .getChildAt(i);
+                if (imageView.getVisibility() == View.VISIBLE) {
+                    AnimationRect rect = AnimationRect.buildFromImageView(imageView);
+                    animationRectArrayList.add(rect);
+                }
+            }
+
+            TopicGalleryActivity
+                    .startWithIntent(mContext, urls, animationRectArrayList, index);
         }
     }
 

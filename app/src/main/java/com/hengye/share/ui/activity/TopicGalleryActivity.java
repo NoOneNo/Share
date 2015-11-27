@@ -1,6 +1,7 @@
 package com.hengye.share.ui.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -19,6 +20,8 @@ import com.android.volley.toolbox.ImageLoader;
 import com.hengye.share.BaseActivity;
 import com.hengye.share.R;
 import com.hengye.share.module.Topic;
+import com.hengye.share.ui.support.AnimationRect;
+import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.ui.view.TouchImageView;
 import com.hengye.volleyplus.toolbox.RequestManager;
@@ -27,13 +30,14 @@ import java.util.ArrayList;
 
 public class TopicGalleryActivity extends BaseActivity {
 
-    public final static String IMG_PATHS = "mImgPaths";
-    public final static String IMG_INDEX = "mImgIndex";
+    public final static String IMG_URLS = "img_paths";
+    public final static String IMG_INDEX = "img_index";
+    public final static String IMG_RECTS = "img_rects";
     private ViewPager mPager;
     private TextView mPages;
-    //默认从0开始
-    private int mIndexNow = 0;
-    private ArrayList<String> urls;
+    private int mIndexNow;
+    private ArrayList<String> mUrls;
+    private ArrayList<AnimationRect> mRects;
 
     @Override
     protected boolean setToolBar() {
@@ -50,7 +54,16 @@ public class TopicGalleryActivity extends BaseActivity {
         return "TopicGalleryActivity";
     }
 
-    @SuppressWarnings("unchecked")
+    public static void startWithIntent(Context context, ArrayList<String> urls, ArrayList<AnimationRect> rects,
+                                   int index) {
+        Intent intent = new Intent(context, TopicGalleryActivity.class);
+        intent.putExtra(IMG_URLS, urls);
+        intent.putExtra(IMG_RECTS, rects);
+        intent.putExtra(IMG_INDEX, index);
+        context.startActivity(intent);
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,20 +72,33 @@ public class TopicGalleryActivity extends BaseActivity {
         mPager = (ViewPager) findViewById(R.id.select_photo_gallery_view_pager);
         mPages = (TextView) findViewById(R.id.select_photo_gallery_pages);
 
-        try {
-            urls = (ArrayList<String>) getIntent().getSerializableExtra(IMG_PATHS);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (urls != null && urls.size() > 0) {
-            int index = getIntent().getIntExtra(IMG_INDEX, 0);
-            if (0 < index && index < urls.size()) {
-                mIndexNow = index;
-            }
-            initViewPager();
+        initViewPager();
+//        try {
+//            mUrls = (ArrayList<String>) getIntent().getSerializableExtra(IMG_URLS);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        if (mUrls != null && mUrls.size() > 0) {
+//            int index = getIntent().getIntExtra(IMG_INDEX, 0);
+//            if (0 < index && index < mUrls.size()) {
+//                mIndexNow = index;
+//            }
+//            initViewPager();
+//
+//        }//如果传进来的图片路径为空
+//        else {
+//            this.finish();
+//        }
+    }
 
-        }//如果传进来的图片路径为空
-        else {
+    @SuppressWarnings("unchecked")
+    @Override
+    protected void getBundleExtra(){
+        mUrls = (ArrayList<String>) getIntent().getSerializableExtra(IMG_URLS);
+        mIndexNow = getIntent().getIntExtra(IMG_INDEX, 0);
+        mRects = (ArrayList<AnimationRect>) getIntent().getSerializableExtra(IMG_RECTS);
+
+        if(CommonUtil.isEmptyCollection(mUrls, mRects)){
             this.finish();
         }
     }
@@ -82,9 +108,9 @@ public class TopicGalleryActivity extends BaseActivity {
         DisplayMetrics dm = getResources().getDisplayMetrics();
 
         // 给ViewPager设置适配器
-        mPager.setAdapter(new PhotoPagerAdapter(this, urls));
+        mPager.setAdapter(new PhotoPagerAdapter(this, mUrls));
         mPager.setCurrentItem(mIndexNow);// 设置当前显示标签页为显示页
-        mPages.setText(mIndexNow + 1 + "/" + urls.size());
+        mPages.setText(mIndexNow + 1 + "/" + mUrls.size());
         mPager.addOnPageChangeListener(new MyOnPageChangeListener());// 页面变化时的监听器
     }
 
@@ -112,7 +138,7 @@ public class TopicGalleryActivity extends BaseActivity {
         @Override
         public void onPageSelected(int arg0) {
             mIndexNow = arg0;
-            mPages.setText(mIndexNow + 1 + "/" + urls.size());
+            mPages.setText(mIndexNow + 1 + "/" + mUrls.size());
         }
     }
 
@@ -160,9 +186,11 @@ public class TopicGalleryActivity extends BaseActivity {
                     RequestManager.getImageLoader().get(imageLargeUrl, new ImageLoader.ImageListener() {
                         @Override
                         public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate, boolean isFromCache) {
-                            touchIv.setImageBitmap(response.getBitmap());
-                            imageLarge.setVisibility(View.GONE);
-                            pb.setVisibility(View.GONE);
+                            if(response.getBitmap() != null){
+                                touchIv.setImageBitmap(response.getBitmap());
+                                imageLarge.setVisibility(View.GONE);
+                                pb.setVisibility(View.GONE);
+                            }
                         }
 
                         @Override

@@ -14,6 +14,15 @@ public class CommonUtil {
         return false;
     }
 
+    public static boolean isEmptyCollection(Collection... collections){
+        for(Collection collection : collections){
+            if(collection == null || collection.isEmpty()){
+                return true;
+            }
+        }
+        return false;
+    }
+
 //    public static boolean isEmptyColection(Collection collection){
 //        if(collection == null || collection.isEmpty()){
 //            return true;

@@ -32,6 +32,7 @@ import com.hengye.share.module.Topic;
 import com.hengye.share.module.UserInfo;
 import com.hengye.share.module.sina.WBTopic;
 import com.hengye.share.module.sina.WBTopicIds;
+import com.hengye.share.module.sina.WBUnReadCount;
 import com.hengye.share.module.sina.WBUserInfo;
 import com.hengye.share.module.sina.WBUtil;
 import com.hengye.share.support.ActionBarDrawerToggleCustom;
@@ -39,6 +40,7 @@ import com.hengye.share.ui.activity.setting.SettingActivity;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.IntentUtil;
 import com.hengye.share.util.L;
+import com.hengye.share.util.RequestFactory;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.SettingHelper;
 import com.hengye.share.util.UrlBuilder;
@@ -134,11 +136,13 @@ public class MainActivity extends BaseActivity
                     mPullToRefreshLayout.setRefreshing(false);
                     return;
                 }
-                String id = 0 + "";
+
                 if (!CommonUtil.isEmptyCollection(mAdapter.getDatas())) {
-                    id = mAdapter.getDatas().get(0).getId();
+                    String id = CommonUtil.getLastItem(mAdapter.getDatas()).getId();
+                    RequestManager.addToRequestQueue(getWBTopicIdsRequest(mWBAccessToken.getToken(), id));
+                }else{
+                    RequestManager.addToRequestQueue(getWBTopicRequest(mWBAccessToken.getToken(), 0 + "", true));
                 }
-                RequestManager.addToRequestQueue(getWBTopicIdsRequest(mWBAccessToken.getToken(), id));
             }
         });
         mPullToRefreshLayout.setOnLoadListener(new PullToRefreshLayout.OnLoadListener() {
@@ -271,16 +275,28 @@ public class MainActivity extends BaseActivity
         if (wbUserInfo == null) {
             //用户数据为空
             L.debug("updateNavigationView invoke, userinfo is null");
+
+            if(mWBAccessToken != null){
+                RequestManager.addToRequestQueue(RequestFactory.getInstance().
+                        getWBUserInfoRequest(mWBAccessToken.getToken(), mWBAccessToken.getUid()));
+            }
             return;
         }
 
         UserInfo userInfo = UserInfo.getUserInfo(wbUserInfo);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         String uid = (String) navigationView.getTag();
-        if (!TextUtils.isEmpty(uid) && uid.equals(userInfo.getUid())) {
-            //此ID数据已经更新过
-            L.debug("updateNavigationView invoke, userinfo has updated");
-            return;
+        if (!TextUtils.isEmpty(uid)){
+            if(uid.equals(userInfo.getUid())){
+                //此ID数据已经更新过
+                L.debug("updateNavigationView invoke, userinfo has updated");
+                return;
+            }else{
+                if(mWBAccessToken != null){
+                    RequestManager.addToRequestQueue(RequestFactory.getInstance().
+                            getWBUserInfoRequest(mWBAccessToken.getToken(), mWBAccessToken.getUid()));
+                }
+            }
         }
 
         L.debug("updateNavigationView invoke, userinfo has not updated");
@@ -439,7 +455,8 @@ public class MainActivity extends BaseActivity
             super.onComplete(values);
             if (mAccessToken != null && mAccessToken.isSessionValid()) {
                 MainActivity.this.mWBAccessToken = mAccessToken;
-                RequestManager.addToRequestQueue(getWBTopicRequest(mAccessToken.getToken(), 0 + "", true));
+                mPullToRefreshLayout.setRefreshing(true);
+//                RequestManager.addToRequestQueue(getWBTopicRequest(mAccessToken.getToken(), 0 + "", true));
             }
         }
     }

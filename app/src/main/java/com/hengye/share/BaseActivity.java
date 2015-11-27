@@ -37,6 +37,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setCustomThemeIfNeeded(savedInstanceState);
+        getBundleExtra();
         super.onCreate(savedInstanceState);
     }
 
@@ -60,6 +61,10 @@ public class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         cancelPendingRequestsIfNeeded();
         super.onDestroy();
+    }
+
+    protected void getBundleExtra(){
+
     }
 
     protected void cancelPendingRequestsIfNeeded(){
