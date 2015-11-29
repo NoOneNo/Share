@@ -1,7 +1,11 @@
 package com.hengye.share.ui.activity;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -10,12 +14,17 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
+import com.android.volley.Cache;
 import com.android.volley.error.VolleyError;
+import com.android.volley.toolbox.BitmapUtil;
 import com.android.volley.toolbox.ImageLoader;
 import com.hengye.share.BaseActivity;
 import com.hengye.share.R;
@@ -35,9 +44,10 @@ public class TopicGalleryActivity extends BaseActivity {
     public final static String IMG_RECTS = "img_rects";
     private ViewPager mPager;
     private TextView mPages;
-    private int mIndexNow;
+    private int mIndexNow, mIndexInit;
     private ArrayList<String> mUrls;
     private ArrayList<AnimationRect> mRects;
+    private boolean hasAnimatedIn = false;
 
     @Override
     protected boolean setToolBar() {
@@ -73,29 +83,13 @@ public class TopicGalleryActivity extends BaseActivity {
         mPages = (TextView) findViewById(R.id.select_photo_gallery_pages);
 
         initViewPager();
-//        try {
-//            mUrls = (ArrayList<String>) getIntent().getSerializableExtra(IMG_URLS);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        if (mUrls != null && mUrls.size() > 0) {
-//            int index = getIntent().getIntExtra(IMG_INDEX, 0);
-//            if (0 < index && index < mUrls.size()) {
-//                mIndexNow = index;
-//            }
-//            initViewPager();
-//
-//        }//如果传进来的图片路径为空
-//        else {
-//            this.finish();
-//        }
     }
 
     @SuppressWarnings("unchecked")
     @Override
     protected void getBundleExtra(){
         mUrls = (ArrayList<String>) getIntent().getSerializableExtra(IMG_URLS);
-        mIndexNow = getIntent().getIntExtra(IMG_INDEX, 0);
+        mIndexNow = mIndexInit = getIntent().getIntExtra(IMG_INDEX, 0);
         mRects = (ArrayList<AnimationRect>) getIntent().getSerializableExtra(IMG_RECTS);
 
         if(CommonUtil.isEmptyCollection(mUrls, mRects)){
@@ -167,44 +161,142 @@ public class TopicGalleryActivity extends BaseActivity {
             final ProgressBar pb = (ProgressBar) view.findViewById(R.id.pb_image_large);
             final Button imageLarge = (Button) view.findViewById(R.id.btn_image_large);
 
-            RequestManager.getImageLoader().get(url, new ImageLoader.ImageListener() {
-                @Override
-                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate, boolean isFromCache) {
-                    touchIv.setImageBitmap(response.getBitmap());
-                }
+//            if(position == mIndexInit && !hasAnimatedIn){
+//                hasAnimatedIn = true;
+//                Cache.Entry entry = RequestManager.getCache(url);
+//                if(entry != null) {
+//                    int screenWidth = getResources().getDisplayMetrics().widthPixels;
+//                    int screenHeight = getResources().getDisplayMetrics().heightPixels;
+//                    Bitmap bitmap = BitmapUtil.getSuitableBitmap(entry.data, screenWidth, screenHeight, BitmapUtil.DEFAULT_CONFIG, touchIv.getScaleType());
+//                    if(bitmap != null){
+//                        touchIv.setImageBitmap(bitmap);
+//                        doAnimation(touchIv, mRects.get(position));
+//                    }
+//                }
+//            }else{
 
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    L.debug("request image fail, url : {}", url);
-                }
-            });
-            imageLarge.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    pb.setVisibility(View.VISIBLE);
-                    final String imageLargeUrl = Topic.getWBTopicImgUrl(url, Topic.IMAGE_TYPE_BMIDDLE, Topic.IMAGE_TYPE_LARGE);
-                    RequestManager.getImageLoader().get(imageLargeUrl, new ImageLoader.ImageListener() {
-                        @Override
-                        public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate, boolean isFromCache) {
-                            if(response.getBitmap() != null){
-                                touchIv.setImageBitmap(response.getBitmap());
-                                imageLarge.setVisibility(View.GONE);
-                                pb.setVisibility(View.GONE);
-                            }
-                        }
+                int screenWidth = getResources().getDisplayMetrics().widthPixels;
+                int screenHeight = getResources().getDisplayMetrics().heightPixels;
+                RequestManager.getImageLoader().get(url, new ImageLoader.ImageListener() {
+                    @Override
+                    public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate, boolean isFromCache) {
+                        touchIv.setImageBitmap(response.getBitmap());
+                    }
 
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            pb.setVisibility(View.GONE);
-                            L.debug("request image fail, url : {}", imageLargeUrl);
-                        }
-                    });
-                }
-            });
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        L.debug("request image fail, url : {}", url);
+                    }
+                }, screenWidth, 0, touchIv.getScaleType());
+//            }
+
+
+
+
+
+
+
+//            imageLarge.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    pb.setVisibility(View.VISIBLE);
+//                    final String imageLargeUrl = Topic.getWBTopicImgUrl(url, Topic.IMAGE_TYPE_BMIDDLE, Topic.IMAGE_TYPE_LARGE);
+//                    RequestManager.getImageLoader().get(imageLargeUrl, new ImageLoader.ImageListener() {
+//                        @Override
+//                        public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate, boolean isFromCache) {
+//                            if(response.getBitmap() != null){
+//                                touchIv.setImageBitmap(response.getBitmap());
+//                                imageLarge.setVisibility(View.GONE);
+//                                pb.setVisibility(View.GONE);
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onErrorResponse(VolleyError error) {
+//                            pb.setVisibility(View.GONE);
+//                            L.debug("request image fail, url : {}", imageLargeUrl);
+//                        }
+//                    });
+//                }
+//            });
 
             touchIv.setOnClickListener(mOnPhotoClickListener);
             container.addView(view);
             return view;
+        }
+
+        public static final int ANIMATION_DURATION = 300;
+
+        private void doAnimation(final ImageView imageview, final AnimationRect rect){
+            imageview.getViewTreeObserver()
+                    .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                        @Override
+                        public boolean onPreDraw() {
+
+                            if (rect == null) {
+                                imageview.getViewTreeObserver().removeOnPreDrawListener(this);
+//                                endAction.run();
+                                return true;
+                            }
+
+                            final Rect startBounds = new Rect(rect.scaledBitmapRect);
+                            final Rect finalBounds = AnimationRect
+                                    .getBitmapRectFromImageView(imageview);
+
+                            if (finalBounds == null) {
+                                imageview.getViewTreeObserver().removeOnPreDrawListener(this);
+//                                endAction.run();
+                                return true;
+                            }
+
+                            float startScale = (float) finalBounds.width() / startBounds.width();
+
+                            if (startScale * startBounds.height() > finalBounds.height()) {
+                                startScale = (float) finalBounds.height() / startBounds.height();
+                            }
+
+                            int deltaTop = startBounds.top - finalBounds.top;
+                            int deltaLeft = startBounds.left - finalBounds.left;
+
+                            imageview.setPivotY(
+                                    (imageview.getHeight() - finalBounds.height()) / 2);
+                            imageview.setPivotX((imageview.getWidth() - finalBounds.width()) / 2);
+
+                            imageview.setScaleX(1 / startScale);
+                            imageview.setScaleY(1 / startScale);
+
+                            imageview.setTranslationX(deltaLeft);
+                            imageview.setTranslationY(deltaTop);
+
+                            imageview.animate().translationY(0).translationX(0)
+                                    .scaleY(1)
+                                    .scaleX(1).setDuration(ANIMATION_DURATION)
+                                    .setInterpolator(
+                                            new AccelerateDecelerateInterpolator());
+//                                    .withEndAction(endAction);
+
+                            AnimatorSet animationSet = new AnimatorSet();
+                            animationSet.setDuration(ANIMATION_DURATION);
+                            animationSet
+                                    .setInterpolator(new AccelerateDecelerateInterpolator());
+
+//                            animationSet.playTogether(ObjectAnimator.ofFloat(imageview,
+//                                    "clipBottom",
+//                                    AnimationRect.getClipBottom(rect, finalBounds), 0));
+//                            animationSet.playTogether(ObjectAnimator.ofFloat(imageview,
+//                                    "clipRight",
+//                                    AnimationRect.getClipRight(rect, finalBounds), 0));
+//                            animationSet.playTogether(ObjectAnimator.ofFloat(imageview,
+//                                    "clipTop", AnimationRect.getClipTop(rect, finalBounds), 0));
+//                            animationSet.playTogether(ObjectAnimator.ofFloat(imageview,
+//                                    "clipLeft", AnimationRect.getClipLeft(rect, finalBounds), 0));
+
+                            animationSet.start();
+
+                            imageview.getViewTreeObserver().removeOnPreDrawListener(this);
+                            return true;
+                        }
+                    });
         }
 
         @Override
