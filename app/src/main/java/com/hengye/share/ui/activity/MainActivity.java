@@ -138,7 +138,7 @@ public class MainActivity extends BaseActivity
                 }
 
                 if (!CommonUtil.isEmptyCollection(mAdapter.getDatas())) {
-                    String id = CommonUtil.getLastItem(mAdapter.getDatas()).getId();
+                    String id = mAdapter.getDatas().get(0).getId();
                     RequestManager.addToRequestQueue(getWBTopicIdsRequest(mWBAccessToken.getToken(), id));
                 }else{
                     RequestManager.addToRequestQueue(getWBTopicRequest(mWBAccessToken.getToken(), 0 + "", true));
