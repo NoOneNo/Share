@@ -12,7 +12,7 @@ public class WBUtil {
     public final static int MAX_COUNT_REQUEST = 30;
     public final static int START_PAGE = 1;
 
-    //从微博里得到匹配的@名字，正则表达式@[^: ]+(:| )
+    //从微博里得到匹配的@名字，正则表达式@[^:： ]+(:|：| )
     public static Map<Integer, String> getMatchAtWBName(String str){
 
         if(TextUtils.isEmpty(str)){
@@ -20,7 +20,7 @@ public class WBUtil {
         }
 
         Map<Integer, String> result = new HashMap<>();
-        String regex = "@[^: ]+(:| )";
+        String regex = "@[^:： ]+(:|：| )";
         Matcher m = Pattern.compile(regex).matcher(str);
         while(m.find()){
             result.put(m.start(), m.group());

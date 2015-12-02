@@ -105,6 +105,7 @@ public class RecyclerViewTopicAdapter extends RecyclerViewSimpleAdapter<Topic, R
                             Toast.makeText(mContext, atName.substring(0, atName.length() - 1), Toast.LENGTH_SHORT).show();
                         }
                     });
+                //此处-1为了除去@name后面的判断符,(:|：| );
                 ss.setSpan(scs, startIndex, startIndex + atName.length() - 1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
             }
             holder.mContent.setText(ss);
