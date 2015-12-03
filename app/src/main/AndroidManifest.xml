@@ -44,7 +44,7 @@
         <activity
             android:name="com.hengye.share.ui.activity.TopicGalleryActivity"
             android:parentActivityName="com.hengye.share.ui.activity.MainActivity"
-            android:theme="@style/CommonGalleryTheme"
+            android:theme="@style/FullScreenTheme"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:launchMode="singleTop">
             <meta-data

@@ -2,14 +2,12 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/select_photo_gallery_layout"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:background="@android:color/black">
+	android:layout_height="match_parent">
 	<android.support.v4.view.ViewPager
 	    android:id="@+id/select_photo_gallery_view_pager"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    android:layout_gravity="center"
-	    android:background="#000000"
 	    android:flipInterval="30"
 	    android:persistentDrawingCache="animation" 
 	    android:overScrollMode="never"/>
@@ -28,4 +26,13 @@
 	        android:textSize="16sp"
 	        android:textColor="@android:color/white"/>
 	</RelativeLayout>
+
+	<Button
+		android:id="@+id/btn_image_large"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/topic_gallery_image_large"
+		android:layout_gravity="left|bottom"
+		android:layout_marginStart="@dimen/activity_horizontal_margin"
+		android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 </FrameLayout>

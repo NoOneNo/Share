@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.SettingHelper;
 import com.hengye.volleyplus.toolbox.RequestManager;
 
@@ -19,6 +18,9 @@ public class BaseActivity extends AppCompatActivity {
         return null;
     }
 
+    /**
+     * @return 如果为true, 则使用APP自定义的主题
+     */
     protected boolean setCustomTheme(){
         return true;
     }
@@ -37,7 +39,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setCustomThemeIfNeeded(savedInstanceState);
-        getBundleExtra();
+        handleBundleExtra();
         super.onCreate(savedInstanceState);
     }
 
@@ -63,7 +65,7 @@ public class BaseActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    protected void getBundleExtra(){
+    protected void handleBundleExtra(){
 
     }
 

@@ -114,7 +114,7 @@ public class AnimationRect implements Parcelable {
         AnimationRect rect = new AnimationRect();
 
         rect.isScreenPortrait = BaseApplication.getInstance().getResources().getConfiguration().orientation
-                == Configuration.ORIENTATION_PORTRAIT;;
+                == Configuration.ORIENTATION_PORTRAIT;
 
         Drawable drawable = imageView.getDrawable();
         Bitmap bitmap = null;

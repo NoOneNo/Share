@@ -65,7 +65,7 @@ public class FragmentActivity extends BaseActivity {
 
         setContentView(R.layout.activity_fragment);
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .replace(R.id.content, mFragment)
                     .commit();
         }

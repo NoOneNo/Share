@@ -3,7 +3,6 @@ package com.hengye.share.ui.activity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -14,7 +13,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -25,6 +23,7 @@ import com.hengye.share.R;
 import com.hengye.share.ui.fragment.TopicGalleryFragment;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.thirdparty.AnimationUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,15 +32,14 @@ public class TopicGalleryActivity extends BaseActivity {
 
     public final static String IMG_URLS = "img_paths";
     public final static String IMG_INDEX = "img_index";
-    public final static String IMG_RECTS = "img_rects";
+    public final static String IMG_RECT_LIST = "img_rect_list";
     private ViewPager mViewPager;
     private TextView mPages;
-    private int mIndexNow, mIndexStart;
+    private int mIndexStart;
     private ArrayList<String> mUrls;
-    private ArrayList<AnimationRect> mRects;
-    private boolean hasAnimatedIn = false;
-    private View background;
-    private ColorDrawable backgroundColor;
+    private ArrayList<AnimationRect> mRectList;
+    private View mBackground;
+    private ColorDrawable mBackgroundColor;
 
     @Override
     protected boolean setToolBar() {
@@ -58,16 +56,26 @@ public class TopicGalleryActivity extends BaseActivity {
         return "TopicGalleryActivity";
     }
 
-    public static void startWithIntent(Context context, ArrayList<String> urls, ArrayList<AnimationRect> rects,
+    public static void startWithIntent(Context context, ArrayList<String> urls, ArrayList<AnimationRect> rectList,
                                    int index) {
         Intent intent = new Intent(context, TopicGalleryActivity.class);
         intent.putExtra(IMG_URLS, urls);
-        intent.putExtra(IMG_RECTS, rects);
+        intent.putExtra(IMG_RECT_LIST, rectList);
         intent.putExtra(IMG_INDEX, index);
         context.startActivity(intent);
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    protected void handleBundleExtra(){
+        mUrls = (ArrayList<String>) getIntent().getSerializableExtra(IMG_URLS);
+        mIndexStart = getIntent().getIntExtra(IMG_INDEX, 0);
+        mRectList = (ArrayList<AnimationRect>) getIntent().getSerializableExtra(IMG_RECT_LIST);
 
+        if(CommonUtil.isEmptyCollection(mUrls, mRectList)){
+            this.finish();
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,71 +83,41 @@ public class TopicGalleryActivity extends BaseActivity {
 
         mViewPager = (ViewPager) findViewById(R.id.select_photo_gallery_view_pager);
         mPages = (TextView) findViewById(R.id.select_photo_gallery_pages);
-        background = findViewById(android.R.id.content);
-
+        mBackground = findViewById(android.R.id.content);
+        mBackgroundColor = new ColorDrawable(Color.BLACK);
+        mBackground.setBackground(mBackgroundColor);
         initViewPager();
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    protected void getBundleExtra(){
-        mUrls = (ArrayList<String>) getIntent().getSerializableExtra(IMG_URLS);
-        mIndexNow = mIndexStart = getIntent().getIntExtra(IMG_INDEX, 0);
-        mRects = (ArrayList<AnimationRect>) getIntent().getSerializableExtra(IMG_RECTS);
-
-        if(CommonUtil.isEmptyCollection(mUrls, mRects)){
-            this.finish();
-        }
-    }
-
     public void initViewPager() {
-
-        DisplayMetrics dm = getResources().getDisplayMetrics();
-
-        // 给ViewPager设置适配器
         mViewPager.setAdapter(new PhotoPagerAdapter(getSupportFragmentManager()));
-//        mViewPager.setAdapter(new PhotoPagerAdapter(this, mUrls));
-        mViewPager.setCurrentItem(mIndexNow);// 设置当前显示标签页为显示页
-        mPages.setText(mIndexNow + 1 + "/" + mUrls.size());
-        mViewPager.addOnPageChangeListener(new MyOnPageChangeListener());// 页面变化时的监听器
+        mViewPager.setCurrentItem(mIndexStart);// 设置当前显示标签页为显示页
+        mPages.setText(mIndexStart + 1 + "/" + mUrls.size());
+        mViewPager.addOnPageChangeListener(new GalleryPageChangeListener());// 页面变化时的监听器
     }
 
-    private View.OnClickListener mOnPhotoClickListener = new View.OnClickListener() {
-
+    class GalleryPageChangeListener implements OnPageChangeListener{
         @Override
-        public void onClick(View v) {
-            finish();
-        }
-    };
-
-    public class MyOnPageChangeListener implements OnPageChangeListener {
-        /**
-         * arg0 :当前页面，及你点击滑动的页面 arg1:当前页面偏移的百分比 arg2:当前页面偏移的像素位置
-         */
-        @Override
-        public void onPageScrolled(int arg0, float arg1, int arg2) {
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int arg0) {
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
         }
 
         @Override
-        public void onPageSelected(int arg0) {
-            mIndexNow = arg0;
-            mPages.setText(mIndexNow + 1 + "/" + mUrls.size());
+        public void onPageSelected(int position) {
+            mPages.setText(position + 1 + "/" + mUrls.size());
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
         }
     }
 
-    private HashMap<Integer, TopicGalleryFragment> fragmentMap = new HashMap<>();
+    private HashMap<Integer, TopicGalleryFragment> mFragmentMap = new HashMap<>();
 
-    private boolean alreadyAnimateIn = false;
+    private boolean mHasAnimateIn = false;
 
     class PhotoPagerAdapter extends FragmentPagerAdapter {
-
-        private ArrayList<String> paths = new ArrayList<>();
-        private Context mContext;
 
         public PhotoPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -148,16 +126,15 @@ public class TopicGalleryActivity extends BaseActivity {
         @Override
         public Fragment getItem(int position) {
 
-            TopicGalleryFragment fragment = fragmentMap.get(position);
+            TopicGalleryFragment fragment = mFragmentMap.get(position);
             if (fragment == null) {
 
-                boolean animateIn = (mIndexStart == position) && !alreadyAnimateIn;
-//                fragment = new TopicGalleryFragment();
+                boolean animateIn = (mIndexStart == position) && !mHasAnimateIn;
                 fragment = TopicGalleryFragment
-                        .newInstance(mUrls.get(position), mRects.get(position), animateIn,
+                        .newInstance(mUrls.get(position), mRectList.get(position), animateIn,
                                 mIndexStart == position);
-                alreadyAnimateIn = true;
-                fragmentMap.put(position, fragment);
+                mHasAnimateIn = true;
+                mFragmentMap.put(position, fragment);
             }
 
             return fragment;
@@ -169,60 +146,47 @@ public class TopicGalleryActivity extends BaseActivity {
         }
 
         //when activity is recycled, ViewPager will reuse fragment by theirs name, so
-        //getItem wont be called, but we need fragmentMap to animate close operation
+        //getItem wont be called, but we need mFragmentMap to animate close operation
         @Override
         public void setPrimaryItem(ViewGroup container, int position, Object object) {
             super.setPrimaryItem(container, position, object);
             if (object instanceof TopicGalleryFragment) {
-                fragmentMap.put(position, (TopicGalleryFragment) object);
+                mFragmentMap.put(position, (TopicGalleryFragment) object);
             }
         }
 
     }
 
-    public void showBackgroundImmediately() {
-        if (background.getBackground() == null) {
-            backgroundColor = new ColorDrawable(Color.BLACK);
-            background.setBackground(backgroundColor);
+    ObjectAnimator mShowBackgroundAnimation;
+    public ObjectAnimator getShowBackgroundAnimation() {
+        if(mShowBackgroundAnimation == null) {
+            mShowBackgroundAnimation = ObjectAnimator.ofInt(mBackgroundColor, "alpha", 0, 255);
+            mShowBackgroundAnimation.setDuration(AnimationUtil.GALLERY_SHOW_BACKGROUND_ANIMATION_DURATION);
         }
+        return mShowBackgroundAnimation;
     }
 
-    public ObjectAnimator showBackgroundAnimate() {
-        backgroundColor = new ColorDrawable(Color.BLACK);
-        background.setBackground(backgroundColor);
-        ObjectAnimator bgAnim = ObjectAnimator
-                .ofInt(backgroundColor, "alpha", 0, 255);
-        bgAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                background.setBackground(backgroundColor);
-            }
-        });
-        return bgAnim;
+    ObjectAnimator mHideBackgroundAnimation;
+    public ObjectAnimator getHideBackgroundAnimation() {
+        if(mHideBackgroundAnimation == null) {
+            mHideBackgroundAnimation = ObjectAnimator.ofInt(mBackgroundColor, "alpha", 255, 0);
+            mHideBackgroundAnimation.setDuration(AnimationUtil.GALLERY_HIDE_BACKGROUND_ANIMATION_DURATION);
+            mHideBackgroundAnimation.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    finish();
+                    overridePendingTransition(0, 0);
+                }
+            });
+        }
+        return mHideBackgroundAnimation;
     }
 
     @Override
     public void onBackPressed() {
-
-        TopicGalleryFragment fragment = fragmentMap.get(mViewPager.getCurrentItem());
-        if (fragment != null && fragment.canAnimateCloseActivity()) {
-            backgroundColor = new ColorDrawable(Color.BLACK);
-            ObjectAnimator bgAnim = ObjectAnimator.ofInt(backgroundColor, "alpha", 0);
-            bgAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    background.setBackground(backgroundColor);
-                }
-            });
-            bgAnim.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    super.onAnimationEnd(animation);
-                    TopicGalleryActivity.super.finish();
-                    overridePendingTransition(-1, -1);
-                }
-            });
-            fragment.animationExit(bgAnim);
+        TopicGalleryFragment fragment = mFragmentMap.get(mViewPager.getCurrentItem());
+        if (fragment != null && fragment.canFinishWithAnimation()) {
+            fragment.runExitAnimation(getHideBackgroundAnimation());
         } else {
             super.onBackPressed();
         }

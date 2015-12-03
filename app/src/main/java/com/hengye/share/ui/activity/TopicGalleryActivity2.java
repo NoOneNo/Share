@@ -81,7 +81,7 @@ public class TopicGalleryActivity2 extends BaseActivity {
 
     @SuppressWarnings("unchecked")
     @Override
-    protected void getBundleExtra(){
+    protected void handleBundleExtra(){
         mUrls = (ArrayList<String>) getIntent().getSerializableExtra(IMG_URLS);
         mIndexNow = mIndexInit = getIntent().getIntExtra(IMG_INDEX, 0);
         mRects = (ArrayList<AnimationRect>) getIntent().getSerializableExtra(IMG_RECTS);

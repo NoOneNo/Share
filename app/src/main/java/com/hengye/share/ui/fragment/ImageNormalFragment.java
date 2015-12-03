@@ -27,6 +27,7 @@ import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.ui.view.TouchImageView;
 import com.hengye.share.util.ImageUtil;
 import com.hengye.share.util.L;
+import com.hengye.share.util.thirdparty.AnimationUtil;
 import com.hengye.volleyplus.toolbox.RequestManager;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
@@ -34,15 +35,10 @@ import com.sina.weibo.sdk.utils.Utility;
 
 import uk.co.senab.photoview.PhotoView;
 
-public class ImageNormalFragment extends Fragment {
-
-    private static final int IMAGEVIEW_SOFT_LAYER_MAX_WIDTH = 2000;
-    private static final int IMAGEVIEW_SOFT_LAYER_MAX_HEIGHT = 3000;
-
-    public static final int ANIMATION_DURATION = 300;
+public class ImageNormalFragment extends BaseFragment {
 
     public static ImageNormalFragment newInstance(String path, AnimationRect rect,
-                                                     boolean animationIn) {
+                                                  boolean animationIn) {
         ImageNormalFragment fragment = new ImageNormalFragment();
         Bundle bundle = new Bundle();
         bundle.putString("path", path);
@@ -52,6 +48,16 @@ public class ImageNormalFragment extends Fragment {
         return fragment;
     }
 
+    String mPath;
+    boolean mAnimateIn;
+    AnimationRect mRect;
+
+    @Override
+    protected void handleBundleExtra() {
+        mPath = getArguments().getString("path");
+        mAnimateIn = getArguments().getBoolean("animationIn");
+        mRect = getArguments().getParcelable("rect");
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,84 +72,35 @@ public class ImageNormalFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.item_viewpager_topic_gallery_, null);
 
-//        final String url = paths.get(position);
         photoView = (PhotoView) view.findViewById(R.id.select_photo_gallery_fragment_iv);
 //        photoView = (TouchImageView) view.findViewById(R.id.select_photo_gallery_fragment_iv);
-        final ProgressBar pb = (ProgressBar) view.findViewById(R.id.pb_image_large);
-        final Button imageLarge = (Button) view.findViewById(R.id.btn_image_large);
-
-//            if(position == mIndexInit && !hasAnimatedIn){
-//                hasAnimatedIn = true;
-//                Cache.Entry entry = RequestManager.getCache(url);
-//                if(entry != null) {
-//                    int screenWidth = getResources().getDisplayMetrics().widthPixels;
-//                    int screenHeight = getResources().getDisplayMetrics().heightPixels;
-//                    Bitmap bitmap = BitmapUtil.getSuitableBitmap(entry.data, screenWidth, screenHeight, BitmapUtil.DEFAULT_CONFIG, touchIv.getScaleType());
-//                    if(bitmap != null){
-//                        touchIv.setImageBitmap(bitmap);
-//                        doAnimation(touchIv, mRects.get(position));
-//                    }
-//                }
-//            }else{
-
         int screenWidth = getResources().getDisplayMetrics().widthPixels;
-        int screenHeight = getResources().getDisplayMetrics().heightPixels;
 
-        final String path = getArguments().getString("path");
-        boolean animateIn = getArguments().getBoolean("animationIn");
-        final AnimationRect rect = getArguments().getParcelable("rect");
-
-        if (!animateIn) {
-//            RequestManager.getImageLoader().get(url, new ImageLoader.ImageListener() {
-//                @Override
-//                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate, boolean isFromCache) {
-//                    touchIv.setImageBitmap(response.getBitmap());
-//                }
-//
-//                @Override
-//                public void onErrorResponse(VolleyError error) {
-//                    L.debug("request image fail, url : {}", url);
-//                }
-//            }, screenWidth, 0, touchIv.getScaleType());
-            final Bitmap bitmap = BitmapUtil.getSuitableBitmap(path, screenWidth, 0, BitmapUtil.DEFAULT_CONFIG, ImageView.ScaleType.FIT_XY);
-
-            photoView.setImageBitmap(bitmap);
-            return view;
-        }
-
-//        final Bitmap bitmap = ImageUtil
-//                .decodeBitmapFromSDCard(path, IMAGEVIEW_SOFT_LAYER_MAX_WIDTH,
-//                        IMAGEVIEW_SOFT_LAYER_MAX_HEIGHT);
-        final Bitmap bitmap = BitmapUtil.getSuitableBitmap(path, screenWidth, 0, BitmapUtil.DEFAULT_CONFIG, ImageView.ScaleType.FIT_XY);
-
+        final Bitmap bitmap = BitmapUtil.getSuitableBitmap(mPath, screenWidth, 0, BitmapUtil.DEFAULT_CONFIG, ImageView.ScaleType.FIT_XY);
         photoView.setImageBitmap(bitmap);
 
-        final Runnable endAction = new Runnable() {
-            @Override
-            public void run() {
-                Bundle bundle = getArguments();
-                bundle.putBoolean("animationIn", false);
-            }
-        };
+        if (mAnimateIn) {
+            mAnimateIn = false;
+            runEnterAnimation();
+        }
+        return view;
+    }
 
+    private void runEnterAnimation() {
         photoView.getViewTreeObserver()
                 .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                     @Override
                     public boolean onPreDraw() {
                         photoView.getViewTreeObserver().removeOnPreDrawListener(this);
-                        if (rect == null) {
-                            photoView.getViewTreeObserver().removeOnPreDrawListener(this);
-                            endAction.run();
+                        if (mRect == null) {
                             return true;
                         }
 
-                        final Rect startBounds = new Rect(rect.scaledBitmapRect);
+                        final Rect startBounds = new Rect(mRect.scaledBitmapRect);
                         final Rect finalBounds = AnimationRect
                                 .getBitmapRectFromImageView(photoView);
 
                         if (finalBounds == null) {
-                            photoView.getViewTreeObserver().removeOnPreDrawListener(this);
-                            endAction.run();
                             return true;
                         }
 
@@ -166,73 +123,41 @@ public class ImageNormalFragment extends Fragment {
                         photoView.setTranslationX(deltaLeft);
                         photoView.setTranslationY(deltaTop);
 
-//                        long temp = 500;
                         photoView.animate().translationY(0).translationX(0)
                                 .scaleY(1)
-                                .scaleX(1).setDuration(ANIMATION_DURATION)
+                                .scaleX(1).setDuration(AnimationUtil.GALLERY_ANIMATION_DURATION)
                                 .setInterpolator(
-                                        new AccelerateDecelerateInterpolator())
-                                .withEndAction(endAction);
-
-//                        ViewHelper.setPivotX(photoView, (photoView.getWidth() - finalBounds.width()) / 2);
-//                        ViewHelper.setPivotY(photoView, (photoView.getHeight() - finalBounds.height()) / 2);
-//                        ViewHelper.setTranslationX(photoView, deltaLeft);
-//                        ViewHelper.setTranslationY(photoView, deltaTop);
-//                        ViewHelper.setScaleX(photoView, 1 / startScale);
-//                        ViewHelper.setScaleY(photoView, 1 / startScale);
-//
-//                        // Animate scale and translation to go from thumbnail to full size
-//                        ViewPropertyAnimator.animate(photoView).translationY(0).translationX(0)
-//                                .scaleY(1)
-//                                .scaleX(1).setDuration(temp)
-//                                .setInterpolator(
-//                                        new AccelerateDecelerateInterpolator());
-//                                .withEndAction(endAction);
-
-
+                                        new AccelerateDecelerateInterpolator());
 
                         AnimatorSet animationSet = new AnimatorSet();
-                        animationSet.setDuration(ANIMATION_DURATION);
+                        animationSet.setDuration(AnimationUtil.GALLERY_ANIMATION_DURATION);
                         animationSet
                                 .setInterpolator(new AccelerateDecelerateInterpolator());
 
                         animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
                                 "clipBottom",
-                                AnimationRect.getClipBottom(rect, finalBounds), 0));
+                                AnimationRect.getClipBottom(mRect, finalBounds), 0));
                         animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
                                 "clipRight",
-                                AnimationRect.getClipRight(rect, finalBounds), 0));
+                                AnimationRect.getClipRight(mRect, finalBounds), 0));
                         animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
-                                "clipTop", AnimationRect.getClipTop(rect, finalBounds), 0));
+                                "clipTop", AnimationRect.getClipTop(mRect, finalBounds), 0));
                         animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
-                                "clipLeft", AnimationRect.getClipLeft(rect, finalBounds), 0));
+                                "clipLeft", AnimationRect.getClipLeft(mRect, finalBounds), 0));
 
                         animationSet.start();
 
-//                        photoView.getViewTreeObserver().removeOnPreDrawListener(this);
                         return true;
                     }
                 });
-
-        return view;
     }
 
-    private void runEnterAnimation() {
-
-    }
-
-    public void animationExit(ObjectAnimator backgroundAnimator) {
+    public void runExitAnimation(ObjectAnimator backgroundAnimator) {
 
 //        if (Math.abs(photoView.getScale() - 1.0f) > 0.1f) {
 //            photoView.setScale(1, true);
 //            return;
 //        }
-
-        getActivity().overridePendingTransition(0, 0);
-        animateClose(backgroundAnimator);
-    }
-
-    private void animateClose(ObjectAnimator backgroundAnimator) {
 
         AnimationRect rect = getArguments().getParcelable("rect");
 
@@ -275,7 +200,7 @@ public class ImageNormalFragment extends Fragment {
 
         photoView.animate().translationX(deltaLeft).translationY(deltaTop)
                 .scaleY(startScaleFinal)
-                .scaleX(startScaleFinal).setDuration(ANIMATION_DURATION)
+                .scaleX(startScaleFinal).setDuration(AnimationUtil.GALLERY_ANIMATION_DURATION)
                 .setInterpolator(new AccelerateDecelerateInterpolator())
                 .withEndAction(new Runnable() {
                     @Override
@@ -292,7 +217,7 @@ public class ImageNormalFragment extends Fragment {
                 });
 
         AnimatorSet animationSet = new AnimatorSet();
-        animationSet.setDuration(ANIMATION_DURATION);
+        animationSet.setDuration(AnimationUtil.GALLERY_ANIMATION_DURATION);
         animationSet.setInterpolator(new AccelerateDecelerateInterpolator());
 
         animationSet.playTogether(backgroundAnimator);

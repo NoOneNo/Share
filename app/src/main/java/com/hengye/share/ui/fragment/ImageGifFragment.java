@@ -99,9 +99,6 @@ public class ImageGifFragment extends Fragment {
             return view;
         }
 
-//        final Bitmap bitmap = ImageUtility
-//                .decodeBitmapFromSDCard(path, IMAGEVIEW_SOFT_LAYER_MAX_WIDTH,
-//                        IMAGEVIEW_SOFT_LAYER_MAX_HEIGHT);
         final Bitmap bitmap = BitmapUtil.getSuitableBitmap(path, screenWidth, 0, BitmapUtil.DEFAULT_CONFIG, ImageView.ScaleType.FIT_XY);
 
         photoView.setImageBitmap(bitmap);
@@ -187,18 +184,12 @@ public class ImageGifFragment extends Fragment {
         return view;
     }
 
-    public void animationExit(ObjectAnimator backgroundAnimator) {
+    public void runExitAnimation(ObjectAnimator backgroundAnimator) {
 
 //        if (Math.abs(photoView.getScale() - 1.0f) > 0.1f) {
 //            photoView.setScale(1, true);
 //            return;
 //        }
-
-        getActivity().overridePendingTransition(0, 0);
-        animateClose(backgroundAnimator);
-    }
-
-    private void animateClose(ObjectAnimator backgroundAnimator) {
 
         AnimationRect rect = getArguments().getParcelable("rect");
 
