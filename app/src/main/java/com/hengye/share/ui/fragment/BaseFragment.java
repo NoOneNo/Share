@@ -3,11 +3,17 @@ package com.hengye.share.ui.fragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import com.hengye.volleyplus.toolbox.RequestManager;
+
 public class BaseFragment extends Fragment {
 
     public final static String BASE_FRAGMENT = "BaseFragment";
 
     public String getTitle(){
+        return null;
+    }
+
+    protected String getRequestTag(){
         return null;
     }
 
@@ -19,5 +25,17 @@ public class BaseFragment extends Fragment {
 
     protected void handleBundleExtra(){
 
+    }
+
+    @Override
+    public void onDestroy() {
+        cancelPendingRequestsIfNeeded();
+        super.onDestroy();
+    }
+
+    protected void cancelPendingRequestsIfNeeded(){
+        if(getRequestTag() != null){
+            RequestManager.cancelPendingRequests(getRequestTag());
+        }
     }
 }

@@ -139,9 +139,9 @@ public class MainActivity extends BaseActivity
 
                 if (!CommonUtil.isEmptyCollection(mAdapter.getDatas())) {
                     String id = mAdapter.getDatas().get(0).getId();
-                    RequestManager.addToRequestQueue(getWBTopicIdsRequest(mWBAccessToken.getToken(), id));
+                    RequestManager.addToRequestQueue(getWBTopicIdsRequest(mWBAccessToken.getToken(), id), getRequestTag());
                 }else{
-                    RequestManager.addToRequestQueue(getWBTopicRequest(mWBAccessToken.getToken(), 0 + "", true));
+                    RequestManager.addToRequestQueue(getWBTopicRequest(mWBAccessToken.getToken(), 0 + "", true), getRequestTag());
                 }
             }
         });
@@ -150,7 +150,7 @@ public class MainActivity extends BaseActivity
             public void onLoad() {
                 if (!CommonUtil.isEmptyCollection(mAdapter.getDatas())) {
                     String id = CommonUtil.getLastItem(mAdapter.getDatas()).getId();
-                    RequestManager.addToRequestQueue(getWBTopicRequest(mWBAccessToken.getToken(), id, false));
+                    RequestManager.addToRequestQueue(getWBTopicRequest(mWBAccessToken.getToken(), id, false), getRequestTag());
                 } else {
                     mPullToRefreshLayout.setLoading(false);
                     mPullToRefreshLayout.setLoadEnable(false);
@@ -278,7 +278,7 @@ public class MainActivity extends BaseActivity
 
             if(mWBAccessToken != null){
                 RequestManager.addToRequestQueue(RequestFactory.getInstance().
-                        getWBUserInfoRequest(mWBAccessToken.getToken(), mWBAccessToken.getUid()));
+                        getWBUserInfoRequest(mWBAccessToken.getToken(), mWBAccessToken.getUid()), getRequestTag());
             }
             return;
         }
@@ -418,11 +418,11 @@ public class MainActivity extends BaseActivity
                         } else {
                             if (response.getStatuses().size() >= WBUtil.MAX_COUNT_REQUEST) {
                                 //还有更新的微博，重新请求刷新
-                                RequestManager.addToRequestQueue(getWBTopicRequest(token, 0 + "", true));
+                                RequestManager.addToRequestQueue(getWBTopicRequest(token, 0 + "", true), getRequestTag());
                                 L.debug("exist newer topic, request refresh again");
                             } else {
                                 //新的微博条数没有超过请求条数，显示更新多少条微博，根据请求的since_id获取微博
-                                RequestManager.addToRequestQueue(getWBTopicRequest(token, since_id, true));
+                                RequestManager.addToRequestQueue(getWBTopicRequest(token, since_id, true), getRequestTag());
                                 L.debug("new topic is less than MAX_COUNT_REQUEST, request refresh by since_id");
                             }
                         }

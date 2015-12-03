@@ -30,6 +30,7 @@ public class FragmentActivity extends BaseActivity {
         return intent;
     }
 
+    @Override
     protected CharSequence getToolbarTitle() {
         ensureFragment();
         return mFragment.getTitle();

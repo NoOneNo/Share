@@ -1,6 +1,7 @@
 package com.hengye.share.ui.fragment;
 
 import android.animation.ObjectAnimator;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,8 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.cache.BitmapCache;
 import com.android.volley.cache.ImageDiskLruCache;
 import com.android.volley.error.VolleyError;
+import com.android.volley.request.ImageRequest;
 import com.android.volley.toolbox.ImageLoader;
 import com.hengye.share.R;
 import com.hengye.share.ui.activity.TopicGalleryActivity;
@@ -44,6 +49,11 @@ public class TopicGalleryFragment extends BaseFragment {
         mFirstEnter = getArguments().getBoolean("firstEnter");
     }
 
+    @Override
+    protected String getRequestTag() {
+        return "TopicGalleryFragment";
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,19 +66,7 @@ public class TopicGalleryFragment extends BaseFragment {
             mAnimateIn = false;
         } else {
             int screenWidth = getResources().getDisplayMetrics().widthPixels;
-            RequestManager.getImageLoader().get(mUrl, new ImageLoader.ImageListener() {
-                @Override
-                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate, boolean isFromCache) {
-                    String path = ImageDiskLruCache.getInstance().getDiskCachePath(mUrl);
-                    if (path != null) {
-                        displayImage(path, false);
-                    }
-                }
-
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                }
-            }, screenWidth, 0, ImageView.ScaleType.FIT_XY);
+            RequestManager.addToRequestQueue(makeImageRequest(mUrl, screenWidth, 0, ImageView.ScaleType.FIT_XY), getRequestTag());
         }
 
         return view;
@@ -116,5 +114,23 @@ public class TopicGalleryFragment extends BaseFragment {
         } else {
             return false;
         }
+    }
+
+    protected Request<Bitmap> makeImageRequest(String requestUrl, int maxWidth, int maxHeight,
+                                               ImageView.ScaleType scaleType) {
+        return new ImageRequest(requestUrl, new Response.Listener<Bitmap>() {
+            @Override
+            public void onResponse(Bitmap response) {
+                String path = ImageDiskLruCache.getInstance().getDiskCachePath(mUrl);
+                if (path != null) {
+                    displayImage(path, false);
+                    BitmapCache.getInstance().putBitmap(path, response);
+                }
+            }
+        }, maxWidth, maxHeight, scaleType, Bitmap.Config.RGB_565, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
     }
 }

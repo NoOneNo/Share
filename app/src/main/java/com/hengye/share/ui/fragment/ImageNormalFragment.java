@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.android.volley.cache.BitmapCache;
 import com.android.volley.error.VolleyError;
 import com.android.volley.toolbox.BitmapUtil;
 import com.android.volley.toolbox.ImageLoader;
@@ -76,7 +77,11 @@ public class ImageNormalFragment extends BaseFragment {
 //        photoView = (TouchImageView) view.findViewById(R.id.select_photo_gallery_fragment_iv);
         int screenWidth = getResources().getDisplayMetrics().widthPixels;
 
-        final Bitmap bitmap = BitmapUtil.getSuitableBitmap(mPath, screenWidth, 0, BitmapUtil.DEFAULT_CONFIG, ImageView.ScaleType.FIT_XY);
+        Bitmap bitmap = BitmapCache.getInstance().getBitmap(mPath);
+        if(bitmap == null){
+            bitmap = BitmapUtil.getSuitableBitmap(mPath, screenWidth, 0, BitmapUtil.DEFAULT_CONFIG, ImageView.ScaleType.FIT_XY);
+            BitmapCache.getInstance().putBitmap(mPath, bitmap);
+        }
         photoView.setImageBitmap(bitmap);
 
         if (mAnimateIn) {
