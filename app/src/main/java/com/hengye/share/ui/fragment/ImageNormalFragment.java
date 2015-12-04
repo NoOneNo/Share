@@ -8,31 +8,19 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import com.android.volley.cache.BitmapCache;
-import com.android.volley.error.VolleyError;
 import com.android.volley.toolbox.BitmapUtil;
-import com.android.volley.toolbox.ImageLoader;
 import com.hengye.share.BaseApplication;
 import com.hengye.share.R;
 import com.hengye.share.ui.support.AnimationRect;
-import com.hengye.share.ui.view.TouchImageView;
-import com.hengye.share.util.ImageUtil;
-import com.hengye.share.util.L;
-import com.hengye.share.util.thirdparty.AnimationUtil;
-import com.hengye.volleyplus.toolbox.RequestManager;
-import com.nineoldandroids.view.ViewHelper;
-import com.nineoldandroids.view.ViewPropertyAnimator;
-import com.sina.weibo.sdk.utils.Utility;
+import com.hengye.share.util.AnimationUtil;
 
 import uk.co.senab.photoview.PhotoView;
 
@@ -71,16 +59,18 @@ public class ImageNormalFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.item_viewpager_topic_gallery_, null);
+        View view = inflater.inflate(R.layout.fragment_image_normal, null);
 
-        photoView = (PhotoView) view.findViewById(R.id.select_photo_gallery_fragment_iv);
-//        photoView = (TouchImageView) view.findViewById(R.id.select_photo_gallery_fragment_iv);
+        photoView = (PhotoView) view.findViewById(R.id.iv_normal);
+//        photoView = (TouchImageView) view.findViewById(R.id.iv_normal);
         int screenWidth = getResources().getDisplayMetrics().widthPixels;
 
         Bitmap bitmap = BitmapCache.getInstance().getBitmap(mPath);
         if(bitmap == null){
             bitmap = BitmapUtil.getSuitableBitmap(mPath, screenWidth, 0, BitmapUtil.DEFAULT_CONFIG, ImageView.ScaleType.FIT_XY);
-            BitmapCache.getInstance().putBitmap(mPath, bitmap);
+            if(bitmap != null){
+                BitmapCache.getInstance().putBitmap(mPath, bitmap);
+            }
         }
         photoView.setImageBitmap(bitmap);
 
@@ -210,14 +200,7 @@ public class ImageNormalFragment extends BaseFragment {
                 .withEndAction(new Runnable() {
                     @Override
                     public void run() {
-
-                        photoView.animate().alpha(0.0f).setDuration(200).withEndAction(
-                                new Runnable() {
-                                    @Override
-                                    public void run() {
-
-                                    }
-                                });
+                        photoView.animate().alpha(0.0f).setDuration(200);
                     }
                 });
 

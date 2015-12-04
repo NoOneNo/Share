@@ -4,16 +4,16 @@
     android:layout_width="match_parent"  
     android:layout_height="match_parent">
      	  
-	<!--<com.hengye.share.ui.view.TouchImageView-->
-	    <!--android:id="@+id/select_photo_gallery_fragment_iv"-->
-	    <!--android:layout_width="match_parent"-->
-	    <!--android:layout_height="match_parent"-->
-	    <!--android:contentDescription="@null"-->
-	    <!--android:scaleType="matrix"-->
-        <!--android:layout_centerInParent="true"/>-->
     <uk.co.senab.photoview.PhotoView
         android:layout_gravity="center"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:id="@+id/select_photo_gallery_fragment_iv"/>
+        android:id="@+id/iv_normal"/>
+
+    <com.hengye.share.ui.view.ClipImageView
+        android:layout_gravity="center"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:id="@+id/cover"
+        android:visibility="gone"/>
 </FrameLayout>

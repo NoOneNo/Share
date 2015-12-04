@@ -23,7 +23,7 @@ import com.hengye.share.R;
 import com.hengye.share.ui.fragment.TopicGalleryFragment;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.util.CommonUtil;
-import com.hengye.share.util.thirdparty.AnimationUtil;
+import com.hengye.share.util.AnimationUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;

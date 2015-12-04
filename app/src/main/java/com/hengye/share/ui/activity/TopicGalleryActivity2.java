@@ -148,10 +148,10 @@ public class TopicGalleryActivity2 extends BaseActivity {
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            View view =  LayoutInflater.from(mContext).inflate(R.layout.item_viewpager_topic_gallery_, null);
+            View view =  LayoutInflater.from(mContext).inflate(R.layout.fragment_image_normal, null);
 
             final String url = paths.get(position);
-            final TouchImageView touchIv = (TouchImageView) view.findViewById(R.id.select_photo_gallery_fragment_iv);
+            final TouchImageView touchIv = (TouchImageView) view.findViewById(R.id.iv_normal);
             final ProgressBar pb = (ProgressBar) view.findViewById(R.id.pb_image_large);
             final Button imageLarge = (Button) view.findViewById(R.id.btn_image_large);
 

@@ -16,7 +16,6 @@ import com.android.volley.cache.BitmapCache;
 import com.android.volley.cache.ImageDiskLruCache;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.ImageRequest;
-import com.android.volley.toolbox.ImageLoader;
 import com.hengye.share.R;
 import com.hengye.share.ui.activity.TopicGalleryActivity;
 import com.hengye.share.ui.support.AnimationRect;
@@ -88,7 +87,7 @@ public class TopicGalleryFragment extends BaseFragment {
                 fragment = ImageNormalFragment.newInstance(path, mRect, animateIn);
             }
         } else {
-            fragment = ImageLargeFragment.newInstance(path, animateIn);
+            fragment = ImageWebViewFragment.newInstance(path, animateIn);
         }
         getChildFragmentManager().beginTransaction().replace(R.id.content, fragment)
                 .commitAllowingStateLoss();
