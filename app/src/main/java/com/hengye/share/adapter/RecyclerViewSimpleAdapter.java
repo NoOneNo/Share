@@ -6,18 +6,19 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
+import com.hengye.share.util.ViewUtil;
+
 import java.util.List;
 
 public class RecyclerViewSimpleAdapter<T, VH extends RecyclerViewSimpleAdapter.ViewHolder> extends RecyclerView.Adapter<VH> {
 
     protected Context mContext;
-    protected List<T> mDatas;
-    protected OnItemClickListener mOnItemClickListener;
+    protected List<T> mData;
+    protected ViewUtil.OnItemClickListener mOnItemClickListener;
 
-    public RecyclerViewSimpleAdapter(Context context, List<T> datas) {
+    public RecyclerViewSimpleAdapter(Context context, List<T> data) {
         mContext = context;
-        mDatas = datas;
+        mData = data;
     }
 
     @Override
@@ -31,97 +32,88 @@ public class RecyclerViewSimpleAdapter<T, VH extends RecyclerViewSimpleAdapter.V
 
     @Override
     public int getItemCount() {
-        return mDatas.size();
+        return mData.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ViewHolder<T> extends RecyclerView.ViewHolder implements View.OnClickListener, ViewUtil.OnItemClickListener {
 
         public ViewHolder(View itemView) {
             super(itemView);
         }
 
-        public ViewHolder(View itemView, OnItemClickListener onItemClickListener) {
+        public ViewHolder(View itemView, ViewUtil.OnItemClickListener onItemClickListener) {
             super(itemView);
             mOnItemClickListener = onItemClickListener;
             itemView.setOnClickListener(this);
         }
 
-        OnItemClickListener mOnItemClickListener;
+        public void bindData(Context context, T t){
+
+        }
+
+        ViewUtil.OnItemClickListener mOnItemClickListener;
 
         @Override
         public void onClick(View v) {
+            onItemClick(v, getAdapterPosition());
             if (mOnItemClickListener != null) {
                 mOnItemClickListener.onItemClick(v, getAdapterPosition());
             }
         }
+
+        @Override
+        public void onItemClick(View view, int position) {
+
+        }
     }
 
     public T getItem(int position){
-        return mDatas.get(position);
+        return mData.get(position);
     }
 
-    public void add(int position, T data) {
-        mDatas.add(position, data);
+    public void add(int position, T item) {
+        mData.add(position, item);
         notifyItemInserted(position);
     }
 
     public void remove(int position) {
-        mDatas.remove(position);
+        mData.remove(position);
         notifyItemRemoved(position);
     }
 
-    public void refresh(List<T> datas) {
-        if (datas == null) {
-            mDatas.clear();
+    public void refresh(List<T> data) {
+        if (data == null) {
+            mData.clear();
         } else {
-            mDatas = datas;
+            mData = data;
         }
         notifyDataSetChanged();
     }
 
-    public void addAll(List<T> datas) {
-        mDatas.addAll(datas);
+    public void addAll(List<T> data) {
+        mData.addAll(data);
         notifyDataSetChanged();
     }
 
-    public void addAll(int position, List<T> datas) {
-        mDatas.addAll(position, datas);
+    public void addAll(int position, List<T> data) {
+        mData.addAll(position, data);
         notifyDataSetChanged();
     }
 
-    public OnItemClickListener getOnItemClickListener() {
+    public ViewUtil.OnItemClickListener getOnItemClickListener() {
         return mOnItemClickListener;
     }
 
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+    public void setOnItemClickListener(ViewUtil.OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
     }
 
-    public List<T> getDatas() {
-        return mDatas;
+    public List<T> getData() {
+        return mData;
     }
 
-    public void setDatas(List<T> datas) {
-        refresh(datas);
+    public void setData(List<T> data) {
+        refresh(data);
     }
 
-    /**
-     * Interface definition for a callback to be invoked when an item in this
-     * RecyclerView has been clicked.
-     */
-    public interface OnItemClickListener {
-
-        /**
-         * Callback method to be invoked when an item in this RecyclerView has
-         * been clicked.
-         * <p/>
-         * Implementers can call getItemAtPosition(position) if they need
-         * to access the data associated with the selected item.
-         *
-         * @param view     The view within the AdapterView that was clicked (this
-         *                 will be a view provided by the adapter)
-         * @param position The position of the view in the adapter.
-         */
-        void onItemClick(View view, int position);
-    }
 }

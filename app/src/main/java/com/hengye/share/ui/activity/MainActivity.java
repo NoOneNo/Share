@@ -26,13 +26,11 @@ import com.android.volley.view.NetworkImageView;
 import com.google.gson.reflect.TypeToken;
 import com.hengye.share.BaseActivity;
 import com.hengye.share.R;
-import com.hengye.share.adapter.RecyclerViewSimpleAdapter;
 import com.hengye.share.adapter.RecyclerViewTopicAdapter;
 import com.hengye.share.module.Topic;
 import com.hengye.share.module.UserInfo;
 import com.hengye.share.module.sina.WBTopic;
 import com.hengye.share.module.sina.WBTopicIds;
-import com.hengye.share.module.sina.WBUnReadCount;
 import com.hengye.share.module.sina.WBUserInfo;
 import com.hengye.share.module.sina.WBUtil;
 import com.hengye.share.support.ActionBarDrawerToggleCustom;
@@ -42,9 +40,9 @@ import com.hengye.share.util.IntentUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestFactory;
 import com.hengye.share.util.SPUtil;
-import com.hengye.share.util.SettingHelper;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
+import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.thirdparty.SaveUserInfoWeiboAuthListener;
 import com.hengye.share.util.thirdparty.ThirdPartyUtils;
 import com.hengye.swiperefresh.PullToRefreshLayout;
@@ -137,8 +135,8 @@ public class MainActivity extends BaseActivity
                     return;
                 }
 
-                if (!CommonUtil.isEmptyCollection(mAdapter.getDatas())) {
-                    String id = mAdapter.getDatas().get(0).getId();
+                if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
+                    String id = mAdapter.getData().get(0).getId();
                     RequestManager.addToRequestQueue(getWBTopicIdsRequest(mWBAccessToken.getToken(), id), getRequestTag());
                 }else{
                     RequestManager.addToRequestQueue(getWBTopicRequest(mWBAccessToken.getToken(), 0 + "", true), getRequestTag());
@@ -148,8 +146,8 @@ public class MainActivity extends BaseActivity
         mPullToRefreshLayout.setOnLoadListener(new PullToRefreshLayout.OnLoadListener() {
             @Override
             public void onLoad() {
-                if (!CommonUtil.isEmptyCollection(mAdapter.getDatas())) {
-                    String id = CommonUtil.getLastItem(mAdapter.getDatas()).getId();
+                if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
+                    String id = CommonUtil.getLastItem(mAdapter.getData()).getId();
                     RequestManager.addToRequestQueue(getWBTopicRequest(mWBAccessToken.getToken(), id, false), getRequestTag());
                 } else {
                     mPullToRefreshLayout.setLoading(false);
@@ -158,7 +156,7 @@ public class MainActivity extends BaseActivity
             }
         });
 
-        mAdapter.setOnItemClickListener(new RecyclerViewSimpleAdapter.OnItemClickListener() {
+        mAdapter.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Toast.makeText(MainActivity.this, "click item : " + position, Toast.LENGTH_SHORT).show();
@@ -333,7 +331,7 @@ public class MainActivity extends BaseActivity
                 if (isRefresh) {
                     //下拉刷新
                     mPullToRefreshLayout.setRefreshing(false);
-                    if (!CommonUtil.isEmptyCollection(mAdapter.getDatas())) {
+                    if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
                         //微博属于刷新
                         if (CommonUtil.isEmptyCollection(datas)) {
                             //没有内容更新
@@ -358,7 +356,7 @@ public class MainActivity extends BaseActivity
                         mAdapter.refresh(datas);
                     }
                     //存储数据
-                    SPUtil.setModule(mAdapter.getDatas(), Topic.class.getSimpleName());
+                    SPUtil.setModule(mAdapter.getData(), Topic.class.getSimpleName());
                 } else {
                     //上拉加载
                     mPullToRefreshLayout.setLoading(false);
@@ -376,7 +374,7 @@ public class MainActivity extends BaseActivity
                         }
                         //因为请求的数据是小于或等于max_id，需要做是否重复判断处理
                         if (datas.get(0).getId() != null && datas.get(0).getId().
-                                equals(CommonUtil.getLastItem(mAdapter.getDatas()).getId())) {
+                                equals(CommonUtil.getLastItem(mAdapter.getData()).getId())) {
                             datas.remove(0);
                         }
                         mAdapter.addAll(datas);

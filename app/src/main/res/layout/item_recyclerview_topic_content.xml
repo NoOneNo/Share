@@ -10,9 +10,14 @@
         android:textSize="16sp"
         android:textColor="@color/topic_content" />
 
-    <GridLayout
+    <com.hengye.share.ui.view.GridGalleryView
         android:id="@+id/gl_topic_gallery"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/content_margin"></GridLayout>
+        android:layout_marginTop="@dimen/content_margin"/>
+    <!--<GridLayout-->
+        <!--android:id="@+id/gl_topic_gallery"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="@dimen/content_margin"></GridLayout>-->
 </merge>
