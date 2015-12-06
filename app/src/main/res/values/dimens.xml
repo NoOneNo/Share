@@ -13,11 +13,13 @@
     <dimen name="content_margin">5dp</dimen>
     <dimen name="content_margin_2">10dp</dimen>
 
-    <dimen name="userinfo_avator">45dp</dimen>
+    <dimen name="user_avatar">45dp</dimen>
 
     <dimen name="topic_username">14sp</dimen>
-    <dimen name="topic_avator">35dp</dimen>
+    <dimen name="topic_avatar">35dp</dimen>
     <dimen name="topic_description">11sp</dimen>
     <dimen name="topic_content">16sp</dimen>
     <dimen name="topic_gallery_iv_margin">4dp</dimen>
+
+    <dimen name="detail_backdrop_height">256dp</dimen>
 </resources>

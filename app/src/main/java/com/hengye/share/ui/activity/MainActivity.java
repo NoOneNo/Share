@@ -31,6 +31,7 @@ import com.hengye.share.module.Topic;
 import com.hengye.share.module.UserInfo;
 import com.hengye.share.module.sina.WBTopic;
 import com.hengye.share.module.sina.WBTopicIds;
+import com.hengye.share.module.sina.WBTopics;
 import com.hengye.share.module.sina.WBUserInfo;
 import com.hengye.share.module.sina.WBUtil;
 import com.hengye.share.support.ActionBarDrawerToggleCustom;
@@ -204,7 +205,8 @@ public class MainActivity extends BaseActivity
 //                mWeiboAuth.anthorize(new WBAuthListener());
 //            }
         } else if (id == R.id.action_test) {
-            Intent intent = new Intent(this, TestActivity.class);
+//            Intent intent = new Intent(this, TestActivity.class);
+            Intent intent = new Intent(this, PersonalHomepageActivity.class);
             startActivity(intent);
         }
 
@@ -272,7 +274,7 @@ public class MainActivity extends BaseActivity
         WBUserInfo wbUserInfo = SPUtil.getModule(WBUserInfo.class, WBUserInfo.class.getSimpleName());
         if (wbUserInfo == null) {
             //用户数据为空
-            L.debug("updateNavigationView invoke, userinfo is null");
+            L.debug("updateNavigationView invoke, UserInfo is null");
 
             if(mWBAccessToken != null){
                 RequestManager.addToRequestQueue(RequestFactory.getInstance().
@@ -287,7 +289,7 @@ public class MainActivity extends BaseActivity
         if (!TextUtils.isEmpty(uid)){
             if(uid.equals(userInfo.getUid())){
                 //此ID数据已经更新过
-                L.debug("updateNavigationView invoke, userinfo has updated");
+                L.debug("updateNavigationView invoke, UserInfo has updated");
                 return;
             }else{
                 if(mWBAccessToken != null){
@@ -297,20 +299,19 @@ public class MainActivity extends BaseActivity
             }
         }
 
-        L.debug("updateNavigationView invoke, userinfo has not updated");
+        L.debug("updateNavigationView invoke, UserInfo has not updated");
         navigationView.setTag(userInfo.getUid());
-        NetworkImageView avator = (NetworkImageView) navigationView.findViewById(R.id.iv_avator);
+        NetworkImageView avatar = (NetworkImageView) navigationView.findViewById(R.id.iv_avatar);
         TextView name = (TextView) navigationView.findViewById(R.id.tv_username);
         TextView sign = (TextView) navigationView.findViewById(R.id.tv_sign);
 
-        avator.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());
+        avatar.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());
         name.setText(userInfo.getName());
         sign.setText(userInfo.getSign());
     }
 
 
-    //    private int mPageNo;
-    private GsonRequest<WBTopic> getWBTopicRequest(String token, String id, final boolean isRefresh) {
+    private GsonRequest<WBTopics> getWBTopicRequest(String token, String id, final boolean isRefresh) {
         final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBFriendTopicUrl());
         ub.addParameter("access_token", token);
         if (isRefresh) {
@@ -318,14 +319,13 @@ public class MainActivity extends BaseActivity
         } else {
             ub.addParameter("max_id", id);
         }
-//        ub.addParameter("page", page);
         ub.addParameter("count", WBUtil.MAX_COUNT_REQUEST);
         return new GsonRequest<>(
                 ub.getRequestUrl()
-                , WBTopic.class
-                , new Response.Listener<WBTopic>() {
+                , WBTopics.class
+                , new Response.Listener<WBTopics>() {
             @Override
-            public void onResponse(WBTopic response) {
+            public void onResponse(WBTopics response) {
                 L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
                 List<Topic> datas = Topic.getTopics(response);
                 if (isRefresh) {

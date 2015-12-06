@@ -15,7 +15,7 @@ import com.hengye.volleyplus.toolbox.RequestManager;
 public class BaseActivity extends AppCompatActivity {
 
     protected String getRequestTag(){
-        return null;
+        return "BaseActivity";
     }
 
     /**

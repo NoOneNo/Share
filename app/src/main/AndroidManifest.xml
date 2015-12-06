@@ -66,6 +66,10 @@
         </activity>
 
         <activity
+            android:name="com.hengye.share.ui.activity.PersonalHomepageActivity">
+        </activity>
+
+        <activity
             android:name="com.hengye.share.ui.activity.TestActivity">
         </activity>
     </application>

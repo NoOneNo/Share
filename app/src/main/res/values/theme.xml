@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Base application theme. -->
-    <style name="ShareAppTheme" parent="Theme.AppCompat.Light">
+    <style name="ShareAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <!--<item name="android:homeAsUpIndicator">@mipmap/btn_back</item>-->
     </style>
 
@@ -26,6 +22,7 @@
 
 
     <style name="ShareAppTheme.Green">
+
         <item name="android:navigationBarColor">@color/theme_green_primary</item>
         <item name="colorPrimary">@color/theme_green_primary</item>
         <item name="colorPrimaryDark">@color/theme_green_primary</item>

@@ -3,14 +3,7 @@ package com.hengye.share.util;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
-import com.hengye.share.module.Topic;
-import com.hengye.share.module.UserInfo;
-import com.hengye.share.module.sina.WBTopic;
-import com.hengye.share.module.sina.WBTopicIds;
 import com.hengye.share.module.sina.WBUserInfo;
-import com.hengye.share.module.sina.WBUtil;
-
-import java.util.List;
 
 /**
  * 用于生成一些不需要更新UI的网络请求
@@ -52,19 +45,19 @@ public class RequestFactory {
         });
     }
 
-//    public GsonRequest<WBTopic> getWBTopicRequest(String token,
-//                                                  Response.Listener<WBTopic> listener, Response.ErrorListener errorListener) {
+//    public GsonRequest<WBTopics> getWBTopicRequest(String token,
+//                                                  Response.Listener<WBTopics> listener, Response.ErrorListener errorListener) {
 //        return getWBTopicRequest(token, 0, true, 1, listener, errorListener);
 //    }
 //
 //
-//    public GsonRequest<WBTopic> getWBTopicRequest(String token, int id, boolean isRefresh,
-//                                                  Response.Listener<WBTopic> listener, Response.ErrorListener errorListener) {
+//    public GsonRequest<WBTopics> getWBTopicRequest(String token, int id, boolean isRefresh,
+//                                                  Response.Listener<WBTopics> listener, Response.ErrorListener errorListener) {
 //        return getWBTopicRequest(token, id, isRefresh, 1, listener, errorListener);
 //    }
 //
-//    public GsonRequest<WBTopic> getWBTopicRequest(String token, int id, boolean isRefresh, int page,
-//                                                  Response.Listener<WBTopic> listener, Response.ErrorListener errorListener) {
+//    public GsonRequest<WBTopics> getWBTopicRequest(String token, int id, boolean isRefresh, int page,
+//                                                  Response.Listener<WBTopics> listener, Response.ErrorListener errorListener) {
 //        final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBFriendTopicIdsUrl());
 //        ub.addParameter("access_token", token);
 //        if(isRefresh){
@@ -76,7 +69,7 @@ public class RequestFactory {
 //        ub.addParameter("count", WBUtil.MAX_COUNT_REQUEST);
 //        return new GsonRequest<>(
 //                ub.getRequestUrl()
-//                , WBTopic.class
+//                , WBTopics.class
 //                , listener, errorListener);
 //    }
 

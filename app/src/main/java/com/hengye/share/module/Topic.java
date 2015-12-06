@@ -3,6 +3,7 @@ package com.hengye.share.module;
 import android.text.TextUtils;
 
 import com.hengye.share.module.sina.WBTopic;
+import com.hengye.share.module.sina.WBTopics;
 import com.hengye.share.util.CommonUtil;
 
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.List;
 
 public class Topic extends Parent{
 
-    private String avator;//头像
+    private String avatar;//头像
     private String username;//名字
     private String date;//创建日期
     private String channel;//渠道，通过什么发表
@@ -20,15 +21,15 @@ public class Topic extends Parent{
     private List<String> imageLargeUrls;//原图
     private Topic retweetedTopic;//被转发的主题
 
-    public static ArrayList<Topic> getTopics(WBTopic wbTopic){
+    public static ArrayList<Topic> getTopics(WBTopics wbTopics){
         ArrayList<Topic> topics = new ArrayList<>();
-        for(WBTopic.StatusesEntity entity : wbTopic.getStatuses()){
+        for(WBTopic entity : wbTopics.getStatuses()){
             topics.add(getTopic(entity));
         }
         return topics;
     }
 
-    public static Topic getTopic(WBTopic.StatusesEntity entity){
+    public static Topic getTopic(WBTopic entity){
         Topic topic = new Topic();
         if(entity == null){
             return topic;
@@ -36,7 +37,7 @@ public class Topic extends Parent{
         topic.setParent(entity);
         topic.setParentType(Parent.TYPE_WEIBO);
         if(entity.getUser() != null) {
-            topic.setAvator(entity.getUser().getAvatar_large());
+            topic.setAvatar(entity.getUser().getAvatar_large());
             topic.setUsername(entity.getUser().getScreen_name());
         }
         topic.setDate(entity.getCreated_at());
@@ -46,7 +47,7 @@ public class Topic extends Parent{
         if(!CommonUtil.isEmptyCollection(entity.getPic_urls())){
             List<String> imageUrls = new ArrayList<>();
             List<String> imageLargeUrls = new ArrayList<>();
-            for(WBTopic.StatusesEntity.Pic_urlsEntity urlsEntity : entity.getPic_urls()){
+            for(WBTopic.Pic_urlsEntity urlsEntity : entity.getPic_urls()){
                 imageUrls.add(getWBTopicImgUrl(urlsEntity.getThumbnail_pic(), IMAGE_TYPE_BMIDDLE));
                 imageLargeUrls.add(getWBTopicImgUrl(urlsEntity.getThumbnail_pic(), IMAGE_TYPE_LARGE));
             }
@@ -82,7 +83,7 @@ public class Topic extends Parent{
     @Override
     public String toString() {
         return "Topic{" +
-                "avator='" + avator + '\'' +
+                "avator='" + avatar + '\'' +
                 ", username='" + username + '\'' +
                 ", date='" + date + '\'' +
                 ", channel='" + channel + '\'' +
@@ -106,12 +107,12 @@ public class Topic extends Parent{
         this.id = id;
     }
 
-    public String getAvator() {
-        return avator;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setAvator(String avator) {
-        this.avator = avator;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getUsername() {

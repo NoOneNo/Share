@@ -69,6 +69,7 @@ public class WBUserInfo {
     private String url;
     private String profile_image_url;
     private String profile_url;
+    private String cover_image_phone;
     private String domain;
     private String weihao;
     private String gender;
@@ -93,7 +94,7 @@ public class WBUserInfo {
      * deleted : 1
      */
 
-    private StatusEntity status;
+    private WBTopic status;
     private int ptype;
     private boolean allow_all_comment;
     private String avatar_large;
@@ -115,6 +116,14 @@ public class WBUserInfo {
     private int credit_score;
     private int user_ability;
     private int urank;
+
+    public String getCover_image_phone() {
+        return cover_image_phone;
+    }
+
+    public void setCover_image_phone(String cover_image_phone) {
+        this.cover_image_phone = cover_image_phone;
+    }
 
     public void setId(long id) {
         this.id = id;
@@ -224,7 +233,7 @@ public class WBUserInfo {
         this.remark = remark;
     }
 
-    public void setStatus(StatusEntity status) {
+    public void setStatus(WBTopic status) {
         this.status = status;
     }
 
@@ -420,7 +429,7 @@ public class WBUserInfo {
         return remark;
     }
 
-    public StatusEntity getStatus() {
+    public WBTopic getStatus() {
         return status;
     }
 
@@ -508,60 +517,4 @@ public class WBUserInfo {
         return urank;
     }
 
-    public static class StatusEntity {
-        private String created_at;
-        private long id;
-        private String mid;
-        private String idstr;
-        private String text;
-        private String deleted;
-
-        public void setCreated_at(String created_at) {
-            this.created_at = created_at;
-        }
-
-        public void setId(long id) {
-            this.id = id;
-        }
-
-        public void setMid(String mid) {
-            this.mid = mid;
-        }
-
-        public void setIdstr(String idstr) {
-            this.idstr = idstr;
-        }
-
-        public void setText(String text) {
-            this.text = text;
-        }
-
-        public void setDeleted(String deleted) {
-            this.deleted = deleted;
-        }
-
-        public String getCreated_at() {
-            return created_at;
-        }
-
-        public long getId() {
-            return id;
-        }
-
-        public String getMid() {
-            return mid;
-        }
-
-        public String getIdstr() {
-            return idstr;
-        }
-
-        public String getText() {
-            return text;
-        }
-
-        public String getDeleted() {
-            return deleted;
-        }
-    }
 }

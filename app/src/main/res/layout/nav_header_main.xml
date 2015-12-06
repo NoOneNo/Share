@@ -12,9 +12,9 @@
     android:gravity="bottom">
 
     <com.android.volley.view.NetworkImageView
-        android:id="@+id/iv_avator"
-        android:layout_width="@dimen/userinfo_avator"
-        android:layout_height="@dimen/userinfo_avator"
+        android:id="@+id/iv_avatar"
+        android:layout_width="@dimen/user_avatar"
+        android:layout_height="@dimen/user_avatar"
         android:src="@android:drawable/sym_def_app_icon"/>
 
     <TextView

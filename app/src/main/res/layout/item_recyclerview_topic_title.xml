@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_topic_title"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/content_margin_2"
-    tools:showIn="@layout/item_recylerview_main">
+    tools:showIn="@layout/item_recyclerview_topic">
 
     <com.android.volley.view.NetworkImageViewPlus
-        android:id="@+id/iv_topic_avator"
-        android:layout_width="@dimen/topic_avator"
-        android:layout_height="@dimen/topic_avator"
+        android:id="@+id/iv_topic_avatar"
+        android:layout_width="@dimen/topic_avatar"
+        android:layout_height="@dimen/topic_avatar"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:scaleType="fitXY"
         android:contentDescription="@null"/>
 
     <TextView
         android:id="@+id/tv_topic_username"
-        android:layout_toEndOf="@id/iv_topic_avator"
+        android:layout_toEndOf="@id/iv_topic_avatar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="我是一只小小小鸡仔"

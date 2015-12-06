@@ -12,9 +12,9 @@ import java.util.List;
 
 public class RecyclerViewSimpleAdapter<T, VH extends RecyclerViewSimpleAdapter.ViewHolder> extends RecyclerView.Adapter<VH> {
 
-    protected Context mContext;
-    protected List<T> mData;
-    protected ViewUtil.OnItemClickListener mOnItemClickListener;
+    private Context mContext;
+    private List<T> mData;
+    private ViewUtil.OnItemClickListener mOnItemClickListener;
 
     public RecyclerViewSimpleAdapter(Context context, List<T> data) {
         mContext = context;
@@ -44,26 +44,60 @@ public class RecyclerViewSimpleAdapter<T, VH extends RecyclerViewSimpleAdapter.V
         public ViewHolder(View itemView, ViewUtil.OnItemClickListener onItemClickListener) {
             super(itemView);
             mOnItemClickListener = onItemClickListener;
-            itemView.setOnClickListener(this);
+            itemView.setOnClickListener(mOnClickForItemListener);
         }
 
         public void bindData(Context context, T t){
 
         }
 
-        ViewUtil.OnItemClickListener mOnItemClickListener;
+        ViewUtil.OnItemClickListener mOnItemClickListener, mOnChildViewClickListener;
 
         @Override
         public void onClick(View v) {
             onItemClick(v, getAdapterPosition());
-            if (mOnItemClickListener != null) {
-                mOnItemClickListener.onItemClick(v, getAdapterPosition());
+        }
+
+        /**
+         * 用于实现Item的子view的OnClick, 子类重载此方法必须调用父类的onItemClick;
+         */
+        @Override
+        public void onItemClick(View view, int position) {
+            if (mOnChildViewClickListener != null) {
+                mOnChildViewClickListener.onItemClick(view, getAdapterPosition());
             }
         }
 
-        @Override
-        public void onItemClick(View view, int position) {
+        /**
+         * 用于提供给外部调用的ItemClick;
+         */
+        View.OnClickListener mOnClickForItemListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onItemClick(v, getAdapterPosition());
+                }
+            }
+        };
 
+        public ViewUtil.OnItemClickListener getOnItemClickListener() {
+            return mOnItemClickListener;
+        }
+
+        public void setOnItemClickListener(ViewUtil.OnItemClickListener onItemClickListener) {
+            this.mOnItemClickListener = onItemClickListener;
+        }
+
+        public View.OnClickListener getOnClickForItemListener() {
+            return mOnClickForItemListener;
+        }
+
+        public ViewUtil.OnItemClickListener getOnChildViewClickListener() {
+            return mOnChildViewClickListener;
+        }
+
+        public void setOnChildViewClickListener(ViewUtil.OnItemClickListener onChildViewClickListener) {
+            this.mOnChildViewClickListener = onChildViewClickListener;
         }
     }
 
@@ -74,6 +108,11 @@ public class RecyclerViewSimpleAdapter<T, VH extends RecyclerViewSimpleAdapter.V
     public void add(int position, T item) {
         mData.add(position, item);
         notifyItemInserted(position);
+    }
+
+    public void add(T item) {
+        mData.add(item);
+        notifyItemInserted(mData.size() - 1);
     }
 
     public void remove(int position) {
@@ -116,4 +155,11 @@ public class RecyclerViewSimpleAdapter<T, VH extends RecyclerViewSimpleAdapter.V
         refresh(data);
     }
 
+    public Context getContext() {
+        return mContext;
+    }
+
+    public void setContext(Context context) {
+        this.mContext = context;
+    }
 }
