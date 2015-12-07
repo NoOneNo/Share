@@ -29,7 +29,6 @@ import com.hengye.share.R;
 import com.hengye.share.adapter.RecyclerViewTopicAdapter;
 import com.hengye.share.module.Topic;
 import com.hengye.share.module.UserInfo;
-import com.hengye.share.module.sina.WBTopic;
 import com.hengye.share.module.sina.WBTopicIds;
 import com.hengye.share.module.sina.WBTopics;
 import com.hengye.share.module.sina.WBUserInfo;
@@ -121,9 +120,9 @@ public class MainActivity extends BaseActivity
         navigationView.setNavigationItemSelectedListener(this);
         updateNavigationView();
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_main);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(mAdapter = new RecyclerViewTopicAdapter(this, getDatas()));
+        recyclerView.setAdapter(mAdapter = new RecyclerViewTopicAdapter(this, getData()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         mWBAccessToken = SPUtil.getSinaAccessToken();
@@ -247,18 +246,18 @@ public class MainActivity extends BaseActivity
         }
     }
 
-    private ArrayList<Topic> getDatas() {
+    private ArrayList<Topic> getData() {
 
-        ArrayList<Topic> datas = SPUtil.getModule(new TypeToken<ArrayList<Topic>>() {
+        ArrayList<Topic> data = SPUtil.getModule(new TypeToken<ArrayList<Topic>>() {
         }.getType(), Topic.class.getSimpleName());
-//        ArrayList<Topic> datas = null;
+//        ArrayList<Topic> data = null;
 //        if (wbTopic != null) {
-//            datas = Topic.getTopics(wbTopic);
+//            data = Topic.getTopics(wbTopic);
 //        }
-        if (datas == null) {
-            datas = new ArrayList<>();
+        if (data == null) {
+            data = new ArrayList<>();
         }
-        return datas;
+        return data;
     }
 
     private void initData() {

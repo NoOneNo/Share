@@ -11,6 +11,10 @@ public class UrlFactory {
         return UrlFactoryHolder.INSTANCE;
     }
 
+    public String getWBUserTopicUrl(){
+        return URL_PREFIX_WEIBO + "statuses/user_timeline.json";
+    }
+
     //weibo url prefix
     private static final String URL_PREFIX_WEIBO = "https://api.weibo.com/2/";
 

@@ -1,6 +1,7 @@
 package com.hengye.share.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.Html;
 import android.text.Selection;
 import android.text.SpannableString;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.R;
+import com.hengye.share.module.UserInfo;
 import com.hengye.share.ui.activity.PersonalHomepageActivity;
 import com.hengye.share.ui.activity.TopicGalleryActivity;
 import com.hengye.share.module.Topic;
@@ -61,7 +63,9 @@ public class RecyclerViewTopicAdapter extends RecyclerViewSimpleAdapter<Topic, R
     public void onItemClick(View view, int position) {
         int id = view.getId();
         if(id == R.id.rl_topic_title){
-            IntentUtil.startActivity(getContext(), PersonalHomepageActivity.class);
+            Intent intent = new Intent(getContext(), PersonalHomepageActivity.class);
+            intent.putExtra(UserInfo.class.getSimpleName(), getItem(position).getUserInfo());
+            IntentUtil.startActivity(getContext(), intent);
         }
     }
 

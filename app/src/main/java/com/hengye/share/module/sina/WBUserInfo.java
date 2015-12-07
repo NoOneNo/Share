@@ -2,8 +2,11 @@ package com.hengye.share.module.sina;
 
 import com.google.gson.annotations.SerializedName;
 
-public class WBUserInfo {
+import java.io.Serializable;
 
+public class WBUserInfo implements Serializable{
+
+    private static final long serialVersionUID = -6328937740278034345L;
     /**
      * id : 2207519004
      * idstr : 2207519004

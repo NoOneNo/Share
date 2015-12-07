@@ -3,7 +3,13 @@ package com.hengye.share.module;
 
 import com.hengye.share.module.sina.WBUserInfo;
 
-public class UserInfo extends Parent{
+import java.io.Serializable;
+
+public class UserInfo implements Serializable{
+
+    private static final long serialVersionUID = -8013315389622733204L;
+
+    private Parent parent;
 
     private String uid;//用户ID
     private String name;//用户名
@@ -13,14 +19,21 @@ public class UserInfo extends Parent{
 
     public static UserInfo getUserInfo(WBUserInfo wbUserInfo){
         UserInfo userInfo = new UserInfo();
-        userInfo.setParent(wbUserInfo);
-        userInfo.setParentType(Parent.TYPE_WEIBO);
+        userInfo.setParent(new Parent(wbUserInfo, Parent.TYPE_WEIBO));
         userInfo.setUid(wbUserInfo.getIdstr());
         userInfo.setName(wbUserInfo.getName());
         userInfo.setAvatar(wbUserInfo.getAvatar_large());
         userInfo.setGender(wbUserInfo.getGender());
         userInfo.setSign(wbUserInfo.getDescription());
         return userInfo;
+    }
+
+    public Parent getParent() {
+        return parent;
+    }
+
+    public void setParent(Parent parent) {
+        this.parent = parent;
     }
 
     public String getUid() {

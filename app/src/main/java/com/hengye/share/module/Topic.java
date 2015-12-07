@@ -6,10 +6,15 @@ import com.hengye.share.module.sina.WBTopic;
 import com.hengye.share.module.sina.WBTopics;
 import com.hengye.share.util.CommonUtil;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Topic extends Parent{
+public class Topic implements Serializable{
+
+    private static final long serialVersionUID = 971288752432928272L;
+
+    private Parent parent;
 
     private String avatar;//头像
     private String username;//名字
@@ -21,7 +26,12 @@ public class Topic extends Parent{
     private List<String> imageLargeUrls;//原图
     private Topic retweetedTopic;//被转发的主题
 
+    private UserInfo userInfo;
+
     public static ArrayList<Topic> getTopics(WBTopics wbTopics){
+        if(wbTopics == null || CommonUtil.isEmptyCollection(wbTopics.getStatuses())){
+            return null;
+        }
         ArrayList<Topic> topics = new ArrayList<>();
         for(WBTopic entity : wbTopics.getStatuses()){
             topics.add(getTopic(entity));
@@ -34,8 +44,8 @@ public class Topic extends Parent{
         if(entity == null){
             return topic;
         }
-        topic.setParent(entity);
-        topic.setParentType(Parent.TYPE_WEIBO);
+        topic.setParent(new Parent(entity, Parent.TYPE_WEIBO));
+        topic.setUserInfo(UserInfo.getUserInfo(entity.getUser()));
         if(entity.getUser() != null) {
             topic.setAvatar(entity.getUser().getAvatar_large());
             topic.setUsername(entity.getUser().getScreen_name());
@@ -89,6 +99,22 @@ public class Topic extends Parent{
                 ", channel='" + channel + '\'' +
                 ", content='" + content + '\'' +
                 '}';
+    }
+
+    public Parent getParent() {
+        return parent;
+    }
+
+    public void setParent(Parent parent) {
+        this.parent = parent;
+    }
+
+    public UserInfo getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
     }
 
     public Topic getRetweetedTopic() {

@@ -2,10 +2,12 @@ package com.hengye.share.module.sina;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class WBTopic {
+public class WBTopic implements Serializable{
 
+    private static final long serialVersionUID = 3472592334630262158L;
     /**
      * created_at : Mon Nov 02 22:27:36 +0800 2015
      * id : 3904859252596728
