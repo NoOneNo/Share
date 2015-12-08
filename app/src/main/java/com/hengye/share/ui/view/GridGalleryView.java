@@ -9,7 +9,7 @@ import android.widget.ImageView;
 
 import com.hengye.share.util.ViewUtil;
 
-public class GridGalleryView extends GridLayout implements View.OnClickListener{
+public class GridGalleryView extends GridLayout implements View.OnClickListener {
 
     public GridGalleryView(Context context) {
         super(context);
@@ -34,56 +34,58 @@ public class GridGalleryView extends GridLayout implements View.OnClickListener{
         super.onMeasure(widthSpec, heightSpec);
 
         ensureSize();
-
-//        generateGridView();
     }
 
-    int mMaxWidth;
-    protected void ensureSize(){
-        if(mMaxWidth == 0) {
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+
+    }
+
+    int mMaxWidth = -1;
+
+    protected void ensureSize() {
+        if (mMaxWidth == -1) {
             mMaxWidth = getMeasuredWidth();
         }
     }
 
-
-
-    protected void generateGridView(){
-        if(!mReset){
+    protected void generateGridView() {
+        if (!mReset) {
             return;
         }
-        mReset = false;
 
-        if(mHandleData == null){
+        mReset = false;
+        if (mHandleData == null) {
             throw new NullPointerException("HandleData Interface has not initialize");
         }
-
         removeAllViews();
-        for(int i = 0; i < mChildCount; i++){
+        setColumnCount(ImageSize.getImageColumnCount(mGridCount));
+        for (int i = 0; i < mGridCount; i++) {
             ImageView imageView = mHandleData.getImageView();
             imageView.setTag(View.NO_ID, i);
-            ImageSize.handleImageView(imageView, mMaxWidth, mMargin, mChildCount);
+            ImageSize.handleImageView(imageView, mMaxWidth, mMargin, mGridCount);
             imageView.setOnClickListener(this);
             addView(imageView);
             mHandleData.handleChildItem(imageView, i);
         }
-        setColumnCount(ImageSize.getImageColumnCount(mChildCount));
     }
 
     @Override
     public void onClick(View v) {
         int position = (int) v.getTag(View.NO_ID);
-        if(mOnItemClickListener != null){
+        if (mOnItemClickListener != null) {
             mOnItemClickListener.onItemClick(v, position);
         }
     }
 
     boolean mReset = true;
-    int mChildCount;
+    int mGridCount;
     int mMargin;
     ViewUtil.OnItemClickListener mOnItemClickListener;
     HandleData mHandleData;
 
-    public void reset(){
+    public void reset() {
         mReset = true;
         generateGridView();
     }
@@ -97,13 +99,20 @@ public class GridGalleryView extends GridLayout implements View.OnClickListener{
         return this;
     }
 
-    public int getChildCount() {
-        return mChildCount;
+    public int getGridCount() {
+        return mGridCount;
     }
 
-    public GridGalleryView setChildCount(int childCount) {
-        this.mChildCount = childCount;
-        return this;
+    public void setGridCount(int gridCount) {
+        this.mGridCount = gridCount;
+    }
+
+    public int getMaxWidth() {
+        return mMaxWidth;
+    }
+
+    public void setMaxWidth(int maxWidth) {
+        this.mMaxWidth = maxWidth;
     }
 
     public ViewUtil.OnItemClickListener getOnItemClickListener() {
@@ -124,12 +133,13 @@ public class GridGalleryView extends GridLayout implements View.OnClickListener{
         return this;
     }
 
-    public interface HandleData{
+    public interface HandleData {
         <T extends ImageView> T getImageView();
+
         void handleChildItem(ImageView imageView, int position);
     }
 
-    public static class ImageSize{
+    public static class ImageSize {
         public int width, height, minWidth, minHeight, maxWidth, maxHeight;
 
         public ImageSize(int width) {
@@ -151,46 +161,43 @@ public class GridGalleryView extends GridLayout implements View.OnClickListener{
             this.maxHeight = maxHeight;
         }
 
-        public static int getImageColumnCount(int count){
-            if(count == 1){
+        public static int getImageColumnCount(int count) {
+            if (count == 1) {
                 return 1;
-            }else if(count == 2 || count == 4){
+            } else if (count == 2 || count == 4) {
                 return 2;
-            }else{
+            } else {
                 return 3;
             }
         }
 
-        public static ImageSize getImageSize(int maxWidth, int margin, int count){
+        public static ImageSize getImageSize(int maxWidth, int margin, int count) {
             int marginLength = margin * 2;
-            if(count == 1){
+            if (count == 1) {
                 int size = ViewGroup.LayoutParams.WRAP_CONTENT;
                 int minSize = maxWidth / 2;
                 return new ImageSize(minSize, minSize, minSize, minSize, maxWidth, minSize);
-            }else if(count == 2 || count == 4){
+            } else if (count == 2 || count == 4) {
                 return new ImageSize((maxWidth - marginLength) / 3);
-            }else{
+            } else {
                 return new ImageSize((maxWidth - marginLength) / 3);
             }
         }
 
-        public static void handleImageView(ImageView imageView, int maxWidth, int margin, int count){
+        public static void handleImageView(ImageView imageView, int maxWidth, int margin, int count) {
             ImageSize is = getImageSize(maxWidth, margin, count);
 
             GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
+
             lp.width = is.width;
             lp.height = is.height;
             lp.rightMargin = margin;
             lp.bottomMargin = margin;
-//            MarginLayoutParams lp = new MarginLayoutParams(is.width, is.height);
-//            lp.rightMargin = margin;
-//            lp.bottomMargin = margin;
-//        iv.setAdjustViewBounds(true);
-            if(count == 1){
-                imageView.setMinimumWidth(is.minWidth);
-                imageView.setMinimumHeight(is.minHeight);
-                imageView.setMaxWidth(is.maxWidth);
-                imageView.setMaxHeight(is.maxHeight);
+            if (count == 1) {
+//                imageView.setMinimumWidth(is.minWidth);
+//                imageView.setMinimumHeight(is.minHeight);
+//                imageView.setMaxWidth(is.maxWidth);
+//                imageView.setMaxHeight(is.maxHeight);
             }
             imageView.setLayoutParams(lp);
         }

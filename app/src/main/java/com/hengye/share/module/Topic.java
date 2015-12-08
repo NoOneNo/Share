@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.hengye.share.module.sina.WBTopic;
 import com.hengye.share.module.sina.WBTopics;
 import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.GsonUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -41,10 +42,10 @@ public class Topic implements Serializable{
 
     public static Topic getTopic(WBTopic entity){
         Topic topic = new Topic();
+        topic.setParent(new Parent(GsonUtil.getInstance().toJson(entity), Parent.TYPE_WEIBO));
         if(entity == null){
             return topic;
         }
-        topic.setParent(new Parent(entity, Parent.TYPE_WEIBO));
         topic.setUserInfo(UserInfo.getUserInfo(entity.getUser()));
         if(entity.getUser() != null) {
             topic.setAvatar(entity.getUser().getAvatar_large());

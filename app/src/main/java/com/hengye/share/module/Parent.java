@@ -12,20 +12,22 @@ public class Parent implements Serializable{
 
     public static final int TYPE_WECHAT= 3;
 
-    public Parent(Object target, int type) {
-        this.target = target;
+    public Parent(){}
+
+    public Parent(String json, int type) {
+        this.json = json;
         this.type = type;
     }
 
-    private Object target;
+    private String json;
     private int type;
 
-    public Object getTarget() {
-        return target;
+    public String getJson() {
+        return json;
     }
 
-    public void setTarget(Object target) {
-        this.target = target;
+    public void setJson(String json) {
+        this.json = json;
     }
 
     public int getType() {

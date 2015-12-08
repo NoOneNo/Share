@@ -1,5 +1,7 @@
 package com.hengye.share.ui.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
@@ -27,7 +29,6 @@ import com.hengye.share.util.L;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
-import com.hengye.swiperefresh.PullToRefreshLayout;
 import com.hengye.volleyplus.toolbox.RequestManager;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 
@@ -56,19 +57,26 @@ public class PersonalHomepageActivity extends BaseActivity{
         mUserInfo = (UserInfo) getIntent().getSerializableExtra(UserInfo.class.getSimpleName());
     }
 
+    public static Intent getIntentToStart(Context context, UserInfo userInfo){
+        Intent intent = new Intent(context, PersonalHomepageActivity.class);
+        intent.putExtra(UserInfo.class.getSimpleName(), userInfo);
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_homepage);
 
-        initView();
         initData();
+        initView();
 
         loadBackdrop();
     }
 
     private UserInfo mUserInfo;
-    private PullToRefreshLayout mPullToRefreshLayout;
+//    private PullToRefreshLayout mPullToRefreshLayout;
+    private RecyclerView mRecyclerView;
     private RecyclerViewTopicAdapter mAdapter;
     private Oauth2AccessToken mWBAccessToken;
 
@@ -80,33 +88,52 @@ public class PersonalHomepageActivity extends BaseActivity{
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle("Homepage");
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(mAdapter = new RecyclerViewTopicAdapter(this, new ArrayList<Topic>()));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setAdapter(mAdapter = new RecyclerViewTopicAdapter(this, new ArrayList<Topic>()));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.pull_to_refresh);
-
-        mPullToRefreshLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if(mUserInfo == null || mWBAccessToken == null || TextUtils.isEmpty(mWBAccessToken.getToken())){
-                    mPullToRefreshLayout.setRefreshing(false);
-                    return;
-                }
-                if(mUserInfo.getParent().isWeiBo()){
-                    L.debug(mUserInfo.getParent().getTarget().toString());
-                    WBUserInfo wbUserInfo = (WBUserInfo) mUserInfo.getParent().getTarget();
-                    RequestManager.addToRequestQueue(getWBTopicRequest(mWBAccessToken.getToken(), wbUserInfo.getIdstr(), 0 + "", true), getRequestTag());
-                }
-            }
-        });
-        mPullToRefreshLayout.setRefreshing(true);
+//        mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.pull_to_refresh);
+//
+//        mPullToRefreshLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                if(mUserInfo == null || mWBAccessToken == null || TextUtils.isEmpty(mWBAccessToken.getToken())){
+//                    mPullToRefreshLayout.setRefreshing(false);
+//                    return;
+//                }
+//                if(mUserInfo.getParent().isWeiBo()){
+//                    L.debug(mUserInfo.getParent().getJson());
+//                    WBUserInfo wbUserInfo = mUserInfo.getWBUserInfoFromParent();
+//                    if(wbUserInfo != null) {
+//                        RequestManager.addToRequestQueue(getWBTopicRequest(mWBAccessToken.getToken(), wbUserInfo.getIdstr(), 0 + "", true), getRequestTag());
+//                    }
+//                }
+//            }
+//        });
+//        mPullToRefreshLayout.setRefreshing(true);
+        loadData();
     }
 
     private void initData(){
         mWBAccessToken = SPUtil.getSinaAccessToken();
     }
+
+    private boolean loadData(){
+        if(mUserInfo == null || mWBAccessToken == null || TextUtils.isEmpty(mWBAccessToken.getToken())){
+            return false;
+        }
+        if(mUserInfo.getParent().isWeiBo()){
+            L.debug(mUserInfo.getParent().getJson());
+            WBUserInfo wbUserInfo = mUserInfo.getWBUserInfoFromParent();
+            if(wbUserInfo != null) {
+                RequestManager.addToRequestQueue(getWBTopicRequest(mWBAccessToken.getToken(), wbUserInfo.getIdstr(), 0 + "", true), getRequestTag());
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     private void loadBackdrop() {
         final ImageView imageView = (ImageView) findViewById(R.id.backdrop);
@@ -143,47 +170,47 @@ public class PersonalHomepageActivity extends BaseActivity{
                 List<Topic> data = Topic.getTopics(response);
                 if (isRefresh) {
                     //下拉刷新
-                    mPullToRefreshLayout.setRefreshing(false);
+//                    mPullToRefreshLayout.setRefreshing(false);
                     if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
                         //微博属于刷新
                         if (CommonUtil.isEmptyCollection(data)) {
                             //没有内容更新
-                            Snackbar.make(mPullToRefreshLayout, "没有新的微博", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(mRecyclerView, "没有新的微博", Snackbar.LENGTH_SHORT).show();
                             return;
                         } else if (data.size() < WBUtil.MAX_COUNT_REQUEST) {
                             //结果小于请求条数
                             mAdapter.addAll(0, data);
-                            Snackbar.make(mPullToRefreshLayout, data.size() + "条新微博", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(mRecyclerView, data.size() + "条新微博", Snackbar.LENGTH_SHORT).show();
                         } else {
                             //结果大于或等于请求条数
-                            mPullToRefreshLayout.setLoadEnable(true);
+//                            mPullToRefreshLayout.setLoadEnable(true);
                             mAdapter.refresh(data);
-                            Snackbar.make(mPullToRefreshLayout, "超过" + WBUtil.MAX_COUNT_REQUEST + "条新微博", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(mRecyclerView, "超过" + WBUtil.MAX_COUNT_REQUEST + "条新微博", Snackbar.LENGTH_SHORT).show();
                         }
                     } else {
                         //属于第一次加载
                         if (CommonUtil.isEmptyCollection(data)) {
                             //内容为空
-                            mPullToRefreshLayout.setLoadEnable(false);
+//                            mPullToRefreshLayout.setLoadEnable(false);
                         }
                         mAdapter.refresh(data);
                     }
                     //存储数据
-                    SPUtil.setModule(mAdapter.getData(), Topic.class.getSimpleName());
+//                    SPUtil.setModule(mAdapter.getData(), Topic.class.getSimpleName());
                 } else {
                     //上拉加载
-                    mPullToRefreshLayout.setLoading(false);
+//                    mPullToRefreshLayout.setLoading(false);
                     if (CommonUtil.isEmptyCollection(data)) {
                         //没有数据可供加载
-                        mPullToRefreshLayout.setLoadEnable(false);
-                        Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
+//                        mPullToRefreshLayout.setLoadEnable(false);
+                        Snackbar.make(mRecyclerView, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
                     } else {
                         //成功加载更多
 //                        mPageNo++;
                         if (data.size() < WBUtil.MAX_COUNT_REQUEST) {
                             //没有更多的数据可供加载
-                            mPullToRefreshLayout.setLoadEnable(false);
-                            Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
+//                            mPullToRefreshLayout.setLoadEnable(false);
+                            Snackbar.make(mRecyclerView, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
                         }
                         //因为请求的数据是小于或等于max_id，需要做是否重复判断处理
                         if (data.get(0).getId() != null && data.get(0).getId().
@@ -199,9 +226,9 @@ public class PersonalHomepageActivity extends BaseActivity{
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (isRefresh) {
-                    mPullToRefreshLayout.setRefreshing(false);
+//                    mPullToRefreshLayout.setRefreshing(false);
                 } else {
-                    mPullToRefreshLayout.setLoading(false);
+//                    mPullToRefreshLayout.setLoading(false);
                 }
                 L.debug("request fail , url : {}, error : {}", ub.getRequestUrl(), error);
             }

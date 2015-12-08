@@ -219,7 +219,13 @@ public class MainActivity extends BaseActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camara) {
-            // Handle the camera action
+            UserInfo userInfo = getUserInfo();
+            if(userInfo == null){
+                Toast.makeText(this, "暂未获取到个人信息", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+            IntentUtil.startActivity(this, PersonalHomepageActivity.getIntentToStart(this, userInfo));
+
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -269,20 +275,27 @@ public class MainActivity extends BaseActivity
         }
     }
 
-    private void updateNavigationView() {
+    private UserInfo getUserInfo(){
         WBUserInfo wbUserInfo = SPUtil.getModule(WBUserInfo.class, WBUserInfo.class.getSimpleName());
         if (wbUserInfo == null) {
             //用户数据为空
-            L.debug("updateNavigationView invoke, UserInfo is null");
+            L.debug("UserInfo is null, wait to load");
 
             if(mWBAccessToken != null){
                 RequestManager.addToRequestQueue(RequestFactory.getInstance().
                         getWBUserInfoRequest(mWBAccessToken.getToken(), mWBAccessToken.getUid()), getRequestTag());
             }
+            return null;
+        }
+        return UserInfo.getUserInfo(wbUserInfo);
+    }
+
+    private void updateNavigationView() {
+
+        UserInfo userInfo = getUserInfo();
+        if(userInfo == null){
             return;
         }
-
-        UserInfo userInfo = UserInfo.getUserInfo(wbUserInfo);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         String uid = (String) navigationView.getTag();
         if (!TextUtils.isEmpty(uid)){

@@ -1,7 +1,6 @@
 package com.hengye.share.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.text.Html;
 import android.text.Selection;
 import android.text.SpannableString;
@@ -18,7 +17,6 @@ import android.widget.Toast;
 
 import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.R;
-import com.hengye.share.module.UserInfo;
 import com.hengye.share.ui.activity.PersonalHomepageActivity;
 import com.hengye.share.ui.activity.TopicGalleryActivity;
 import com.hengye.share.module.Topic;
@@ -40,8 +38,11 @@ import java.util.Map;
 public class RecyclerViewTopicAdapter extends RecyclerViewSimpleAdapter<Topic, RecyclerViewTopicAdapter.MainViewHolder>
     implements ViewUtil.OnItemClickListener{
 
+    public static int mGalleryMaxWidth;
     public RecyclerViewTopicAdapter(Context context, List<Topic> data) {
         super(context, data);
+        int galleryMargin = context.getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin);
+        mGalleryMaxWidth = context.getResources().getDisplayMetrics().widthPixels - 2 * galleryMargin;
     }
 
     @Override
@@ -63,9 +64,7 @@ public class RecyclerViewTopicAdapter extends RecyclerViewSimpleAdapter<Topic, R
     public void onItemClick(View view, int position) {
         int id = view.getId();
         if(id == R.id.rl_topic_title){
-            Intent intent = new Intent(getContext(), PersonalHomepageActivity.class);
-            intent.putExtra(UserInfo.class.getSimpleName(), getItem(position).getUserInfo());
-            IntentUtil.startActivity(getContext(), intent);
+            IntentUtil.startActivity(getContext(), PersonalHomepageActivity.getIntentToStart(getContext(), getItem(position).getUserInfo()));
         }
     }
 
@@ -173,10 +172,13 @@ public class RecyclerViewTopicAdapter extends RecyclerViewSimpleAdapter<Topic, R
             if (!CommonUtil.isEmptyCollection(topic.getImageUrls())) {
                 //加载图片
                 final List<String> urls = topic.getImageUrls();
+                holder.mGallery.removeAllViews();
                 holder.mGallery.setTag(urls);
                 holder.mGallery.
-                        setMargin(context.getResources().getDimensionPixelSize(R.dimen.topic_gallery_iv_margin)).
-                        setChildCount(urls.size()).
+                        setMargin(context.getResources().getDimensionPixelSize(R.dimen.topic_gallery_iv_margin));
+                holder.mGallery.setMaxWidth(mGalleryMaxWidth);
+                holder.mGallery.setGridCount(urls.size());
+                holder.mGallery.
                         setHandleData(new GridGalleryView.HandleData() {
                             @Override
                             public NetworkImageViewPlus getImageView() {
@@ -193,30 +195,31 @@ public class RecyclerViewTopicAdapter extends RecyclerViewSimpleAdapter<Topic, R
                                 NetworkImageViewPlus iv = (NetworkImageViewPlus) imageView;
                                 iv.setImageUrl(urls.get(position), RequestManager.getImageLoader());
                             }
-                        }).
-                        setOnItemClickListener(new ViewUtil.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(View view, int position) {
-                                int id = view.getId();
-                                if (id == View.NO_ID) {
-                                    GridLayout gridLayout = (GridLayout) view.getTag();
-                                    ArrayList<String> urls = (ArrayList<String>) gridLayout.getTag();
-                                    ArrayList<AnimationRect> animationRectArrayList
-                                            = new ArrayList<>();
-                                    for (int i = 0; i < urls.size(); i++) {
-                                        final ImageView imageView = (ImageView) gridLayout
-                                                .getChildAt(i);
-                                        if (imageView.getVisibility() == View.VISIBLE) {
-                                            AnimationRect rect = AnimationRect.buildFromImageView(imageView);
-                                            animationRectArrayList.add(rect);
-                                        }
-                                    }
-
-                                    TopicGalleryActivity
-                                            .startWithIntent(context, urls, animationRectArrayList, position);
+                        });
+                holder.mGallery.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        int id = view.getId();
+                        if (id == View.NO_ID) {
+                            GridLayout gridLayout = (GridLayout) view.getTag();
+                            ArrayList<String> urls = (ArrayList<String>) gridLayout.getTag();
+                            ArrayList<AnimationRect> animationRectArrayList
+                                    = new ArrayList<>();
+                            for (int i = 0; i < urls.size(); i++) {
+                                final ImageView imageView = (ImageView) gridLayout
+                                        .getChildAt(i);
+                                if (imageView.getVisibility() == View.VISIBLE) {
+                                    AnimationRect rect = AnimationRect.buildFromImageView(imageView);
+                                    animationRectArrayList.add(rect);
                                 }
                             }
-                        }).reset();
+
+                            TopicGalleryActivity
+                                    .startWithIntent(context, urls, animationRectArrayList, position);
+                        }
+                    }
+                });
+                holder.mGallery.reset();
                 holder.mGallery.setVisibility(View.VISIBLE);
             } else {
                 holder.mGallery.setVisibility(View.GONE);

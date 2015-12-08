@@ -2,6 +2,7 @@ package com.hengye.share.module;
 
 
 import com.hengye.share.module.sina.WBUserInfo;
+import com.hengye.share.util.GsonUtil;
 
 import java.io.Serializable;
 
@@ -19,13 +20,20 @@ public class UserInfo implements Serializable{
 
     public static UserInfo getUserInfo(WBUserInfo wbUserInfo){
         UserInfo userInfo = new UserInfo();
-        userInfo.setParent(new Parent(wbUserInfo, Parent.TYPE_WEIBO));
+        userInfo.setParent(new Parent(GsonUtil.getInstance().toJson(wbUserInfo), Parent.TYPE_WEIBO));
+        if(wbUserInfo == null){
+            return userInfo;
+        }
         userInfo.setUid(wbUserInfo.getIdstr());
         userInfo.setName(wbUserInfo.getName());
         userInfo.setAvatar(wbUserInfo.getAvatar_large());
         userInfo.setGender(wbUserInfo.getGender());
         userInfo.setSign(wbUserInfo.getDescription());
         return userInfo;
+    }
+
+    public WBUserInfo getWBUserInfoFromParent(){
+        return GsonUtil.getInstance().fromJson(getParent().getJson(), WBUserInfo.class);
     }
 
     public Parent getParent() {
