@@ -6,11 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/material_grey_50"
-    android:layout_marginTop="@dimen/content_margin"
-    android:paddingTop="@dimen/content_margin"
+    android:layout_marginTop="@dimen/content_margin_5dp"
+    android:paddingTop="@dimen/content_margin_5dp"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingBottom="@dimen/content_margin"
+    android:paddingBottom="@dimen/content_margin_5dp"
     android:orientation="vertical"
     android:visibility="visible"
     tools:showIn="@layout/item_recyclerview_topic">
@@ -27,12 +27,12 @@
         android:id="@+id/gl_topic_retweeted_gallery"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/content_margin"/>
+        android:layout_marginTop="@dimen/content_margin_5dp"/>
 
     <!--<GridLayout-->
         <!--android:id="@+id/gl_topic_retweeted_gallery"-->
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginTop="@dimen/content_margin"></GridLayout>-->
+        <!--android:layout_marginTop="@dimen/content_margin_5dp"></GridLayout>-->
 
 </LinearLayout>

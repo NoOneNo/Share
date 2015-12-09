@@ -39,8 +39,8 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setCustomThemeIfNeeded(savedInstanceState);
-        handleBundleExtra();
         super.onCreate(savedInstanceState);
+        handleBundleExtra();
     }
 
     @Override

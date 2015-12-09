@@ -184,7 +184,7 @@ public class RecyclerViewTopicAdapter extends RecyclerViewSimpleAdapter<Topic, R
                             public NetworkImageViewPlus getImageView() {
                                 NetworkImageViewPlus iv = new NetworkImageViewPlus(context);
                                 iv.setScaleType(ImageView.ScaleType.FIT_XY);
-                                iv.setBackgroundColor(context.getResources().getColor(R.color.material_grey_300));
+                                iv.setBackgroundColor(context.getResources().getColor(R.color.image_default_bg));
                                 iv.setTag(holder.mGallery);
                                 iv.setId(View.NO_ID);
                                 return iv;

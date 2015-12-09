@@ -1,6 +1,19 @@
 <resources>
     <string name="app_name">Share</string>
 
+    <!-- Strings related to login -->
+    <string name="prompt_username">Username</string>
+    <string name="prompt_password">Password</string>
+
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <!-- Strings related to login -->
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -15,6 +28,20 @@
     <string name="title_activity_setting">设置</string>
     <!-- Strings related to activity title-->
 
+
+    <!-- Strings related to PersonalHomePage -->
+    <string name="label_attention">关注 %s</string>
+    <string name="label_division">|</string>
+    <string name="label_fans">粉丝 %s</string>
+
+    <!-- Strings related to PersonalHomePage -->
+
+
+
+
+
+
+
     <!-- Strings related to fragment title-->
     <string name="title_fragment_setting">设置</string>
     <string name="title_fragment_basic_setting">基本设置</string>
@@ -26,20 +53,6 @@
     <string name="title_fragment_feedback">意见反馈</string>
     <string name="title_fragment_about">关于</string>
     <!-- Strings related to fragment title-->
-
-
-    <!-- Strings related to login -->
-    <string name="prompt_username">Username</string>
-    <string name="prompt_password">Password</string>
-
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <!-- Strings related to login -->
 
     <!-- Strings related to setting -->
     <string name="title_setting_common">常规设置</string>

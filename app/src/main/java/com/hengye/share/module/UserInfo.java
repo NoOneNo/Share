@@ -14,9 +14,10 @@ public class UserInfo implements Serializable{
 
     private String uid;//用户ID
     private String name;//用户名
-    private String avatar;//头像
+    private String avatar;//头像地址
     private String gender;//性别
     private String sign;//签名
+    private String cover;//封面地址
 
     public static UserInfo getUserInfo(WBUserInfo wbUserInfo){
         UserInfo userInfo = new UserInfo();
@@ -29,6 +30,7 @@ public class UserInfo implements Serializable{
         userInfo.setAvatar(wbUserInfo.getAvatar_large());
         userInfo.setGender(wbUserInfo.getGender());
         userInfo.setSign(wbUserInfo.getDescription());
+        userInfo.setCover(wbUserInfo.getCover_image_phone());
         return userInfo;
     }
 
@@ -84,6 +86,13 @@ public class UserInfo implements Serializable{
         this.sign = sign;
     }
 
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
 }
 //        返回字段说明
 //        返回值字段 	字段类型 	字段说明

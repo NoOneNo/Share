@@ -5,7 +5,7 @@
     android:id="@+id/rl_topic_title"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/content_margin_2"
+    android:layout_marginBottom="@dimen/content_margin_10dp"
     tools:showIn="@layout/item_recyclerview_topic">
 
     <com.android.volley.view.NetworkImageViewPlus

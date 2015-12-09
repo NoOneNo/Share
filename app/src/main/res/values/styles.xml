@@ -23,12 +23,22 @@
         <item name="android:windowFullscreen">false</item>
     </style>
 
-    <style name="Theme.DesignDemo" parent="Base.Theme.DesignDemo">
+    <!--<style name="Theme.DesignDemo" parent="Base.Theme.DesignDemo">-->
+    <!--</style>-->
+
+    <!--<style name="Base.Theme.DesignDemo" parent="Theme.AppCompat.Light.NoActionBar">-->
+        <!--<item name="colorPrimary">#673AB7</item>-->
+        <!--<item name="colorPrimaryDark">#512DA8</item>-->
+        <!--<item name="colorAccent">#FF4081</item>-->
+    <!--</style>-->
+
+    <style name="PersonalHomepageExpandedTitleAppearance">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@android:color/black</item>
     </style>
 
-    <style name="Base.Theme.DesignDemo" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">#673AB7</item>
-        <item name="colorPrimaryDark">#512DA8</item>
-        <item name="colorAccent">#FF4081</item>
+    <style name="PersonalHomepageTitleAppearance">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@android:color/black</item>
     </style>
 </resources>

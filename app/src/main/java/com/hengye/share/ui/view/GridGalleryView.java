@@ -47,6 +47,7 @@ public class GridGalleryView extends GridLayout implements View.OnClickListener 
     protected void ensureSize() {
         if (mMaxWidth == -1) {
             mMaxWidth = getMeasuredWidth();
+//            generateGridView();
         }
     }
 

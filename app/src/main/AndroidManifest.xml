@@ -21,6 +21,9 @@
         android:supportsRtl="true"
         android:theme="@style/ShareAppTheme"
         android:name=".BaseApplication">
+
+        <service android:name="com.hengye.share.service.ShareService"/>
+
         <activity
             android:name="com.hengye.share.ui.activity.MainActivity"
             android:launchMode="singleTop"

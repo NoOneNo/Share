@@ -10,8 +10,10 @@
 
     <dimen name="fab_margin">16dp</dimen>
 
-    <dimen name="content_margin">5dp</dimen>
-    <dimen name="content_margin_2">10dp</dimen>
+    <dimen name="content_margin_3dp">3dp</dimen>
+    <dimen name="content_margin_5dp">5dp</dimen>
+    <dimen name="content_margin_10dp">10dp</dimen>
+    <dimen name="content_margin_50dp">50dp</dimen>
 
     <dimen name="user_avatar">45dp</dimen>
 
@@ -21,5 +23,5 @@
     <dimen name="topic_content">16sp</dimen>
     <dimen name="topic_gallery_iv_margin">4dp</dimen>
 
-    <dimen name="detail_backdrop_height">256dp</dimen>
+    <dimen name="detail_backdrop_height">300dp</dimen>
 </resources>

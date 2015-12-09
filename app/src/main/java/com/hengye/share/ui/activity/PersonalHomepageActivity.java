@@ -11,11 +11,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
+import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.BaseActivity;
 import com.hengye.share.R;
 import com.hengye.share.adapter.RecyclerViewTopicAdapter;
@@ -33,9 +36,10 @@ import com.hengye.volleyplus.toolbox.RequestManager;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.List;
 
-public class PersonalHomepageActivity extends BaseActivity{
+public class PersonalHomepageActivity extends BaseActivity implements View.OnClickListener{
 
     @Override
     protected String getRequestTag() {
@@ -68,10 +72,12 @@ public class PersonalHomepageActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_homepage);
 
-        initData();
-        initView();
-
-        loadBackdrop();
+        if(mUserInfo == null){
+            PersonalHomepageActivity.this.finish();
+        }else {
+            initData();
+            initView();
+        }
     }
 
     private UserInfo mUserInfo;
@@ -81,37 +87,45 @@ public class PersonalHomepageActivity extends BaseActivity{
     private Oauth2AccessToken mWBAccessToken;
 
     private void initView() {
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setTitle("Homepage");
+        collapsingToolbar.setTitle(mUserInfo.getName());
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter = new RecyclerViewTopicAdapter(this, new ArrayList<Topic>()));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-//        mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.pull_to_refresh);
-//
-//        mPullToRefreshLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                if(mUserInfo == null || mWBAccessToken == null || TextUtils.isEmpty(mWBAccessToken.getToken())){
-//                    mPullToRefreshLayout.setRefreshing(false);
-//                    return;
-//                }
-//                if(mUserInfo.getParent().isWeiBo()){
-//                    L.debug(mUserInfo.getParent().getJson());
-//                    WBUserInfo wbUserInfo = mUserInfo.getWBUserInfoFromParent();
-//                    if(wbUserInfo != null) {
-//                        RequestManager.addToRequestQueue(getWBTopicRequest(mWBAccessToken.getToken(), wbUserInfo.getIdstr(), 0 + "", true), getRequestTag());
-//                    }
-//                }
-//            }
-//        });
-//        mPullToRefreshLayout.setRefreshing(true);
+
+        NetworkImageViewPlus cover = (NetworkImageViewPlus) findViewById(R.id.iv_cover);
+        cover.setImageUrl(mUserInfo.getCover(), RequestManager.getImageLoader());
+        NetworkImageViewPlus avatar = (NetworkImageViewPlus) findViewById(R.id.iv_avatar);
+        avatar.setImageUrl(mUserInfo.getAvatar(), RequestManager.getImageLoader());
+
+        if(mUserInfo.getParent().isWeiBo()) {
+            L.debug(mUserInfo.getParent().getJson());
+            WBUserInfo wbUserInfo = mUserInfo.getWBUserInfoFromParent();
+            if (wbUserInfo != null) {
+                TextView division = (TextView) findViewById(R.id.tv_division);
+                division.setVisibility(View.VISIBLE);
+                TextView attention = (TextView) findViewById(R.id.tv_attention);
+                attention.setText(String.format(getString(R.string.label_attention), wbUserInfo.getFriends_count()));
+                TextView fans = (TextView) findViewById(R.id.tv_fans);
+                fans.setText(String.format(getString(R.string.label_fans), wbUserInfo.getFollowers_count()));
+                TextView sign = (TextView) findViewById(R.id.tv_sign);
+                sign.setText(wbUserInfo.getDescription());
+            }
+        }
+
         loadData();
     }
 
@@ -134,10 +148,9 @@ public class PersonalHomepageActivity extends BaseActivity{
         return false;
     }
 
-
-    private void loadBackdrop() {
-        final ImageView imageView = (ImageView) findViewById(R.id.backdrop);
-        imageView.setImageResource(R.drawable.cheese_1);
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
     }
 
     @Override
