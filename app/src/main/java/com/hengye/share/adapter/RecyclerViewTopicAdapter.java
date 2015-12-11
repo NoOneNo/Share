@@ -47,7 +47,7 @@ public class RecyclerViewTopicAdapter extends RecyclerViewSimpleAdapter<Topic, R
 
     @Override
     public MainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new MainViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_recyclerview_topic, parent, false));
+        return new MainViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_topic, parent, false));
     }
 
     @Override

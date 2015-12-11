@@ -15,9 +15,4 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/content_margin_5dp"/>
-    <!--<GridLayout-->
-        <!--android:id="@+id/gl_topic_gallery"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginTop="@dimen/content_margin_5dp"></GridLayout>-->
 </merge>

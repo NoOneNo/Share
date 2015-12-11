@@ -159,7 +159,8 @@ public class MainActivity extends BaseActivity
         mAdapter.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Toast.makeText(MainActivity.this, "click item : " + position, Toast.LENGTH_SHORT).show();
+                IntentUtil.startActivity(MainActivity.this, TopicDetailActivity.getIntentToStart(MainActivity.this, mAdapter.getItem(position)));
+//                Toast.makeText(MainActivity.this, "click item : " + position, Toast.LENGTH_SHORT).show();
             }
         });
 
