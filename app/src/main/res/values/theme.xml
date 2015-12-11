@@ -1,39 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Base application theme. -->
-    <style name="ShareAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="BaseAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <!--<item name="android:homeAsUpIndicator">@mipmap/btn_back</item>-->
+        <item name="android:navigationBarColor">?attr/theme_color</item>
+        <!-- 用于Toolbar的颜色设置 -->
+        <item name="colorPrimary">?attr/theme_color</item>
+        <!-- 用于状态栏的颜色设置 -->
+        <item name="colorPrimaryDark">?attr/theme_color</item>
+        <!-- 用于侧滑页的头部变换色 -->
+        <!--<item name="android:colorPressedHighlight">?attr/theme_color_dark</item>-->
+
+        <item name="colorAccent">?attr/theme_color_accent</item>
+    </style>
+
+    <style name="AppTheme" parent="BaseAppTheme">
+
+    </style>
+
+    <style name="ShareAppTheme" parent="AppTheme">
+        <item name="theme_color">@color/theme_green_primary</item>
+        <item name="theme_color_dark">@color/theme_green_primary_dark</item>
+        <item name="theme_color_accent">@color/theme_green_accent</item>
+
     </style>
 
     <style name="ShareAppTheme.Blue">
-        <!-- 用于虚拟按键的颜色设置 -->
-        <item name="android:navigationBarColor">@color/theme_blue_primary</item>
-        <!-- 用于Toolbar的颜色设置 -->
-        <item name="colorPrimary">@color/theme_blue_primary</item>
-        <!-- 用于状态栏的颜色设置 -->
-        <item name="colorPrimaryDark">@color/theme_blue_primary</item>
-        <!-- 用于侧滑页的头部变换色 -->
-        <item name="android:colorPressedHighlight">@color/theme_blue_primary_dark</item>
-        <!-- 用于控制点击波纹的颜色 -->
-        <!--<item name="colorControlHighlight">@color/theme_blue_highlight</item>-->
-        <item name="colorAccent">@color/theme_blue_accent</item>
+        <item name="theme_color">@color/theme_blue_primary</item>
+        <item name="theme_color_dark">@color/theme_blue_primary_dark</item>
+        <item name="theme_color_accent">@color/theme_blue_accent</item>
+
     </style>
 
-
     <style name="ShareAppTheme.Green">
+        <item name="theme_color">@color/theme_green_primary</item>
+        <item name="theme_color_dark">@color/theme_green_primary_dark</item>
+        <item name="theme_color_accent">@color/theme_green_accent</item>
 
-        <item name="android:navigationBarColor">@color/theme_green_primary</item>
-        <item name="colorPrimary">@color/theme_green_primary</item>
-        <item name="colorPrimaryDark">@color/theme_green_primary</item>
-        <item name="android:colorPressedHighlight">@color/theme_green_primary_dark</item>
-        <!--<item name="colorControlHighlight">@color/theme_green_highlight</item>-->
-        <item name="colorAccent">@color/theme_green_accent</item>
     </style>
 
     <!--<style name="ShareAppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >-->
-        <!--<item name="colorPrimary">?attr/colorPrimary</item>-->
-        <!--<item name="colorControlHighlight">?attr/colorControlHighlight</item>-->
+    <!--<item name="colorPrimary">?attr/colorPrimary</item>-->
+    <!--<item name="colorControlHighlight">?attr/colorControlHighlight</item>-->
     <!--</style>-->
     <!--<style name="ShareAppTheme.Green.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />-->
 
