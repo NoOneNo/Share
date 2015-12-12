@@ -17,15 +17,16 @@ import android.widget.Toast;
 
 import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.R;
-import com.hengye.share.ui.activity.PersonalHomepageActivity;
-import com.hengye.share.ui.activity.TopicGalleryActivity;
 import com.hengye.share.module.Topic;
 import com.hengye.share.module.sina.WBUtil;
+import com.hengye.share.ui.activity.PersonalHomepageActivity;
+import com.hengye.share.ui.activity.TopicGalleryActivity;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.ui.view.GridGalleryView;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DateUtil;
 import com.hengye.share.util.IntentUtil;
+import com.hengye.share.util.L;
 import com.hengye.share.util.SimpleClickableSpan;
 import com.hengye.share.util.SimpleLinkMovementMethod;
 import com.hengye.share.util.ViewUtil;
@@ -35,11 +36,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class RecyclerViewTopicAdapter extends RecyclerViewBaseAdapter<Topic, RecyclerViewTopicAdapter.TopicViewHolder>
+public class RecyclerViewTopicTestAdapter extends RecyclerViewBaseAdapter<Topic, RecyclerViewTopicTestAdapter.TestViewHolder>
     implements ViewUtil.OnItemClickListener{
 
     public static int mGalleryMaxWidth;
-    public RecyclerViewTopicAdapter(Context context, List<Topic> data) {
+    public RecyclerViewTopicTestAdapter(Context context, List<Topic> data) {
         super(context, data);
         int galleryMargin = context.getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin);
         mGalleryMaxWidth = context.getResources().getDisplayMetrics().widthPixels - 2 * galleryMargin;
@@ -47,8 +48,24 @@ public class RecyclerViewTopicAdapter extends RecyclerViewBaseAdapter<Topic, Rec
     }
 
     @Override
-    public TopicViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
-        return new TopicViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_topic, parent, false));
+    public boolean isAddHeaderView() {
+        return true;
+    }
+
+    @Override
+    public TestViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
+        return new TestViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_topic, parent, false), isAddHeaderView());
+    }
+
+    @Override
+    public TestViewHolder onCreateHeaderViewHolder(ViewGroup parent, int viewType) {
+        return new TestViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_topic, parent, false), isAddHeaderView());
+    }
+
+    @Override
+    public void onBindHeaderView(TestViewHolder holder, int position) {
+        super.onBindHeaderView(holder, position);
+        L.debug("onBindHeaderView invoke");
     }
 
     @Override
@@ -59,15 +76,15 @@ public class RecyclerViewTopicAdapter extends RecyclerViewBaseAdapter<Topic, Rec
         }
     }
 
-    public static class TopicViewHolder extends RecyclerViewBaseAdapter.ItemViewHolder<Topic> {
+    public static class TestViewHolder extends RecyclerViewBaseAdapter.ItemViewHolder<Topic> {
 
         NetworkImageViewPlus mAvatar;
         TextView mUsername, mDescription;
         TopicContentViewHolder mTopic, mRetweetTopic;
         View mTopicTitle, mRetweetTopicLayout;
 
-        public TopicViewHolder(View v) {
-            super(v);
+        public TestViewHolder(View v, boolean isAddHeaderView) {
+            super(v, isAddHeaderView);
             if (mTopic == null) {
                 mTopic = new TopicContentViewHolder();
             }

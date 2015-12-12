@@ -9,19 +9,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Toast;
 
 import com.hengye.share.BaseActivity;
 import com.hengye.share.R;
 import com.hengye.share.adapter.RecyclerViewCommentAdapter;
 import com.hengye.share.adapter.RecyclerViewTopicAdapter;
 import com.hengye.share.module.Topic;
-import com.hengye.share.module.UserInfo;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.ViewUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
-import com.hengye.volleyplus.toolbox.RequestManager;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 
 import java.util.ArrayList;
@@ -77,7 +74,7 @@ public class TopicDetailActivity extends BaseActivity{
         if(mTopic == null){
             return;
         }
-        RecyclerViewTopicAdapter.MainViewHolder vh = new RecyclerViewTopicAdapter.MainViewHolder(findViewById(R.id.item_topic));
+        RecyclerViewTopicAdapter.TopicViewHolder vh = new RecyclerViewTopicAdapter.TopicViewHolder(findViewById(R.id.item_topic));
         vh.bindData(this, mTopic);
     }
 
@@ -95,6 +92,7 @@ public class TopicDetailActivity extends BaseActivity{
         recyclerView.setAdapter(mAdapter = new RecyclerViewCommentAdapter(this, new ArrayList<String>()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+//        tablayout.attacht
         mWBAccessToken = SPUtil.getSinaAccessToken();
         mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.pull_to_refresh);
         mPullToRefreshLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {

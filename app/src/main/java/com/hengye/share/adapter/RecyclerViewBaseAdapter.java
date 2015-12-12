@@ -10,56 +10,74 @@ import com.hengye.share.util.ViewUtil;
 
 import java.util.List;
 
-public class RecyclerViewSimpleAdapter<T, VH extends RecyclerViewSimpleAdapter.ViewHolder> extends RecyclerView.Adapter<VH> {
+public class RecyclerViewBaseAdapter<T, VH extends RecyclerViewBaseAdapter.ItemViewHolder> extends RecyclerViewHeaderAdapter<VH> {
 
     private Context mContext;
     private List<T> mData;
     private ViewUtil.OnItemClickListener mOnItemClickListener, mOnChildViewItemClickListener;
 
-    public RecyclerViewSimpleAdapter(Context context, List<T> data) {
+    public RecyclerViewBaseAdapter(Context context, List<T> data) {
         mContext = context;
         mData = data;
     }
 
     @Override
-    public VH onCreateViewHolder(ViewGroup parent, int viewType) {
+    public VH onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
         return null;
     }
 
     @Override
-    public void onBindViewHolder(VH holder, int position) {
+    public void onBindBasicItemView(VH holder, int position) {
         holder.setOnItemClickListener(getOnItemClickListener());
         holder.setOnChildViewItemClickListener(getOnChildViewItemClickListener());
         holder.bindData(getContext(), getItem(position));
     }
 
     @Override
-    public int getItemCount() {
+    public int getBasicItemCount() {
         return mData.size();
     }
 
-    public static class ViewHolder<T> extends RecyclerView.ViewHolder{
+    @Override
+    public int getBasicItemType(int position) {
+        return 0;
+    }
 
-        public ViewHolder(View itemView) {
-            super(itemView);
+    public static class ItemViewHolder<T> extends RecyclerView.ViewHolder{
+
+        public ItemViewHolder(View itemView) {
+            this(itemView, null);
         }
 
-        public ViewHolder(View itemView, ViewUtil.OnItemClickListener onItemClickListener) {
+        public ItemViewHolder(View itemView, ViewUtil.OnItemClickListener onItemClickListener) {
+            this(itemView, null, false);
+        }
+
+        public ItemViewHolder(View itemView, boolean isAddHeaderView) {
+            this(itemView, null, isAddHeaderView);
+        }
+
+        public ItemViewHolder(View itemView, ViewUtil.OnItemClickListener onItemClickListener, boolean isAddHeaderView) {
             super(itemView);
             mOnItemClickListener = onItemClickListener;
             itemView.setOnClickListener(mOnClickForItemListener);
+            mIsAddHeaderView = isAddHeaderView;
         }
 
         public void bindData(Context context, T t){
 
         }
 
-        ViewUtil.OnItemClickListener mOnItemClickListener, mOnChildViewItemClickListener;
 
         public void registerChildViewItemClick(View v){
             v.setOnClickListener(mOnClickForChildViewListener);
         }
 
+        boolean mIsAddHeaderView;
+
+        public int getItemVirtualPosition(){
+            return RecyclerViewHeaderAdapter.getBasicItemVirtualPosition(getAdapterPosition(), mIsAddHeaderView);
+        }
 
         /**
          * 用于提供给外部调用的ChildViewClick;
@@ -68,7 +86,7 @@ public class RecyclerViewSimpleAdapter<T, VH extends RecyclerViewSimpleAdapter.V
             @Override
             public void onClick(View v) {
                 if (mOnChildViewItemClickListener != null) {
-                    mOnChildViewItemClickListener.onItemClick(v, getAdapterPosition());
+                    mOnChildViewItemClickListener.onItemClick(v, getItemVirtualPosition());
                 }
             }
         };
@@ -79,10 +97,12 @@ public class RecyclerViewSimpleAdapter<T, VH extends RecyclerViewSimpleAdapter.V
             @Override
             public void onClick(View v) {
                 if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onItemClick(v, getAdapterPosition());
+                    mOnItemClickListener.onItemClick(v, getItemVirtualPosition());
                 }
             }
         };
+
+        ViewUtil.OnItemClickListener mOnItemClickListener, mOnChildViewItemClickListener;
 
         public ViewUtil.OnItemClickListener getOnItemClickListener() {
             return mOnItemClickListener;
@@ -111,17 +131,17 @@ public class RecyclerViewSimpleAdapter<T, VH extends RecyclerViewSimpleAdapter.V
 
     public void add(int position, T item) {
         mData.add(position, item);
-        notifyItemInserted(position);
+        notifyItemInserted(getBasicItemVirtualPosition(position));
     }
 
     public void add(T item) {
         mData.add(item);
-        notifyItemInserted(mData.size() - 1);
+        notifyItemInserted(getBasicItemVirtualPosition(mData.size() - 1));
     }
 
     public void remove(int position) {
         mData.remove(position);
-        notifyItemRemoved(position);
+        notifyItemRemoved(getBasicItemVirtualPosition(position));
     }
 
     public void refresh(List<T> data) {
