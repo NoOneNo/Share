@@ -28,6 +28,10 @@
     <string name="title_activity_setting">设置</string>
     <!-- Strings related to activity title-->
 
+    <!-- Strings related to TopicComment-->
+    <string name="title_page_comment">评论</string>
+    <string name="title_page_repost">转发</string>
+    <!-- Strings related to TopicComment-->
 
     <!-- Strings related to PersonalHomePage -->
     <string name="label_attention">关注 %s</string>

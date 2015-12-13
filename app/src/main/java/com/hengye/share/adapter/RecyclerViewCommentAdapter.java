@@ -35,42 +35,8 @@ import java.util.Map;
 
 public class RecyclerViewCommentAdapter extends RecyclerViewBaseAdapter<TopicComment, RecyclerViewCommentAdapter.CommentViewHolder> {
 
-    private Topic mTopic;
-
-    public RecyclerViewCommentAdapter(Context context, List<TopicComment> data, Topic topic) {
+    public RecyclerViewCommentAdapter(Context context, List<TopicComment> data) {
         super(context, data);
-        mTopic = topic;
-    }
-
-    @Override
-    public boolean isAddHeaderView() {
-        return true;
-    }
-
-    @Override
-    public RecyclerView.ViewHolder onCreateHeaderViewHolder(ViewGroup parent, int viewType) {
-        return new HeaderViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.header_topic_detail, parent, false));
-    }
-
-    @Override
-    public void onBindHeaderView(RecyclerView.ViewHolder holder, int position) {
-        HeaderViewHolder headerViewHolder = ((HeaderViewHolder)holder);
-        headerViewHolder.mTopicViewHolder.bindData(getContext(), mTopic);
-    }
-
-    public static class HeaderViewHolder extends RecyclerView.ViewHolder {
-
-        RecyclerViewTopicAdapter.TopicViewHolder mTopicViewHolder;
-        TabLayout mTabLayout;
-
-        public HeaderViewHolder(View v) {
-            super(v);
-            mTopicViewHolder = new RecyclerViewTopicAdapter.TopicViewHolder(v.findViewById(R.id.item_topic));
-            mTabLayout = (TabLayout) v.findViewById(R.id.tablayout);
-            mTabLayout.addTab((mTabLayout.newTab().setText("评论")));
-            mTabLayout.addTab((mTabLayout.newTab().setText("转发")));
-        }
-
     }
 
     @Override
