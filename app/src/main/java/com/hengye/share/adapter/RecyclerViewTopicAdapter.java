@@ -88,9 +88,8 @@ public class RecyclerViewTopicAdapter extends RecyclerViewBaseAdapter<Topic, Rec
 
         @Override
         public void bindData(Context context, Topic topic) {
-//            mTopicTitle.setOnClickListener(this);
             registerChildViewItemClick(mTopicTitle);
-            mUsername.setText(topic.getUsername());
+            mUsername.setText(topic.getUserInfo().getName());
             String time = DateUtil.getLatestDateFormat(topic.getDate());
             if (TextUtils.isEmpty(topic.getChannel())) {
                 mDescription.setText(time);
@@ -98,26 +97,25 @@ public class RecyclerViewTopicAdapter extends RecyclerViewBaseAdapter<Topic, Rec
                 mDescription.setText(time + " 来自 " + Html.fromHtml(topic.getChannel()));
             }
 
-            mAvatar.setImageUrl(topic.getAvatar(), RequestManager.getImageLoader());
+            mAvatar.setImageUrl(topic.getUserInfo().getAvatar(), RequestManager.getImageLoader());
 
-            initTopicContent(context, mTopic, topic, false, itemView);
+            initTopicContent(context, mTopic, topic, false);
             if (topic.getRetweetedTopic() != null) {
                 mRetweetTopicLayout.setVisibility(View.VISIBLE);
-                initTopicContent(context, mRetweetTopic, topic.getRetweetedTopic(), true, itemView);
+                initTopicContent(context, mRetweetTopic, topic.getRetweetedTopic(), true);
             } else {
                 mRetweetTopicLayout.setVisibility(View.GONE);
             }
         }
 
-        private void initTopicContent(final Context context, final TopicContentViewHolder holder, Topic topic, boolean isRetweeted, View itemView) {
+        public void initTopicContent(final Context context, final TopicContentViewHolder holder, Topic topic, boolean isRetweeted) {
 
             //不设置的话会被名字内容的点击事件覆盖，无法触发ItemView的onClick
-            holder.mContent.setTag(itemView);
-            holder.mContent.setOnClickListener(getOnClickForItemListener());
+            registerItemClick(holder.mContent);
             String str;
-            if (isRetweeted && !TextUtils.isEmpty(topic.getUsername())) {
+            if (isRetweeted && !TextUtils.isEmpty(topic.getUserInfo().getName())) {
                 //如果微博已经被删除，则名字为空
-                str = "@" + topic.getUsername() + ":" + topic.getContent();
+                str = "@" + topic.getUserInfo().getName() + ":" + topic.getContent();
             } else {
                 str = topic.getContent();
             }

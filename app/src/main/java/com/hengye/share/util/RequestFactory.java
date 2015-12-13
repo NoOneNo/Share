@@ -22,7 +22,7 @@ public class RequestFactory {
     }
 
 
-    public GsonRequest<WBUserInfo> getWBUserInfoRequest(String token, String uid) {
+    public GsonRequest getWBUserInfoRequest(String token, String uid) {
         final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBUserInfoUrl());
         ub.addParameter("access_token", token);
         ub.addParameter("uid", uid);

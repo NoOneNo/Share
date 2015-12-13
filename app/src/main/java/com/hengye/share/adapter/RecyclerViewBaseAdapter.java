@@ -68,9 +68,12 @@ public class RecyclerViewBaseAdapter<T, VH extends RecyclerViewBaseAdapter.ItemV
 
         }
 
-
         public void registerChildViewItemClick(View v){
             v.setOnClickListener(mOnClickForChildViewListener);
+        }
+
+        public void registerItemClick(View v){
+            v.setOnClickListener(mOnClickForItemListener);
         }
 
         boolean mIsAddHeaderView;

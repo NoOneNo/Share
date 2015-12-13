@@ -324,7 +324,7 @@ public class MainActivity extends BaseActivity
     }
 
 
-    private GsonRequest<WBTopics> getWBTopicRequest(String token, String id, final boolean isRefresh) {
+    private GsonRequest getWBTopicRequest(String token, String id, final boolean isRefresh) {
         final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBFriendTopicUrl());
         ub.addParameter("access_token", token);
         if (isRefresh) {
@@ -379,7 +379,6 @@ public class MainActivity extends BaseActivity
                         Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
                     } else {
                         //成功加载更多
-//                        mPageNo++;
                         if (datas.size() < WBUtil.MAX_COUNT_REQUEST) {
                             //没有更多的数据可供加载
                             mPullToRefreshLayout.setLoadEnable(false);
@@ -409,7 +408,7 @@ public class MainActivity extends BaseActivity
         });
     }
 
-    private GsonRequest<WBTopicIds> getWBTopicIdsRequest(final String token, final String since_id) {
+    private GsonRequest getWBTopicIdsRequest(final String token, final String since_id) {
         final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBFriendTopicIdsUrl());
         ub.addParameter("access_token", token);
         ub.addParameter("since_id", since_id);

@@ -30,6 +30,22 @@ public class WBUtil {
         return result;
     }
 
+    public static String IMAGE_TYPE_THUMBNAIL = "thumbnail";//缩略图
+    public static String IMAGE_TYPE_BMIDDLE = "bmiddle";//高清
+    public static String IMAGE_TYPE_LARGE = "large";//原图
+    //默认返回缩略图
+    //要得到高清图或者原图，把地址"http://ww1.sinaimg.cn/thumbnail/6dab804cjw1exv392snomj21kw23ukjl.jpg"
+    //中的thumbnail换成对应的bmiddle(高清)或者large(原图)
+    public static String getWBTopicImgUrl(String url, String toType){
+        return getWBTopicImgUrl(url, IMAGE_TYPE_THUMBNAIL, toType);
+    }
+
+    public static String getWBTopicImgUrl(String url, String fromType, String toType){
+        if(TextUtils.isEmpty(url)){
+            return null;
+        }
+        return url.replaceFirst(fromType, toType);
+    }
 //    public static Pattern getMatchWBContentPattern(){
 //        return Pattern.compile("@[^: ]+(:| )");
 //    }

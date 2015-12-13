@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.hengye.share.module.sina.WBTopic;
 import com.hengye.share.module.sina.WBTopics;
+import com.hengye.share.module.sina.WBUtil;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.GsonUtil;
 
@@ -17,8 +18,8 @@ public class Topic implements Serializable{
 
     private Parent parent;
 
-    private String avatar;//头像
-    private String username;//名字
+//    private String avatar;//头像
+//    private String username;//名字
     private String date;//创建日期
     private String channel;//渠道，通过什么发表
     private String content;//内容
@@ -27,7 +28,7 @@ public class Topic implements Serializable{
     private List<String> imageLargeUrls;//原图
     private Topic retweetedTopic;//被转发的主题
 
-    private UserInfo userInfo;
+    private UserInfo userInfo;//用户信息
 
     public static ArrayList<Topic> getTopics(WBTopics wbTopics){
         if(wbTopics == null || CommonUtil.isEmptyCollection(wbTopics.getStatuses())){
@@ -47,10 +48,10 @@ public class Topic implements Serializable{
             return topic;
         }
         topic.setUserInfo(UserInfo.getUserInfo(entity.getUser()));
-        if(entity.getUser() != null) {
-            topic.setAvatar(entity.getUser().getAvatar_large());
-            topic.setUsername(entity.getUser().getScreen_name());
-        }
+//        if(entity.getUser() != null) {
+//            topic.setAvatar(entity.getUser().getAvatar_large());
+//            topic.setUsername(entity.getUser().getScreen_name());
+//        }
         topic.setDate(entity.getCreated_at());
         topic.setChannel(entity.getSource());
         topic.setContent(entity.getText());
@@ -59,8 +60,8 @@ public class Topic implements Serializable{
             List<String> imageUrls = new ArrayList<>();
             List<String> imageLargeUrls = new ArrayList<>();
             for(WBTopic.Pic_urlsEntity urlsEntity : entity.getPic_urls()){
-                imageUrls.add(getWBTopicImgUrl(urlsEntity.getThumbnail_pic(), IMAGE_TYPE_BMIDDLE));
-                imageLargeUrls.add(getWBTopicImgUrl(urlsEntity.getThumbnail_pic(), IMAGE_TYPE_LARGE));
+                imageUrls.add(WBUtil.getWBTopicImgUrl(urlsEntity.getThumbnail_pic(), WBUtil.IMAGE_TYPE_BMIDDLE));
+                imageLargeUrls.add(WBUtil.getWBTopicImgUrl(urlsEntity.getThumbnail_pic(), WBUtil.IMAGE_TYPE_LARGE));
             }
             topic.setImageUrls(imageUrls);
             topic.setImageLargeUrls(imageLargeUrls);
@@ -74,31 +75,18 @@ public class Topic implements Serializable{
         return topic;
     }
 
-    public static String IMAGE_TYPE_THUMBNAIL = "thumbnail";//缩略图
-    public static String IMAGE_TYPE_BMIDDLE = "bmiddle";//高清
-    public static String IMAGE_TYPE_LARGE = "large";//原图
-    //默认返回缩略图
-    //要得到高清图或者原图，把地址"http://ww1.sinaimg.cn/thumbnail/6dab804cjw1exv392snomj21kw23ukjl.jpg"
-    //中的thumbnail换成对应的bmiddle(高清)或者large(原图)
-    public static String getWBTopicImgUrl(String url, String toType){
-        return getWBTopicImgUrl(url, IMAGE_TYPE_THUMBNAIL, toType);
-    }
-
-    public static String getWBTopicImgUrl(String url, String fromType, String toType){
-        if(TextUtils.isEmpty(url)){
-            return null;
-        }
-        return url.replaceFirst(fromType, toType);
-    }
-
     @Override
     public String toString() {
         return "Topic{" +
-                "avator='" + avatar + '\'' +
-                ", username='" + username + '\'' +
+                "parent=" + parent +
                 ", date='" + date + '\'' +
                 ", channel='" + channel + '\'' +
                 ", content='" + content + '\'' +
+                ", id='" + id + '\'' +
+                ", imageUrls=" + imageUrls +
+                ", imageLargeUrls=" + imageLargeUrls +
+                ", retweetedTopic=" + retweetedTopic +
+                ", userInfo=" + userInfo +
                 '}';
     }
 
@@ -132,22 +120,6 @@ public class Topic implements Serializable{
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getDate() {
