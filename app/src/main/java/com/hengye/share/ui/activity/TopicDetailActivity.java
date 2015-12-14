@@ -20,6 +20,7 @@ import com.android.volley.request.GsonRequest;
 import com.hengye.share.BaseActivity;
 import com.hengye.share.R;
 import com.hengye.share.adapter.RecyclerViewCommentAdapter;
+import com.hengye.share.adapter.RecyclerViewCommentWithHeaderAdapter;
 import com.hengye.share.adapter.RecyclerViewTopicAdapter;
 import com.hengye.share.module.Topic;
 import com.hengye.share.module.TopicComment;
@@ -77,7 +78,7 @@ public class TopicDetailActivity extends BaseActivity {
 
         setContentView(R.layout.activity_topic_detail);
 
-        initTopicView();
+//        initTopicView();
         initView();
 
 
@@ -89,39 +90,13 @@ public class TopicDetailActivity extends BaseActivity {
     }
 
     private PullToRefreshLayout mPullToRefreshLayout;
-    private RecyclerViewCommentAdapter mAdapter;
-    private ViewPager mViewPager;
+    private RecyclerViewCommentWithHeaderAdapter mAdapter;
+    private TabLayout mTabLayout;
+    private RecyclerView mRecyclerView;
+//    private ViewPager mViewPager;
 
     private Oauth2AccessToken mWBAccessToken;
 
-    class CommentFragmentPageAdapter extends FragmentPagerAdapter{
-
-        public CommentFragmentPageAdapter(){
-            super(getSupportFragmentManager());
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            TopicCommentFragment fragment = TopicCommentFragment.newInstance(mTopic.getId());
-            return fragment;
-        }
-
-        @Override
-        public int getCount() {
-            return 2;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            if(position == 0){
-                return getString(R.string.title_page_comment);
-            }else if(position == 1){
-                return getString(R.string.title_page_repost);
-            }else{
-                return null;
-            }
-        }
-    }
 
     private void initTopicView(){
         RecyclerViewTopicAdapter.TopicViewHolder topicViewHolder = new RecyclerViewTopicAdapter.TopicViewHolder(findViewById(R.id.item_topic));
@@ -133,58 +108,169 @@ public class TopicDetailActivity extends BaseActivity {
             return;
         }
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tablayout);
-
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
-
-        mViewPager.setAdapter(new CommentFragmentPageAdapter());
-        tabLayout.setupWithViewPager(mViewPager);
-        tabLayout.setTabsFromPagerAdapter(mViewPager.getAdapter());
-
-//        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        recyclerView.setAdapter(mAdapter = new RecyclerViewCommentAdapter(this, new ArrayList<TopicComment>(), mTopic));
-//        recyclerView.setItemAnimator(new DefaultItemAnimator());
+//        TabLayout tabLayout = (TabLayout) findViewById(R.id.tablayout);
 //
-//        mWBAccessToken = SPUtil.getSinaAccessToken();
-//        mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.pull_to_refresh);
-//        mPullToRefreshLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                if (mWBAccessToken == null || TextUtils.isEmpty(mWBAccessToken.getToken())) {
-//                    mPullToRefreshLayout.setRefreshing(false);
-//                    return;
-//                }
+//        mViewPager = (ViewPager) findViewById(R.id.viewpager);
 //
-//                RequestManager.addToRequestQueue(getWBCommentRequest(mWBAccessToken.getToken(), mTopic.getId(), "0", true), getRequestTag());
-////                if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
-////                    String id = mAdapter.getData().get(0).getId();
-////                    RequestManager.addToRequestQueue(getWBTopicIdsRequest(mWBAccessToken.getToken(), id), getRequestTag());
-////                }else{
-////                    RequestManager.addToRequestQueue(getWBTopicRequest(mWBAccessToken.getToken(), 0 + "", true), getRequestTag());
-////                }
-//            }
-//        });
-//        mPullToRefreshLayout.setOnLoadListener(new PullToRefreshLayout.OnLoadListener() {
-//            @Override
-//            public void onLoad() {
+//        mViewPager.setAdapter(new CommentFragmentPageAdapter());
+//        tabLayout.setupWithViewPager(mViewPager);
+//        tabLayout.setTabsFromPagerAdapter(mViewPager.getAdapter());
+
+        mTabLayout = (TabLayout) findViewById(R.id.tablayout_test);
+        mTabLayout.addTab((mTabLayout.newTab().setText("评论")));
+        mTabLayout.addTab((mTabLayout.newTab().setText("转发")));
+
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setAdapter(mAdapter = new RecyclerViewCommentWithHeaderAdapter(this, new ArrayList<TopicComment>(), mTopic));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                L.debug("onScrollStateChanged newState : {}", newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                L.debug("onScrolled dx : {}, dy : {}", dx, dy);
+
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                layoutManager.findFirstVisibleItemPosition();
+                recyclerView.getvisi
+            }
+        });
+
+
+        mWBAccessToken = SPUtil.getSinaAccessToken();
+        mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.pull_to_refresh);
+        mPullToRefreshLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (mWBAccessToken == null || TextUtils.isEmpty(mWBAccessToken.getToken())) {
+                    mPullToRefreshLayout.setRefreshing(false);
+                    return;
+                }
+
+                RequestManager.addToRequestQueue(getWBCommentRequest(mWBAccessToken.getToken(), mTopic.getId(), "0", true), getRequestTag());
 //                if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
-//                    String id = CommonUtil.getLastItem(mAdapter.getData()).getId();
-//                    RequestManager.addToRequestQueue(getWBCommentRequest(mWBAccessToken.getToken(), mTopic.getId(), id, false), getRequestTag());
-//                } else {
-//                    mPullToRefreshLayout.setLoading(false);
-//                    mPullToRefreshLayout.setLoadEnable(false);
+//                    String id = mAdapter.getData().get(0).getId();
+//                    RequestManager.addToRequestQueue(getWBTopicIdsRequest(mWBAccessToken.getToken(), id), getRequestTag());
+//                }else{
+//                    RequestManager.addToRequestQueue(getWBTopicRequest(mWBAccessToken.getToken(), 0 + "", true), getRequestTag());
 //                }
-//            }
-//        });
-//
-//        mAdapter.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(View view, int position) {
-////                Toast.makeText(MainActivity.this, "click item : " + position, Toast.LENGTH_SHORT).show();
-//            }
-//        });
+            }
+        });
+        mPullToRefreshLayout.setOnLoadListener(new PullToRefreshLayout.OnLoadListener() {
+            @Override
+            public void onLoad() {
+                if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
+                    String id = CommonUtil.getLastItem(mAdapter.getData()).getId();
+                    RequestManager.addToRequestQueue(getWBCommentRequest(mWBAccessToken.getToken(), mTopic.getId(), id, false), getRequestTag());
+                } else {
+                    mPullToRefreshLayout.setLoading(false);
+                    mPullToRefreshLayout.setLoadEnable(false);
+                }
+            }
+        });
+
+        mAdapter.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+//                Toast.makeText(MainActivity.this, "click item : " + position, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
+    private GsonRequest getWBCommentRequest(String token, String topicId, String id, final boolean isRefresh) {
+        final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBCommentUrl());
+        ub.addParameter("access_token", token);
+        ub.addParameter("id", topicId);
+        if (isRefresh) {
+            ub.addParameter("since_id", id);
+        } else {
+            ub.addParameter("max_id", id);
+        }
+        ub.addParameter("count", WBUtil.MAX_COUNT_REQUEST);
+        return new GsonRequest<>(
+                ub.getRequestUrl()
+                , WBTopicComments.class
+                , new Response.Listener<WBTopicComments>() {
+            @Override
+            public void onResponse(WBTopicComments response) {
+                L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
+                List<TopicComment> datas = TopicComment.getComments(response);
+                if (isRefresh) {
+                    //下拉刷新
+                    mPullToRefreshLayout.setRefreshing(false);
+                    if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
+                        //微博属于刷新
+                        if (CommonUtil.isEmptyCollection(datas)) {
+                            //没有内容更新
+                            Snackbar.make(mPullToRefreshLayout, "暂时没有内容", Snackbar.LENGTH_SHORT).show();
+                            return;
+                        } else if (datas.size() < WBUtil.MAX_COUNT_REQUEST) {
+                            //结果小于请求条数
+                            mAdapter.addAll(0, datas);
+//                            Snackbar.make(mPullToRefreshLayout, datas.size() + "条新微博", Snackbar.LENGTH_SHORT).show();
+                        } else {
+                            //结果大于或等于请求条数
+                            mPullToRefreshLayout.setLoadEnable(true);
+                            mAdapter.refresh(datas);
+//                            Snackbar.make(mPullToRefreshLayout, "超过" + WBUtil.MAX_COUNT_REQUEST + "条新微博", Snackbar.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        //属于第一次加载
+                        if (CommonUtil.isEmptyCollection(datas)) {
+                            //内容为空
+                            mPullToRefreshLayout.setLoadEnable(false);
+                        }else if (datas.size() < WBUtil.MAX_COUNT_REQUEST) {
+                            //结果小于请求条数
+                            mPullToRefreshLayout.setLoadEnable(false);
+                        }else{
+                            mPullToRefreshLayout.setLoadEnable(true);
+                        }
+                        mAdapter.refresh(datas);
+                    }
+                    //存储数据
+//                    SPUtil.setModule(mAdapter.getData(), TopicComment.class.getSimpleName());
+                } else {
+                    //上拉加载
+                    mPullToRefreshLayout.setLoading(false);
+                    if (CommonUtil.isEmptyCollection(datas)) {
+                        //没有数据可供加载
+                        mPullToRefreshLayout.setLoadEnable(false);
+                        Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
+                    } else {
+                        //成功加载更多
+                        if (datas.size() < WBUtil.MAX_COUNT_REQUEST) {
+                            //没有更多的数据可供加载
+                            mPullToRefreshLayout.setLoadEnable(false);
+                            Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
+                        }
+                        //因为请求的数据是小于或等于max_id，需要做是否重复判断处理
+                        if (datas.get(0).getId() != null && datas.get(0).getId().
+                                equals(CommonUtil.getLastItem(mAdapter.getData()).getId())) {
+                            datas.remove(0);
+                        }
+                        mAdapter.addAll(datas);
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                if (isRefresh) {
+                    mPullToRefreshLayout.setRefreshing(false);
+                } else {
+                    mPullToRefreshLayout.setLoading(false);
+                }
+                L.debug("request fail , url : {}, error : {}", ub.getRequestUrl(), volleyError);
+            }
+        });
+    }
 
 }
