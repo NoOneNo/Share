@@ -18,7 +18,7 @@ public class WBTopicComments {
     private boolean hasvisible;
     private long previous_cursor;
     private long next_cursor;
-    private int total_number;
+    private long total_number;
     /**
      * created_at : Sun Dec 06 16:20:05 +0800 2015
      * id : 3917087946430089
@@ -48,7 +48,7 @@ public class WBTopicComments {
         this.next_cursor = next_cursor;
     }
 
-    public void setTotal_number(int total_number) {
+    public void setTotal_number(long total_number) {
         this.total_number = total_number;
     }
 
@@ -72,7 +72,7 @@ public class WBTopicComments {
         return next_cursor;
     }
 
-    public int getTotal_number() {
+    public long getTotal_number() {
         return total_number;
     }
 

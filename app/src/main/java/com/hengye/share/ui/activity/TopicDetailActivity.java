@@ -5,9 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,16 +16,12 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
 import com.hengye.share.BaseActivity;
 import com.hengye.share.R;
-import com.hengye.share.adapter.RecyclerViewCommentAdapter;
 import com.hengye.share.adapter.RecyclerViewCommentWithHeaderAdapter;
-import com.hengye.share.adapter.RecyclerViewTopicAdapter;
 import com.hengye.share.module.Topic;
 import com.hengye.share.module.TopicComment;
-import com.hengye.share.module.sina.WBTopicComment;
 import com.hengye.share.module.sina.WBTopicComments;
-import com.hengye.share.module.sina.WBTopics;
+import com.hengye.share.module.sina.WBTopicReposts;
 import com.hengye.share.module.sina.WBUtil;
-import com.hengye.share.ui.fragment.TopicCommentFragment;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.SPUtil;
@@ -56,7 +49,7 @@ public class TopicDetailActivity extends BaseActivity {
 
     @Override
     protected boolean setToolBar() {
-        return false;
+        return true;
     }
 
     public static Intent getIntentToStart(Context context, Topic topic) {
@@ -78,10 +71,7 @@ public class TopicDetailActivity extends BaseActivity {
 
         setContentView(R.layout.activity_topic_detail);
 
-//        initTopicView();
         initView();
-
-
     }
 
     @Override
@@ -93,33 +83,39 @@ public class TopicDetailActivity extends BaseActivity {
     private RecyclerViewCommentWithHeaderAdapter mAdapter;
     private TabLayout mTabLayout;
     private RecyclerView mRecyclerView;
-//    private ViewPager mViewPager;
+    private int mTabLayoutHeight;
 
     private Oauth2AccessToken mWBAccessToken;
-
-
-    private void initTopicView(){
-        RecyclerViewTopicAdapter.TopicViewHolder topicViewHolder = new RecyclerViewTopicAdapter.TopicViewHolder(findViewById(R.id.item_topic));
-        topicViewHolder.bindData(this, mTopic);
-    }
 
     private void initView() {
         if (mTopic == null) {
             return;
         }
 
-//        TabLayout tabLayout = (TabLayout) findViewById(R.id.tablayout);
-//
-//        mViewPager = (ViewPager) findViewById(R.id.viewpager);
-//
-//        mViewPager.setAdapter(new CommentFragmentPageAdapter());
-//        tabLayout.setupWithViewPager(mViewPager);
-//        tabLayout.setTabsFromPagerAdapter(mViewPager.getAdapter());
-
-        mTabLayout = (TabLayout) findViewById(R.id.tablayout_test);
+        mTabLayoutHeight = getResources().getDimensionPixelSize(R.dimen.tab_layout_height);
+        mTabLayout = (TabLayout) findViewById(R.id.tablayout_assist);
         mTabLayout.addTab((mTabLayout.newTab().setText("评论")));
         mTabLayout.addTab((mTabLayout.newTab().setText("转发")));
+        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if(tab.getText().equals("评论")){
+                    mAdapter.refresh(mCommentData);
+                }else if(tab.getText().equals("转发")){
+                    mAdapter.refresh(mRepostData);
+                }
+            }
 
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -128,19 +124,21 @@ public class TopicDetailActivity extends BaseActivity {
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                L.debug("onScrollStateChanged newState : {}", newState);
-            }
-
-            @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                L.debug("onScrolled dx : {}, dy : {}", dx, dy);
-
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                layoutManager.findFirstVisibleItemPosition();
-                recyclerView.getvisi
+                int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+
+                if(firstVisibleItemPosition == 0){
+                    View firstVisibleItem = recyclerView.getChildAt(0);
+                    int firstItemBottom = layoutManager.getDecoratedBottom(firstVisibleItem);
+                    L.debug("onScrolled firstItemBottom : {}", firstItemBottom);
+                    if(firstItemBottom <= mTabLayoutHeight){
+                        mTabLayout.setVisibility(View.VISIBLE);
+                    }else{
+                        mTabLayout.setVisibility(View.GONE);
+                    }
+                }
+                L.debug("onScrolled firstVisibleItemPosition : {}", firstVisibleItemPosition);
             }
         });
 
@@ -156,6 +154,7 @@ public class TopicDetailActivity extends BaseActivity {
                 }
 
                 RequestManager.addToRequestQueue(getWBCommentRequest(mWBAccessToken.getToken(), mTopic.getId(), "0", true), getRequestTag());
+                RequestManager.addToRequestQueue(getWBRepostRequest(mWBAccessToken.getToken(), mTopic.getId(), "0", true), getRequestTag());
 //                if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
 //                    String id = mAdapter.getData().get(0).getId();
 //                    RequestManager.addToRequestQueue(getWBTopicIdsRequest(mWBAccessToken.getToken(), id), getRequestTag());
@@ -169,7 +168,13 @@ public class TopicDetailActivity extends BaseActivity {
             public void onLoad() {
                 if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
                     String id = CommonUtil.getLastItem(mAdapter.getData()).getId();
-                    RequestManager.addToRequestQueue(getWBCommentRequest(mWBAccessToken.getToken(), mTopic.getId(), id, false), getRequestTag());
+                    GsonRequest gsonRequest;
+                    if(isSelectedCommentTab()){
+                        gsonRequest = getWBCommentRequest(mWBAccessToken.getToken(), mTopic.getId(), id, false);
+                    }else{
+                        gsonRequest = getWBRepostRequest(mWBAccessToken.getToken(), mTopic.getId(), id, false);
+                    }
+                    RequestManager.addToRequestQueue(gsonRequest, getRequestTag());
                 } else {
                     mPullToRefreshLayout.setLoading(false);
                     mPullToRefreshLayout.setLoadEnable(false);
@@ -185,7 +190,172 @@ public class TopicDetailActivity extends BaseActivity {
         });
     }
 
+    private boolean isSelectedCommentTab(){
+        return mTabLayout.getSelectedTabPosition() == 0;
+    }
+
+    private boolean isSelectedRepostTab(){
+        return mTabLayout.getSelectedTabPosition() == 1;
+    }
+
+    boolean mHasCommentRequestSuccess, mHasRepostRequestSuccess;
+    List<TopicComment> mCommentData = new ArrayList<TopicComment>();
+    List<TopicComment> mRepostData = new ArrayList<TopicComment>();
+
+    private void handleCommentData(boolean isComment, List<TopicComment> data, boolean isRefresh){
+//        if(isComment){
+//            targetData = mCommentData;
+//        }else{
+//            targetData = mRepostData;
+//        }
+        if(isRefresh){
+            mPullToRefreshLayout.setRefreshing(false);
+            if(isComment){
+                mCommentData = data;
+            }else{
+                mRepostData = data;
+            }
+            if(mHasCommentRequestSuccess && mHasRepostRequestSuccess){
+                List<TopicComment> adapterData = isSelectedCommentTab() ? mCommentData : mRepostData;
+                if (CommonUtil.isEmptyCollection(adapterData)) {
+//                    //内容为空
+//                    mPullToRefreshLayout.setLoadEnable(false);
+                }else if (data.size() < WBUtil.MAX_COUNT_REQUEST) {
+                    //结果小于请求条数
+                    mPullToRefreshLayout.setLoadEnable(false);
+                }else{
+                    mPullToRefreshLayout.setLoadEnable(true);
+                }
+                mAdapter.refresh(adapterData);
+            }
+        }else{
+            List<TopicComment> targetData = isComment ? mCommentData : mRepostData;
+            mPullToRefreshLayout.setLoading(false);
+            if (data.get(0).getId() != null && data.get(0).getId().
+                    equals(CommonUtil.getLastItem(targetData).getId())) {
+                data.remove(0);
+            }
+            targetData.addAll(data);
+
+            if(isComment && isSelectedCommentTab()){
+                mAdapter.notifyDataSetChanged();
+            }else if(!isComment && isSelectedRepostTab()){
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+
+    }
+
+
+    private void handleCommentData2(boolean isComment, List<TopicComment> data, boolean isRefresh){
+        if(!mHasCommentRequestSuccess || !mHasRepostRequestSuccess){
+            return;
+        }
+
+        List<TopicComment> adapterData;
+        if(mTabLayout.getSelectedTabPosition() == 0){
+            adapterData = mCommentData;
+        }else{
+            adapterData = mRepostData;
+        }
+
+        if (isRefresh) {
+            //下拉刷新
+            mPullToRefreshLayout.setRefreshing(false);
+            if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
+                //微博属于刷新
+                if (CommonUtil.isEmptyCollection(data)) {
+                    //没有内容更新
+                    Snackbar.make(mPullToRefreshLayout, "暂时没有内容", Snackbar.LENGTH_SHORT).show();
+                    return;
+                } else if (data.size() < WBUtil.MAX_COUNT_REQUEST) {
+                    //结果小于请求条数
+                    mAdapter.addAll(0, data);
+//                            Snackbar.make(mPullToRefreshLayout, datas.size() + "条新微博", Snackbar.LENGTH_SHORT).show();
+                } else {
+                    //结果大于或等于请求条数
+                    mPullToRefreshLayout.setLoadEnable(true);
+                    mAdapter.refresh(data);
+//                            Snackbar.make(mPullToRefreshLayout, "超过" + WBUtil.MAX_COUNT_REQUEST + "条新微博", Snackbar.LENGTH_SHORT).show();
+                }
+            } else {
+                //属于第一次加载
+                if (CommonUtil.isEmptyCollection(data)) {
+                    //内容为空
+                    mPullToRefreshLayout.setLoadEnable(false);
+                }else if (data.size() < WBUtil.MAX_COUNT_REQUEST) {
+                    //结果小于请求条数
+                    mPullToRefreshLayout.setLoadEnable(false);
+                }else{
+                    mPullToRefreshLayout.setLoadEnable(true);
+                }
+                mAdapter.refresh(data);
+            }
+            //存储数据
+//                    SPUtil.setModule(mAdapter.getData(), TopicComment.class.getSimpleName());
+        } else {
+            //上拉加载
+            mPullToRefreshLayout.setLoading(false);
+            if (CommonUtil.isEmptyCollection(data)) {
+                //没有数据可供加载
+                mPullToRefreshLayout.setLoadEnable(false);
+                Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
+            } else {
+                //成功加载更多
+                if (data.size() < WBUtil.MAX_COUNT_REQUEST) {
+                    //没有更多的数据可供加载
+                    mPullToRefreshLayout.setLoadEnable(false);
+                    Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
+                }
+                //因为请求的数据是小于或等于max_id，需要做是否重复判断处理
+                if (data.get(0).getId() != null && data.get(0).getId().
+                        equals(CommonUtil.getLastItem(mAdapter.getData()).getId())) {
+                    data.remove(0);
+                }
+                mAdapter.addAll(data);
+            }
+        }
+    }
+
+    private GsonRequest getWBRepostRequest(String token, String topicId, String id, final boolean isRefresh) {
+        mHasRepostRequestSuccess = false;
+
+        final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBRepostUrl());
+        ub.addParameter("access_token", token);
+        ub.addParameter("id", topicId);
+        if (isRefresh) {
+            ub.addParameter("since_id", id);
+        } else {
+            ub.addParameter("max_id", id);
+        }
+        ub.addParameter("count", WBUtil.MAX_COUNT_REQUEST);
+        return new GsonRequest<>(
+                ub.getRequestUrl()
+                , WBTopicReposts.class
+                , new Response.Listener<WBTopicReposts>() {
+            @Override
+            public void onResponse(WBTopicReposts response) {
+                L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
+                mHasRepostRequestSuccess = true;
+//                mRepostData = TopicComment.getComments(response);
+               handleCommentData(false, TopicComment.getComments(response), isRefresh);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                if (isRefresh) {
+                    mPullToRefreshLayout.setRefreshing(false);
+                } else {
+                    mPullToRefreshLayout.setLoading(false);
+                }
+                L.debug("request fail , url : {}, error : {}", ub.getRequestUrl(), volleyError);
+            }
+        });
+    }
+
     private GsonRequest getWBCommentRequest(String token, String topicId, String id, final boolean isRefresh) {
+        mHasCommentRequestSuccess = false;
+
         final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBCommentUrl());
         ub.addParameter("access_token", token);
         ub.addParameter("id", topicId);
@@ -202,63 +372,9 @@ public class TopicDetailActivity extends BaseActivity {
             @Override
             public void onResponse(WBTopicComments response) {
                 L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
-                List<TopicComment> datas = TopicComment.getComments(response);
-                if (isRefresh) {
-                    //下拉刷新
-                    mPullToRefreshLayout.setRefreshing(false);
-                    if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
-                        //微博属于刷新
-                        if (CommonUtil.isEmptyCollection(datas)) {
-                            //没有内容更新
-                            Snackbar.make(mPullToRefreshLayout, "暂时没有内容", Snackbar.LENGTH_SHORT).show();
-                            return;
-                        } else if (datas.size() < WBUtil.MAX_COUNT_REQUEST) {
-                            //结果小于请求条数
-                            mAdapter.addAll(0, datas);
-//                            Snackbar.make(mPullToRefreshLayout, datas.size() + "条新微博", Snackbar.LENGTH_SHORT).show();
-                        } else {
-                            //结果大于或等于请求条数
-                            mPullToRefreshLayout.setLoadEnable(true);
-                            mAdapter.refresh(datas);
-//                            Snackbar.make(mPullToRefreshLayout, "超过" + WBUtil.MAX_COUNT_REQUEST + "条新微博", Snackbar.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        //属于第一次加载
-                        if (CommonUtil.isEmptyCollection(datas)) {
-                            //内容为空
-                            mPullToRefreshLayout.setLoadEnable(false);
-                        }else if (datas.size() < WBUtil.MAX_COUNT_REQUEST) {
-                            //结果小于请求条数
-                            mPullToRefreshLayout.setLoadEnable(false);
-                        }else{
-                            mPullToRefreshLayout.setLoadEnable(true);
-                        }
-                        mAdapter.refresh(datas);
-                    }
-                    //存储数据
-//                    SPUtil.setModule(mAdapter.getData(), TopicComment.class.getSimpleName());
-                } else {
-                    //上拉加载
-                    mPullToRefreshLayout.setLoading(false);
-                    if (CommonUtil.isEmptyCollection(datas)) {
-                        //没有数据可供加载
-                        mPullToRefreshLayout.setLoadEnable(false);
-                        Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
-                    } else {
-                        //成功加载更多
-                        if (datas.size() < WBUtil.MAX_COUNT_REQUEST) {
-                            //没有更多的数据可供加载
-                            mPullToRefreshLayout.setLoadEnable(false);
-                            Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
-                        }
-                        //因为请求的数据是小于或等于max_id，需要做是否重复判断处理
-                        if (datas.get(0).getId() != null && datas.get(0).getId().
-                                equals(CommonUtil.getLastItem(mAdapter.getData()).getId())) {
-                            datas.remove(0);
-                        }
-                        mAdapter.addAll(datas);
-                    }
-                }
+                mHasCommentRequestSuccess = true;
+//                mCommentData = TopicComment.getComments(response);
+                handleCommentData(true, TopicComment.getComments(response), isRefresh);
             }
         }, new Response.ErrorListener() {
             @Override

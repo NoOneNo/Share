@@ -38,7 +38,7 @@ public class WBTopics implements Serializable{
     private boolean hasvisible;
     private long previous_cursor;
     private long next_cursor;
-    private int total_number;
+    private long total_number;
     private int interval;
     private int uve_blank;
     private long since_id;
@@ -61,7 +61,7 @@ public class WBTopics implements Serializable{
         this.next_cursor = next_cursor;
     }
 
-    public void setTotal_number(int total_number) {
+    public void setTotal_number(long total_number) {
         this.total_number = total_number;
     }
 
@@ -109,7 +109,7 @@ public class WBTopics implements Serializable{
         return next_cursor;
     }
 
-    public int getTotal_number() {
+    public long getTotal_number() {
         return total_number;
     }
 

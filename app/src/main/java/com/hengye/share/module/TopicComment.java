@@ -1,7 +1,9 @@
 package com.hengye.share.module;
 
+import com.hengye.share.module.sina.WBTopic;
 import com.hengye.share.module.sina.WBTopicComment;
 import com.hengye.share.module.sina.WBTopicComments;
+import com.hengye.share.module.sina.WBTopicReposts;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.GsonUtil;
 
@@ -58,6 +60,32 @@ public class TopicComment implements Serializable{
 //            topicComment.setImageLargeUrls(imageLargeUrls);
 //        }
 
+        return topicComment;
+    }
+
+    public static ArrayList<TopicComment> getComments(WBTopicReposts wbTopicReposts){
+        if(wbTopicReposts == null || CommonUtil.isEmptyCollection(wbTopicReposts.getReposts())){
+            return null;
+        }
+        ArrayList<TopicComment> topicComments = new ArrayList<>();
+        for(WBTopic entity : wbTopicReposts.getReposts()){
+            topicComments.add(getComment(entity));
+        }
+        return topicComments;
+    }
+
+    public static TopicComment getComment(WBTopic entity){
+        TopicComment topicComment = new TopicComment();
+        topicComment.setParent(new Parent(GsonUtil.getInstance().toJson(entity), Parent.TYPE_WEIBO));
+        if(entity == null){
+            return topicComment;
+        }
+        topicComment.setUserInfo(UserInfo.getUserInfo(entity.getUser()));
+        topicComment.setDate(entity.getCreated_at());
+        topicComment.setChannel(entity.getSource());
+        topicComment.setContent(entity.getText());
+        topicComment.setId(entity.getIdstr());
+        topicComment.setTopic(Topic.getTopic(entity.getRetweeted_status()));
         return topicComment;
     }
 
