@@ -42,7 +42,7 @@ public abstract class RecyclerViewHeaderAdapter<VH extends RecyclerView.ViewHold
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (position == 0 && holder.getItemViewType() == TYPE_HEADER) {
             onBindHeaderView(holder, position);
-        } else if (position == getBasicItemCount() && holder.getItemViewType() == TYPE_FOOTER) {
+        } else if (position == getItemCount() - 1&& holder.getItemViewType() == TYPE_FOOTER) {
             onBindFooterView(holder, position);
         } else {
             onBindBasicItemView((VH)holder, getBasicItemVirtualPosition(position));
@@ -86,7 +86,7 @@ public abstract class RecyclerViewHeaderAdapter<VH extends RecyclerView.ViewHold
         if (position == 0 && isAddHeaderView()) {
             return TYPE_HEADER;
         }
-        if (position == getBasicItemCount() && isAddFooterView()) {
+        if (position == getItemCount() - 1 && isAddFooterView()) {
             return TYPE_FOOTER;
         }
         if (getBasicItemType(position) >= Integer.MAX_VALUE - TYPE_ADAPTEE_OFFSET) {

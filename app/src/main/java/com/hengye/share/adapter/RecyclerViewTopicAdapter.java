@@ -66,15 +66,21 @@ public class RecyclerViewTopicAdapter extends RecyclerViewBaseAdapter<Topic, Rec
         TopicContentViewHolder mTopic, mRetweetTopic;
         View mTopicTitle, mRetweetTopicLayout;
 
-        public TopicViewHolder(View v) {
+        boolean mIsFadeInImage;
+
+        public TopicViewHolder(View v){
+            this(v, true);
+        }
+
+        public TopicViewHolder(View v, boolean isFadeInImage) {
             super(v);
+            mIsFadeInImage = isFadeInImage;
             if (mTopic == null) {
                 mTopic = new TopicContentViewHolder();
             }
             if (mRetweetTopic == null) {
                 mRetweetTopic = new TopicContentViewHolder();
             }
-
             mTopicTitle = v.findViewById(R.id.rl_topic_title);
             mAvatar = (NetworkImageViewPlus) v.findViewById(R.id.iv_topic_avatar);
             mUsername = (TextView) v.findViewById(R.id.tv_topic_username);
@@ -173,6 +179,7 @@ public class RecyclerViewTopicAdapter extends RecyclerViewBaseAdapter<Topic, Rec
                             @Override
                             public NetworkImageViewPlus getImageView() {
                                 NetworkImageViewPlus iv = new NetworkImageViewPlus(context);
+                                iv.setFadeInImage(mIsFadeInImage);
                                 iv.setScaleType(ImageView.ScaleType.FIT_XY);
                                 iv.setBackgroundColor(context.getResources().getColor(R.color.image_default_bg));
                                 iv.setTag(holder.mGallery);

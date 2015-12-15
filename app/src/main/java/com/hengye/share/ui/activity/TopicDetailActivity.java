@@ -87,20 +87,34 @@ public class TopicDetailActivity extends BaseActivity {
 
     private Oauth2AccessToken mWBAccessToken;
 
+    public TabLayout getTabLayout() {
+        return mTabLayout;
+    }
+
     TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
+            String str = (String)tab.getTag();
+            if("tablayout_assist".equals(str)){
+                return;
+            }else if("tablayout".equals(str)){
+                mTabLayout.getTabAt(tab.getPosition()).select();
+            }
             if(tab.getPosition() == 0){
                 mAdapter.setData(mCommentData);
-                if(!mCommentData.isEmpty()){
-                    mAdapter.notifyItemRangeChanged(1, mAdapter.getBasicItemCount());
-                }
+//                if(!mCommentData.isEmpty()){
+//                    mAdapter.notifyItemRangeChanged(1, mAdapter.getItemCount() - 2);
+//                }else{
+                    mAdapter.notifyDataSetChanged();
+//                }
 
             }else if(tab.getPosition() == 1){
                 mAdapter.setData(mRepostData);
-                if(!mRepostData.isEmpty()){
-                    mAdapter.notifyItemRangeChanged(1, mAdapter.getBasicItemCount());
-                }
+//                if(!mRepostData.isEmpty()){
+//                    mAdapter.notifyItemRangeChanged(1, mAdapter.getItemCount() - 2);
+//                }else{
+                    mAdapter.notifyDataSetChanged();
+//                }
             }
         }
 
@@ -122,8 +136,8 @@ public class TopicDetailActivity extends BaseActivity {
 
         mTabLayoutHeight = getResources().getDimensionPixelSize(R.dimen.tab_layout_height);
         mTabLayout = (TabLayout) findViewById(R.id.tablayout_assist);
-        mTabLayout.addTab((mTabLayout.newTab().setText("评论")));
-        mTabLayout.addTab((mTabLayout.newTab().setText("转发")));
+        mTabLayout.addTab((mTabLayout.newTab().setText("评论").setTag("tablayout_assist")));
+        mTabLayout.addTab((mTabLayout.newTab().setText("转发").setTag("tablayout_assist")));
         mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);

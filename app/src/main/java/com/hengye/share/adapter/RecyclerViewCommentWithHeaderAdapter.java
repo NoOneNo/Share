@@ -50,6 +50,11 @@ public class RecyclerViewCommentWithHeaderAdapter extends RecyclerViewBaseAdapte
     }
 
     @Override
+    public boolean isAddFooterView() {
+        return true;
+    }
+
+    @Override
     public RecyclerView.ViewHolder onCreateHeaderViewHolder(ViewGroup parent, int viewType) {
         return new HeaderViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.header_topic_detail, parent, false), mTabLayout);
     }
@@ -58,7 +63,9 @@ public class RecyclerViewCommentWithHeaderAdapter extends RecyclerViewBaseAdapte
     public void onBindHeaderView(RecyclerView.ViewHolder holder, int position) {
         HeaderViewHolder headerViewHolder = ((HeaderViewHolder)holder);
         headerViewHolder.mTopicViewHolder.bindData(getContext(), mTopic);
-        headerViewHolder.mTabLayout.setOnTabSelectedListener(((TopicDetailActivity)getContext()).getOnTabSelectedListener());
+        headerViewHolder.mTabLayout.setOnTabSelectedListener(((TopicDetailActivity) getContext()).getOnTabSelectedListener());
+        TabLayout tabLayoutAssist = ((TopicDetailActivity) getContext()).getTabLayout();
+        headerViewHolder.mTabLayout.getTabAt(tabLayoutAssist.getSelectedTabPosition()).select();
     }
 
     public static class HeaderViewHolder extends RecyclerView.ViewHolder {
@@ -70,16 +77,30 @@ public class RecyclerViewCommentWithHeaderAdapter extends RecyclerViewBaseAdapte
             super(v);
             mTargetTabLayout = targetTabLayout;
 
-            mTopicViewHolder = new RecyclerViewTopicAdapter.TopicViewHolder(v.findViewById(R.id.item_topic));
+            mTopicViewHolder = new RecyclerViewTopicAdapter.TopicViewHolder(v.findViewById(R.id.item_topic), false);
             mTabLayout = (TabLayout) v.findViewById(R.id.tablayout);
-            mTabLayout.addTab((mTabLayout.newTab().setText("评论")));
-            mTabLayout.addTab((mTabLayout.newTab().setText("转发")));
+            mTabLayout.addTab((mTabLayout.newTab().setText("评论").setTag("tablayout")));
+            mTabLayout.addTab((mTabLayout.newTab().setText("转发").setTag("tablayout")));
 
         }
 
     }
 
+    @Override
+    public RecyclerView.ViewHolder onCreateFooterViewHolder(ViewGroup parent, int viewType) {
+        return new FooterViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.footer_null, parent, false));
+    }
 
+    @Override
+    public void onBindFooterView(RecyclerView.ViewHolder holder, int position) {
+        super.onBindFooterView(holder, position);
+    }
+
+    public static class FooterViewHolder extends RecyclerView.ViewHolder{
+        public FooterViewHolder(View v){
+            super(v);
+        }
+    }
 
     @Override
     public CommentViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
