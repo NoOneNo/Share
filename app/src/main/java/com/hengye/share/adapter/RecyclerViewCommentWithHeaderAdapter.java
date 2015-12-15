@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,9 +21,11 @@ import com.hengye.share.R;
 import com.hengye.share.module.Topic;
 import com.hengye.share.module.TopicComment;
 import com.hengye.share.module.sina.WBUtil;
+import com.hengye.share.ui.activity.TopicDetailActivity;
 import com.hengye.share.ui.view.GridGalleryView;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DateUtil;
+import com.hengye.share.util.ReflectionHelpers;
 import com.hengye.share.util.SimpleClickableSpan;
 import com.hengye.share.util.SimpleLinkMovementMethod;
 import com.hengye.volleyplus.toolbox.RequestManager;
@@ -33,10 +36,12 @@ import java.util.Map;
 public class RecyclerViewCommentWithHeaderAdapter extends RecyclerViewBaseAdapter<TopicComment, RecyclerViewCommentWithHeaderAdapter.CommentViewHolder> {
 
     private Topic mTopic;
+    private TabLayout mTabLayout;
 
-    public RecyclerViewCommentWithHeaderAdapter(Context context, List<TopicComment> data, Topic topic) {
+    public RecyclerViewCommentWithHeaderAdapter(Context context, List<TopicComment> data, Topic topic, TabLayout tabLayout) {
         super(context, data);
         mTopic = topic;
+        mTabLayout = tabLayout;
     }
 
     @Override
@@ -46,29 +51,35 @@ public class RecyclerViewCommentWithHeaderAdapter extends RecyclerViewBaseAdapte
 
     @Override
     public RecyclerView.ViewHolder onCreateHeaderViewHolder(ViewGroup parent, int viewType) {
-        return new HeaderViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.header_topic_detail, parent, false));
+        return new HeaderViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.header_topic_detail, parent, false), mTabLayout);
     }
 
     @Override
     public void onBindHeaderView(RecyclerView.ViewHolder holder, int position) {
         HeaderViewHolder headerViewHolder = ((HeaderViewHolder)holder);
         headerViewHolder.mTopicViewHolder.bindData(getContext(), mTopic);
+        headerViewHolder.mTabLayout.setOnTabSelectedListener(((TopicDetailActivity)getContext()).getOnTabSelectedListener());
     }
 
     public static class HeaderViewHolder extends RecyclerView.ViewHolder {
 
         RecyclerViewTopicAdapter.TopicViewHolder mTopicViewHolder;
-        TabLayout mTabLayout;
+        TabLayout mTabLayout, mTargetTabLayout;
 
-        public HeaderViewHolder(View v) {
+        public HeaderViewHolder(View v, TabLayout targetTabLayout) {
             super(v);
+            mTargetTabLayout = targetTabLayout;
+
             mTopicViewHolder = new RecyclerViewTopicAdapter.TopicViewHolder(v.findViewById(R.id.item_topic));
             mTabLayout = (TabLayout) v.findViewById(R.id.tablayout);
             mTabLayout.addTab((mTabLayout.newTab().setText("评论")));
             mTabLayout.addTab((mTabLayout.newTab().setText("转发")));
+
         }
 
     }
+
+
 
     @Override
     public CommentViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {

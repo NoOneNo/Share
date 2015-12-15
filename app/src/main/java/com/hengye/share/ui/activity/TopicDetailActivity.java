@@ -87,6 +87,34 @@ public class TopicDetailActivity extends BaseActivity {
 
     private Oauth2AccessToken mWBAccessToken;
 
+    TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
+        @Override
+        public void onTabSelected(TabLayout.Tab tab) {
+            if(tab.getPosition() == 0){
+                mAdapter.setData(mCommentData);
+                if(!mCommentData.isEmpty()){
+                    mAdapter.notifyItemRangeChanged(1, mAdapter.getBasicItemCount());
+                }
+
+            }else if(tab.getPosition() == 1){
+                mAdapter.setData(mRepostData);
+                if(!mRepostData.isEmpty()){
+                    mAdapter.notifyItemRangeChanged(1, mAdapter.getBasicItemCount());
+                }
+            }
+        }
+
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab) {}
+
+        @Override
+        public void onTabReselected(TabLayout.Tab tab) {}
+    };
+
+    public TabLayout.OnTabSelectedListener getOnTabSelectedListener() {
+        return mOnTabSelectedListener;
+    }
+
     private void initView() {
         if (mTopic == null) {
             return;
@@ -96,30 +124,11 @@ public class TopicDetailActivity extends BaseActivity {
         mTabLayout = (TabLayout) findViewById(R.id.tablayout_assist);
         mTabLayout.addTab((mTabLayout.newTab().setText("评论")));
         mTabLayout.addTab((mTabLayout.newTab().setText("转发")));
-        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                if(tab.getText().equals("评论")){
-                    mAdapter.refresh(mCommentData);
-                }else if(tab.getText().equals("转发")){
-                    mAdapter.refresh(mRepostData);
-                }
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
+        mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(mAdapter = new RecyclerViewCommentWithHeaderAdapter(this, new ArrayList<TopicComment>(), mTopic));
+        mRecyclerView.setAdapter(mAdapter = new RecyclerViewCommentWithHeaderAdapter(this, new ArrayList<TopicComment>(), mTopic, mTabLayout));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -208,6 +217,10 @@ public class TopicDetailActivity extends BaseActivity {
 //        }else{
 //            targetData = mRepostData;
 //        }
+        if(CommonUtil.isEmptyCollection(data)){
+            return;
+        }
+
         if(isRefresh){
             mPullToRefreshLayout.setRefreshing(false);
             if(isComment){

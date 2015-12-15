@@ -187,7 +187,7 @@ public class RecyclerViewBaseAdapter<T, VH extends RecyclerViewBaseAdapter.ItemV
     }
 
     public void setData(List<T> data) {
-        refresh(data);
+        mData = data;
     }
 
     public Context getContext() {
