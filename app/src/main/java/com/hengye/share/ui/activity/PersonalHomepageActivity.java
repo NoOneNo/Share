@@ -12,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -21,7 +20,7 @@ import com.android.volley.request.GsonRequest;
 import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.BaseActivity;
 import com.hengye.share.R;
-import com.hengye.share.adapter.RecyclerViewTopicAdapter;
+import com.hengye.share.adapter.recyclerview.TopicAdapter;
 import com.hengye.share.module.Topic;
 import com.hengye.share.module.UserInfo;
 import com.hengye.share.module.sina.WBTopics;
@@ -36,7 +35,6 @@ import com.hengye.volleyplus.toolbox.RequestManager;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 
 import java.util.ArrayList;
-import java.util.Formatter;
 import java.util.List;
 
 public class PersonalHomepageActivity extends BaseActivity implements View.OnClickListener{
@@ -83,7 +81,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     private UserInfo mUserInfo;
 //    private PullToRefreshLayout mPullToRefreshLayout;
     private RecyclerView mRecyclerView;
-    private RecyclerViewTopicAdapter mAdapter;
+    private TopicAdapter mAdapter;
     private Oauth2AccessToken mWBAccessToken;
 
     private void initView() {
@@ -102,7 +100,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(mAdapter = new RecyclerViewTopicAdapter(this, new ArrayList<Topic>()));
+        mRecyclerView.setAdapter(mAdapter = new TopicAdapter(this, new ArrayList<Topic>()));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
 

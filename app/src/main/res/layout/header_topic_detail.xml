@@ -21,7 +21,7 @@
         <!--android:background="@null">-->
 
         <android.support.design.widget.TabLayout
-            android:id="@+id/tablayout"
+            android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/tab_layout_height"
             android:layout_marginTop="@dimen/content_margin_5dp"

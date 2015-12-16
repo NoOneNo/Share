@@ -3,6 +3,8 @@ package com.hengye.share.module;
 import android.text.TextUtils;
 
 import com.hengye.share.module.sina.WBTopic;
+import com.hengye.share.module.sina.WBTopicComment;
+import com.hengye.share.module.sina.WBTopicComments;
 import com.hengye.share.module.sina.WBTopics;
 import com.hengye.share.module.sina.WBUtil;
 import com.hengye.share.util.CommonUtil;
@@ -71,6 +73,51 @@ public class Topic implements Serializable{
             //获得一条转发的微博, 防止一直递归
             entity.getRetweeted_status().setRetweeted_status(null);
             topic.setRetweetedTopic(getTopic(entity.getRetweeted_status()));
+        }
+        return topic;
+    }
+
+    public static ArrayList<Topic> getTopics(WBTopicComments wbTopicComments){
+        if(wbTopicComments == null || CommonUtil.isEmptyCollection(wbTopicComments.getComments())){
+            return null;
+        }
+        ArrayList<Topic> topics = new ArrayList<>();
+        for(WBTopicComment entity : wbTopicComments.getComments()){
+            topics.add(getTopic(entity));
+        }
+        return topics;
+    }
+
+    public static Topic getTopic(WBTopicComment entity){
+        Topic topic = new Topic();
+        topic.setParent(new Parent(GsonUtil.getInstance().toJson(entity), Parent.TYPE_WEIBO));
+        if(entity == null){
+            return topic;
+        }
+        topic.setUserInfo(UserInfo.getUserInfo(entity.getUser()));
+//        if(entity.getUser() != null) {
+//            topic.setAvatar(entity.getUser().getAvatar_large());
+//            topic.setUsername(entity.getUser().getScreen_name());
+//        }
+        topic.setDate(entity.getCreated_at());
+        topic.setChannel(entity.getSource());
+        topic.setContent(entity.getText());
+        topic.setId(entity.getIdstr());
+//        if(!CommonUtil.isEmptyCollection(entity.getPic_urls())){
+//            List<String> imageUrls = new ArrayList<>();
+//            List<String> imageLargeUrls = new ArrayList<>();
+//            for(WBTopic.Pic_urlsEntity urlsEntity : entity.getPic_urls()){
+//                imageUrls.add(WBUtil.getWBTopicImgUrl(urlsEntity.getThumbnail_pic(), WBUtil.IMAGE_TYPE_BMIDDLE));
+//                imageLargeUrls.add(WBUtil.getWBTopicImgUrl(urlsEntity.getThumbnail_pic(), WBUtil.IMAGE_TYPE_LARGE));
+//            }
+//            topic.setImageUrls(imageUrls);
+//            topic.setImageLargeUrls(imageLargeUrls);
+//        }
+
+        if(entity.getStatus() != null){
+            //获得一条转发的微博, 防止一直递归
+            entity.getStatus().setRetweeted_status(null);
+            topic.setRetweetedTopic(getTopic(entity.getStatus()));
         }
         return topic;
     }

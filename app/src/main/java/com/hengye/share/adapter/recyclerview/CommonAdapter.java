@@ -1,4 +1,4 @@
-package com.hengye.share.adapter;
+package com.hengye.share.adapter.recyclerview;
 
 
 import android.content.Context;
@@ -10,13 +10,13 @@ import com.hengye.share.util.ViewUtil;
 
 import java.util.List;
 
-public class RecyclerViewBaseAdapter<T, VH extends RecyclerViewBaseAdapter.ItemViewHolder> extends RecyclerViewHeaderAdapter<VH> {
+public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends HeaderAdapter<VH> {
 
     private Context mContext;
     private List<T> mData;
     private ViewUtil.OnItemClickListener mOnItemClickListener, mOnChildViewItemClickListener;
 
-    public RecyclerViewBaseAdapter(Context context, List<T> data) {
+    public CommonAdapter(Context context, List<T> data) {
         mContext = context;
         mData = data;
     }
@@ -79,7 +79,7 @@ public class RecyclerViewBaseAdapter<T, VH extends RecyclerViewBaseAdapter.ItemV
         boolean mIsAddHeaderView;
 
         public int getItemVirtualPosition(){
-            return RecyclerViewHeaderAdapter.getBasicItemVirtualPosition(getAdapterPosition(), mIsAddHeaderView);
+            return HeaderAdapter.getBasicItemVirtualPosition(getAdapterPosition(), mIsAddHeaderView);
         }
 
         /**

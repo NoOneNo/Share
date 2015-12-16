@@ -12,7 +12,7 @@ public class WBUtil {
     public final static int MAX_COUNT_REQUEST = 30;
     public final static int START_PAGE = 1;
 
-    public final static String WB_USERNAME_REGEX = "@[^:： ]+(:|：| )";
+    public final static String WB_USERNAME_REGEX = "@[^:： ]+(:|：| |\\s)";
     //从微博里得到匹配的@名字，正则表达式@[^:： ]+(:|：| )
     public static Map<Integer, String> getMatchAtWBName(String str){
 

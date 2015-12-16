@@ -13,32 +13,20 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
+        <ListView
+            android:id="@+id/list_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1" />
     </com.hengye.swiperefresh.PullToRefreshLayout>
 
-    <!--<android.support.design.widget.AppBarLayout-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:background="@null">-->
-
-    <!--<android.support.v7.widget.Toolbar-->
-    <!--android:id="@+id/toolbar"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="?attr/actionBarSize"-->
-    <!--android:background="?attr/colorPrimary"-->
-    <!--app:title="SNS Share Tools" />-->
-
     <android.support.design.widget.TabLayout
-        android:id="@+id/tablayout_assist"
+        android:id="@+id/tab_layout_assist"
         android:layout_width="match_parent"
         android:layout_height="@dimen/tab_layout_height"
         android:background="@android:color/white"
+        android:theme="@style/Platform.V14.AppCompat.Light"
         android:visibility="gone"/>
 
-    <!--</android.support.design.widget.AppBarLayout>-->
 
 </FrameLayout>

@@ -1,4 +1,4 @@
-package com.hengye.share.adapter;
+package com.hengye.share.adapter.recyclerview;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,9 +7,9 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-public class RecyclerViewTemplateAdapter extends RecyclerViewBaseAdapter<String, RecyclerViewTemplateAdapter.MainViewHolder>{
+public class TemplateAdapter extends CommonAdapter<String, TemplateAdapter.MainViewHolder> {
 
-    public RecyclerViewTemplateAdapter(Context context, List<String> data) {
+    public TemplateAdapter(Context context, List<String> data) {
         super(context, data);
     }
 
@@ -18,7 +18,7 @@ public class RecyclerViewTemplateAdapter extends RecyclerViewBaseAdapter<String,
         return new MainViewHolder(LayoutInflater.from(getContext()).inflate(null, parent, false));
     }
 
-    public static class MainViewHolder extends RecyclerViewBaseAdapter.ItemViewHolder<String> {
+    public static class MainViewHolder extends CommonAdapter.ItemViewHolder<String> {
         public MainViewHolder(View v) {
             super(v);
         }

@@ -1,4 +1,4 @@
-package com.hengye.share.adapter;
+package com.hengye.share.adapter.recyclerview;
 
 
 import android.content.Context;
@@ -10,13 +10,13 @@ import com.hengye.share.util.ViewUtil;
 
 import java.util.List;
 
-public class RecyclerViewSimpleAdapter<T, VH extends RecyclerViewSimpleAdapter.ViewHolder> extends RecyclerView.Adapter<VH> {
+public class SimpleAdapter<T, VH extends SimpleAdapter.ViewHolder> extends RecyclerView.Adapter<VH> {
 
     private Context mContext;
     private List<T> mData;
     private ViewUtil.OnItemClickListener mOnItemClickListener, mOnChildViewItemClickListener;
 
-    public RecyclerViewSimpleAdapter(Context context, List<T> data) {
+    public SimpleAdapter(Context context, List<T> data) {
         mContext = context;
         mData = data;
     }

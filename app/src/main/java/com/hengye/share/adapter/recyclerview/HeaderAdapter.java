@@ -1,4 +1,4 @@
-package com.hengye.share.adapter;
+package com.hengye.share.adapter.recyclerview;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
@@ -23,7 +23,7 @@ import android.view.ViewGroup;
  * <p/>
  * TOTALLY UNTESTED - USE WITH CARE - HAVE FUN :)
  */
-public abstract class RecyclerViewHeaderAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public abstract class HeaderAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_HEADER = Integer.MIN_VALUE;
     private static final int TYPE_FOOTER = Integer.MIN_VALUE + 1;
     private static final int TYPE_ADAPTEE_OFFSET = 2;

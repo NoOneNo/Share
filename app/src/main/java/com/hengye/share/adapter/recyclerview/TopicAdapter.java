@@ -1,4 +1,4 @@
-package com.hengye.share.adapter;
+package com.hengye.share.adapter.recyclerview;
 
 import android.content.Context;
 import android.text.Html;
@@ -35,11 +35,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class RecyclerViewTopicAdapter extends RecyclerViewBaseAdapter<Topic, RecyclerViewTopicAdapter.TopicViewHolder>
+public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHolder>
     implements ViewUtil.OnItemClickListener{
 
     public static int mGalleryMaxWidth;
-    public RecyclerViewTopicAdapter(Context context, List<Topic> data) {
+    public TopicAdapter(Context context, List<Topic> data) {
         super(context, data);
         int galleryMargin = context.getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin);
         mGalleryMaxWidth = context.getResources().getDisplayMetrics().widthPixels - 2 * galleryMargin;
@@ -59,7 +59,7 @@ public class RecyclerViewTopicAdapter extends RecyclerViewBaseAdapter<Topic, Rec
         }
     }
 
-    public static class TopicViewHolder extends RecyclerViewBaseAdapter.ItemViewHolder<Topic> {
+    public static class TopicViewHolder extends CommonAdapter.ItemViewHolder<Topic> {
 
         NetworkImageViewPlus mAvatar;
         TextView mUsername, mDescription;
@@ -226,8 +226,8 @@ public class RecyclerViewTopicAdapter extends RecyclerViewBaseAdapter<Topic, Rec
     }
 
     public static class TopicContentViewHolder {
-        TextView mContent;
-        GridGalleryView mGallery;
+        public TextView mContent;
+        public GridGalleryView mGallery;
     }
 }
 

@@ -98,4 +98,24 @@ public class UrlFactory {
     public String getWBRepostUrl() {
         return URL_PREFIX_WEIBO + "statuses/repost_timeline.json";
     }
+
+    //我发出的评论列表
+    public String getWBCommentByMeUrl() {
+        return URL_PREFIX_WEIBO + "comments/by_me.json";
+    }
+
+    //我收到的评论列表
+    public String getWBCommentToMeUrl() {
+        return URL_PREFIX_WEIBO + "comments/to_me.json";
+    }
+
+    //@我的评论列表
+    public String getWBCommentMentionUrl() {
+        return URL_PREFIX_WEIBO + "comments/mentions.json";
+    }
+
+    //@我的微博
+    public String getWBTopicMentionUrl() {
+        return URL_PREFIX_WEIBO + "statuses/mentions.json";
+    }
 }

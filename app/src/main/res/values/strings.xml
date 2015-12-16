@@ -26,6 +26,7 @@
     <!-- Strings related to activity title-->
     <string name="title_activity_login">Sign in</string>
     <string name="title_activity_setting">设置</string>
+    <string name="title_activity_topic_notify">通知</string>
     <!-- Strings related to activity title-->
 
     <!-- Strings related to TopicComment-->
