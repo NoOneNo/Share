@@ -84,14 +84,11 @@ public class TopicNotifyFragment extends BaseFragment{
                     return;
                 }
 
-                RequestManager.addToRequestQueue(getWBCommentRequest(mWBAccessToken.getToken(), 0 + "", true, URL_COMMENT_TO_ME), getRequestTag());
-//                RequestManager.addToRequestQueue(getWBCommentRequest(mWBAccessToken.getToken(), mTopicId, "0", true), getRequestTag());
-//                if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
-//                    String id = mAdapter.getData().get(0).getId();
-//                    RequestManager.addToRequestQueue(getWBTopicIdsRequest(mWBAccessToken.getToken(), id), getRequestTag());
-//                }else{
-//                    RequestManager.addToRequestQueue(getWBTopicRequest(mWBAccessToken.getToken(), 0 + "", true), getRequestTag());
-//                }
+                if(mNotifyType == NOTIFY_COMMENT) {
+                    RequestManager.addToRequestQueue(getWBCommentRequest(mWBAccessToken.getToken(), 0 + "", true, URL_COMMENT_TO_ME), getRequestTag());
+                }else{
+                    RequestManager.addToRequestQueue(getWBTopicRequest(mWBAccessToken.getToken(), 0 + "", true), getRequestTag());
+                }
             }
         });
         mPullToRefreshLayout.setOnLoadListener(new PullToRefreshLayout.OnLoadListener() {
@@ -99,7 +96,11 @@ public class TopicNotifyFragment extends BaseFragment{
             public void onLoad() {
                 if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
                     String id = CommonUtil.getLastItem(mAdapter.getData()).getId();
-                    RequestManager.addToRequestQueue(getWBCommentRequest(mWBAccessToken.getToken(), id, true, URL_COMMENT_TO_ME), getRequestTag());
+                    if(mNotifyType == NOTIFY_COMMENT) {
+                        RequestManager.addToRequestQueue(getWBCommentRequest(mWBAccessToken.getToken(), id, true, URL_COMMENT_TO_ME), getRequestTag());
+                    }else{
+                        RequestManager.addToRequestQueue(getWBTopicRequest(mWBAccessToken.getToken(), id, true), getRequestTag());
+                    }
                 } else {
                     mPullToRefreshLayout.setLoading(false);
                     mPullToRefreshLayout.setLoadEnable(false);
@@ -114,6 +115,7 @@ public class TopicNotifyFragment extends BaseFragment{
             }
         });
 
+        mPullToRefreshLayout.setRefreshing(true);
         return view;
     }
 
@@ -146,7 +148,7 @@ public class TopicNotifyFragment extends BaseFragment{
                 mAdapter.refresh(data);
             }
             //存储数据
-            SPUtil.setModule(mAdapter.getData(), Topic.class.getSimpleName());
+//            SPUtil.setModule(mAdapter.getData(), Topic.class.getSimpleName());
         } else {
             //上拉加载
             mPullToRefreshLayout.setLoading(false);

@@ -25,5 +25,5 @@
     <dimen name="topic_content">16sp</dimen>
     <dimen name="topic_gallery_iv_margin">4dp</dimen>
 
-    <dimen name="detail_backdrop_height">300dp</dimen>
+    <dimen name="header_personal_homepage_height">300dp</dimen>
 </resources>

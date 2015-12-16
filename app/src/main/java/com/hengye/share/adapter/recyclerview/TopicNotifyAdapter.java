@@ -50,7 +50,7 @@ public class TopicNotifyAdapter extends CommonAdapter<Topic, TopicAdapter.TopicV
 
     @Override
     public RecyclerView.ViewHolder onCreateHeaderViewHolder(ViewGroup parent, int viewType) {
-        return new HeaderViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.header_null, parent, false));
+        return new HeaderViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.header_topic_notify, parent, false));
     }
 
     @Override
