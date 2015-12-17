@@ -32,10 +32,12 @@ import com.hengye.share.module.UserInfo;
 import com.hengye.share.module.sina.WBTopicIds;
 import com.hengye.share.module.sina.WBTopics;
 import com.hengye.share.module.sina.WBUserInfo;
-import com.hengye.share.module.sina.WBUtil;
+import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.share.support.ActionBarDrawerToggleCustom;
 import com.hengye.share.ui.activity.setting.SettingActivity;
+import com.hengye.share.ui.fragment.TopicFavoritesFragment;
 import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.IntentUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestFactory;
@@ -230,7 +232,7 @@ public class TopicActivity extends BaseActivity
         } else if (id == R.id.nav_gallery) {
             IntentUtil.startActivity(this, TopicNotifyActivity.class);
         } else if (id == R.id.nav_slideshow) {
-
+            IntentUtil.startActivity(this, FragmentActivity.getStartIntent(this, TopicFavoritesFragment.class));
         } else if (id == R.id.nav_manage) {
             IntentUtil.startActivity(this, SettingActivity.class);
         } else if (id == R.id.nav_share) {
@@ -324,56 +326,20 @@ public class TopicActivity extends BaseActivity
     }
 
     private void handleData(List<Topic> data, boolean isRefresh){
-        if (isRefresh) {
-            //下拉刷新
+        if(isRefresh) {
             mPullToRefreshLayout.setRefreshing(false);
-            if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
-                //微博属于刷新
-                if (CommonUtil.isEmptyCollection(data)) {
-                    //没有内容更新
-                    Snackbar.make(mPullToRefreshLayout, "没有新的微博", Snackbar.LENGTH_SHORT).show();
-                    return;
-                } else if (data.size() < WBUtil.MAX_COUNT_REQUEST) {
-                    //结果小于请求条数
-                    mAdapter.addAll(0, data);
-                    Snackbar.make(mPullToRefreshLayout, data.size() + "条新微博", Snackbar.LENGTH_SHORT).show();
-                } else {
-                    //结果大于或等于请求条数
-                    mPullToRefreshLayout.setLoadEnable(true);
-                    mAdapter.refresh(data);
-                    Snackbar.make(mPullToRefreshLayout, "超过" + WBUtil.MAX_COUNT_REQUEST + "条新微博", Snackbar.LENGTH_SHORT).show();
-                }
-            } else {
-                //属于第一次加载
-                if (CommonUtil.isEmptyCollection(data)) {
-                    //内容为空
-                    mPullToRefreshLayout.setLoadEnable(false);
-                }
-                mAdapter.refresh(data);
-            }
-            //存储数据
-            SPUtil.setModule(mAdapter.getData(), Topic.class.getSimpleName());
-        } else {
-            //上拉加载
+        }else {
             mPullToRefreshLayout.setLoading(false);
-            if (CommonUtil.isEmptyCollection(data)) {
-                //没有数据可供加载
-                mPullToRefreshLayout.setLoadEnable(false);
-                Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
-            } else {
-                //成功加载更多
-                if (data.size() < WBUtil.MAX_COUNT_REQUEST) {
-                    //没有更多的数据可供加载
-                    mPullToRefreshLayout.setLoadEnable(false);
-                    Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
-                }
-                //因为请求的数据是小于或等于max_id，需要做是否重复判断处理
-                if (data.get(0).getId() != null && data.get(0).getId().
-                        equals(CommonUtil.getLastItem(mAdapter.getData()).getId())) {
-                    data.remove(0);
-                }
-                mAdapter.addAll(data);
-            }
+        }
+        int type = DataUtil.handlePagingData(mAdapter.getData(), data, isRefresh);
+        DataUtil.handleTopicAdapter(type, mAdapter, data);
+        DataUtil.handlePullToRefresh(type, mPullToRefreshLayout);
+        DataUtil.handleSnackBar(type, mPullToRefreshLayout, data == null ? 0 : data.size());
+        if(type == DataUtil.REFRESH_DATA_SIZE_LESS
+                || type == DataUtil.REFRESH_DATA_SIZE_EQUAL
+                || type == DataUtil.LOAD_NO_MORE_DATA
+                || type == DataUtil.LOAD_DATA_SIZE_EQUAL){
+            SPUtil.setModule(mAdapter.getData(), Topic.class.getSimpleName());
         }
     }
 
@@ -472,4 +438,60 @@ public class TopicActivity extends BaseActivity
             }
         }
     }
+
+
+//    private void handleDataNotUser(List<Topic> data, boolean isRefresh){
+//        if (isRefresh) {
+//            //下拉刷新
+//            mPullToRefreshLayout.setRefreshing(false);
+//            if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
+//                //微博属于刷新
+//                if (CommonUtil.isEmptyCollection(data)) {
+//                    //没有内容更新
+//                    Snackbar.make(mPullToRefreshLayout, "没有新的微博", Snackbar.LENGTH_SHORT).show();
+//                    return;
+//                } else if (data.size() < WBUtil.MAX_COUNT_REQUEST) {
+//                    //结果小于请求条数
+//                    mAdapter.addAll(0, data);
+//                    Snackbar.make(mPullToRefreshLayout, data.size() + "条新微博", Snackbar.LENGTH_SHORT).show();
+//                } else {
+//                    //结果大于或等于请求条数
+//                    mPullToRefreshLayout.setLoadEnable(true);
+//                    mAdapter.refresh(data);
+//                    Snackbar.make(mPullToRefreshLayout, "超过" + WBUtil.MAX_COUNT_REQUEST + "条新微博", Snackbar.LENGTH_SHORT).show();
+//                }
+//            } else {
+//                //属于第一次加载
+//                if (CommonUtil.isEmptyCollection(data)) {
+//                    //内容为空
+//                    mPullToRefreshLayout.setLoadEnable(false);
+//                }
+//                mAdapter.refresh(data);
+//            }
+//            //存储数据
+//            SPUtil.setModule(mAdapter.getData(), Topic.class.getSimpleName());
+//        } else {
+//            //上拉加载
+//            mPullToRefreshLayout.setLoading(false);
+//            if (CommonUtil.isEmptyCollection(data)) {
+//                //没有数据可供加载
+//                mPullToRefreshLayout.setLoadEnable(false);
+//                Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
+//            } else {
+//                //成功加载更多
+//                if (data.size() < WBUtil.MAX_COUNT_REQUEST) {
+//                    //没有更多的数据可供加载
+//                    mPullToRefreshLayout.setLoadEnable(false);
+//                    Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
+//                }
+//                //因为请求的数据是小于或等于max_id，需要做是否重复判断处理
+//                if (data.get(0).getId() != null && data.get(0).getId().
+//                        equals(CommonUtil.getLastItem(mAdapter.getData()).getId())) {
+//                    data.remove(0);
+//                }
+//                mAdapter.addAll(data);
+//            }
+//        }
+//    }
+
 }

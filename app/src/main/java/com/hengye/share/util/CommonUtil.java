@@ -23,13 +23,6 @@ public class CommonUtil {
         return false;
     }
 
-//    public static boolean isEmptyColection(Collection collection){
-//        if(collection == null || collection.isEmpty()){
-//            return true;
-//        }
-//        return false;
-//    }
-
     public static boolean isEmptyMap(Map map){
         if(map == null || map.isEmpty()){
             return true;

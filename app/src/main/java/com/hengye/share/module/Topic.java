@@ -1,12 +1,10 @@
 package com.hengye.share.module;
 
-import android.text.TextUtils;
-
 import com.hengye.share.module.sina.WBTopic;
 import com.hengye.share.module.sina.WBTopicComment;
 import com.hengye.share.module.sina.WBTopicComments;
 import com.hengye.share.module.sina.WBTopics;
-import com.hengye.share.module.sina.WBUtil;
+import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.GsonUtil;
 

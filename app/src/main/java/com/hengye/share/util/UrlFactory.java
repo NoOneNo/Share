@@ -118,4 +118,9 @@ public class UrlFactory {
     public String getWBTopicMentionUrl() {
         return URL_PREFIX_WEIBO + "statuses/mentions.json";
     }
+
+    //我收藏的微博
+    public String getWBTopicFavoritesUrl() {
+        return URL_PREFIX_WEIBO + "favorites.json";
+    }
 }

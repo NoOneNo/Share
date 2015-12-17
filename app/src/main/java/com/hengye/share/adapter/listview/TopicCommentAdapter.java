@@ -17,7 +17,7 @@ import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicAdapter;
 import com.hengye.share.module.TopicComment;
-import com.hengye.share.module.sina.WBUtil;
+import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.share.ui.view.GridGalleryView;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DateUtil;

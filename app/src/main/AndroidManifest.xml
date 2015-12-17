@@ -57,7 +57,8 @@
         </activity>
 
         <activity
-            android:name=".ui.activity.FragmentActivity">
+            android:name=".ui.activity.FragmentActivity"
+            android:screenOrientation="portrait">
         </activity>
 
         <activity

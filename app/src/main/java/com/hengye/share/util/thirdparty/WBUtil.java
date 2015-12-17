@@ -1,4 +1,4 @@
-package com.hengye.share.module.sina;
+package com.hengye.share.util.thirdparty;
 
 import android.text.TextUtils;
 

@@ -2,7 +2,6 @@ package com.hengye.share.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,14 +14,13 @@ import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
 import com.hengye.share.R;
-import com.hengye.share.adapter.recyclerview.TopicCommentAdapter;
 import com.hengye.share.adapter.recyclerview.TopicNotifyAdapter;
 import com.hengye.share.module.Topic;
-import com.hengye.share.module.TopicComment;
 import com.hengye.share.module.sina.WBTopicComments;
 import com.hengye.share.module.sina.WBTopics;
-import com.hengye.share.module.sina.WBUtil;
+import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.UrlBuilder;
@@ -85,9 +83,9 @@ public class TopicNotifyFragment extends BaseFragment{
                 }
 
                 if(mNotifyType == NOTIFY_COMMENT) {
-                    RequestManager.addToRequestQueue(getWBCommentRequest(mWBAccessToken.getToken(), 0 + "", true, URL_COMMENT_TO_ME), getRequestTag());
+                    RequestManager.addToRequestQueue(getWBCommentRequest(mWBAccessToken.getToken(), "0", true, URL_COMMENT_TO_ME), getRequestTag());
                 }else{
-                    RequestManager.addToRequestQueue(getWBTopicRequest(mWBAccessToken.getToken(), 0 + "", true), getRequestTag());
+                    RequestManager.addToRequestQueue(getWBTopicRequest(mWBAccessToken.getToken(), "0", true), getRequestTag());
                 }
             }
         });
@@ -97,9 +95,9 @@ public class TopicNotifyFragment extends BaseFragment{
                 if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
                     String id = CommonUtil.getLastItem(mAdapter.getData()).getId();
                     if(mNotifyType == NOTIFY_COMMENT) {
-                        RequestManager.addToRequestQueue(getWBCommentRequest(mWBAccessToken.getToken(), id, true, URL_COMMENT_TO_ME), getRequestTag());
+                        RequestManager.addToRequestQueue(getWBCommentRequest(mWBAccessToken.getToken(), id, false, URL_COMMENT_TO_ME), getRequestTag());
                     }else{
-                        RequestManager.addToRequestQueue(getWBTopicRequest(mWBAccessToken.getToken(), id, true), getRequestTag());
+                        RequestManager.addToRequestQueue(getWBTopicRequest(mWBAccessToken.getToken(), id, false), getRequestTag());
                     }
                 } else {
                     mPullToRefreshLayout.setLoading(false);
@@ -120,57 +118,21 @@ public class TopicNotifyFragment extends BaseFragment{
     }
 
     private void handleData(List<Topic> data, boolean isRefresh){
-        if (isRefresh) {
-            //下拉刷新
+        if(isRefresh) {
             mPullToRefreshLayout.setRefreshing(false);
-            if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
-                //微博属于刷新
-                if (CommonUtil.isEmptyCollection(data)) {
-                    //没有内容更新
-                    Snackbar.make(mPullToRefreshLayout, "没有新的微博", Snackbar.LENGTH_SHORT).show();
-                    return;
-                } else if (data.size() < WBUtil.MAX_COUNT_REQUEST) {
-                    //结果小于请求条数
-                    mAdapter.addAll(0, data);
-                    Snackbar.make(mPullToRefreshLayout, data.size() + "条新微博", Snackbar.LENGTH_SHORT).show();
-                } else {
-                    //结果大于或等于请求条数
-                    mPullToRefreshLayout.setLoadEnable(true);
-                    mAdapter.refresh(data);
-                    Snackbar.make(mPullToRefreshLayout, "超过" + WBUtil.MAX_COUNT_REQUEST + "条新微博", Snackbar.LENGTH_SHORT).show();
-                }
-            } else {
-                //属于第一次加载
-                if (CommonUtil.isEmptyCollection(data)) {
-                    //内容为空
-                    mPullToRefreshLayout.setLoadEnable(false);
-                }
-                mAdapter.refresh(data);
-            }
-            //存储数据
-//            SPUtil.setModule(mAdapter.getData(), Topic.class.getSimpleName());
-        } else {
-            //上拉加载
+        }else {
             mPullToRefreshLayout.setLoading(false);
-            if (CommonUtil.isEmptyCollection(data)) {
-                //没有数据可供加载
-                mPullToRefreshLayout.setLoadEnable(false);
-                Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
-            } else {
-                //成功加载更多
-                if (data.size() < WBUtil.MAX_COUNT_REQUEST) {
-                    //没有更多的数据可供加载
-                    mPullToRefreshLayout.setLoadEnable(false);
-                    Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
-                }
-                //因为请求的数据是小于或等于max_id，需要做是否重复判断处理
-                if (data.get(0).getId() != null && data.get(0).getId().
-                        equals(CommonUtil.getLastItem(mAdapter.getData()).getId())) {
-                    data.remove(0);
-                }
-                mAdapter.addAll(data);
-            }
         }
+        int type = DataUtil.handlePagingData(mAdapter.getData(), data, isRefresh);
+        DataUtil.handleTopicAdapter(type, mAdapter, data);
+        DataUtil.handlePullToRefresh(type, mPullToRefreshLayout);
+//        DataUtil.handleSnackBar(type, mPullToRefreshLayout, data == null ? 0 : data.size());
+//        if(type == DataUtil.REFRESH_DATA_SIZE_LESS
+//                || type == DataUtil.REFRESH_DATA_SIZE_EQUAL
+//                || type == DataUtil.LOAD_NO_MORE_DATA
+//                || type == DataUtil.LOAD_DATA_SIZE_EQUAL){
+//            SPUtil.setModule(mAdapter.getData(), Topic.class.getSimpleName());
+//        }
     }
 
     private GsonRequest getWBTopicRequest(String token, String id, final boolean isRefresh) {
@@ -251,4 +213,58 @@ public class TopicNotifyFragment extends BaseFragment{
 
         });
     }
+
+//    private void handleData(List<Topic> data, boolean isRefresh){
+//        if (isRefresh) {
+//            //下拉刷新
+//            mPullToRefreshLayout.setRefreshing(false);
+//            if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
+//                //微博属于刷新
+//                if (CommonUtil.isEmptyCollection(data)) {
+//                    //没有内容更新
+//                    Snackbar.make(mPullToRefreshLayout, "没有新的微博", Snackbar.LENGTH_SHORT).show();
+//                    return;
+//                } else if (data.size() < WBUtil.MAX_COUNT_REQUEST) {
+//                    //结果小于请求条数
+//                    mAdapter.addAll(0, data);
+//                    Snackbar.make(mPullToRefreshLayout, data.size() + "条新微博", Snackbar.LENGTH_SHORT).show();
+//                } else {
+//                    //结果大于或等于请求条数
+//                    mPullToRefreshLayout.setLoadEnable(true);
+//                    mAdapter.refresh(data);
+//                    Snackbar.make(mPullToRefreshLayout, "超过" + WBUtil.MAX_COUNT_REQUEST + "条新微博", Snackbar.LENGTH_SHORT).show();
+//                }
+//            } else {
+//                //属于第一次加载
+//                if (CommonUtil.isEmptyCollection(data)) {
+//                    //内容为空
+//                    mPullToRefreshLayout.setLoadEnable(false);
+//                }
+//                mAdapter.refresh(data);
+//            }
+//            //存储数据
+////            SPUtil.setModule(mAdapter.getData(), Topic.class.getSimpleName());
+//        } else {
+//            //上拉加载
+//            mPullToRefreshLayout.setLoading(false);
+//            if (CommonUtil.isEmptyCollection(data)) {
+//                //没有数据可供加载
+//                mPullToRefreshLayout.setLoadEnable(false);
+//                Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
+//            } else {
+//                //成功加载更多
+//                if (data.size() < WBUtil.MAX_COUNT_REQUEST) {
+//                    //没有更多的数据可供加载
+//                    mPullToRefreshLayout.setLoadEnable(false);
+//                    Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
+//                }
+//                //因为请求的数据是小于或等于max_id，需要做是否重复判断处理
+//                if (data.get(0).getId() != null && data.get(0).getId().
+//                        equals(CommonUtil.getLastItem(mAdapter.getData()).getId())) {
+//                    data.remove(0);
+//                }
+//                mAdapter.addAll(data);
+//            }
+//        }
+//    }
 }

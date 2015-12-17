@@ -18,7 +18,7 @@
 //import com.hengye.share.adapter.recyclerview.TopicCommentAdapter;
 //import com.hengye.share.module.TopicComment;
 //import com.hengye.share.module.sina.WBTopicComments;
-//import com.hengye.share.module.sina.WBUtil;
+//import com.hengye.share.util.thirdparty.WBUtil;
 //import com.hengye.share.util.CommonUtil;
 //import com.hengye.share.util.L;
 //import com.hengye.share.util.SPUtil;
