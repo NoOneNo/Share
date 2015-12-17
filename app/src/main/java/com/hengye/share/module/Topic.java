@@ -1,9 +1,13 @@
 package com.hengye.share.module;
 
+import android.text.SpannableString;
+import android.text.TextUtils;
+
 import com.hengye.share.module.sina.WBTopic;
 import com.hengye.share.module.sina.WBTopicComment;
 import com.hengye.share.module.sina.WBTopicComments;
 import com.hengye.share.module.sina.WBTopics;
+import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.GsonUtil;
@@ -29,6 +33,8 @@ public class Topic implements Serializable{
     private Topic retweetedTopic;//被转发的主题
 
     private UserInfo userInfo;//用户信息
+
+    private transient SpannableString urlSpannableString;
 
     public static ArrayList<Topic> getTopics(WBTopics wbTopics){
         if(wbTopics == null || CommonUtil.isEmptyCollection(wbTopics.getStatuses())){
@@ -133,6 +139,19 @@ public class Topic implements Serializable{
                 ", retweetedTopic=" + retweetedTopic +
                 ", userInfo=" + userInfo +
                 '}';
+    }
+
+    public SpannableString getUrlSpannableString() {
+        if (!TextUtils.isEmpty(urlSpannableString)) {
+            return urlSpannableString;
+        } else {
+            DataUtil.addTopicContentHighLightLinks(this);
+            return urlSpannableString;
+        }
+    }
+
+    public void setUrlSpannableString(SpannableString urlSpannableString) {
+        this.urlSpannableString = urlSpannableString;
     }
 
     public Parent getParent() {

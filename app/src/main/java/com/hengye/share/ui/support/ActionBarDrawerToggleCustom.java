@@ -1,4 +1,4 @@
-package com.hengye.share.support;
+package com.hengye.share.ui.support;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import com.hengye.share.support.ActionBarDrawerToggleHoneycomb;
 import android.support.v7.graphics.drawable.DrawerArrowDrawable;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;

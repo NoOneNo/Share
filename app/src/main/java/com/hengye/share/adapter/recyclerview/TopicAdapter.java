@@ -151,6 +151,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
             } else {
                 holder.mContent.setText(str);
             }
+//            holder.mContent.setText(topic.getUrlSpannableString());
 
             holder.mContent.setOnTouchListener(new View.OnTouchListener() {
                 @Override

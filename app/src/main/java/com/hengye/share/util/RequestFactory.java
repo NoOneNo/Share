@@ -33,7 +33,7 @@ public class RequestFactory {
             @Override
             public void onResponse(WBUserInfo response) {
                 L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
-                SPUtil.setModule(response, WBUserInfo.class.getSimpleName());
+                SPUtil.setModule(response, WBUserInfo.class.getSimpleName() + SPUtil.getUid());
             }
         }, new Response.ErrorListener() {
 

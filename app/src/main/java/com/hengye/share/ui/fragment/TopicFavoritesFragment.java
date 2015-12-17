@@ -13,8 +13,10 @@ import android.view.ViewGroup;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
+import com.google.gson.reflect.TypeToken;
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicFavoritesAdapter;
+import com.hengye.share.module.Topic;
 import com.hengye.share.module.TopicFavorites;
 import com.hengye.share.module.sina.WBTopicFavorites;
 import com.hengye.share.util.CommonUtil;
@@ -50,7 +52,7 @@ public class TopicFavoritesFragment extends BaseFragment{
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(mAdapter = new TopicFavoritesAdapter(getActivity(), new ArrayList<TopicFavorites.TopicFavorite>()));
+        recyclerView.setAdapter(mAdapter = new TopicFavoritesAdapter(getActivity(), getData()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         mWBAccessToken = SPUtil.getSinaAccessToken();
         mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.pull_to_refresh);
@@ -85,8 +87,22 @@ public class TopicFavoritesFragment extends BaseFragment{
             }
         });
 
-        mPullToRefreshLayout.setRefreshing(true);
+        if(mAdapter.getData().isEmpty()) {
+            mPullToRefreshLayout.setRefreshing(true);
+        }else{
+            mPullToRefreshLayout.setLoadEnable(false);
+        }
         return view;
+    }
+
+    private ArrayList<TopicFavorites.TopicFavorite> getData() {
+
+        ArrayList<TopicFavorites.TopicFavorite> data = SPUtil.getModule(new TypeToken<ArrayList<TopicFavorites.TopicFavorite>>() {
+        }.getType(), TopicFavorites.TopicFavorite.class.getSimpleName() + SPUtil.getUid());
+        if (data == null) {
+            data = new ArrayList<>();
+        }
+        return data;
     }
 
     private void handleData(List<TopicFavorites.TopicFavorite> data, boolean isRefresh){
@@ -99,12 +115,12 @@ public class TopicFavoritesFragment extends BaseFragment{
         DataUtil.handleCommonAdapter(type, mAdapter, data);
         DataUtil.handlePullToRefresh(type, mPullToRefreshLayout);
 //        DataUtil.handleSnackBar(type, mPullToRefreshLayout, data == null ? 0 : data.size());
-//        if(type == DataUtil.REFRESH_DATA_SIZE_LESS
-//                || type == DataUtil.REFRESH_DATA_SIZE_EQUAL
-//                || type == DataUtil.LOAD_NO_MORE_DATA
-//                || type == DataUtil.LOAD_DATA_SIZE_EQUAL){
-//            SPUtil.setModule(mAdapter.getData(), Topic.class.getSimpleName());
-//        }
+        if(type == DataUtil.REFRESH_DATA_SIZE_LESS
+                || type == DataUtil.REFRESH_DATA_SIZE_EQUAL
+                || type == DataUtil.LOAD_NO_MORE_DATA
+                || type == DataUtil.LOAD_DATA_SIZE_EQUAL){
+            SPUtil.setModule(mAdapter.getData(), TopicFavorites.TopicFavorite.class.getSimpleName() + SPUtil.getUid());
+        }
     }
 
     private int mPageStart = 1;

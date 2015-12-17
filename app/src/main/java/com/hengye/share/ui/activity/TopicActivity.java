@@ -33,7 +33,7 @@ import com.hengye.share.module.sina.WBTopicIds;
 import com.hengye.share.module.sina.WBTopics;
 import com.hengye.share.module.sina.WBUserInfo;
 import com.hengye.share.util.thirdparty.WBUtil;
-import com.hengye.share.support.ActionBarDrawerToggleCustom;
+import com.hengye.share.ui.support.ActionBarDrawerToggleCustom;
 import com.hengye.share.ui.activity.setting.SettingActivity;
 import com.hengye.share.ui.fragment.TopicFavoritesFragment;
 import com.hengye.share.util.CommonUtil;
@@ -258,11 +258,7 @@ public class TopicActivity extends BaseActivity
     private ArrayList<Topic> getData() {
 
         ArrayList<Topic> data = SPUtil.getModule(new TypeToken<ArrayList<Topic>>() {
-        }.getType(), Topic.class.getSimpleName());
-//        ArrayList<Topic> data = null;
-//        if (wbTopic != null) {
-//            data = Topic.getTopics(wbTopic);
-//        }
+        }.getType(), Topic.class.getSimpleName() + SPUtil.getUid());
         if (data == null) {
             data = new ArrayList<>();
         }
@@ -279,7 +275,7 @@ public class TopicActivity extends BaseActivity
     }
 
     private UserInfo getUserInfo(){
-        WBUserInfo wbUserInfo = SPUtil.getModule(WBUserInfo.class, WBUserInfo.class.getSimpleName());
+        WBUserInfo wbUserInfo = SPUtil.getModule(WBUserInfo.class, WBUserInfo.class.getSimpleName() + SPUtil.getUid());
         if (wbUserInfo == null) {
             //用户数据为空
             L.debug("UserInfo is null, wait to load");
@@ -339,7 +335,7 @@ public class TopicActivity extends BaseActivity
                 || type == DataUtil.REFRESH_DATA_SIZE_EQUAL
                 || type == DataUtil.LOAD_NO_MORE_DATA
                 || type == DataUtil.LOAD_DATA_SIZE_EQUAL){
-            SPUtil.setModule(mAdapter.getData(), Topic.class.getSimpleName());
+            SPUtil.setModule(mAdapter.getData(), Topic.class.getSimpleName() + SPUtil.getUid());
         }
     }
 
