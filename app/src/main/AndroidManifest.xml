@@ -74,6 +74,13 @@
         <activity
             android:name="com.hengye.share.ui.activity.PersonalHomepageActivity"
             android:screenOrientation="portrait">
+
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.intent.action.VIEW"/>
+                <data android:scheme="${applicationId}.mention"/>
+            </intent-filter>
+
         </activity>
 
         <activity

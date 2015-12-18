@@ -1,8 +1,10 @@
 package com.hengye.share.util;
 
+import android.graphics.Bitmap;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.view.View;
@@ -15,6 +17,7 @@ import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
 
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DataUtil {
@@ -150,12 +153,12 @@ public class DataUtil {
     public static final String TOPIC_SCHEME = BuildConfig.APPLICATION_ID + ".topic://";
     public static final String MENTION_SCHEME = BuildConfig.APPLICATION_ID + ".mention://";
 
-    public static void addTopicContentHighLightLinks(Topic bean) {
-        bean.setUrlSpannableString(convertNormalStringToSpannableString(bean.getContent()));
+    public static void addTopicContentHighLightLinks(Topic topic) {
+        topic.setUrlSpannableString(convertNormalStringToSpannableString(topic.getContent()));
 
-        if (bean.getRetweetedTopic() != null) {
-            String str = addRetweetedNamePrefix(bean);
-            bean.getRetweetedTopic().setUrlSpannableString(convertNormalStringToSpannableString(str));
+        if (topic.getRetweetedTopic() != null) {
+            String str = addRetweetedNamePrefix(topic);
+            topic.getRetweetedTopic().setUrlSpannableString(convertNormalStringToSpannableString(str));
         }
     }
 
@@ -201,6 +204,27 @@ public class DataUtil {
         }
         return str;
     }
+
+//    private static void addEmotions(SpannableString value) {
+//        Matcher localMatcher = EMOTION_URL.matcher(value);
+//        while (localMatcher.find()) {
+//            String str = localMatcher.group();
+//            int k = localMatcher.start();
+//            int m = localMatcher.end();
+//            if (m - k < 8) {
+//                Bitmap bitmap = GlobalContext.getInstance().getEmotionsPics().get(str);
+//                if (bitmap == null) {
+//                    bitmap = GlobalContext.getInstance().getHuahuaPics().get(str);
+//                }
+//                if (bitmap != null) {
+//                    ImageSpan localImageSpan = new ImageSpan(
+//                            GlobalContext.getInstance().getActivity(), bitmap,
+//                            ImageSpan.ALIGN_BASELINE);
+//                    value.setSpan(localImageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                }
+//            }
+//        }
+//    }
 }
 
 

@@ -24,8 +24,8 @@ import com.hengye.share.ui.activity.TopicDetail2Activity;
 import com.hengye.share.ui.view.GridGalleryView;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DateUtil;
-import com.hengye.share.util.SimpleClickableSpan;
-import com.hengye.share.util.SimpleLinkMovementMethod;
+import com.hengye.share.ui.support.SimpleClickableSpan;
+import com.hengye.share.ui.support.SimpleLinkMovementMethod;
 import com.hengye.volleyplus.toolbox.RequestManager;
 
 import java.util.List;

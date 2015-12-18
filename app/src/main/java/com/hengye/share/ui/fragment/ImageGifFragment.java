@@ -65,7 +65,7 @@ public class ImageGifFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_image_normal, null);
+        View view = inflater.inflate(R.layout.fragment_image_gif, null);
 
         mGifView = (PhotoView) view.findViewById(R.id.iv_normal);
         mPhotoView = (ClipImageView) view.findViewById(R.id.cover);
@@ -74,7 +74,7 @@ public class ImageGifFragment extends BaseFragment {
         File gifFile = new File(mPath);
         try {
             GifDrawable gifFromFile = new GifDrawable(gifFile);
-            mPhotoView.setImageDrawable(gifFromFile);
+            mGifView.setImageDrawable(gifFromFile);
         } catch (IOException e) {
             e.printStackTrace();
         }

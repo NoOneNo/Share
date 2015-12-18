@@ -121,6 +121,7 @@ public class TopicDetailActivity extends BaseActivity {
         mTabLayout = (TabLayout) headerView.findViewById(R.id.tab_layout);
         mTabLayout.addTab((mTabLayout.newTab().setText("评论").setTag("tablayout")));
         mTabLayout.addTab((mTabLayout.newTab().setText("转发").setTag("tablayout")));
+        mTabLayout.getTabAt(0).select();
         mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
         TopicAdapter.TopicViewHolder topicViewHolder = new TopicAdapter.TopicViewHolder(headerView.findViewById(R.id.item_topic));
         topicViewHolder.bindData(this, mTopic);
@@ -135,6 +136,7 @@ public class TopicDetailActivity extends BaseActivity {
         mTabLayoutAssist = (TabLayout) findViewById(R.id.tab_layout_assist);
         mTabLayoutAssist.addTab((mTabLayoutAssist.newTab().setText("评论").setTag("tablayout_assist")));
         mTabLayoutAssist.addTab((mTabLayoutAssist.newTab().setText("转发").setTag("tablayout_assist")));
+        mTabLayoutAssist.getTabAt(0).select();
         mTabLayoutAssist.setOnTabSelectedListener(mOnTabSelectedListener);
 
         View headerView = LayoutInflater.from(this).inflate(R.layout.header_topic_detail, null);
@@ -236,7 +238,7 @@ public class TopicDetailActivity extends BaseActivity {
 //                    mPullToRefreshLayout.setLoadEnable(false);
                 }else if (data.size() < WBUtil.MAX_COUNT_REQUEST) {
                     //结果小于请求条数
-                    mPullToRefreshLayout.setLoadEnable(false);
+//                    mPullToRefreshLayout.setLoadEnable(false);
                 }else{
                     mPullToRefreshLayout.setLoadEnable(true);
                 }
@@ -253,15 +255,21 @@ public class TopicDetailActivity extends BaseActivity {
                 //成功加载更多
                 if (data.size() < WBUtil.MAX_COUNT_REQUEST) {
                     //没有更多的数据可供加载
-                    mPullToRefreshLayout.setLoadEnable(false);
-                    Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
+//                    mPullToRefreshLayout.setLoadEnable(false);
+//                    Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
                 }
                 //因为请求的数据是小于或等于max_id，需要做是否重复判断处理
                 if (data.get(0).getId() != null && data.get(0).getId().
                         equals(CommonUtil.getLastItem(targetData).getId())) {
                     data.remove(0);
+                    if (CommonUtil.isEmptyCollection(data)) {
+                        mPullToRefreshLayout.setLoadEnable(false);
+                        Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
+                    }else{
+                        targetData.addAll(data);
+                    }
                 }
-                targetData.addAll(data);
+
             }
 
             if(isComment && isSelectedCommentTab()){

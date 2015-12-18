@@ -14,6 +14,8 @@ import android.view.View;
 
 import com.hengye.share.R;
 import com.hengye.share.ui.activity.PersonalHomepageActivity;
+import com.hengye.share.util.DataUtil;
+import com.hengye.share.util.L;
 import com.hengye.share.util.thirdparty.WBUtil;
 import com.sina.weibo.sdk.utils.Utility;
 
@@ -79,14 +81,17 @@ public class TopicContentUrlSpan extends ClickableSpan implements ParcelableSpan
     public void onLongClick(View widget) {
         Uri data = Uri.parse(getURL());
         if (data != null) {
-            String d = data.toString();
+            String value = data.toString();
             String newValue = "";
-            if (d.startsWith("org.qii.weiciyuan")) {
-                int index = d.lastIndexOf("/");
-                newValue = d.substring(index + 1);
-            } else if (d.startsWith("http")) {
-                newValue = d;
+            if (value.startsWith(DataUtil.MENTION_SCHEME)) {
+//                int index = value.lastIndexOf("/");
+//                newValue = value.substring(index + 1);
+                newValue = value.substring(DataUtil.MENTION_SCHEME.length());
+            } else if (value.startsWith("http")) {
+                newValue = value;
             }
+
+            L.debug("long click value : {}", newValue);
 //            if (!TextUtils.isEmpty(newValue)) {
 //                Utility.vibrate(widget.getContext(), widget);
 //                LongClickLinkDialog dialog = new LongClickLinkDialog(data);
@@ -97,7 +102,7 @@ public class TopicContentUrlSpan extends ClickableSpan implements ParcelableSpan
 
     @Override
     public void updateDrawState(TextPaint tp) {
-        tp.setColor(0xFFFF4081);
+        tp.setColor(0xFF5061BB);
 //        tp.setUnderlineText(true);
     }
 }

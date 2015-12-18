@@ -6,11 +6,11 @@ import com.hengye.share.util.GsonUtil;
 
 import java.io.Serializable;
 
-public class UserInfo implements Serializable{
+public class UserInfo extends ParentInherit implements Serializable{
 
     private static final long serialVersionUID = -8013315389622733204L;
 
-    private Parent parent;
+//    private Parent parent;
 
     private String uid;//用户ID
     private String name;//用户名
@@ -38,13 +38,13 @@ public class UserInfo implements Serializable{
         return GsonUtil.getInstance().fromJson(getParent().getJson(), WBUserInfo.class);
     }
 
-    public Parent getParent() {
-        return parent;
-    }
-
-    public void setParent(Parent parent) {
-        this.parent = parent;
-    }
+//    public Parent getParent() {
+//        return parent;
+//    }
+//
+//    public void setParent(Parent parent) {
+//        this.parent = parent;
+//    }
 
     public String getUid() {
         return uid;

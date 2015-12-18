@@ -1,4 +1,4 @@
-package com.hengye.share.util;
+package com.hengye.share.ui.support;
 
 import android.text.Layout;
 import android.text.Selection;

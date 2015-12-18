@@ -61,7 +61,7 @@ public class TopicGalleryFragment extends BaseFragment {
         String path = ImageDiskLruCache.getInstance().getDiskCachePath(mUrl);
 
         if (path != null) {
-            displayImage(path, mAnimateIn);
+            displayImage(mUrl, path, mAnimateIn);
             mAnimateIn = false;
         } else {
             int screenWidth = getResources().getDisplayMetrics().widthPixels;
@@ -71,7 +71,7 @@ public class TopicGalleryFragment extends BaseFragment {
         return view;
     }
 
-    private void displayImage(String path, boolean animateIn) {
+    private void displayImage(String url, String path, boolean animateIn) {
 
         if (mFirstEnter && animateIn) {
             mFirstEnter = true;
@@ -81,7 +81,7 @@ public class TopicGalleryFragment extends BaseFragment {
 
         Fragment fragment;
         if (!ImageUtil.isThisBitmapTooLargeToRead(path)) {
-            if (ImageUtil.isThisPictureGif(path)) {
+            if (ImageUtil.isThisPictureGif(url)) {
                 fragment = ImageGifFragment.newInstance(path, mRect, animateIn);
             } else {
                 fragment = ImageNormalFragment.newInstance(path, mRect, animateIn);
@@ -122,7 +122,7 @@ public class TopicGalleryFragment extends BaseFragment {
             public void onResponse(Bitmap response) {
                 String path = ImageDiskLruCache.getInstance().getDiskCachePath(mUrl);
                 if (path != null) {
-                    displayImage(path, false);
+                    displayImage(mUrl, path, false);
                     BitmapCache.getInstance().putBitmap(path, response);
                 }
             }

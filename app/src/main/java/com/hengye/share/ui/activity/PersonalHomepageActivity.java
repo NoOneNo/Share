@@ -2,6 +2,7 @@ package com.hengye.share.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
@@ -21,6 +22,7 @@ import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.BaseActivity;
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicAdapter;
+import com.hengye.share.module.Parent;
 import com.hengye.share.module.Topic;
 import com.hengye.share.module.UserInfo;
 import com.hengye.share.module.sina.WBTopics;
@@ -57,6 +59,18 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     @Override
     protected void handleBundleExtra() {
         mUserInfo = (UserInfo) getIntent().getSerializableExtra(UserInfo.class.getSimpleName());
+
+        if(mUserInfo == null) {
+            Uri data = getIntent().getData();
+            if (data != null) {
+                String value = data.toString();
+                int index = value.lastIndexOf("@");
+                String newValue = value.substring(index + 1);
+                mUserInfo = new UserInfo();
+                mUserInfo.setName(newValue);
+                mUserInfo.setParent(new Parent(null, Parent.TYPE_WEIBO));
+            }
+        }
     }
 
     public static Intent getIntentToStart(Context context, UserInfo userInfo){
@@ -110,7 +124,6 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         avatar.setImageUrl(mUserInfo.getAvatar(), RequestManager.getImageLoader());
 
         if(mUserInfo.getParent().isWeiBo()) {
-            L.debug(mUserInfo.getParent().getJson());
             WBUserInfo wbUserInfo = mUserInfo.getWBUserInfoFromParent();
             if (wbUserInfo != null) {
                 TextView division = (TextView) findViewById(R.id.tv_division);
@@ -136,11 +149,16 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
             return false;
         }
         if(mUserInfo.getParent().isWeiBo()){
-            L.debug(mUserInfo.getParent().getJson());
-            WBUserInfo wbUserInfo = mUserInfo.getWBUserInfoFromParent();
-            if(wbUserInfo != null) {
-                RequestManager.addToRequestQueue(getWBTopicRequest(mWBAccessToken.getToken(), wbUserInfo.getIdstr(), 0 + "", true), getRequestTag());
-                return true;
+            L.debug("userInfo : " + mUserInfo.getParent().getJson());
+
+            if(mUserInfo.getParent().getJson() != null) {
+                WBUserInfo wbUserInfo = mUserInfo.getWBUserInfoFromParent();
+                if (wbUserInfo != null) {
+                    RequestManager.addToRequestQueue(getWBTopicRequest(mWBAccessToken.getToken(), wbUserInfo.getIdstr(), 0 + "", true), getRequestTag());
+                    return true;
+                }
+            }else{
+                L.debug("only find user name");
             }
         }
         return false;
