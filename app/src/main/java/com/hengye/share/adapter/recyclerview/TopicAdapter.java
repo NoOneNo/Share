@@ -122,54 +122,9 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
 
             //不设置的话会被名字内容的点击事件覆盖，无法触发ItemView的onClick
             registerItemClick(holder.mContent);
-//            String str;
-//            if (isRetweeted && !TextUtils.isEmpty(topic.getUserInfo().getName())) {
-//                //如果微博已经被删除，则名字为空
-//                str = "@" + topic.getUserInfo().getName() + ":" + topic.getContent();
-//            } else {
-//                str = topic.getContent();
-//            }
-//
-//            Map<Integer, String> atNames = WBUtil.getMatchAtWBName(str);
-//            if (!CommonUtil.isEmptyMap(atNames)) {
-//                SpannableString ss = new SpannableString(str);
-//                for (Map.Entry<Integer, String> entry : atNames.entrySet()) {
-//                    final int startIndex = entry.getKey();
-//                    final String atName = entry.getValue();
-//                    SimpleClickableSpan scs = new SimpleClickableSpan();
-//                    scs.setNormalColor(context.getResources().getColor(R.color.topic_name_at)).
-//                            setSelectedColor(context.getResources().getColor(R.color.topic_username)).
-//                            setOnClickListener(new View.OnClickListener() {
-//                                @Override
-//                                public void onClick(View v) {
-////                            Intent intent = new Intent(mContext, LoginActivity.class);
-////                            IntentUtil.startActivityIfTokenValid(mContext, intent);
-//                                    Toast.makeText(context, atName.substring(0, atName.length() - 1), Toast.LENGTH_SHORT).show();
-//                                }
-//                            });
-//                    //此处-1为了除去@name后面的判断符,(:|：| );
-//                    ss.setSpan(scs, startIndex, startIndex + atName.length() - 1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-//                }
-//                holder.mContent.setText(ss);
-//                holder.mContent.setMovementMethod(SimpleLinkMovementMethod.getInstance());
-//            } else {
-//                holder.mContent.setText(str);
-//            }
-            holder.mContent.setText(topic.getUrlSpannableString());
+            holder.mContent.setText(topic.getUrlSpannableString(context));
             holder.mContent.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
             holder.mContent.setOnTouchListener(mTopicContentUrlOnTouchListener);
-//            holder.mContent.setOnTouchListener(new View.OnTouchListener() {
-//                @Override
-//                public boolean onTouch(View v, MotionEvent event) {
-//                    int action = event.getAction();
-//                    TextView tv = (TextView) v;
-//                    switch (action) {
-//                        case MotionEvent.ACTION_MOVE:
-//                            Selection.removeSelection(SpannableString.valueOf(tv.getText()));
-//                    }
-//                    return false;
-//                }
-//            });
 
             if (!CommonUtil.isEmptyCollection(topic.getImageUrls())) {
                 //加载图片

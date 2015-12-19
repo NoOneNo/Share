@@ -1,10 +1,15 @@
 package com.hengye.share.module;
 
+import android.content.Context;
+import android.text.SpannableString;
+import android.text.TextUtils;
+
 import com.hengye.share.module.sina.WBTopic;
 import com.hengye.share.module.sina.WBTopicComment;
 import com.hengye.share.module.sina.WBTopicComments;
 import com.hengye.share.module.sina.WBTopicReposts;
 import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.GsonUtil;
 
 import java.io.Serializable;
@@ -25,6 +30,8 @@ public class TopicComment implements Serializable{
     private Topic topic;//评论的主题
     private List<String> imageUrls;//缩略图
     private List<String> imageLargeUrls;//原图
+
+    private transient SpannableString urlSpannableString;
 
     public static ArrayList<TopicComment> getComments(WBTopicComments wbTopicComments){
         if(wbTopicComments == null || CommonUtil.isEmptyCollection(wbTopicComments.getComments())){
@@ -102,6 +109,19 @@ public class TopicComment implements Serializable{
                 ", imageUrls=" + imageUrls +
                 ", imageLargeUrls=" + imageLargeUrls +
                 '}';
+    }
+
+    public SpannableString getUrlSpannableString(Context context) {
+        if (!TextUtils.isEmpty(urlSpannableString)) {
+            return urlSpannableString;
+        } else {
+            DataUtil.addTopicContentHighLightLinks(context, this);
+            return urlSpannableString;
+        }
+    }
+
+    public void setUrlSpannableString(SpannableString urlSpannableString) {
+        this.urlSpannableString = urlSpannableString;
     }
 
     public String getId() {

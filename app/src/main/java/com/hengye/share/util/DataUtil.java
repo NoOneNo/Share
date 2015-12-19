@@ -1,5 +1,6 @@
 package com.hengye.share.util;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -12,6 +13,8 @@ import android.view.View;
 import com.hengye.share.BuildConfig;
 import com.hengye.share.adapter.recyclerview.CommonAdapter;
 import com.hengye.share.module.Topic;
+import com.hengye.share.module.TopicComment;
+import com.hengye.share.ui.emotion.Emotion;
 import com.hengye.share.ui.support.TopicContentUrlSpan;
 import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
@@ -153,16 +156,20 @@ public class DataUtil {
     public static final String TOPIC_SCHEME = BuildConfig.APPLICATION_ID + ".topic://";
     public static final String MENTION_SCHEME = BuildConfig.APPLICATION_ID + ".mention://";
 
-    public static void addTopicContentHighLightLinks(Topic topic) {
-        topic.setUrlSpannableString(convertNormalStringToSpannableString(topic.getContent()));
+    public static void addTopicContentHighLightLinks(Context context, TopicComment topicComment) {
+        topicComment.setUrlSpannableString(convertNormalStringToSpannableString(context, topicComment.getContent()));
+    }
+
+    public static void addTopicContentHighLightLinks(Context context, Topic topic) {
+        topic.setUrlSpannableString(convertNormalStringToSpannableString(context, topic.getContent()));
 
         if (topic.getRetweetedTopic() != null) {
-            String str = addRetweetedNamePrefix(topic);
-            topic.getRetweetedTopic().setUrlSpannableString(convertNormalStringToSpannableString(str));
+            String str = addRetweetedNamePrefix(topic.getRetweetedTopic());
+            topic.getRetweetedTopic().setUrlSpannableString(convertNormalStringToSpannableString(context, str));
         }
     }
 
-    public static SpannableString convertNormalStringToSpannableString(String txt) {
+    public static SpannableString convertNormalStringToSpannableString(Context context, String txt) {
         //hack to fix android imagespan bug,see http://stackoverflow.com/questions/3253148/imagespan-is-cut-off-incorrectly-aligned
         //if string only contains emotion tags,add a empty char to the end
         String hackTxt;
@@ -171,14 +178,19 @@ public class DataUtil {
         } else {
             hackTxt = txt;
         }
+
         SpannableString value = SpannableString.valueOf(hackTxt);
+
+        //添加表情
+        addEmotions(context, value);
+
         Linkify.addLinks(value, MENTION_URL, MENTION_SCHEME);
         Linkify.addLinks(value, WEB_URL, WEB_SCHEME);
         Linkify.addLinks(value, TOPIC_URL, TOPIC_SCHEME);
 
         URLSpan[] urlSpans = value.getSpans(0, value.length(), URLSpan.class);
         if(urlSpans == null || urlSpans.length == 0){
-            return SpannableString.valueOf(txt);
+            return value;
         }
 
         TopicContentUrlSpan topicContentUrlSpan = null;
@@ -189,8 +201,6 @@ public class DataUtil {
             value.removeSpan(urlSpan);
             value.setSpan(topicContentUrlSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
-
-//        TimeLineUtility.addEmotions(value);
         return value;
     }
 
@@ -205,26 +215,21 @@ public class DataUtil {
         return str;
     }
 
-//    private static void addEmotions(SpannableString value) {
-//        Matcher localMatcher = EMOTION_URL.matcher(value);
-//        while (localMatcher.find()) {
-//            String str = localMatcher.group();
-//            int k = localMatcher.start();
-//            int m = localMatcher.end();
-//            if (m - k < 8) {
-//                Bitmap bitmap = GlobalContext.getInstance().getEmotionsPics().get(str);
-//                if (bitmap == null) {
-//                    bitmap = GlobalContext.getInstance().getHuahuaPics().get(str);
-//                }
-//                if (bitmap != null) {
-//                    ImageSpan localImageSpan = new ImageSpan(
-//                            GlobalContext.getInstance().getActivity(), bitmap,
-//                            ImageSpan.ALIGN_BASELINE);
-//                    value.setSpan(localImageSpan, k, m, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                }
-//            }
-//        }
-//    }
+    private static void addEmotions(Context context, SpannableString value) {
+        Matcher localMatcher = EMOTION_URL.matcher(value);
+        while (localMatcher.find()) {
+            String str = localMatcher.group();
+            int start = localMatcher.start();
+            int end = localMatcher.end();
+            if (end - start < 8) {
+                Bitmap bitmap = Emotion.getInstance().getEmotionBitmap().get(str);
+                if (bitmap != null) {
+                    ImageSpan localImageSpan = new ImageSpan(context, bitmap, ImageSpan.ALIGN_BASELINE);
+                    value.setSpan(localImageSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+            }
+        }
+    }
 }
 
 

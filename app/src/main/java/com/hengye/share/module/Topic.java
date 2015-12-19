@@ -1,5 +1,6 @@
 package com.hengye.share.module;
 
+import android.content.Context;
 import android.text.SpannableString;
 import android.text.TextUtils;
 
@@ -141,11 +142,11 @@ public class Topic implements Serializable{
                 '}';
     }
 
-    public SpannableString getUrlSpannableString() {
+    public SpannableString getUrlSpannableString(Context context) {
         if (!TextUtils.isEmpty(urlSpannableString)) {
             return urlSpannableString;
         } else {
-            DataUtil.addTopicContentHighLightLinks(this);
+            DataUtil.addTopicContentHighLightLinks(context, this);
             return urlSpannableString;
         }
     }

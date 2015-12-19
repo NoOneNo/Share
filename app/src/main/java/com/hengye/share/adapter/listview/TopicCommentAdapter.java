@@ -17,6 +17,8 @@ import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicAdapter;
 import com.hengye.share.module.TopicComment;
+import com.hengye.share.ui.support.LongClickableLinkMovementMethod;
+import com.hengye.share.ui.support.TopicContentUrlOnTouchListener;
 import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.share.ui.view.GridGalleryView;
 import com.hengye.share.util.CommonUtil;
@@ -54,6 +56,8 @@ public class TopicCommentAdapter extends CommonAdapter<TopicComment> {
         TopicAdapter.TopicContentViewHolder mTopic;
         View mTopicTitle;
 
+        TopicContentUrlOnTouchListener mTopicContentUrlOnTouchListener = new TopicContentUrlOnTouchListener();
+
         public TopicCommentViewHolder(View v) {
             v.setTag(this);
             if (mTopic == null) {
@@ -86,47 +90,10 @@ public class TopicCommentAdapter extends CommonAdapter<TopicComment> {
 
             //不设置的话会被名字内容的点击事件覆盖，无法触发ItemView的onClick
 //            registerItemClick(holder.mContent);、
-            String str = topicComment.getContent();
 
-
-            Map<Integer, String> atNames = WBUtil.getMatchAtWBName(str);
-            if (!CommonUtil.isEmptyMap(atNames)) {
-                SpannableString ss = new SpannableString(str);
-                for (Map.Entry<Integer, String> entry : atNames.entrySet()) {
-                    final int startIndex = entry.getKey();
-                    final String atName = entry.getValue();
-                    SimpleClickableSpan scs = new SimpleClickableSpan();
-                    scs.setNormalColor(context.getResources().getColor(R.color.topic_name_at)).
-                            setSelectedColor(context.getResources().getColor(R.color.topic_username)).
-                            setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-//                            Intent intent = new Intent(mContext, LoginActivity.class);
-//                            IntentUtil.startActivityIfTokenValid(mContext, intent);
-                                    Toast.makeText(context, atName.substring(0, atName.length() - 1), Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                    //此处-1为了除去@name后面的判断符,(:|：| );
-                    ss.setSpan(scs, startIndex, startIndex + atName.length() - 1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-                }
-                holder.mContent.setText(ss);
-                holder.mContent.setMovementMethod(SimpleLinkMovementMethod.getInstance());
-            } else {
-                holder.mContent.setText(str);
-            }
-
-            holder.mContent.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    int action = event.getAction();
-                    TextView tv = (TextView) v;
-                    switch (action) {
-                        case MotionEvent.ACTION_MOVE:
-                            Selection.removeSelection(SpannableString.valueOf(tv.getText()));
-                    }
-                    return false;
-                }
-            });
+            holder.mContent.setText(topicComment.getUrlSpannableString(context));
+            holder.mContent.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
+            holder.mContent.setOnTouchListener(mTopicContentUrlOnTouchListener);
         }
     }
 }

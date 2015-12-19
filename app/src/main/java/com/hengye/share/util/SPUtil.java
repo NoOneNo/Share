@@ -87,7 +87,7 @@ public class SPUtil {
         editor.apply();
     }
 
-    public static BaseApplication getContext(){
+    private static BaseApplication getContext(){
         return BaseApplication.getInstance();
     }
 }
