@@ -42,8 +42,9 @@
     <!-- Strings related to PersonalHomePage -->
 
 
-
-
+    <!-- Strings related to TopicPublish -->
+    <string name="label_topic_publish_hint">说点什么吧……</string>
+    <!-- Strings related to TopicPublish -->
 
 
 

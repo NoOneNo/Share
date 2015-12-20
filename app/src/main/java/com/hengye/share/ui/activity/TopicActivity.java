@@ -207,8 +207,8 @@ public class TopicActivity extends BaseActivity
 //                mWeiboAuth.anthorize(new WBAuthListener());
 //            }
         } else if (id == R.id.action_test) {
-            Intent intent = new Intent(this, TestActivity.class);
-//            Intent intent = new Intent(this, PersonalHomepageActivity.class);
+//            Intent intent = new Intent(this, TestActivity.class);
+            Intent intent = new Intent(this, TopicPublishActivity.class);
             startActivity(intent);
         }
 

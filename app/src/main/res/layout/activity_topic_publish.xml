@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_root"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/rl_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <EditText
+            android:id="@+id/et_topic_publish"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/ll_topic_publish_tools"
+            android:hint="@string/label_topic_publish_hint"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="true"
+            android:scrollbarStyle="outsideOverlay"
+            android:background="@null"
+            android:gravity="start|top"/>
+
+        <LinearLayout
+            android:id="@id/ll_topic_publish_tools"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:orientation="horizontal"
+            android:background="?attr/theme_color">
+
+            <ImageButton
+                style="?android:actionButtonStyle"
+                android:id="@+id/btn_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:src="@drawable/compose_camerabutton_background"/>
+
+            <ImageButton
+                style="?android:actionButtonStyle"
+                android:id="@+id/btn_mention"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:src="@drawable/compose_mentionbutton_background"/>
+
+            <ImageButton
+                style="?android:actionButtonStyle"
+                android:id="@+id/btn_emoticon"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:src="@drawable/compose_emoticonbutton_background"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <com.hengye.share.ui.emoticon.EmoticonPicker
+        android:id="@+id/emoticon_picker"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+</LinearLayout>

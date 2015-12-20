@@ -14,7 +14,7 @@ import com.hengye.share.BuildConfig;
 import com.hengye.share.adapter.recyclerview.CommonAdapter;
 import com.hengye.share.module.Topic;
 import com.hengye.share.module.TopicComment;
-import com.hengye.share.ui.emotion.Emotion;
+import com.hengye.share.ui.emoticon.Emoticon;
 import com.hengye.share.ui.support.TopicContentUrlSpan;
 import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
@@ -222,9 +222,9 @@ public class DataUtil {
             int start = localMatcher.start();
             int end = localMatcher.end();
             if (end - start < 8) {
-                Bitmap bitmap = Emotion.getInstance().getEmotionBitmap().get(str);
+                Bitmap bitmap = Emoticon.getInstance().getEmoticonBitmap().get(str);
                 if (bitmap != null) {
-                    ImageSpan localImageSpan = new ImageSpan(context, bitmap, ImageSpan.ALIGN_BASELINE);
+                    ImageSpan localImageSpan = new ImageSpan(context, bitmap, ImageSpan.ALIGN_BOTTOM);
                     value.setSpan(localImageSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }

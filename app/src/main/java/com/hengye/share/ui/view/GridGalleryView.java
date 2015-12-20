@@ -12,13 +12,11 @@ import com.hengye.share.util.ViewUtil;
 public class GridGalleryView extends GridLayout implements View.OnClickListener {
 
     public GridGalleryView(Context context) {
-        super(context);
-        init(context);
+        this(context, null);
     }
 
     public GridGalleryView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init(context);
+        this(context, attrs, 0);
     }
 
     public GridGalleryView(Context context, AttributeSet attrs, int defStyle) {
