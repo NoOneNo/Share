@@ -22,10 +22,11 @@
             android:fadeScrollbars="true"
             android:scrollbarStyle="outsideOverlay"
             android:background="@null"
+            android:padding="@dimen/content_margin_10dp"
             android:gravity="start|top"/>
 
         <LinearLayout
-            android:id="@id/ll_topic_publish_tools"
+            android:id="@+id/ll_topic_publish_tools"
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
