@@ -141,7 +141,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
                             public NetworkImageViewPlus getImageView() {
                                 NetworkImageViewPlus iv = new NetworkImageViewPlus(context);
                                 iv.setFadeInImage(mIsFadeInImage);
-                                iv.setScaleType(ImageView.ScaleType.FIT_XY);
+                                iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
                                 iv.setBackgroundColor(context.getResources().getColor(R.color.image_default_bg));
                                 iv.setTag(holder.mGallery);
                                 iv.setId(View.NO_ID);
