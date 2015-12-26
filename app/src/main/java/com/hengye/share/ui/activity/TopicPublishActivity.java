@@ -1,5 +1,8 @@
 package com.hengye.share.ui.activity;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -9,8 +12,13 @@ import android.widget.RelativeLayout;
 
 import com.hengye.share.BaseActivity;
 import com.hengye.share.R;
+import com.hengye.share.module.Topic;
+import com.hengye.share.service.TopicPublishService;
 import com.hengye.share.ui.emoticon.EmoticonPicker;
 import com.hengye.share.ui.emoticon.EmoticonPickerUtil;
+import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
+import com.hengye.share.util.L;
+import com.hengye.share.util.SPUtil;
 
 public class TopicPublishActivity extends BaseActivity implements View.OnClickListener{
 
@@ -43,10 +51,11 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         super.onResume();
     }
 
-    private ImageButton mEmoticonBtn;
+    private ImageButton mEmoticonBtn, mPublishBtn;
     private EmoticonPicker mEmoticonPicker;
     private RelativeLayout mContainer;
     private EditText mContent;
+    private Dialog mSaveToDraftDialog;
 
     private void initView(){
         mContainer = (RelativeLayout) findViewById(R.id.rl_container);
@@ -54,9 +63,32 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         mContent.setOnClickListener(this);
         mEmoticonBtn = (ImageButton) findViewById(R.id.btn_emoticon);
         mEmoticonBtn.setOnClickListener(this);
+        mPublishBtn = (ImageButton) findViewById(R.id.btn_publish);
+        mPublishBtn.setOnClickListener(this);
         mEmoticonPicker = (EmoticonPicker) findViewById(R.id.emoticon_picker);
         mEmoticonPicker.setEditText(this, ((LinearLayout) findViewById(R.id.ll_root)),
                 mContent);
+
+        initSaveToDraftDialog();
+    }
+
+    public void initSaveToDraftDialog(){
+        SimpleTwoBtnDialog builder = new SimpleTwoBtnDialog();
+        builder.setContent(getString(R.string.label_save_to_draft));
+        builder.setNegativeButtonClickListener(new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                finish();
+            }
+        });
+        builder.setPositiveButtonClickListener(new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        mSaveToDraftDialog = builder.create(this);
     }
 
     @Override
@@ -71,7 +103,22 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
             }
         }else if(id == R.id.et_topic_publish){
             hideEmoticonPicker(true);
+        }else if(id == R.id.btn_publish){
+            publishTopic();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        mSaveToDraftDialog.show();
+    }
+
+    private void publishTopic(){
+        String content = mContent.getText().toString();
+        Topic topic = new Topic();
+        topic.setContent(content);
+        TopicPublishService.publish(this, topic, SPUtil.getSinaToken());
     }
 
     private void showEmoticonPicker(boolean showAnimation) {
@@ -107,7 +154,6 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     }
 
     public void unlockContainerHeight() {
-        ((LinearLayout.LayoutParams) mContainer.getLayoutParams()).weight
-                = 1.0F;
+        ((LinearLayout.LayoutParams) mContainer.getLayoutParams()).weight = 1.0F;
     }
 }

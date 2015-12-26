@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="dialog_text_yes">是</string>
+    <string name="dialog_text_no">否</string>
+    <string name="dialog_text_cancel">取消</string>
+    <string name="dialog_text_confirm">确定</string>
+
+    <string name="dialog_text_tip">温馨提示</string>
+
+</resources>

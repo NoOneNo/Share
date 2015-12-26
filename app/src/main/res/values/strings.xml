@@ -44,7 +44,15 @@
 
     <!-- Strings related to TopicPublish -->
     <string name="label_topic_publish_hint">说点什么吧……</string>
+
+    <string name="label_topic_publish_start">正在发送……</string>
+    <string name="label_topic_publish_success">发表成功</string>
+    <string name="label_topic_publish_fail">发表失败</string>
     <!-- Strings related to TopicPublish -->
+
+    <!-- Strings related to TopicDraft -->
+    <string name="label_save_to_draft">是否保存到草稿箱?</string>
+    <!-- Strings related to TopicDraft -->
 
 
 

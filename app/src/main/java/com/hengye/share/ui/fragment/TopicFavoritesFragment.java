@@ -16,7 +16,6 @@ import com.android.volley.request.GsonRequest;
 import com.google.gson.reflect.TypeToken;
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicFavoritesAdapter;
-import com.hengye.share.module.Topic;
 import com.hengye.share.module.TopicFavorites;
 import com.hengye.share.module.sina.WBTopicFavorites;
 import com.hengye.share.util.CommonUtil;
@@ -98,7 +97,7 @@ public class TopicFavoritesFragment extends BaseFragment{
     private ArrayList<TopicFavorites.TopicFavorite> getData() {
 
         ArrayList<TopicFavorites.TopicFavorite> data = SPUtil.getModule(new TypeToken<ArrayList<TopicFavorites.TopicFavorite>>() {
-        }.getType(), TopicFavorites.TopicFavorite.class.getSimpleName() + SPUtil.getUid());
+        }.getType(), TopicFavorites.TopicFavorite.class.getSimpleName() + SPUtil.getSinaUid());
         if (data == null) {
             data = new ArrayList<>();
         }
@@ -119,7 +118,7 @@ public class TopicFavoritesFragment extends BaseFragment{
                 || type == DataUtil.REFRESH_DATA_SIZE_EQUAL
                 || type == DataUtil.LOAD_NO_MORE_DATA
                 || type == DataUtil.LOAD_DATA_SIZE_EQUAL){
-            SPUtil.setModule(mAdapter.getData(), TopicFavorites.TopicFavorite.class.getSimpleName() + SPUtil.getUid());
+            SPUtil.setModule(mAdapter.getData(), TopicFavorites.TopicFavorite.class.getSimpleName() + SPUtil.getSinaUid());
         }
     }
 
@@ -132,9 +131,9 @@ public class TopicFavoritesFragment extends BaseFragment{
         ub.addParameter("page", isRefresh ? mPageStart : mPageNo + 1);
         ub.addParameter("count", WBUtil.MAX_COUNT_REQUEST);
         return new GsonRequest<>(
-                ub.getRequestUrl()
-                , WBTopicFavorites.class
-                , new Response.Listener<WBTopicFavorites>() {
+                WBTopicFavorites.class,
+                ub.getRequestUrl(),
+                new Response.Listener<WBTopicFavorites>() {
             @Override
             public void onResponse(WBTopicFavorites response) {
                 L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);

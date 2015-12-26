@@ -145,9 +145,9 @@ public class TopicNotifyFragment extends BaseFragment{
         }
         ub.addParameter("count", WBUtil.MAX_COUNT_REQUEST);
         return new GsonRequest<>(
-                ub.getRequestUrl()
-                , WBTopics.class
-                , new Response.Listener<WBTopics>() {
+                WBTopics.class,
+                ub.getRequestUrl(),
+                new Response.Listener<WBTopics>() {
             @Override
             public void onResponse(WBTopics response) {
                 L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
@@ -191,9 +191,9 @@ public class TopicNotifyFragment extends BaseFragment{
         }
         ub.addParameter("count", WBUtil.MAX_COUNT_REQUEST);
         return new GsonRequest<>(
-                ub.getRequestUrl()
-                , WBTopicComments.class
-                , new Response.Listener<WBTopicComments>() {
+                WBTopicComments.class,
+                ub.getRequestUrl(),
+                new Response.Listener<WBTopicComments>() {
             @Override
             public void onResponse(WBTopicComments response) {
                 L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);

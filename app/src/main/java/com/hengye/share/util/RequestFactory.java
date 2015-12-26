@@ -27,13 +27,13 @@ public class RequestFactory {
         ub.addParameter("access_token", token);
         ub.addParameter("uid", uid);
         return new GsonRequest<>(
-                ub.getRequestUrl()
-                , WBUserInfo.class
-                , new Response.Listener<WBUserInfo>() {
+                WBUserInfo.class,
+                ub.getRequestUrl(),
+                new Response.Listener<WBUserInfo>() {
             @Override
             public void onResponse(WBUserInfo response) {
                 L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
-                SPUtil.setModule(response, WBUserInfo.class.getSimpleName() + SPUtil.getUid());
+                SPUtil.setModule(response, WBUserInfo.class.getSimpleName() + SPUtil.getSinaUid());
             }
         }, new Response.ErrorListener() {
 

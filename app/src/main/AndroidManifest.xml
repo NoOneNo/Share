@@ -23,6 +23,7 @@
         android:name=".BaseApplication">
 
         <service android:name="com.hengye.share.service.ShareService"/>
+        <service android:name="com.hengye.share.service.TopicPublishService"/>
 
         <activity
             android:name=".ui.activity.TopicActivity"

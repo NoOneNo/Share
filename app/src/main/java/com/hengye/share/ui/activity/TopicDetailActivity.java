@@ -262,14 +262,13 @@ public class TopicDetailActivity extends BaseActivity {
                 if (data.get(0).getId() != null && data.get(0).getId().
                         equals(CommonUtil.getLastItem(targetData).getId())) {
                     data.remove(0);
-                    if (CommonUtil.isEmptyCollection(data)) {
-                        mPullToRefreshLayout.setLoadEnable(false);
-                        Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
-                    }else{
-                        targetData.addAll(data);
-                    }
                 }
-
+                if (CommonUtil.isEmptyCollection(data)) {
+                    mPullToRefreshLayout.setLoadEnable(false);
+                    Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
+                }else{
+                    targetData.addAll(data);
+                }
             }
 
             if(isComment && isSelectedCommentTab()){
@@ -294,9 +293,9 @@ public class TopicDetailActivity extends BaseActivity {
         }
         ub.addParameter("count", WBUtil.MAX_COUNT_REQUEST);
         return new GsonRequest<>(
-                ub.getRequestUrl()
-                , WBTopicReposts.class
-                , new Response.Listener<WBTopicReposts>() {
+                WBTopicReposts.class,
+                ub.getRequestUrl(),
+                new Response.Listener<WBTopicReposts>() {
             @Override
             public void onResponse(WBTopicReposts response) {
                 L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
@@ -329,9 +328,9 @@ public class TopicDetailActivity extends BaseActivity {
         }
         ub.addParameter("count", WBUtil.MAX_COUNT_REQUEST);
         return new GsonRequest<>(
-                ub.getRequestUrl()
-                , WBTopicComments.class
-                , new Response.Listener<WBTopicComments>() {
+                WBTopicComments.class
+                ,ub.getRequestUrl(),
+                new Response.Listener<WBTopicComments>() {
             @Override
             public void onResponse(WBTopicComments response) {
                 L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);

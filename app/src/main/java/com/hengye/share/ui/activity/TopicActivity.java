@@ -258,7 +258,7 @@ public class TopicActivity extends BaseActivity
     private ArrayList<Topic> getData() {
 
         ArrayList<Topic> data = SPUtil.getModule(new TypeToken<ArrayList<Topic>>() {
-        }.getType(), Topic.class.getSimpleName() + SPUtil.getUid());
+        }.getType(), Topic.class.getSimpleName() + SPUtil.getSinaUid());
         if (data == null) {
             data = new ArrayList<>();
         }
@@ -275,7 +275,7 @@ public class TopicActivity extends BaseActivity
     }
 
     private UserInfo getUserInfo(){
-        WBUserInfo wbUserInfo = SPUtil.getModule(WBUserInfo.class, WBUserInfo.class.getSimpleName() + SPUtil.getUid());
+        WBUserInfo wbUserInfo = SPUtil.getModule(WBUserInfo.class, WBUserInfo.class.getSimpleName() + SPUtil.getSinaUid());
         if (wbUserInfo == null) {
             //用户数据为空
             L.debug("UserInfo is null, wait to load");
@@ -335,7 +335,7 @@ public class TopicActivity extends BaseActivity
                 || type == DataUtil.REFRESH_DATA_SIZE_EQUAL
                 || type == DataUtil.LOAD_NO_MORE_DATA
                 || type == DataUtil.LOAD_DATA_SIZE_EQUAL){
-            SPUtil.setModule(mAdapter.getData(), Topic.class.getSimpleName() + SPUtil.getUid());
+            SPUtil.setModule(mAdapter.getData(), Topic.class.getSimpleName() + SPUtil.getSinaUid());
         }
     }
 
@@ -349,9 +349,9 @@ public class TopicActivity extends BaseActivity
         }
         ub.addParameter("count", WBUtil.MAX_COUNT_REQUEST);
         return new GsonRequest<>(
-                ub.getRequestUrl()
-                , WBTopics.class
-                , new Response.Listener<WBTopics>() {
+                WBTopics.class,
+                ub.getRequestUrl(),
+                new Response.Listener<WBTopics>() {
             @Override
             public void onResponse(WBTopics response) {
                 L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
@@ -378,8 +378,8 @@ public class TopicActivity extends BaseActivity
         ub.addParameter("since_id", since_id);
         ub.addParameter("count", WBUtil.MAX_COUNT_REQUEST);
         return new GsonRequest<>(
-                ub.getRequestUrl()
-                , WBTopicIds.class,
+                WBTopicIds.class,
+                ub.getRequestUrl(),
                 new Response.Listener<WBTopicIds>() {
                     @Override
                     public void onResponse(WBTopicIds response) {

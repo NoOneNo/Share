@@ -123,4 +123,9 @@ public class UrlFactory {
     public String getWBTopicFavoritesUrl() {
         return URL_PREFIX_WEIBO + "favorites.json";
     }
+
+    //发表微博
+    public String getWBTopicPublishUrl() {
+        return URL_PREFIX_WEIBO + "statuses/update.json";
+    }
 }

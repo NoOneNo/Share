@@ -12,6 +12,10 @@ public class Parent implements Serializable{
 
     public static final int TYPE_WECHAT= 3;
 
+    public static Parent getWBParent(){
+        return new Parent(null, TYPE_WEIBO);
+    }
+
     public Parent(){}
 
     public Parent(String json, int type) {

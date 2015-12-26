@@ -17,11 +17,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Topic implements Serializable{
+public class Topic extends ParentInherit implements Serializable{
 
     private static final long serialVersionUID = 971288752432928272L;
 
-    private Parent parent;
+//    private Parent parent;
 
 //    private String avatar;//头像
 //    private String username;//名字
@@ -130,7 +130,6 @@ public class Topic implements Serializable{
     @Override
     public String toString() {
         return "Topic{" +
-                "parent=" + parent +
                 ", date='" + date + '\'' +
                 ", channel='" + channel + '\'' +
                 ", content='" + content + '\'' +
@@ -155,13 +154,13 @@ public class Topic implements Serializable{
         this.urlSpannableString = urlSpannableString;
     }
 
-    public Parent getParent() {
-        return parent;
-    }
+//    public Parent getParent() {
+//        return parent;
+//    }
 
-    public void setParent(Parent parent) {
-        this.parent = parent;
-    }
+//    public void setParent(Parent parent) {
+//        this.parent = parent;
+//    }
 
     public UserInfo getUserInfo() {
         return userInfo;

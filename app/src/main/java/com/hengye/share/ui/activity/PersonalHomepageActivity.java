@@ -190,9 +190,9 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         }
         ub.addParameter("count", WBUtil.MAX_COUNT_REQUEST);
         return new GsonRequest<>(
-                ub.getRequestUrl()
-                , WBTopics.class
-                , new Response.Listener<WBTopics>() {
+                WBTopics.class,
+                ub.getRequestUrl(),
+                new Response.Listener<WBTopics>() {
             @Override
             public void onResponse(WBTopics response) {
                 L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);

@@ -2,6 +2,7 @@ package com.hengye.share;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -63,6 +64,16 @@ public class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         cancelPendingRequestsIfNeeded();
         super.onDestroy();
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode, @Nullable Bundle options){
+        super.startActivityForResult(intent, requestCode, options);
+    }
+
+    @Override
+    public void finish(){
+        super.finish();
     }
 
     protected void handleBundleExtra(){
