@@ -11,6 +11,9 @@ import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.AtUserAdapter;
 import com.hengye.swiperefresh.PullToRefreshLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AtUserActivity extends BaseActivity{
 
     @Override
@@ -32,6 +35,7 @@ public class AtUserActivity extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setContentView(R.layout.activity_at_user);
         initView();
     }
 
@@ -45,7 +49,7 @@ public class AtUserActivity extends BaseActivity{
     private EditText mSearchContent;
 
     private AtUserAdapter mAtUserAdapter;
-
+    private List<String> mSearchResultData;
 
 
     private void initView(){
@@ -56,12 +60,29 @@ public class AtUserActivity extends BaseActivity{
 
         mRVSearchResult = (RecyclerView) findViewById(R.id.recycler_view_search_result);
 
-        mRVSearchResult.setLayoutManager(new LinearLayoutManager(this);
-        mRVSearchResult.setAdapter(mAtUserAdapter = new AtUserAdapter(this,
-        mRVSearchResult.setItemAnimator(new DefaultItemAnimator());
+        mRVSearchResult.setLayoutManager(new LinearLayoutManager(this));
+        mRVSearchResult.setAdapter(mAtUserAdapter = new AtUserAdapter(this, getSearchResultData()));
+//        mRVSearchResult.setItemAnimator(new DefaultItemAnimator());
 
         mSearchContent = (EditText) findViewById(R.id.et_username);
 
 
+    }
+
+    private List<String> getSearchResultData(){
+        mSearchResultData = new ArrayList<>();
+        mSearchResultData.add("test");
+        mSearchResultData.add("test");
+        mSearchResultData.add("test");
+        mSearchResultData.add("test");
+        mSearchResultData.add("test");
+        mSearchResultData.add("test");
+        mSearchResultData.add("test");
+        mSearchResultData.add("test");
+        mSearchResultData.add("test");
+        mSearchResultData.add("test");
+        mSearchResultData.add("test");
+
+        return mSearchResultData;
     }
 }

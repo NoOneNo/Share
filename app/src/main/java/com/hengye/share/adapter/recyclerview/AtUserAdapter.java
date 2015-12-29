@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.hengye.share.R;
+
 import java.util.List;
 
 public class AtUserAdapter extends CommonAdapter<String, AtUserAdapter.MainViewHolder> {
@@ -15,7 +17,7 @@ public class AtUserAdapter extends CommonAdapter<String, AtUserAdapter.MainViewH
 
     @Override
     public MainViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
-        return new MainViewHolder(LayoutInflater.from(getContext()).inflate(null, parent, false));
+        return new MainViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_at_user_search_result, parent, false));
     }
 
     public static class MainViewHolder extends CommonAdapter.ItemViewHolder<String> {
