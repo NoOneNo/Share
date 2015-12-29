@@ -119,6 +119,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         Topic topic = new Topic();
         topic.setContent(content);
         TopicPublishService.publish(this, topic, SPUtil.getSinaToken());
+        finish();
     }
 
     private void showEmoticonPicker(boolean showAnimation) {

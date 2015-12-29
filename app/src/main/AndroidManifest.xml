@@ -100,6 +100,11 @@
         </activity>
 
         <activity
+            android:name="com.hengye.share.ui.activity.AtUserActivity"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
             android:name="com.hengye.share.ui.activity.TestActivity">
         </activity>
     </application>

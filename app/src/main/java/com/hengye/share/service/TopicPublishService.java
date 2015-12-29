@@ -92,7 +92,7 @@ public class TopicPublishService extends Service{
         ub.addParameter("status", tp.getTopic().getContent());
         return new GsonRequest<WBTopic>(Request.Method.POST,
                 WBTopic.class,
-                ub.getUrl()
+                ub.getRequestUrl()
                 , new Response.Listener<WBTopic>() {
             @Override
             public void onResponse(WBTopic response) {
@@ -115,7 +115,8 @@ public class TopicPublishService extends Service{
         }){
             @Override
             public byte[] getBody() {
-                return ub.getBody();
+//                return ub.getBody();
+                return null;
             }
         };
     }
