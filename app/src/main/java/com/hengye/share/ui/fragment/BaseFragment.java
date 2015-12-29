@@ -3,7 +3,8 @@ package com.hengye.share.ui.fragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import com.hengye.volleyplus.toolbox.RequestManager;
+import com.hengye.share.util.RequestManager;
+
 
 public class BaseFragment extends Fragment {
 

@@ -16,13 +16,13 @@ import android.widget.Toast;
 import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.R;
 import com.hengye.share.module.TopicComment;
-import com.hengye.share.util.thirdparty.WBUtil;
+import com.hengye.share.ui.support.SimpleClickableSpan;
+import com.hengye.share.ui.support.SimpleLinkMovementMethod;
 import com.hengye.share.ui.view.GridGalleryView;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DateUtil;
-import com.hengye.share.ui.support.SimpleClickableSpan;
-import com.hengye.share.ui.support.SimpleLinkMovementMethod;
-import com.hengye.volleyplus.toolbox.RequestManager;
+import com.hengye.share.util.RequestManager;
+import com.hengye.share.util.thirdparty.WBUtil;
 
 import java.util.List;
 import java.util.Map;

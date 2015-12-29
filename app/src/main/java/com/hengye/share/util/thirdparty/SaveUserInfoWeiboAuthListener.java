@@ -2,17 +2,9 @@ package com.hengye.share.util.thirdparty;
 
 import android.os.Bundle;
 
-import com.android.volley.Response;
-import com.android.volley.error.VolleyError;
-import com.android.volley.request.GsonRequest;
-import com.hengye.share.module.Topic;
-import com.hengye.share.module.UserInfo;
-import com.hengye.share.module.sina.WBUserInfo;
 import com.hengye.share.util.RequestFactory;
+import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.SPUtil;
-import com.hengye.volleyplus.toolbox.RequestManager;
-import com.sina.weibo.sdk.auth.Oauth2AccessToken;
-import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.sina.weibo.sdk.exception.WeiboException;
 
 public class SaveUserInfoWeiboAuthListener extends ParseTokenWeiboAuthListener {

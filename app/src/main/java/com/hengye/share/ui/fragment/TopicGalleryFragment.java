@@ -20,7 +20,7 @@ import com.hengye.share.R;
 import com.hengye.share.ui.activity.TopicGalleryActivity;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.util.ImageUtil;
-import com.hengye.volleyplus.toolbox.RequestManager;
+import com.hengye.share.util.RequestManager;
 
 public class TopicGalleryFragment extends BaseFragment {
 

@@ -4,9 +4,7 @@ import android.app.Application;
 import android.content.Intent;
 
 import com.hengye.share.service.ShareService;
-import com.hengye.share.util.CrashHandler;
-import com.hengye.share.util.SPUtil;
-import com.hengye.volleyplus.toolbox.RequestManager;
+import com.hengye.share.util.RequestManager;
 
 public class BaseApplication extends Application{
 

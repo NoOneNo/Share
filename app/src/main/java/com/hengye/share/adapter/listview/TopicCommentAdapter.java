@@ -2,16 +2,11 @@ package com.hengye.share.adapter.listview;
 
 import android.content.Context;
 import android.text.Html;
-import android.text.Selection;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.R;
@@ -19,16 +14,11 @@ import com.hengye.share.adapter.recyclerview.TopicAdapter;
 import com.hengye.share.module.TopicComment;
 import com.hengye.share.ui.support.LongClickableLinkMovementMethod;
 import com.hengye.share.ui.support.TopicContentUrlOnTouchListener;
-import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.share.ui.view.GridGalleryView;
-import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DateUtil;
-import com.hengye.share.ui.support.SimpleClickableSpan;
-import com.hengye.share.ui.support.SimpleLinkMovementMethod;
-import com.hengye.volleyplus.toolbox.RequestManager;
+import com.hengye.share.util.RequestManager;
 
 import java.util.List;
-import java.util.Map;
 
 public class TopicCommentAdapter extends CommonAdapter<TopicComment> {
 

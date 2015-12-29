@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.SettingHelper;
-import com.hengye.volleyplus.toolbox.RequestManager;
 
 public class BaseActivity extends AppCompatActivity {
 

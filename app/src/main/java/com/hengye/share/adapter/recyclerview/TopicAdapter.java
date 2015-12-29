@@ -2,40 +2,31 @@ package com.hengye.share.adapter.recyclerview;
 
 import android.content.Context;
 import android.text.Html;
-import android.text.Selection;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.R;
+import com.hengye.share.module.Topic;
 import com.hengye.share.ui.activity.PersonalHomepageActivity;
 import com.hengye.share.ui.activity.TopicGalleryActivity;
-import com.hengye.share.module.Topic;
+import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.ui.support.LongClickableLinkMovementMethod;
 import com.hengye.share.ui.support.TopicContentUrlOnTouchListener;
-import com.hengye.share.util.thirdparty.WBUtil;
-import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.ui.view.GridGalleryView;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DateUtil;
 import com.hengye.share.util.IntentUtil;
-import com.hengye.share.ui.support.SimpleClickableSpan;
-import com.hengye.share.ui.support.SimpleLinkMovementMethod;
+import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.ViewUtil;
-import com.hengye.volleyplus.toolbox.RequestManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHolder>
     implements ViewUtil.OnItemClickListener{
