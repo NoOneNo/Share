@@ -98,8 +98,10 @@ public class TopicActivity extends BaseActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                Intent intent = new Intent(TopicActivity.this, TopicPublishActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -132,7 +134,7 @@ public class TopicActivity extends BaseActivity
         mPullToRefreshLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(mWBAccessToken == null || TextUtils.isEmpty(mWBAccessToken.getToken())){
+                if (mWBAccessToken == null || TextUtils.isEmpty(mWBAccessToken.getToken())) {
                     mPullToRefreshLayout.setRefreshing(false);
                     return;
                 }
@@ -140,7 +142,7 @@ public class TopicActivity extends BaseActivity
                 if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
                     String id = mAdapter.getData().get(0).getId();
                     RequestManager.addToRequestQueue(getWBTopicIdsRequest(mWBAccessToken.getToken(), id), getRequestTag());
-                }else{
+                } else {
                     RequestManager.addToRequestQueue(getWBTopicRequest(mWBAccessToken.getToken(), 0 + "", true), getRequestTag());
                 }
             }
@@ -207,8 +209,7 @@ public class TopicActivity extends BaseActivity
 //                mWeiboAuth.anthorize(new WBAuthListener());
 //            }
         } else if (id == R.id.action_test) {
-//            Intent intent = new Intent(this, TestActivity.class);
-            Intent intent = new Intent(this, TopicPublishActivity.class);
+            Intent intent = new Intent(TopicActivity.this, AtUserActivity.class);
             startActivity(intent);
         }
 
@@ -223,7 +224,7 @@ public class TopicActivity extends BaseActivity
 
         if (id == R.id.nav_camara) {
             UserInfo userInfo = getUserInfo();
-            if(userInfo == null){
+            if (userInfo == null) {
                 Toast.makeText(this, "暂未获取到个人信息", Toast.LENGTH_SHORT).show();
                 return true;
             }
@@ -274,13 +275,13 @@ public class TopicActivity extends BaseActivity
         }
     }
 
-    private UserInfo getUserInfo(){
+    private UserInfo getUserInfo() {
         WBUserInfo wbUserInfo = SPUtil.getModule(WBUserInfo.class, WBUserInfo.class.getSimpleName() + SPUtil.getSinaUid());
         if (wbUserInfo == null) {
             //用户数据为空
             L.debug("UserInfo is null, wait to load");
 
-            if(mWBAccessToken != null){
+            if (mWBAccessToken != null) {
                 RequestManager.addToRequestQueue(RequestFactory.getInstance().
                         getWBUserInfoRequest(mWBAccessToken.getToken(), mWBAccessToken.getUid()), getRequestTag());
             }
@@ -292,18 +293,18 @@ public class TopicActivity extends BaseActivity
     private void updateNavigationView() {
 
         UserInfo userInfo = getUserInfo();
-        if(userInfo == null){
+        if (userInfo == null) {
             return;
         }
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         String uid = (String) navigationView.getTag();
-        if (!TextUtils.isEmpty(uid)){
-            if(uid.equals(userInfo.getUid())){
+        if (!TextUtils.isEmpty(uid)) {
+            if (uid.equals(userInfo.getUid())) {
                 //此ID数据已经更新过
                 L.debug("updateNavigationView invoke, UserInfo has updated");
                 return;
-            }else{
-                if(mWBAccessToken != null){
+            } else {
+                if (mWBAccessToken != null) {
                     RequestManager.addToRequestQueue(RequestFactory.getInstance().
                             getWBUserInfoRequest(mWBAccessToken.getToken(), mWBAccessToken.getUid()));
                 }
@@ -321,20 +322,20 @@ public class TopicActivity extends BaseActivity
         sign.setText(userInfo.getSign());
     }
 
-    private void handleData(List<Topic> data, boolean isRefresh){
-        if(isRefresh) {
+    private void handleData(List<Topic> data, boolean isRefresh) {
+        if (isRefresh) {
             mPullToRefreshLayout.setRefreshing(false);
-        }else {
+        } else {
             mPullToRefreshLayout.setLoading(false);
         }
         int type = DataUtil.handlePagingData(mAdapter.getData(), data, isRefresh);
         DataUtil.handleTopicAdapter(type, mAdapter, data);
         DataUtil.handlePullToRefresh(type, mPullToRefreshLayout);
         DataUtil.handleSnackBar(type, mPullToRefreshLayout, data == null ? 0 : data.size());
-        if(type == DataUtil.REFRESH_DATA_SIZE_LESS
+        if (type == DataUtil.REFRESH_DATA_SIZE_LESS
                 || type == DataUtil.REFRESH_DATA_SIZE_EQUAL
                 || type == DataUtil.LOAD_NO_MORE_DATA
-                || type == DataUtil.LOAD_DATA_SIZE_EQUAL){
+                || type == DataUtil.LOAD_DATA_SIZE_EQUAL) {
             SPUtil.setModule(mAdapter.getData(), Topic.class.getSimpleName() + SPUtil.getSinaUid());
         }
     }
@@ -352,12 +353,12 @@ public class TopicActivity extends BaseActivity
                 WBTopics.class,
                 ub.getRequestUrl(),
                 new Response.Listener<WBTopics>() {
-            @Override
-            public void onResponse(WBTopics response) {
-                L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
-                handleData(Topic.getTopics(response), isRefresh);
-            }
-        }, new Response.ErrorListener() {
+                    @Override
+                    public void onResponse(WBTopics response) {
+                        L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
+                        handleData(Topic.getTopics(response), isRefresh);
+                    }
+                }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -403,13 +404,13 @@ public class TopicActivity extends BaseActivity
                     }
                 }, new Response.ErrorListener() {
 
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        mPullToRefreshLayout.setRefreshing(false);
-                        L.debug("request fail , url : {}, error : {}", ub.getRequestUrl(), error);
-                    }
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mPullToRefreshLayout.setRefreshing(false);
+                L.debug("request fail , url : {}, error : {}", ub.getRequestUrl(), error);
+            }
 
-                });
+        });
     }
 
     /**

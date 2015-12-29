@@ -5,7 +5,7 @@
     android:id="@+id/ll_topic_retweeted"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/material_grey_50"
+    android:background="@color/grey_50"
     android:layout_marginTop="@dimen/content_margin_5dp"
     android:paddingTop="@dimen/content_margin_5dp"
     android:paddingLeft="@dimen/activity_horizontal_margin"
