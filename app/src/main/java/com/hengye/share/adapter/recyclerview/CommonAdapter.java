@@ -31,6 +31,7 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
         holder.setOnItemClickListener(getOnItemClickListener());
         holder.setOnChildViewItemClickListener(getOnChildViewItemClickListener());
         holder.bindData(getContext(), getItem(position));
+        holder.bindData(getContext(), getItem(position), position);
     }
 
     @Override
@@ -65,6 +66,10 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
         }
 
         public void bindData(Context context, T t){
+
+        }
+
+        public void bindData(Context context, T t, int position){
 
         }
 
@@ -132,6 +137,10 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
         return mData.get(position);
     }
 
+    public int getItemPosition(T item){
+        return mData.indexOf(item);
+    }
+
     public void add(int position, T item) {
         mData.add(position, item);
         notifyItemInserted(getBasicItemVirtualPosition(position));
@@ -145,6 +154,14 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
     public void remove(int position) {
         mData.remove(position);
         notifyItemRemoved(getBasicItemVirtualPosition(position));
+    }
+
+    public void remove(T item) {
+        int index = mData.indexOf(item);
+        if(index != -1){
+            mData.remove(index);
+            notifyItemRemoved(getBasicItemVirtualPosition(index));
+        }
     }
 
     public void refresh(List<T> data) {

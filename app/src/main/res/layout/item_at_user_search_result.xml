@@ -56,6 +56,6 @@
         android:layout_height="@dimen/bg_divider"
         android:layout_marginTop="@dimen/content_margin_10dp"
         android:layout_below="@id/iv_avatar"
-        android:background="@color/grey_600"/>
+        android:background="@color/bg_divider"/>
 
 </RelativeLayout>
