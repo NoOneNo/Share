@@ -1,6 +1,7 @@
 package com.hengye.share.adapter.recyclerview;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,14 @@ public class AtUserSearchAdapter extends CommonAdapter<AtUser, AtUserSearchAdapt
     public void onBindBasicItemView(MainViewHolder holder, int position) {
         super.onBindBasicItemView(holder, position);
 
+    }
+
+    public void showSearchResult(String str, List<AtUser> totalData){
+        if (TextUtils.isEmpty(str)) {
+            refresh(totalData);
+        } else {
+            refresh(AtUser.search(totalData, str));
+        }
     }
 
     public static class MainViewHolder extends CommonAdapter.ItemViewHolder<AtUser> {

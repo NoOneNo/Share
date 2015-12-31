@@ -31,19 +31,39 @@ public class AtUserSelectAdapter extends CommonAdapter<AtUser, AtUserSelectAdapt
 
     }
 
+    public void setLastItemPrepareDelete(boolean isPrepareDelete) {
+        AtUser au = getLastItem();
+        if (au != null) {
+            setItemPrepareDelete(isPrepareDelete, au, getLastItemPosition());
+        }
+    }
+
+    public void setItemPrepareDelete(boolean isPrepareDelete, AtUser au, int position) {
+        if(au.isPrepareDelete() != isPrepareDelete) {
+            au.setPrepareDelete(isPrepareDelete);
+            notifyItemChanged(position);
+        }
+    }
+
     public static class MainViewHolder extends CommonAdapter.ItemViewHolder<AtUser> {
 
         ImageView mAvatar;
+        View mAvatarMask;
 
         public MainViewHolder(View v) {
             super(v);
 
             mAvatar = (ImageView) v.findViewById(R.id.iv_avatar);
+            mAvatarMask = v.findViewById(R.id.iv_avatar_mask);
         }
 
         @Override
         public void bindData(Context context, AtUser select, int position) {
-
+            if (select.isPrepareDelete()) {
+                mAvatarMask.setVisibility(View.VISIBLE);
+            } else {
+                mAvatarMask.setVisibility(View.GONE);
+            }
         }
     }
 }

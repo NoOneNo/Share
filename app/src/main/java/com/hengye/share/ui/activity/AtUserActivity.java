@@ -8,11 +8,13 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 
 import com.hengye.share.BaseActivity;
 import com.hengye.share.R;
@@ -95,12 +97,11 @@ public class AtUserActivity extends BaseActivity {
                 if (select == null) {
                     return;
                 }
-                select.setSelected(!select.isSelected());
                 updateSelectItems(select);
 
                 mRVSelectResult.post(mRVSelectResultScrollToEnd);
 
-                setCheckBoxSelect(position, select.isSelected());
+                mAtUserSearchAdapter.notifyItemChanged(position);
             }
         });
 
@@ -111,17 +112,13 @@ public class AtUserActivity extends BaseActivity {
                 if (select == null) {
                     return;
                 }
-                select.setSelected(!select.isSelected());
                 updateSelectItems(select);
-
-                mRVSelectResult.post(mRVSelectResultScrollToEnd);
 
                 int index = mAtUserSearchAdapter.getItemPosition(select);
                 if (index != -1) {
-                    setCheckBoxSelect(index, select.isSelected());
+                    mAtUserSearchAdapter.notifyItemChanged(index);
                 }
 
-//                mAtUserSearchAdapter.notifyDataSetChanged();
             }
         });
 
@@ -138,12 +135,34 @@ public class AtUserActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String str = mSearch.getText().toString();
-                if (TextUtils.isEmpty(str)) {
-                    mAtUserSearchAdapter.refresh(mSearchResultData);
+                mAtUserSelectAdapter.setLastItemPrepareDelete(false);
+                mAtUserSearchAdapter.showSearchResult(mSearch.getText().toString(), mSearchResultData);
+            }
+        });
+
+        mSearch.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (!TextUtils.isEmpty(mSearch.getText().toString())) {
+                    return false;
                 } else {
-                    mAtUserSearchAdapter.refresh(AtUser.search(mSearchResultData, str));
+                    if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DEL) {
+
+                        AtUser au = mAtUserSelectAdapter.getLastItem();
+                        if (au != null) {
+                            int position = mAtUserSelectAdapter.getLastItemPosition();
+                            if (au.isPrepareDelete()) {
+                                mRVSelectResult.scrollToPosition(position - 1);
+                                mAtUserSelectAdapter.getOnItemClickListener().onItemClick(null, position);
+                            } else {
+                                mRVSelectResult.scrollToPosition(position);
+                                mAtUserSelectAdapter.setItemPrepareDelete(true, au, position);
+                            }
+                        }
+
+                    }
                 }
+                return false;
             }
         });
     }
@@ -157,17 +176,14 @@ public class AtUserActivity extends BaseActivity {
         }
     };
 
-    private void setCheckBoxSelect(int position, boolean isSelected) {
-        ImageButton checkBox = (ImageButton) mRVSearchResult.findViewWithTag(position);
-        if (checkBox != null) {
-            checkBox.setImageResource(isSelected ? R.drawable.ic_check_select : 0);
-        }
-    }
-
     private void updateSelectItems(AtUser select) {
+        select.setSelected(!select.isSelected());
+
         long searchMoveTime;
         if (select.isSelected()) {
             searchMoveTime = mRVSelectResult.getItemAnimator().getAddDuration();
+            mAtUserSelectAdapter.setLastItemPrepareDelete(false);
+            select.setPrepareDelete(false);
             mAtUserSelectAdapter.add(select);
         } else {
             int index = mAtUserSelectAdapter.getItemPosition(select);

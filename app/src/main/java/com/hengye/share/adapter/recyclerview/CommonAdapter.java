@@ -141,6 +141,17 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
         return mData.indexOf(item);
     }
 
+    public T getLastItem(){
+        if(mData.isEmpty()){
+            return null;
+        }
+        return mData.get(mData.size() - 1);
+    }
+
+    public int getLastItemPosition(){
+        return mData.size() - 1;
+    }
+
     public void add(int position, T item) {
         mData.add(position, item);
         notifyItemInserted(getBasicItemVirtualPosition(position));
