@@ -17,7 +17,7 @@ import com.hengye.share.util.SettingHelper;
 
 public class EmoticonPickerUtil {
 
-    public static void hideSoftInput(View paramEditText) {
+    public static void hideKeyBoard(View paramEditText) {
         ((InputMethodManager) BaseApplication.getInstance().getSystemService(Context.INPUT_METHOD_SERVICE))
                 .hideSoftInputFromWindow(paramEditText.getWindowToken(), 0);
     }

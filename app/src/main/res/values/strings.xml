@@ -54,7 +54,10 @@
     <string name="label_save_to_draft">是否保存到草稿箱?</string>
     <!-- Strings related to TopicDraft -->
 
-
+    <!-- Strings related to AtUser -->
+    <string name="label_confirm">确定</string>
+    <string name="label_confirm_count">确定(%s)</string>
+    <!-- Strings related to AtUser -->
 
     <!-- Strings related to fragment title-->
     <string name="title_fragment_setting">设置</string>

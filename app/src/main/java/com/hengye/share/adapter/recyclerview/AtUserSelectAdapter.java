@@ -4,13 +4,12 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 
+import com.android.volley.view.NetworkImageView;
 import com.hengye.share.R;
 import com.hengye.share.module.AtUser;
-import com.hengye.share.module.Select;
+import com.hengye.share.module.UserInfo;
+import com.hengye.share.util.RequestManager;
 
 import java.util.List;
 
@@ -45,24 +44,33 @@ public class AtUserSelectAdapter extends CommonAdapter<AtUser, AtUserSelectAdapt
         }
     }
 
+    public int getSelectSize(){
+        return getBasicItemCount();
+    }
+
     public static class MainViewHolder extends CommonAdapter.ItemViewHolder<AtUser> {
 
-        ImageView mAvatar;
+        NetworkImageView mAvatar;
         View mAvatarMask;
 
         public MainViewHolder(View v) {
             super(v);
 
-            mAvatar = (ImageView) v.findViewById(R.id.iv_avatar);
+            mAvatar = (NetworkImageView) v.findViewById(R.id.iv_avatar);
             mAvatarMask = v.findViewById(R.id.iv_avatar_mask);
         }
 
         @Override
-        public void bindData(Context context, AtUser select, int position) {
-            if (select.isPrepareDelete()) {
+        public void bindData(Context context, AtUser atUser, int position) {
+            if (atUser.isPrepareDelete()) {
                 mAvatarMask.setVisibility(View.VISIBLE);
             } else {
                 mAvatarMask.setVisibility(View.GONE);
+            }
+
+            UserInfo userInfo = atUser.getUserInfo();
+            if(userInfo != null){
+                mAvatar.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());
             }
         }
     }

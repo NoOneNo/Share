@@ -128,4 +128,9 @@ public class UrlFactory {
     public String getWBTopicPublishUrl() {
         return URL_PREFIX_WEIBO + "statuses/update.json";
     }
+
+    //获取用户的关注列表
+    public String getWBAttentionUrl() {
+        return URL_PREFIX_WEIBO + "friendships/friends.json";
+    }
 }

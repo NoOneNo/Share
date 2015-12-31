@@ -2,27 +2,48 @@ package com.hengye.share.ui.activity;
 
 import android.animation.ObjectAnimator;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.internal.view.menu.MenuItemImpl;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
+import com.android.volley.Response;
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.GsonRequest;
+import com.google.gson.reflect.TypeToken;
 import com.hengye.share.BaseActivity;
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.AtUserSearchAdapter;
 import com.hengye.share.adapter.recyclerview.AtUserSelectAdapter;
 import com.hengye.share.module.AtUser;
+import com.hengye.share.module.Topic;
+import com.hengye.share.module.UserInfo;
+import com.hengye.share.module.sina.WBTopicComments;
+import com.hengye.share.module.sina.WBUserInfos;
+import com.hengye.share.util.L;
+import com.hengye.share.util.RequestManager;
+import com.hengye.share.util.SPUtil;
+import com.hengye.share.util.UrlBuilder;
+import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.ViewUtil;
+import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
+import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,26 +89,49 @@ public class AtUserActivity extends BaseActivity {
 
     private AtUserSearchAdapter mAtUserSearchAdapter;
     private List<AtUser> mSelectResultData, mSearchResultData;
+    private LinearLayoutManager mSelectResultLayoutManager;
 
+    private Oauth2AccessToken mOauth2AccessToken;
 
     private void initView() {
 
         mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.pull_to_refresh);
 
         mRVSelectResult = (RecyclerView) findViewById(R.id.recycler_view_select_result);
-        mRVSelectResult.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        mSelectResultLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mRVSelectResult.setLayoutManager(mSelectResultLayoutManager);
         mRVSelectResult.setAdapter(mAtUserSelectAdapter = new AtUserSelectAdapter(this, getSelectResultData()));
         mRVSelectResult.setItemAnimator(new DefaultItemAnimator());
 
         mRVSearchResult = (RecyclerView) findViewById(R.id.recycler_view_search_result);
         mRVSearchResult.setLayoutManager(new LinearLayoutManager(this));
         mRVSearchResult.setAdapter(mAtUserSearchAdapter = new AtUserSearchAdapter(this, getSearchResultData()));
-
         mSearch = (EditText) findViewById(R.id.et_username);
 
         mSearchIcon = findViewById(R.id.ic_search);
 
+        mOauth2AccessToken = SPUtil.getSinaAccessToken();
+
+        Toolbar toolbar = getToolbar();
+        toolbar.setTitle("选择用户");
+//        toolbar.getMenu().addSubMenu("确定");
+//        toolbar.setme
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_at_user_menu, menu);
+        MenuItem menuItem = menu.findItem(R.id.action_confirm);
+
+        int count = mAtUserSelectAdapter.getSelectSize();
+        if(count == 0){
+            menuItem.setTitle(getResources().getString(R.string.label_confirm));
+        }else{
+            menuItem.setTitle(String.format(getResources().getString(R.string.label_confirm_count), count));
+        }
+        return true;
+    }
+
 
     private void initClick() {
         mAtUserSearchAdapter.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
@@ -100,7 +144,6 @@ public class AtUserActivity extends BaseActivity {
                 updateSelectItems(select);
 
                 mRVSelectResult.post(mRVSelectResultScrollToEnd);
-
                 mAtUserSearchAdapter.notifyItemChanged(position);
             }
         });
@@ -152,8 +195,12 @@ public class AtUserActivity extends BaseActivity {
                         if (au != null) {
                             int position = mAtUserSelectAdapter.getLastItemPosition();
                             if (au.isPrepareDelete()) {
-                                mRVSelectResult.scrollToPosition(position - 1);
                                 mAtUserSelectAdapter.getOnItemClickListener().onItemClick(null, position);
+                                mRVSelectResult.scrollToPosition(position - 1);
+
+                                int count = mRVSelectResult.getChildCount();
+
+                                notifySelectResultFirstItem();
                             } else {
                                 mRVSelectResult.scrollToPosition(position);
                                 mAtUserSelectAdapter.setItemPrepareDelete(true, au, position);
@@ -165,6 +212,30 @@ public class AtUserActivity extends BaseActivity {
                 return false;
             }
         });
+
+        mRVSearchResult.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(RecyclerView.SCROLL_STATE_DRAGGING == newState){
+                    ViewUtil.hideKeyBoard(mSearch);
+                }
+            }
+        });
+
+        mPullToRefreshLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                RequestManager.addToRequestQueue(getWBAttentionRequest(mOauth2AccessToken.getToken(), mOauth2AccessToken.getUid()));
+            }
+        });
+        mPullToRefreshLayout.setLoadEnable(false);
+//        mPullToRefreshLayout.setRefreshing(true);
+    }
+
+    private void notifySelectResultFirstItem(){
+        int index = mSelectResultLayoutManager.findFirstVisibleItemPosition();
+        mAtUserSelectAdapter.notifyItemChanged(index - 1);
     }
 
     private Runnable mRVSelectResultScrollToEnd = new Runnable() {
@@ -172,6 +243,7 @@ public class AtUserActivity extends BaseActivity {
         public void run() {
             if (mSelectResultData.size() > 1) {
                 mRVSelectResult.scrollToPosition(mSelectResultData.size() - 1);
+                notifySelectResultFirstItem();
             }
         }
     };
@@ -201,7 +273,8 @@ public class AtUserActivity extends BaseActivity {
     }
 
     private void initViewSize() {
-        mSearchItemWidth = getResources().getDimensionPixelSize(R.dimen.at_user_avatar);
+        mSearchItemWidth = getResources().getDimensionPixelSize(R.dimen.at_user_avatar) +
+                getResources().getDimensionPixelSize(R.dimen.content_margin_3dp) * 2;
         mSearchMarginStart = mSearchMarginStartOriginal = getResources().getDimensionPixelSize(R.dimen.at_user_et_search_margin_start);
     }
 
@@ -267,11 +340,7 @@ public class AtUserActivity extends BaseActivity {
     }
 
     private void updateSelectItemCount() {
-//        if(mSelectItems == null || mSelectItems.size() == 0){
-//            mNext.setText("确定");
-//        }else{
-//            mNext.setText("确定(" + mSelectItems.size() + ")");
-//        }
+        invalidateOptionsMenu();
     }
 
     private List<AtUser> getSelectResultData() {
@@ -280,41 +349,62 @@ public class AtUserActivity extends BaseActivity {
     }
 
     private List<AtUser> getSearchResultData() {
-        mSearchResultData = new ArrayList<>();
-        int i = 0;
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
-        mSearchResultData.add(new AtUser("user" + i++ + i));
+        mSearchResultData = SPUtil.getModule(new TypeToken<ArrayList<AtUser>>() {
+        }.getType(), AtUser.class.getSimpleName() + SPUtil.getSinaUid());
 
+        if(mSearchResultData == null){
+            mSearchResultData = new ArrayList<>();
+        }
         return mSearchResultData;
     }
+
+    //https://api.weibo.com/2/friendships/friends.json?access_token=2.00OXW56CiGSdcC7b3b00d3940PueHq&count=200&uid=2207519004
+
+    private GsonRequest getWBAttentionRequest(String token, String uid) {
+        final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBAttentionUrl());
+        ub.addParameter("access_token", token);
+        ub.addParameter("uid", uid);
+        ub.addParameter("count", 200);
+//        ub.addParameter("count", WBUtil.MAX_COUNT_REQUEST);
+        return new GsonRequest<>(
+                WBUserInfos.class,
+                ub.getRequestUrl(),
+                new Response.Listener<WBUserInfos>() {
+                    @Override
+                    public void onResponse(WBUserInfos response) {
+                        L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
+                        handleData(UserInfo.getUserInfos(response));
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+//                if (isRefresh) {
+                    mPullToRefreshLayout.setRefreshing(false);
+//                } else {
+                    mPullToRefreshLayout.setLoading(false);
+//                }
+                L.debug("request fail , url : {}, error : {}", ub.getRequestUrl(), error);
+            }
+
+        });
+    }
+
+    private void handleData(List<UserInfo> data){
+//        if (isRefresh) {
+            mPullToRefreshLayout.setRefreshing(false);
+//                } else {
+            mPullToRefreshLayout.setLoading(false);
+//                }
+
+        mSearchResultData = AtUser.getAtUser(data);
+
+        SPUtil.setModule(mSearchResultData, AtUser.class.getSimpleName() + SPUtil.getSinaUid());
+        mAtUserSearchAdapter.refresh(mSearchResultData);
+//        mAtUserSearchAdapter.notifyDataSetChanged();
+    }
 }
+
+
+
+

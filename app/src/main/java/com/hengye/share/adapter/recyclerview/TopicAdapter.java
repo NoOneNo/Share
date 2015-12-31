@@ -89,6 +89,10 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
 
         @Override
         public void bindData(Context context, Topic topic) {
+            if(topic == null){
+                return;
+            }
+
             registerChildViewItemClick(mTopicTitle);
             mUsername.setText(topic.getUserInfo().getName());
             String time = DateUtil.getLatestDateFormat(topic.getDate());

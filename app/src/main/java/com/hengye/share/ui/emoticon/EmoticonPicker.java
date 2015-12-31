@@ -81,7 +81,7 @@ public class EmoticonPicker extends LinearLayout implements AdapterView.OnItemCl
             mLayoutTransition.setDuration(0);
         }
         mPickerHeight = EmoticonPickerUtil.getKeyboardHeight(mActivity);
-        EmoticonPickerUtil.hideSoftInput(this.mEditText);
+        EmoticonPickerUtil.hideKeyBoard(this.mEditText);
         getLayoutParams().height = mPickerHeight;
         setVisibility(View.VISIBLE);
         //open EmoticonPicker, press home, press app switcher to return to write weibo interface,

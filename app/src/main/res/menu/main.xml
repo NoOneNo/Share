@@ -6,6 +6,7 @@
     <item android:id="@+id/action_test"
         android:title="add"
         android:orderInCategory="180"
+        android:icon="@drawable/ic_search_2"
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_login"

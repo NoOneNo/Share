@@ -1,10 +1,15 @@
 package com.hengye.share.module;
 
 
+import com.hengye.share.module.sina.WBTopic;
+import com.hengye.share.module.sina.WBTopics;
 import com.hengye.share.module.sina.WBUserInfo;
+import com.hengye.share.module.sina.WBUserInfos;
+import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.GsonUtil;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class UserInfo extends ParentInherit implements Serializable{
 
@@ -18,6 +23,17 @@ public class UserInfo extends ParentInherit implements Serializable{
     private String gender;//性别
     private String sign;//签名
     private String cover;//封面地址
+
+    public static ArrayList<UserInfo> getUserInfos(WBUserInfos wbUserInfos){
+        if(wbUserInfos == null || CommonUtil.isEmptyCollection(wbUserInfos.getUsers())){
+            return null;
+        }
+        ArrayList<UserInfo> userInfos = new ArrayList<>();
+        for(WBUserInfo entity : wbUserInfos.getUsers()){
+            userInfos.add(getUserInfo(entity));
+        }
+        return userInfos;
+    }
 
     public static UserInfo getUserInfo(WBUserInfo wbUserInfo){
         UserInfo userInfo = new UserInfo();

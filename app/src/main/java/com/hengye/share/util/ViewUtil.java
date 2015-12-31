@@ -1,11 +1,14 @@
 package com.hengye.share.util;
 
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 
 import com.android.volley.toolbox.ImageLoader;
+import com.hengye.share.BaseApplication;
 
 public class ViewUtil {
 
@@ -39,5 +42,21 @@ public class ViewUtil {
         return new StringBuilder(url.length() + 12).append("#W").append(maxWidth)
                 .append("#H").append(maxHeight).append("#S").append(scaleType.ordinal()).append(url)
                 .toString();
+    }
+
+    public static void hideKeyBoard(View paramEditText) {
+        ((InputMethodManager) BaseApplication.getInstance().getSystemService(Context.INPUT_METHOD_SERVICE))
+                .hideSoftInputFromWindow(paramEditText.getWindowToken(), 0);
+    }
+
+    public static void showKeyBoard(final View paramEditText) {
+        paramEditText.requestFocus();
+        paramEditText.post(new Runnable() {
+            @Override
+            public void run() {
+                ((InputMethodManager) BaseApplication.getInstance().getSystemService(Context.INPUT_METHOD_SERVICE))
+                        .showSoftInput(paramEditText, 0);
+            }
+        });
     }
 }

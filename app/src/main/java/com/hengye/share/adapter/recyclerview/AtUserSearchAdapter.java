@@ -6,12 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.view.NetworkImageView;
 import com.hengye.share.R;
 import com.hengye.share.module.AtUser;
-import com.hengye.share.module.Select;
+import com.hengye.share.module.UserInfo;
+import com.hengye.share.util.RequestManager;
 
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class AtUserSearchAdapter extends CommonAdapter<AtUser, AtUserSearchAdapt
 
     }
 
-    public void showSearchResult(String str, List<AtUser> totalData){
+    public void showSearchResult(String str, List<AtUser> totalData) {
         if (TextUtils.isEmpty(str)) {
             refresh(totalData);
         } else {
@@ -44,21 +45,28 @@ public class AtUserSearchAdapter extends CommonAdapter<AtUser, AtUserSearchAdapt
 
         ImageButton mCheckBox;
         TextView mUsername;
-        ImageView mAvatar;
+        NetworkImageView mAvatar;
 
         public MainViewHolder(View v) {
             super(v);
 
             mCheckBox = (ImageButton) v.findViewById(R.id.btn_check);
             mUsername = (TextView) v.findViewById(R.id.tv_username);
-            mAvatar = (ImageView) v.findViewById(R.id.iv_avatar);
+            mAvatar = (NetworkImageView) v.findViewById(R.id.iv_avatar);
         }
 
         @Override
-        public void bindData(Context context, AtUser select, int position) {
+        public void bindData(Context context, AtUser atUser, int position) {
             mCheckBox.setTag(position);
-            mCheckBox.setImageResource(select.isSelected() ? R.drawable.ic_check_select : 0);
-            mUsername.setText(select.getUsername());
+            mCheckBox.setImageResource(atUser.isSelected() ? R.drawable.ic_check_select : 0);
+
+            UserInfo userInfo = atUser.getUserInfo();
+            if (userInfo != null) {
+                mUsername.setText(userInfo.getName());
+                mAvatar.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());
+            }else{
+                mAvatar.setImageResource(0);
+            }
         }
     }
 }

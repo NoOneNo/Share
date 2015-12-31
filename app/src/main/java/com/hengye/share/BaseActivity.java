@@ -127,11 +127,11 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void initToolbar(){
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            toolbar.setTitle(getToolbarTitle());
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (mToolbar != null) {
+            setSupportActionBar(mToolbar);
+            mToolbar.setTitle(getToolbarTitle());
+            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onBackPressed();
@@ -140,11 +140,18 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    private Toolbar mToolbar;
+
+    public Toolbar getToolbar(){
+        return mToolbar;
+    }
+
     public void updateToolbarTitle(String title){
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle(title);
-        }
+        mToolbar.setTitle(title);
+//        ActionBar actionBar = getSupportActionBar();
+//        if (actionBar != null) {
+//            actionBar.setTitle(title);
+//        }
     }
 
     protected CharSequence getToolbarTitle() {

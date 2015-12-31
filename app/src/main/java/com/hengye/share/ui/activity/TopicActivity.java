@@ -222,7 +222,7 @@ public class TopicActivity extends BaseActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camara) {
+        if (id == R.id.nav_camera) {
             UserInfo userInfo = getUserInfo();
             if (userInfo == null) {
                 Toast.makeText(this, "暂未获取到个人信息", Toast.LENGTH_SHORT).show();

@@ -13,6 +13,13 @@
         <!--<item name="android:colorPressedHighlight">?attr/theme_color_dark</item>-->
 
         <item name="colorAccent">?attr/theme_color_accent</item>
+
+        <item name="android:actionMenuTextAppearance">@style/MenuTextStyle</item>
+    </style>
+
+    <style name="MenuTextStyle">
+        <item name="android:textColor">@color/grey_600</item>
+        <item name="android:textSize">@dimen/font_normal</item>
     </style>
 
     <style name="AppTheme" parent="BaseAppTheme">

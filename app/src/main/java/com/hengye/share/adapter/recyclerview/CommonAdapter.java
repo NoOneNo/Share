@@ -134,7 +134,10 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
     }
 
     public T getItem(int position){
-        return mData.get(position);
+        if(0 <= position && position < mData.size()){
+            return mData.get(position);
+        }
+        return null;
     }
 
     public int getItemPosition(T item){
