@@ -27,6 +27,7 @@
     <string name="title_activity_login">Sign in</string>
     <string name="title_activity_setting">设置</string>
     <string name="title_activity_topic_notify">通知</string>
+    <string name="title_activity_at_user">选择用户</string>
     <!-- Strings related to activity title-->
 
     <!-- Strings related to TopicComment-->
@@ -56,7 +57,9 @@
 
     <!-- Strings related to AtUser -->
     <string name="label_confirm">确定</string>
+    <string name="label_search">搜索</string>
     <string name="label_confirm_count">确定(%s)</string>
+    <string name="label_select_at_user_null">还没有选择用户</string>
     <!-- Strings related to AtUser -->
 
     <!-- Strings related to fragment title-->

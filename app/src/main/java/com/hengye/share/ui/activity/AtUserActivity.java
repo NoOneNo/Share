@@ -1,13 +1,12 @@
 package com.hengye.share.ui.activity;
 
 import android.animation.ObjectAnimator;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.internal.view.menu.MenuItemImpl;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -15,12 +14,8 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ListView;
 
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
@@ -31,17 +26,16 @@ import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.AtUserSearchAdapter;
 import com.hengye.share.adapter.recyclerview.AtUserSelectAdapter;
 import com.hengye.share.module.AtUser;
-import com.hengye.share.module.Topic;
 import com.hengye.share.module.UserInfo;
-import com.hengye.share.module.sina.WBTopicComments;
 import com.hengye.share.module.sina.WBUserInfos;
+import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.SPUtil;
+import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.ViewUtil;
-import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 
@@ -80,6 +74,8 @@ public class AtUserActivity extends BaseActivity {
         super.onResume();
     }
 
+    public final static int REQUEST_AT_USER = 1;
+
     private PullToRefreshLayout mPullToRefreshLayout;
     private RecyclerView mRVSelectResult, mRVSearchResult;
     private EditText mSearch;
@@ -88,7 +84,7 @@ public class AtUserActivity extends BaseActivity {
     private AtUserSelectAdapter mAtUserSelectAdapter;
 
     private AtUserSearchAdapter mAtUserSearchAdapter;
-    private List<AtUser> mSelectResultData, mSearchResultData;
+    private ArrayList<AtUser> mSelectResultData, mSearchResultData;
     private LinearLayoutManager mSelectResultLayoutManager;
 
     private Oauth2AccessToken mOauth2AccessToken;
@@ -112,10 +108,6 @@ public class AtUserActivity extends BaseActivity {
 
         mOauth2AccessToken = SPUtil.getSinaAccessToken();
 
-        Toolbar toolbar = getToolbar();
-        toolbar.setTitle("选择用户");
-//        toolbar.getMenu().addSubMenu("确定");
-//        toolbar.setme
     }
 
     @Override
@@ -124,11 +116,37 @@ public class AtUserActivity extends BaseActivity {
         MenuItem menuItem = menu.findItem(R.id.action_confirm);
 
         int count = mAtUserSelectAdapter.getSelectSize();
-        if(count == 0){
+        if (count == 0) {
             menuItem.setTitle(getResources().getString(R.string.label_confirm));
-        }else{
+        } else {
             menuItem.setTitle(String.format(getResources().getString(R.string.label_confirm_count), count));
         }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_confirm) {
+
+            if(handleAtUser()) {
+                finish();
+            }else{
+                ToastUtil.showToast(R.string.label_select_at_user_null);
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private boolean handleAtUser(){
+        if(CommonUtil.isEmptyCollection(mSelectResultData)){
+            return false;
+        }
+
+        Intent intent = new Intent();
+        intent.putExtra("atUser", AtUser.getAtUserName(mSelectResultData));
+        setResult(Activity.RESULT_OK, intent);
         return true;
     }
 
@@ -198,8 +216,6 @@ public class AtUserActivity extends BaseActivity {
                                 mAtUserSelectAdapter.getOnItemClickListener().onItemClick(null, position);
                                 mRVSelectResult.scrollToPosition(position - 1);
 
-                                int count = mRVSelectResult.getChildCount();
-
                                 notifySelectResultFirstItem();
                             } else {
                                 mRVSelectResult.scrollToPosition(position);
@@ -217,7 +233,7 @@ public class AtUserActivity extends BaseActivity {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if(RecyclerView.SCROLL_STATE_DRAGGING == newState){
+                if (RecyclerView.SCROLL_STATE_DRAGGING == newState) {
                     ViewUtil.hideKeyBoard(mSearch);
                 }
             }
@@ -230,10 +246,13 @@ public class AtUserActivity extends BaseActivity {
             }
         });
         mPullToRefreshLayout.setLoadEnable(false);
-//        mPullToRefreshLayout.setRefreshing(true);
+
+        if (CommonUtil.isEmptyCollection(mSearchResultData)) {
+            mPullToRefreshLayout.setRefreshing(true);
+        }
     }
 
-    private void notifySelectResultFirstItem(){
+    private void notifySelectResultFirstItem() {
         int index = mSelectResultLayoutManager.findFirstVisibleItemPosition();
         mAtUserSelectAdapter.notifyItemChanged(index - 1);
     }
@@ -352,7 +371,7 @@ public class AtUserActivity extends BaseActivity {
         mSearchResultData = SPUtil.getModule(new TypeToken<ArrayList<AtUser>>() {
         }.getType(), AtUser.class.getSimpleName() + SPUtil.getSinaUid());
 
-        if(mSearchResultData == null){
+        if (mSearchResultData == null) {
             mSearchResultData = new ArrayList<>();
         }
         return mSearchResultData;
@@ -380,9 +399,9 @@ public class AtUserActivity extends BaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
 //                if (isRefresh) {
-                    mPullToRefreshLayout.setRefreshing(false);
+                mPullToRefreshLayout.setRefreshing(false);
 //                } else {
-                    mPullToRefreshLayout.setLoading(false);
+                mPullToRefreshLayout.setLoading(false);
 //                }
                 L.debug("request fail , url : {}, error : {}", ub.getRequestUrl(), error);
             }
@@ -390,11 +409,11 @@ public class AtUserActivity extends BaseActivity {
         });
     }
 
-    private void handleData(List<UserInfo> data){
+    private void handleData(List<UserInfo> data) {
 //        if (isRefresh) {
-            mPullToRefreshLayout.setRefreshing(false);
+        mPullToRefreshLayout.setRefreshing(false);
 //                } else {
-            mPullToRefreshLayout.setLoading(false);
+        mPullToRefreshLayout.setLoading(false);
 //                }
 
         mSearchResultData = AtUser.getAtUser(data);
