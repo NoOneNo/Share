@@ -13,7 +13,7 @@
     android:paddingBottom="@dimen/content_margin_5dp"
     android:orientation="vertical"
     android:visibility="visible"
-    tools:showIn="@layout/item_recyclerview_topic">
+    tools:showIn="@layout/item_topic">
 
     <TextView
         android:id="@+id/tv_topic_retweeted_content"

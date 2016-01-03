@@ -163,7 +163,7 @@ public class TopicActivity extends BaseActivity
         mAdapter.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                IntentUtil.startActivity(TopicActivity.this, TopicDetailActivity.getIntentToStart(TopicActivity.this, mAdapter.getItem(position)));
+//                IntentUtil.startActivity(TopicActivity.this, TopicDetailActivity.getIntentToStart(TopicActivity.this, mAdapter.getItem(position)));
 //                Toast.makeText(MainActivity.this, "click item : " + position, Toast.LENGTH_SHORT).show();
             }
         });
@@ -239,7 +239,7 @@ public class TopicActivity extends BaseActivity
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
-
+            IntentUtil.startActivity(this, TopicDraftActivity.class);
         }
 
 //        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

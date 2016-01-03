@@ -1,5 +1,7 @@
 package com.hengye.share.util;
 
+import android.text.TextUtils;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -22,9 +24,12 @@ public class DateUtil {
     }
 
     public static String getLatestDateFormat(String time) {
+        if(TextUtils.isEmpty(time)){
+            return "未知";
+        }
         Date date = getGMTDate(time);
         if (date == null) {
-            return null;
+            return "未知";
         }
 
         Calendar calendarNow = Calendar.getInstance();

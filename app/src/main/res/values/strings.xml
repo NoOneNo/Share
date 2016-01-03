@@ -28,7 +28,12 @@
     <string name="title_activity_setting">设置</string>
     <string name="title_activity_topic_notify">通知</string>
     <string name="title_activity_at_user">选择用户</string>
+    <string name="title_activity_topic_draft">草稿箱</string>
     <!-- Strings related to activity title-->
+
+    <!-- Strings related to Topic-->
+    <string name="label_time_and_from">%1$s 来自 %2$s</string>
+    <!-- Strings related to Topic-->
 
     <!-- Strings related to TopicComment-->
     <string name="title_page_comment">评论</string>
@@ -45,7 +50,6 @@
 
     <!-- Strings related to TopicPublish -->
     <string name="label_topic_publish_hint">说点什么吧……</string>
-
     <string name="label_topic_publish_start">正在发送……</string>
     <string name="label_topic_publish_success">发表成功</string>
     <string name="label_topic_publish_fail">发表失败</string>
@@ -53,6 +57,7 @@
 
     <!-- Strings related to TopicDraft -->
     <string name="label_save_to_draft">是否保存到草稿箱?</string>
+    <string name="label_save_to_draft_success">保存成功</string>
     <!-- Strings related to TopicDraft -->
 
     <!-- Strings related to AtUser -->

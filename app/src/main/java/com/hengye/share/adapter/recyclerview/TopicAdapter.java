@@ -13,7 +13,10 @@ import android.widget.TextView;
 import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.R;
 import com.hengye.share.module.Topic;
+import com.hengye.share.module.TopicComment;
+import com.hengye.share.module.UserInfo;
 import com.hengye.share.ui.activity.PersonalHomepageActivity;
+import com.hengye.share.ui.activity.TopicDetailActivity;
 import com.hengye.share.ui.activity.TopicGalleryActivity;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.ui.support.LongClickableLinkMovementMethod;
@@ -49,37 +52,33 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
         int id = view.getId();
         if(id == R.id.rl_topic_title){
             IntentUtil.startActivity(getContext(), PersonalHomepageActivity.getIntentToStart(getContext(), getItem(position).getUserInfo()));
+        }else if(id == R.id.tv_topic_content){
+            IntentUtil.startActivity(getContext(), TopicDetailActivity.getIntentToStart(getContext(), getItem(position)));
+        }else if(id == R.id.tv_topic_retweeted_content){
+            Topic topic = getItem(position).getRetweetedTopic();
+            if(topic != null) {
+                IntentUtil.startActivity(getContext(), TopicDetailActivity.getIntentToStart(getContext(), topic));
+            }
         }
     }
 
     public static class TopicViewHolder extends CommonAdapter.ItemViewHolder<Topic> {
 
-        NetworkImageViewPlus mAvatar;
-        TextView mUsername, mDescription;
+        TopicTitleViewHolder mTopicTitle;
         TopicContentViewHolder mTopic, mRetweetTopic;
-        View mTopicTitle, mRetweetTopicLayout;
+        View mRetweetTopicLayout;
 
-        boolean mIsFadeInImage;
-
-        TopicContentUrlOnTouchListener mTopicContentUrlOnTouchListener = new TopicContentUrlOnTouchListener();
-
-        public TopicViewHolder(View v){
-            this(v, true);
-        }
-
-        public TopicViewHolder(View v, boolean isFadeInImage) {
+        public TopicViewHolder(View v) {
             super(v);
-            mIsFadeInImage = isFadeInImage;
+            if(mTopicTitle == null){
+                mTopicTitle = new TopicTitleViewHolder(v);
+            }
             if (mTopic == null) {
                 mTopic = new TopicContentViewHolder();
             }
             if (mRetweetTopic == null) {
                 mRetweetTopic = new TopicContentViewHolder();
             }
-            mTopicTitle = v.findViewById(R.id.rl_topic_title);
-            mAvatar = (NetworkImageViewPlus) v.findViewById(R.id.iv_topic_avatar);
-            mUsername = (TextView) v.findViewById(R.id.tv_topic_username);
-            mDescription = (TextView) v.findViewById(R.id.tv_topic_description);
             mTopic.mContent = (TextView) v.findViewById(R.id.tv_topic_content);
             mTopic.mGallery = (GridGalleryView) v.findViewById(R.id.gl_topic_gallery);
             mRetweetTopicLayout = v.findViewById(R.id.ll_topic_retweeted);
@@ -93,63 +92,111 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
                 return;
             }
 
-            registerChildViewItemClick(mTopicTitle);
-            mUsername.setText(topic.getUserInfo().getName());
-            String time = DateUtil.getLatestDateFormat(topic.getDate());
-            if (TextUtils.isEmpty(topic.getChannel())) {
-                mDescription.setText(time);
-            } else {
-                mDescription.setText(time + " 来自 " + Html.fromHtml(topic.getChannel()));
-            }
+            mTopicTitle.initTopicTitle(context, topic);
+            registerChildViewItemClick(mTopicTitle.mTitle);
 
-            mAvatar.setImageUrl(topic.getUserInfo().getAvatar(), RequestManager.getImageLoader());
-
-            initTopicContent(context, mTopic, topic, false);
+            mTopic.initTopicContent(context, topic, false);
+            registerChildViewItemClick(mTopic.mContent);
             if (topic.getRetweetedTopic() != null) {
                 mRetweetTopicLayout.setVisibility(View.VISIBLE);
-                initTopicContent(context, mRetweetTopic, topic.getRetweetedTopic(), true);
+                mRetweetTopic.initTopicContent(context, topic.getRetweetedTopic(), true);
+                registerChildViewItemClick(mRetweetTopic.mContent);
             } else {
                 mRetweetTopicLayout.setVisibility(View.GONE);
             }
         }
+    }
 
-        public void initTopicContent(final Context context, final TopicContentViewHolder holder, Topic topic, boolean isRetweeted) {
+    public static class TopicTitleViewHolder {
+
+        NetworkImageViewPlus mAvatar;
+        TextView mUsername, mDescription;
+        View mTitle;
+
+        public TopicTitleViewHolder() {}
+
+        public TopicTitleViewHolder(View v) {
+            mTitle = v.findViewById(R.id.rl_topic_title);
+            mAvatar = (NetworkImageViewPlus) v.findViewById(R.id.iv_topic_avatar);
+            mUsername = (TextView) v.findViewById(R.id.tv_topic_username);
+            mDescription = (TextView) v.findViewById(R.id.tv_topic_description);
+        }
+
+        public void initTopicTitle(final Context context, Topic topic) {
+            String time = DateUtil.getLatestDateFormat(topic.getDate());
+            if (TextUtils.isEmpty(topic.getChannel())) {
+                mDescription.setText(time);
+            } else {
+                String str = String.format(context.getString(R.string.label_time_and_from), time, Html.fromHtml(topic.getChannel()));
+                mDescription.setText(str);
+            }
+
+            UserInfo userInfo = topic.getUserInfo();
+            if(userInfo != null){
+                mUsername.setText(userInfo.getName());
+                mAvatar.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());
+            }
+        }
+
+        public void initTopicTitle(final Context context, TopicComment topicComment) {
+            String time = DateUtil.getLatestDateFormat(topicComment.getDate());
+            if (TextUtils.isEmpty(topicComment.getChannel())) {
+                mDescription.setText(time);
+            } else {
+                String str = String.format(context.getString(R.string.label_time_and_from), time, Html.fromHtml(topicComment.getChannel()));
+                mDescription.setText(str);
+            }
+
+            UserInfo userInfo = topicComment.getUserInfo();
+            if(userInfo != null){
+                mUsername.setText(userInfo.getName());
+                mAvatar.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());
+            }
+        }
+    }
+
+    public static class TopicContentViewHolder {
+        public TextView mContent;
+        public GridGalleryView mGallery;
+
+        public TopicContentViewHolder(){}
+
+        TopicContentUrlOnTouchListener mTopicContentUrlOnTouchListener = new TopicContentUrlOnTouchListener();
+
+        public void initTopicContent(final Context context, Topic topic, boolean isRetweeted) {
 
             //不设置的话会被名字内容的点击事件覆盖，无法触发ItemView的onClick
-            registerItemClick(holder.mContent);
-            holder.mContent.setText(topic.getUrlSpannableString(context));
-            holder.mContent.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
-            holder.mContent.setOnTouchListener(mTopicContentUrlOnTouchListener);
+            mContent.setText(topic.getUrlSpannableString(context));
+            mContent.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
+            mContent.setOnTouchListener(mTopicContentUrlOnTouchListener);
 
             if (!CommonUtil.isEmptyCollection(topic.getImageUrls())) {
                 //加载图片
                 final List<String> urls = topic.getImageUrls();
-                holder.mGallery.removeAllViews();
-                holder.mGallery.setTag(urls);
-                holder.mGallery.
-                        setMargin(context.getResources().getDimensionPixelSize(R.dimen.topic_gallery_iv_margin));
-                holder.mGallery.setMaxWidth(mGalleryMaxWidth);
-                holder.mGallery.setGridCount(urls.size());
-                holder.mGallery.
-                        setHandleData(new GridGalleryView.HandleData() {
-                            @Override
-                            public NetworkImageViewPlus getImageView() {
-                                NetworkImageViewPlus iv = new NetworkImageViewPlus(context);
-                                iv.setFadeInImage(mIsFadeInImage);
-                                iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                                iv.setBackgroundColor(context.getResources().getColor(R.color.image_default_bg));
-                                iv.setTag(holder.mGallery);
-                                iv.setId(View.NO_ID);
-                                return iv;
-                            }
+                mGallery.removeAllViews();
+                mGallery.setTag(urls);
+                mGallery.setMargin(context.getResources().getDimensionPixelSize(R.dimen.topic_gallery_iv_margin));
+                mGallery.setMaxWidth(mGalleryMaxWidth);
+                mGallery.setGridCount(urls.size());
+                mGallery.setHandleData(new GridGalleryView.HandleData() {
+                    @Override
+                    public NetworkImageViewPlus getImageView() {
+                        NetworkImageViewPlus iv = new NetworkImageViewPlus(context);
+//                                iv.setFadeInImage(mIsFadeInImage);
+                        iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        iv.setBackgroundColor(context.getResources().getColor(R.color.image_default_bg));
+                        iv.setTag(mGallery);
+                        iv.setId(View.NO_ID);
+                        return iv;
+                    }
 
-                            @Override
-                            public void handleChildItem(ImageView imageView, int position) {
-                                NetworkImageViewPlus iv = (NetworkImageViewPlus) imageView;
-                                iv.setImageUrl(urls.get(position), RequestManager.getImageLoader());
-                            }
+                    @Override
+                    public void handleChildItem(ImageView imageView, int position) {
+                        NetworkImageViewPlus iv = (NetworkImageViewPlus) imageView;
+                        iv.setImageUrl(urls.get(position), RequestManager.getImageLoader());
+                    }
                         });
-                holder.mGallery.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
+                mGallery.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
                         int id = view.getId();
@@ -172,17 +219,12 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
                         }
                     }
                 });
-                holder.mGallery.reset();
-                holder.mGallery.setVisibility(View.VISIBLE);
+                mGallery.reset();
+                mGallery.setVisibility(View.VISIBLE);
             } else {
-                holder.mGallery.setVisibility(View.GONE);
+                mGallery.setVisibility(View.GONE);
             }
         }
-    }
-
-    public static class TopicContentViewHolder {
-        public TextView mContent;
-        public GridGalleryView mGallery;
     }
 }
 

@@ -16,10 +16,12 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.google.gson.reflect.TypeToken;
 import com.hengye.share.BaseActivity;
 import com.hengye.share.R;
 import com.hengye.share.module.AtUser;
 import com.hengye.share.module.Topic;
+import com.hengye.share.module.UserInfo;
 import com.hengye.share.service.TopicPublishService;
 import com.hengye.share.ui.emoticon.EmoticonPicker;
 import com.hengye.share.ui.emoticon.EmoticonPickerUtil;
@@ -30,6 +32,7 @@ import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.IntentUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.SPUtil;
+import com.hengye.share.util.ToastUtil;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -102,7 +105,9 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         builder.setPositiveButtonClickListener(new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                saveToDraft();
                 dialog.dismiss();
+                finish();
             }
         });
         mSaveToDraftDialog = builder.create(this);
@@ -138,6 +143,24 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         topic.setContent(content);
         TopicPublishService.publish(this, topic, SPUtil.getSinaToken());
         finish();
+    }
+
+    private void saveToDraft() {
+        ArrayList<Topic> temp = SPUtil.getModule(new TypeToken<ArrayList<Topic>>() {
+        }.getType(), TopicDraftActivity.class.getSimpleName() + SPUtil.getSinaUid());
+
+        if(CommonUtil.isEmptyCollection(temp)){
+            temp = new ArrayList<>();
+        }
+
+        String content = mContent.getText().toString();
+        Topic topic = new Topic();
+        topic.setContent(content);
+
+        temp.add(topic);
+        SPUtil.setModule(temp, TopicDraftActivity.class.getSimpleName() + SPUtil.getSinaUid());
+
+        ToastUtil.showToast(R.string.label_save_to_draft_success);
     }
 
     @Override
