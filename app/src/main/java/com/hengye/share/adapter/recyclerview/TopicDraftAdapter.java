@@ -29,7 +29,7 @@ public class TopicDraftAdapter extends CommonAdapter<Topic, TopicDraftAdapter.To
         TopicAdapter.TopicContentViewHolder mTopic;
 
         public TopicDraftViewHolder(View v) {
-            super(v, true);
+            super(v);
 
             if (mTopicTitle == null) {
                 mTopicTitle = new TopicAdapter.TopicTitleViewHolder(v);

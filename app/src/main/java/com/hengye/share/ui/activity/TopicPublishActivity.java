@@ -2,8 +2,10 @@ package com.hengye.share.ui.activity;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -20,6 +22,7 @@ import com.google.gson.reflect.TypeToken;
 import com.hengye.share.BaseActivity;
 import com.hengye.share.R;
 import com.hengye.share.module.AtUser;
+import com.hengye.share.module.Parent;
 import com.hengye.share.module.Topic;
 import com.hengye.share.module.UserInfo;
 import com.hengye.share.service.TopicPublishService;
@@ -54,6 +57,18 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         return super.setToolBar();
     }
 
+    public static Intent getIntentToStart(Context context, Topic topic){
+        Intent intent = new Intent(context, TopicPublishActivity.class);
+        intent.putExtra("topic", topic);
+        return intent;
+    }
+
+    private Topic mTopic;
+    @Override
+    protected void handleBundleExtra() {
+        mTopic  = (Topic) getIntent().getSerializableExtra("topic");
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +76,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         setContentView(R.layout.activity_topic_publish);
 
         initView();
+        initData();
     }
 
     @Override
@@ -111,6 +127,13 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
             }
         });
         mSaveToDraftDialog = builder.create(this);
+    }
+
+    private void initData(){
+        if(mTopic == null){
+            return;
+        }
+        mContent.setText(mTopic.getContent());
     }
 
     @Override

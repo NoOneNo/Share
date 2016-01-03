@@ -3,6 +3,7 @@ package com.hengye.share.ui.activity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.google.gson.reflect.TypeToken;
 import com.hengye.share.BaseActivity;
@@ -11,7 +12,9 @@ import com.hengye.share.adapter.recyclerview.TopicDraftAdapter;
 import com.hengye.share.module.AtUser;
 import com.hengye.share.module.Topic;
 import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.IntentUtil;
 import com.hengye.share.util.SPUtil;
+import com.hengye.share.util.ViewUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +57,14 @@ public class TopicDraftActivity extends BaseActivity{
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter = new TopicDraftAdapter(this, getTopicDraftData()));
+
+        mAdapter.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                IntentUtil.startActivity(TopicDraftActivity.this,
+                        TopicPublishActivity.getIntentToStart(TopicDraftActivity.this, mAdapter.getItem(position)));
+            }
+        });
     }
 
     private ArrayList<Topic> getTopicDraftData(){
