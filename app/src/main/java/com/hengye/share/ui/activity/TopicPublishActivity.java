@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.util.Linkify;
 import android.view.View;
 import android.widget.EditText;
@@ -32,6 +33,7 @@ import com.hengye.share.ui.support.LongClickableLinkMovementMethod;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DataUtil;
+import com.hengye.share.util.DateUtil;
 import com.hengye.share.util.IntentUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.SPUtil;
@@ -93,7 +95,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     private void initView() {
         mContainer = (RelativeLayout) findViewById(R.id.rl_container);
         mContent = (EditText) findViewById(R.id.et_topic_publish);
-        mContent.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
+        mContent.setSelection(0);
         mContent.setOnClickListener(this);
         mMentionBtn = (ImageButton) findViewById(R.id.btn_mention);
         mMentionBtn.setOnClickListener(this);
@@ -134,6 +136,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
             return;
         }
         mContent.setText(mTopic.getContent());
+        mContent.setSelection(mTopic.getContent().length());
     }
 
     @Override
@@ -160,29 +163,21 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         mSaveToDraftDialog.show();
     }
 
-    private void publishTopic() {
+    private Topic generateTopic(){
         String content = mContent.getText().toString();
         Topic topic = new Topic();
         topic.setContent(content);
-        TopicPublishService.publish(this, topic, SPUtil.getSinaToken());
+        topic.setDate(DateUtil.getChinaGMTDateFormat());
+        return topic;
+    }
+
+    private void publishTopic() {
+        TopicPublishService.publish(this, generateTopic(), SPUtil.getSinaToken());
         finish();
     }
 
     private void saveToDraft() {
-        ArrayList<Topic> temp = SPUtil.getModule(new TypeToken<ArrayList<Topic>>() {
-        }.getType(), TopicDraftActivity.class.getSimpleName() + SPUtil.getSinaUid());
-
-        if(CommonUtil.isEmptyCollection(temp)){
-            temp = new ArrayList<>();
-        }
-
-        String content = mContent.getText().toString();
-        Topic topic = new Topic();
-        topic.setContent(content);
-
-        temp.add(topic);
-        SPUtil.setModule(temp, TopicDraftActivity.class.getSimpleName() + SPUtil.getSinaUid());
-
+        TopicDraftActivity.saveTopicToDraft(generateTopic());
         ToastUtil.showToast(R.string.label_save_to_draft_success);
     }
 
@@ -193,14 +188,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         if (resultCode == Activity.RESULT_OK && requestCode == AtUserActivity.REQUEST_AT_USER) {
             if (data != null) {
                 ArrayList<String> result = (ArrayList<String>) data.getSerializableExtra("atUser");
-                if(!CommonUtil.isEmptyCollection(result)){
-                    Editable editAble = mContent.getEditableText();
-                    int start = mContent.getSelectionStart();
-                    if(start == -1){
-                        start = 0;
-                    }
-                    editAble.insert(start, AtUser.getFormatAtUserName(result));
-                }
+                EmoticonPickerUtil.addContentToEditTextEnd(mContent,  AtUser.getFormatAtUserName(result));
             }
         }
     }
@@ -208,7 +196,6 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     private InputFilter mAtUserInputFilter = new InputFilter() {
         @Override
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-
             return DataUtil.convertNormalStringToSpannableString(TopicPublishActivity.this, String.valueOf(source));
         }
     };

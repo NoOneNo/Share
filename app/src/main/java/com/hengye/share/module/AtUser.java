@@ -24,6 +24,9 @@ public class AtUser extends Select implements Serializable{
     }
 
     public static String getFormatAtUserName(List<String> username){
+        if(CommonUtil.isEmptyCollection(username)){
+            return "";
+        }
         StringBuilder sb = new StringBuilder();
         for(String str : username){
             sb.append("@");

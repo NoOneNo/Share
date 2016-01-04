@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/content_margin_10dp"
-    tools:showIn="@layout/item_recyclerview_topic">
+    tools:showIn="@layout/item_topic">
 
     <com.android.volley.view.NetworkImageViewPlus
         android:id="@+id/iv_topic_avatar"
@@ -36,4 +36,14 @@
         android:textSize="@dimen/topic_description"
         android:textColor="@color/topic_description"
         android:singleLine="true" />
+
+    <Button
+        android:id="@+id/btn_topic_send_again"
+        android:layout_width="60dp"
+        android:layout_height="35dp"
+        android:text="重发"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:textSize="12sp"
+        android:visibility="gone"/>
 </RelativeLayout>

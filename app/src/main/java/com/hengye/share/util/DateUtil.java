@@ -7,8 +7,16 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class DateUtil {
+
+    public static String getChinaGMTDateFormat() {
+        Calendar cd = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd hh:mm:ss z yyyy", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT+800")); // 设置时区为GMT
+        return sdf.format(cd.getTime());
+    }
 
     //    "Fri Nov 06 21:39:48 +0800 2015" 格林时间格式
     //    EEE MMM dd hh:mm:ss z yyyy

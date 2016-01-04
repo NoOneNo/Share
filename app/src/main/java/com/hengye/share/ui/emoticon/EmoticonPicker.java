@@ -270,9 +270,7 @@ public class EmoticonPicker extends LinearLayout implements AdapterView.OnItemCl
     private OnEmotionSelectedListener mDefaultEmotionSelectedListener = new OnEmotionSelectedListener() {
         @Override
         public void onEmotionSelected(String key) {
-            Editable editAble = mEditText.getEditableText();
-            int start = mEditText.getSelectionStart();
-            editAble.insert(start, key);
+            EmoticonPickerUtil.addContentToEditTextEnd(mEditText, key);
         }
     };
 

@@ -17,6 +17,7 @@ import com.hengye.share.R;
 import com.hengye.share.module.Topic;
 import com.hengye.share.module.TopicPublish;
 import com.hengye.share.module.sina.WBTopic;
+import com.hengye.share.ui.activity.TopicDraftActivity;
 import com.hengye.share.util.L;
 import com.hengye.share.util.NotificationUtil;
 import com.hengye.share.util.RequestManager;
@@ -107,6 +108,7 @@ public class TopicPublishService extends Service{
                 L.debug("request fail , url : {}, error : {}", ub.getRequestUrl(), volleyError);
                 mPublishQueue.remove(tp);
                 showTopicPublishFailNotification(tp);
+                TopicDraftActivity.saveTopicToDraft(tp.getTopic());
                 stopServiceIfQueueIsAllFinish();
             }
         }){

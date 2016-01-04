@@ -128,6 +128,26 @@ public class Topic extends ParentInherit implements Serializable{
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        if(date == null){
+            return false;
+        }
+
+        Topic topic = (Topic) o;
+
+        return date.equals(topic.date);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return date.hashCode();
+    }
+
+    @Override
     public String toString() {
         return "Topic{" +
                 ", date='" + date + '\'' +

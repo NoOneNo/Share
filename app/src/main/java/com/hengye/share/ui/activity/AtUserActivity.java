@@ -108,6 +108,9 @@ public class AtUserActivity extends BaseActivity {
 
         mOauth2AccessToken = SPUtil.getSinaAccessToken();
 
+        if(mOauth2AccessToken == null){
+            finish();
+        }
     }
 
     @Override

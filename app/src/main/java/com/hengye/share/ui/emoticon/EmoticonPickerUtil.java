@@ -5,17 +5,38 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
+import android.text.Editable;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import com.hengye.share.BaseApplication;
 import com.hengye.share.R;
 import com.hengye.share.util.SettingHelper;
 
 public class EmoticonPickerUtil {
+
+    public static void addContentToEditTextEnd(EditText editText, CharSequence charSequence){
+        Editable editAble = editText.getEditableText();
+        editAble.insert(getEditTextEndSelection(editText), charSequence);
+    }
+
+    public static int getEditTextEndSelection(EditText editText){
+        int start = editText.getSelectionStart();
+        if(start == -1){
+            String str = editText.getText().toString();
+            if(TextUtils.isEmpty(str)){
+                start = 0;
+            }else {
+                start = str.length();
+            }
+        }
+        return start;
+    }
 
     public static void hideKeyBoard(View paramEditText) {
         ((InputMethodManager) BaseApplication.getInstance().getSystemService(Context.INPUT_METHOD_SERVICE))

@@ -12,7 +12,9 @@ import com.hengye.share.adapter.recyclerview.TopicDraftAdapter;
 import com.hengye.share.module.AtUser;
 import com.hengye.share.module.Topic;
 import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.DateUtil;
 import com.hengye.share.util.IntentUtil;
+import com.hengye.share.util.L;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.ViewUtil;
 
@@ -75,5 +77,27 @@ public class TopicDraftActivity extends BaseActivity{
             mTopicDraft = new ArrayList<>();
         }
         return mTopicDraft;
+    }
+
+    public static void saveTopicToDraft(Topic topic){
+        ArrayList<Topic> temp = SPUtil.getModule(new TypeToken<ArrayList<Topic>>() {
+        }.getType(), TopicDraftActivity.class.getSimpleName() + SPUtil.getSinaUid());
+
+        if(CommonUtil.isEmptyCollection(temp)){
+            temp = new ArrayList<>();
+        }
+
+        temp.add(topic);
+        SPUtil.setModule(temp, TopicDraftActivity.class.getSimpleName() + SPUtil.getSinaUid());
+    }
+
+    public static void removeTopicFromDraft(Topic topic){
+        ArrayList<Topic> temp = SPUtil.getModule(new TypeToken<ArrayList<Topic>>() {
+        }.getType(), TopicDraftActivity.class.getSimpleName() + SPUtil.getSinaUid());
+
+        if(!CommonUtil.isEmptyCollection(temp)){
+            temp.remove(topic);
+        }
+        SPUtil.setModule(temp, TopicDraftActivity.class.getSimpleName() + SPUtil.getSinaUid());
     }
 }
