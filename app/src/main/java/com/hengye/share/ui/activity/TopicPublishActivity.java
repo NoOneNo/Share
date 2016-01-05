@@ -5,41 +5,30 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.InputFilter;
-import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextUtils;
-import android.text.util.Linkify;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.google.gson.reflect.TypeToken;
 import com.hengye.share.BaseActivity;
 import com.hengye.share.R;
 import com.hengye.share.module.AtUser;
-import com.hengye.share.module.Parent;
 import com.hengye.share.module.Topic;
-import com.hengye.share.module.UserInfo;
+import com.hengye.share.module.TopicDraft;
 import com.hengye.share.service.TopicPublishService;
 import com.hengye.share.ui.emoticon.EmoticonPicker;
 import com.hengye.share.ui.emoticon.EmoticonPickerUtil;
-import com.hengye.share.ui.support.LongClickableLinkMovementMethod;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
-import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.DateUtil;
 import com.hengye.share.util.IntentUtil;
-import com.hengye.share.util.L;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.ToastUtil;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class TopicPublishActivity extends BaseActivity implements View.OnClickListener {
@@ -59,16 +48,21 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         return super.setToolBar();
     }
 
-    public static Intent getIntentToStart(Context context, Topic topic){
+    public static Intent getIntentToStart(Context context, TopicDraft topicDraft) {
         Intent intent = new Intent(context, TopicPublishActivity.class);
-        intent.putExtra("topic", topic);
+        intent.putExtra("topicDraft", topicDraft);
         return intent;
     }
 
-    private Topic mTopic;
+    private TopicDraft mTopicDraft;
+    private int mTopicPublishType = TopicDraft.PUBLISHT_TOPIC;
+
     @Override
     protected void handleBundleExtra() {
-        mTopic  = (Topic) getIntent().getSerializableExtra("topic");
+        mTopicDraft = (TopicDraft) getIntent().getSerializableExtra("topicDraft");
+        if(mTopicDraft != null){
+            mTopicPublishType = mTopicDraft.getPublishType();
+        }
     }
 
     @Override
@@ -131,20 +125,41 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         mSaveToDraftDialog = builder.create(this);
     }
 
-    private void initData(){
-        if(mTopic == null){
+    private void initData() {
+        changeTitleStyle(mTopicPublishType);
+
+        if (mTopicDraft == null || mTopicDraft.getTopic() == null) {
             return;
         }
-        mContent.setText(mTopic.getContent());
-        mContent.setSelection(mTopic.getContent().length());
+        Topic topic = mTopicDraft.getTopic();
+        if (topic.getContent() != null) {
+            mContent.setText(topic.getContent());
+            mContent.setSelection(topic.getContent().length());
+        }
+
+    }
+
+    private void changeTitleStyle(int publishType){
+        switch (publishType){
+            case TopicDraft.PUBLISHT_COMMENT:
+                updateToolbarTitle(R.string.title_publish_comment);
+                break;
+            case TopicDraft.REPLY_COMMENT:
+                updateToolbarTitle(R.string.title_reply_comment);
+                break;
+            case TopicDraft.PUBLISHT_TOPIC:
+            default:
+                updateToolbarTitle(R.string.title_publish_topic);
+                break;
+        }
     }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if(id == R.id.btn_mention){
+        if (id == R.id.btn_mention) {
             IntentUtil.startActivityForResult(this, AtUserActivity.class, AtUserActivity.REQUEST_AT_USER);
-        }else if (id == R.id.btn_emoticon) {
+        } else if (id == R.id.btn_emoticon) {
             if (mEmoticonPicker.isShown()) {
                 hideEmoticonPicker(true);
             } else {
@@ -163,21 +178,21 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         mSaveToDraftDialog.show();
     }
 
-    private Topic generateTopic(){
+    private TopicDraft generateTopicDraft() {
         String content = mContent.getText().toString();
         Topic topic = new Topic();
         topic.setContent(content);
         topic.setDate(DateUtil.getChinaGMTDateFormat());
-        return topic;
+        return new TopicDraft(topic, mTopicPublishType);
     }
 
     private void publishTopic() {
-        TopicPublishService.publish(this, generateTopic(), SPUtil.getSinaToken());
+        TopicPublishService.publish(this, generateTopicDraft(), SPUtil.getSinaToken());
         finish();
     }
 
     private void saveToDraft() {
-        TopicDraftActivity.saveTopicToDraft(generateTopic());
+        TopicDraftActivity.saveTopicDraft(generateTopicDraft());
         ToastUtil.showToast(R.string.label_save_to_draft_success);
     }
 
@@ -188,7 +203,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         if (resultCode == Activity.RESULT_OK && requestCode == AtUserActivity.REQUEST_AT_USER) {
             if (data != null) {
                 ArrayList<String> result = (ArrayList<String>) data.getSerializableExtra("atUser");
-                EmoticonPickerUtil.addContentToEditTextEnd(mContent,  AtUser.getFormatAtUserName(result));
+                EmoticonPickerUtil.addContentToEditTextEnd(mContent, AtUser.getFormatAtUserName(result));
             }
         }
     }

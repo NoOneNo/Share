@@ -1,6 +1,8 @@
 package com.hengye.share.adapter.recyclerview;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -22,9 +24,11 @@ import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.ui.support.LongClickableLinkMovementMethod;
 import com.hengye.share.ui.support.TopicContentUrlOnTouchListener;
 import com.hengye.share.ui.view.GridGalleryView;
+import com.hengye.share.ui.widget.dialog.DialogBuilder;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DateUtil;
 import com.hengye.share.util.IntentUtil;
+import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.ViewUtil;
 
@@ -32,14 +36,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHolder>
-    implements ViewUtil.OnItemClickListener{
+    implements ViewUtil.OnItemClickListener, ViewUtil.OnItemLongClickListener{
 
     public static int mGalleryMaxWidth;
+    public Dialog mLongClickDialog;
     public TopicAdapter(Context context, List<Topic> data) {
         super(context, data);
         int galleryMargin = context.getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin);
         mGalleryMaxWidth = context.getResources().getDisplayMetrics().widthPixels - 2 * galleryMargin;
         setOnChildViewItemClickListener(this);
+        setOnItemLongClickListener(this);
+        setOnChildViewItemLongClickListener(this);
+
+        CharSequence cs[];
+        cs = new String[2];
+        cs[0] = "回复";
+        cs[1] = "转发";
+        mLongClickDialog = DialogBuilder.getItemDialog(getContext(), cs, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                L.debug("dialog item click , which : {}", which);
+            }
+        });
     }
 
     @Override
@@ -60,6 +78,13 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
                 IntentUtil.startActivity(getContext(), TopicDetailActivity.getIntentToStart(getContext(), topic));
             }
         }
+    }
+
+    @Override
+    public boolean onItemLongClick(View view, int position) {
+
+        mLongClickDialog.show();
+        return true;
     }
 
     public static class TopicViewHolder extends CommonAdapter.ItemViewHolder<Topic> {
@@ -97,10 +122,14 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
 
             mTopic.initTopicContent(context, topic, false);
             registerChildViewItemClick(mTopic.mContent);
+
+            registerChildViewItemLongClick(mTopicTitle.mTitle);
+            registerChildViewItemLongClick(mTopic.mContent);
             if (topic.getRetweetedTopic() != null) {
                 mRetweetTopicLayout.setVisibility(View.VISIBLE);
                 mRetweetTopic.initTopicContent(context, topic.getRetweetedTopic(), true);
                 registerChildViewItemClick(mRetweetTopic.mContent);
+                registerChildViewItemLongClick(mRetweetTopic.mContent);
             } else {
                 mRetweetTopicLayout.setVisibility(View.GONE);
             }

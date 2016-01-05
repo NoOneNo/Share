@@ -98,7 +98,7 @@
 //
 //        mAdapter.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
 //            @Override
-//            public void onItemClick(View view, int position) {
+//            public void onItemLongClick(View view, int position) {
 ////                Toast.makeText(MainActivity.this, "click item : " + position, Toast.LENGTH_SHORT).show();
 //            }
 //        });

@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.hengye.share.R;
 import com.hengye.share.module.Topic;
+import com.hengye.share.module.TopicDraft;
 import com.hengye.share.service.TopicPublishService;
 import com.hengye.share.ui.activity.TopicDraftActivity;
 import com.hengye.share.ui.view.GridGalleryView;
@@ -17,10 +18,10 @@ import com.hengye.share.util.ViewUtil;
 
 import java.util.List;
 
-public class TopicDraftAdapter extends CommonAdapter<Topic, TopicDraftAdapter.TopicDraftViewHolder>
+public class TopicDraftAdapter extends CommonAdapter<TopicDraft, TopicDraftAdapter.TopicDraftViewHolder>
         implements ViewUtil.OnItemClickListener{
 
-    public TopicDraftAdapter(Context context, List<Topic> data) {
+    public TopicDraftAdapter(Context context, List<TopicDraft> data) {
         super(context, data);
         setOnChildViewItemClickListener(this);
     }
@@ -39,14 +40,14 @@ public class TopicDraftAdapter extends CommonAdapter<Topic, TopicDraftAdapter.To
     public void onItemClick(View view, int position) {
         int id = view.getId();
         if(id == R.id.btn_topic_send_again){
-            Topic topic = getItem(position);
-            TopicDraftActivity.removeTopicFromDraft(topic);
+            TopicDraft topicDraft = getItem(position);
+            TopicDraftActivity.removeTopicDraft(topicDraft);
             remove(position);
-            TopicPublishService.publish(getContext(), topic, SPUtil.getSinaToken());
+            TopicPublishService.publish(getContext(), topicDraft, SPUtil.getSinaToken());
         }
     }
 
-    public static class TopicDraftViewHolder extends CommonAdapter.ItemViewHolder<Topic> {
+    public static class TopicDraftViewHolder extends CommonAdapter.ItemViewHolder<TopicDraft> {
 
         TopicAdapter.TopicTitleViewHolder mTopicTitle;
         TopicAdapter.TopicContentViewHolder mTopic;
@@ -69,10 +70,13 @@ public class TopicDraftAdapter extends CommonAdapter<Topic, TopicDraftAdapter.To
         }
 
         @Override
-        public void bindData(Context context, Topic topic) {
+        public void bindData(Context context, TopicDraft topicDraft) {
             registerChildViewItemClick(mSendAgain);
-            mTopicTitle.initTopicTitle(context, topic);
-            mTopic.initTopicContent(context, topic, false);
+            Topic topic = topicDraft.getTopic();
+            if(topic != null) {
+                mTopicTitle.initTopicTitle(context, topic);
+                mTopic.initTopicContent(context, topic, false);
+            }
         }
     }
 }

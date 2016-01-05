@@ -15,6 +15,7 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
     private Context mContext;
     private List<T> mData;
     private ViewUtil.OnItemClickListener mOnItemClickListener, mOnChildViewItemClickListener;
+    private ViewUtil.OnItemLongClickListener mOnItemLongClickListener, mOnChildViewItemLongClickListener;
 
     public CommonAdapter(Context context, List<T> data) {
         mContext = context;
@@ -30,6 +31,8 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
     public void onBindBasicItemView(VH holder, int position) {
         holder.setOnItemClickListener(getOnItemClickListener());
         holder.setOnChildViewItemClickListener(getOnChildViewItemClickListener());
+        holder.setOnItemLongClickListener(getOnItemLongClickListener());
+        holder.setOnChildViewItemLongClickListener(getOnChildViewItemLongClickListener());
         holder.bindData(getContext(), getItem(position));
         holder.bindData(getContext(), getItem(position), position);
     }
@@ -62,6 +65,7 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
             super(itemView);
             mOnItemClickListener = onItemClickListener;
             itemView.setOnClickListener(mOnClickForItemListener);
+            itemView.setOnLongClickListener(mOnLongClickForItemListener);
             mIsAddHeaderView = isAddHeaderView;
         }
 
@@ -77,8 +81,12 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
             v.setOnClickListener(mOnClickForChildViewListener);
         }
 
-        public void registerItemClick(View v){
-            v.setOnClickListener(mOnClickForItemListener);
+//        public void registerItemClick(View v){
+//            v.setOnClickListener(mOnClickForItemListener);
+//        }
+
+        public void registerChildViewItemLongClick(View v){
+            v.setOnLongClickListener(mOnLongClickForChildViewListener);
         }
 
         boolean mIsAddHeaderView;
@@ -110,7 +118,33 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
             }
         };
 
+        /**
+         * 用于提供给外部调用的ChildViewClick;
+         */
+        View.OnLongClickListener mOnLongClickForChildViewListener = new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (mOnChildViewItemLongClickListener != null) {
+                    return mOnChildViewItemLongClickListener.onItemLongClick(v, getItemVirtualPosition());
+                }
+                return false;
+            }
+        };
+        /**
+         * 用于提供给内部调用的ItemClick;
+         */
+        View.OnLongClickListener mOnLongClickForItemListener = new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (mOnItemLongClickListener != null) {
+                    return mOnItemLongClickListener.onItemLongClick(v, getItemVirtualPosition());
+                }
+                return false;
+            }
+        };
+
         ViewUtil.OnItemClickListener mOnItemClickListener, mOnChildViewItemClickListener;
+        ViewUtil.OnItemLongClickListener mOnItemLongClickListener, mOnChildViewItemLongClickListener;
 
         public ViewUtil.OnItemClickListener getOnItemClickListener() {
             return mOnItemClickListener;
@@ -120,10 +154,6 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
             this.mOnItemClickListener = onItemClickListener;
         }
 
-        public View.OnClickListener getOnClickForItemListener() {
-            return mOnClickForItemListener;
-        }
-
         public ViewUtil.OnItemClickListener getOnChildViewItemClickListener() {
             return mOnChildViewItemClickListener;
         }
@@ -131,6 +161,26 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
         public void setOnChildViewItemClickListener(ViewUtil.OnItemClickListener onChildViewItemClickListener) {
             this.mOnChildViewItemClickListener = onChildViewItemClickListener;
         }
+
+        public ViewUtil.OnItemLongClickListener getOnItemLongClickListener() {
+            return mOnItemLongClickListener;
+        }
+
+        public void setOnItemLongClickListener(ViewUtil.OnItemLongClickListener onItemLongClickListener) {
+            this.mOnItemLongClickListener = onItemLongClickListener;
+        }
+
+        public ViewUtil.OnItemLongClickListener getOnChildViewItemLongClickListener() {
+            return mOnChildViewItemLongClickListener;
+        }
+
+        public void setOnChildViewItemLongClickListener(ViewUtil.OnItemLongClickListener onChildViewItemLongClickListener) {
+            this.mOnChildViewItemLongClickListener = onChildViewItemLongClickListener;
+        }
+
+        //        public View.OnClickListener getOnClickForItemListener() {
+//            return mOnClickForItemListener;
+//        }
     }
 
     public T getItem(int position){
@@ -211,6 +261,22 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
 
     public void setOnChildViewItemClickListener(ViewUtil.OnItemClickListener onChildViewItemClickListener) {
         this.mOnChildViewItemClickListener = onChildViewItemClickListener;
+    }
+
+    public ViewUtil.OnItemLongClickListener getOnChildViewItemLongClickListener() {
+        return mOnChildViewItemLongClickListener;
+    }
+
+    public void setOnChildViewItemLongClickListener(ViewUtil.OnItemLongClickListener onChildViewItemLongClickListener) {
+        this.mOnChildViewItemLongClickListener = onChildViewItemLongClickListener;
+    }
+
+    public ViewUtil.OnItemLongClickListener getOnItemLongClickListener() {
+        return mOnItemLongClickListener;
+    }
+
+    public void setOnItemLongClickListener(ViewUtil.OnItemLongClickListener onItemLongClickListener) {
+        this.mOnItemLongClickListener = onItemLongClickListener;
     }
 
     public List<T> getData() {

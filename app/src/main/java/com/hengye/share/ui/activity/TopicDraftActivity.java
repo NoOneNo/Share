@@ -11,6 +11,7 @@ import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicDraftAdapter;
 import com.hengye.share.module.AtUser;
 import com.hengye.share.module.Topic;
+import com.hengye.share.module.TopicDraft;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DateUtil;
 import com.hengye.share.util.IntentUtil;
@@ -53,7 +54,7 @@ public class TopicDraftActivity extends BaseActivity{
 
     private RecyclerView mRecyclerView;
     private TopicDraftAdapter mAdapter;
-    private ArrayList<Topic> mTopicDraft;
+    private ArrayList<TopicDraft> mTopicDraft;
 
     private void initView(){
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -69,8 +70,8 @@ public class TopicDraftActivity extends BaseActivity{
         });
     }
 
-    private ArrayList<Topic> getTopicDraftData(){
-        mTopicDraft = SPUtil.getModule(new TypeToken<ArrayList<Topic>>() {
+    private ArrayList<TopicDraft> getTopicDraftData(){
+        mTopicDraft = SPUtil.getModule(new TypeToken<ArrayList<TopicDraft>>() {
         }.getType(), TopicDraftActivity.class.getSimpleName() + SPUtil.getSinaUid());
 
         if(CommonUtil.isEmptyCollection(mTopicDraft)){
@@ -79,24 +80,24 @@ public class TopicDraftActivity extends BaseActivity{
         return mTopicDraft;
     }
 
-    public static void saveTopicToDraft(Topic topic){
-        ArrayList<Topic> temp = SPUtil.getModule(new TypeToken<ArrayList<Topic>>() {
+    public static void saveTopicDraft(TopicDraft topicDraft){
+        ArrayList<TopicDraft> temp = SPUtil.getModule(new TypeToken<ArrayList<TopicDraft>>() {
         }.getType(), TopicDraftActivity.class.getSimpleName() + SPUtil.getSinaUid());
 
         if(CommonUtil.isEmptyCollection(temp)){
             temp = new ArrayList<>();
         }
 
-        temp.add(topic);
+        temp.add(topicDraft);
         SPUtil.setModule(temp, TopicDraftActivity.class.getSimpleName() + SPUtil.getSinaUid());
     }
 
-    public static void removeTopicFromDraft(Topic topic){
-        ArrayList<Topic> temp = SPUtil.getModule(new TypeToken<ArrayList<Topic>>() {
+    public static void removeTopicDraft(TopicDraft topicDraft){
+        ArrayList<TopicDraft> temp = SPUtil.getModule(new TypeToken<ArrayList<TopicDraft>>() {
         }.getType(), TopicDraftActivity.class.getSimpleName() + SPUtil.getSinaUid());
 
         if(!CommonUtil.isEmptyCollection(temp)){
-            temp.remove(topic);
+            temp.remove(topicDraft);
         }
         SPUtil.setModule(temp, TopicDraftActivity.class.getSimpleName() + SPUtil.getSinaUid());
     }

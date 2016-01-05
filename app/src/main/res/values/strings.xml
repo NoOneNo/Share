@@ -49,6 +49,9 @@
 
 
     <!-- Strings related to TopicPublish -->
+    <string name="title_publish_topic">发微博</string>
+    <string name="title_publish_comment">发评论</string>
+    <string name="title_reply_comment">回复评论</string>
     <string name="label_topic_publish_hint">说点什么吧……</string>
     <string name="label_topic_publish_start">正在发送……</string>
     <string name="label_topic_publish_success">发表成功</string>

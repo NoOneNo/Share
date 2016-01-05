@@ -3,6 +3,7 @@ package com.hengye.share;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -148,10 +149,10 @@ public class BaseActivity extends AppCompatActivity {
 
     public void updateToolbarTitle(String title){
         mToolbar.setTitle(title);
-//        ActionBar actionBar = getSupportActionBar();
-//        if (actionBar != null) {
-//            actionBar.setTitle(title);
-//        }
+    }
+
+    public void updateToolbarTitle(@StringRes int resId){
+        mToolbar.setTitle(getString(resId));
     }
 
     protected CharSequence getToolbarTitle() {

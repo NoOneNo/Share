@@ -15,6 +15,7 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
 import com.hengye.share.R;
 import com.hengye.share.module.Topic;
+import com.hengye.share.module.TopicDraft;
 import com.hengye.share.module.TopicPublish;
 import com.hengye.share.module.sina.WBTopic;
 import com.hengye.share.ui.activity.TopicDraftActivity;
@@ -37,9 +38,16 @@ public class TopicPublishService extends Service{
 
     public final static int MAX_PUBLISH_SIZE = 10;
 
-    public static void publish(Context context, Topic topic, String token){
+//    public static void publish(Context context, Topic topic, String token){
+//        Intent intent = new Intent(context, TopicPublishService.class);
+//        intent.putExtra("topic", topic);
+//        intent.putExtra("token", token);
+//        context.startService(intent);
+//    }
+
+    public static void publish(Context context, TopicDraft topicDraft, String token){
         Intent intent = new Intent(context, TopicPublishService.class);
-        intent.putExtra("topic", topic);
+        intent.putExtra("topicDraft", topicDraft);
         intent.putExtra("token", token);
         context.startService(intent);
     }
@@ -54,10 +62,10 @@ public class TopicPublishService extends Service{
     public int onStartCommand(Intent intent, int flags, int startId) {
         L.debug("TopicPublishService onStartCommand invoke");
 
-        Topic topic = (Topic) intent.getSerializableExtra("topic");
+        TopicDraft topicDraft = (TopicDraft) intent.getSerializableExtra("topicDraft");
         String token = intent.getStringExtra("token");
-        if(topic != null && !TextUtils.isEmpty(token)){
-            addTopicPublishRequestToQueue(TopicPublish.getWBTopicPublish(topic, token));
+        if(topicDraft != null && !TextUtils.isEmpty(token)){
+            addTopicPublishRequestToQueue(TopicPublish.getWBTopicPublish(topicDraft, token));
         }
 
         return START_REDELIVER_INTENT;
@@ -87,7 +95,7 @@ public class TopicPublishService extends Service{
 
         final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBTopicPublishUrl());
         ub.addParameter("access_token", tp.getToken());
-        ub.addParameter("status", tp.getTopic().getContent());
+        ub.addParameter("status", tp.getTopicDraft().getTopic().getContent());
         return new GsonRequest<WBTopic>(Request.Method.POST,
                 WBTopic.class,
                 ub.getRequestUrl()
@@ -108,7 +116,7 @@ public class TopicPublishService extends Service{
                 L.debug("request fail , url : {}, error : {}", ub.getRequestUrl(), volleyError);
                 mPublishQueue.remove(tp);
                 showTopicPublishFailNotification(tp);
-                TopicDraftActivity.saveTopicToDraft(tp.getTopic());
+                TopicDraftActivity.saveTopicDraft(tp.getTopicDraft());
                 stopServiceIfQueueIsAllFinish();
             }
         }){

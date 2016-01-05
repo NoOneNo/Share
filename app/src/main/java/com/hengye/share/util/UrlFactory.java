@@ -133,4 +133,21 @@ public class UrlFactory {
     public String getWBAttentionUrl() {
         return URL_PREFIX_WEIBO + "friendships/friends.json";
     }
+
+    //    comment	true	string	评论内容，必须做URLencode，内容不超过140个汉字。
+    //    id	true	int64	需要评论的微博ID。
+    //    comment_ori	false	int	当评论转发微博时，是否评论给原微博，0：否、1：是，默认为0。
+    //对微博进行评论
+    public String getWBTopicCommentCreateUrl() {
+        return URL_PREFIX_WEIBO + "comments/create.json";
+    }
+
+    //    cid	true	int64	需要回复的评论ID。
+    //    id	true	int64	需要评论的微博ID。
+    //    comment	true	string	回复评论内容，必须做URLencode，内容不超过140个汉字。
+    //    without_mention	false	int	回复中是否自动加入“回复@用户名”，0：是、1：否，默认为0。
+    //    comment_ori	false	int	当评论转发微博时，是否评论给原微博，0：否、1：是，默认为0。
+    public String getWBTopicCommentReplyUrl() {
+        return URL_PREFIX_WEIBO + "comments/reply.json";
+    }
 }

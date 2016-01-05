@@ -21,10 +21,6 @@ public class Topic extends ParentInherit implements Serializable{
 
     private static final long serialVersionUID = 971288752432928272L;
 
-//    private Parent parent;
-
-//    private String avatar;//头像
-//    private String username;//名字
     private String date;//创建日期
     private String channel;//渠道，通过什么发表
     private String content;//内容

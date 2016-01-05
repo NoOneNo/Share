@@ -1,14 +1,27 @@
 package com.hengye.share.module;
 
-public class TopicPublish extends ParentInherit{
+import java.io.Serializable;
 
-    private Topic topic;
+public class TopicPublish extends ParentInherit implements Serializable {
+
+    private static final long serialVersionUID = 6509806716456702406L;
+
+    private TopicDraft topicDraft;
 
     private String token;
 
-    public static TopicPublish getWBTopicPublish(Topic topic, String token){
+
+    public TopicPublish() {
+    }
+
+    public TopicPublish(TopicDraft topicDraft, String token) {
+        this.topicDraft = topicDraft;
+        this.token = token;
+    }
+
+    public static TopicPublish getWBTopicPublish(TopicDraft topicDraft, String token) {
         TopicPublish tp = new TopicPublish();
-        tp.setTopic(topic);
+        tp.setTopicDraft(topicDraft);
         tp.setToken(token);
         tp.setParent(Parent.getWBParent());
         return tp;
@@ -17,17 +30,17 @@ public class TopicPublish extends ParentInherit{
     @Override
     public String toString() {
         return "TopicPublish{" +
-                "topic=" + topic +
+                "topicDraft=" + topicDraft +
                 ", token='" + token + '\'' +
                 '}';
     }
 
-    public Topic getTopic() {
-        return topic;
+    public TopicDraft getTopicDraft() {
+        return topicDraft;
     }
 
-    public void setTopic(Topic topic) {
-        this.topic = topic;
+    public void setTopicDraft(TopicDraft topicDraft) {
+        this.topicDraft = topicDraft;
     }
 
     public String getToken() {
