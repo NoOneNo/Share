@@ -16,10 +16,12 @@ import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.R;
 import com.hengye.share.module.Topic;
 import com.hengye.share.module.TopicComment;
+import com.hengye.share.module.TopicDraft;
 import com.hengye.share.module.UserInfo;
 import com.hengye.share.ui.activity.PersonalHomepageActivity;
 import com.hengye.share.ui.activity.TopicDetailActivity;
 import com.hengye.share.ui.activity.TopicGalleryActivity;
+import com.hengye.share.ui.activity.TopicPublishActivity;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.ui.support.LongClickableLinkMovementMethod;
 import com.hengye.share.ui.support.TopicContentUrlOnTouchListener;
@@ -28,7 +30,6 @@ import com.hengye.share.ui.widget.dialog.DialogBuilder;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DateUtil;
 import com.hengye.share.util.IntentUtil;
-import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.ViewUtil;
 
@@ -36,33 +37,58 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHolder>
-    implements ViewUtil.OnItemClickListener, ViewUtil.OnItemLongClickListener{
+    implements ViewUtil.OnItemClickListener, ViewUtil.OnItemLongClickListener, DialogInterface.OnClickListener{
 
     public static int mGalleryMaxWidth;
-    public Dialog mLongClickDialog;
+    private Dialog mLongClickDialog;
+    private int mLongClickPosition;
     public TopicAdapter(Context context, List<Topic> data) {
         super(context, data);
         int galleryMargin = context.getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin);
         mGalleryMaxWidth = context.getResources().getDisplayMetrics().widthPixels - 2 * galleryMargin;
+
+        mLongClickDialog = DialogBuilder.getOnLongClickTopicDialog(getContext(), this);
         setOnChildViewItemClickListener(this);
         setOnItemLongClickListener(this);
         setOnChildViewItemLongClickListener(this);
-
-        CharSequence cs[];
-        cs = new String[2];
-        cs[0] = "回复";
-        cs[1] = "转发";
-        mLongClickDialog = DialogBuilder.getItemDialog(getContext(), cs, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                L.debug("dialog item click , which : {}", which);
-            }
-        });
     }
 
     @Override
     public TopicViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
         return new TopicViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_topic, parent, false));
+    }
+
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        Topic topic = getItem(mLongClickPosition);
+        if(topic == null){
+            return;
+        }
+        switch (which){
+            case DialogBuilder.LONG_CLICK_TOPIC_REPOST:
+                IntentUtil.startActivity(getContext(),
+                        TopicPublishActivity.getIntentToStart(getContext(), TopicDraft.getTopicDraftByTopicRepost(topic.getId())));
+                break;
+            case DialogBuilder.LONG_CLICK_TOPIC_COMMENT:
+                IntentUtil.startActivity(getContext(),
+                        TopicPublishActivity.getIntentToStart(getContext(), TopicDraft.getTopicDraftByTopicComment(topic.getId())));
+                break;
+            case DialogBuilder.LONG_CLICK_TOPIC_COLLECT:
+                break;
+            case DialogBuilder.LONG_CLICK_TOPIC_REPOST_ORIGIN:
+                Topic retweet = topic.getRetweetedTopic();
+                if(retweet == null){
+                    break;
+                }
+                IntentUtil.startActivity(getContext(),
+                        TopicPublishActivity.getIntentToStart(getContext(), TopicDraft.getTopicDraftByTopicRepost(retweet.getId())));
+                break;
+            case DialogBuilder.LONG_CLICK_TOPIC_COPY:
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -83,6 +109,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
     @Override
     public boolean onItemLongClick(View view, int position) {
 
+        mLongClickPosition = position;
         mLongClickDialog.show();
         return true;
     }

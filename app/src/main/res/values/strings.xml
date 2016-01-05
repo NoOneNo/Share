@@ -33,6 +33,13 @@
 
     <!-- Strings related to Topic-->
     <string name="label_time_and_from">%1$s 来自 %2$s</string>
+
+
+    <string name="label_topic_repost">转发</string>
+    <string name="label_topic_comment">评论</string>
+    <string name="label_topic_collect">收藏</string>
+    <string name="label_topic_repost_origin">转发原微博</string>
+    <string name="label_topic_copy">复制</string>
     <!-- Strings related to Topic-->
 
     <!-- Strings related to TopicComment-->
@@ -50,6 +57,7 @@
 
     <!-- Strings related to TopicPublish -->
     <string name="title_publish_topic">发微博</string>
+    <string name="title_repost_topic">转发微博</string>
     <string name="title_publish_comment">发评论</string>
     <string name="title_reply_comment">回复评论</string>
     <string name="label_topic_publish_hint">说点什么吧……</string>

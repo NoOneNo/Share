@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -53,6 +54,12 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         intent.putExtra("topicDraft", topicDraft);
         return intent;
     }
+
+//    public static Intent getIntentToStart(Context context, int publishType) {
+//        Intent intent = new Intent(context, TopicPublishActivity.class);
+//        intent.putExtra("publishType", publishType);
+//        return intent;
+//    }
 
     private TopicDraft mTopicDraft;
     private int mTopicPublishType = TopicDraft.PUBLISHT_TOPIC;
@@ -147,6 +154,9 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
             case TopicDraft.REPLY_COMMENT:
                 updateToolbarTitle(R.string.title_reply_comment);
                 break;
+            case TopicDraft.REPOST_TOPIC:
+                updateToolbarTitle(R.string.title_repost_topic);
+                break;
             case TopicDraft.PUBLISHT_TOPIC:
             default:
                 updateToolbarTitle(R.string.title_publish_topic);
@@ -175,7 +185,19 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onBackPressed() {
-        mSaveToDraftDialog.show();
+        if(shouldSaveToDraft()) {
+            mSaveToDraftDialog.show();
+        }else{
+            super.onBackPressed();
+        }
+    }
+
+    private boolean shouldSaveToDraft(){
+        if(TextUtils.isEmpty(mContent.getText().toString())){
+            return false;
+        }
+
+        return true;
     }
 
     private TopicDraft generateTopicDraft() {
@@ -183,7 +205,11 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         Topic topic = new Topic();
         topic.setContent(content);
         topic.setDate(DateUtil.getChinaGMTDateFormat());
-        return new TopicDraft(topic, mTopicPublishType);
+        TopicDraft.ExtraInfo extraInfo = null;
+        if(mTopicDraft != null) {
+            extraInfo = mTopicDraft.getExtraInfo();
+        }
+        return new TopicDraft(topic, mTopicPublishType, extraInfo);
     }
 
     private void publishTopic() {

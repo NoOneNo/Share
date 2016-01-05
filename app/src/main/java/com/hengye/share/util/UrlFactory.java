@@ -147,7 +147,16 @@ public class UrlFactory {
     //    comment	true	string	回复评论内容，必须做URLencode，内容不超过140个汉字。
     //    without_mention	false	int	回复中是否自动加入“回复@用户名”，0：是、1：否，默认为0。
     //    comment_ori	false	int	当评论转发微博时，是否评论给原微博，0：否、1：是，默认为0。
+    //回复评论
     public String getWBTopicCommentReplyUrl() {
         return URL_PREFIX_WEIBO + "comments/reply.json";
     }
+
+//    id	true	int64	要转发的微博ID。
+//    status	false	string	添加的转发文本，必须做URLencode，内容不超过140个汉字，不填则默认为“转发微博”。
+//    is_comment	false	int	是否在转发的同时发表评论，0：否、1：评论给当前微博、2：评论给原微博、3：都评论，默认为0 。
+    //转发微博
+    public String getWBTopicRepostUrl() {
+    return URL_PREFIX_WEIBO + "statuses/repost.json";
+}
 }
