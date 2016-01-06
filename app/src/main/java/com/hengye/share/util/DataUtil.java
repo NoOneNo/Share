@@ -12,8 +12,8 @@ import android.view.View;
 
 import com.hengye.share.BuildConfig;
 import com.hengye.share.adapter.recyclerview.CommonAdapter;
-import com.hengye.share.module.Topic;
-import com.hengye.share.module.TopicComment;
+import com.hengye.share.model.Topic;
+import com.hengye.share.model.TopicComment;
 import com.hengye.share.ui.emoticon.Emoticon;
 import com.hengye.share.ui.support.TopicContentUrlSpan;
 import com.hengye.share.util.thirdparty.WBUtil;

@@ -1,15 +1,11 @@
 package com.hengye.share.adapter.recyclerview;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.hengye.share.R;
-import com.hengye.share.module.Topic;
-import com.hengye.share.module.TopicFavorites;
-import com.hengye.share.module.sina.WBTopicFavorite;
+import com.hengye.share.model.TopicFavorites;
 
 import java.util.List;
 

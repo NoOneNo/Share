@@ -1,10 +1,8 @@
-package com.hengye.share.module;
+package com.hengye.share.model;
 
 
-import com.hengye.share.module.sina.WBTopic;
-import com.hengye.share.module.sina.WBTopics;
-import com.hengye.share.module.sina.WBUserInfo;
-import com.hengye.share.module.sina.WBUserInfos;
+import com.hengye.share.model.sina.WBUserInfo;
+import com.hengye.share.model.sina.WBUserInfos;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.GsonUtil;
 

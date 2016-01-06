@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicAdapter;
-import com.hengye.share.module.TopicComment;
+import com.hengye.share.model.TopicComment;
 import com.hengye.share.ui.support.LongClickableLinkMovementMethod;
 import com.hengye.share.ui.support.TopicContentUrlOnTouchListener;
 import com.hengye.share.ui.view.GridGalleryView;

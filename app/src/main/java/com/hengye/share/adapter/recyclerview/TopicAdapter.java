@@ -14,10 +14,10 @@ import android.widget.TextView;
 
 import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.R;
-import com.hengye.share.module.Topic;
-import com.hengye.share.module.TopicComment;
-import com.hengye.share.module.TopicDraft;
-import com.hengye.share.module.UserInfo;
+import com.hengye.share.model.Topic;
+import com.hengye.share.model.TopicComment;
+import com.hengye.share.model.TopicDraft;
+import com.hengye.share.model.UserInfo;
 import com.hengye.share.ui.activity.PersonalHomepageActivity;
 import com.hengye.share.ui.activity.TopicDetailActivity;
 import com.hengye.share.ui.activity.TopicGalleryActivity;

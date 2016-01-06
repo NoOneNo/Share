@@ -1,6 +1,4 @@
-package com.hengye.share.module.sina;
-
-import com.google.gson.annotations.SerializedName;
+package com.hengye.share.model.sina;
 
 import java.io.Serializable;
 import java.util.List;

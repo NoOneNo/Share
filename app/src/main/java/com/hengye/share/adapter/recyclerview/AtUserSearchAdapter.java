@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import com.android.volley.view.NetworkImageView;
 import com.hengye.share.R;
-import com.hengye.share.module.AtUser;
-import com.hengye.share.module.UserInfo;
+import com.hengye.share.model.AtUser;
+import com.hengye.share.model.UserInfo;
 import com.hengye.share.util.RequestManager;
 
 import java.util.List;

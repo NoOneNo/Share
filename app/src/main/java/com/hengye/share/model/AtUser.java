@@ -1,4 +1,4 @@
-package com.hengye.share.module;
+package com.hengye.share.model;
 
 import android.text.TextUtils;
 

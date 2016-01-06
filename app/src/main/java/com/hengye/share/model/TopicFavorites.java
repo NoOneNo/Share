@@ -1,7 +1,7 @@
-package com.hengye.share.module;
+package com.hengye.share.model;
 
-import com.hengye.share.module.sina.WBTopicFavorite;
-import com.hengye.share.module.sina.WBTopicFavorites;
+import com.hengye.share.model.sina.WBTopicFavorite;
+import com.hengye.share.model.sina.WBTopicFavorites;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.GsonUtil;
 

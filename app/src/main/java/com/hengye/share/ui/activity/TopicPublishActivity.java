@@ -17,9 +17,9 @@ import android.widget.RelativeLayout;
 
 import com.hengye.share.BaseActivity;
 import com.hengye.share.R;
-import com.hengye.share.module.AtUser;
-import com.hengye.share.module.Topic;
-import com.hengye.share.module.TopicDraft;
+import com.hengye.share.model.AtUser;
+import com.hengye.share.model.Topic;
+import com.hengye.share.model.TopicDraft;
 import com.hengye.share.service.TopicPublishService;
 import com.hengye.share.ui.emoticon.EmoticonPicker;
 import com.hengye.share.ui.emoticon.EmoticonPickerUtil;

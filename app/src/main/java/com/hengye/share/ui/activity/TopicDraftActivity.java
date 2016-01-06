@@ -9,18 +9,13 @@ import com.google.gson.reflect.TypeToken;
 import com.hengye.share.BaseActivity;
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicDraftAdapter;
-import com.hengye.share.module.AtUser;
-import com.hengye.share.module.Topic;
-import com.hengye.share.module.TopicDraft;
+import com.hengye.share.model.TopicDraft;
 import com.hengye.share.util.CommonUtil;
-import com.hengye.share.util.DateUtil;
 import com.hengye.share.util.IntentUtil;
-import com.hengye.share.util.L;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.ViewUtil;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class TopicDraftActivity extends BaseActivity{
 

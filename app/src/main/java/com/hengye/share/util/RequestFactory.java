@@ -3,7 +3,7 @@ package com.hengye.share.util;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
-import com.hengye.share.module.sina.WBUserInfo;
+import com.hengye.share.model.sina.WBUserInfo;
 
 /**
  * 用于生成一些不需要更新UI的网络请求

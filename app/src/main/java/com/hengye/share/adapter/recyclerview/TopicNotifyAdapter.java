@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hengye.share.R;
-import com.hengye.share.module.Topic;
+import com.hengye.share.model.Topic;
 
 import java.util.List;
 

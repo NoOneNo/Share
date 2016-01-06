@@ -8,8 +8,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.hengye.share.R;
-import com.hengye.share.module.Topic;
-import com.hengye.share.module.TopicDraft;
+import com.hengye.share.model.Topic;
+import com.hengye.share.model.TopicDraft;
 import com.hengye.share.service.TopicPublishService;
 import com.hengye.share.ui.activity.TopicDraftActivity;
 import com.hengye.share.ui.view.GridGalleryView;
