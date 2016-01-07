@@ -78,6 +78,12 @@
     <string name="label_select_at_user_null">还没有选择用户</string>
     <!-- Strings related to AtUser -->
 
+    <!-- Strings related to Search -->
+    <string name="label_search_user">用户</string>
+    <string name="label_search_topic">微博</string>
+    <string name="label_search_hint">搜索内容</string>
+    <!-- Strings related to Search -->
+
     <!-- Strings related to fragment title-->
     <string name="title_fragment_setting">设置</string>
     <string name="title_fragment_basic_setting">基本设置</string>

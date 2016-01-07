@@ -52,15 +52,11 @@
             android:theme="@style/FullScreenTheme"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:launchMode="singleTop">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activity.TopicActivity" />
         </activity>
 
         <activity
             android:name=".ui.activity.FragmentActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".ui.activity.setting.SettingActivity"
@@ -86,34 +82,32 @@
 
         <activity
             android:name="com.hengye.share.ui.activity.TopicPublishActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name="com.hengye.share.ui.activity.TopicDraftActivity"
             android:screenOrientation="portrait"
-            android:label="@string/title_activity_topic_draft">
-        </activity>
+            android:label="@string/title_activity_topic_draft"/>
 
         <activity
             android:name="com.hengye.share.ui.activity.TopicDetailActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name="com.hengye.share.ui.activity.TopicNotifyActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name="com.hengye.share.ui.activity.AtUserActivity"
             android:screenOrientation="portrait"
-            android:label="@string/title_activity_at_user">
-        </activity>
+            android:label="@string/title_activity_at_user"/>
 
         <activity
-            android:name="com.hengye.share.ui.activity.TestActivity">
-        </activity>
+            android:name="com.hengye.share.ui.activity.SearchActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name="com.hengye.share.ui.activity.TestActivity"/>
     </application>
 
 </manifest>

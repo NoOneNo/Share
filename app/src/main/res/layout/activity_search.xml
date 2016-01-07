@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_default">
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/grey_600"
+        android:layout_margin="@dimen/content_margin_3dp"
+        android:padding="@dimen/content_margin_5dp"
+        android:gravity="center_vertical">
+        
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="@dimen/icon_size_normal"
+            android:layout_height="@dimen/icon_size_normal"
+            android:src="@drawable/btn_back"
+            android:contentDescription="@null"
+            android:background="@null"/>
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:hint="@string/label_search_hint"
+            android:textColor="@color/white"
+            android:lines="1"/>
+
+        <ImageButton
+            android:id="@+id/btn_delete"
+            android:layout_width="@dimen/icon_size_normal"
+            android:layout_height="@dimen/icon_size_normal"
+            android:src="@drawable/compose_emotion_delete"
+            android:contentDescription="@null"
+            android:background="@null"/>
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/label_search_user"
+        android:padding="@dimen/content_margin_10dp"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_user"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:background="@color/white"
+        android:paddingTop="@dimen/content_margin_10dp"
+        android:paddingStart="@dimen/content_margin_10dp"
+        android:paddingEnd="0dp"
+        android:paddingBottom="@dimen/content_margin_10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/label_search_topic"
+        android:padding="@dimen/content_margin_10dp"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_topic"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>

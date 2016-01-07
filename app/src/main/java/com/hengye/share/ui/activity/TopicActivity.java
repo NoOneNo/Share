@@ -196,7 +196,7 @@ public class TopicActivity extends BaseActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_login) {
-            Intent intent = new Intent(TopicActivity.this, LoginActivity.class);
+            Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         } else if (id == R.id.action_login_by_third) {
 //            if (isExistWeibo){
@@ -209,7 +209,7 @@ public class TopicActivity extends BaseActivity
 //                mWeiboAuth.anthorize(new WBAuthListener());
 //            }
         } else if (id == R.id.action_test) {
-            Intent intent = new Intent(TopicActivity.this, AtUserActivity.class);
+            Intent intent = new Intent(this, SearchActivity.class);
             startActivity(intent);
         }
 

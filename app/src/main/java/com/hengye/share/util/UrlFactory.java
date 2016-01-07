@@ -12,13 +12,12 @@ public class UrlFactory {
         return UrlFactoryHolder.INSTANCE;
     }
 
-    public String getWBUserTopicUrl() {
-        return URL_PREFIX_WEIBO + "statuses/user_timeline.json";
-    }
-
     //weibo url prefix
     private static final String URL_PREFIX_WEIBO = "https://api.weibo.com/2/";
 
+    public String getWBUserTopicUrl() {
+        return URL_PREFIX_WEIBO + "statuses/user_timeline.json";
+    }
     //    必选 	类型及范围 	说明
 //    source 	false 	string 	采用OAuth授权方式不需要此参数，其他授权方式为必填参数，数值为应用的AppKey。
 //    access_token 	false 	string 	采用OAuth授权方式为必填参数，其他授权方式不需要此参数，OAuth授权后获得。
@@ -159,4 +158,16 @@ public class UrlFactory {
     public String getWBTopicRepostUrl() {
     return URL_PREFIX_WEIBO + "statuses/repost.json";
 }
+
+
+    //搜索用户
+    public String getWBSearchUserUrl() {
+        return URL_PREFIX_WEIBO + "search/suggestions/users.json";
+    }
+
+    //搜索微博
+    public String getWBSearchTopicUrl() {
+        return URL_PREFIX_WEIBO + "search/topics.json";
+    }
+
 }
