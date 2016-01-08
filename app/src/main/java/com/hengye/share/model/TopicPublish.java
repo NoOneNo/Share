@@ -1,6 +1,7 @@
 package com.hengye.share.model;
 
 import java.io.Serializable;
+import com.hengye.share.model.greenrobot.TopicDraft;
 
 public class TopicPublish extends ParentInherit implements Serializable {
 

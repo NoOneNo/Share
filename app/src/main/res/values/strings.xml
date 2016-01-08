@@ -67,7 +67,8 @@
     <!-- Strings related to TopicPublish -->
 
     <!-- Strings related to TopicDraft -->
-    <string name="label_save_to_draft">是否保存到草稿箱?</string>
+    <string name="label_save_to_draft">是否保存到草稿箱？</string>
+    <string name="label_save_to_draft_override">发现草稿已存在，是否覆盖？</string>
     <string name="label_save_to_draft_success">保存成功</string>
     <!-- Strings related to TopicDraft -->
 

@@ -2,7 +2,7 @@ package com.hengye.share.model;
 
 import java.io.Serializable;
 
-public class TopicDraft extends ParentInherit implements Serializable{
+public class TopicDraft2 extends ParentInherit implements Serializable{
 
     private static final long serialVersionUID = -7695751557899945662L;
 
@@ -17,33 +17,33 @@ public class TopicDraft extends ParentInherit implements Serializable{
     public final static int REPLY_COMMENT = 2;
     public final static int REPOST_TOPIC = 3;
 
-    public TopicDraft() {}
+    public TopicDraft2() {}
 
-    public TopicDraft(Topic topic, int publishType) {
+    public TopicDraft2(Topic topic, int publishType) {
         this(topic, publishType, null);
     }
 
-    public TopicDraft(Topic topic, int publishType, ExtraInfo extraInfo) {
+    public TopicDraft2(Topic topic, int publishType, ExtraInfo extraInfo) {
         this.topic = topic;
         this.publishType = publishType;
         this.extraInfo = extraInfo;
     }
 
-    public static TopicDraft getTopicDraftByTopicRepost(String targetTopicId){
-        TopicDraft topicDraft = new TopicDraft();
-        TopicDraft.ExtraInfo extraInfo = new TopicDraft.ExtraInfo();
+    public static TopicDraft2 getTopicDraftByTopicRepost(String targetTopicId){
+        TopicDraft2 topicDraft = new TopicDraft2();
+        TopicDraft2.ExtraInfo extraInfo = new TopicDraft2.ExtraInfo();
         extraInfo.setTargetTopicId(targetTopicId);
         topicDraft.setExtraInfo(extraInfo);
-        topicDraft.setPublishType(TopicDraft.REPOST_TOPIC);
+        topicDraft.setPublishType(TopicDraft2.REPOST_TOPIC);
         return topicDraft;
     }
 
-    public static TopicDraft getTopicDraftByTopicComment(String targetTopicId){
-        TopicDraft topicDraft = new TopicDraft();
-        TopicDraft.ExtraInfo extraInfo = new TopicDraft.ExtraInfo();
+    public static TopicDraft2 getTopicDraftByTopicComment(String targetTopicId){
+        TopicDraft2 topicDraft = new TopicDraft2();
+        TopicDraft2.ExtraInfo extraInfo = new TopicDraft2.ExtraInfo();
         extraInfo.setTargetTopicId(targetTopicId);
         topicDraft.setExtraInfo(extraInfo);
-        topicDraft.setPublishType(TopicDraft.PUBLISHT_COMMENT);
+        topicDraft.setPublishType(TopicDraft2.PUBLISHT_COMMENT);
         return topicDraft;
     }
 
@@ -76,7 +76,7 @@ public class TopicDraft extends ParentInherit implements Serializable{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        TopicDraft that = (TopicDraft) o;
+        TopicDraft2 that = (TopicDraft2) o;
 
         if (publishType != that.publishType) return false;
         return !(topic != null ? !topic.equals(that.topic) : that.topic != null);

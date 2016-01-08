@@ -11,11 +11,17 @@ import java.util.TimeZone;
 
 public class DateUtil {
 
+
     public static String getChinaGMTDateFormat() {
         Calendar cd = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd hh:mm:ss z yyyy", Locale.US);
         sdf.setTimeZone(TimeZone.getTimeZone("GMT+800")); // 设置时区为GMT
         return sdf.format(cd.getTime());
+    }
+
+    public static Date getChinaGMTDate() {
+        Calendar cd = Calendar.getInstance();
+        return cd.getTime();
     }
 
     //    "Fri Nov 06 21:39:48 +0800 2015" 格林时间格式
@@ -31,11 +37,7 @@ public class DateUtil {
         return date;
     }
 
-    public static String getLatestDateFormat(String time) {
-        if(TextUtils.isEmpty(time)){
-            return "未知";
-        }
-        Date date = getGMTDate(time);
+    public static String getLatestDateFormat(Date date) {
         if (date == null) {
             return "未知";
         }
@@ -80,6 +82,13 @@ public class DateUtil {
                 return formatter.format(date);
             }
         }
+    }
+
+    public static String getLatestDateFormat(String time) {
+        if(TextUtils.isEmpty(time)){
+            return "未知";
+        }
+        return getLatestDateFormat(getGMTDate(time));
     }
 }
 

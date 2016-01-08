@@ -123,6 +123,13 @@ public class Topic extends ParentInherit implements Serializable{
         return topic;
     }
 
+    public static WBTopic getWBTopic(Topic topic){
+        if(topic.getParent() == null || topic.getParent().getType() != Parent.TYPE_WEIBO){
+            return null;
+        }
+        return GsonUtil.getInstance().fromJson(topic.getParent().getJson(), WBTopic.class);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

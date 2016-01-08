@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.hengye.share.util.RequestFactory;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.SPUtil;
+import com.hengye.share.util.UserUtil;
 import com.sina.weibo.sdk.exception.WeiboException;
 
 public class SaveUserInfoWeiboAuthListener extends ParseTokenWeiboAuthListener {
@@ -15,6 +16,8 @@ public class SaveUserInfoWeiboAuthListener extends ParseTokenWeiboAuthListener {
         super.onComplete(values);
         if (mAccessToken != null && mAccessToken.isSessionValid()) {
             SPUtil.setSinaAccessToken(mAccessToken);
+            UserUtil.updateUser(mAccessToken);
+
             RequestManager.addToRequestQueue(RequestFactory.getInstance().
                     getWBUserInfoRequest(mAccessToken.getToken(), mAccessToken.getUid()));
         } else {

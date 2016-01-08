@@ -23,6 +23,10 @@ public class SPUtil {
 
     private final static String MODULE_NAME = "module";
 
+    public static synchronized String getUid(){
+        return getContext().getSharedPreferences(MODULE_NAME, Context.MODE_PRIVATE).getString("uid", null);
+    }
+
     public static synchronized String getSinaUid(){
         Oauth2AccessToken oauth2AccessToken = getSinaAccessToken();
         if(oauth2AccessToken == null){

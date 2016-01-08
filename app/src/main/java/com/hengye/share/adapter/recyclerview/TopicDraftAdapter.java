@@ -9,10 +9,12 @@ import android.widget.TextView;
 
 import com.hengye.share.R;
 import com.hengye.share.model.Topic;
-import com.hengye.share.model.TopicDraft;
+import com.hengye.share.model.greenrobot.TopicDraft;
+import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.service.TopicPublishService;
 import com.hengye.share.ui.activity.TopicDraftActivity;
 import com.hengye.share.ui.view.GridGalleryView;
+import com.hengye.share.util.L;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.ViewUtil;
 
@@ -41,7 +43,7 @@ public class TopicDraftAdapter extends CommonAdapter<TopicDraft, TopicDraftAdapt
         int id = view.getId();
         if(id == R.id.btn_topic_send_again){
             TopicDraft topicDraft = getItem(position);
-            TopicDraftActivity.removeTopicDraft(topicDraft);
+            TopicDraftHelper.removeTopicDraft(topicDraft);
             remove(position);
             TopicPublishService.publish(getContext(), topicDraft, SPUtil.getSinaToken());
         }
@@ -71,8 +73,9 @@ public class TopicDraftAdapter extends CommonAdapter<TopicDraft, TopicDraftAdapt
 
         @Override
         public void bindData(Context context, TopicDraft topicDraft) {
+            L.debug("topicDraft id : {}", topicDraft.getId());
             registerChildViewItemClick(mSendAgain);
-            Topic topic = topicDraft.getTopic();
+            Topic topic = TopicDraftHelper.getTopic(topicDraft);
             if(topic != null) {
                 mTopicTitle.initTopicTitle(context, topic);
                 mTopic.initTopicContent(context, topic, false);

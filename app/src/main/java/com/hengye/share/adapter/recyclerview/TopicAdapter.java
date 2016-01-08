@@ -12,12 +12,18 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.GsonRequest;
 import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.R;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
-import com.hengye.share.model.TopicDraft;
+import com.hengye.share.model.TopicPublish;
 import com.hengye.share.model.UserInfo;
+import com.hengye.share.model.greenrobot.TopicDraftHelper;
+import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.ui.activity.PersonalHomepageActivity;
 import com.hengye.share.ui.activity.TopicDetailActivity;
 import com.hengye.share.ui.activity.TopicGalleryActivity;
@@ -30,7 +36,11 @@ import com.hengye.share.ui.widget.dialog.DialogBuilder;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DateUtil;
 import com.hengye.share.util.IntentUtil;
+import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
+import com.hengye.share.util.SPUtil;
+import com.hengye.share.util.UrlBuilder;
+import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.ViewUtil;
 
 import java.util.ArrayList;
@@ -68,13 +78,17 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
         switch (which){
             case DialogBuilder.LONG_CLICK_TOPIC_REPOST:
                 IntentUtil.startActivity(getContext(),
-                        TopicPublishActivity.getIntentToStart(getContext(), TopicDraft.getTopicDraftByTopicRepost(topic.getId())));
+                        TopicPublishActivity.getIntentToStart(getContext(), TopicDraftHelper.getWBTopicDraftByTopicRepost(topic.getId())));
                 break;
             case DialogBuilder.LONG_CLICK_TOPIC_COMMENT:
                 IntentUtil.startActivity(getContext(),
-                        TopicPublishActivity.getIntentToStart(getContext(), TopicDraft.getTopicDraftByTopicComment(topic.getId())));
+                        TopicPublishActivity.getIntentToStart(getContext(), TopicDraftHelper.getWBTopicDraftByTopicComment(topic.getId())));
                 break;
             case DialogBuilder.LONG_CLICK_TOPIC_COLLECT:
+                WBTopic wbTopic = Topic.getWBTopic(topic);
+                if(wbTopic != null) {
+                    RequestManager.addToRequestQueue(getWBCollectTopicRequest(topic.getId(), wbTopic.isFavorited()));
+                }
                 break;
             case DialogBuilder.LONG_CLICK_TOPIC_REPOST_ORIGIN:
                 Topic retweet = topic.getRetweetedTopic();
@@ -82,7 +96,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
                     break;
                 }
                 IntentUtil.startActivity(getContext(),
-                        TopicPublishActivity.getIntentToStart(getContext(), TopicDraft.getTopicDraftByTopicRepost(retweet.getId())));
+                        TopicPublishActivity.getIntentToStart(getContext(), TopicDraftHelper.getWBTopicDraftByTopicRepost(retweet.getId())));
                 break;
             case DialogBuilder.LONG_CLICK_TOPIC_COPY:
                 break;
@@ -281,6 +295,40 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
                 mGallery.setVisibility(View.GONE);
             }
         }
+    }
+
+    private GsonRequest getWBCollectTopicRequest(final String topicId, boolean isFavorite) {
+        final UrlBuilder ub;
+        if(isFavorite){
+            ub = new UrlBuilder(UrlFactory.getInstance().getWBDestroyFavoritesUrl());
+        }else{
+            ub = new UrlBuilder(UrlFactory.getInstance().getWBCreateFavoritesUrl());
+        }
+
+        ub.addParameter("access_token", SPUtil.getSinaToken());
+        ub.addParameter("id", topicId);
+        return new GsonRequest<WBTopic>(Request.Method.POST,
+                WBTopic.class,
+                ub.getUrl()
+                , new Response.Listener<WBTopic>() {
+            @Override
+            public void onResponse(WBTopic response) {
+                L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
+                if(response != null){
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                L.debug("request fail , url : {}, error : {}", ub.getRequestUrl(), volleyError);
+            }
+        }){
+            @Override
+            public byte[] getBody() {
+                return ub.getBody();
+            }
+        };
     }
 }
 

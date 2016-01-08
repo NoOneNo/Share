@@ -18,8 +18,10 @@ import android.widget.RelativeLayout;
 import com.hengye.share.BaseActivity;
 import com.hengye.share.R;
 import com.hengye.share.model.AtUser;
+import com.hengye.share.model.Parent;
 import com.hengye.share.model.Topic;
-import com.hengye.share.model.TopicDraft;
+import com.hengye.share.model.greenrobot.TopicDraft;
+import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.service.TopicPublishService;
 import com.hengye.share.ui.emoticon.EmoticonPicker;
 import com.hengye.share.ui.emoticon.EmoticonPickerUtil;
@@ -62,13 +64,15 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
 //    }
 
     private TopicDraft mTopicDraft;
-    private int mTopicPublishType = TopicDraft.PUBLISHT_TOPIC;
+    private String mTopicDraftContent;
+    private int mTopicPublishType = TopicDraftHelper.PUBLISH_TOPIC;
 
     @Override
     protected void handleBundleExtra() {
         mTopicDraft = (TopicDraft) getIntent().getSerializableExtra("topicDraft");
         if(mTopicDraft != null){
-            mTopicPublishType = mTopicDraft.getPublishType();
+            mTopicPublishType = mTopicDraft.getType();
+            mTopicDraftContent = mTopicDraft.getContent();
         }
     }
 
@@ -113,7 +117,11 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
 
     public void initSaveToDraftDialog() {
         SimpleTwoBtnDialog builder = new SimpleTwoBtnDialog();
-        builder.setContent(getString(R.string.label_save_to_draft));
+        if(mTopicDraft != null && mTopicDraft.getId() != 0){
+            builder.setContent(getString(R.string.label_save_to_draft_override));
+        }else {
+            builder.setContent(getString(R.string.label_save_to_draft));
+        }
         builder.setNegativeButtonClickListener(new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -135,29 +143,29 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     private void initData() {
         changeTitleStyle(mTopicPublishType);
 
-        if (mTopicDraft == null || mTopicDraft.getTopic() == null) {
+        if (mTopicDraft == null) {
             return;
         }
-        Topic topic = mTopicDraft.getTopic();
-        if (topic.getContent() != null) {
-            mContent.setText(topic.getContent());
-            mContent.setSelection(topic.getContent().length());
-        }
+//        Topic topic = mTopicDraft.getTopic();
+//        if (topic.getContent() != null) {
+            mContent.setText(mTopicDraft.getContent());
+            mContent.setSelection(mTopicDraft.getContent().length());
+//        }
 
     }
 
     private void changeTitleStyle(int publishType){
         switch (publishType){
-            case TopicDraft.PUBLISHT_COMMENT:
+            case TopicDraftHelper.PUBLISH_COMMENT:
                 updateToolbarTitle(R.string.title_publish_comment);
                 break;
-            case TopicDraft.REPLY_COMMENT:
+            case TopicDraftHelper.REPLY_COMMENT:
                 updateToolbarTitle(R.string.title_reply_comment);
                 break;
-            case TopicDraft.REPOST_TOPIC:
+            case TopicDraftHelper.REPOST_TOPIC:
                 updateToolbarTitle(R.string.title_repost_topic);
                 break;
-            case TopicDraft.PUBLISHT_TOPIC:
+            case TopicDraftHelper.PUBLISH_TOPIC:
             default:
                 updateToolbarTitle(R.string.title_publish_topic);
                 break;
@@ -193,23 +201,30 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     }
 
     private boolean shouldSaveToDraft(){
-        if(TextUtils.isEmpty(mContent.getText().toString())){
+        String str = mContent.getText().toString();
+        if(TextUtils.isEmpty(str)){
             return false;
         }
-
+        if(str.equals(mTopicDraftContent)){
+            return false;
+        }
         return true;
     }
 
     private TopicDraft generateTopicDraft() {
-        String content = mContent.getText().toString();
-        Topic topic = new Topic();
-        topic.setContent(content);
-        topic.setDate(DateUtil.getChinaGMTDateFormat());
-        TopicDraft.ExtraInfo extraInfo = null;
+        TopicDraft td = new TopicDraft();
+        td.setUid(SPUtil.getSinaUid());
+        td.setContent(mContent.getText().toString());
+//        td.setDate(DateUtil.getChinaGMTDateFormat());
+        td.setDate(DateUtil.getChinaGMTDate());
+        td.setType(mTopicPublishType);
+        td.setParentType(Parent.TYPE_WEIBO);
         if(mTopicDraft != null) {
-            extraInfo = mTopicDraft.getExtraInfo();
+            td.setId(mTopicDraft.getId());
+            td.setTargetTopicId(mTopicDraft.getTargetTopicId());
+            td.setTargetCommentId(mTopicDraft.getTargetCommentId());
         }
-        return new TopicDraft(topic, mTopicPublishType, extraInfo);
+        return td;
     }
 
     private void publishTopic() {
@@ -218,7 +233,8 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void saveToDraft() {
-        TopicDraftActivity.saveTopicDraft(generateTopicDraft());
+        TopicDraftHelper.saveTopicDraft(generateTopicDraft());
+        setResult(Activity.RESULT_OK);
         ToastUtil.showToast(R.string.label_save_to_draft_success);
     }
 

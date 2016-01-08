@@ -3,6 +3,8 @@ package com.hengye.share.util;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
+import com.hengye.share.model.Parent;
+import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.sina.WBUserInfo;
 
 /**
@@ -22,7 +24,7 @@ public class RequestFactory {
     }
 
 
-    public GsonRequest getWBUserInfoRequest(String token, String uid) {
+    public GsonRequest getWBUserInfoRequest(String token, final String uid) {
         final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBUserInfoUrl());
         ub.addParameter("access_token", token);
         ub.addParameter("uid", uid);
@@ -33,6 +35,8 @@ public class RequestFactory {
             @Override
             public void onResponse(WBUserInfo response) {
                 L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
+
+                UserUtil.updateUserInfo(uid, UserInfo.getUserInfo(response), Parent.TYPE_WEIBO);
                 SPUtil.setModule(response, WBUserInfo.class.getSimpleName() + SPUtil.getSinaUid());
             }
         }, new Response.ErrorListener() {

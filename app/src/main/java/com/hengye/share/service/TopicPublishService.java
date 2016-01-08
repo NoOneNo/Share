@@ -14,8 +14,9 @@ import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
 import com.hengye.share.R;
-import com.hengye.share.model.TopicDraft;
 import com.hengye.share.model.TopicPublish;
+import com.hengye.share.model.greenrobot.TopicDraft;
+import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.ui.activity.TopicDraftActivity;
 import com.hengye.share.util.L;
@@ -94,7 +95,7 @@ public class TopicPublishService extends Service{
 
         final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBTopicPublishUrl());
         ub.addParameter("access_token", tp.getToken());
-        ub.addParameter("status", tp.getTopicDraft().getTopic().getContent());
+        ub.addParameter("status", tp.getTopicDraft().getContent());
         return new GsonRequest<WBTopic>(Request.Method.POST,
                 WBTopic.class,
                 ub.getRequestUrl()
@@ -115,7 +116,7 @@ public class TopicPublishService extends Service{
                 L.debug("request fail , url : {}, error : {}", ub.getRequestUrl(), volleyError);
                 mPublishQueue.remove(tp);
                 showTopicPublishFailNotification(tp);
-                TopicDraftActivity.saveTopicDraft(tp.getTopicDraft());
+                TopicDraftHelper.saveTopicDraft(tp.getTopicDraft());
                 stopServiceIfQueueIsAllFinish();
             }
         }){

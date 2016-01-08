@@ -170,4 +170,13 @@ public class UrlFactory {
         return URL_PREFIX_WEIBO + "search/topics.json";
     }
 
+    //添加收藏微博
+    public String getWBCreateFavoritesUrl() {
+        return URL_PREFIX_WEIBO + "favorites/create.json";
+    }
+
+    //删除收藏微博
+    public String getWBDestroyFavoritesUrl() {
+        return URL_PREFIX_WEIBO + "favorites/destroy.json";
+    }
 }
