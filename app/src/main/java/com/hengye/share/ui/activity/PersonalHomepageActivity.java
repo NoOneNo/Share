@@ -10,7 +10,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
@@ -30,11 +29,10 @@ import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
-import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
+import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
-import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,7 +94,6 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 //    private PullToRefreshLayout mPullToRefreshLayout;
     private RecyclerView mRecyclerView;
     private TopicAdapter mAdapter;
-    private Oauth2AccessToken mWBAccessToken;
 
     private void initView() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -141,20 +138,19 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     }
 
     private void initData(){
-        mWBAccessToken = SPUtil.getSinaAccessToken();
     }
 
     private boolean loadData(){
-        if(mUserInfo == null || mWBAccessToken == null || TextUtils.isEmpty(mWBAccessToken.getToken())){
+        if(mUserInfo == null || UserUtil.isUserEmpty()){
             return false;
         }
         if(mUserInfo.getParent().isWeiBo()){
-            L.debug("userInfo : " + mUserInfo.getParent().getJson());
+            L.debug("userInfo : {}", mUserInfo.getParent().getJson());
 
             if(mUserInfo.getParent().getJson() != null) {
                 WBUserInfo wbUserInfo = mUserInfo.getWBUserInfoFromParent();
                 if (wbUserInfo != null) {
-                    RequestManager.addToRequestQueue(getWBTopicRequest(mWBAccessToken.getToken(), wbUserInfo.getIdstr(), 0 + "", true), getRequestTag());
+                    RequestManager.addToRequestQueue(getWBTopicRequest(UserUtil.getToken(), wbUserInfo.getIdstr(), 0 + "", true), getRequestTag());
                     return true;
                 }
             }else{

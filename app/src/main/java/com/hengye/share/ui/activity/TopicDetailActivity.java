@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
@@ -25,12 +24,11 @@ import com.hengye.share.model.sina.WBTopicReposts;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
-import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
+import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
-import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,8 +112,6 @@ public class TopicDetailActivity extends BaseActivity {
     private TabLayout mTabLayout, mTabLayoutAssist;
     private int mTabLayoutHeight;
 
-    private Oauth2AccessToken mWBAccessToken;
-
 
     private void initHeaderView(View headerView){
         mTabLayout = (TabLayout) headerView.findViewById(R.id.tab_layout);
@@ -172,18 +168,17 @@ public class TopicDetailActivity extends BaseActivity {
             }
         });
 
-        mWBAccessToken = SPUtil.getSinaAccessToken();
         mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.pull_to_refresh);
         mPullToRefreshLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (mWBAccessToken == null || TextUtils.isEmpty(mWBAccessToken.getToken())) {
+                if (UserUtil.isUserEmpty()) {
                     mPullToRefreshLayout.setRefreshing(false);
                     return;
                 }
 
-                RequestManager.addToRequestQueue(getWBCommentRequest(mWBAccessToken.getToken(), mTopic.getId(), "0", true), getRequestTag());
-                RequestManager.addToRequestQueue(getWBRepostRequest(mWBAccessToken.getToken(), mTopic.getId(), "0", true), getRequestTag());
+                RequestManager.addToRequestQueue(getWBCommentRequest(UserUtil.getToken(), mTopic.getId(), "0", true), getRequestTag());
+                RequestManager.addToRequestQueue(getWBRepostRequest(UserUtil.getToken(), mTopic.getId(), "0", true), getRequestTag());
             }
         });
         mPullToRefreshLayout.setOnLoadListener(new PullToRefreshLayout.OnLoadListener() {
@@ -193,9 +188,9 @@ public class TopicDetailActivity extends BaseActivity {
                     String id = CommonUtil.getLastItem(mAdapter.getData()).getId();
                     GsonRequest gsonRequest;
                     if(isSelectedCommentTab()){
-                        gsonRequest = getWBCommentRequest(mWBAccessToken.getToken(), mTopic.getId(), id, false);
+                        gsonRequest = getWBCommentRequest(UserUtil.getToken(), mTopic.getId(), id, false);
                     }else{
-                        gsonRequest = getWBRepostRequest(mWBAccessToken.getToken(), mTopic.getId(), id, false);
+                        gsonRequest = getWBRepostRequest(UserUtil.getToken(), mTopic.getId(), id, false);
                     }
                     RequestManager.addToRequestQueue(gsonRequest, getRequestTag());
                 } else {

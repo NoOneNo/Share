@@ -36,8 +36,7 @@ public class RequestFactory {
             public void onResponse(WBUserInfo response) {
                 L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
 
-                UserUtil.updateUserInfo(uid, UserInfo.getUserInfo(response), Parent.TYPE_WEIBO);
-                SPUtil.setModule(response, WBUserInfo.class.getSimpleName() + SPUtil.getSinaUid());
+                UserUtil.updateUserInfo(response);
             }
         }, new Response.ErrorListener() {
 

@@ -27,13 +27,14 @@ public class UserDao extends AbstractDao<User, Long> {
         public final static Property Uid = new Property(1, String.class, "uid", false, "UID");
         public final static Property Token = new Property(2, String.class, "token", false, "TOKEN");
         public final static Property ParentType = new Property(3, int.class, "parentType", false, "PARENT_TYPE");
-        public final static Property RefreshToken = new Property(4, String.class, "refreshToken", false, "REFRESH_TOKEN");
-        public final static Property ExpiresIn = new Property(5, Long.class, "expiresIn", false, "EXPIRES_IN");
-        public final static Property Name = new Property(6, String.class, "name", false, "NAME");
-        public final static Property Avatar = new Property(7, String.class, "avatar", false, "AVATAR");
-        public final static Property Gender = new Property(8, String.class, "gender", false, "GENDER");
-        public final static Property Sign = new Property(9, String.class, "sign", false, "SIGN");
-        public final static Property Cover = new Property(10, String.class, "cover", false, "COVER");
+        public final static Property ParentJson = new Property(4, String.class, "parentJson", false, "PARENT_JSON");
+        public final static Property RefreshToken = new Property(5, String.class, "refreshToken", false, "REFRESH_TOKEN");
+        public final static Property ExpiresIn = new Property(6, Long.class, "expiresIn", false, "EXPIRES_IN");
+        public final static Property Name = new Property(7, String.class, "name", false, "NAME");
+        public final static Property Avatar = new Property(8, String.class, "avatar", false, "AVATAR");
+        public final static Property Gender = new Property(9, String.class, "gender", false, "GENDER");
+        public final static Property Sign = new Property(10, String.class, "sign", false, "SIGN");
+        public final static Property Cover = new Property(11, String.class, "cover", false, "COVER");
     };
 
 
@@ -53,13 +54,14 @@ public class UserDao extends AbstractDao<User, Long> {
                 "\"UID\" TEXT NOT NULL ," + // 1: uid
                 "\"TOKEN\" TEXT NOT NULL ," + // 2: token
                 "\"PARENT_TYPE\" INTEGER NOT NULL ," + // 3: parentType
-                "\"REFRESH_TOKEN\" TEXT," + // 4: refreshToken
-                "\"EXPIRES_IN\" INTEGER," + // 5: expiresIn
-                "\"NAME\" TEXT," + // 6: name
-                "\"AVATAR\" TEXT," + // 7: avatar
-                "\"GENDER\" TEXT," + // 8: gender
-                "\"SIGN\" TEXT," + // 9: sign
-                "\"COVER\" TEXT);"); // 10: cover
+                "\"PARENT_JSON\" TEXT," + // 4: parentJson
+                "\"REFRESH_TOKEN\" TEXT," + // 5: refreshToken
+                "\"EXPIRES_IN\" INTEGER," + // 6: expiresIn
+                "\"NAME\" TEXT," + // 7: name
+                "\"AVATAR\" TEXT," + // 8: avatar
+                "\"GENDER\" TEXT," + // 9: gender
+                "\"SIGN\" TEXT," + // 10: sign
+                "\"COVER\" TEXT);"); // 11: cover
     }
 
     /** Drops the underlying database table. */
@@ -81,39 +83,44 @@ public class UserDao extends AbstractDao<User, Long> {
         stmt.bindString(3, entity.getToken());
         stmt.bindLong(4, entity.getParentType());
  
+        String parentJson = entity.getParentJson();
+        if (parentJson != null) {
+            stmt.bindString(5, parentJson);
+        }
+ 
         String refreshToken = entity.getRefreshToken();
         if (refreshToken != null) {
-            stmt.bindString(5, refreshToken);
+            stmt.bindString(6, refreshToken);
         }
  
         Long expiresIn = entity.getExpiresIn();
         if (expiresIn != null) {
-            stmt.bindLong(6, expiresIn);
+            stmt.bindLong(7, expiresIn);
         }
  
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(7, name);
+            stmt.bindString(8, name);
         }
  
         String avatar = entity.getAvatar();
         if (avatar != null) {
-            stmt.bindString(8, avatar);
+            stmt.bindString(9, avatar);
         }
  
         String gender = entity.getGender();
         if (gender != null) {
-            stmt.bindString(9, gender);
+            stmt.bindString(10, gender);
         }
  
         String sign = entity.getSign();
         if (sign != null) {
-            stmt.bindString(10, sign);
+            stmt.bindString(11, sign);
         }
  
         String cover = entity.getCover();
         if (cover != null) {
-            stmt.bindString(11, cover);
+            stmt.bindString(12, cover);
         }
     }
 
@@ -131,13 +138,14 @@ public class UserDao extends AbstractDao<User, Long> {
             cursor.getString(offset + 1), // uid
             cursor.getString(offset + 2), // token
             cursor.getInt(offset + 3), // parentType
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // refreshToken
-            cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5), // expiresIn
-            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // name
-            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // avatar
-            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // gender
-            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // sign
-            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10) // cover
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // parentJson
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // refreshToken
+            cursor.isNull(offset + 6) ? null : cursor.getLong(offset + 6), // expiresIn
+            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // name
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // avatar
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // gender
+            cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // sign
+            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11) // cover
         );
         return entity;
     }
@@ -149,13 +157,14 @@ public class UserDao extends AbstractDao<User, Long> {
         entity.setUid(cursor.getString(offset + 1));
         entity.setToken(cursor.getString(offset + 2));
         entity.setParentType(cursor.getInt(offset + 3));
-        entity.setRefreshToken(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setExpiresIn(cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5));
-        entity.setName(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
-        entity.setAvatar(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
-        entity.setGender(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
-        entity.setSign(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
-        entity.setCover(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
+        entity.setParentJson(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setRefreshToken(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setExpiresIn(cursor.isNull(offset + 6) ? null : cursor.getLong(offset + 6));
+        entity.setName(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setAvatar(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
+        entity.setGender(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
+        entity.setSign(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
+        entity.setCover(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
      }
     
     /** @inheritdoc */

@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,10 +24,10 @@ import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
+import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
-import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,6 @@ public class TopicFavoritesFragment extends BaseFragment{
 
     private PullToRefreshLayout mPullToRefreshLayout;
     private TopicFavoritesAdapter mAdapter;
-    private Oauth2AccessToken mWBAccessToken;
 
     @Nullable
     @Override
@@ -53,17 +51,16 @@ public class TopicFavoritesFragment extends BaseFragment{
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(mAdapter = new TopicFavoritesAdapter(getActivity(), getData()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        mWBAccessToken = SPUtil.getSinaAccessToken();
         mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.pull_to_refresh);
         mPullToRefreshLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (mWBAccessToken == null || TextUtils.isEmpty(mWBAccessToken.getToken())) {
+                if (UserUtil.isUserEmpty()) {
                     mPullToRefreshLayout.setRefreshing(false);
                     return;
                 }
 
-                RequestManager.addToRequestQueue(getWBTopicFavoritesRequest(mWBAccessToken.getToken(), true), getRequestTag());
+                RequestManager.addToRequestQueue(getWBTopicFavoritesRequest(UserUtil.getToken(), true), getRequestTag());
             }
         });
         mPullToRefreshLayout.setOnLoadListener(new PullToRefreshLayout.OnLoadListener() {
@@ -71,7 +68,7 @@ public class TopicFavoritesFragment extends BaseFragment{
             public void onLoad() {
                 if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
 //                    String id = CommonUtil.getLastItem(mAdapter.getData()).getId();
-                    RequestManager.addToRequestQueue(getWBTopicFavoritesRequest(mWBAccessToken.getToken(), false), getRequestTag());
+                    RequestManager.addToRequestQueue(getWBTopicFavoritesRequest(UserUtil.getToken(), false), getRequestTag());
                 } else {
                     mPullToRefreshLayout.setLoading(false);
                     mPullToRefreshLayout.setLoadEnable(false);
@@ -97,7 +94,7 @@ public class TopicFavoritesFragment extends BaseFragment{
     private ArrayList<TopicFavorites.TopicFavorite> getData() {
 
         ArrayList<TopicFavorites.TopicFavorite> data = SPUtil.getModule(new TypeToken<ArrayList<TopicFavorites.TopicFavorite>>() {
-        }.getType(), TopicFavorites.TopicFavorite.class.getSimpleName() + SPUtil.getSinaUid());
+        }.getType(), TopicFavorites.TopicFavorite.class.getSimpleName() + UserUtil.getUid());
         if (data == null) {
             data = new ArrayList<>();
         }
@@ -118,7 +115,7 @@ public class TopicFavoritesFragment extends BaseFragment{
                 || type == DataUtil.REFRESH_DATA_SIZE_EQUAL
                 || type == DataUtil.LOAD_NO_MORE_DATA
                 || type == DataUtil.LOAD_DATA_SIZE_EQUAL){
-            SPUtil.setModule(mAdapter.getData(), TopicFavorites.TopicFavorite.class.getSimpleName() + SPUtil.getSinaUid());
+            SPUtil.setModule(mAdapter.getData(), TopicFavorites.TopicFavorite.class.getSimpleName() + UserUtil.getUid());
         }
     }
 

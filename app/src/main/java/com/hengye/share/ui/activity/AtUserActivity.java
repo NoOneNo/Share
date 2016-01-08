@@ -35,9 +35,9 @@ import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
+import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
-import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +87,6 @@ public class AtUserActivity extends BaseActivity {
     private ArrayList<AtUser> mSelectResultData, mSearchResultData;
     private LinearLayoutManager mSelectResultLayoutManager;
 
-    private Oauth2AccessToken mOauth2AccessToken;
 
     private void initView() {
 
@@ -106,9 +105,7 @@ public class AtUserActivity extends BaseActivity {
 
         mSearchIcon = findViewById(R.id.ic_search);
 
-        mOauth2AccessToken = SPUtil.getSinaAccessToken();
-
-        if(mOauth2AccessToken == null){
+        if(UserUtil.isUserEmpty()){
             finish();
         }
     }
@@ -245,7 +242,7 @@ public class AtUserActivity extends BaseActivity {
         mPullToRefreshLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                RequestManager.addToRequestQueue(getWBAttentionRequest(mOauth2AccessToken.getToken(), mOauth2AccessToken.getUid()));
+                RequestManager.addToRequestQueue(getWBAttentionRequest(UserUtil.getToken(), UserUtil.getUid()));
             }
         });
         mPullToRefreshLayout.setLoadEnable(false);
@@ -372,7 +369,7 @@ public class AtUserActivity extends BaseActivity {
 
     private List<AtUser> getSearchResultData() {
         mSearchResultData = SPUtil.getModule(new TypeToken<ArrayList<AtUser>>() {
-        }.getType(), AtUser.class.getSimpleName() + SPUtil.getSinaUid());
+        }.getType(), AtUser.class.getSimpleName() + UserUtil.getUid());
 
         if (mSearchResultData == null) {
             mSearchResultData = new ArrayList<>();
@@ -421,7 +418,7 @@ public class AtUserActivity extends BaseActivity {
 
         mSearchResultData = AtUser.getAtUser(data);
 
-        SPUtil.setModule(mSearchResultData, AtUser.class.getSimpleName() + SPUtil.getSinaUid());
+        SPUtil.setModule(mSearchResultData, AtUser.class.getSimpleName() + UserUtil.getUid());
         mAtUserSearchAdapter.refresh(mSearchResultData);
 //        mAtUserSearchAdapter.notifyDataSetChanged();
     }

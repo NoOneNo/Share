@@ -20,7 +20,6 @@ import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.R;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
-import com.hengye.share.model.TopicPublish;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.model.sina.WBTopic;
@@ -38,9 +37,9 @@ import com.hengye.share.util.DateUtil;
 import com.hengye.share.util.IntentUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
-import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
+import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
 
 import java.util.ArrayList;
@@ -305,7 +304,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
             ub = new UrlBuilder(UrlFactory.getInstance().getWBCreateFavoritesUrl());
         }
 
-        ub.addParameter("access_token", SPUtil.getSinaToken());
+        ub.addParameter("access_token", UserUtil.getToken());
         ub.addParameter("id", topicId);
         return new GsonRequest<WBTopic>(Request.Method.POST,
                 WBTopic.class,

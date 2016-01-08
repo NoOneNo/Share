@@ -19,7 +19,6 @@ import com.hengye.share.BaseActivity;
 import com.hengye.share.R;
 import com.hengye.share.model.AtUser;
 import com.hengye.share.model.Parent;
-import com.hengye.share.model.Topic;
 import com.hengye.share.model.greenrobot.TopicDraft;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.service.TopicPublishService;
@@ -29,8 +28,8 @@ import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.DateUtil;
 import com.hengye.share.util.IntentUtil;
-import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.ToastUtil;
+import com.hengye.share.util.UserUtil;
 
 import java.util.ArrayList;
 
@@ -213,7 +212,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
 
     private TopicDraft generateTopicDraft() {
         TopicDraft td = new TopicDraft();
-        td.setUid(SPUtil.getSinaUid());
+        td.setUid(UserUtil.getUid());
         td.setContent(mContent.getText().toString());
 //        td.setDate(DateUtil.getChinaGMTDateFormat());
         td.setDate(DateUtil.getChinaGMTDate());
@@ -228,7 +227,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void publishTopic() {
-        TopicPublishService.publish(this, generateTopicDraft(), SPUtil.getSinaToken());
+        TopicPublishService.publish(this, generateTopicDraft(), UserUtil.getToken());
         finish();
     }
 

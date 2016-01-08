@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,13 +21,12 @@ import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
-import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
+import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
-import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +57,6 @@ public class TopicNotifyFragment extends BaseFragment{
 
     private PullToRefreshLayout mPullToRefreshLayout;
     private TopicNotifyAdapter mAdapter;
-    private Oauth2AccessToken mWBAccessToken;
 
 
     @Nullable
@@ -72,20 +69,19 @@ public class TopicNotifyFragment extends BaseFragment{
         recyclerView.setAdapter(mAdapter = new TopicNotifyAdapter(getActivity(), new ArrayList<Topic>()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mWBAccessToken = SPUtil.getSinaAccessToken();
         mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.pull_to_refresh);
         mPullToRefreshLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (mWBAccessToken == null || TextUtils.isEmpty(mWBAccessToken.getToken())) {
+                if (UserUtil.isUserEmpty()) {
                     mPullToRefreshLayout.setRefreshing(false);
                     return;
                 }
 
                 if(mNotifyType == NOTIFY_COMMENT) {
-                    RequestManager.addToRequestQueue(getWBCommentRequest(mWBAccessToken.getToken(), "0", true, URL_COMMENT_TO_ME), getRequestTag());
+                    RequestManager.addToRequestQueue(getWBCommentRequest(UserUtil.getToken(), "0", true, URL_COMMENT_TO_ME), getRequestTag());
                 }else{
-                    RequestManager.addToRequestQueue(getWBTopicRequest(mWBAccessToken.getToken(), "0", true), getRequestTag());
+                    RequestManager.addToRequestQueue(getWBTopicRequest(UserUtil.getToken(), "0", true), getRequestTag());
                 }
             }
         });
@@ -95,9 +91,9 @@ public class TopicNotifyFragment extends BaseFragment{
                 if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
                     String id = CommonUtil.getLastItem(mAdapter.getData()).getId();
                     if(mNotifyType == NOTIFY_COMMENT) {
-                        RequestManager.addToRequestQueue(getWBCommentRequest(mWBAccessToken.getToken(), id, false, URL_COMMENT_TO_ME), getRequestTag());
+                        RequestManager.addToRequestQueue(getWBCommentRequest(UserUtil.getToken(), id, false, URL_COMMENT_TO_ME), getRequestTag());
                     }else{
-                        RequestManager.addToRequestQueue(getWBTopicRequest(mWBAccessToken.getToken(), id, false), getRequestTag());
+                        RequestManager.addToRequestQueue(getWBTopicRequest(UserUtil.getToken(), id, false), getRequestTag());
                     }
                 } else {
                     mPullToRefreshLayout.setLoading(false);

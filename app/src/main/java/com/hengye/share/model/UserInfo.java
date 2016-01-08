@@ -1,6 +1,7 @@
 package com.hengye.share.model;
 
 
+import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.model.sina.WBUserInfos;
 import com.hengye.share.util.CommonUtil;
@@ -52,13 +53,20 @@ public class UserInfo extends ParentInherit implements Serializable{
         return GsonUtil.getInstance().fromJson(getParent().getJson(), WBUserInfo.class);
     }
 
-//    public Parent getParent() {
-//        return parent;
-//    }
-//
-//    public void setParent(Parent parent) {
-//        this.parent = parent;
-//    }
+    public static UserInfo getUserInfo(User user){
+        UserInfo userInfo = new UserInfo();
+        if(user == null){
+            return userInfo;
+        }
+        userInfo.setParent(new Parent(user.getParentJson(), Parent.TYPE_WEIBO));
+        userInfo.setUid(user.getUid());
+        userInfo.setName(user.getName());
+        userInfo.setAvatar(user.getAvatar());
+        userInfo.setGender(user.getGender());
+        userInfo.setSign(user.getSign());
+        userInfo.setCover(user.getCover());
+        return userInfo;
+    }
 
     public String getUid() {
         return uid;

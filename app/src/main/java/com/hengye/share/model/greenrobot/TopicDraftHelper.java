@@ -2,7 +2,7 @@ package com.hengye.share.model.greenrobot;
 
 import com.hengye.share.model.Parent;
 import com.hengye.share.model.Topic;
-import com.hengye.share.util.SPUtil;
+import com.hengye.share.util.UserUtil;
 
 import java.util.List;
 
@@ -40,7 +40,7 @@ public class TopicDraftHelper {
 
     public static List<TopicDraft> getTopicDraft(){
         QueryBuilder<TopicDraft> qb = GreenDaoManager.getDaoSession().getTopicDraftDao().queryBuilder();
-        qb.where(TopicDraftDao.Properties.Uid.eq(SPUtil.getSinaUid()));
+        qb.where(TopicDraftDao.Properties.Uid.eq(UserUtil.getUid()));
         qb.orderDesc(TopicDraftDao.Properties.Date);
         return qb.list();
     }

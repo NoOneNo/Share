@@ -27,46 +27,52 @@ public class SPUtil {
         return getContext().getSharedPreferences(MODULE_NAME, Context.MODE_PRIVATE).getString("uid", null);
     }
 
-    public static synchronized String getSinaUid(){
-        Oauth2AccessToken oauth2AccessToken = getSinaAccessToken();
-        if(oauth2AccessToken == null){
-            return "";
-        }else{
-            return oauth2AccessToken.getUid();
-        }
-    }
-
-    public static synchronized String getSinaToken(){
-        Oauth2AccessToken oauth2AccessToken = getSinaAccessToken();
-        if(oauth2AccessToken == null){
-            return "";
-        }else{
-            return oauth2AccessToken.getToken();
-        }
-    }
-
-    public static synchronized Oauth2AccessToken getSinaAccessToken(){
-        String json = getContext().getSharedPreferences(SINA_NAME, Context.MODE_PRIVATE).getString("access_token", null);
-        if(!TextUtils.isEmpty(json)){
-            try{
-                return GsonUtil.getInstance().fromJson(json, Oauth2AccessToken.class);
-            }catch (JsonParseException e){
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
-    public static synchronized void setSinaAccessToken(Oauth2AccessToken accessToken){
-        setSinaAccessToken(GsonUtil.getInstance().toJson(accessToken));
-    }
-
-    public static synchronized void setSinaAccessToken(String json){
-        SharedPreferences.Editor editor = getContext().getSharedPreferences(SINA_NAME, Context.MODE_PRIVATE).edit();
-        editor.putString("access_token", json);
-        L.debug("save sina access_token , json : {}", json);
+    public static synchronized void setUid(String uid){
+        SharedPreferences.Editor editor = getContext().getSharedPreferences(MODULE_NAME, Context.MODE_PRIVATE).edit();
+        editor.putString("uid", uid);
         editor.apply();
     }
+
+//    public static synchronized String getSinaUid(){
+//        Oauth2AccessToken oauth2AccessToken = getSinaAccessToken();
+//        if(oauth2AccessToken == null){
+//            return "";
+//        }else{
+//            return oauth2AccessToken.getUid();
+//        }
+//    }
+//
+//    public static synchronized String getSinaToken(){
+//        Oauth2AccessToken oauth2AccessToken = getSinaAccessToken();
+//        if(oauth2AccessToken == null){
+//            return "";
+//        }else{
+//            return oauth2AccessToken.getToken();
+//        }
+//    }
+//
+//    public static synchronized Oauth2AccessToken getSinaAccessToken(){
+//        String json = getContext().getSharedPreferences(SINA_NAME, Context.MODE_PRIVATE).getString("access_token", null);
+//        if(!TextUtils.isEmpty(json)){
+//            try{
+//                return GsonUtil.getInstance().fromJson(json, Oauth2AccessToken.class);
+//            }catch (JsonParseException e){
+//                e.printStackTrace();
+//            }
+//        }
+//        return null;
+//    }
+//
+//    public static synchronized void setSinaAccessToken(Oauth2AccessToken accessToken){
+//        setSinaAccessToken(GsonUtil.getInstance().toJson(accessToken));
+//    }
+//
+//    public static synchronized void setSinaAccessToken(String json){
+//        SharedPreferences.Editor editor = getContext().getSharedPreferences(SINA_NAME, Context.MODE_PRIVATE).edit();
+//        editor.putString("access_token", json);
+//        L.debug("save sina access_token , json : {}", json);
+//        editor.apply();
+//    }
 
     public static synchronized <T> T getModule(Type type, String name){
         String json = getContext().getSharedPreferences(MODULE_NAME, Context.MODE_PRIVATE).getString(name, null);

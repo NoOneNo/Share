@@ -53,4 +53,16 @@ public class Parent implements Serializable{
     public boolean isWechat(){
         return getType() == TYPE_WECHAT;
     }
+
+    public static boolean isWeiBo(int type){
+        return type == TYPE_WEIBO;
+    }
+
+    public static boolean isQQ(int type){
+        return type == TYPE_QQ;
+    }
+
+    public static boolean isWechat(int type){
+        return type == TYPE_WECHAT;
+    }
 }
