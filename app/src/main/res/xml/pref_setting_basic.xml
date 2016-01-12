@@ -11,17 +11,19 @@
             android:title="@string/title_setting_launch_check_update"
             android:defaultValue="true"/>
 
-        <CheckBoxPreference
-            android:key="slide_back"
-            android:title="@string/title_setting_slide_back"
-            android:summary="@string/title_setting_slide_back_summary"
-            android:defaultValue="true"/>
-
         <SwitchPreference
             android:key="home_back"
             android:title="@string/title_setting_home_back"
             android:summary="@string/title_setting_home_back_summary"
             android:defaultValue="false"/>
+
+        <ListPreference
+            android:key="swipe_back"
+            android:title="@string/title_setting_swipe_back"
+            android:summary="%s"
+            android:entries="@array/swipe_back_entries"
+            android:entryValues="@array/swipe_back_values"
+            android:defaultValue="1"/>
 
         <EditTextPreference
             android:key="photo_save_path"

@@ -11,6 +11,10 @@ import java.util.Set;
 
 public class SettingHelper {
 
+    //基本设置
+    public final static String KEY_BASIC_SWIPE_BACK = "swipe_back";
+    //基本设置
+
     //流量控制
     public final static String KEY_FLOW_PREREAD = "preread";
     public final static String KEY_FLOW_LOAD_COUNT = "load_count";
@@ -79,6 +83,20 @@ public class SettingHelper {
         }else{
             return THEME_RES_ID_DEFAULT;
         }
+    }
+
+    //滑动退出
+    public static String getSwipeBack(){
+        return getPreferences().getString(KEY_BASIC_SWIPE_BACK, null);
+    }
+
+    //滑动退出
+    public static boolean isSwipeBack(){
+        String value = getPreferences().getString(KEY_BASIC_SWIPE_BACK, null);
+        if("4".equals(value)){
+            return false;
+        }
+        return true;
     }
 
     //预读模式

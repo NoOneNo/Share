@@ -71,6 +71,16 @@ public class TopicActivity extends BaseActivity
     }
 
     @Override
+    protected boolean canSwipeBack() {
+        return false;
+    }
+
+    @Override
+    protected boolean setFinishPendingTransition() {
+        return false;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);

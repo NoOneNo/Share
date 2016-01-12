@@ -113,10 +113,9 @@
     <string name="title_setting_other_about">关于</string>
 
     <string name="title_setting_launch_check_update">启动时检查更新</string>
-    <string name="title_setting_slide_back">滑动后退</string>
-    <string name="title_setting_slide_back_summary">二级页面向右滑动执行返回操作</string>
     <string name="title_setting_home_back">首页按返回键退出</string>
     <string name="title_setting_home_back_summary">首页按返回键退出应用，不在后台运行</string>
+    <string name="title_setting_swipe_back">二级页面滑动后退</string>
     <string name="title_setting_photo_save_path">图片保存路径</string>
     <string name="title_setting_click_photo_back">点击图片返回</string>
     <string name="title_setting_clear_photo_cache">清除图片缓存</string>

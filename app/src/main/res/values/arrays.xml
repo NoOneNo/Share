@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- 滑动退出 -->
+    <string-array name="swipe_back_entries">
+        <item>向右滑动退出</item>
+        <item>向左滑动退出</item>
+        <item>向左或右滑动退出</item>
+        <item>禁用</item>
+    </string-array>
+    <string-array name="swipe_back_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+    <!-- 滑动退出 -->
+
     <!-- 预读模式 -->
     <string-array name="load_count_entries">
         <item>30</item>

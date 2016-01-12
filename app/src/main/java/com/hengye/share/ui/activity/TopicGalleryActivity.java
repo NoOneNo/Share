@@ -3,6 +3,7 @@ package com.hengye.share.ui.activity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -63,6 +64,9 @@ public class TopicGalleryActivity extends BaseActivity {
         intent.putExtra(IMG_RECT_LIST, rectList);
         intent.putExtra(IMG_INDEX, index);
         context.startActivity(intent);
+        if(context instanceof Activity){
+            ((Activity)context).overridePendingTransition(0, 0);
+        }
     }
 
     @SuppressWarnings("unchecked")

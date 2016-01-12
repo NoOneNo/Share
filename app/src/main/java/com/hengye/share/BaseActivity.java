@@ -16,21 +16,34 @@ import com.hengye.share.util.SettingHelper;
 
 public class BaseActivity extends AppCompatActivity {
 
-    protected String getRequestTag(){
+    protected String getRequestTag() {
         return "BaseActivity";
     }
 
     /**
      * @return 如果为true, 则使用APP自定义的主题
      */
-    protected boolean setCustomTheme(){
+    protected boolean setCustomTheme() {
         return true;
     }
 
-    protected boolean setToolBar(){
+    protected boolean setToolBar() {
         return true;
     }
+
+    protected boolean canSwipeBack() {
+        return true;
+    }
+
+    protected boolean setFinishPendingTransition() {
+        return true;
+    }
+
     private int mThemeResId = 0;
+
+    private BaseActivityHelper mHelper;
+
+    protected boolean mFirstClick = true;
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -43,6 +56,18 @@ public class BaseActivity extends AppCompatActivity {
         setCustomThemeIfNeeded(savedInstanceState);
         super.onCreate(savedInstanceState);
         handleBundleExtra();
+        setupActivityHelper();
+        if (mHelper != null) {
+            mHelper.onCreate(savedInstanceState);
+        }
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        if (mHelper != null) {
+            mHelper.onPostCreate(savedInstanceState);
+        }
     }
 
     @Override
@@ -57,8 +82,12 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        mFirstClick = true;
         replaceCustomThemeIfNeeded();
         super.onResume();
+        if (mHelper != null) {
+            mHelper.onResume();
+        }
     }
 
     @Override
@@ -68,27 +97,34 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     @Override
-    public void startActivityForResult(Intent intent, int requestCode, @Nullable Bundle options){
-        super.startActivityForResult(intent, requestCode, options);
+    public void startActivityForResult(Intent intent, int requestCode, @Nullable Bundle options) {
+        if (mFirstClick) {
+            mFirstClick = false;
+            super.startActivityForResult(intent, requestCode, options);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        }
     }
 
     @Override
-    public void finish(){
+    public void finish() {
         super.finish();
+        if (setFinishPendingTransition()) {
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        }
     }
 
-    protected void handleBundleExtra(){
+    protected void handleBundleExtra() {
 
     }
 
-    protected void cancelPendingRequestsIfNeeded(){
-        if(getRequestTag() != null){
+    protected void cancelPendingRequestsIfNeeded() {
+        if (getRequestTag() != null) {
             RequestManager.cancelPendingRequests(getRequestTag());
         }
     }
 
-    protected void setCustomThemeIfNeeded(Bundle savedInstanceState){
-        if(setCustomTheme()){
+    protected void setCustomThemeIfNeeded(Bundle savedInstanceState) {
+        if (setCustomTheme()) {
             if (savedInstanceState == null) {
                 mThemeResId = SettingHelper.getAppThemeResId();
             } else {
@@ -99,7 +135,7 @@ public class BaseActivity extends AppCompatActivity {
 
     }
 
-    protected void replaceCustomThemeIfNeeded(){
+    protected void replaceCustomThemeIfNeeded() {
         if (setCustomTheme() && mThemeResId != SettingHelper.getAppThemeResId()) {
             reStartActivity();
         }
@@ -114,10 +150,10 @@ public class BaseActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    protected void setToolBarIfNeeded(View view){
-        if(!setToolBar()) {
+    protected void setToolBarIfNeeded(View view) {
+        if (!setToolBar()) {
             super.setContentView(view);
-        }else{
+        } else {
             super.setContentView(R.layout.activity_base);
             LinearLayout rootLayout = (LinearLayout) findViewById(R.id.layout_root);
             if (rootLayout == null) return;
@@ -127,7 +163,7 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    protected void initToolbar(){
+    protected void initToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         if (mToolbar != null) {
             setSupportActionBar(mToolbar);
@@ -143,19 +179,25 @@ public class BaseActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
 
-    public Toolbar getToolbar(){
+    public Toolbar getToolbar() {
         return mToolbar;
     }
 
-    public void updateToolbarTitle(String title){
+    public void updateToolbarTitle(String title) {
         mToolbar.setTitle(title);
     }
 
-    public void updateToolbarTitle(@StringRes int resId){
+    public void updateToolbarTitle(@StringRes int resId) {
         mToolbar.setTitle(getString(resId));
     }
 
     protected CharSequence getToolbarTitle() {
         return getTitle();
+    }
+
+    protected void setupActivityHelper() {
+        if (mHelper == null) {
+            mHelper = new ShareActivityHelper(this, canSwipeBack());
+        }
     }
 }
