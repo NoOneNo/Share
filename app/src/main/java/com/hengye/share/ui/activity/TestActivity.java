@@ -6,7 +6,7 @@ import android.os.HandlerThread;
 import android.util.Log;
 import android.view.View;
 
-import com.hengye.share.BaseActivity;
+import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.R;
 
 import java.util.concurrent.TimeUnit;

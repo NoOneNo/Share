@@ -2,10 +2,9 @@ package com.hengye.share.ui.fragment.setting;
 
 import android.os.Bundle;
 
-import com.hengye.share.BaseApplication;
+import com.hengye.share.ui.base.BaseApplication;
 import com.hengye.share.R;
 import com.hengye.share.ui.fragment.BasePreferenceFragment;
-import com.hengye.share.util.L;
 
 public class SettingFlowControlFragment extends BasePreferenceFragment{
 

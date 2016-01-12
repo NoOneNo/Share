@@ -5,7 +5,7 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.Toast;
 
-import com.hengye.share.BaseApplication;
+import com.hengye.share.ui.base.BaseApplication;
 
 public class ToastUtil {
 

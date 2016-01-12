@@ -20,7 +20,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/ShareAppTheme"
-        android:name=".BaseApplication">
+        android:name=".ui.base.BaseApplication">
 
         <service android:name="com.hengye.share.service.ShareService"/>
         <service android:name="com.hengye.share.service.TopicPublishService"/>

@@ -2,9 +2,8 @@ package com.hengye.share.ui.fragment.setting;
 
 import android.os.Bundle;
 
-import com.hengye.share.BaseApplication;
+import com.hengye.share.ui.base.BaseApplication;
 import com.hengye.share.R;
-import com.hengye.share.ui.fragment.BaseFragment;
 import com.hengye.share.ui.fragment.BasePreferenceFragment;
 
 public class SettingFeedbackFragment extends BasePreferenceFragment{

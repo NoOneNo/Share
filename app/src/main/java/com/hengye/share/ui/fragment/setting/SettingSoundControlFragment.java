@@ -4,7 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 
-import com.hengye.share.BaseApplication;
+import com.hengye.share.ui.base.BaseApplication;
 import com.hengye.share.R;
 import com.hengye.share.ui.fragment.BasePreferenceFragment;
 import com.hengye.share.util.SettingHelper;

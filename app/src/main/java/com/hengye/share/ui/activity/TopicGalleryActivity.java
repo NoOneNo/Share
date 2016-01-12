@@ -19,7 +19,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-import com.hengye.share.BaseActivity;
+import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.R;
 import com.hengye.share.ui.fragment.TopicGalleryFragment;
 import com.hengye.share.ui.support.AnimationRect;

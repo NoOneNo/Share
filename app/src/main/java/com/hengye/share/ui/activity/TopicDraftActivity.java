@@ -7,22 +7,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.hengye.share.BaseActivity;
+import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicDraftAdapter;
-import com.hengye.share.model.greenrobot.GreenDaoManager;
 import com.hengye.share.model.greenrobot.TopicDraft;
-import com.hengye.share.model.greenrobot.TopicDraftDao;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.IntentUtil;
-import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.ViewUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import de.greenrobot.dao.query.QueryBuilder;
 
 public class TopicDraftActivity extends BaseActivity{
 

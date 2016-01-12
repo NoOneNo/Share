@@ -13,7 +13,7 @@ import android.widget.ListView;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
-import com.hengye.share.BaseActivity;
+import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.R;
 import com.hengye.share.adapter.listview.TopicCommentAdapter;
 import com.hengye.share.adapter.recyclerview.TopicAdapter;

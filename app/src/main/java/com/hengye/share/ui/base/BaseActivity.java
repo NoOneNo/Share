@@ -1,20 +1,20 @@
-package com.hengye.share;
+package com.hengye.share.ui.base;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.hengye.share.R;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.SettingHelper;
 
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity implements MvpView{
 
     protected String getRequestTag() {
         return "BaseActivity";
@@ -41,7 +41,9 @@ public class BaseActivity extends AppCompatActivity {
 
     private int mThemeResId = 0;
 
-    private BaseActivityHelper mHelper;
+    private SwipeBackHelper mSwipeHelper;
+
+    private BasePresenter<MvpView> mPresenter;
 
     protected boolean mFirstClick = true;
 
@@ -57,16 +59,19 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         handleBundleExtra();
         setupActivityHelper();
-        if (mHelper != null) {
-            mHelper.onCreate(savedInstanceState);
+        if (mSwipeHelper != null) {
+            mSwipeHelper.onCreate();
+        }
+        if(mPresenter != null){
+            mPresenter.attachView(this);
         }
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        if (mHelper != null) {
-            mHelper.onPostCreate(savedInstanceState);
+        if (mSwipeHelper != null) {
+            mSwipeHelper.onPostCreate();
         }
     }
 
@@ -82,18 +87,21 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        super.onResume();
         mFirstClick = true;
         replaceCustomThemeIfNeeded();
-        super.onResume();
-        if (mHelper != null) {
-            mHelper.onResume();
+        if (mSwipeHelper != null) {
+            mSwipeHelper.onResume();
         }
     }
 
     @Override
     protected void onDestroy() {
-        cancelPendingRequestsIfNeeded();
         super.onDestroy();
+        cancelPendingRequestsIfNeeded();
+        if(mPresenter != null){
+            mPresenter.detachView();
+        }
     }
 
     @Override
@@ -103,6 +111,11 @@ public class BaseActivity extends AppCompatActivity {
             super.startActivityForResult(intent, requestCode, options);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     @Override
@@ -196,8 +209,18 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void setupActivityHelper() {
-        if (mHelper == null) {
-            mHelper = new ShareActivityHelper(this, canSwipeBack());
+        if (mSwipeHelper == null) {
+            if(canSwipeBack() && SettingHelper.isSwipeBack()){
+                mSwipeHelper = new SwipeBackHelper(this);
+            }
         }
+    }
+
+    public void resetFirstClick() {
+        mFirstClick = true;
+    }
+
+    public void setupPresenter(BasePresenter<MvpView> presenter) {
+        mPresenter = presenter;
     }
 }

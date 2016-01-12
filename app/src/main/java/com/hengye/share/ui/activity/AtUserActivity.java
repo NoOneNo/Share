@@ -21,13 +21,15 @@ import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
 import com.google.gson.reflect.TypeToken;
-import com.hengye.share.BaseActivity;
+import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.AtUserSearchAdapter;
 import com.hengye.share.adapter.recyclerview.AtUserSelectAdapter;
 import com.hengye.share.model.AtUser;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.sina.WBUserInfos;
+import com.hengye.share.ui.mvpview.AtUserMvpView;
+import com.hengye.share.ui.presenter.AtUserPresenter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
@@ -42,7 +44,7 @@ import com.hengye.swiperefresh.PullToRefreshLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AtUserActivity extends BaseActivity {
+public class AtUserActivity extends BaseActivity implements AtUserMvpView{
 
     @Override
     protected String getRequestTag() {
@@ -64,6 +66,7 @@ public class AtUserActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_at_user);
+//        setupPresenter(mAtUserPresenter = new AtUserPresenter());
         initView();
         initViewSize();
         initClick();
@@ -87,6 +90,7 @@ public class AtUserActivity extends BaseActivity {
     private ArrayList<AtUser> mSelectResultData, mSearchResultData;
     private LinearLayoutManager mSelectResultLayoutManager;
 
+    private AtUserPresenter mAtUserPresenter;
 
     private void initView() {
 

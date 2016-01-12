@@ -1,4 +1,4 @@
-package com.hengye.share;
+package com.hengye.share.ui.base;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -11,17 +11,18 @@ import me.imid.swipebacklayout.lib.Utils;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivityBase;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivityHelper;
 
-public class ShareActivityHelper extends BaseActivityHelper implements SwipeBackActivityBase {
+@Deprecated
+public class SwipeBackHelperBackUp extends BaseActivityHelper implements SwipeBackActivityBase {
 
     private boolean mCanSwipeBack = SettingHelper.isSwipeBack();
     private SwipeBackActivityHelper mHelper;
 
-    public ShareActivityHelper(Activity activity){
+    public SwipeBackHelperBackUp(Activity activity){
         super(activity);
         mCanSwipeBack = SettingHelper.isSwipeBack();
     }
 
-    public ShareActivityHelper(Activity activity, boolean canSwipeBack){
+    public SwipeBackHelperBackUp(Activity activity, boolean canSwipeBack){
         super(activity);
         mCanSwipeBack = SettingHelper.isSwipeBack() && canSwipeBack;
     }

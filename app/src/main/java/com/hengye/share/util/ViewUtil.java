@@ -4,11 +4,9 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 
-import com.android.volley.toolbox.ImageLoader;
-import com.hengye.share.BaseApplication;
+import com.hengye.share.ui.base.BaseApplication;
 
 public class ViewUtil {
 

@@ -1,6 +1,6 @@
 package com.hengye.share.model.greenrobot;
 
-import com.hengye.share.BaseApplication;
+import com.hengye.share.ui.base.BaseApplication;
 
 public class GreenDaoManager {
 

@@ -1,4 +1,4 @@
-package com.hengye.share;
+package com.hengye.share.ui.base;
 
 import android.app.Application;
 import android.content.Intent;

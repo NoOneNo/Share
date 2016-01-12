@@ -7,9 +7,7 @@ import android.text.TextUtils;
 
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
-import com.hengye.share.BaseApplication;
-import com.hengye.share.R;
-import com.sina.weibo.sdk.auth.Oauth2AccessToken;
+import com.hengye.share.ui.base.BaseApplication;
 
 import java.lang.reflect.Type;
 

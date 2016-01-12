@@ -17,7 +17,7 @@ import android.widget.ImageView;
 
 import com.android.volley.cache.BitmapCache;
 import com.android.volley.toolbox.BitmapUtil;
-import com.hengye.share.BaseApplication;
+import com.hengye.share.ui.base.BaseApplication;
 import com.hengye.share.R;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.util.AnimationUtil;

@@ -24,7 +24,7 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
 import com.android.volley.view.NetworkImageView;
 import com.google.gson.reflect.TypeToken;
-import com.hengye.share.BaseActivity;
+import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicAdapter;
 import com.hengye.share.model.Topic;
@@ -50,7 +50,6 @@ import com.hengye.share.util.thirdparty.SaveUserInfoWeiboAuthListener;
 import com.hengye.share.util.thirdparty.ThirdPartyUtils;
 import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
-import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.auth.WeiboAuth;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
 
