@@ -18,6 +18,7 @@ public class UrlFactory {
     public String getWBUserTopicUrl() {
         return URL_PREFIX_WEIBO + "statuses/user_timeline.json";
     }
+
     //    必选 	类型及范围 	说明
 //    source 	false 	string 	采用OAuth授权方式不需要此参数，其他授权方式为必填参数，数值为应用的AppKey。
 //    access_token 	false 	string 	采用OAuth授权方式为必填参数，其他授权方式不需要此参数，OAuth授权后获得。
@@ -31,6 +32,11 @@ public class UrlFactory {
 //    获得微博
     public String getWBFriendTopicUrl() {
         return URL_PREFIX_WEIBO + "statuses/friends_timeline.json";
+    }
+
+    //获得好友圈微博
+    public String getWBBilateralTopicUrl() {
+        return URL_PREFIX_WEIBO + "statuses/bilateral_timeline.json";
     }
 
     //    必选 	类型及范围 	说明
@@ -151,13 +157,13 @@ public class UrlFactory {
         return URL_PREFIX_WEIBO + "comments/reply.json";
     }
 
-//    id	true	int64	要转发的微博ID。
+    //    id	true	int64	要转发的微博ID。
 //    status	false	string	添加的转发文本，必须做URLencode，内容不超过140个汉字，不填则默认为“转发微博”。
 //    is_comment	false	int	是否在转发的同时发表评论，0：否、1：评论给当前微博、2：评论给原微博、3：都评论，默认为0 。
     //转发微博
     public String getWBTopicRepostUrl() {
-    return URL_PREFIX_WEIBO + "statuses/repost.json";
-}
+        return URL_PREFIX_WEIBO + "statuses/repost.json";
+    }
 
 
     //搜索用户
