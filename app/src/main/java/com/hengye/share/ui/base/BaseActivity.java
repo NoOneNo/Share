@@ -1,5 +1,6 @@
 package com.hengye.share.ui.base;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -43,7 +44,7 @@ public class BaseActivity extends AppCompatActivity implements MvpView{
 
     private SwipeBackHelper mSwipeHelper;
 
-    private BasePresenter<MvpView> mPresenter;
+    private BasePresenter mPresenter;
 
     protected boolean mFirstClick = true;
 
@@ -61,9 +62,6 @@ public class BaseActivity extends AppCompatActivity implements MvpView{
         setupActivityHelper();
         if (mSwipeHelper != null) {
             mSwipeHelper.onCreate();
-        }
-        if(mPresenter != null){
-            mPresenter.attachView(this);
         }
     }
 
@@ -220,7 +218,7 @@ public class BaseActivity extends AppCompatActivity implements MvpView{
         mFirstClick = true;
     }
 
-    public void setupPresenter(BasePresenter<MvpView> presenter) {
+    public void setupPresenter(BasePresenter presenter) {
         mPresenter = presenter;
     }
 }

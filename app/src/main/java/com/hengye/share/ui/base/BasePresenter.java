@@ -9,6 +9,10 @@ public class BasePresenter<T extends MvpView> implements Presenter<T> {
 
     private T mMvpView;
 
+    public BasePresenter(T mvpView){
+        attachView(mvpView);
+    }
+
     @Override
     public void attachView(T mvpView) {
         mMvpView = mvpView;

@@ -5,6 +5,10 @@ import com.hengye.share.ui.mvpview.TemplateMvpView;
 
 public class TemplatePresenter extends BasePresenter<TemplateMvpView> {
 
+    public TemplatePresenter(TemplateMvpView mvpView){
+        super(mvpView);
+    }
+
     @Override
     public void attachView(TemplateMvpView mvpView) {
         super.attachView(mvpView);

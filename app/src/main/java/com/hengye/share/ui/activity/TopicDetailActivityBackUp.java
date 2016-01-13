@@ -10,15 +10,22 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
+import com.android.volley.Response;
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.GsonRequest;
 import com.hengye.share.R;
 import com.hengye.share.adapter.listview.TopicCommentAdapter;
 import com.hengye.share.adapter.recyclerview.TopicAdapter;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
+import com.hengye.share.model.sina.WBTopicComments;
+import com.hengye.share.model.sina.WBTopicReposts;
 import com.hengye.share.ui.base.BaseActivity;
-import com.hengye.share.ui.mvpview.TopicDetailMvpView;
-import com.hengye.share.ui.presenter.TopicDetailPresenter;
 import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.L;
+import com.hengye.share.util.RequestManager;
+import com.hengye.share.util.UrlBuilder;
+import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
@@ -26,7 +33,7 @@ import com.hengye.swiperefresh.PullToRefreshLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpView{
+public class TopicDetailActivityBackUp extends BaseActivity {
 
     @Override
     protected String getRequestTag() {
@@ -44,7 +51,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     }
 
     public static Intent getIntentToStart(Context context, Topic topic) {
-        Intent intent = new Intent(context, TopicDetailActivity.class);
+        Intent intent = new Intent(context, TopicDetailActivityBackUp.class);
         intent.putExtra(Topic.class.getSimpleName(), topic);
         return intent;
     }
@@ -62,7 +69,6 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 
         setContentView(R.layout.activity_topic_detail);
 
-        setupPresenter(mPresenter = new TopicDetailPresenter(this));
         initView();
 
     }
@@ -78,6 +84,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             String str = (String)tab.getTag();
             if("tablayout_assist".equals(str)){
                 mTabLayout.getTabAt(tab.getPosition()).select();
+                return;
             }else if("tablayout".equals(str)){
                 mTabLayoutAssist.getTabAt(tab.getPosition()).select();
 
@@ -100,12 +107,11 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     };
 
     private PullToRefreshLayout mPullToRefreshLayout;
-//    private ListView mListView;
+    private ListView mListView;
     private TopicCommentAdapter mAdapter;
     private TabLayout mTabLayout, mTabLayoutAssist;
     private int mTabLayoutHeight;
 
-    private TopicDetailPresenter mPresenter;
 
     private void initHeaderView(View headerView){
         mTabLayout = (TabLayout) headerView.findViewById(R.id.tab_layout);
@@ -131,11 +137,11 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 
         View headerView = LayoutInflater.from(this).inflate(R.layout.header_topic_detail, null);
         initHeaderView(headerView);
-        ListView listView = (ListView) findViewById(R.id.list_view);
-        listView.addHeaderView(headerView);
-        listView.setAdapter(mAdapter = new TopicCommentAdapter(this, new ArrayList<TopicComment>()));
+        mListView = (ListView) findViewById(R.id.list_view);
+        mListView.addHeaderView(headerView);
+        mListView.setAdapter(mAdapter = new TopicCommentAdapter(this, new ArrayList<TopicComment>()));
 
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
 
@@ -170,7 +176,9 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                     mPullToRefreshLayout.setRefreshing(false);
                     return;
                 }
-                mPresenter.loadCommentAndRepost(UserUtil.getToken(), mTopic.getId(), "0", true);
+
+                RequestManager.addToRequestQueue(getWBCommentRequest(UserUtil.getToken(), mTopic.getId(), "0", true), getRequestTag());
+                RequestManager.addToRequestQueue(getWBRepostRequest(UserUtil.getToken(), mTopic.getId(), "0", true), getRequestTag());
             }
         });
         mPullToRefreshLayout.setOnLoadListener(new PullToRefreshLayout.OnLoadListener() {
@@ -178,7 +186,13 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             public void onLoad() {
                 if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
                     String id = CommonUtil.getLastItem(mAdapter.getData()).getId();
-                    mPresenter.loadCommentOrRepost(UserUtil.getToken(), mTopic.getId(), id, false, isSelectedCommentTab());
+                    GsonRequest gsonRequest;
+                    if(isSelectedCommentTab()){
+                        gsonRequest = getWBCommentRequest(UserUtil.getToken(), mTopic.getId(), id, false);
+                    }else{
+                        gsonRequest = getWBRepostRequest(UserUtil.getToken(), mTopic.getId(), id, false);
+                    }
+                    RequestManager.addToRequestQueue(gsonRequest, getRequestTag());
                 } else {
                     mPullToRefreshLayout.setLoading(false);
                     mPullToRefreshLayout.setLoadEnable(false);
@@ -197,32 +211,13 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         return mTabLayout.getSelectedTabPosition() == 1;
     }
 
+    boolean mHasCommentRequestSuccess, mHasRepostRequestSuccess;
     List<TopicComment> mCommentData = new ArrayList<TopicComment>();
     List<TopicComment> mRepostData = new ArrayList<TopicComment>();
 
-    @Override
-    public void loadSuccess(boolean isRefresh) {
-        stopLoading(isRefresh);
-    }
-
-    @Override
-    public void loadFail(boolean isRefresh) {
-        stopLoading(isRefresh);
-    }
-
-    @Override
-    public void stopLoading(boolean isRefresh) {
+    private void handleCommentData(boolean isComment, List<TopicComment> data, boolean isRefresh){
         if(isRefresh){
             mPullToRefreshLayout.setRefreshing(false);
-        }else{
-            mPullToRefreshLayout.setLoading(false);
-        }
-    }
-
-    @Override
-    public void handleCommentData(boolean isComment, List<TopicComment> data, boolean isRefresh){
-        if(isRefresh){
-//            mPullToRefreshLayout.setRefreshing(false);
             if(CommonUtil.isEmptyCollection(data)){
                 return;
             }
@@ -231,7 +226,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             }else{
                 mRepostData = data;
             }
-//            if(mHasCommentRequestSuccess && mHasRepostRequestSuccess){
+            if(mHasCommentRequestSuccess && mHasRepostRequestSuccess){
                 List<TopicComment> adapterData = isSelectedCommentTab() ? mCommentData : mRepostData;
                 if (CommonUtil.isEmptyCollection(adapterData)) {
 //                    //内容为空
@@ -243,10 +238,10 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                     mPullToRefreshLayout.setLoadEnable(true);
                 }
                 mAdapter.refresh(adapterData);
-//            }
+            }
         }else{
             List<TopicComment> targetData = isComment ? mCommentData : mRepostData;
-//            mPullToRefreshLayout.setLoading(false);
+            mPullToRefreshLayout.setLoading(false);
             if (CommonUtil.isEmptyCollection(data)) {
                 //没有数据可供加载
                 mPullToRefreshLayout.setLoadEnable(false);
@@ -255,7 +250,6 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                 //成功加载更多
                 if (data.size() < WBUtil.MAX_COUNT_REQUEST) {
                     //没有更多的数据可供加载
-                    //不可靠，有可能继续加载还有数据
 //                    mPullToRefreshLayout.setLoadEnable(false);
 //                    Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
                 }
@@ -264,8 +258,6 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                         equals(CommonUtil.getLastItem(targetData).getId())) {
                     data.remove(0);
                 }
-
-                //当只有1条数据并且重复，data会空
                 if (CommonUtil.isEmptyCollection(data)) {
                     mPullToRefreshLayout.setLoadEnable(false);
                     Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
@@ -283,4 +275,73 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 
     }
 
+    private GsonRequest getWBRepostRequest(String token, String topicId, String id, final boolean isRefresh) {
+        mHasRepostRequestSuccess = false;
+
+        final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBRepostUrl());
+        ub.addParameter("access_token", token);
+        ub.addParameter("id", topicId);
+        if (isRefresh) {
+            ub.addParameter("since_id", id);
+        } else {
+            ub.addParameter("max_id", id);
+        }
+        ub.addParameter("count", WBUtil.MAX_COUNT_REQUEST);
+        return new GsonRequest<>(
+                WBTopicReposts.class,
+                ub.getRequestUrl(),
+                new Response.Listener<WBTopicReposts>() {
+            @Override
+            public void onResponse(WBTopicReposts response) {
+                L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
+                mHasRepostRequestSuccess = true;
+                handleCommentData(false, TopicComment.getComments(response), isRefresh);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                if (isRefresh) {
+                    mPullToRefreshLayout.setRefreshing(false);
+                } else {
+                    mPullToRefreshLayout.setLoading(false);
+                }
+                L.debug("request fail , url : {}, error : {}", ub.getRequestUrl(), volleyError);
+            }
+        });
+    }
+
+    private GsonRequest getWBCommentRequest(String token, String topicId, String id, final boolean isRefresh) {
+        mHasCommentRequestSuccess = false;
+
+        final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBCommentUrl());
+        ub.addParameter("access_token", token);
+        ub.addParameter("id", topicId);
+        if (isRefresh) {
+            ub.addParameter("since_id", id);
+        } else {
+            ub.addParameter("max_id", id);
+        }
+        ub.addParameter("count", WBUtil.MAX_COUNT_REQUEST);
+        return new GsonRequest<>(
+                WBTopicComments.class
+                ,ub.getRequestUrl(),
+                new Response.Listener<WBTopicComments>() {
+            @Override
+            public void onResponse(WBTopicComments response) {
+                L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
+                mHasCommentRequestSuccess = true;
+                handleCommentData(true, TopicComment.getComments(response), isRefresh);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                if (isRefresh) {
+                    mPullToRefreshLayout.setRefreshing(false);
+                } else {
+                    mPullToRefreshLayout.setLoading(false);
+                }
+                L.debug("request fail , url : {}, error : {}", ub.getRequestUrl(), volleyError);
+            }
+        });
+    }
 }
