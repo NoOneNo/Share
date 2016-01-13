@@ -35,7 +35,7 @@ import com.hengye.swiperefresh.PullToRefreshLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AtUserActivity extends BaseActivity implements AtUserMvpView{
+public class AtUserActivity extends BaseActivity implements AtUserMvpView {
 
     @Override
     protected String getRequestTag() {
@@ -103,7 +103,7 @@ public class AtUserActivity extends BaseActivity implements AtUserMvpView{
 
         mSearchIcon = findViewById(R.id.ic_search);
 
-        if(UserUtil.isUserEmpty()){
+        if (UserUtil.isUserEmpty()) {
             finish();
         }
     }
@@ -128,17 +128,17 @@ public class AtUserActivity extends BaseActivity implements AtUserMvpView{
 
         if (id == R.id.action_confirm) {
 
-            if(handleAtUser()) {
+            if (handleAtUser()) {
                 finish();
-            }else{
+            } else {
                 ToastUtil.showToast(R.string.label_select_at_user_null);
             }
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean handleAtUser(){
-        if(CommonUtil.isEmptyCollection(mSelectResultData)){
+    private boolean handleAtUser() {
+        if (CommonUtil.isEmptyCollection(mSelectResultData)) {
             return false;
         }
 
@@ -204,24 +204,23 @@ public class AtUserActivity extends BaseActivity implements AtUserMvpView{
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (!TextUtils.isEmpty(mSearch.getText().toString())) {
                     return false;
-                } else {
-                    if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DEL) {
+                }
+                if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DEL) {
 
-                        AtUser au = mAtUserSelectAdapter.getLastItem();
-                        if (au != null) {
-                            int position = mAtUserSelectAdapter.getLastItemPosition();
-                            if (au.isPrepareDelete()) {
-                                mAtUserSelectAdapter.getOnItemClickListener().onItemClick(null, position);
-                                mRVSelectResult.scrollToPosition(position - 1);
+                    AtUser au = mAtUserSelectAdapter.getLastItem();
+                    if (au != null) {
+                        int position = mAtUserSelectAdapter.getLastItemPosition();
+                        if (au.isPrepareDelete()) {
+                            mAtUserSelectAdapter.getOnItemClickListener().onItemClick(null, position);
+                            mRVSelectResult.scrollToPosition(position - 1);
 
-                                notifySelectResultFirstItem();
-                            } else {
-                                mRVSelectResult.scrollToPosition(position);
-                                mAtUserSelectAdapter.setItemPrepareDelete(true, au, position);
-                            }
+                            notifySelectResultFirstItem();
+                        } else {
+                            mRVSelectResult.scrollToPosition(position);
+                            mAtUserSelectAdapter.setItemPrepareDelete(true, au, position);
                         }
-
                     }
+
                 }
                 return false;
             }

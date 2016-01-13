@@ -2,6 +2,7 @@ package com.hengye.share.util.retrofit;
 
 import com.hengye.share.model.sina.WBTopicComments;
 import com.hengye.share.model.sina.WBTopicReposts;
+import com.hengye.share.util.UrlFactory;
 
 import java.util.Map;
 
@@ -15,10 +16,10 @@ public interface WBRetrofitService {
     String URL_PREFIX_WEIBO = "https://api.weibo.com/2/";
 
 
-    @GET("comments/show.json")
+    @GET(UrlFactory.WB_COMMENT_SHOW)
     Observable<WBTopicComments> listComment(@QueryMap Map<String, String> options);
 
-    @GET("statuses/repost_timeline.json")
+    @GET(UrlFactory.WB_REPOST_SHOW)
     Observable<WBTopicReposts> listRepost(@QueryMap Map<String, String> options);
 
 

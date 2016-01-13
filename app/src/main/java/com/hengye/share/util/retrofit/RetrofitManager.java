@@ -15,7 +15,7 @@ public class RetrofitManager {
     public static Retrofit getWBRetrofit(){
         if(mWBRetrofit == null) {
             mWBRetrofit = new Retrofit.Builder()
-                    .baseUrl(UrlFactory.getInstance().getWBUrlPrefix())
+                    .baseUrl(UrlFactory.getWBUrlPrefix())
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .build();
