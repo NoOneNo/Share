@@ -107,6 +107,10 @@
             android:screenOrientation="portrait"/>
 
         <activity
+            android:name="com.hengye.share.ui.activity.SetTokenActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
             android:name="com.hengye.share.ui.activity.TestActivity"/>
     </application>
 

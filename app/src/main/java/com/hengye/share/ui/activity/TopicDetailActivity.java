@@ -84,10 +84,11 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                 if(tab.getPosition() == 0){
                     mAdapter.setData(mCommentData);
                     mAdapter.notifyDataSetChanged();
-
+                    mListView.setSelection(1);
                 }else if(tab.getPosition() == 1){
                     mAdapter.setData(mRepostData);
                     mAdapter.notifyDataSetChanged();
+                    mListView.setSelection(1);
                 }
             }
         }
@@ -100,7 +101,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     };
 
     private PullToRefreshLayout mPullToRefreshLayout;
-//    private ListView mListView;
+    private ListView mListView;
     private TopicCommentAdapter mAdapter;
     private TabLayout mTabLayout, mTabLayoutAssist;
     private int mTabLayoutHeight;
@@ -131,11 +132,11 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 
         View headerView = LayoutInflater.from(this).inflate(R.layout.header_topic_detail, null);
         initHeaderView(headerView);
-        ListView listView = (ListView) findViewById(R.id.list_view);
-        listView.addHeaderView(headerView);
-        listView.setAdapter(mAdapter = new TopicCommentAdapter(this, new ArrayList<TopicComment>()));
+        mListView = (ListView) findViewById(R.id.list_view);
+        mListView.addHeaderView(headerView);
+        mListView.setAdapter(mAdapter = new TopicCommentAdapter(this, new ArrayList<TopicComment>()));
 
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
 

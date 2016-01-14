@@ -11,23 +11,33 @@ import android.text.TextUtils;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.error.AuthFailureError;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
+import com.android.volley.request.StringRequest;
 import com.hengye.share.R;
+import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.TopicPublish;
 import com.hengye.share.model.greenrobot.TopicDraft;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.model.sina.WBTopic;
+import com.hengye.share.model.sina.WBTopicComments;
 import com.hengye.share.ui.activity.TopicDraftActivity;
 import com.hengye.share.util.L;
 import com.hengye.share.util.NotificationUtil;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
+import com.hengye.share.util.retrofit.RetrofitManager;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class TopicPublishService extends Service{
 
@@ -86,22 +96,58 @@ public class TopicPublishService extends Service{
     private void addTopicPublishRequestToQueue(TopicPublish tp){
         mPublishQueue.put(tp, false);
         mPublishNotificationQueue.put(tp, new Random().nextInt(Integer.MAX_VALUE));
-        RequestManager.addToRequestQueue(getWBTopicPublishRequest(tp));
+//        RequestManager.addToRequestQueue(getWBTopicPublishRequest(tp));
+        publishWBTopic(tp);
         showTopicPublishStartNotification(tp);
     }
 
-    private GsonRequest getWBTopicPublishRequest(final TopicPublish tp) {
+    private void publishWBTopic(final TopicPublish tp){
+
+//        final UrlBuilder ub = new UrlBuilder();
+//        ub.addParameter("access_token", tp.getToken());
+//        ub.addParameter("status", tp.getTopicDraft().getContent());
+        RetrofitManager.getWBService().publishTopic(tp.getTopicDraft().getContent(), tp.getToken())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<WBTopic>() {
+                    @Override
+                    public void onCompleted() {
+                        L.debug("onCompleted invoke");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        L.debug("request fail, error : {}", e);
+                        mPublishQueue.remove(tp);
+                        showTopicPublishFailNotification(tp);
+                        TopicDraftHelper.saveTopicDraft(tp.getTopicDraft());
+                        stopServiceIfQueueIsAllFinish();
+                    }
+
+                    @Override
+                    public void onNext(WBTopic wbTopic) {
+                        L.debug("request success , data : {}", wbTopic);
+                        if(wbTopic != null){
+                            showTopicPublishSuccessNotification(tp);
+                            mPublishQueue.put(tp, true);
+                            stopServiceIfQueueIsAllFinish();
+                        }
+                    }
+                });
+    }
+
+    private StringRequest getWBTopicPublishRequest(final TopicPublish tp) {
 
 
         final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBTopicPublishUrl());
         ub.addParameter("access_token", tp.getToken());
         ub.addParameter("status", tp.getTopicDraft().getContent());
-        return new GsonRequest<WBTopic>(Request.Method.POST,
-                WBTopic.class,
-                ub.getRequestUrl()
-                , new Response.Listener<WBTopic>() {
+        return new StringRequest(Request.Method.POST,
+//                WBTopic.class,
+                ub.getUrl()
+                , new Response.Listener<String>() {
             @Override
-            public void onResponse(WBTopic response) {
+            public void onResponse(String response) {
                 L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
                 if(response != null){
                     showTopicPublishSuccessNotification(tp);
@@ -122,8 +168,18 @@ public class TopicPublishService extends Service{
         }){
             @Override
             public byte[] getBody() {
-//                return ub.getBody();
-                return null;
+                return ub.getBody();
+//                return null;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> header = new HashMap<>();
+                header.put("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+                header.put("Connection", "Keep-Alive");
+                header.put("Charset", "UTF-8");
+                header.put("Accept-Encoding", "gzip, deflate");
+                return header;
             }
         };
     }

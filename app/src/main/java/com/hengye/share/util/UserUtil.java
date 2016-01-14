@@ -14,55 +14,59 @@ public class UserUtil {
 
     private static User mCurrentUser;
 
-    public static User getCurrentUser(){
-        if(mCurrentUser == null){
+    public static User getCurrentUser() {
+        if (mCurrentUser == null) {
             mCurrentUser = getDefaultUser();
         }
         return mCurrentUser;
     }
 
-    public static String getUid(){
-        if(getCurrentUser() == null){
+    public static User updateCurrentUser() {
+        return mCurrentUser = getDefaultUser();
+    }
+
+    public static String getUid() {
+        if (getCurrentUser() == null) {
             return null;
-        }else{
+        } else {
             return getCurrentUser().getUid();
         }
     }
 
-    public static String getToken(){
-        if(getCurrentUser() == null){
+    public static String getToken() {
+        if (getCurrentUser() == null) {
             return null;
-        }else{
+        } else {
             return getCurrentUser().getToken();
         }
     }
 
-    public static boolean isUserEmpty(){
+    public static boolean isUserEmpty() {
         return getCurrentUser() == null;
     }
 
-    public static boolean isTokenEmpty(){
+    public static boolean isTokenEmpty() {
         return getToken() == null;
     }
 
-    public static User getDefaultUser(){
+    public static User getDefaultUser() {
         String uid = SPUtil.getUid();
-        if(uid == null){
+        if (uid == null) {
             return null;
         }
         UserDao ud = GreenDaoManager.getDaoSession().getUserDao();
         List<User> users = ud.queryRaw("where UID = ?", uid);
-        if(CommonUtil.isEmptyCollection(users)){
+        if (CommonUtil.isEmptyCollection(users)) {
             return null;
         }
         return users.get(0);
     }
 
-    public static void updateUser(Oauth2AccessToken accessToken){
+    public static void updateUser(Oauth2AccessToken accessToken) {
         User user;
         UserDao ud = GreenDaoManager.getDaoSession().getUserDao();
         List<User> users = ud.queryRaw("where UID = ? and PARENT_TYPE = ?", accessToken.getUid(), Parent.TYPE_WEIBO + "");
-        if(CommonUtil.isEmptyCollection(users)){
+        if (CommonUtil.isEmptyCollection(users)) {
             user = new User();
             user.setUid(accessToken.getUid());
             user.setToken(accessToken.getToken());
@@ -70,7 +74,7 @@ public class UserUtil {
             user.setExpiresIn(accessToken.getExpiresTime());
             user.setParentType(Parent.TYPE_WEIBO);
             ud.insert(user);
-        }else{
+        } else {
             user = users.get(0);
             user.setToken(accessToken.getToken());
             user.setRefreshToken(accessToken.getRefreshToken());
@@ -82,11 +86,11 @@ public class UserUtil {
         SPUtil.setUid(user.getUid());
     }
 
-        public static void updateUserInfo(WBUserInfo wbUserInfo){
+    public static void updateUserInfo(WBUserInfo wbUserInfo) {
         User user;
         UserDao ud = GreenDaoManager.getDaoSession().getUserDao();
         List<User> users = ud.queryRaw("where UID = ? and PARENT_TYPE = ?", wbUserInfo.getIdstr(), Parent.TYPE_WEIBO + "");
-        if(!CommonUtil.isEmptyCollection(users)){
+        if (!CommonUtil.isEmptyCollection(users)) {
             user = users.get(0);
             user.setName(wbUserInfo.getName());
             user.setAvatar(wbUserInfo.getAvatar_large());
@@ -95,6 +99,17 @@ public class UserUtil {
             user.setSign(wbUserInfo.getDescription());
             user.setParentJson(GsonUtil.getInstance().toJson(wbUserInfo));
             ud.update(user);
+        }
+    }
+
+    public static void updateUser(User targetUser){
+        User user;
+        UserDao ud = GreenDaoManager.getDaoSession().getUserDao();
+        List<User> users = ud.queryRaw("where UID = ?", targetUser.getUid());
+        if(!CommonUtil.isEmptyCollection(users)){
+            user = users.get(0);
+            targetUser.setId(user.getId());
+            ud.update(targetUser);
         }
     }
 //    public static void updateUserInfo(String uid, UserInfo userInfo, int parentType){

@@ -7,7 +7,7 @@ import com.hengye.share.ui.base.BasePresenter;
 import com.hengye.share.ui.mvpview.TopicDetailMvpView;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.retrofit.RetrofitManager;
-import com.hengye.share.util.retrofit.WBRetrofitService;
+import com.hengye.share.util.retrofit.WBService;
 import com.hengye.share.util.thirdparty.WBUtil;
 
 import java.util.Map;
@@ -58,7 +58,7 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailMvpView> {
     };
 
     public void loadCommentAndRepost(String token, String topicId, String id, final boolean isRefresh) {
-        WBRetrofitService service = RetrofitManager.getWBRetrofitService();
+        WBService service = RetrofitManager.getWBService();
         Map<String, String> params = getParameter(token, topicId, id, isRefresh);
         Observable.zip(
                 service.listComment(params),
@@ -80,14 +80,14 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailMvpView> {
             @Override
             public void onNext(Object[] obj) {
                 getMvpView().handleCommentData(true, TopicComment.getComments((WBTopicComments)obj[0]), isRefresh);
-                getMvpView().handleCommentData(false, TopicComment.getComments((WBTopicReposts)obj[2]), isRefresh);
+                getMvpView().handleCommentData(false, TopicComment.getComments((WBTopicReposts)obj[1]), isRefresh);
             }
         });
     }
 
     @SuppressWarnings("unchecked")
     public void loadCommentOrRepost(String token, String topicId, String id, final boolean isRefresh, final boolean isComment) {
-        WBRetrofitService service = RetrofitManager.getWBRetrofitService();
+        WBService service = RetrofitManager.getWBService();
         Map<String, String> params = getParameter(token, topicId, id, isRefresh);
 
         Observable observable = isComment ? service.listComment(params) : service.listRepost(params);
@@ -108,7 +108,12 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailMvpView> {
 
                     @Override
                     public void onNext(Object obj) {
-                        getMvpView().handleCommentData(isComment, TopicComment.getComments((WBTopicComments)obj), isRefresh);
+                        if(isComment){
+                            getMvpView().handleCommentData(isComment, TopicComment.getComments((WBTopicComments)obj), isRefresh);
+                        }else{
+                            getMvpView().handleCommentData(isComment, TopicComment.getComments((WBTopicReposts)obj), isRefresh);
+                        }
+
                     }
                 });
     }

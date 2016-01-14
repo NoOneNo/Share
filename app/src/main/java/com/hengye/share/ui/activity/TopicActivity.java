@@ -217,8 +217,11 @@ public class TopicActivity extends BaseActivity
 //            }else{
 //                mWeiboAuth.anthorize(new WBAuthListener());
 //            }
-        } else if (id == R.id.action_test) {
+        } else if (id == R.id.action_search) {
             Intent intent = new Intent(this, SearchActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.set_token) {
+            Intent intent = new Intent(this, SetTokenActivity.class);
             startActivity(intent);
         }
 
@@ -285,7 +288,7 @@ public class TopicActivity extends BaseActivity
     }
 
     private User getUser() {
-        if (UserUtil.getCurrentUser() == null || TextUtils.isEmpty(UserUtil.getCurrentUser().getName())){
+        if (UserUtil.getCurrentUser() == null || TextUtils.isEmpty(UserUtil.getCurrentUser().getName())) {
             //用户数据为空
             L.debug("UserInfo is null, wait to load");
 
