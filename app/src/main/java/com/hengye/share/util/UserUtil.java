@@ -45,6 +45,10 @@ public class UserUtil {
         return getCurrentUser() == null;
     }
 
+    public static boolean isUserNameEmpty() {
+        return getCurrentUser() == null || getCurrentUser().getName() == null;
+    }
+
     public static boolean isTokenEmpty() {
         return getToken() == null;
     }
@@ -112,21 +116,5 @@ public class UserUtil {
             ud.update(targetUser);
         }
     }
-//    public static void updateUserInfo(String uid, UserInfo userInfo, int parentType){
-//        User user;
-//        UserDao ud = GreenDaoManager.getDaoSession().getUserDao();
-//        List<User> users = ud.queryRaw("where UID = ? and PARENT_TYPE = ?", uid, parentType + "");
-//        if(!CommonUtil.isEmptyCollection(users)){
-//            user = users.get(0);
-//            user.setName(userInfo.getName());
-//            user.setAvatar(userInfo.getAvatar());
-//            user.setCover(userInfo.getCover());
-//            user.setGender(userInfo.getGender());
-//            user.setSign(userInfo.getSign());
-//            user.setParentJson(GsonUtil.getInstance().toJson(userInfo));
-//            ud.update(user);
-//        }
-//    }
-
 
 }

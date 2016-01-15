@@ -2,7 +2,11 @@ package com.hengye.share.util.retrofit;
 
 import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.model.sina.WBTopicComments;
+import com.hengye.share.model.sina.WBTopicIds;
 import com.hengye.share.model.sina.WBTopicReposts;
+import com.hengye.share.model.sina.WBTopics;
+import com.hengye.share.model.sina.WBUserInfo;
+import com.hengye.share.model.sina.WBUserInfos;
 import com.hengye.share.util.UrlFactory;
 
 import java.util.Map;
@@ -24,10 +28,28 @@ public interface WBService {
     @GET(UrlFactory.WB_REPOST_SHOW)
     Observable<WBTopicReposts> listRepost(@QueryMap Map<String, String> options);
 
-
 //    @Headers({"Content-Type: application/x-www-form-urlencoded"})
     @FormUrlEncoded
     @POST(UrlFactory.WB_PUBLISH_TOPIC)
     Observable<WBTopic> publishTopic(
             @Field("status") String status, @Field("access_token") String token);
+
+    @GET(UrlFactory.WB_SEARCH_USER)
+    Observable<WBUserInfos> searchUser(@QueryMap Map<String, String> options);
+
+    @GET(UrlFactory.WB_SEARCH_PUBLIC)
+    Observable<WBTopics> searchPublic(@QueryMap Map<String, String> options);
+
+    @GET(UrlFactory.WB_SEARCH_TOPIC)
+    Observable<WBTopic> searchTopic(@QueryMap Map<String, String> options);
+
+    @GET(UrlFactory.WB_FRIEND_TOPIC)
+    Observable<WBTopics> listTopic(@QueryMap Map<String, String> options);
+
+    @GET(UrlFactory.WB_FRIEND_TOPIC_IDS)
+    Observable<WBTopicIds> listTopicIds(@QueryMap Map<String, String> options);
+
+    @GET(UrlFactory.WB_USER_INFO)
+    Observable<WBUserInfo> listUserInfo(@QueryMap Map<String, String> options);
+
 }

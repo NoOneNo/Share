@@ -10,9 +10,9 @@
         <!-- 用于状态栏的颜色设置 -->
         <item name="colorPrimaryDark">?attr/theme_color</item>
         <!-- 用于侧滑页的头部变换色 -->
-        <!--<item name="android:colorPressedHighlight">?attr/theme_color_dark</item>-->
+        <!--<item name="android:colorPressedHighlight">?attr/theme_dark_color</item>-->
 
-        <item name="colorAccent">?attr/theme_color_accent</item>
+        <item name="colorAccent">?attr/theme_accent_color</item>
 
         <item name="android:actionMenuTextAppearance">@style/MenuTextStyle</item>
 
@@ -30,22 +30,23 @@
 
     <style name="ShareAppTheme" parent="AppTheme">
         <item name="theme_color">@color/theme_green_primary</item>
-        <item name="theme_color_dark">@color/theme_green_primary_dark</item>
-        <item name="theme_color_accent">@color/theme_green_accent</item>
+        <item name="theme_dark_color">@color/theme_green_primary_dark</item>
+        <item name="theme_accent_color">@color/theme_green_accent</item>
 
+        <item name="theme_assist_color">@color/white</item>
     </style>
 
     <style name="ShareAppTheme.Blue">
         <item name="theme_color">@color/theme_blue_primary</item>
-        <item name="theme_color_dark">@color/theme_blue_primary_dark</item>
-        <item name="theme_color_accent">@color/theme_blue_accent</item>
+        <item name="theme_dark_color">@color/theme_blue_primary_dark</item>
+        <item name="theme_accent_color">@color/theme_blue_accent</item>
 
     </style>
 
     <style name="ShareAppTheme.Green">
         <item name="theme_color">@color/theme_green_primary</item>
-        <item name="theme_color_dark">@color/theme_green_primary_dark</item>
-        <item name="theme_color_accent">@color/theme_green_accent</item>
+        <item name="theme_dark_color">@color/theme_green_primary_dark</item>
+        <item name="theme_accent_color">@color/theme_green_accent</item>
 
     </style>
 

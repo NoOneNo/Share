@@ -55,8 +55,15 @@ public class UrlFactory {
     //转发微博
     public static final String WB_REPOST_TOPIC = "statuses/repost.json";
     //搜索用户
-    public static final String WB_SEARCH_USER = "search/suggestions/users.json";
+    public static final String WB_SEARCH_USER = "search/users.json";
+//    https://api.weibo.com/2/search/users.json?q=uu&user_id=2207519004&count=20&page=1&filter_ori=0&filter_pic=0&access_token=2.00OXW56C06XASOc5a146b1b0pVluLB
+    //联想用户
+    public static final String WB_SEARCH_USER_SUGGESTION = "http://s.weibo.com/ajax/suggestion";
+//    http://s.weibo.com/ajax/suggestion?where=gs_weibo&type=gs_weibo&key=uue&access_token=2.00OXW56C06XASOc5a146b1b0pVluLB
     //搜索微博
+    public static final String WB_SEARCH_PUBLIC = "search/public.json";
+//    https://api.weibo.com/2/search/public.json?q=uu&sid=o_weico&sort=social&source=211160679&user_id=2207519004&count=20&page=1&access_token=2.00OXW56C06XASOc5a146b1b0pVluLB
+    //搜索话题
     public static final String WB_SEARCH_TOPIC = "search/topics.json";
     //添加收藏微博
     public static final String WB_FAVORITES_CREATE = "favorites/create.json";
@@ -220,13 +227,22 @@ public class UrlFactory {
         return getWBUrlPrefix() + WB_REPOST_TOPIC;
     }
 
-
     //搜索用户
     public String getWBSearchUserUrl() {
         return getWBUrlPrefix() + WB_SEARCH_USER;
     }
 
+    //搜索用户建议
+    public String getWBSearchUserSuggestionUrl() {
+        return WB_SEARCH_USER_SUGGESTION;
+    }
+
     //搜索微博
+    public String getWBSearchPublicUrl() {
+        return getWBUrlPrefix() + WB_SEARCH_PUBLIC;
+    }
+
+    //搜索话题
     public String getWBSearchTopicUrl() {
         return getWBUrlPrefix() + WB_SEARCH_TOPIC;
     }

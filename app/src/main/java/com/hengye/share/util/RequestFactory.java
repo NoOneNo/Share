@@ -48,44 +48,4 @@ public class RequestFactory {
         });
     }
 
-//    public GsonRequest<WBTopics> getWBTopicRequest(String token,
-//                                                  Response.Listener<WBTopics> listener, Response.ErrorListener errorListener) {
-//        return getWBTopicRequest(token, 0, true, 1, listener, errorListener);
-//    }
-//
-//
-//    public GsonRequest<WBTopics> getWBTopicRequest(String token, int id, boolean isRefresh,
-//                                                  Response.Listener<WBTopics> listener, Response.ErrorListener errorListener) {
-//        return getWBTopicRequest(token, id, isRefresh, 1, listener, errorListener);
-//    }
-//
-//    public GsonRequest<WBTopics> getWBTopicRequest(String token, int id, boolean isRefresh, int page,
-//                                                  Response.Listener<WBTopics> listener, Response.ErrorListener errorListener) {
-//        final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBFriendTopicIdsUrl());
-//        ub.addParameter("access_token", token);
-//        if(isRefresh){
-//            ub.addParameter("since_id", id);
-//        }else{
-//            ub.addParameter("max_id", id);
-//        }
-//        ub.addParameter("page", page);
-//        ub.addParameter("count", WBUtil.MAX_COUNT_REQUEST);
-//        return new GsonRequest<>(
-//                ub.getRequestUrl()
-//                , WBTopics.class
-//                , listener, errorListener);
-//    }
-
-//    public GsonRequest<WBTopicIds> getWBUnReadIdsRequest(String token, String since_id,
-//                                                         Response.Listener<WBTopicIds> listener, Response.ErrorListener errorListener) {
-//        final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBFriendTopicIdsUrl());
-//        ub.addParameter("access_token", token);
-//        ub.addParameter("since_id", since_id);
-//        ub.addParameter("count", WBUtil.MAX_COUNT_REQUEST);
-//        return new GsonRequest<>(
-//                ub.getRequestUrl()
-//                , WBTopicIds.class
-//                , listener, errorListener);
-//    }
-
 }

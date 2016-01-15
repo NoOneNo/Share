@@ -101,6 +101,9 @@ public class BaseActivity extends AppCompatActivity implements MvpView{
             mPresenter.detachView();
         }
     }
+    public void startActivity(Class<?> cls){
+        startActivity(new Intent(this, cls));
+    }
 
     @Override
     public void startActivityForResult(Intent intent, int requestCode, @Nullable Bundle options) {

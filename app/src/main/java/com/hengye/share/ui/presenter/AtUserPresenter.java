@@ -26,16 +26,6 @@ public class AtUserPresenter extends BasePresenter<AtUserMvpView> {
         super(mvpView);
     }
 
-    @Override
-    public void attachView(AtUserMvpView mvpView) {
-        super.attachView(mvpView);
-    }
-
-    @Override
-    public void detachView() {
-        super.detachView();
-    }
-
     public ArrayList<AtUser> getSelectResultData() {
         return new ArrayList<>();
     }

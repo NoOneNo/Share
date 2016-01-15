@@ -10,6 +10,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
@@ -147,15 +148,22 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         if(mUserInfo.getParent().isWeiBo()){
             L.debug("userInfo : {}", mUserInfo.getParent().getJson());
 
-            if(mUserInfo.getParent().getJson() != null) {
-                WBUserInfo wbUserInfo = mUserInfo.getWBUserInfoFromParent();
-                if (wbUserInfo != null) {
-                    RequestManager.addToRequestQueue(getWBTopicRequest(UserUtil.getToken(), wbUserInfo.getIdstr(), 0 + "", true), getRequestTag());
-                    return true;
-                }
-            }else{
-                L.debug("only find user name");
+            if(!TextUtils.isEmpty(mUserInfo.getUid())){
+                RequestManager.addToRequestQueue(getWBTopicRequest(UserUtil.getToken(), mUserInfo.getUid(), null, 0 + "", true), getRequestTag());
+                return true;
+            }else if(!TextUtils.isEmpty(mUserInfo.getName())){
+                RequestManager.addToRequestQueue(getWBTopicRequest(UserUtil.getToken(), null, mUserInfo.getName(), 0 + "", true), getRequestTag());
+                return true;
             }
+//            if(mUserInfo.getParent().getJson() != null) {
+//                WBUserInfo wbUserInfo = mUserInfo.getWBUserInfoFromParent();
+//                if (wbUserInfo != null) {
+//                    RequestManager.addToRequestQueue(getWBTopicRequest(UserUtil.getToken(), wbUserInfo.getIdstr(), 0 + "", true), getRequestTag());
+//                    return true;
+//                }
+//            }else{
+//                L.debug("only find user name");
+//            }
         }
         return false;
     }
@@ -175,10 +183,14 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     }
 
 
-    private GsonRequest<WBTopics> getWBTopicRequest(String token, String uid, String id, final boolean isRefresh) {
+    private GsonRequest<WBTopics> getWBTopicRequest(String token, String uid, String name, String id, final boolean isRefresh) {
         final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBUserTopicUrl());
         ub.addParameter("access_token", token);
-        ub.addParameter("uid", uid);
+        if(!TextUtils.isEmpty(uid)){
+            ub.addParameter("uid", uid);
+        }else if(!TextUtils.isEmpty(name)){
+            ub.addParameter("screen_name", name);
+        }
         if (isRefresh) {
             ub.addParameter("since_id", id);
         } else {

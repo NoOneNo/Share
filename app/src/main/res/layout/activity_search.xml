@@ -5,17 +5,17 @@
     android:layout_height="match_parent"
     android:background="@color/background_default">
     
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:orientation="horizontal"
-        android:background="@color/grey_600"
-        android:layout_margin="@dimen/content_margin_3dp"
-        android:padding="@dimen/content_margin_5dp"
-        android:gravity="center_vertical">
+        android:background="?attr/theme_color"
+        android:padding="@dimen/content_margin_5dp">
         
         <ImageButton
             android:id="@+id/btn_back"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
             android:layout_width="@dimen/icon_size_normal"
             android:layout_height="@dimen/icon_size_normal"
             android:src="@drawable/btn_back"
@@ -24,23 +24,35 @@
 
         <EditText
             android:id="@+id/et_search"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_toEndOf="@id/btn_back"
+            android:layout_toStartOf="@+id/btn_search"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"
             android:hint="@string/label_search_hint"
             android:textColor="@color/white"
-            android:lines="1"/>
+            android:maxLines="1"/>
+
+        <View
+            android:id="@+id/divider_line"
+            style="@style/horizontal_line"
+            android:background="?attr/theme_assist_color"
+            android:layout_alignStart="@id/et_search"
+            android:layout_below="@id/et_search"
+            android:layout_marginTop="@dimen/content_margin_5dp"/>
 
         <ImageButton
-            android:id="@+id/btn_delete"
+            android:id="@+id/btn_search"
+            android:layout_alignBottom="@id/et_search"
+            android:layout_alignParentEnd="true"
             android:layout_width="@dimen/icon_size_normal"
             android:layout_height="@dimen/icon_size_normal"
-            android:src="@drawable/compose_emotion_delete"
+            android:src="@drawable/ic_search_2"
+            android:scaleType="fitXY"
             android:contentDescription="@null"
             android:background="@null"/>
-    </LinearLayout>
-
+    </RelativeLayout>
 
     <TextView
         android:layout_width="wrap_content"
@@ -51,7 +63,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_user"
         android:layout_width="match_parent"
-        android:layout_height="85dp"
+        android:layout_height="100dp"
         android:background="@color/white"
         android:paddingTop="@dimen/content_margin_10dp"
         android:paddingStart="@dimen/content_margin_10dp"

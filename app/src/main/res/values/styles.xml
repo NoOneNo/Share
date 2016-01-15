@@ -1,11 +1,5 @@
 <resources>
 
-    <!--<style name="FullScreen" parent="Theme.AppCompat.Light.NoActionBar">-->
-        <!--<item name="colorPrimaryDark">@android:color/black</item>-->
-        <!--<item name="android:windowFullscreen">true</item>-->
-        <!--<item name="android:windowContentOverlay">@null</item>-->
-    <!--</style>-->
-
     <style name="FullScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimaryDark">@android:color/black</item>
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -23,14 +17,19 @@
         <item name="android:windowFullscreen">false</item>
     </style>
 
-    <!--<style name="Theme.DesignDemo" parent="Base.Theme.DesignDemo">-->
-    <!--</style>-->
+    <!-- 横线 样式 -->
+    <style name="horizontal_line">
+        <item name="android:layout_height">0.5dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@color/bg_divider</item>
+    </style>
 
-    <!--<style name="Base.Theme.DesignDemo" parent="Theme.AppCompat.Light.NoActionBar">-->
-        <!--<item name="colorPrimary">#673AB7</item>-->
-        <!--<item name="colorPrimaryDark">#512DA8</item>-->
-        <!--<item name="colorAccent">#FF4081</item>-->
-    <!--</style>-->
+    <!-- 竖线 样式 -->
+    <style name="vertical_line">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">0.5dp</item>
+        <item name="android:background">@color/bg_divider</item>
+    </style>
 
     <style name="PersonalHomepageExpandedTitleAppearance">
         <item name="android:textSize">20sp</item>

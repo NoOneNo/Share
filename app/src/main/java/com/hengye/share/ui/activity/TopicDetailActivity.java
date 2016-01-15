@@ -171,7 +171,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                     mPullToRefreshLayout.setRefreshing(false);
                     return;
                 }
-                mPresenter.loadCommentAndRepost(UserUtil.getToken(), mTopic.getId(), "0", true);
+                mPresenter.loadWBCommentAndRepost(mTopic.getId(), "0", true);
             }
         });
         mPullToRefreshLayout.setOnLoadListener(new PullToRefreshLayout.OnLoadListener() {
@@ -179,7 +179,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             public void onLoad() {
                 if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
                     String id = CommonUtil.getLastItem(mAdapter.getData()).getId();
-                    mPresenter.loadCommentOrRepost(UserUtil.getToken(), mTopic.getId(), id, false, isSelectedCommentTab());
+                    mPresenter.loadWBCommentOrRepost(mTopic.getId(), id, false, isSelectedCommentTab());
                 } else {
                     mPullToRefreshLayout.setLoading(false);
                     mPullToRefreshLayout.setLoadEnable(false);
@@ -223,7 +223,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     @Override
     public void handleCommentData(boolean isComment, List<TopicComment> data, boolean isRefresh){
         if(isRefresh){
-//            mPullToRefreshLayout.setRefreshing(false);
+            mPullToRefreshLayout.setRefreshing(false);
             if(CommonUtil.isEmptyCollection(data)){
                 return;
             }
@@ -247,7 +247,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 //            }
         }else{
             List<TopicComment> targetData = isComment ? mCommentData : mRepostData;
-//            mPullToRefreshLayout.setLoading(false);
+            mPullToRefreshLayout.setLoading(false);
             if (CommonUtil.isEmptyCollection(data)) {
                 //没有数据可供加载
                 mPullToRefreshLayout.setLoadEnable(false);

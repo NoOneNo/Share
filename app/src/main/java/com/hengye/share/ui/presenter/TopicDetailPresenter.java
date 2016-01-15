@@ -6,6 +6,8 @@ import com.hengye.share.model.sina.WBTopicReposts;
 import com.hengye.share.ui.base.BasePresenter;
 import com.hengye.share.ui.mvpview.TopicDetailMvpView;
 import com.hengye.share.util.UrlBuilder;
+import com.hengye.share.util.UserUtil;
+import com.hengye.share.util.retrofit.ObjectConverter;
 import com.hengye.share.util.retrofit.RetrofitManager;
 import com.hengye.share.util.retrofit.WBService;
 import com.hengye.share.util.thirdparty.WBUtil;
@@ -24,16 +26,6 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailMvpView> {
         super(mvpView);
     }
 
-    @Override
-    public void attachView(TopicDetailMvpView mvpView) {
-        super.attachView(mvpView);
-    }
-
-    @Override
-    public void detachView() {
-        super.detachView();
-    }
-
     public Map<String, String> getParameter(String token, String topicId, String id, final boolean isRefresh) {
         final UrlBuilder ub = new UrlBuilder();
         ub.addParameter("access_token", token);
@@ -47,23 +39,13 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailMvpView> {
         return ub.getParameters();
     }
 
-    Func2<WBTopicComments, WBTopicReposts, Object[]> mDataConverter = new Func2<WBTopicComments, WBTopicReposts, Object[]>() {
-        @Override
-        public Object[] call(WBTopicComments wbTopicComments, WBTopicReposts wbTopicReposts) {
-            Object[] obj = new Object[2];
-            obj[0] = wbTopicComments;
-            obj[1] = wbTopicReposts;
-            return obj;
-        }
-    };
-
-    public void loadCommentAndRepost(String token, String topicId, String id, final boolean isRefresh) {
+    public void loadWBCommentAndRepost(String topicId, String id, final boolean isRefresh) {
         WBService service = RetrofitManager.getWBService();
-        Map<String, String> params = getParameter(token, topicId, id, isRefresh);
+        Map<String, String> params = getParameter(UserUtil.getToken(), topicId, id, isRefresh);
         Observable.zip(
                 service.listComment(params),
                 service.listRepost(params),
-                mDataConverter)
+                ObjectConverter.getObjectConverter2())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Object[]>() {
@@ -86,9 +68,9 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailMvpView> {
     }
 
     @SuppressWarnings("unchecked")
-    public void loadCommentOrRepost(String token, String topicId, String id, final boolean isRefresh, final boolean isComment) {
+    public void loadWBCommentOrRepost(String topicId, String id, final boolean isRefresh, final boolean isComment) {
         WBService service = RetrofitManager.getWBService();
-        Map<String, String> params = getParameter(token, topicId, id, isRefresh);
+        Map<String, String> params = getParameter(UserUtil.getToken(), topicId, id, isRefresh);
 
         Observable observable = isComment ? service.listComment(params) : service.listRepost(params);
 

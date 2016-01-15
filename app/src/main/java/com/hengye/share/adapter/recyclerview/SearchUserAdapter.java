@@ -8,14 +8,16 @@ import android.widget.TextView;
 
 import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.R;
+import com.hengye.share.model.UserInfo;
+import com.hengye.share.util.RequestManager;
 
 import org.w3c.dom.Text;
 
 import java.util.List;
 
-public class SearchUserAdapter extends CommonAdapter<String, SearchUserAdapter.MainViewHolder> {
+public class SearchUserAdapter extends CommonAdapter<UserInfo, SearchUserAdapter.MainViewHolder> {
 
-    public SearchUserAdapter(Context context, List<String> data) {
+    public SearchUserAdapter(Context context, List<UserInfo> data) {
         super(context, data);
     }
 
@@ -24,7 +26,7 @@ public class SearchUserAdapter extends CommonAdapter<String, SearchUserAdapter.M
         return new MainViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_search_user, parent, false));
     }
 
-    public static class MainViewHolder extends CommonAdapter.ItemViewHolder<String> {
+    public static class MainViewHolder extends CommonAdapter.ItemViewHolder<UserInfo> {
 
         NetworkImageViewPlus avatar;
         TextView username;
@@ -37,8 +39,9 @@ public class SearchUserAdapter extends CommonAdapter<String, SearchUserAdapter.M
         }
 
         @Override
-        public void bindData(Context context, String string) {
-            username.setText(string);
+        public void bindData(Context context, UserInfo userInfo) {
+            username.setText(userInfo.getName());
+            avatar.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());
         }
     }
 }

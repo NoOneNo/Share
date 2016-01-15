@@ -8,21 +8,19 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.error.VolleyError;
-import com.android.volley.request.GsonRequest;
+import com.hengye.share.adapter.recyclerview.TopicAdapter;
+import com.hengye.share.model.Topic;
+import com.hengye.share.model.UserInfo;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.SearchUserAdapter;
-import com.hengye.share.model.sina.WBTopic;
-import com.hengye.share.util.L;
-import com.hengye.share.util.UrlBuilder;
-import com.hengye.share.util.UrlFactory;
+import com.hengye.share.ui.mvpview.SearchMvpView;
+import com.hengye.share.ui.presenter.SearchPresenter;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class SearchActivity extends BaseActivity implements View.OnClickListener{
+public class SearchActivity extends BaseActivity implements View.OnClickListener, SearchMvpView{
 
     @Override
     protected String getRequestTag() {
@@ -36,7 +34,12 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     protected boolean setToolBar() {
-        return super.setToolBar();
+        return false;
+    }
+
+    @Override
+    protected boolean canSwipeBack() {
+        return false;
     }
 
     @Override
@@ -45,25 +48,33 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
         setContentView(R.layout.activity_search);
 
+        setupPresenter(mPresenter = new SearchPresenter(this));
         initView();
     }
 
-    private ImageButton mBackBtn, mDeleteBtn;
+    private ImageButton mBackBtn, mSearchBtn;
     private EditText mContent;
     private RecyclerView mUserRV, mTopicRV;
 
     private SearchUserAdapter mUserAdapter;
-    private ArrayList<String> mUserData;
+    private TopicAdapter mTopicAdapter;
+
+    private SearchPresenter mPresenter;
 
     private void initView(){
         mBackBtn = (ImageButton) findViewById(R.id.btn_back);
-        mDeleteBtn = (ImageButton) findViewById(R.id.btn_delete);
+        mBackBtn.setOnClickListener(this);
+        mSearchBtn = (ImageButton) findViewById(R.id.btn_search);
+        mSearchBtn.setOnClickListener(this);
         mContent = (EditText) findViewById(R.id.et_search);
         mUserRV = (RecyclerView) findViewById(R.id.recycler_view_user);
         mUserRV.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        mUserRV.setAdapter(mUserAdapter = new SearchUserAdapter(this, getUserData()));
+        mUserRV.setAdapter(mUserAdapter = new SearchUserAdapter(this, new ArrayList<UserInfo>()));
         mUserRV.setItemAnimator(new DefaultItemAnimator());
         mTopicRV = (RecyclerView) findViewById(R.id.recycler_view_topic);
+        mTopicRV.setAdapter(mTopicAdapter = new TopicAdapter(this, new ArrayList<Topic>()));
+        mTopicRV.setLayoutManager(new LinearLayoutManager(this));
+        mTopicRV.setItemAnimator(new DefaultItemAnimator());
     }
 
     @Override
@@ -71,51 +82,20 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         int id = v.getId();
         if(id == R.id.btn_back){
             onBackPressed();
-        }else if(id == R.id.btn_delete){
-
+        }else if(id == R.id.btn_search){
+            mPresenter.loadWBSearchContent(mContent.getText().toString().trim());
         }
     }
 
-    private ArrayList<String> getUserData(){
-        if(mUserData == null){
-            mUserData = new ArrayList<>();
-            mUserData.add("yu");
-            mUserData.add("yu");
-            mUserData.add("yu");
-            mUserData.add("yu");
-            mUserData.add("yu");
-            mUserData.add("yu");
-            mUserData.add("yu");
-            mUserData.add("yu");
-            mUserData.add("yu");
-            mUserData.add("yu");
-            mUserData.add("yu");
-            mUserData.add("yu");
-        }
-        return mUserData;
+    @Override
+    public void handleSearchUserData(List<UserInfo> userInfos) {
+        mUserAdapter.refresh(userInfos);
     }
 
-    private GsonRequest getWBSearchUserRequest(String token, String content) {
-
-        final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBSearchUserUrl());
-        ub.addParameter("access_token", token);
-        ub.addParameter("q", content);
-        return new GsonRequest<>(Request.Method.POST,
-                WBTopic.class,
-                ub.getRequestUrl()
-                , new Response.Listener<WBTopic>() {
-            @Override
-            public void onResponse(WBTopic response) {
-                L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
-                if(response != null){
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                L.debug("request fail , url : {}, error : {}", ub.getRequestUrl(), volleyError);
-            }
-        });
+    @Override
+    public void handleSearchPublicData(List<Topic> topics) {
+        mTopicAdapter.refresh(topics);
     }
+
+
 }
