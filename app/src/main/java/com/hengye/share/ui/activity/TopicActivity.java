@@ -39,7 +39,7 @@ import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
-import com.hengye.share.util.thirdparty.SaveUserInfoWeiboAuthListener;
+import com.hengye.share.util.thirdparty.ParseTokenWeiboAuthListener;
 import com.hengye.share.util.thirdparty.ThirdPartyUtils;
 import com.hengye.swiperefresh.PullToRefreshLayout;
 import com.sina.weibo.sdk.auth.WeiboAuth;
@@ -350,12 +350,14 @@ public class TopicActivity extends BaseActivity
      */
     private SsoHandler mSsoHandler;
 
-    class WBAuthListener extends SaveUserInfoWeiboAuthListener {
+    class WBAuthListener extends ParseTokenWeiboAuthListener {
 
         @Override
         public void onComplete(Bundle values) {
             super.onComplete(values);
             if (mAccessToken != null && mAccessToken.isSessionValid()) {
+                UserUtil.updateUser(mAccessToken);
+                mPresenter.loadWBUserInfo();
                 mPullToRefreshLayout.setRefreshing(true);
 //                RequestManager.addToRequestQueue(getWBTopicRequest(mAccessToken.getToken(), 0 + "", true));
             }
