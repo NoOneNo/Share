@@ -120,6 +120,13 @@ public class Topic extends ParentInherit implements Serializable{
             entity.getStatus().setRetweeted_status(null);
             topic.setRetweetedTopic(getTopic(entity.getStatus()));
         }
+
+        //如果是回复评论，优先用回复评论覆盖转发微博
+        if(entity.getReply_comment() != null){
+            //获得一条转发的微博, 防止一直递归
+            entity.getReply_comment().setReply_comment(null);
+            topic.setRetweetedTopic(getTopic(entity.getReply_comment()));
+        }
         return topic;
     }
 

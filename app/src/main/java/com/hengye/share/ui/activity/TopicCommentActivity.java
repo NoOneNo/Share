@@ -8,11 +8,16 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.R;
+import com.hengye.share.adapter.viewpager.TopicFragmentPager;
+import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.ui.fragment.TopicNotifyFragment;
+import com.hengye.share.ui.presenter.TopicPresenter;
 
-public class TopicNotifyActivity extends BaseActivity{
+import java.util.ArrayList;
+import java.util.List;
+
+public class TopicCommentActivity extends BaseActivity{
 
     @Override
     protected String getRequestTag() {
@@ -59,40 +64,16 @@ public class TopicNotifyActivity extends BaseActivity{
 
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
-        mViewPager.setAdapter(new TopicNotifyFragmentPager());
+        mViewPager.setAdapter(new TopicFragmentPager(getSupportFragmentManager(), this, getTopicGroups()));
+//        mViewPager.setAdapter(new TopicNotifyFragmentPager());
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
-
-    class TopicNotifyFragmentPager extends FragmentPagerAdapter{
-
-        public TopicNotifyFragmentPager(){
-            super(getSupportFragmentManager());
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            if(position == 0){
-                return "评论";
-            }else{
-                return "提及";
-            }
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            Fragment fragment;
-            if(position == 0){
-                fragment = TopicNotifyFragment.newInstance(TopicNotifyFragment.NOTIFY_COMMENT);
-            }else{
-                fragment = TopicNotifyFragment.newInstance(TopicNotifyFragment.NOTIFY_MENTION);
-            }
-            return fragment;
-        }
-
-        @Override
-        public int getCount() {
-            return 2;
-        }
+    private List<TopicPresenter.TopicGroup> getTopicGroups(){
+        ArrayList<TopicPresenter.TopicGroup> topicGroupGroups = new ArrayList<>();
+        topicGroupGroups.add(TopicPresenter.TopicGroup.COMMENT_TO_ME);
+        topicGroupGroups.add(TopicPresenter.TopicGroup.COMMENT_BY_ME);
+        return topicGroupGroups;
     }
+
 }

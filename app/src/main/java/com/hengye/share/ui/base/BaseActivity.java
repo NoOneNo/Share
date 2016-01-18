@@ -1,6 +1,5 @@
 package com.hengye.share.ui.base;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,8 +11,12 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.hengye.share.R;
+import com.hengye.share.ui.fragment.BaseFragment;
+import com.hengye.share.ui.fragment.TopicFragment;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.SettingHelper;
+
+import java.util.HashMap;
 
 public class BaseActivity extends AppCompatActivity implements MvpView{
 
@@ -86,7 +89,7 @@ public class BaseActivity extends AppCompatActivity implements MvpView{
     @Override
     protected void onResume() {
         super.onResume();
-        mFirstClick = true;
+        resetFirstClick();
         replaceCustomThemeIfNeeded();
         if (mSwipeHelper != null) {
             mSwipeHelper.onResume();
@@ -224,4 +227,5 @@ public class BaseActivity extends AppCompatActivity implements MvpView{
     public void setupPresenter(BasePresenter presenter) {
         mPresenter = presenter;
     }
+
 }

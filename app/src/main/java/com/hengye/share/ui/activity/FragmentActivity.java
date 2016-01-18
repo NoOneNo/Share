@@ -31,8 +31,12 @@ public class FragmentActivity extends BaseActivity {
     }
 
     @Override
+    protected boolean setToolBar() {
+        return mFragment.setToolBar();
+    }
+
+    @Override
     protected CharSequence getToolbarTitle() {
-        ensureFragment();
         return mFragment.getTitle();
     }
 
@@ -60,9 +64,8 @@ public class FragmentActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
         ensureFragment();
+        super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_fragment);
         if (savedInstanceState == null) {

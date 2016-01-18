@@ -9,13 +9,4 @@ public class TemplatePresenter extends BasePresenter<TemplateMvpView> {
         super(mvpView);
     }
 
-    @Override
-    public void attachView(TemplateMvpView mvpView) {
-        super.attachView(mvpView);
-    }
-
-    @Override
-    public void detachView() {
-        super.detachView();
-    }
 }

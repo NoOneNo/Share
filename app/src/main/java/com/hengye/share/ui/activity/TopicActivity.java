@@ -4,13 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -22,26 +19,23 @@ import android.widget.Toast;
 import com.android.volley.view.NetworkImageView;
 import com.google.gson.reflect.TypeToken;
 import com.hengye.share.R;
-import com.hengye.share.adapter.recyclerview.TopicAdapter;
+import com.hengye.share.adapter.viewpager.TopicFragmentPager;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.ui.activity.setting.SettingActivity;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.ui.fragment.TopicFavoritesFragment;
-import com.hengye.share.ui.mvpview.TopicMvpView;
+import com.hengye.share.ui.mvpview.UserMvpView;
 import com.hengye.share.ui.presenter.TopicPresenter;
+import com.hengye.share.ui.presenter.UserPresenter;
 import com.hengye.share.ui.support.ActionBarDrawerToggleCustom;
-import com.hengye.share.util.CommonUtil;
-import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.UserUtil;
-import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.thirdparty.ParseTokenWeiboAuthListener;
 import com.hengye.share.util.thirdparty.ThirdPartyUtils;
-import com.hengye.swiperefresh.PullToRefreshLayout;
 import com.sina.weibo.sdk.auth.WeiboAuth;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
 
@@ -49,7 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TopicActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener, TopicMvpView {
+        implements NavigationView.OnNavigationItemSelectedListener, UserMvpView {
 
     @Override
     protected String getRequestTag() {
@@ -77,34 +71,38 @@ public class TopicActivity extends BaseActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_topic);
-        setupPresenter(mPresenter = new TopicPresenter(this));
+        setupPresenter(mPresenter = new UserPresenter(this));
         initView();
         initData();
 
     }
 
-    private PullToRefreshLayout mPullToRefreshLayout;
+//    private PullToRefreshLayout mPullToRefreshLayout;
+    private ViewPager mViewPager;
     private NetworkImageView mAvatar;
     private TextView mUsername, mSign;
-    private TopicAdapter mAdapter;
-    private TopicPresenter mPresenter;
+//    private TopicAdapter mAdapter;
+    private UserPresenter mPresenter;
 
-//    private Oauth2AccessToken mWBAccessToken;
 
     private void initView() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        TabLayout tablayout = (TabLayout) findViewById(R.id.tab_layout);
-        tablayout.addTab((tablayout.newTab().setText("tab one")));
-        tablayout.addTab((tablayout.newTab().setText("tab two")));
-        tablayout.addTab((tablayout.newTab().setText("tab three")));
+        final TabLayout tablayout = (TabLayout) findViewById(R.id.tab_layout);
+//        tablayout.addTab((tablayout.newTab().setText("tab one")));
+//        tablayout.addTab((tablayout.newTab().setText("tab two")));
+//        tablayout.addTab((tablayout.newTab().setText("tab three")));
+        mViewPager = (ViewPager) findViewById(R.id.view_pager);
+        mViewPager.setAdapter(new TopicFragmentPager(getSupportFragmentManager(), this, getTopicGroups()));
+        tablayout.setupWithViewPager(mViewPager);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(TopicActivity.this, TopicPublishActivity.class);
-                startActivity(intent);
+            public void onClick(View view){
+
+//                Intent intent = new Intent(TopicActivity.this, TopicPublishActivity.clas;
+//                startActivity(intent);
             }
         });
 
@@ -135,51 +133,51 @@ public class TopicActivity extends BaseActivity
             handleUserInfo(UserUtil.getCurrentUser());
         }
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(mAdapter = new TopicAdapter(this, getData()));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.pull_to_refresh);
-        mPullToRefreshLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (UserUtil.isUserEmpty()) {
-                    mPullToRefreshLayout.setRefreshing(false);
-                    return;
-                }
-
-                if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
-                    String id = mAdapter.getData().get(0).getId();
-                    mPresenter.loadWBTopicIds(id);
-//                    RequestManager.addToRequestQueue(getWBTopicIdsRequest(UserUtil.getToken(), id), getRequestTag());
-                } else {
-                    mPresenter.loadWBTopic("0", true);
-//                    RequestManager.addToRequestQueue(getWBTopicRequest(UserUtil.getToken(), 0 + "", true), getRequestTag());
-                }
-            }
-        });
-        mPullToRefreshLayout.setOnLoadListener(new PullToRefreshLayout.OnLoadListener() {
-            @Override
-            public void onLoad() {
-                if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
-                    String id = CommonUtil.getLastItem(mAdapter.getData()).getId();
-                    mPresenter.loadWBTopic(id, false);
-//                    RequestManager.addToRequestQueue(getWBTopicRequest(UserUtil.getToken(), id, false), getRequestTag());
-                } else {
-                    mPullToRefreshLayout.setLoading(false);
-                    mPullToRefreshLayout.setLoadEnable(false);
-                }
-            }
-        });
-
-        mAdapter.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-//                IntentUtil.startActivity(TopicActivity.this, TopicDetailActivity.getIntentToStart(TopicActivity.this, mAdapter.getItem(position)));
-//                Toast.makeText(MainActivity.this, "click item : " + position, Toast.LENGTH_SHORT).show();
-            }
-        });
+//        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        recyclerView.setAdapter(mAdapter = new TopicAdapter(this, getData()));
+//        recyclerView.setItemAnimator(new DefaultItemAnimator());
+//
+//        mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.pull_to_refresh);
+//        mPullToRefreshLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                if (UserUtil.isUserEmpty()) {
+//                    mPullToRefreshLayout.setRefreshing(false);
+//                    return;
+//                }
+//
+//                if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
+//                    String id = mAdapter.getData().get(0).getId();
+//                    mPresenter.loadWBAllTopicIds(id);
+////                    RequestManager.addToRequestQueue(getWBTopicIdsRequest(UserUtil.getToken(), id), getRequestTag());
+//                } else {
+//                    mPresenter.loadWBAllTopic("0", true);
+////                    RequestManager.addToRequestQueue(getWBTopicRequest(UserUtil.getToken(), 0 + "", true), getRequestTag());
+//                }
+//            }
+//        });
+//        mPullToRefreshLayout.setOnLoadListener(new PullToRefreshLayout.OnLoadListener() {
+//            @Override
+//            public void onLoad() {
+//                if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
+//                    String id = CommonUtil.getLastItem(mAdapter.getData()).getId();
+//                    mPresenter.loadWBAllTopic(id, false);
+////                    RequestManager.addToRequestQueue(getWBTopicRequest(UserUtil.getToken(), id, false), getRequestTag());
+//                } else {
+//                    mPullToRefreshLayout.setLoading(false);
+//                    mPullToRefreshLayout.setLoadEnable(false);
+//                }
+//            }
+//        });
+//
+//        mAdapter.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(View view, int position) {
+////                IntentUtil.startActivity(TopicActivity.this, TopicDetailActivity.getIntentToStart(TopicActivity.this, mAdapter.getItem(position)));
+////                Toast.makeText(MainActivity.this, "click item : " + position, Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
     }
 
@@ -244,9 +242,11 @@ public class TopicActivity extends BaseActivity
                 return true;
             }
             startActivity(PersonalHomepageActivity.getIntentToStart(this, UserInfo.getUserInfo(UserUtil.getCurrentUser())));
-        } else if (id == R.id.nav_gallery) {
-            startActivity(TopicNotifyActivity.class);
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_at_me) {
+            startActivity(TopicAtActivity.class);
+        } else if (id == R.id.nav_comment) {
+            startActivity(TopicCommentActivity.class);
+        }else if (id == R.id.nav_slideshow) {
             startActivity(FragmentActivity.getStartIntent(this, TopicFavoritesFragment.class));
         } else if (id == R.id.nav_manage) {
             startActivity(SettingActivity.class);
@@ -312,32 +312,39 @@ public class TopicActivity extends BaseActivity
         }
     }
 
-    @Override
-    public void stopLoading(boolean isRefresh) {
-        if (isRefresh) {
-            mPullToRefreshLayout.setRefreshing(false);
-        } else {
-            mPullToRefreshLayout.setLoading(false);
-        }
-    }
+//    @Override
+//    public void stopLoading(boolean isRefresh) {
+//        if (isRefresh) {
+//            mPullToRefreshLayout.setRefreshing(false);
+//        } else {
+//            mPullToRefreshLayout.setLoading(false);
+//        }
+//    }
+//
+//    @Override
+//    public void handleNoMoreTopics() {
+//        Snackbar.make(mPullToRefreshLayout, "没有新的微博", Snackbar.LENGTH_SHORT).show();
+//    }
+//
+//    @Override
+//    public void handleTopicData(List<Topic> data, boolean isRefresh) {
+//        int type = DataUtil.handlePagingData(mAdapter.getData(), data, isRefresh);
+//        DataUtil.handleTopicAdapter(type, mAdapter, data);
+//        DataUtil.handlePullToRefresh(type, mPullToRefreshLayout);
+//        DataUtil.handleSnackBar(type, mPullToRefreshLayout, data == null ? 0 : data.size());
+//        if (type == DataUtil.REFRESH_DATA_SIZE_LESS
+//                || type == DataUtil.REFRESH_DATA_SIZE_EQUAL
+//                || type == DataUtil.LOAD_NO_MORE_DATA
+//                || type == DataUtil.LOAD_DATA_SIZE_EQUAL) {
+//            SPUtil.setModule(mAdapter.getData(), Topic.class.getSimpleName() + UserUtil.getUid());
+//        }
+//    }
 
-    @Override
-    public void handleNoMoreTopics() {
-        Snackbar.make(mPullToRefreshLayout, "没有新的微博", Snackbar.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void handleTopicData(List<Topic> data, boolean isRefresh) {
-        int type = DataUtil.handlePagingData(mAdapter.getData(), data, isRefresh);
-        DataUtil.handleTopicAdapter(type, mAdapter, data);
-        DataUtil.handlePullToRefresh(type, mPullToRefreshLayout);
-        DataUtil.handleSnackBar(type, mPullToRefreshLayout, data == null ? 0 : data.size());
-        if (type == DataUtil.REFRESH_DATA_SIZE_LESS
-                || type == DataUtil.REFRESH_DATA_SIZE_EQUAL
-                || type == DataUtil.LOAD_NO_MORE_DATA
-                || type == DataUtil.LOAD_DATA_SIZE_EQUAL) {
-            SPUtil.setModule(mAdapter.getData(), Topic.class.getSimpleName() + UserUtil.getUid());
-        }
+    private List<TopicPresenter.TopicGroup> getTopicGroups(){
+        ArrayList<TopicPresenter.TopicGroup> topicGroupGroups = new ArrayList<>();
+        topicGroupGroups.add(TopicPresenter.TopicGroup.ALL);
+        topicGroupGroups.add(TopicPresenter.TopicGroup.BILATERAL);
+        return topicGroupGroups;
     }
 
     /**
@@ -358,7 +365,7 @@ public class TopicActivity extends BaseActivity
             if (mAccessToken != null && mAccessToken.isSessionValid()) {
                 UserUtil.updateUser(mAccessToken);
                 mPresenter.loadWBUserInfo();
-                mPullToRefreshLayout.setRefreshing(true);
+//                mPullToRefreshLayout.setRefreshing(true);
 //                RequestManager.addToRequestQueue(getWBTopicRequest(mAccessToken.getToken(), 0 + "", true));
             }
         }

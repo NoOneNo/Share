@@ -87,7 +87,7 @@ public class SettingHelper {
 
     //滑动退出
     public static String getSwipeBack(){
-        return getPreferences().getString(KEY_BASIC_SWIPE_BACK, null);
+        return getPreferences().getString(KEY_BASIC_SWIPE_BACK, "1");
     }
 
     //滑动退出

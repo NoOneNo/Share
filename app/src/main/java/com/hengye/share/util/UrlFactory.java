@@ -26,6 +26,8 @@ public class UrlFactory {
     public static final String WB_FRIEND_TOPIC_IDS = "statuses/friends_timeline/ids.json";
     //获得好友圈微博
     public static final String WB_BILATERAL_TOPIC = "statuses/bilateral_timeline.json";
+    //获得某一分组的微博列表
+    public static final String WB_GROUP_TOPIC = "friendships/groups/timeline.json";
     //获取某个用户的各种消息未读数
     public static final String WB_UNREAD_COUNT = "remind/unread_count.json";
     //获取用户信息
@@ -113,6 +115,11 @@ public class UrlFactory {
 //    获得微博的ID数
     public String getWBFriendTopicIdsUrl() {
         return getWBUrlPrefix() + WB_FRIEND_TOPIC_IDS;
+    }
+
+    //获得某一分组的微博列表
+    public String getWBGroupTopicUrl() {
+        return getWBUrlPrefix() + WB_GROUP_TOPIC;
     }
 
     //    必选	类型及范围	说明

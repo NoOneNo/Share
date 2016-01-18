@@ -31,8 +31,8 @@ public interface WBService {
 //    @Headers({"Content-Type: application/x-www-form-urlencoded"})
     @FormUrlEncoded
     @POST(UrlFactory.WB_PUBLISH_TOPIC)
-    Observable<WBTopic> publishTopic(
-            @Field("status") String status, @Field("access_token") String token);
+    Observable<WBTopic> publishTopic
+    (@Field("status") String status, @Field("access_token") String token);
 
     @GET(UrlFactory.WB_SEARCH_USER)
     Observable<WBUserInfos> searchUser(@QueryMap Map<String, String> options);
@@ -48,6 +48,21 @@ public interface WBService {
 
     @GET(UrlFactory.WB_FRIEND_TOPIC_IDS)
     Observable<WBTopicIds> listTopicIds(@QueryMap Map<String, String> options);
+
+    @GET(UrlFactory.WB_BILATERAL_TOPIC)
+    Observable<WBTopics> listBilateralTopic(@QueryMap Map<String, String> options);
+
+    @GET(UrlFactory.WB_COMMENT_MENTION)
+    Observable<WBTopicComments> listCommentAtMeTopic(@QueryMap Map<String, String> options);
+
+    @GET(UrlFactory.WB_TOPIC_MENTION)
+    Observable<WBTopics> listTopicAtMeTopic(@QueryMap Map<String, String> options);
+
+    @GET(UrlFactory.WB_COMMENT_TO_ME)
+    Observable<WBTopicComments> listCommentToMeTopic(@QueryMap Map<String, String> options);
+
+    @GET(UrlFactory.WB_COMMENT_BY_ME)
+    Observable<WBTopicComments> listCommentByMeTopic(@QueryMap Map<String, String> options);
 
     @GET(UrlFactory.WB_USER_INFO)
     Observable<WBUserInfo> listUserInfo(@QueryMap Map<String, String> options);
