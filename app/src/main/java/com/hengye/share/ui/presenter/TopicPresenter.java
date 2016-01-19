@@ -22,6 +22,7 @@ import com.hengye.share.util.retrofit.RetrofitManager;
 import com.hengye.share.util.thirdparty.WBUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import rx.Subscriber;
@@ -165,34 +166,34 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
                 .subscribe(getWBCommentsSubscriber(isRefresh));
     }
 
-    public void loadWBUserInfo() {
-        final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBUserInfoUrl());
-        ub.addParameter("access_token", UserUtil.getToken());
-        ub.addParameter("uid", UserUtil.getUid());
-
-        RetrofitManager
-                .getWBService()
-                .listUserInfo(ub.getParameters())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<WBUserInfo>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(WBUserInfo wbUserInfo) {
-                        UserUtil.updateUserInfo(wbUserInfo);
-                        getMvpView().handleUserInfo(User.getUser(wbUserInfo));
-                    }
-                });
-    }
+//    public void loadWBUserInfo() {
+//        final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBUserInfoUrl());
+//        ub.addParameter("access_token", UserUtil.getToken());
+//        ub.addParameter("uid", UserUtil.getUid());
+//
+//        RetrofitManager
+//                .getWBService()
+//                .listUserInfo(ub.getParameters())
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Subscriber<WBUserInfo>() {
+//                    @Override
+//                    public void onCompleted() {
+//
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onNext(WBUserInfo wbUserInfo) {
+//                        UserUtil.updateUserInfo(wbUserInfo);
+//                        getMvpView().handleUserInfo(User.getUser(wbUserInfo));
+//                    }
+//                });
+//    }
 
     public Map<String, String> getWBAllTopicParameter(String id, final boolean isRefresh) {
         final UrlBuilder ub = new UrlBuilder();
@@ -244,14 +245,18 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
         };
     }
 
-    public ArrayList<Topic> getData() {
+    public ArrayList<Topic> findData() {
 
         ArrayList<Topic> data = SPUtil.getModule(new TypeToken<ArrayList<Topic>>() {
-        }.getType(), Topic.class.getSimpleName() + UserUtil.getUid());
+        }.getType(), Topic.class.getSimpleName() + UserUtil.getUid() + "/" + mTopicGroup);
         if (data == null) {
             data = new ArrayList<>();
         }
         return data;
+    }
+
+    public void saveData(List<Topic> data) {
+        SPUtil.setModule(data, Topic.class.getSimpleName() + UserUtil.getUid() + "/" + mTopicGroup);
     }
 
     public enum TopicGroup {

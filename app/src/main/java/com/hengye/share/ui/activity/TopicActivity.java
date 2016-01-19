@@ -46,8 +46,8 @@ public class TopicActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, UserMvpView {
 
     @Override
-    protected String getRequestTag() {
-        return "MainActivity";
+    protected boolean setCustomTheme() {
+        return false;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class TopicActivity extends BaseActivity
 
     @Override
     protected boolean setFinishPendingTransition() {
-        return false;
+        return true;
     }
 
     @Override
@@ -70,6 +70,7 @@ public class TopicActivity extends BaseActivity
 
         super.onCreate(savedInstanceState);
 
+//        getWindow().setFeatureInt(Window.feature_);
         setContentView(R.layout.activity_topic);
         setupPresenter(mPresenter = new UserPresenter(this));
         initView();
@@ -243,7 +244,7 @@ public class TopicActivity extends BaseActivity
             }
             startActivity(PersonalHomepageActivity.getIntentToStart(this, UserInfo.getUserInfo(UserUtil.getCurrentUser())));
         } else if (id == R.id.nav_at_me) {
-            startActivity(TopicAtActivity.class);
+            startActivity(TopicMentionActivity.class);
         } else if (id == R.id.nav_comment) {
             startActivity(TopicCommentActivity.class);
         }else if (id == R.id.nav_slideshow) {

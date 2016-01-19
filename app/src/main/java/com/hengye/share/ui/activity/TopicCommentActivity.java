@@ -2,8 +2,6 @@ package com.hengye.share.ui.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -11,23 +9,12 @@ import android.view.View;
 import com.hengye.share.R;
 import com.hengye.share.adapter.viewpager.TopicFragmentPager;
 import com.hengye.share.ui.base.BaseActivity;
-import com.hengye.share.ui.fragment.TopicNotifyFragment;
 import com.hengye.share.ui.presenter.TopicPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TopicCommentActivity extends BaseActivity{
-
-    @Override
-    protected String getRequestTag() {
-        return "TopicNotifyActivity";
-    }
-
-    @Override
-    protected boolean setCustomTheme() {
-        return super.setCustomTheme();
-    }
 
     @Override
     protected boolean setToolBar() {
@@ -38,7 +25,7 @@ public class TopicCommentActivity extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_topic_notify);
+        setContentView(R.layout.activity_topic_comment);
 
         initView();
     }

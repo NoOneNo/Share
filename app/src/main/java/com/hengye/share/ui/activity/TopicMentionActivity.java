@@ -17,17 +17,7 @@ import com.hengye.share.ui.presenter.TopicPresenter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopicAtActivity extends BaseActivity{
-
-    @Override
-    protected String getRequestTag() {
-        return "TopicNotifyActivity";
-    }
-
-    @Override
-    protected boolean setCustomTheme() {
-        return super.setCustomTheme();
-    }
+public class TopicMentionActivity extends BaseActivity{
 
     @Override
     protected boolean setToolBar() {
@@ -38,7 +28,7 @@ public class TopicAtActivity extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_topic_notify);
+        setContentView(R.layout.activity_topic_mention);
 
         initView();
     }
@@ -65,7 +55,6 @@ public class TopicAtActivity extends BaseActivity{
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         mViewPager.setAdapter(new TopicFragmentPager(getSupportFragmentManager(), this, getTopicGroups()));
-//        mViewPager.setAdapter(new TopicNotifyFragmentPager());
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
@@ -74,37 +63,5 @@ public class TopicAtActivity extends BaseActivity{
         topicGroupGroups.add(TopicPresenter.TopicGroup.TOPIC_AT_ME);
         topicGroupGroups.add(TopicPresenter.TopicGroup.COMMENT_AT_ME);
         return topicGroupGroups;
-    }
-
-    class TopicNotifyFragmentPager extends FragmentPagerAdapter{
-
-        public TopicNotifyFragmentPager(){
-            super(getSupportFragmentManager());
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            if(position == 0){
-                return "评论";
-            }else{
-                return "提及";
-            }
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            Fragment fragment;
-            if(position == 0){
-                fragment = TopicNotifyFragment.newInstance(TopicNotifyFragment.NOTIFY_COMMENT);
-            }else{
-                fragment = TopicNotifyFragment.newInstance(TopicNotifyFragment.NOTIFY_MENTION);
-            }
-            return fragment;
-        }
-
-        @Override
-        public int getCount() {
-            return 2;
-        }
     }
 }

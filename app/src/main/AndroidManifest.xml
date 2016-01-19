@@ -94,7 +94,7 @@
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".ui.activity.TopicAtActivity"
+            android:name=".ui.activity.TopicMentionActivity"
             android:screenOrientation="portrait"/>
 
         <activity

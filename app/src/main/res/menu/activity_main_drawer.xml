@@ -5,7 +5,7 @@
         <item android:id="@+id/nav_camera" android:icon="@android:drawable/ic_menu_camera"
             android:title="个人主页" />
         <item android:id="@+id/nav_at_me" android:icon="@android:drawable/ic_menu_gallery"
-            android:title="/@提及" />
+            android:title="提及" />
         <item android:id="@+id/nav_comment" android:icon="@android:drawable/ic_menu_gallery"
             android:title="评论" />
         <item android:id="@+id/nav_slideshow" android:icon="@android:drawable/ic_menu_slideshow"

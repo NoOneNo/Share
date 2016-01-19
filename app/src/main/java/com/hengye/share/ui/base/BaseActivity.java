@@ -18,7 +18,7 @@ import com.hengye.share.util.SettingHelper;
 
 import java.util.HashMap;
 
-public class BaseActivity extends AppCompatActivity implements MvpView{
+public class BaseActivity extends AppCompatActivity{
 
     protected String getRequestTag() {
         return "BaseActivity";

@@ -53,7 +53,7 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(mAdapter = new TopicAdapter(getContext(), mPresenter.getData()));
+        recyclerView.setAdapter(mAdapter = new TopicAdapter(getContext(), mPresenter.findData()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.pull_to_refresh);
@@ -81,7 +81,6 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
                 if (!mAdapter.isEmpty()) {
                     String id = CommonUtil.getLastItem(mAdapter.getData()).getId();
                     mPresenter.loadWBTopic(id, false);
-//                    RequestManager.addToRequestQueue(getWBTopicRequest(UserUtil.getToken(), id, false), getRequestTag());
                 } else {
                     mPullToRefreshLayout.setLoading(false);
                     mPullToRefreshLayout.setLoadEnable(false);
@@ -118,7 +117,7 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
                 || type == DataUtil.REFRESH_DATA_SIZE_EQUAL
                 || type == DataUtil.LOAD_NO_MORE_DATA
                 || type == DataUtil.LOAD_DATA_SIZE_EQUAL) {
-            SPUtil.setModule(mAdapter.getData(), TopicPresenter.TopicGroup.class.getSimpleName() + UserUtil.getUid());
+            mPresenter.saveData(data);
         }
     }
 
