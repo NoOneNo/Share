@@ -14,6 +14,4 @@ public interface TopicMvpView extends MvpView {
 
     void handleTopicData(List<Topic> data, boolean isRefresh);
 
-    void handleUserInfo(User user);
-
 }

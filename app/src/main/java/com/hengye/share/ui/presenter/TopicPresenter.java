@@ -166,35 +166,6 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
                 .subscribe(getWBCommentsSubscriber(isRefresh));
     }
 
-//    public void loadWBUserInfo() {
-//        final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBUserInfoUrl());
-//        ub.addParameter("access_token", UserUtil.getToken());
-//        ub.addParameter("uid", UserUtil.getUid());
-//
-//        RetrofitManager
-//                .getWBService()
-//                .listUserInfo(ub.getParameters())
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Subscriber<WBUserInfo>() {
-//                    @Override
-//                    public void onCompleted() {
-//
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onNext(WBUserInfo wbUserInfo) {
-//                        UserUtil.updateUserInfo(wbUserInfo);
-//                        getMvpView().handleUserInfo(User.getUser(wbUserInfo));
-//                    }
-//                });
-//    }
-
     public Map<String, String> getWBAllTopicParameter(String id, final boolean isRefresh) {
         final UrlBuilder ub = new UrlBuilder();
         ub.addParameter("access_token", UserUtil.getToken());

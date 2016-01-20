@@ -121,9 +121,4 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
         }
     }
 
-    @Override
-    public void handleUserInfo(User user) {
-
-    }
-
 }
