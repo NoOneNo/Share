@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hengye.share.ui.base.BasePresenter;
+import com.hengye.share.ui.presenter.BasePresenter;
 import com.hengye.share.util.RequestManager;
 
 

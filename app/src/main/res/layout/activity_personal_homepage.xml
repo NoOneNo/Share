@@ -19,12 +19,16 @@
             <!--android:id="@+id/pull_to_refresh"-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="match_parent">-->
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+            <!--<android.support.v7.widget.RecyclerView-->
+                <!--android:id="@+id/recycler_view"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--app:layout_behavior="@string/appbar_scrolling_view_behavior" />-->
         <!--</com.hengye.swiperefresh.PullToRefreshLayout>-->
     <!--</android.support.v4.widget.NestedScrollView>-->
 

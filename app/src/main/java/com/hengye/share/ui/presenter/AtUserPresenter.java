@@ -7,9 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import com.hengye.share.model.AtUser;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.sina.WBUserInfos;
-import com.hengye.share.ui.base.BasePresenter;
 import com.hengye.share.ui.mvpview.AtUserMvpView;
-import com.hengye.share.ui.mvpview.TemplateMvpView;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.SPUtil;
@@ -18,7 +16,6 @@ import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.UserUtil;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class AtUserPresenter extends BasePresenter<AtUserMvpView> {
 

@@ -16,6 +16,9 @@ import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.SearchUserAdapter;
 import com.hengye.share.ui.mvpview.SearchMvpView;
 import com.hengye.share.ui.presenter.SearchPresenter;
+import com.hengye.share.ui.widget.dialog.LoadingDialog;
+import com.hengye.share.util.IntentUtil;
+import com.hengye.share.util.ViewUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,9 +55,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         initView();
     }
 
-    private ImageButton mBackBtn, mSearchBtn;
     private EditText mContent;
     private RecyclerView mUserRV, mTopicRV;
+    private LoadingDialog mLoadingDialog;
 
     private SearchUserAdapter mUserAdapter;
     private TopicAdapter mTopicAdapter;
@@ -62,10 +65,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private SearchPresenter mPresenter;
 
     private void initView(){
-        mBackBtn = (ImageButton) findViewById(R.id.btn_back);
-        mBackBtn.setOnClickListener(this);
-        mSearchBtn = (ImageButton) findViewById(R.id.btn_search);
-        mSearchBtn.setOnClickListener(this);
+        findViewById(R.id.btn_back).setOnClickListener(this);
+        findViewById(R.id.btn_search).setOnClickListener(this);
         mContent = (EditText) findViewById(R.id.et_search);
         mUserRV = (RecyclerView) findViewById(R.id.recycler_view_user);
         mUserRV.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -75,6 +76,15 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         mTopicRV.setAdapter(mTopicAdapter = new TopicAdapter(this, new ArrayList<Topic>()));
         mTopicRV.setLayoutManager(new LinearLayoutManager(this));
         mTopicRV.setItemAnimator(new DefaultItemAnimator());
+
+        mUserAdapter.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                startActivity(PersonalHomepageActivity.getIntentToStart(SearchActivity.this, mUserAdapter.getItem(position)));
+            }
+        });
+
+        mLoadingDialog = new LoadingDialog(this);
     }
 
     @Override
@@ -83,8 +93,20 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         if(id == R.id.btn_back){
             onBackPressed();
         }else if(id == R.id.btn_search){
+            ViewUtil.hideKeyBoard(mContent);
+            mLoadingDialog.show();
             mPresenter.loadWBSearchContent(mContent.getText().toString().trim());
         }
+    }
+
+    @Override
+    public void loadSuccess() {
+        mLoadingDialog.dismiss();
+    }
+
+    @Override
+    public void loadFail() {
+        mLoadingDialog.dismiss();
     }
 
     @Override

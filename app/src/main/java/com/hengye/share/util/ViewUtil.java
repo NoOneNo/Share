@@ -1,5 +1,6 @@
 package com.hengye.share.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +61,14 @@ public class ViewUtil {
         return new StringBuilder(url.length() + 12).append("#W").append(maxWidth)
                 .append("#H").append(maxHeight).append("#S").append(scaleType.ordinal()).append(url)
                 .toString();
+    }
+
+    public static void hideKeyBoard(Activity activity) {
+        View view = activity.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) BaseApplication.getInstance().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     public static void hideKeyBoard(View paramEditText) {

@@ -64,6 +64,9 @@ public interface WBService {
     @GET(UrlFactory.WB_COMMENT_BY_ME)
     Observable<WBTopicComments> listCommentByMeTopic(@QueryMap Map<String, String> options);
 
+    @GET(UrlFactory.WB_USER_TOPIC)
+    Observable<WBTopics> listUserTopic(@QueryMap Map<String, String> options);
+
     @GET(UrlFactory.WB_USER_INFO)
     Observable<WBUserInfo> listUserInfo(@QueryMap Map<String, String> options);
 

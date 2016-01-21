@@ -1,7 +1,6 @@
 package com.hengye.share.ui.mvpview;
 
 import com.hengye.share.model.TopicComment;
-import com.hengye.share.ui.base.MvpView;
 
 import java.util.List;
 

@@ -20,4 +20,24 @@
         android:layout_height="wrap_content"
         android:text="test2 RXJAVA"
         android:layout_centerInParent="true"/>
+
+    <Button
+        android:id="@+id/btn_test3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="create loading dialog"
+        android:layout_centerInParent="true"/>
+
+    <Button
+        android:id="@+id/btn_test4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="loading button"
+        android:onClick="clickLoading"
+        android:layout_centerInParent="true"/>
+
+    <com.hengye.share.ui.widget.loading.FramesLoadingView
+        android:id="@+id/loading"
+        android:layout_width="35dp"
+        android:layout_height="45dp" />
 </LinearLayout>

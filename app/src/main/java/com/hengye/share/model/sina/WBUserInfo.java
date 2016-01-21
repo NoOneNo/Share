@@ -76,11 +76,11 @@ public class WBUserInfo implements Serializable{
     private String domain;
     private String weihao;
     private String gender;
-    private int followers_count;
-    private int friends_count;
-    private int pagefriends_count;
-    private int statuses_count;
-    private int favourites_count;
+    private long followers_count;
+    private long friends_count;
+    private long pagefriends_count;
+    private long statuses_count;
+    private long favourites_count;
     private String created_at;
     private boolean following;
     private boolean allow_all_act_msg;
@@ -111,7 +111,7 @@ public class WBUserInfo implements Serializable{
     private int online_status;
     private int bi_followers_count;
     private String lang;
-    private int star;
+    private long star;
     private int mbtype;
     private int mbrank;
     private int block_word;
@@ -188,23 +188,23 @@ public class WBUserInfo implements Serializable{
         this.gender = gender;
     }
 
-    public void setFollowers_count(int followers_count) {
+    public void setFollowers_count(long followers_count) {
         this.followers_count = followers_count;
     }
 
-    public void setFriends_count(int friends_count) {
+    public void setFriends_count(long friends_count) {
         this.friends_count = friends_count;
     }
 
-    public void setPagefriends_count(int pagefriends_count) {
+    public void setPagefriends_count(long pagefriends_count) {
         this.pagefriends_count = pagefriends_count;
     }
 
-    public void setStatuses_count(int statuses_count) {
+    public void setStatuses_count(long statuses_count) {
         this.statuses_count = statuses_count;
     }
 
-    public void setFavourites_count(int favourites_count) {
+    public void setFavourites_count(long favourites_count) {
         this.favourites_count = favourites_count;
     }
 
@@ -292,7 +292,7 @@ public class WBUserInfo implements Serializable{
         this.lang = lang;
     }
 
-    public void setStar(int star) {
+    public void setStar(long star) {
         this.star = star;
     }
 
@@ -384,23 +384,23 @@ public class WBUserInfo implements Serializable{
         return gender;
     }
 
-    public int getFollowers_count() {
+    public long getFollowers_count() {
         return followers_count;
     }
 
-    public int getFriends_count() {
+    public long getFriends_count() {
         return friends_count;
     }
 
-    public int getPagefriends_count() {
+    public long getPagefriends_count() {
         return pagefriends_count;
     }
 
-    public int getStatuses_count() {
+    public long getStatuses_count() {
         return statuses_count;
     }
 
-    public int getFavourites_count() {
+    public long getFavourites_count() {
         return favourites_count;
     }
 
@@ -488,7 +488,7 @@ public class WBUserInfo implements Serializable{
         return lang;
     }
 
-    public int getStar() {
+    public long getStar() {
         return star;
     }
 

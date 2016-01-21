@@ -1,22 +1,19 @@
 package com.hengye.share.ui.presenter;
 
 import android.content.res.Resources;
+import android.text.TextUtils;
 
 import com.google.gson.reflect.TypeToken;
 import com.hengye.share.R;
 import com.hengye.share.model.Topic;
-import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.model.sina.WBTopicComments;
 import com.hengye.share.model.sina.WBTopicIds;
 import com.hengye.share.model.sina.WBTopics;
-import com.hengye.share.model.sina.WBUserInfo;
-import com.hengye.share.ui.base.BasePresenter;
 import com.hengye.share.ui.mvpview.TopicMvpView;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.UrlBuilder;
-import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
 import com.hengye.share.util.thirdparty.WBUtil;
@@ -31,12 +28,14 @@ import rx.schedulers.Schedulers;
 
 public class TopicPresenter extends BasePresenter<TopicMvpView> {
 
+    private TopicGroup mTopicGroup;
+    private String uid, name;
+
     public TopicPresenter(TopicMvpView mvpView, TopicGroup topicGroup) {
         super(mvpView);
         mTopicGroup = topicGroup;
     }
 
-    TopicGroup mTopicGroup;
 
     public void loadWBAllTopic(String id, final boolean isRefresh) {
         RetrofitManager
@@ -51,9 +50,9 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
     public void loadWBTopic(String id, final boolean isRefresh) {
         switch (mTopicGroup) {
             case ALL:
-                if(isRefresh){
+                if (isRefresh) {
                     loadWBAllTopicIds(id);
-                }else {
+                } else {
                     loadWBAllTopic(id, false);
                 }
                 break;
@@ -71,6 +70,9 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
                 break;
             case COMMENT_BY_ME:
                 loadWBCommentByMeTopic(id, isRefresh);
+                break;
+            case HOMEPAGE:
+                loadWBHomepageTopic(id, isRefresh);
                 break;
             default:
                 break;
@@ -166,6 +168,15 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
                 .subscribe(getWBCommentsSubscriber(isRefresh));
     }
 
+    public void loadWBHomepageTopic(String id, final boolean isRefresh) {
+        RetrofitManager
+                .getWBService()
+                .listUserTopic(getWBAllTopicParameter(id, isRefresh))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(getWBTopicsSubscriber(isRefresh));
+    }
+
     public Map<String, String> getWBAllTopicParameter(String id, final boolean isRefresh) {
         final UrlBuilder ub = new UrlBuilder();
         ub.addParameter("access_token", UserUtil.getToken());
@@ -174,6 +185,12 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
         } else {
             ub.addParameter("max_id", id);
         }
+        if (!TextUtils.isEmpty(uid)) {
+            ub.addParameter("uid", uid);
+        } else if (!TextUtils.isEmpty(name)) {
+            ub.addParameter("screen_name", name);
+        }
+
         ub.addParameter("count", WBUtil.MAX_COUNT_REQUEST);
         return ub.getParameters();
     }
@@ -219,7 +236,7 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
     public ArrayList<Topic> findData() {
 
         ArrayList<Topic> data = SPUtil.getModule(new TypeToken<ArrayList<Topic>>() {
-        }.getType(), Topic.class.getSimpleName() + UserUtil.getUid() + "/" + mTopicGroup);
+        }.getType(), getModuleName());
         if (data == null) {
             data = new ArrayList<>();
         }
@@ -227,14 +244,30 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
     }
 
     public void saveData(List<Topic> data) {
-        SPUtil.setModule(data, Topic.class.getSimpleName() + UserUtil.getUid() + "/" + mTopicGroup);
+        SPUtil.setModule(data, getModuleName());
+    }
+
+    private String mModuleName;
+
+    public String getModuleName() {
+        if (mModuleName == null) {
+            mModuleName = Topic.class.getSimpleName()
+                    + UserUtil.getUid()
+                    + "/"
+                    + uid
+                    + "/"
+                    + name
+                    + "/"
+                    + mTopicGroup;
+        }
+        return mModuleName;
     }
 
     public enum TopicGroup {
-        ALL,BILATERAL,COMMENT_AT_ME,TOPIC_AT_ME,COMMENT_TO_ME,COMMENT_BY_ME;
+        ALL, BILATERAL, COMMENT_AT_ME, TOPIC_AT_ME, COMMENT_TO_ME, COMMENT_BY_ME, HOMEPAGE;
 
         public static String getName(TopicGroup topicGroup, Resources resources) {
-            switch (topicGroup){
+            switch (topicGroup) {
                 case ALL:
                     return resources.getString(R.string.title_page_all);
                 case BILATERAL:
@@ -251,5 +284,21 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
                     return null;
             }
         }
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

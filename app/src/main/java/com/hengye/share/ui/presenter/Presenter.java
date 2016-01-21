@@ -1,4 +1,6 @@
-package com.hengye.share.ui.base;
+package com.hengye.share.ui.presenter;
+
+import com.hengye.share.ui.mvpview.MvpView;
 
 /**
  * Every presenter in the app must either implement this interface or extend BasePresenter

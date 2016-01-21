@@ -8,6 +8,8 @@ import android.view.View;
 
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.R;
+import com.hengye.share.ui.widget.dialog.LoadingDialog;
+import com.hengye.share.ui.widget.loading.FramesLoadingView;
 
 import java.util.concurrent.TimeUnit;
 
@@ -31,6 +33,8 @@ public class TestActivity extends BaseActivity implements View.OnClickListener{
     private static final String TAG = "RxAndroidSamples";
 
     private Handler backgroundHandler;
+    private FramesLoadingView mLoading;
+    private LoadingDialog mLoadingDialog;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +43,9 @@ public class TestActivity extends BaseActivity implements View.OnClickListener{
 
         findViewById(R.id.btn_test).setOnClickListener(this);
         findViewById(R.id.btn_test2).setOnClickListener(this);
+        findViewById(R.id.btn_test3).setOnClickListener(this);
+        findViewById(R.id.btn_test4).setOnClickListener(this);
+        mLoading = (FramesLoadingView)findViewById(R.id.loading);
 
         BackgroundThread backgroundThread = new BackgroundThread();
         backgroundThread.start();
@@ -50,8 +57,23 @@ public class TestActivity extends BaseActivity implements View.OnClickListener{
     public void onClick(View v) {
         if(v.getId() == R.id.btn_test) {
             onRunSchedulerExampleButtonClicked();
-        }if(v.getId() == R.id.btn_test2) {
+        }else if(v.getId() == R.id.btn_test2) {
             onRunSchedulerExampleButtonClicked2();
+        }else if(v.getId() == R.id.btn_test3) {
+            if(mLoadingDialog == null){
+                mLoadingDialog = new LoadingDialog(this, "正在加载中...", false);
+            }
+            if(mLoadingDialog.isShowing()){
+                mLoadingDialog.dismiss();
+            }else{
+                mLoadingDialog.show();
+            }
+        }else if(v.getId() == R.id.btn_test4) {
+            if(mLoading.isRunning()){
+                mLoading.stop();
+            }else{
+                mLoading.start();
+            }
         }
     }
 

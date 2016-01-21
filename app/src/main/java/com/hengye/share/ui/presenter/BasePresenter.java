@@ -1,4 +1,7 @@
-package com.hengye.share.ui.base;
+package com.hengye.share.ui.presenter;
+
+import com.hengye.share.ui.mvpview.MvpView;
+import com.hengye.share.ui.presenter.Presenter;
 
 /**
  * Base class that implements the Presenter interface and provides a base implementation for

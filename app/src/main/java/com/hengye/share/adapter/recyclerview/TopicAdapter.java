@@ -165,6 +165,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
 
             registerChildViewItemLongClick(mTopicTitle.mTitle);
             registerChildViewItemLongClick(mTopic.mContent);
+            registerChildViewItemLongClick(mRetweetTopicLayout);
             if (topic.getRetweetedTopic() != null) {
                 mRetweetTopicLayout.setVisibility(View.VISIBLE);
                 mRetweetTopic.initTopicContent(context, topic.getRetweetedTopic(), true);

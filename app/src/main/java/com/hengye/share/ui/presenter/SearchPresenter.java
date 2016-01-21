@@ -6,7 +6,6 @@ import com.hengye.share.model.Topic;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.sina.WBTopics;
 import com.hengye.share.model.sina.WBUserInfos;
-import com.hengye.share.ui.base.BasePresenter;
 import com.hengye.share.ui.mvpview.SearchMvpView;
 import com.hengye.share.util.L;
 import com.hengye.share.util.UrlBuilder;
@@ -48,13 +47,13 @@ public class SearchPresenter extends BasePresenter<SearchMvpView> {
                     @Override
                     public void onCompleted() {
                         L.debug("onCompleted invoke!");
-//                        getMvpView().loadSuccess(isRefresh);
+                        getMvpView().loadSuccess();
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         L.debug("onError invoke!");
-//                        getMvpView().loadFail(isRefresh);
+                        getMvpView().loadFail();
                     }
 
                     @Override

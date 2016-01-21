@@ -23,6 +23,7 @@ import com.hengye.share.adapter.viewpager.TopicFragmentPager;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.greenrobot.User;
+import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.ui.activity.setting.SettingActivity;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.ui.fragment.TopicFavoritesFragment;
@@ -78,11 +79,9 @@ public class TopicActivity extends BaseActivity
 
     }
 
-//    private PullToRefreshLayout mPullToRefreshLayout;
     private ViewPager mViewPager;
     private NetworkImageView mAvatar;
     private TextView mUsername, mSign;
-//    private TopicAdapter mAdapter;
     private UserPresenter mPresenter;
 
 
@@ -90,9 +89,6 @@ public class TopicActivity extends BaseActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final TabLayout tablayout = (TabLayout) findViewById(R.id.tab_layout);
-//        tablayout.addTab((tablayout.newTab().setText("tab one")));
-//        tablayout.addTab((tablayout.newTab().setText("tab two")));
-//        tablayout.addTab((tablayout.newTab().setText("tab three")));
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         mViewPager.setAdapter(new TopicFragmentPager(getSupportFragmentManager(), this, getTopicGroups()));
         tablayout.setupWithViewPager(mViewPager);
@@ -101,9 +97,7 @@ public class TopicActivity extends BaseActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
-
-//                Intent intent = new Intent(TopicActivity.this, TopicPublishActivity.clas;
-//                startActivity(intent);
+                startActivity(TopicPublishActivity.class);
             }
         });
 
@@ -133,52 +127,6 @@ public class TopicActivity extends BaseActivity
         } else {
             handleUserInfo(UserUtil.getCurrentUser());
         }
-
-//        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        recyclerView.setAdapter(mAdapter = new TopicAdapter(this, getData()));
-//        recyclerView.setItemAnimator(new DefaultItemAnimator());
-//
-//        mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.pull_to_refresh);
-//        mPullToRefreshLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                if (UserUtil.isUserEmpty()) {
-//                    mPullToRefreshLayout.setRefreshing(false);
-//                    return;
-//                }
-//
-//                if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
-//                    String id = mAdapter.getData().get(0).getId();
-//                    mPresenter.loadWBAllTopicIds(id);
-////                    RequestManager.addToRequestQueue(getWBTopicIdsRequest(UserUtil.getToken(), id), getRequestTag());
-//                } else {
-//                    mPresenter.loadWBAllTopic("0", true);
-////                    RequestManager.addToRequestQueue(getWBTopicRequest(UserUtil.getToken(), 0 + "", true), getRequestTag());
-//                }
-//            }
-//        });
-//        mPullToRefreshLayout.setOnLoadListener(new PullToRefreshLayout.OnLoadListener() {
-//            @Override
-//            public void onLoad() {
-//                if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
-//                    String id = CommonUtil.getLastItem(mAdapter.getData()).getId();
-//                    mPresenter.loadWBAllTopic(id, false);
-////                    RequestManager.addToRequestQueue(getWBTopicRequest(UserUtil.getToken(), id, false), getRequestTag());
-//                } else {
-//                    mPullToRefreshLayout.setLoading(false);
-//                    mPullToRefreshLayout.setLoadEnable(false);
-//                }
-//            }
-//        });
-//
-//        mAdapter.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(View view, int position) {
-////                IntentUtil.startActivity(TopicActivity.this, TopicDetailActivity.getIntentToStart(TopicActivity.this, mAdapter.getItem(position)));
-////                Toast.makeText(MainActivity.this, "click item : " + position, Toast.LENGTH_SHORT).show();
-//            }
-//        });
 
     }
 
@@ -252,7 +200,7 @@ public class TopicActivity extends BaseActivity
         } else if (id == R.id.nav_manage) {
             startActivity(SettingActivity.class);
         } else if (id == R.id.nav_share) {
-
+            startActivity(TestActivity.class);
         } else if (id == R.id.nav_send) {
             startActivity(TopicDraftActivity.class);
         }
@@ -313,39 +261,26 @@ public class TopicActivity extends BaseActivity
         }
     }
 
-//    @Override
-//    public void stopLoading(boolean isRefresh) {
-//        if (isRefresh) {
-//            mPullToRefreshLayout.setRefreshing(false);
-//        } else {
-//            mPullToRefreshLayout.setLoading(false);
-//        }
-//    }
-//
-//    @Override
-//    public void handleNoMoreTopics() {
-//        Snackbar.make(mPullToRefreshLayout, "没有新的微博", Snackbar.LENGTH_SHORT).show();
-//    }
-//
-//    @Override
-//    public void handleTopicData(List<Topic> data, boolean isRefresh) {
-//        int type = DataUtil.handlePagingData(mAdapter.getData(), data, isRefresh);
-//        DataUtil.handleTopicAdapter(type, mAdapter, data);
-//        DataUtil.handlePullToRefresh(type, mPullToRefreshLayout);
-//        DataUtil.handleSnackBar(type, mPullToRefreshLayout, data == null ? 0 : data.size());
-//        if (type == DataUtil.REFRESH_DATA_SIZE_LESS
-//                || type == DataUtil.REFRESH_DATA_SIZE_EQUAL
-//                || type == DataUtil.LOAD_NO_MORE_DATA
-//                || type == DataUtil.LOAD_DATA_SIZE_EQUAL) {
-//            SPUtil.setModule(mAdapter.getData(), Topic.class.getSimpleName() + UserUtil.getUid());
-//        }
-//    }
-
     private List<TopicPresenter.TopicGroup> getTopicGroups(){
         ArrayList<TopicPresenter.TopicGroup> topicGroupGroups = new ArrayList<>();
         topicGroupGroups.add(TopicPresenter.TopicGroup.ALL);
         topicGroupGroups.add(TopicPresenter.TopicGroup.BILATERAL);
         return topicGroupGroups;
+    }
+
+    @Override
+    public void handleUserInfo(WBUserInfo wbUserInfo) {
+
+    }
+
+    @Override
+    public void loadSuccess() {
+
+    }
+
+    @Override
+    public void loadFail() {
+
     }
 
     /**

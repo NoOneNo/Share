@@ -11,12 +11,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.hengye.share.R;
-import com.hengye.share.ui.fragment.BaseFragment;
-import com.hengye.share.ui.fragment.TopicFragment;
+import com.hengye.share.ui.presenter.BasePresenter;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.SettingHelper;
-
-import java.util.HashMap;
 
 public class BaseActivity extends AppCompatActivity{
 
@@ -104,6 +101,7 @@ public class BaseActivity extends AppCompatActivity{
             mPresenter.detachView();
         }
     }
+
     public void startActivity(Class<?> cls){
         startActivity(new Intent(this, cls));
     }

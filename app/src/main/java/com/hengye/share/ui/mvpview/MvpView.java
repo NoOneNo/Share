@@ -1,4 +1,4 @@
-package com.hengye.share.ui.base;
+package com.hengye.share.ui.mvpview;
 
 
 /**

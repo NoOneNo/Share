@@ -32,6 +32,7 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
     private TopicAdapter mAdapter;
     private TopicPresenter mPresenter;
     private TopicPresenter.TopicGroup topicGroup;
+    private String uid, name;
 
     public static TopicFragment newInstance(TopicPresenter.TopicGroup topicGroup) {
         TopicFragment fragment = new TopicFragment();
@@ -41,15 +42,29 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
         return fragment;
     }
 
+    public static TopicFragment newInstance(TopicPresenter.TopicGroup topicGroup, String uid, String name) {
+        TopicFragment fragment = new TopicFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("topicGroup", topicGroup);
+        bundle.putSerializable("uid", uid);
+        bundle.putSerializable("name", name);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Override
     protected void handleBundleExtra() {
         topicGroup = (TopicPresenter.TopicGroup)getArguments().getSerializable("topicGroup");
+        uid = getArguments().getString("uid");
+        name = getArguments().getString("name");
     }
 
     @Override
     protected void onCreateView() {
 
         setupPresenter(mPresenter = new TopicPresenter(this, topicGroup));
+        mPresenter.setUid(uid);
+        mPresenter.setName(name);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

@@ -3,7 +3,6 @@ package com.hengye.share.ui.presenter;
 import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.sina.WBTopicComments;
 import com.hengye.share.model.sina.WBTopicReposts;
-import com.hengye.share.ui.base.BasePresenter;
 import com.hengye.share.ui.mvpview.TopicDetailMvpView;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
@@ -17,7 +16,6 @@ import java.util.Map;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 public class TopicDetailPresenter extends BasePresenter<TopicDetailMvpView> {
