@@ -54,16 +54,24 @@ public class UserUtil {
     }
 
     public static User getDefaultUser() {
+        User user = null;
         String uid = SPUtil.getUid();
-        if (uid == null) {
-            return null;
+        if (uid != null) {
+            UserDao ud = GreenDaoManager.getDaoSession().getUserDao();
+            List<User> users = ud.queryRaw("where UID = ?", uid);
+            if (!CommonUtil.isEmptyCollection(users)) {
+                user =  users.get(0);
+            }
         }
-        UserDao ud = GreenDaoManager.getDaoSession().getUserDao();
-        List<User> users = ud.queryRaw("where UID = ?", uid);
-        if (CommonUtil.isEmptyCollection(users)) {
-            return null;
-        }
-        return users.get(0);
+
+       if(user == null){
+           UserDao ud = GreenDaoManager.getDaoSession().getUserDao();
+           List<User> users = ud.queryRaw("limit 1");
+           if (!CommonUtil.isEmptyCollection(users)) {
+               user =  users.get(0);
+           }
+       }
+        return user;
     }
 
     public static void updateUser(Oauth2AccessToken accessToken) {
