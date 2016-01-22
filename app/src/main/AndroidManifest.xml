@@ -115,6 +115,11 @@
             android:screenOrientation="portrait"/>
 
         <activity
+            android:name="com.hengye.share.ui.activity.GroupManageActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_group_manage"/>
+
+        <activity
             android:name="com.hengye.share.ui.activity.TestActivity"/>
     </application>
 

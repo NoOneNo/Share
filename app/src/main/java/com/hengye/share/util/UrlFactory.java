@@ -22,12 +22,16 @@ public class UrlFactory {
     public static final String WB_USER_TOPIC = "statuses/user_timeline.json";
     //获得微博
     public static final String WB_FRIEND_TOPIC = "statuses/friends_timeline.json";
-    //获得微博 ID列表
+    //获得微博ID列表
     public static final String WB_FRIEND_TOPIC_IDS = "statuses/friends_timeline/ids.json";
     //获得好友圈微博
     public static final String WB_BILATERAL_TOPIC = "statuses/bilateral_timeline.json";
+    //获得好友圈微博ID列表
+    public static final String WB_BILATERAL_TOPIC_IDS = "statuses/bilateral_timeline/ids.json";
     //获得某一分组的微博列表
     public static final String WB_GROUP_TOPIC = "friendships/groups/timeline.json";
+    //获得某一分组的微博ID列表
+    public static final String WB_GROUP_TOPIC_IDS = "statuses/groups/timeline/ids.json";
     //获取某个用户的各种消息未读数
     public static final String WB_UNREAD_COUNT = "remind/unread_count.json";
     //获取用户信息
@@ -71,6 +75,24 @@ public class UrlFactory {
     public static final String WB_FAVORITES_CREATE = "favorites/create.json";
     //删除收藏微博
     public static final String WB_FAVORITES_DESTROY = "favorites/destroy.json";
+
+    //--- 以下都没写方法
+    //获取好友的分组信息
+    public static final String WB_GROUP = "friendships/groups.json";
+    //创建好友分组
+    public static final String WB_GROUP_CREATE = "friendships/groups/create.json";
+    //删除好友分组
+    public static final String WB_GROUP_DESTROY = "friendships/groups/destroy.json";
+    //添加关注用户到好友分组
+    public static final String WB_GROUP_MEMBER_ADD = "friendships/groups/members/add.json";
+    //删除好友分组内的关注用户
+    public static final String WB_GROUP_MEMBER_DESTROY = "friendships/groups/members/destroy.json";
+    //更新好友分组
+    public static final String WB_GROUP_UPDATE = "friendships/groups/update.json";
+    //获取某一好友分组下的成员列表
+    public static final String WB_GROUP_MEMBER = "friendships/groups/members.json";
+    //调整当前登录用户的好友分组顺序
+    public static final String WB_GROUP_ORDER = "friendships/groups/order.json";
     /**
      * 微博接口
      */
@@ -263,4 +285,5 @@ public class UrlFactory {
     public String getWBDestroyFavoritesUrl() {
         return getWBUrlPrefix() + WB_FAVORITES_DESTROY;
     }
+
 }

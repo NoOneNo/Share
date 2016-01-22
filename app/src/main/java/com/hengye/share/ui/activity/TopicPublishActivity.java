@@ -76,18 +76,16 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_topic_publish);
-
-        initView();
-        initData();
+    protected int getLayoutResId() {
+        return R.layout.activity_topic_publish;
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void afterCreate(Bundle savedInstanceState) {
+        super.afterCreate(savedInstanceState);
+
+        initView();
+        initData();
     }
 
     private ImageButton mMentionBtn, mEmoticonBtn, mPublishBtn;

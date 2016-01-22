@@ -60,11 +60,13 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected int getLayoutResId() {
+        return R.layout.activity_login;
+    }
 
-        setContentView(R.layout.activity_login);
-//        setupActionBar();
+    @Override
+    protected void afterCreate(Bundle savedInstanceState) {
+        super.afterCreate(savedInstanceState);
         // Set up the login form.
         mUsernameView = (AutoCompleteTextView) findViewById(R.id.login_username);
         populateAutoComplete();

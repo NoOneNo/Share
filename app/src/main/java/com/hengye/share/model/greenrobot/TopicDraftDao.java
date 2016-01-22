@@ -36,6 +36,8 @@ public class TopicDraftDao extends AbstractDao<TopicDraft, Long> {
         public final static Property ParentType = new Property(10, Integer.class, "parentType", false, "PARENT_TYPE");
     };
 
+    private DaoSession daoSession;
+
 
     public TopicDraftDao(DaoConfig config) {
         super(config);
@@ -43,6 +45,7 @@ public class TopicDraftDao extends AbstractDao<TopicDraft, Long> {
     
     public TopicDraftDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
+        this.daoSession = daoSession;
     }
 
     /** Creates the underlying database table. */
@@ -53,7 +56,7 @@ public class TopicDraftDao extends AbstractDao<TopicDraft, Long> {
                 "\"CONTENT\" TEXT NOT NULL ," + // 1: content
                 "\"DATE\" INTEGER," + // 2: date
                 "\"URLS\" TEXT," + // 3: urls
-                "\"UID\" TEXT," + // 4: uid
+                "\"UID\" TEXT NOT NULL ," + // 4: uid
                 "\"TARGET_TOPIC_ID\" TEXT," + // 5: targetTopicId
                 "\"TARGET_COMMENT_ID\" TEXT," + // 6: targetCommentId
                 "\"IS_COMMENT_ORIGIN\" INTEGER," + // 7: isCommentOrigin
@@ -88,11 +91,7 @@ public class TopicDraftDao extends AbstractDao<TopicDraft, Long> {
         if (urls != null) {
             stmt.bindString(4, urls);
         }
- 
-        String uid = entity.getUid();
-        if (uid != null) {
-            stmt.bindString(5, uid);
-        }
+        stmt.bindString(5, entity.getUid());
  
         String targetTopicId = entity.getTargetTopicId();
         if (targetTopicId != null) {
@@ -125,6 +124,12 @@ public class TopicDraftDao extends AbstractDao<TopicDraft, Long> {
         }
     }
 
+    @Override
+    protected void attachEntity(TopicDraft entity) {
+        super.attachEntity(entity);
+        entity.__setDaoSession(daoSession);
+    }
+
     /** @inheritdoc */
     @Override
     public Long readKey(Cursor cursor, int offset) {
@@ -139,7 +144,7 @@ public class TopicDraftDao extends AbstractDao<TopicDraft, Long> {
             cursor.getString(offset + 1), // content
             cursor.isNull(offset + 2) ? null : new java.util.Date(cursor.getLong(offset + 2)), // date
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // urls
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // uid
+            cursor.getString(offset + 4), // uid
             cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // targetTopicId
             cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // targetCommentId
             cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7), // isCommentOrigin
@@ -157,7 +162,7 @@ public class TopicDraftDao extends AbstractDao<TopicDraft, Long> {
         entity.setContent(cursor.getString(offset + 1));
         entity.setDate(cursor.isNull(offset + 2) ? null : new java.util.Date(cursor.getLong(offset + 2)));
         entity.setUrls(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setUid(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setUid(cursor.getString(offset + 4));
         entity.setTargetTopicId(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
         entity.setTargetCommentId(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
         entity.setIsCommentOrigin(cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7));

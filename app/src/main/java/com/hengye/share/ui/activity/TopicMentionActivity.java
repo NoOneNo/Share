@@ -25,17 +25,15 @@ public class TopicMentionActivity extends BaseActivity{
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_topic_mention);
-
-        initView();
+    protected int getLayoutResId() {
+        return R.layout.activity_topic_mention;
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void afterCreate(Bundle savedInstanceState) {
+        super.afterCreate(savedInstanceState);
+
+        initView();
     }
 
     private ViewPager mViewPager;
@@ -60,8 +58,9 @@ public class TopicMentionActivity extends BaseActivity{
 
     private List<TopicPresenter.TopicGroup> getTopicGroups(){
         ArrayList<TopicPresenter.TopicGroup> topicGroupGroups = new ArrayList<>();
-        topicGroupGroups.add(TopicPresenter.TopicGroup.TOPIC_AT_ME);
-        topicGroupGroups.add(TopicPresenter.TopicGroup.COMMENT_AT_ME);
+
+        topicGroupGroups.add(new TopicPresenter.TopicGroup(TopicPresenter.TopicType.TOPIC_AT_ME));
+        topicGroupGroups.add(new TopicPresenter.TopicGroup(TopicPresenter.TopicType.COMMENT_AT_ME));
         return topicGroupGroups;
     }
 }

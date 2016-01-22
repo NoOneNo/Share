@@ -46,10 +46,13 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected int getLayoutResId() {
+        return R.layout.activity_search;
+    }
 
-        setContentView(R.layout.activity_search);
+    @Override
+    protected void afterCreate(Bundle savedInstanceState) {
+        super.afterCreate(savedInstanceState);
 
         setupPresenter(mPresenter = new SearchPresenter(this));
         initView();

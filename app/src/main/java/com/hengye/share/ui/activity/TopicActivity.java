@@ -22,6 +22,7 @@ import com.hengye.share.R;
 import com.hengye.share.adapter.viewpager.TopicFragmentPager;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.UserInfo;
+import com.hengye.share.model.greenrobot.GroupList;
 import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.ui.activity.setting.SettingActivity;
@@ -31,6 +32,7 @@ import com.hengye.share.ui.mvpview.UserMvpView;
 import com.hengye.share.ui.presenter.TopicPresenter;
 import com.hengye.share.ui.presenter.UserPresenter;
 import com.hengye.share.ui.support.ActionBarDrawerToggleCustom;
+import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.SPUtil;
@@ -67,16 +69,16 @@ public class TopicActivity extends BaseActivity
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected int getLayoutResId() {
+        return R.layout.activity_topic;
+    }
 
-        super.onCreate(savedInstanceState);
-
-//        getWindow().setFeatureInt(Window.feature_);
-        setContentView(R.layout.activity_topic);
+    @Override
+    protected void afterCreate(Bundle savedInstanceState) {
+        super.afterCreate(savedInstanceState);
         setupPresenter(mPresenter = new UserPresenter(this));
         initView();
         initData();
-
     }
 
     private ViewPager mViewPager;
@@ -91,6 +93,9 @@ public class TopicActivity extends BaseActivity
         final TabLayout tablayout = (TabLayout) findViewById(R.id.tab_layout);
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         mViewPager.setAdapter(new TopicFragmentPager(getSupportFragmentManager(), this, getTopicGroups()));
+        if(mViewPager.getAdapter().getCount() > 3){
+            tablayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        }
         tablayout.setupWithViewPager(mViewPager);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -184,7 +189,7 @@ public class TopicActivity extends BaseActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_homepage) {
 //            UserInfo userInfo = getUserInfo();
             if (UserUtil.getCurrentUser() == null) {
                 Toast.makeText(this, "请先登录", Toast.LENGTH_SHORT).show();
@@ -195,14 +200,16 @@ public class TopicActivity extends BaseActivity
             startActivity(TopicMentionActivity.class);
         } else if (id == R.id.nav_comment) {
             startActivity(TopicCommentActivity.class);
-        }else if (id == R.id.nav_slideshow) {
+        }else if (id == R.id.nav_favorites) {
             startActivity(FragmentActivity.getStartIntent(this, TopicFavoritesFragment.class));
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_setting) {
             startActivity(SettingActivity.class);
-        } else if (id == R.id.nav_share) {
-            startActivity(TestActivity.class);
+        } else if (id == R.id.nav_group_manage) {
+            startActivity(GroupManageActivity.class);
         } else if (id == R.id.nav_send) {
             startActivity(TopicDraftActivity.class);
+        }else if (id == R.id.nav_share) {
+            startActivity(TestActivity.class);
         }
 
 //        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -263,8 +270,13 @@ public class TopicActivity extends BaseActivity
 
     private List<TopicPresenter.TopicGroup> getTopicGroups(){
         ArrayList<TopicPresenter.TopicGroup> topicGroupGroups = new ArrayList<>();
-        topicGroupGroups.add(TopicPresenter.TopicGroup.ALL);
-        topicGroupGroups.add(TopicPresenter.TopicGroup.BILATERAL);
+        topicGroupGroups.add(new TopicPresenter.TopicGroup(TopicPresenter.TopicType.ALL));
+        topicGroupGroups.add(new TopicPresenter.TopicGroup(TopicPresenter.TopicType.BILATERAL));
+        List<TopicPresenter.TopicGroup> temp = TopicPresenter.TopicGroup.getTopicGroup();
+        if(!CommonUtil.isEmptyCollection(temp)){
+            topicGroupGroups.addAll(temp);
+        }
+
         return topicGroupGroups;
     }
 

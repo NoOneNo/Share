@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.R;
 import com.hengye.share.ui.fragment.BaseFragment;
+import com.hengye.share.ui.presenter.UserPresenter;
 
 /**
  * This is a Activity to show a Fragment extends BaseFragment.
@@ -66,8 +67,16 @@ public class FragmentActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         ensureFragment();
         super.onCreate(savedInstanceState);
+    }
 
-        setContentView(R.layout.activity_fragment);
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.activity_fragment;
+    }
+
+    @Override
+    protected void afterCreate(Bundle savedInstanceState) {
+        super.afterCreate(savedInstanceState);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.content, mFragment)

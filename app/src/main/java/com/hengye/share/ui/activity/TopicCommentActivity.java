@@ -22,11 +22,13 @@ public class TopicCommentActivity extends BaseActivity{
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected int getLayoutResId() {
+        return R.layout.activity_topic_comment;
+    }
 
-        setContentView(R.layout.activity_topic_comment);
-
+    @Override
+    protected void afterCreate(Bundle savedInstanceState) {
+        super.afterCreate(savedInstanceState);
         initView();
     }
 
@@ -58,8 +60,8 @@ public class TopicCommentActivity extends BaseActivity{
 
     private List<TopicPresenter.TopicGroup> getTopicGroups(){
         ArrayList<TopicPresenter.TopicGroup> topicGroupGroups = new ArrayList<>();
-        topicGroupGroups.add(TopicPresenter.TopicGroup.COMMENT_TO_ME);
-        topicGroupGroups.add(TopicPresenter.TopicGroup.COMMENT_BY_ME);
+        topicGroupGroups.add(new TopicPresenter.TopicGroup(TopicPresenter.TopicType.COMMENT_TO_ME));
+        topicGroupGroups.add(new TopicPresenter.TopicGroup(TopicPresenter.TopicType.COMMENT_BY_ME));
         return topicGroupGroups;
     }
 

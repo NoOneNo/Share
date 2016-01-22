@@ -57,19 +57,16 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_topic_detail);
-
-        setupPresenter(mPresenter = new TopicDetailPresenter(this));
-        initView();
-
+    protected int getLayoutResId() {
+        return R.layout.activity_topic_detail;
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void afterCreate(Bundle savedInstanceState) {
+        super.afterCreate(savedInstanceState);
+
+        setupPresenter(mPresenter = new TopicDetailPresenter(this));
+        initView();
     }
 
     TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {

@@ -19,12 +19,13 @@ import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TopicFragment extends BaseFragment implements TopicMvpView {
 
     @Override
-    protected int getResourcesId() {
+    protected int getLayoutResId() {
         return R.layout.fragment_topic;
     }
 
@@ -34,14 +35,6 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
     private TopicPresenter.TopicGroup topicGroup;
     private String uid, name;
 
-    public static TopicFragment newInstance(TopicPresenter.TopicGroup topicGroup) {
-        TopicFragment fragment = new TopicFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("topicGroup", topicGroup);
-        fragment.setArguments(bundle);
-        return fragment;
-    }
-
     public static TopicFragment newInstance(TopicPresenter.TopicGroup topicGroup, String uid, String name) {
         TopicFragment fragment = new TopicFragment();
         Bundle bundle = new Bundle();
@@ -50,6 +43,14 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
         bundle.putSerializable("name", name);
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    public static TopicFragment newInstance(TopicPresenter.TopicGroup topicGroup) {
+        return newInstance(topicGroup, null, null);
+    }
+
+    public static TopicFragment newInstance(TopicPresenter.TopicType topicType, String uid, String name) {
+        return newInstance(new TopicPresenter.TopicGroup(topicType), uid, name);
     }
 
     @Override
@@ -68,7 +69,7 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(mAdapter = new TopicAdapter(getContext(), mPresenter.findData()));
+        recyclerView.setAdapter(mAdapter = new TopicAdapter(getContext(), new ArrayList<Topic>()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.pull_to_refresh);
@@ -103,9 +104,19 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
             }
         });
 
-        if(mAdapter.isEmpty() && !UserUtil.isUserEmpty()){
-            mPullToRefreshLayout.setRefreshing(true);
+        mPresenter.loadCacheData();
+    }
+
+    @Override
+    public void handleCache(List<Topic> data) {
+        if(CommonUtil.isEmptyCollection(data)){
+            if(mAdapter.isEmpty() && !UserUtil.isUserEmpty()) {
+                mPullToRefreshLayout.setRefreshing(true);
+            }
+        }else{
+            mAdapter.refresh(data);
         }
+
     }
 
     @Override
@@ -132,7 +143,7 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
                 || type == DataUtil.REFRESH_DATA_SIZE_EQUAL
                 || type == DataUtil.LOAD_NO_MORE_DATA
                 || type == DataUtil.LOAD_DATA_SIZE_EQUAL) {
-            mPresenter.saveData(data);
+            mPresenter.saveData(mAdapter.getData());
         }
     }
 

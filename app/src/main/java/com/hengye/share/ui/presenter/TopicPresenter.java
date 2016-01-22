@@ -6,11 +6,16 @@ import android.text.TextUtils;
 import com.google.gson.reflect.TypeToken;
 import com.hengye.share.R;
 import com.hengye.share.model.Topic;
+import com.hengye.share.model.greenrobot.GreenDaoManager;
+import com.hengye.share.model.greenrobot.GroupList;
+import com.hengye.share.model.greenrobot.ShareJson;
+import com.hengye.share.model.greenrobot.ShareJsonDao;
 import com.hengye.share.model.sina.WBTopicComments;
 import com.hengye.share.model.sina.WBTopicIds;
 import com.hengye.share.model.sina.WBTopics;
 import com.hengye.share.ui.mvpview.TopicMvpView;
 import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.GsonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.UrlBuilder;
@@ -18,12 +23,15 @@ import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
 import com.hengye.share.util.thirdparty.WBUtil;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 public class TopicPresenter extends BasePresenter<TopicMvpView> {
@@ -36,7 +44,6 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
         mTopicGroup = topicGroup;
     }
 
-
     public void loadWBAllTopic(String id, final boolean isRefresh) {
         RetrofitManager
                 .getWBService()
@@ -46,14 +53,13 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
                 .subscribe(getWBTopicsSubscriber(isRefresh));
     }
 
-
     public void loadWBTopic(String id, final boolean isRefresh) {
-        switch (mTopicGroup) {
+        switch (mTopicGroup.topicType) {
             case ALL:
-                if (isRefresh) {
+                if (isRefresh && !"0".equals(id)) {
                     loadWBAllTopicIds(id);
                 } else {
-                    loadWBAllTopic(id, false);
+                    loadWBAllTopic(id, isRefresh);
                 }
                 break;
             case BILATERAL:
@@ -73,6 +79,9 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
                 break;
             case HOMEPAGE:
                 loadWBHomepageTopic(id, isRefresh);
+                break;
+            case GROUP_LIST:
+                loadWBGroupListTopic(id, isRefresh);
                 break;
             default:
                 break;
@@ -177,6 +186,15 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
                 .subscribe(getWBTopicsSubscriber(isRefresh));
     }
 
+    public void loadWBGroupListTopic(String id, final boolean isRefresh) {
+        RetrofitManager
+                .getWBService()
+                .listGroupTopic(getWBAllTopicParameter(id, isRefresh))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(getWBTopicsSubscriber(isRefresh));
+    }
+
     public Map<String, String> getWBAllTopicParameter(String id, final boolean isRefresh) {
         final UrlBuilder ub = new UrlBuilder();
         ub.addParameter("access_token", UserUtil.getToken());
@@ -189,6 +207,9 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
             ub.addParameter("uid", uid);
         } else if (!TextUtils.isEmpty(name)) {
             ub.addParameter("screen_name", name);
+        }
+        if (mTopicGroup.groupList != null) {
+            ub.addParameter("list_id", mTopicGroup.groupList.getGid());
         }
 
         ub.addParameter("count", WBUtil.MAX_COUNT_REQUEST);
@@ -233,18 +254,43 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
         };
     }
 
+    public void loadCacheData(){
+        Observable
+                .create(new Observable.OnSubscribe<ArrayList<Topic>>() {
+                    @Override
+                    public void call(Subscriber<? super ArrayList<Topic>> subscriber) {
+                        subscriber.onNext(findData());
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<ArrayList<Topic>>() {
+                    @Override
+                    public void call(ArrayList<Topic> data) {
+                        getMvpView().handleCache(data);
+                    }
+                });
+    }
+
     public ArrayList<Topic> findData() {
 
-        ArrayList<Topic> data = SPUtil.getModule(new TypeToken<ArrayList<Topic>>() {
-        }.getType(), getModuleName());
-        if (data == null) {
-            data = new ArrayList<>();
+        ShareJson shareJson = GreenDaoManager.getDaoSession().getShareJsonDao().load(getModuleName());
+
+        if (shareJson == null) {
+            return new ArrayList<>();
         }
-        return data;
+
+        ArrayList<Topic> data = GsonUtil.fromJson(shareJson.getJson()
+                , new TypeToken<ArrayList<Topic>>(){}.getType());
+
+        return data == null ? new ArrayList<Topic>() : data;
     }
 
     public void saveData(List<Topic> data) {
-        SPUtil.setModule(data, getModuleName());
+        GreenDaoManager
+                .getDaoSession()
+                .getShareJsonDao()
+                .insertOrReplace(new ShareJson(getModuleName(), GsonUtil.toJson(data)));
     }
 
     private String mModuleName;
@@ -263,11 +309,55 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
         return mModuleName;
     }
 
-    public enum TopicGroup {
-        ALL, BILATERAL, COMMENT_AT_ME, TOPIC_AT_ME, COMMENT_TO_ME, COMMENT_BY_ME, HOMEPAGE;
+    public enum TopicType {
+        ALL, BILATERAL, COMMENT_AT_ME, TOPIC_AT_ME, COMMENT_TO_ME, COMMENT_BY_ME, HOMEPAGE, GROUP_LIST
+    }
+
+    public static class TopicGroup implements Serializable {
+
+        private static final long serialVersionUID = -5394322343417513819L;
+
+        private TopicType topicType;
+
+        public TopicGroup(TopicType topicType) {
+            this.topicType = topicType;
+        }
+
+        public TopicGroup(TopicType topicType, GroupList groupList) {
+            this.topicType = topicType;
+            this.groupList = groupList;
+        }
+
+        private GroupList groupList;
+
+        @Override
+        public String toString() {
+            if (groupList == null) {
+                return topicType.toString();
+            }
+
+            return topicType
+                    + "/"
+                    + groupList.getGid();
+        }
+
+        public static List<TopicGroup> getTopicGroup() {
+            return getTopicGroup(UserUtil.queryGroupList());
+        }
+
+        public static List<TopicGroup> getTopicGroup(List<GroupList> groupLists) {
+            if (CommonUtil.isEmptyCollection(groupLists)) {
+                return null;
+            }
+            List<TopicGroup> result = new ArrayList<>();
+            for (GroupList gl : groupLists) {
+                result.add(new TopicGroup(TopicType.GROUP_LIST, gl));
+            }
+            return result;
+        }
 
         public static String getName(TopicGroup topicGroup, Resources resources) {
-            switch (topicGroup) {
+            switch (topicGroup.topicType) {
                 case ALL:
                     return resources.getString(R.string.title_page_all);
                 case BILATERAL:
@@ -280,6 +370,12 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
                     return resources.getString(R.string.title_page_comment_by_me);
                 case TOPIC_AT_ME:
                     return resources.getString(R.string.title_page_topic);
+                case GROUP_LIST:
+                    if (topicGroup.groupList == null) {
+                        return "未知分组";
+                    } else {
+                        return topicGroup.groupList.getName();
+                    }
                 default:
                     return null;
             }

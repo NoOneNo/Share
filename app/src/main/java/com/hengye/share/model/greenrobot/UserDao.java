@@ -37,6 +37,8 @@ public class UserDao extends AbstractDao<User, Long> {
         public final static Property Cover = new Property(11, String.class, "cover", false, "COVER");
     };
 
+    private DaoSession daoSession;
+
 
     public UserDao(DaoConfig config) {
         super(config);
@@ -44,6 +46,7 @@ public class UserDao extends AbstractDao<User, Long> {
     
     public UserDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
+        this.daoSession = daoSession;
     }
 
     /** Creates the underlying database table. */
@@ -122,6 +125,12 @@ public class UserDao extends AbstractDao<User, Long> {
         if (cover != null) {
             stmt.bindString(12, cover);
         }
+    }
+
+    @Override
+    protected void attachEntity(User entity) {
+        super.attachEntity(entity);
+        entity.__setDaoSession(daoSession);
     }
 
     /** @inheritdoc */

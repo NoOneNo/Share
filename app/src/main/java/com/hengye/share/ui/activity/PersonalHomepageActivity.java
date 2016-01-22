@@ -85,9 +85,13 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_personal_homepage);
+    protected int getLayoutResId() {
+        return R.layout.activity_personal_homepage;
+    }
+
+    @Override
+    protected void afterCreate(Bundle savedInstanceState) {
+        super.afterCreate(savedInstanceState);
 
         if(mUserInfo == null){
             PersonalHomepageActivity.this.finish();
@@ -140,7 +144,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     private void setupTopicFragment(){
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content, TopicFragment.newInstance(TopicPresenter.TopicGroup.HOMEPAGE, mUserInfo.getUid(), mUserInfo.getName()))
+                .replace(R.id.content, TopicFragment.newInstance(TopicPresenter.TopicType.HOMEPAGE, mUserInfo.getUid(), mUserInfo.getName()))
                 .commit();
     }
 

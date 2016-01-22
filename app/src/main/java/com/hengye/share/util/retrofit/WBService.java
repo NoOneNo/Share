@@ -1,5 +1,6 @@
 package com.hengye.share.util.retrofit;
 
+import com.hengye.share.model.sina.WBGroups;
 import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.model.sina.WBTopicComments;
 import com.hengye.share.model.sina.WBTopicIds;
@@ -52,6 +53,15 @@ public interface WBService {
     @GET(UrlFactory.WB_BILATERAL_TOPIC)
     Observable<WBTopics> listBilateralTopic(@QueryMap Map<String, String> options);
 
+    @GET(UrlFactory.WB_BILATERAL_TOPIC_IDS)
+    Observable<WBTopics> listBilateralTopicIds(@QueryMap Map<String, String> options);
+
+    @GET(UrlFactory.WB_GROUP_TOPIC)
+    Observable<WBTopics> listGroupTopic(@QueryMap Map<String, String> options);
+
+    @GET(UrlFactory.WB_GROUP_TOPIC_IDS)
+    Observable<WBTopics> listGroupTopicIds(@QueryMap Map<String, String> options);
+
     @GET(UrlFactory.WB_COMMENT_MENTION)
     Observable<WBTopicComments> listCommentAtMeTopic(@QueryMap Map<String, String> options);
 
@@ -69,5 +79,8 @@ public interface WBService {
 
     @GET(UrlFactory.WB_USER_INFO)
     Observable<WBUserInfo> listUserInfo(@QueryMap Map<String, String> options);
+
+    @GET(UrlFactory.WB_GROUP)
+    Observable<WBGroups> listGroups(@QueryMap Map<String, String> options);
 
 }

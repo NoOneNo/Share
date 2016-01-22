@@ -28,16 +28,14 @@ public class SetTokenActivity extends BaseActivity implements View.OnClickListen
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_set_token);
-        initView();
+    protected int getLayoutResId() {
+        return R.layout.activity_set_token;
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void afterCreate(Bundle savedInstanceState) {
+        super.afterCreate(savedInstanceState);
+        initView();
     }
 
     private EditText mTokenEdit;

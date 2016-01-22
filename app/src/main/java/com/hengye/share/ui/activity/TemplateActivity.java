@@ -7,12 +7,12 @@ import com.hengye.share.ui.base.BaseActivity;
 public class TemplateActivity extends BaseActivity{
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected int getLayoutResId() {
+        return super.getLayoutResId();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void afterCreate(Bundle savedInstanceState) {
+        super.afterCreate(savedInstanceState);
     }
 }

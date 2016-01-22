@@ -37,10 +37,14 @@ public class TopicDraftActivity extends BaseActivity{
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected int getLayoutResId() {
+        return R.layout.activity_topic_draft;
+    }
 
-        setContentView(R.layout.activity_topic_draft);
+    @Override
+    protected void afterCreate(Bundle savedInstanceState) {
+        super.afterCreate(savedInstanceState);
+
         initView();
     }
 

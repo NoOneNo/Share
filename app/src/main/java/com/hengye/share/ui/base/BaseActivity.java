@@ -2,6 +2,7 @@ package com.hengye.share.ui.base;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
@@ -60,9 +61,12 @@ public class BaseActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         handleBundleExtra();
         setupActivityHelper();
+
         if (mSwipeHelper != null) {
             mSwipeHelper.onCreate();
         }
+
+        afterCreate(savedInstanceState);
     }
 
     @Override
@@ -71,6 +75,16 @@ public class BaseActivity extends AppCompatActivity{
         if (mSwipeHelper != null) {
             mSwipeHelper.onPostCreate();
         }
+    }
+
+    protected void afterCreate(Bundle savedInstanceState) {
+        if(getLayoutResId() != 0){
+            setContentView(getLayoutResId());
+        }
+    }
+
+    protected @LayoutRes int getLayoutResId(){
+        return 0;
     }
 
     @Override

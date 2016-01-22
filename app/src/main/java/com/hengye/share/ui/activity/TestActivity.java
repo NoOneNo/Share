@@ -36,10 +36,14 @@ public class TestActivity extends BaseActivity implements View.OnClickListener{
     private FramesLoadingView mLoading;
     private LoadingDialog mLoadingDialog;
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.activity_test;
+    }
 
-        setContentView(R.layout.activity_test);
+    @Override
+    protected void afterCreate(Bundle savedInstanceState) {
+        super.afterCreate(savedInstanceState);
 
         findViewById(R.id.btn_test).setOnClickListener(this);
         findViewById(R.id.btn_test2).setOnClickListener(this);
@@ -50,7 +54,6 @@ public class TestActivity extends BaseActivity implements View.OnClickListener{
         BackgroundThread backgroundThread = new BackgroundThread();
         backgroundThread.start();
         backgroundHandler = new Handler(backgroundThread.getLooper());
-
     }
 
     @Override

@@ -80,10 +80,15 @@ public class TopicGalleryActivity extends BaseActivity {
             this.finish();
         }
     }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_topic_gallery);
+    protected int getLayoutResId() {
+        return R.layout.activity_topic_gallery;
+    }
+
+    @Override
+    protected void afterCreate(Bundle savedInstanceState) {
+        super.afterCreate(savedInstanceState);
 
         mViewPager = (ViewPager) findViewById(R.id.select_photo_gallery_view_pager);
         mPages = (TextView) findViewById(R.id.select_photo_gallery_pages);

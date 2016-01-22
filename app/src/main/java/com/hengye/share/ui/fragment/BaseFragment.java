@@ -45,11 +45,11 @@ public class BaseFragment extends Fragment {
 
         super.onCreateView(inflater, container, savedInstanceState);
 
-        if(getResourcesId() == 0){
+        if(getLayoutResId() == 0){
             return null;
         }
         if(parent == null){
-            parent = inflater.inflate(getResourcesId(), container, false);
+            parent = inflater.inflate(getLayoutResId(), container, false);
         }else{
             // 不再重新绘制UI
             // 缓存的rootView需要判断是否已经被加过parent，
@@ -66,7 +66,7 @@ public class BaseFragment extends Fragment {
         return parent;
     }
 
-    protected @LayoutRes int getResourcesId(){
+    protected @LayoutRes int getLayoutResId(){
         return 0;
     }
 

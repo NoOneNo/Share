@@ -25,6 +25,7 @@ import com.hengye.share.model.AtUser;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.ui.mvpview.AtUserMvpView;
 import com.hengye.share.ui.presenter.AtUserPresenter;
+import com.hengye.share.ui.presenter.UserPresenter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.ToastUtil;
@@ -53,19 +54,17 @@ public class AtUserActivity extends BaseActivity implements AtUserMvpView {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected int getLayoutResId() {
+        return R.layout.activity_at_user;
+    }
 
-        setContentView(R.layout.activity_at_user);
+    @Override
+    protected void afterCreate(Bundle savedInstanceState) {
+        super.afterCreate(savedInstanceState);
         setupPresenter(mPresenter = new AtUserPresenter(this));
         initView();
         initViewSize();
         initListener();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     public final static int REQUEST_AT_USER = 1;

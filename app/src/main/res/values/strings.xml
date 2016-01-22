@@ -29,6 +29,7 @@
     <string name="title_activity_topic_notify">通知</string>
     <string name="title_activity_at_user">选择用户</string>
     <string name="title_activity_topic_draft">草稿箱</string>
+    <string name="title_activity_group_manage">分组管理</string>
     <!-- Strings related to activity title-->
 
     <!-- Strings related to TopicGroup-->

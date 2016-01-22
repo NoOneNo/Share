@@ -29,8 +29,7 @@ public class TopicFragmentPager extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        TopicPresenter.TopicGroup topicGroup = mTopicGroupGroups.get(position);
-        return TopicFragment.newInstance(topicGroup);
+        return TopicFragment.newInstance(mTopicGroupGroups.get(position));
     }
 
     @Override
