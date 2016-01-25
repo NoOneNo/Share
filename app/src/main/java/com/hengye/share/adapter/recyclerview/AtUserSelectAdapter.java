@@ -56,8 +56,8 @@ public class AtUserSelectAdapter extends CommonAdapter<AtUser, AtUserSelectAdapt
         public MainViewHolder(View v) {
             super(v);
 
-            mAvatar = (NetworkImageView) v.findViewById(R.id.iv_avatar);
-            mAvatarMask = v.findViewById(R.id.iv_avatar_mask);
+            mAvatar = (NetworkImageView) findViewById(R.id.iv_avatar);
+            mAvatarMask = findViewById(R.id.iv_avatar_mask);
         }
 
         @Override

@@ -2,6 +2,7 @@ package com.hengye.share.adapter.recyclerview;
 
 
 import android.content.Context;
+import android.support.annotation.IdRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +68,10 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
             itemView.setOnClickListener(mOnClickForItemListener);
             itemView.setOnLongClickListener(mOnLongClickForItemListener);
             mIsAddHeaderView = isAddHeaderView;
+        }
+
+        public View findViewById(@IdRes int id){
+            return itemView.findViewById(id);
         }
 
         public void bindData(Context context, T t){

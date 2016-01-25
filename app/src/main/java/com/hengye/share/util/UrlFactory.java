@@ -31,7 +31,7 @@ public class UrlFactory {
     //获得某一分组的微博列表
     public static final String WB_GROUP_TOPIC = "friendships/groups/timeline.json";
     //获得某一分组的微博ID列表
-    public static final String WB_GROUP_TOPIC_IDS = "statuses/groups/timeline/ids.json";
+    public static final String WB_GROUP_TOPIC_IDS = "friendships/groups/timeline/ids.json";
     //获取某个用户的各种消息未读数
     public static final String WB_UNREAD_COUNT = "remind/unread_count.json";
     //获取用户信息

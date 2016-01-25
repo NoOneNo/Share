@@ -28,8 +28,8 @@ import com.hengye.share.ui.activity.TopicDetailActivity;
 import com.hengye.share.ui.activity.TopicGalleryActivity;
 import com.hengye.share.ui.activity.TopicPublishActivity;
 import com.hengye.share.ui.support.AnimationRect;
-import com.hengye.share.ui.support.LongClickableLinkMovementMethod;
-import com.hengye.share.ui.support.TopicContentUrlOnTouchListener;
+import com.hengye.share.ui.support.textspan.LongClickableLinkMovementMethod;
+import com.hengye.share.ui.support.textspan.TopicContentUrlOnTouchListener;
 import com.hengye.share.ui.view.GridGalleryView;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
 import com.hengye.share.util.CommonUtil;
@@ -144,11 +144,11 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
             if (mRetweetTopic == null) {
                 mRetweetTopic = new TopicContentViewHolder();
             }
-            mTopic.mContent = (TextView) v.findViewById(R.id.tv_topic_content);
-            mTopic.mGallery = (GridGalleryView) v.findViewById(R.id.gl_topic_gallery);
-            mRetweetTopicLayout = v.findViewById(R.id.ll_topic_retweeted);
-            mRetweetTopic.mContent = (TextView) v.findViewById(R.id.tv_topic_retweeted_content);
-            mRetweetTopic.mGallery = (GridGalleryView) v.findViewById(R.id.gl_topic_retweeted_gallery);
+            mTopic.mContent = (TextView) findViewById(R.id.tv_topic_content);
+            mTopic.mGallery = (GridGalleryView) findViewById(R.id.gl_topic_gallery);
+            mRetweetTopicLayout = findViewById(R.id.ll_topic_retweeted);
+            mRetweetTopic.mContent = (TextView) findViewById(R.id.tv_topic_retweeted_content);
+            mRetweetTopic.mGallery = (GridGalleryView) findViewById(R.id.gl_topic_retweeted_gallery);
         }
 
         @Override

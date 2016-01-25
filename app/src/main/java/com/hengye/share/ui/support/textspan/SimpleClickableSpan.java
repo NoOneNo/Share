@@ -1,4 +1,4 @@
-package com.hengye.share.ui.support;
+package com.hengye.share.ui.support.textspan;
 
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;

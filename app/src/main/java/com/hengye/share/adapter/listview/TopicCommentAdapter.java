@@ -9,33 +9,29 @@ import android.widget.TextView;
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicAdapter;
 import com.hengye.share.model.TopicComment;
-import com.hengye.share.ui.support.LongClickableLinkMovementMethod;
-import com.hengye.share.ui.support.TopicContentUrlOnTouchListener;
+import com.hengye.share.ui.support.textspan.LongClickableLinkMovementMethod;
+import com.hengye.share.ui.support.textspan.TopicContentUrlOnTouchListener;
 import com.hengye.share.ui.view.GridGalleryView;
 
 import java.util.List;
 
-public class TopicCommentAdapter extends CommonAdapter<TopicComment> {
+public class TopicCommentAdapter extends CommonAdapter<TopicComment, TopicCommentAdapter.TopicCommentViewHolder> {
 
     public TopicCommentAdapter(Context context, List<TopicComment> data){
         super(context, data);
     }
 
     @Override
-    public View getView(TopicComment topicComment, int position, View convertView, ViewGroup parent) {
-        TopicCommentViewHolder viewHolder;
-        if(convertView == null){
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_topic_comment, null);
-            viewHolder = new TopicCommentViewHolder(convertView);
-        }else{
-            viewHolder = (TopicCommentViewHolder) convertView.getTag();
-        }
-        viewHolder.bindData(getContext(), topicComment);
-
-        return convertView;
+    public int getItemLayoutResId() {
+        return R.layout.item_topic_comment;
     }
 
-    public static class TopicCommentViewHolder{
+    @Override
+    public TopicCommentViewHolder getViewHolder(View convertView) {
+        return new TopicCommentViewHolder(convertView);
+    }
+
+    public static class TopicCommentViewHolder extends ViewHolder<TopicComment>{
 
         TopicAdapter.TopicContentViewHolder mTopic;
         TopicAdapter.TopicTitleViewHolder mTopicTitle;
@@ -43,17 +39,18 @@ public class TopicCommentAdapter extends CommonAdapter<TopicComment> {
         TopicContentUrlOnTouchListener mTopicContentUrlOnTouchListener = new TopicContentUrlOnTouchListener();
 
         public TopicCommentViewHolder(View v) {
-            v.setTag(this);
+            super(v);
             if (mTopicTitle == null) {
                 mTopicTitle = new TopicAdapter.TopicTitleViewHolder(v);
             }
             if (mTopic == null) {
                 mTopic = new TopicAdapter.TopicContentViewHolder();
             }
-            mTopic.mContent = (TextView) v.findViewById(R.id.tv_topic_content);
-            mTopic.mGallery = (GridGalleryView) v.findViewById(R.id.gl_topic_gallery);
+            mTopic.mContent = (TextView) findViewById(R.id.tv_topic_content);
+            mTopic.mGallery = (GridGalleryView) findViewById(R.id.gl_topic_gallery);
         }
 
+        @Override
         public void bindData(Context context, TopicComment topicComment) {
 //            registerChildViewItemClick(mTopicTitle);
             mTopicTitle.initTopicTitle(context, topicComment);
@@ -63,7 +60,7 @@ public class TopicCommentAdapter extends CommonAdapter<TopicComment> {
         public void initCommentContent(final Context context, final TopicAdapter.TopicContentViewHolder holder, TopicComment topicComment) {
 
             //不设置的话会被名字内容的点击事件覆盖，无法触发ItemView的onClick
-//            registerItemClick(holder.mContent);、
+//            registerItemClick(holder.mContent);
 
             holder.mContent.setText(topicComment.getUrlSpannableString(context));
             holder.mContent.setMovementMethod(LongClickableLinkMovementMethod.getInstance());

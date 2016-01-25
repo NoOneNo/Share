@@ -158,21 +158,25 @@ public class UserUtil {
                 .executeDeleteWithoutDetachingEntities();
     }
 
-    public static void insertGroupList(WBGroups wbGroups, String uid){
+    public static void insertGroupList(List<GroupList> groupLists){
         GreenDaoManager
                 .getDaoSession()
                 .getGroupListDao()
-                .insertInTx(GroupList.getGroupLists(wbGroups, uid));
+                .insertInTx(groupLists);
     }
 
-    public static void updateGroupList(WBGroups wbGroups) {
-        User user = getCurrentUser();
-        if (user == null) {
-            return;
-        }
-        deleteGroupList(user.getUid());
+    public static void updateGroupList(List<GroupList> groupLists) {
+        updateGroupList(groupLists, UserUtil.getUid());
+    }
 
-        insertGroupList(wbGroups, user.getUid());
+    public static void updateGroupList(List<GroupList> groupLists, String uid) {
+//        User user = getCurrentUser();
+//        if (user == null) {
+//            return;
+//        }
+        deleteGroupList(uid);
+
+        insertGroupList(groupLists);
     }
 
     public static List<GroupList> queryGroupList() {

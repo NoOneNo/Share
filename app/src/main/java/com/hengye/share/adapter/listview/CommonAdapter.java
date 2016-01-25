@@ -1,13 +1,17 @@
 package com.hengye.share.adapter.listview;
 
 import android.content.Context;
+import android.support.annotation.LayoutRes;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.hengye.share.R;
+
 import java.util.List;
 
-public abstract class CommonAdapter<T> extends BaseAdapter {
+public abstract class CommonAdapter<T, V extends ViewHolder<T>> extends BaseAdapter {
 
     protected Context mContext;
     protected List<T> mData;
@@ -34,10 +38,21 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return getView(mData.get(position), position, convertView, parent);
+        V viewHolder;
+        if(convertView == null){
+            convertView = LayoutInflater.from(getContext()).inflate(getItemLayoutResId(), parent, false);
+            viewHolder = getViewHolder(convertView);
+        }else{
+            viewHolder = (V) convertView.getTag();
+        }
+        viewHolder.bindData(getContext(), mData.get(position));
+        return convertView;
+
     }
 
-    abstract public View getView(T t, int position, View convertView, ViewGroup parent);
+    abstract public V getViewHolder(View convertView);
+
+    abstract public @LayoutRes int getItemLayoutResId();
 
     public void refresh(List<T> data){
         if(data == null){

@@ -34,8 +34,8 @@ public class SearchUserAdapter extends CommonAdapter<UserInfo, SearchUserAdapter
         public MainViewHolder(View v) {
             super(v);
 
-            avatar = (NetworkImageViewPlus) v.findViewById(R.id.iv_avatar);
-            username = (TextView) v.findViewById(R.id.tv_username);
+            avatar = (NetworkImageViewPlus) findViewById(R.id.iv_avatar);
+            username = (TextView) findViewById(R.id.tv_username);
         }
 
         @Override

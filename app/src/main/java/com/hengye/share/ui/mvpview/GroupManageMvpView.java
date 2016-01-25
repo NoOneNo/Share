@@ -1,6 +1,8 @@
 package com.hengye.share.ui.mvpview;
 
-import com.hengye.share.model.sina.WBGroups;
+import com.hengye.share.model.greenrobot.GroupList;
+
+import java.util.List;
 
 public interface GroupManageMvpView extends MvpView {
 
@@ -8,6 +10,6 @@ public interface GroupManageMvpView extends MvpView {
 
     void loadFail();
 
-    void handleGroupList(WBGroups wbGroups);
+    void handleGroupList(List<GroupList> groupLists);
 
 }

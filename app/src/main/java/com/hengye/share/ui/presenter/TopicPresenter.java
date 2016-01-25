@@ -44,26 +44,25 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
         mTopicGroup = topicGroup;
     }
 
-    public void loadWBAllTopic(String id, final boolean isRefresh) {
-        RetrofitManager
-                .getWBService()
-                .listTopic(getWBAllTopicParameter(id, isRefresh))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(getWBTopicsSubscriber(isRefresh));
+    public void loadWBTopic(String id, final boolean isRefresh) {
+        loadWBTopic(id, isRefresh, true);
     }
 
-    public void loadWBTopic(String id, final boolean isRefresh) {
+    public void loadWBTopic(String id, final boolean isRefresh, boolean isLoadId) {
         switch (mTopicGroup.topicType) {
             case ALL:
-                if (isRefresh && !"0".equals(id)) {
+                if (isLoadId && isRefresh && !"0".equals(id)) {
                     loadWBAllTopicIds(id);
                 } else {
                     loadWBAllTopic(id, isRefresh);
                 }
                 break;
             case BILATERAL:
-                loadWBBilateralTopic(id, isRefresh);
+                if (isLoadId && isRefresh && !"0".equals(id)) {
+                    loadWBBilateralTopicIds(id);
+                } else {
+                    loadWBBilateralTopic(id, isRefresh);
+                }
                 break;
             case TOPIC_AT_ME:
                 loadWBTopicAtMeTopic(id, isRefresh);
@@ -81,7 +80,11 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
                 loadWBHomepageTopic(id, isRefresh);
                 break;
             case GROUP_LIST:
-                loadWBGroupListTopic(id, isRefresh);
+                if (isLoadId && isRefresh && !"0".equals(id)) {
+                    loadWBGroupListTopicIds(id);
+                } else {
+                    loadWBGroupListTopic(id, isRefresh);
+                }
                 break;
             default:
                 break;
@@ -96,39 +99,26 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
                 .listTopicIds(getWBAllTopicParameter(since_id, true))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<WBTopicIds>() {
-                    @Override
-                    public void onCompleted() {
+                .subscribe(getWBTopicIdsSubscriber(since_id));
 
-                    }
+    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        getMvpView().stopLoading(true);
-                    }
+    public void loadWBAllTopic(String id, final boolean isRefresh) {
+        RetrofitManager
+                .getWBService()
+                .listTopic(getWBAllTopicParameter(id, isRefresh))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(getWBTopicsSubscriber(isRefresh));
+    }
 
-                    @Override
-                    public void onNext(WBTopicIds wbTopicIds) {
-                        if (wbTopicIds == null || CommonUtil.isEmptyCollection(wbTopicIds.getStatuses())) {
-                            //没有新的微博
-                            getMvpView().stopLoading(true);
-                            getMvpView().handleNoMoreTopics();
-                            L.debug("no topic update");
-                        } else {
-                            if (wbTopicIds.getStatuses().size() >= WBUtil.MAX_COUNT_REQUEST) {
-                                //还有更新的微博，重新请求刷新
-//                                RequestManager.addToRequestQueue(getWBTopicRequest(token, 0 + "", true), getRequestTag());
-                                L.debug("exist newer topic, request refresh again");
-                                loadWBAllTopic("0", true);
-                            } else {
-                                //新的微博条数没有超过请求条数，显示更新多少条微博，根据请求的since_id获取微博
-//                                RequestManager.addToRequestQueue(getWBTopicRequest(token, since_id, true), getRequestTag());
-                                L.debug("new topic is less than MAX_COUNT_REQUEST, request refresh by since_id");
-                                loadWBAllTopic(since_id, true);
-                            }
-                        }
-                    }
-                });
+    public void loadWBBilateralTopicIds(final String since_id) {
+        RetrofitManager
+                .getWBService()
+                .listBilateralTopicIds(getWBAllTopicParameter(since_id, true))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(getWBTopicIdsSubscriber(since_id));
 
     }
 
@@ -186,6 +176,15 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
                 .subscribe(getWBTopicsSubscriber(isRefresh));
     }
 
+    public void loadWBGroupListTopicIds(final String since_id) {
+        RetrofitManager
+                .getWBService()
+                .listGroupTopicIds(getWBAllTopicParameter(since_id, true))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(getWBTopicIdsSubscriber(since_id));
+    }
+
     public void loadWBGroupListTopic(String id, final boolean isRefresh) {
         RetrofitManager
                 .getWBService()
@@ -215,6 +214,43 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
         ub.addParameter("count", WBUtil.MAX_COUNT_REQUEST);
         return ub.getParameters();
     }
+
+    public Subscriber<WBTopicIds> getWBTopicIdsSubscriber(final String since_id) {
+        return new Subscriber<WBTopicIds>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                getMvpView().stopLoading(true);
+            }
+
+            @Override
+            public void onNext(WBTopicIds wbTopicIds) {
+                if (wbTopicIds == null || CommonUtil.isEmptyCollection(wbTopicIds.getStatuses())) {
+                    //没有新的微博
+                    getMvpView().stopLoading(true);
+                    getMvpView().handleNoMoreTopics();
+                    L.debug("no topic update");
+                } else {
+                    if (wbTopicIds.getStatuses().size() >= WBUtil.MAX_COUNT_REQUEST) {
+                        //还有更新的微博，重新请求刷新
+//                                RequestManager.addToRequestQueue(getWBTopicRequest(token, 0 + "", true), getRequestTag());
+                        L.debug("exist newer topic, request refresh again");
+                        loadWBTopic("0", true, false);
+                    } else {
+                        //新的微博条数没有超过请求条数，显示更新多少条微博，根据请求的since_id获取微博
+//                                RequestManager.addToRequestQueue(getWBTopicRequest(token, since_id, true), getRequestTag());
+                        L.debug("new topic is less than MAX_COUNT_REQUEST, request refresh by since_id");
+                        loadWBTopic(since_id, true, false);
+                    }
+                }
+            }
+        };
+    }
+
 
     public Subscriber<WBTopics> getWBTopicsSubscriber(final boolean isRefresh) {
         return new Subscriber<WBTopics>() {

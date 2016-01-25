@@ -50,9 +50,9 @@ public class AtUserSearchAdapter extends CommonAdapter<AtUser, AtUserSearchAdapt
         public MainViewHolder(View v) {
             super(v);
 
-            mCheckBox = (ImageButton) v.findViewById(R.id.btn_check);
-            mUsername = (TextView) v.findViewById(R.id.tv_username);
-            mAvatar = (NetworkImageView) v.findViewById(R.id.iv_avatar);
+            mCheckBox = (ImageButton) findViewById(R.id.btn_check);
+            mUsername = (TextView) findViewById(R.id.tv_username);
+            mAvatar = (NetworkImageView) findViewById(R.id.iv_avatar);
         }
 
         @Override

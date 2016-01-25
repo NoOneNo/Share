@@ -15,7 +15,7 @@ import com.hengye.share.adapter.recyclerview.CommonAdapter;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
 import com.hengye.share.ui.emoticon.Emoticon;
-import com.hengye.share.ui.support.TopicContentUrlSpan;
+import com.hengye.share.ui.support.textspan.TopicContentUrlSpan;
 import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
 

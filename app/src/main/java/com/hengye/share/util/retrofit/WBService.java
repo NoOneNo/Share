@@ -54,13 +54,13 @@ public interface WBService {
     Observable<WBTopics> listBilateralTopic(@QueryMap Map<String, String> options);
 
     @GET(UrlFactory.WB_BILATERAL_TOPIC_IDS)
-    Observable<WBTopics> listBilateralTopicIds(@QueryMap Map<String, String> options);
+    Observable<WBTopicIds> listBilateralTopicIds(@QueryMap Map<String, String> options);
 
     @GET(UrlFactory.WB_GROUP_TOPIC)
     Observable<WBTopics> listGroupTopic(@QueryMap Map<String, String> options);
 
     @GET(UrlFactory.WB_GROUP_TOPIC_IDS)
-    Observable<WBTopics> listGroupTopicIds(@QueryMap Map<String, String> options);
+    Observable<WBTopicIds> listGroupTopicIds(@QueryMap Map<String, String> options);
 
     @GET(UrlFactory.WB_COMMENT_MENTION)
     Observable<WBTopicComments> listCommentAtMeTopic(@QueryMap Map<String, String> options);

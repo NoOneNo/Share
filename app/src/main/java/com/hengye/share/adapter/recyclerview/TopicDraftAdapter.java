@@ -64,9 +64,9 @@ public class TopicDraftAdapter extends CommonAdapter<TopicDraft, TopicDraftAdapt
                 mTopic = new TopicAdapter.TopicContentViewHolder();
             }
 
-            mTopic.mContent = (TextView) v.findViewById(R.id.tv_topic_content);
-            mTopic.mGallery = (GridGalleryView) v.findViewById(R.id.gl_topic_gallery);
-            mSendAgain = (Button) v.findViewById(R.id.btn_topic_send_again);
+            mTopic.mContent = (TextView) findViewById(R.id.tv_topic_content);
+            mTopic.mGallery = (GridGalleryView) findViewById(R.id.gl_topic_gallery);
+            mSendAgain = (Button) findViewById(R.id.btn_topic_send_again);
             mSendAgain.setVisibility(View.VISIBLE);
         }
 
