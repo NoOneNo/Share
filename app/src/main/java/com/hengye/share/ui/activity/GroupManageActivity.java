@@ -45,6 +45,7 @@ public class GroupManageActivity extends BaseActivity implements GroupManageMvpV
     }
 
     private DragSortListView mDragSortListView;
+    private DragSortController mDragSortController;
     private GroupManageAdapter mAdapter;
 
     private GroupManagePresenter mPresenter;
@@ -54,16 +55,16 @@ public class GroupManageActivity extends BaseActivity implements GroupManageMvpV
 
         mDragSortListView.setAdapter(mAdapter = new GroupManageAdapter(this, new ArrayList<GroupList>()));
 
-//        controller = buildController(dragSortListView);
-//        mDragSortListView.setFloatViewManager(controller);
-//        mDragSortListView.setOnTouchListener(controller);
+        mDragSortController = buildController(mDragSortListView);
+        mDragSortListView.setFloatViewManager(mDragSortController);
+        mDragSortListView.setOnTouchListener(mDragSortController);
         mDragSortListView.setDragEnabled(true);
 
     }
 
     protected DragSortController buildController(DragSortListView dslv) {
         DragSortController controller = new DragSortController(dslv);
-//        controller.setDragHandleId(R.id.drag_handle);
+        controller.setDragHandleId(R.id.ic_nav);
 //        controller.setClickRemoveId(R.id.click_remove);
         controller.setRemoveEnabled(false);
         controller.setSortEnabled(true);
