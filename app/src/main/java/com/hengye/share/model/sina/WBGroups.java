@@ -48,4 +48,17 @@ public class WBGroups {
                 ", lists=" + lists +
                 '}';
     }
+
+    public static class WBGroupUpdateOrder{
+
+        private String result;
+
+        public String getResult() {
+            return result;
+        }
+
+        public void setResult(String result) {
+            this.result = result;
+        }
+    }
 }

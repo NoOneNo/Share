@@ -25,7 +25,6 @@ import com.hengye.share.model.AtUser;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.ui.mvpview.AtUserMvpView;
 import com.hengye.share.ui.presenter.AtUserPresenter;
-import com.hengye.share.ui.presenter.UserPresenter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.ToastUtil;
@@ -271,7 +270,7 @@ public class AtUserActivity extends BaseActivity implements AtUserMvpView {
             searchMoveTime = mRVSelectResult.getItemAnimator().getAddDuration();
             mAtUserSelectAdapter.setLastItemPrepareDelete(false);
             select.setPrepareDelete(false);
-            mAtUserSelectAdapter.add(select);
+            mAtUserSelectAdapter.addItem(select);
         } else {
             int index = mAtUserSelectAdapter.getItemPosition(select);
             if (index == mAtUserSelectAdapter.getBasicItemCount() - 1) {
@@ -280,7 +279,7 @@ public class AtUserActivity extends BaseActivity implements AtUserMvpView {
             } else {
                 searchMoveTime = mRVSelectResult.getItemAnimator().getMoveDuration() * 2;
             }
-            mAtUserSelectAdapter.remove(select);
+            mAtUserSelectAdapter.removeItem(select);
 
         }
         moveSearchTowardLeftOrRight(select.isSelected(), searchMoveTime);

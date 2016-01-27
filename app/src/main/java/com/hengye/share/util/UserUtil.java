@@ -155,6 +155,7 @@ public class UserUtil {
                 .queryBuilder()
                 .where(GroupListDao.Properties.Uid.eq(uid))
                 .buildDelete()
+                .forCurrentThread()
                 .executeDeleteWithoutDetachingEntities();
     }
 

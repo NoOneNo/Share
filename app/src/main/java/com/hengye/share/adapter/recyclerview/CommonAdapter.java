@@ -214,36 +214,28 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
         return mData.size() - 1;
     }
 
-    public void add(int position, T item) {
+    public void addItem(int position, T item) {
         mData.add(position, item);
         notifyItemInserted(getBasicItemVirtualPosition(position));
     }
 
-    public void add(T item) {
+    public void addItem(T item) {
         mData.add(item);
         notifyItemInserted(getBasicItemVirtualPosition(mData.size() - 1));
     }
 
-    public void remove(int position) {
-        mData.remove(position);
+    public T removeItem(int position) {
+        T t = mData.remove(position);
         notifyItemRemoved(getBasicItemVirtualPosition(position));
+        return t;
     }
 
-    public void remove(T item) {
+    public T removeItem(T item) {
         int index = mData.indexOf(item);
         if(index != -1){
-            mData.remove(index);
-            notifyItemRemoved(getBasicItemVirtualPosition(index));
+            return removeItem(index);
         }
-    }
-
-    public void refresh(List<T> data) {
-        if (data == null) {
-            mData.clear();
-        } else {
-            mData = data;
-        }
-        notifyDataSetChanged();
+        return null;
     }
 
     public void addAll(List<T> data) {
@@ -253,6 +245,15 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
 
     public void addAll(int position, List<T> data) {
         mData.addAll(position, data);
+        notifyDataSetChanged();
+    }
+
+    public void refresh(List<T> data) {
+        if (data == null) {
+            mData.clear();
+        } else {
+            mData = data;
+        }
         notifyDataSetChanged();
     }
 

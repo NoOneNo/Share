@@ -7,19 +7,17 @@
     android:orientation="vertical">
 
     <com.hengye.draglistview.DragSortListView
-        android:id="@+id/drag_sort_listview"
+        android:id="@+id/drag_sort_list_view"
         dslv:collapsed_height="2dp"
-        dslv:drag_enabled="true"
         dslv:drag_scroll_start="0.33"
         dslv:float_alpha="0.6"
-        dslv:max_drag_scroll_speed="0.5"
         dslv:slide_shuffle_speed="0.3"
         dslv:track_drag_sort="false"
         dslv:use_default_controller="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:divider="@null"
         android:layout_margin="3dp"
-        android:dividerHeight="2dp"
         android:padding="3dp" />
 
 </LinearLayout>

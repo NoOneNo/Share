@@ -12,4 +12,6 @@ public interface GroupManageMvpView extends MvpView {
 
     void handleGroupList(List<GroupList> groupLists);
 
+    void updateGroupOrderCallBack(boolean isSuccess);
+
 }

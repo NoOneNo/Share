@@ -18,6 +18,7 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.ImageRequest;
 import com.hengye.share.R;
 import com.hengye.share.ui.activity.TopicGalleryActivity;
+import com.hengye.share.ui.base.BaseFragment;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.util.ImageUtil;
 import com.hengye.share.util.RequestManager;

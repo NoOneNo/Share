@@ -184,6 +184,17 @@ public class GroupList implements java.io.Serializable {
 
     // KEEP METHODS - put your custom methods here
 
+    public static String getGroupIds(List<GroupList> data){
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < data.size(); i++) {
+            sb.append(data.get(i).getGid());
+            if (i != data.size() - 1){
+                sb.append(",");
+            }
+        }
+        return sb.toString();
+    }
+
     public static List<GroupList> getGroupLists(WBGroups wbGroups, String uid){
         if(wbGroups == null || CommonUtil.isEmptyCollection(wbGroups.getLists())){
             return null;

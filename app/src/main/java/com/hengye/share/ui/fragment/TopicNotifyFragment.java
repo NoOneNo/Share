@@ -17,6 +17,7 @@ import com.hengye.share.adapter.recyclerview.TopicNotifyAdapter;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.sina.WBTopicComments;
 import com.hengye.share.model.sina.WBTopics;
+import com.hengye.share.ui.base.BaseFragment;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.L;
@@ -31,7 +32,7 @@ import com.hengye.swiperefresh.PullToRefreshLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopicNotifyFragment extends BaseFragment{
+public class TopicNotifyFragment extends BaseFragment {
 
     public static final int NOTIFY_COMMENT = 1;
     public static final int NOTIFY_MENTION = 2;

@@ -106,7 +106,7 @@ public class TopicPublishService extends Service{
 //        final UrlBuilder ub = new UrlBuilder();
 //        ub.addParameter("access_token", tp.getToken());
 //        ub.addParameter("status", tp.getTopicDraft().getContent());
-        RetrofitManager.getWBService().publishTopic(tp.getTopicDraft().getContent(), tp.getToken())
+        RetrofitManager.getWBService().publishTopic(tp.getToken(), tp.getTopicDraft().getContent())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<WBTopic>() {

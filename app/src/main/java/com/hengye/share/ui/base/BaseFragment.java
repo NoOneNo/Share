@@ -1,4 +1,4 @@
-package com.hengye.share.ui.fragment;
+package com.hengye.share.ui.base;
 
 import android.os.Bundle;
 import android.support.annotation.IdRes;

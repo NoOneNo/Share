@@ -14,6 +14,8 @@
 
         <item name="colorAccent">?attr/theme_accent_color</item>
 
+        <item name="android:colorBackground">@color/background_default</item>
+
         <item name="android:actionMenuTextAppearance">@style/MenuTextStyle</item>
 
         <item name="android:windowIsTranslucent">true</item>

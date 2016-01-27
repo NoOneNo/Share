@@ -17,6 +17,7 @@ import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicFavoritesAdapter;
 import com.hengye.share.model.TopicFavorites;
 import com.hengye.share.model.sina.WBTopicFavorites;
+import com.hengye.share.ui.base.BaseFragment;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.L;
@@ -32,7 +33,7 @@ import com.hengye.swiperefresh.PullToRefreshLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopicFavoritesFragment extends BaseFragment{
+public class TopicFavoritesFragment extends BaseFragment {
 
     @Override
     public String getTitle() {

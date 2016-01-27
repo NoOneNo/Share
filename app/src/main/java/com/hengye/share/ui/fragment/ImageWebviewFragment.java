@@ -5,14 +5,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
 import com.hengye.share.R;
-import com.hengye.share.ui.support.AnimationRect;
+import com.hengye.share.ui.base.BaseFragment;
 import com.hengye.share.util.AnimationUtil;
 
 import java.io.File;

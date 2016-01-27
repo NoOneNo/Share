@@ -33,7 +33,7 @@ public interface WBService {
     @FormUrlEncoded
     @POST(UrlFactory.WB_PUBLISH_TOPIC)
     Observable<WBTopic> publishTopic
-    (@Field("status") String status, @Field("access_token") String token);
+    (@Field("access_token") String token, @Field("status") String status);
 
     @GET(UrlFactory.WB_SEARCH_USER)
     Observable<WBUserInfos> searchUser(@QueryMap Map<String, String> options);
@@ -83,4 +83,14 @@ public interface WBService {
     @GET(UrlFactory.WB_GROUP)
     Observable<WBGroups> listGroups(@QueryMap Map<String, String> options);
 
+    @FormUrlEncoded
+    @POST(UrlFactory.WB_GROUP_ORDER)
+    Observable<String> updateGroupOrder(@QueryMap Map<String, String> options);
+
+    @FormUrlEncoded
+    @POST(UrlFactory.WB_GROUP_ORDER)
+    Observable<WBGroups.WBGroupUpdateOrder> updateGroupOrder(
+            @Field("access_token") String token,
+            @Field("count") String count,
+            @Field("list_ids") String ids);
 }

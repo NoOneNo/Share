@@ -6,12 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.hengye.draglistview.DragSortListView;
 import com.hengye.share.R;
 import com.hengye.share.model.greenrobot.GroupList;
 
 import java.util.List;
 
-public class GroupManageAdapter extends CommonAdapter<GroupList, GroupManageAdapter.GroupManageViewHolder>{
+public class GroupManageAdapter extends DropAdapter<GroupList, GroupManageAdapter.GroupManageViewHolder>{
 
     public GroupManageAdapter(Context context, List<GroupList> data){
         super(context, data);
@@ -44,4 +45,5 @@ public class GroupManageAdapter extends CommonAdapter<GroupList, GroupManageAdap
             mGroupCount.setText(String.format(context.getString(R.string.label_group_count), gl.getCount()));
         }
     }
+
 }

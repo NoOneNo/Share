@@ -6,8 +6,7 @@ import android.os.Bundle;
 
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.R;
-import com.hengye.share.ui.fragment.BaseFragment;
-import com.hengye.share.ui.presenter.UserPresenter;
+import com.hengye.share.ui.base.BaseFragment;
 
 /**
  * This is a Activity to show a Fragment extends BaseFragment.

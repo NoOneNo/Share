@@ -120,6 +120,10 @@ public class BaseActivity extends AppCompatActivity{
         startActivity(new Intent(this, cls));
     }
 
+    public void startActivityForResult(Class<?> cls, int requestCode){
+        startActivityForResult(new Intent(this, cls), requestCode);
+    }
+
     @Override
     public void startActivityForResult(Intent intent, int requestCode, @Nullable Bundle options) {
         if (mFirstClick) {

@@ -43,6 +43,7 @@
     <!-- Strings related to TopicGroup-->
 
     <!-- Strings related to GroupManager-->
+    <string name="label_update_group_order">是否更新分组顺序？</string>
     <string name="label_update">更新</string>
     <string name="label_group_count">%s人</string>
     <!-- Strings related to GroupManager-->

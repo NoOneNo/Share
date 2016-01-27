@@ -10,12 +10,11 @@ import android.support.v7.widget.RecyclerView;
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicAdapter;
 import com.hengye.share.model.Topic;
-import com.hengye.share.model.greenrobot.User;
+import com.hengye.share.ui.base.BaseFragment;
 import com.hengye.share.ui.mvpview.TopicMvpView;
 import com.hengye.share.ui.presenter.TopicPresenter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DataUtil;
-import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
 

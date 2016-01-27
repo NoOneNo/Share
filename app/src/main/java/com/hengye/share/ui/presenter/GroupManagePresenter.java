@@ -9,6 +9,8 @@ import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import rx.Observable;
@@ -60,12 +62,12 @@ public class GroupManagePresenter extends BasePresenter<GroupManageMvpView> {
                 .subscribe(new Subscriber<List<GroupList>>() {
                     @Override
                     public void onCompleted() {
-
+                        getMvpView().loadSuccess();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        getMvpView().loadFail();
                     }
 
                     @Override
@@ -77,6 +79,49 @@ public class GroupManagePresenter extends BasePresenter<GroupManageMvpView> {
 //                        getMvpView().handleGroupList(wbGroups);
                     }
                 });
+    }
+
+    public void updateGroupOrder(final List<GroupList> data){
+        RetrofitManager
+                .getWBService()
+                .updateGroupOrder(UserUtil.getToken(), data.size() + "", GroupList.getGroupIds(data))
+                .flatMap(new Func1<WBGroups.WBGroupUpdateOrder, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> call(WBGroups.WBGroupUpdateOrder result) {
+//                        {"result":true}
+                        boolean isSuccess = false;
+                        if(result != null && "true".equals(result.getResult())){
+                            isSuccess = true;
+                        }
+                        if(isSuccess){
+                            List<GroupList> temp = new ArrayList<>(data);
+                            UserUtil.updateGroupList(temp);
+                        }
+                        return Observable.just(isSuccess);
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Boolean>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getMvpView().updateGroupOrderCallBack(false);
+                    }
+
+                    @Override
+                    public void onNext(Boolean isSuccess) {
+                        getMvpView().updateGroupOrderCallBack(isSuccess);
+//                        GroupList.getGroupLists(wbGroups, UserUtil.getUid());
+//                        UserUtil.updateGroupList(wbGroups);
+//                        getMvpView().handleGroupList(wbGroups);
+                    }
+                });
+
     }
 
 }

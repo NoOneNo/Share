@@ -1,5 +1,6 @@
 package com.hengye.share.ui.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -81,6 +82,7 @@ public class TopicActivity extends BaseActivity
     }
 
     private ViewPager mViewPager;
+    private TabLayout mTablayout;
     private NetworkImageView mAvatar;
     private TextView mUsername, mSign;
     private UserPresenter mPresenter;
@@ -89,13 +91,11 @@ public class TopicActivity extends BaseActivity
     private void initView() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        final TabLayout tablayout = (TabLayout) findViewById(R.id.tab_layout);
+        mTablayout = (TabLayout) findViewById(R.id.tab_layout);
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         mViewPager.setAdapter(new TopicFragmentPager(getSupportFragmentManager(), this, getTopicGroups()));
-        if(mViewPager.getAdapter().getCount() > 3){
-            tablayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-        }
-        tablayout.setupWithViewPager(mViewPager);
+        adjustTabLayout();
+        mTablayout.setupWithViewPager(mViewPager);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -132,6 +132,14 @@ public class TopicActivity extends BaseActivity
             handleUserInfo(UserUtil.getCurrentUser());
         }
 
+    }
+
+    private void adjustTabLayout(){
+        if(mViewPager.getAdapter().getCount() > 3){
+            mTablayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        }else{
+            mTablayout.setTabMode(TabLayout.MODE_FIXED);
+        }
     }
 
     @Override
@@ -204,7 +212,8 @@ public class TopicActivity extends BaseActivity
         } else if (id == R.id.nav_setting) {
             startActivity(SettingActivity.class);
         } else if (id == R.id.nav_group_manage) {
-            startActivity(GroupManageActivity.class);
+//            startActivity(GroupManageActivity.class);
+            startActivityForResult(GroupManageActivity.class, GroupManageActivity.GROUP_UPDATE);
         } else if (id == R.id.nav_send) {
             startActivity(TopicDraftActivity.class);
         }else if (id == R.id.nav_share) {
@@ -214,25 +223,6 @@ public class TopicActivity extends BaseActivity
 //        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 //        drawer.closeDrawer(GravityCompat.END);
         return true;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO && mSsoHandler != null) {
-            mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
-        }
-    }
-
-    private ArrayList<Topic> getData() {
-
-        ArrayList<Topic> data = SPUtil.getModule(new TypeToken<ArrayList<Topic>>() {
-        }.getType(), Topic.class.getSimpleName() + UserUtil.getUid());
-        if (data == null) {
-            data = new ArrayList<>();
-        }
-        return data;
     }
 
     private void initData() {
@@ -294,6 +284,19 @@ public class TopicActivity extends BaseActivity
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO && mSsoHandler != null) {
+            mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
+        }else if(requestCode == GroupManageActivity.GROUP_UPDATE && resultCode == Activity.RESULT_OK){
+            if(mViewPager != null){
+                mViewPager.setAdapter(new TopicFragmentPager(getSupportFragmentManager(), this, getTopicGroups()));
+                adjustTabLayout();
+            }
+        }
+    }
     /**
      * 微博 Web 授权类，提供登陆等功能
      */

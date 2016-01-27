@@ -3,7 +3,6 @@ package com.hengye.share.ui.fragment.setting;
 import android.os.Bundle;
 
 import com.hengye.share.R;
-import com.hengye.share.ui.fragment.BaseFragment;
 import com.hengye.share.ui.fragment.BasePreferenceFragment;
 
 public class SettingAboutFragment extends BasePreferenceFragment{

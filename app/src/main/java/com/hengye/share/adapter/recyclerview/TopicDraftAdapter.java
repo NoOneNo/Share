@@ -43,7 +43,7 @@ public class TopicDraftAdapter extends CommonAdapter<TopicDraft, TopicDraftAdapt
         if(id == R.id.btn_topic_send_again){
             TopicDraft topicDraft = getItem(position);
             TopicDraftHelper.removeTopicDraft(topicDraft);
-            remove(position);
+            removeItem(position);
             TopicPublishService.publish(getContext(), topicDraft, UserUtil.getToken());
         }
     }
