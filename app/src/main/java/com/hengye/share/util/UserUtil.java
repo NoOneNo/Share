@@ -155,9 +155,15 @@ public class UserUtil {
                 .queryBuilder()
                 .where(GroupListDao.Properties.Uid.eq(uid))
                 .buildDelete()
-                .forCurrentThread()
                 .executeDeleteWithoutDetachingEntities();
     }
+
+//    public static void insertGroupList(List<GroupList> groupLists){
+//        GreenDaoManager
+//                .getDaoSession()
+//                .getGroupListDao()
+//                .insertInTx(groupLists);
+//    }
 
     public static void insertGroupList(List<GroupList> groupLists){
         GreenDaoManager
@@ -175,9 +181,18 @@ public class UserUtil {
 //        if (user == null) {
 //            return;
 //        }
+        if(CommonUtil.isEmptyCollection(groupLists)){
+            return;
+        }
+
         deleteGroupList(uid);
 
-        insertGroupList(groupLists);
+        groupLists = GroupList.orderGroupList(groupLists);
+        GroupList gl = groupLists.get(0);
+        if(gl.getVisible() == -1){
+
+        }
+//        insertGroupList();
     }
 
     public static List<GroupList> queryGroupList() {
