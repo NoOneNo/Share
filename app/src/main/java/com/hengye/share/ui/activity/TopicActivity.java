@@ -85,6 +85,9 @@ public class TopicActivity extends BaseActivity
     private TabLayout mTablayout;
     private NetworkImageView mAvatar;
     private TextView mUsername, mSign;
+
+    private TopicFragmentPager mTopicFragmentAdapter;
+
     private UserPresenter mPresenter;
 
 
@@ -93,14 +96,14 @@ public class TopicActivity extends BaseActivity
         setSupportActionBar(toolbar);
         mTablayout = (TabLayout) findViewById(R.id.tab_layout);
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
-        mViewPager.setAdapter(new TopicFragmentPager(getSupportFragmentManager(), this, getTopicGroups()));
+
+        mViewPager.setAdapter(mTopicFragmentAdapter = new TopicFragmentPager(getSupportFragmentManager(), this, getTopicGroups()));
         adjustTabLayout();
-        mTablayout.setupWithViewPager(mViewPager);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 startActivity(TopicPublishActivity.class);
             }
         });
@@ -134,12 +137,9 @@ public class TopicActivity extends BaseActivity
 
     }
 
-    private void adjustTabLayout(){
-        if(mViewPager.getAdapter().getCount() > 3){
-            mTablayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-        }else{
-            mTablayout.setTabMode(TabLayout.MODE_FIXED);
-        }
+    private void adjustTabLayout() {
+        mTablayout.setTabMode(mViewPager.getAdapter().getCount() > 3 ? TabLayout.MODE_SCROLLABLE : TabLayout.MODE_FIXED);
+        mTablayout.setupWithViewPager(mViewPager);
     }
 
     @Override
@@ -207,7 +207,7 @@ public class TopicActivity extends BaseActivity
             startActivity(TopicMentionActivity.class);
         } else if (id == R.id.nav_comment) {
             startActivity(TopicCommentActivity.class);
-        }else if (id == R.id.nav_favorites) {
+        } else if (id == R.id.nav_favorites) {
             startActivity(FragmentActivity.getStartIntent(this, TopicFavoritesFragment.class));
         } else if (id == R.id.nav_setting) {
             startActivity(SettingActivity.class);
@@ -216,7 +216,7 @@ public class TopicActivity extends BaseActivity
             startActivityForResult(GroupManageActivity.class, GroupManageActivity.GROUP_UPDATE);
         } else if (id == R.id.nav_send) {
             startActivity(TopicDraftActivity.class);
-        }else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_share) {
             startActivity(TestActivity.class);
         }
 
@@ -257,12 +257,12 @@ public class TopicActivity extends BaseActivity
         }
     }
 
-    private List<TopicPresenter.TopicGroup> getTopicGroups(){
+    private List<TopicPresenter.TopicGroup> getTopicGroups() {
         ArrayList<TopicPresenter.TopicGroup> topicGroupGroups = new ArrayList<>();
         topicGroupGroups.add(new TopicPresenter.TopicGroup(TopicPresenter.TopicType.ALL));
         topicGroupGroups.add(new TopicPresenter.TopicGroup(TopicPresenter.TopicType.BILATERAL));
         List<TopicPresenter.TopicGroup> temp = TopicPresenter.TopicGroup.getTopicGroup();
-        if(!CommonUtil.isEmptyCollection(temp)){
+        if (!CommonUtil.isEmptyCollection(temp)) {
             topicGroupGroups.addAll(temp);
         }
 
@@ -290,13 +290,14 @@ public class TopicActivity extends BaseActivity
 
         if (requestCode == ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO && mSsoHandler != null) {
             mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
-        }else if(requestCode == GroupManageActivity.GROUP_UPDATE && resultCode == Activity.RESULT_OK){
-            if(mViewPager != null){
-                mViewPager.setAdapter(new TopicFragmentPager(getSupportFragmentManager(), this, getTopicGroups()));
+        } else if (requestCode == GroupManageActivity.GROUP_UPDATE && resultCode == Activity.RESULT_OK) {
+            if (mViewPager != null) {
+                mTopicFragmentAdapter.refresh(getTopicGroups());
                 adjustTabLayout();
             }
         }
     }
+
     /**
      * 微博 Web 授权类，提供登陆等功能
      */

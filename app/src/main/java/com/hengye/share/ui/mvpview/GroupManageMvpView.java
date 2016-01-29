@@ -14,4 +14,5 @@ public interface GroupManageMvpView extends MvpView {
 
     void updateGroupOrderCallBack(boolean isSuccess);
 
+    void checkGroupOrder(boolean isChange);
 }

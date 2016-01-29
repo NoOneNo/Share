@@ -73,10 +73,8 @@ public class GroupManagePresenter extends BasePresenter<GroupManageMvpView> {
                     @Override
                     public void onNext(List<GroupList> groupLists) {
 
+                        setIsGroupUpdate(true);
                         getMvpView().handleGroupList(groupLists);
-//                        GroupList.getGroupLists(wbGroups, UserUtil.getUid());
-//                        UserUtil.updateGroupList(wbGroups);
-//                        getMvpView().handleGroupList(wbGroups);
                     }
                 });
     }
@@ -94,8 +92,8 @@ public class GroupManagePresenter extends BasePresenter<GroupManageMvpView> {
                             isSuccess = true;
                         }
                         if(isSuccess){
-                            List<GroupList> temp = new ArrayList<>(data);
-                            UserUtil.updateGroupList(temp);
+                            setIsGroupUpdate(true);
+                            UserUtil.updateGroupList(data, false);
                         }
                         return Observable.just(isSuccess);
                     }
@@ -116,12 +114,48 @@ public class GroupManagePresenter extends BasePresenter<GroupManageMvpView> {
                     @Override
                     public void onNext(Boolean isSuccess) {
                         getMvpView().updateGroupOrderCallBack(isSuccess);
-//                        GroupList.getGroupLists(wbGroups, UserUtil.getUid());
-//                        UserUtil.updateGroupList(wbGroups);
-//                        getMvpView().handleGroupList(wbGroups);
                     }
                 });
 
     }
 
+    public void checkGroupOrderIsChange(List<GroupList> groupLists){
+        Observable
+                .just(groupLists)
+                .flatMap(new Func1<List<GroupList>, Observable<Boolean>>() {
+                    @Override
+                    public Observable<Boolean> call(List<GroupList> groupLists) {
+                        return Observable.just(!groupLists.equals(UserUtil.queryGroupList(false)));
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Boolean>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getMvpView().checkGroupOrder(false);
+                    }
+
+                    @Override
+                    public void onNext(Boolean isChange) {
+                        setIsGroupUpdate(isChange);
+                        getMvpView().checkGroupOrder(isChange);
+                    }
+                });
+    }
+
+    private boolean mIsGroupUpdate = false;
+
+    public void setIsGroupUpdate(boolean isGroupUpdate) {
+        this.mIsGroupUpdate = isGroupUpdate;
+    }
+
+    public boolean isGroupUpdate(){
+        return mIsGroupUpdate;
+    }
 }

@@ -54,14 +54,18 @@ public class AtUserPresenter extends BasePresenter<AtUserMvpView> {
                     @Override
                     public void onResponse(WBUserInfos response) {
                         L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
-                        getMvpView().showSuccess(UserInfo.getUserInfos(response));
+                        if(getMvpView() != null) {
+                            getMvpView().showSuccess(UserInfo.getUserInfos(response));
+                        }
                     }
                 }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
                 L.debug("request fail , url : {}, error : {}", ub.getRequestUrl(), error);
-                getMvpView().showFail();
+                if(getMvpView() != null) {
+                    getMvpView().showFail();
+                }
             }
 
         });

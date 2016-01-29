@@ -43,24 +43,17 @@ public class SearchPresenter extends BasePresenter<SearchMvpView> {
                 ObjectConverter.getObjectConverter2())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Object[]>() {
+                .subscribe(new BaseSubscriber<Object[]>() {
                     @Override
-                    public void onCompleted() {
-                        L.debug("onCompleted invoke!");
-                        getMvpView().loadSuccess();
+                    public void handleViewOnFail(SearchMvpView v, Throwable e) {
+                        v.loadFail();
                     }
 
                     @Override
-                    public void onError(Throwable e) {
-                        L.debug("onError invoke!");
-                        getMvpView().loadFail();
-                    }
-
-                    @Override
-                    public void onNext(Object[] obj) {
-                        L.debug("onNext invoke!");
-                        getMvpView().handleSearchUserData(UserInfo.getUserInfos((WBUserInfos) obj[0]));
-                        getMvpView().handleSearchPublicData(Topic.getTopics((WBTopics) obj[1]));
+                    public void handleViewOnSuccess(SearchMvpView v, Object[] objects) {
+                        v.handleSearchUserData(UserInfo.getUserInfos((WBUserInfos) objects[0]));
+                        v.handleSearchPublicData(Topic.getTopics((WBTopics) objects[1]));
+                        v.loadSuccess();
                     }
                 });
     }

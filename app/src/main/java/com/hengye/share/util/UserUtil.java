@@ -13,6 +13,9 @@ import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 
 import java.util.List;
 
+import de.greenrobot.dao.query.QueryBuilder;
+import de.greenrobot.dao.query.WhereCondition;
+
 public class UserUtil {
 
     private static User mCurrentUser;
@@ -147,25 +150,23 @@ public class UserUtil {
         }
     }
 
-
-    public static void deleteGroupList(String uid) {
-        GreenDaoManager
+    public static void deleteGroupList(String uid, boolean isDeleteSystemGroup) {
+        QueryBuilder<GroupList> qb = GreenDaoManager
                 .getDaoSession()
                 .getGroupListDao()
-                .queryBuilder()
-                .where(GroupListDao.Properties.Uid.eq(uid))
-                .buildDelete()
-                .executeDeleteWithoutDetachingEntities();
+                .queryBuilder();
+
+        if (isDeleteSystemGroup) {
+            qb.where(GroupListDao.Properties.Uid.eq(uid));
+        } else {
+            qb.where(GroupListDao.Properties.Uid.eq(uid)
+                    , GroupListDao.Properties.Visible.notEq("-1"));
+        }
+
+        qb.buildDelete().executeDeleteWithoutDetachingEntities();
     }
 
-//    public static void insertGroupList(List<GroupList> groupLists){
-//        GreenDaoManager
-//                .getDaoSession()
-//                .getGroupListDao()
-//                .insertInTx(groupLists);
-//    }
-
-    public static void insertGroupList(List<GroupList> groupLists){
+    public static void insertGroupList(List<GroupList> groupLists) {
         GreenDaoManager
                 .getDaoSession()
                 .getGroupListDao()
@@ -173,41 +174,57 @@ public class UserUtil {
     }
 
     public static void updateGroupList(List<GroupList> groupLists) {
-        updateGroupList(groupLists, UserUtil.getUid());
+        updateGroupList(groupLists, UserUtil.getUid(), true);
     }
 
-    public static void updateGroupList(List<GroupList> groupLists, String uid) {
-//        User user = getCurrentUser();
-//        if (user == null) {
-//            return;
-//        }
-        if(CommonUtil.isEmptyCollection(groupLists)){
+    public static void updateGroupList(List<GroupList> groupLists, boolean isUpdateSystemGroup) {
+        updateGroupList(groupLists, UserUtil.getUid(), isUpdateSystemGroup);
+    }
+
+    public static void updateGroupList(List<GroupList> groupLists, String uid, boolean isUpdateSystemGroup) {
+        if (CommonUtil.isEmptyCollection(groupLists)) {
             return;
         }
 
-        deleteGroupList(uid);
+        deleteGroupList(uid, isUpdateSystemGroup);
 
         groupLists = GroupList.orderGroupList(groupLists);
         GroupList gl = groupLists.get(0);
-        if(gl.getVisible() == -1){
-
+        if (!isUpdateSystemGroup && gl.getVisible() == -1) {
+            groupLists.remove(0);
         }
-//        insertGroupList();
+        insertGroupList(groupLists);
     }
 
     public static List<GroupList> queryGroupList() {
+        return queryGroupList(true);
+    }
+
+    public static List<GroupList> queryGroupList(boolean isQuerySystemGroup) {
         User user = getCurrentUser();
         if (user == null) {
             return null;
         }
-        return queryGroupList(user.getUid());
+        return queryGroupList(user.getUid(), isQuerySystemGroup);
     }
 
-    public static List<GroupList> queryGroupList(String uid) {
-        return GreenDaoManager
+
+
+    public static List<GroupList> queryGroupList(String uid, boolean isQuerySystemGroup) {
+
+        QueryBuilder<GroupList> qb = GreenDaoManager
                 .getDaoSession()
                 .getGroupListDao()
-                .queryBuilder()
+                .queryBuilder();
+
+        if (isQuerySystemGroup) {
+            qb.where(GroupListDao.Properties.Uid.eq(uid));
+        } else {
+            qb.where(GroupListDao.Properties.Uid.eq(uid)
+                    , GroupListDao.Properties.Visible.notEq("-1"));
+        }
+
+        return qb
                 .where(GroupListDao.Properties.Uid.eq(uid))
                 .list();
     }

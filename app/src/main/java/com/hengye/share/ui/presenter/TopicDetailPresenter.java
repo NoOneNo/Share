@@ -46,23 +46,20 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailMvpView> {
                 ObjectConverter.getObjectConverter2())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Object[]>() {
-            @Override
-            public void onCompleted() {
-                getMvpView().loadSuccess(isRefresh);
-            }
+                .subscribe(new BaseSubscriber<Object[]>() {
+                    @Override
+                    public void handleViewOnFail(TopicDetailMvpView v, Throwable e) {
+                        v.loadFail(isRefresh);
+                    }
 
-            @Override
-            public void onError(Throwable e) {
-                getMvpView().loadFail(isRefresh);
-            }
+                    @Override
+                    public void handleViewOnSuccess(TopicDetailMvpView v, Object[] objects) {
+                        v.handleCommentData(true, TopicComment.getComments((WBTopicComments) objects[0]), isRefresh);
+                        v.handleCommentData(false, TopicComment.getComments((WBTopicReposts) objects[1]), isRefresh);
 
-            @Override
-            public void onNext(Object[] obj) {
-                getMvpView().handleCommentData(true, TopicComment.getComments((WBTopicComments)obj[0]), isRefresh);
-                getMvpView().handleCommentData(false, TopicComment.getComments((WBTopicReposts)obj[1]), isRefresh);
-            }
-        });
+                        v.loadSuccess(isRefresh);
+                    }
+                });
     }
 
     @SuppressWarnings("unchecked")
@@ -75,26 +72,23 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailMvpView> {
         observable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Object>() {
+                .subscribe(new BaseSubscriber<Object>() {
+
                     @Override
-                    public void onCompleted() {
-                        getMvpView().loadSuccess(isRefresh);
+                    public void handleViewOnFail(TopicDetailMvpView v, Throwable e) {
+                        v.loadFail(isRefresh);
                     }
 
                     @Override
-                    public void onError(Throwable e) {
-                        getMvpView().loadFail(isRefresh);
-                    }
-
-                    @Override
-                    public void onNext(Object obj) {
-                        if(isComment){
-                            getMvpView().handleCommentData(isComment, TopicComment.getComments((WBTopicComments)obj), isRefresh);
-                        }else{
-                            getMvpView().handleCommentData(isComment, TopicComment.getComments((WBTopicReposts)obj), isRefresh);
+                    public void handleViewOnSuccess(TopicDetailMvpView v, Object o) {
+                        if (isComment) {
+                            v.handleCommentData(isComment, TopicComment.getComments((WBTopicComments) o), isRefresh);
+                        } else {
+                            v.handleCommentData(isComment, TopicComment.getComments((WBTopicReposts) o), isRefresh);
                         }
-
+                       v.loadSuccess(isRefresh);
                     }
+
                 });
     }
 }

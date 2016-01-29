@@ -18,6 +18,7 @@ import com.hengye.share.ui.presenter.GroupManagePresenter;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
 import com.hengye.share.ui.widget.listview.DragSortListViewBuilder;
+import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.ToastUtil;
 
 import java.util.ArrayList;
@@ -74,6 +75,7 @@ public class GroupManageActivity extends BaseActivity implements GroupManageMvpV
         builder.setNegativeButtonClickListener(new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                mPresenter.setIsGroupUpdate(false);
                 dialog.dismiss();
                 finish();
             }
@@ -90,8 +92,7 @@ public class GroupManageActivity extends BaseActivity implements GroupManageMvpV
 
     @Override
     public void onBackPressed() {
-//        super.onBackPressed();
-        mConfirmDialog.show();
+        mPresenter.checkGroupOrderIsChange(mAdapter.getData());
     }
 
     @Override
@@ -102,6 +103,23 @@ public class GroupManageActivity extends BaseActivity implements GroupManageMvpV
             mPresenter.loadGroupList(false);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void checkGroupOrder(boolean isChange) {
+        if(isChange){
+            mConfirmDialog.show();
+        }else{
+            finish();
+        }
+    }
+
+    @Override
+    public void finish() {
+        if(mPresenter.isGroupUpdate()){
+            setResult(RESULT_OK);
+        }
+        super.finish();
     }
 
     @Override
@@ -116,6 +134,11 @@ public class GroupManageActivity extends BaseActivity implements GroupManageMvpV
 
     @Override
     public void handleGroupList(List<GroupList> groupLists) {
+        if(!CommonUtil.isEmptyCollection(groupLists)){
+            if(groupLists.get(0).getVisible() == -1){
+                groupLists.remove(0);
+            }
+        }
         mAdapter.refresh(groupLists);
 //        L.debug("wbGroups : {}", wbGroups.toString());
     }

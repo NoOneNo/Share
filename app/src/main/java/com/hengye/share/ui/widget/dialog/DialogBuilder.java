@@ -10,14 +10,12 @@ import com.hengye.share.R;
 public class DialogBuilder {
 
 
-    public static Dialog getItemDialog(Context context, CharSequence[] items, DialogInterface.OnClickListener onClickListener){
+    public static Dialog getItemDialog(Context context, DialogInterface.OnClickListener onClickListener, CharSequence... items){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context)
                 .setItems(items, onClickListener);
         return builder.create();
     }
-
-
 
     public final static int LONG_CLICK_TOPIC_REPOST = 0;
     public final static int LONG_CLICK_TOPIC_COMMENT = 1;

@@ -216,19 +216,14 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
     }
 
     public Subscriber<WBTopicIds> getWBTopicIdsSubscriber(final String since_id) {
-        return new Subscriber<WBTopicIds>() {
+        return new BaseSubscriber<WBTopicIds>() {
             @Override
-            public void onCompleted() {
-
+            public void handleViewOnFail(TopicMvpView v, Throwable e) {
+                v.stopLoading(true);
             }
 
             @Override
-            public void onError(Throwable e) {
-                getMvpView().stopLoading(true);
-            }
-
-            @Override
-            public void onNext(WBTopicIds wbTopicIds) {
+            public void handleViewOnSuccess(TopicMvpView v, WBTopicIds wbTopicIds) {
                 if (wbTopicIds == null || CommonUtil.isEmptyCollection(wbTopicIds.getStatuses())) {
                     //没有新的微博
                     getMvpView().stopLoading(true);
@@ -253,40 +248,33 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
 
 
     public Subscriber<WBTopics> getWBTopicsSubscriber(final boolean isRefresh) {
-        return new Subscriber<WBTopics>() {
+        return new BaseSubscriber<WBTopics>() {
             @Override
-            public void onCompleted() {
+            public void handleViewOnFail(TopicMvpView v, Throwable e) {
+                v.stopLoading(isRefresh);
             }
 
             @Override
-            public void onError(Throwable e) {
-                getMvpView().stopLoading(isRefresh);
-            }
-
-            @Override
-            public void onNext(WBTopics wbTopics) {
-                getMvpView().stopLoading(isRefresh);
-                getMvpView().handleTopicData(Topic.getTopics(wbTopics), isRefresh);
+            public void handleViewOnSuccess(TopicMvpView v, WBTopics wbTopics) {
+                v.stopLoading(isRefresh);
+                v.handleTopicData(Topic.getTopics(wbTopics), isRefresh);
             }
         };
     }
 
     public Subscriber<WBTopicComments> getWBCommentsSubscriber(final boolean isRefresh) {
-        return new Subscriber<WBTopicComments>() {
+        return new BaseSubscriber<WBTopicComments>() {
             @Override
-            public void onCompleted() {
+            public void handleViewOnFail(TopicMvpView v, Throwable e) {
+                v.stopLoading(isRefresh);
             }
 
             @Override
-            public void onError(Throwable e) {
-                getMvpView().stopLoading(isRefresh);
+            public void handleViewOnSuccess(TopicMvpView v, WBTopicComments wbTopicComments) {
+                v.stopLoading(isRefresh);
+                v.handleTopicData(Topic.getTopics(wbTopicComments), isRefresh);
             }
 
-            @Override
-            public void onNext(WBTopicComments wbTopicComments) {
-                getMvpView().stopLoading(isRefresh);
-                getMvpView().handleTopicData(Topic.getTopics(wbTopicComments), isRefresh);
-            }
         };
     }
 
@@ -300,10 +288,10 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<ArrayList<Topic>>() {
+                .subscribe(new BaseAction1<ArrayList<Topic>>() {
                     @Override
-                    public void call(ArrayList<Topic> data) {
-                        getMvpView().handleCache(data);
+                    public void handleView(TopicMvpView v, ArrayList<Topic> topics) {
+                        v.handleCache(topics);
                     }
                 });
     }
@@ -365,6 +353,22 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
         }
 
         private GroupList groupList;
+
+        public GroupList getGroupList() {
+            return groupList;
+        }
+
+        public void setGroupList(GroupList groupList) {
+            this.groupList = groupList;
+        }
+
+        public TopicType getTopicType() {
+            return topicType;
+        }
+
+        public void setTopicType(TopicType topicType) {
+            this.topicType = topicType;
+        }
 
         @Override
         public String toString() {

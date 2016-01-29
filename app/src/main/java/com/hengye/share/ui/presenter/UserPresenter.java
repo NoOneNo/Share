@@ -33,22 +33,23 @@ public class UserPresenter extends BasePresenter<UserMvpView> {
                 .listUserInfo(getWBUserInfoParameter(uid, name))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<WBUserInfo>() {
+                .subscribe(new BaseSubscriber<WBUserInfo>() {
                     @Override
-                    public void onCompleted() {
+                    public void handleViewOnFail(UserMvpView v, Throwable e) {
 
                     }
 
                     @Override
-                    public void onError(Throwable e) {
-
+                    public void handleViewOnSuccess(UserMvpView v, WBUserInfo wbUserInfo) {
+                        v.handleUserInfo(wbUserInfo);
+                        v.handleUserInfo(User.getUser(wbUserInfo));
                     }
+
 
                     @Override
                     public void onNext(WBUserInfo wbUserInfo) {
                         UserUtil.updateUserInfo(wbUserInfo);
-                        getMvpView().handleUserInfo(wbUserInfo);
-                        getMvpView().handleUserInfo(User.getUser(wbUserInfo));
+                        super.onNext(wbUserInfo);
                     }
                 });
     }

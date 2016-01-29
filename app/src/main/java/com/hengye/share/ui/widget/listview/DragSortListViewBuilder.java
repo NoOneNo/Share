@@ -16,7 +16,7 @@ public class DragSortListViewBuilder {
         DragSortController controller = new DragSortController(dslv);
         controller.setDragHandleId(R.id.drag_handle);
         controller.setClickRemoveId(R.id.click_remove);
-        controller.setRemoveEnabled(true);
+        controller.setRemoveEnabled(false);
         controller.setDragInitMode(DragSortController.ON_DOWN);
         controller.setRemoveMode(DragSortController.FLING_REMOVE);
 //        controller.setBackgroundColor(Color.parseColor("#50ffffff"));

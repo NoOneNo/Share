@@ -1,6 +1,8 @@
 package com.hengye.share.adapter.listview;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,13 +11,29 @@ import android.widget.TextView;
 import com.hengye.draglistview.DragSortListView;
 import com.hengye.share.R;
 import com.hengye.share.model.greenrobot.GroupList;
+import com.hengye.share.ui.widget.dialog.DialogBuilder;
 
 import java.util.List;
 
-public class GroupManageAdapter extends DropAdapter<GroupList, GroupManageAdapter.GroupManageViewHolder>{
+public class GroupManageAdapter extends DropAdapter<GroupList, GroupManageAdapter.GroupManageViewHolder>
+        implements DialogInterface.OnClickListener {
 
-    public GroupManageAdapter(Context context, List<GroupList> data){
+    private Dialog mDeleteDialog;
+
+    public GroupManageAdapter(Context context, List<GroupList> data) {
         super(context, data);
+
+        mDeleteDialog = DialogBuilder.getItemDialog(context, this, "删除");
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        switch (which){
+            case 0:
+            default:
+
+                break;
+        }
     }
 
     @Override
@@ -28,7 +46,7 @@ public class GroupManageAdapter extends DropAdapter<GroupList, GroupManageAdapte
         return new GroupManageViewHolder(convertView);
     }
 
-    public static class GroupManageViewHolder extends ViewHolder<GroupList>{
+    public static class GroupManageViewHolder extends ViewHolder<GroupList> {
 
         TextView mGroupName, mGroupCount;
 

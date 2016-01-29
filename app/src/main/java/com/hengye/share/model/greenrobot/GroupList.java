@@ -228,6 +228,26 @@ public class GroupList implements java.io.Serializable {
         }
         return groupLists;
     }
-    // KEEP METHODS END
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GroupList groupList = (GroupList) o;
+
+        if (uid != null ? !uid.equals(groupList.uid) : groupList.uid != null) return false;
+        return !(gid != null ? !gid.equals(groupList.gid) : groupList.gid != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = uid != null ? uid.hashCode() : 0;
+        result = 31 * result + (gid != null ? gid.hashCode() : 0);
+        return result;
+    }
+
+// KEEP METHODS END
 
 }
