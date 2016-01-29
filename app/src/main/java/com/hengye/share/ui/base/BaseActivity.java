@@ -129,7 +129,7 @@ public class BaseActivity extends AppCompatActivity{
         if (mFirstClick) {
             mFirstClick = false;
             super.startActivityForResult(intent, requestCode, options);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            overridePendingTransitionOnStart();
         }
     }
 
@@ -142,8 +142,17 @@ public class BaseActivity extends AppCompatActivity{
     public void finish() {
         super.finish();
         if (setFinishPendingTransition()) {
-            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+            overridePendingTransitionOnFinish();
         }
+    }
+
+    protected void overridePendingTransitionOnStart(){
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+
+
+    protected void overridePendingTransitionOnFinish(){
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
     protected void handleBundleExtra() {

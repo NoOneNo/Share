@@ -3,6 +3,7 @@ package com.hengye.share.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.view.LayoutInflater;
@@ -15,6 +16,8 @@ import com.hengye.share.adapter.listview.TopicCommentAdapter;
 import com.hengye.share.adapter.recyclerview.TopicAdapter;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
+import com.hengye.share.model.greenrobot.TopicDraft;
+import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.ui.mvpview.TopicDetailMvpView;
 import com.hengye.share.ui.presenter.TopicDetailPresenter;
@@ -26,7 +29,7 @@ import com.hengye.swiperefresh.PullToRefreshLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpView{
+public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpView, View.OnClickListener{
 
     @Override
     protected String getRequestTag() {
@@ -120,6 +123,9 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             return;
         }
 
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(this);
+
         mTabLayoutHeight = getResources().getDimensionPixelSize(R.dimen.tab_layout_height);
         mTabLayoutAssist = (TabLayout) findViewById(R.id.tab_layout_assist);
         mTabLayoutAssist.addTab((mTabLayoutAssist.newTab().setText("评论").setTag("tablayout_assist")));
@@ -186,6 +192,15 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         mPullToRefreshLayout.setRefreshing(true);
     }
 
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if(id == R.id.fab){
+            TopicDraft topicDraft = new TopicDraft();
+            topicDraft.setType(TopicDraftHelper.PUBLISH_COMMENT);
+            startActivity(TopicPublishActivity.getIntentToStart(this, topicDraft));
+        }
+    }
 
     private boolean isSelectedCommentTab(){
         return mTabLayout.getSelectedTabPosition() == 0;

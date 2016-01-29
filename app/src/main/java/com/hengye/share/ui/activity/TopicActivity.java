@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,7 +51,7 @@ public class TopicActivity extends BaseActivity
 
     @Override
     protected boolean setCustomTheme() {
-        return false;
+        return true;
     }
 
     @Override
@@ -65,7 +66,7 @@ public class TopicActivity extends BaseActivity
 
     @Override
     protected boolean setFinishPendingTransition() {
-        return true;
+        return false;
     }
 
     @Override
@@ -148,7 +149,8 @@ public class TopicActivity extends BaseActivity
         if (drawer.isDrawerOpen(GravityCompat.END)) {
             drawer.closeDrawer(GravityCompat.END);
         } else {
-            super.onBackPressed();
+            moveTaskToBack(false);
+//            super.onBackPressed();
         }
     }
 

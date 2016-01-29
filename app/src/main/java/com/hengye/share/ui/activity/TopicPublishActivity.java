@@ -72,6 +72,9 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         if(mTopicDraft != null){
             mTopicPublishType = mTopicDraft.getType();
             mTopicDraftContent = mTopicDraft.getContent();
+        }else{
+            mTopicDraft = new TopicDraft();
+            mTopicDraft.setType(TopicDraftHelper.PUBLISH_TOPIC);
         }
     }
 
