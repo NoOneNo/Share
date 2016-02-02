@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.hengye.share" >
+    package="com.hengye.share">
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -8,27 +8,36 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
+
+    <!-- Tencent Bugly -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <!-- -->
+
     <application
+        android:name=".ui.base.BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/ShareAppTheme"
-        android:name=".ui.base.BaseApplication">
+        android:theme="@style/ShareAppTheme">
 
-        <service android:name="com.hengye.share.service.ShareService"/>
-        <service android:name="com.hengye.share.service.TopicPublishService"/>
+        <service android:name="com.hengye.share.service.ShareService" />
+        <service android:name="com.hengye.share.service.TopicPublishService" />
 
         <activity
             android:name=".ui.activity.TopicActivity"
-            android:launchMode="singleTop"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,10 +46,10 @@
         </activity>
         <activity
             android:name="com.hengye.share.ui.activity.LoginActivity"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_login"
             android:parentActivityName=".ui.activity.TopicActivity"
-            android:windowSoftInputMode="adjustResize|stateVisible" >
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateVisible">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activity.TopicActivity" />
@@ -48,20 +57,19 @@
 
         <activity
             android:name="com.hengye.share.ui.activity.TopicGalleryActivity"
-            android:parentActivityName=".ui.activity.TopicActivity"
-            android:theme="@style/FullScreenTheme"
             android:configChanges="screenSize|keyboardHidden|orientation"
-            android:launchMode="singleTop">
-        </activity>
+            android:launchMode="singleTop"
+            android:parentActivityName=".ui.activity.TopicActivity"
+            android:theme="@style/FullScreenTheme"></activity>
 
         <activity
             android:name=".ui.activity.FragmentActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.activity.setting.SettingActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_setting">
+            android:label="@string/title_activity_setting"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MANAGE_NETWORK_USAGE" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -73,54 +81,53 @@
             android:screenOrientation="portrait">
 
             <intent-filter>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <action android:name="android.intent.action.VIEW"/>
-                <data android:scheme="${applicationId}.mention"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.intent.action.VIEW" />
+                <data android:scheme="${applicationId}.mention" />
             </intent-filter>
 
         </activity>
 
         <activity
             android:name="com.hengye.share.ui.activity.TopicPublishActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.hengye.share.ui.activity.TopicDraftActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_topic_draft"/>
+            android:label="@string/title_activity_topic_draft"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.hengye.share.ui.activity.TopicDetailActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.activity.TopicMentionActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.activity.TopicCommentActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.hengye.share.ui.activity.AtUserActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_at_user"/>
+            android:label="@string/title_activity_at_user"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.hengye.share.ui.activity.SearchActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.hengye.share.ui.activity.SetTokenActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.hengye.share.ui.activity.GroupManageActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_group_manage"/>
+            android:label="@string/title_activity_group_manage"
+            android:screenOrientation="portrait" />
 
-        <activity
-            android:name="com.hengye.share.ui.activity.TestActivity"/>
+        <activity android:name="com.hengye.share.ui.activity.TestActivity" />
     </application>
 
 </manifest>

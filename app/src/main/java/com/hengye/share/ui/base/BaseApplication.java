@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import com.hengye.share.service.ShareService;
 import com.hengye.share.util.RequestManager;
+import com.tencent.bugly.crashreport.CrashReport;
 
 public class BaseApplication extends Application{
 
@@ -27,6 +28,8 @@ public class BaseApplication extends Application{
 //		SPUtil.getInstance().init(getApplicationContext());
 //		CrashHandler.getInstance().init(getApplicationContext());
 		RequestManager.init(this, null, MAX_NETWORK_CACHE_SIZE);
+
+		CrashReport.initCrashReport(getApplicationContext(), "900019432", false);
 	}
 
 	public static BaseApplication getInstance(){

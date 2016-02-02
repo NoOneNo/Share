@@ -42,6 +42,7 @@ import com.hengye.share.util.thirdparty.ParseTokenWeiboAuthListener;
 import com.hengye.share.util.thirdparty.ThirdPartyUtils;
 import com.sina.weibo.sdk.auth.WeiboAuth;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import java.util.ArrayList;
 import java.util.List;
