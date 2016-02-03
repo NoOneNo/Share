@@ -23,7 +23,7 @@ public class TopicDraft implements java.io.Serializable {
     private String targetTopicId;
     private String targetCommentId;
     private Integer isCommentOrigin;
-    private Integer isComment;
+    private Integer isMention;
     private Integer type;
     private Integer parentType;
 
@@ -45,7 +45,7 @@ public class TopicDraft implements java.io.Serializable {
         this.id = id;
     }
 
-    public TopicDraft(Long id, String content, java.util.Date date, String urls, String uid, String targetTopicId, String targetCommentId, Integer isCommentOrigin, Integer isComment, Integer type, Integer parentType) {
+    public TopicDraft(Long id, String content, java.util.Date date, String urls, String uid, String targetTopicId, String targetCommentId, Integer isCommentOrigin, Integer isMention, Integer type, Integer parentType) {
         this.id = id;
         this.content = content;
         this.date = date;
@@ -54,7 +54,7 @@ public class TopicDraft implements java.io.Serializable {
         this.targetTopicId = targetTopicId;
         this.targetCommentId = targetCommentId;
         this.isCommentOrigin = isCommentOrigin;
-        this.isComment = isComment;
+        this.isMention = isMention;
         this.type = type;
         this.parentType = parentType;
     }
@@ -133,12 +133,12 @@ public class TopicDraft implements java.io.Serializable {
         this.isCommentOrigin = isCommentOrigin;
     }
 
-    public Integer getIsComment() {
-        return isComment;
+    public Integer getIsMention() {
+        return isMention;
     }
 
-    public void setIsComment(Integer isComment) {
-        this.isComment = isComment;
+    public void setIsMention(Integer isMention) {
+        this.isMention = isMention;
     }
 
     public Integer getType() {
@@ -182,6 +182,13 @@ public class TopicDraft implements java.io.Serializable {
     }
 
     // KEEP METHODS - put your custom methods here
+    public void setIsCommentOrigin(boolean isCommentOrigin){
+        setIsCommentOrigin(isCommentOrigin ? 1 : 0);
+    }
+
+    public void setIsMention(boolean isMention){
+        setIsMention(isMention ? 0 : 1);
+    }
     // KEEP METHODS END
 
 }

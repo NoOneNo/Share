@@ -5,15 +5,16 @@
     android:id="@id/click_remove"
     android:layout_width="match_parent"
     android:layout_height="50dp"
+    android:background="@color/grey_50"
     android:paddingStart="@dimen/content_margin_10dp"
-    android:paddingTop="@dimen/content_margin_10dp"
     android:paddingEnd="@dimen/content_margin_10dp">
 
     <ImageView
         style="?android:actionButtonStyle"
-        android:id="@id/drag_handle"
+        android:id="@+id/drag_handle"
         android:layout_width="@dimen/icon_size_normal"
         android:layout_height="@dimen/icon_size_normal"
+        android:layout_centerVertical="true"
         android:contentDescription="@null"
         android:src="@drawable/compose_mentionbutton_background_highlighted"/>
 

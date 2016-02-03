@@ -21,6 +21,7 @@ import com.hengye.share.model.TopicPublish;
 import com.hengye.share.model.greenrobot.TopicDraft;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.model.sina.WBTopic;
+import com.hengye.share.model.sina.WBTopicComment;
 import com.hengye.share.model.sina.WBTopicComments;
 import com.hengye.share.ui.activity.TopicDraftActivity;
 import com.hengye.share.util.L;
@@ -98,12 +99,31 @@ public class TopicPublishService extends Service{
         mPublishNotificationQueue.put(tp, new Random().nextInt(Integer.MAX_VALUE));
 //        RequestManager.addToRequestQueue(getWBTopicPublishRequest(tp));
         publishWBTopic(tp);
+        publish(tp);
         showTopicPublishStartNotification(tp);
+    }
+
+    protected void publish(TopicPublish tp){
+        switch (tp.getTopicDraft().getType()) {
+            case TopicDraftHelper.PUBLISH_COMMENT:
+                publishWBComment(tp);
+                break;
+            case TopicDraftHelper.REPLY_COMMENT:
+                break;
+            case TopicDraftHelper.REPOST_TOPIC:
+                break;
+            case TopicDraftHelper.PUBLISH_TOPIC:
+            default:
+                publishWBTopic(tp);
+                break;
+        }
     }
 
     private void publishWBTopic(final TopicPublish tp){
 
-        RetrofitManager.getWBService().publishTopic(tp.getToken(), tp.getTopicDraft().getContent())
+        RetrofitManager
+                .getWBService()
+                .publishTopic(tp.getToken(), tp.getTopicDraft().getContent())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<WBTopic>() {
@@ -125,6 +145,40 @@ public class TopicPublishService extends Service{
                     public void onNext(WBTopic wbTopic) {
                         L.debug("request success , data : {}", wbTopic);
                         if(wbTopic != null){
+                            showTopicPublishSuccessNotification(tp);
+                            mPublishQueue.put(tp, true);
+                            stopServiceIfQueueIsAllFinish();
+                        }
+                    }
+                });
+    }
+
+    private void publishWBComment(final TopicPublish tp){
+
+        RetrofitManager
+                .getWBService()
+                .publishComment(tp.getToken(), tp.getTopicDraft().getContent(), tp.getTopicDraft().getTargetTopicId(), tp.getTopicDraft().getIsCommentOrigin())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<WBTopicComment>() {
+                    @Override
+                    public void onCompleted() {
+                        L.debug("onCompleted invoke");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        L.debug("request fail, error : {}", e);
+                        mPublishQueue.remove(tp);
+                        showTopicPublishFailNotification(tp);
+                        TopicDraftHelper.saveTopicDraft(tp.getTopicDraft());
+                        stopServiceIfQueueIsAllFinish();
+                    }
+
+                    @Override
+                    public void onNext(WBTopicComment wbTopicComment) {
+                        L.debug("request success , data : {}", wbTopicComment);
+                        if(wbTopicComment != null){
                             showTopicPublishSuccessNotification(tp);
                             mPublishQueue.put(tp, true);
                             stopServiceIfQueueIsAllFinish();

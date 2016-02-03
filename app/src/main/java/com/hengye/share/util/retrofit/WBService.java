@@ -2,6 +2,7 @@ package com.hengye.share.util.retrofit;
 
 import com.hengye.share.model.sina.WBGroups;
 import com.hengye.share.model.sina.WBTopic;
+import com.hengye.share.model.sina.WBTopicComment;
 import com.hengye.share.model.sina.WBTopicComments;
 import com.hengye.share.model.sina.WBTopicIds;
 import com.hengye.share.model.sina.WBTopicReposts;
@@ -34,6 +35,22 @@ public interface WBService {
     @POST(UrlFactory.WB_PUBLISH_TOPIC)
     Observable<WBTopic> publishTopic
     (@Field("access_token") String token, @Field("status") String status);
+
+    @FormUrlEncoded
+    @POST(UrlFactory.WB_COMMENT_TOPIC)
+    Observable<WBTopicComment> publishComment
+            (@Field("access_token") String token,
+             @Field("comment") String comment,
+             @Field("id") String id,
+             @Field("comment_ori") Integer isForOriginalTopic);
+
+    @FormUrlEncoded
+    @POST(UrlFactory.WB_COMMENT_REPLY)
+    Observable<WBTopicComment> replyComment
+            (@Field("access_token") String token,
+             @Field("comment") String comment,
+             @Field("id") String id,
+             @Field("comment_ori") Integer isForOriginalTopic);
 
     @GET(UrlFactory.WB_SEARCH_USER)
     Observable<WBUserInfos> searchUser(@QueryMap Map<String, String> options);

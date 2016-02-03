@@ -198,6 +198,8 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         if(id == R.id.fab){
             TopicDraft topicDraft = new TopicDraft();
             topicDraft.setType(TopicDraftHelper.PUBLISH_COMMENT);
+            topicDraft.setTargetTopicId(mTopic.getId());
+            topicDraft.setIsCommentOrigin(false);
             startActivity(TopicPublishActivity.getIntentToStart(this, topicDraft));
         }
     }
