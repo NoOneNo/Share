@@ -45,6 +45,14 @@ public interface WBService {
              @Field("comment_ori") Integer isForOriginalTopic);
 
     @FormUrlEncoded
+    @POST(UrlFactory.WB_REPOST_TOPIC)
+    Observable<WBTopic> repostTopic
+            (@Field("access_token") String token,
+             @Field("status") String status,
+             @Field("id") String id,
+             @Field("is_comment") Integer isComment);
+
+    @FormUrlEncoded
     @POST(UrlFactory.WB_COMMENT_REPLY)
     Observable<WBTopicComment> replyComment
             (@Field("access_token") String token,

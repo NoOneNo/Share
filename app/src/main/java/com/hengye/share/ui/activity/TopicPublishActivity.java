@@ -150,21 +150,23 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void changeTitleStyle(int publishType) {
+        int titleResId;
         switch (publishType) {
             case TopicDraftHelper.PUBLISH_COMMENT:
-                updateToolbarTitle(R.string.title_publish_comment);
+                titleResId = R.string.title_publish_comment;
                 break;
             case TopicDraftHelper.REPLY_COMMENT:
-                updateToolbarTitle(R.string.title_reply_comment);
+                titleResId = R.string.title_reply_comment;
                 break;
             case TopicDraftHelper.REPOST_TOPIC:
-                updateToolbarTitle(R.string.title_repost_topic);
+                titleResId = R.string.title_repost_topic;
                 break;
             case TopicDraftHelper.PUBLISH_TOPIC:
             default:
-                updateToolbarTitle(R.string.title_publish_topic);
+                titleResId = R.string.title_publish_topic;
                 break;
         }
+        updateToolbarTitle(titleResId);
     }
 
     @Override

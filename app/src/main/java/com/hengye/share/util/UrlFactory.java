@@ -59,6 +59,7 @@ public class UrlFactory {
     //回复评论
     public static final String WB_COMMENT_REPLY = "comments/reply.json";
     //转发微博
+//    is_comment 是否在转发的同时发表评论，0：否、1：评论给当前微博、2：评论给原微博、3：都评论，默认为0 。
     public static final String WB_REPOST_TOPIC = "statuses/repost.json";
     //搜索用户
     public static final String WB_SEARCH_USER = "search/users.json";

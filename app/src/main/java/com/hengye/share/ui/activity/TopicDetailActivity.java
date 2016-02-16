@@ -192,12 +192,21 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         mPullToRefreshLayout.setRefreshing(true);
     }
 
+    private int getPublishType(){
+        if(mTabLayout != null){
+            if(mTabLayout.getSelectedTabPosition() == 0){
+                return TopicDraftHelper.PUBLISH_COMMENT;
+            }
+        }
+        return TopicDraftHelper.REPOST_TOPIC;
+    }
+
     @Override
     public void onClick(View v) {
         int id = v.getId();
         if(id == R.id.fab){
             TopicDraft topicDraft = new TopicDraft();
-            topicDraft.setType(TopicDraftHelper.PUBLISH_COMMENT);
+            topicDraft.setType(getPublishType());
             topicDraft.setTargetTopicId(mTopic.getId());
             topicDraft.setIsCommentOrigin(false);
             startActivity(TopicPublishActivity.getIntentToStart(this, topicDraft));

@@ -94,11 +94,10 @@ public class TopicPublishService extends Service{
         return null;
     }
 
-    private void addTopicPublishRequestToQueue(TopicPublish tp){
+    protected void addTopicPublishRequestToQueue(TopicPublish tp){
         mPublishQueue.put(tp, false);
         mPublishNotificationQueue.put(tp, new Random().nextInt(Integer.MAX_VALUE));
 //        RequestManager.addToRequestQueue(getWBTopicPublishRequest(tp));
-        publishWBTopic(tp);
         publish(tp);
         showTopicPublishStartNotification(tp);
     }
@@ -111,6 +110,7 @@ public class TopicPublishService extends Service{
             case TopicDraftHelper.REPLY_COMMENT:
                 break;
             case TopicDraftHelper.REPOST_TOPIC:
+                repostWBTopic(tp);
                 break;
             case TopicDraftHelper.PUBLISH_TOPIC:
             default:
@@ -119,7 +119,20 @@ public class TopicPublishService extends Service{
         }
     }
 
-    private void publishWBTopic(final TopicPublish tp){
+    protected void handlePublishSuccess(TopicPublish tp){
+        showTopicPublishSuccessNotification(tp);
+        mPublishQueue.put(tp, true);
+        stopServiceIfQueueIsAllFinish();
+    }
+
+    protected void handlePublishFail(TopicPublish tp){
+        mPublishQueue.remove(tp);
+        showTopicPublishFailNotification(tp);
+        TopicDraftHelper.saveTopicDraft(tp.getTopicDraft());
+        stopServiceIfQueueIsAllFinish();
+    }
+
+    protected void publishWBTopic(final TopicPublish tp){
 
         RetrofitManager
                 .getWBService()
@@ -135,26 +148,20 @@ public class TopicPublishService extends Service{
                     @Override
                     public void onError(Throwable e) {
                         L.debug("request fail, error : {}", e);
-                        mPublishQueue.remove(tp);
-                        showTopicPublishFailNotification(tp);
-                        TopicDraftHelper.saveTopicDraft(tp.getTopicDraft());
-                        stopServiceIfQueueIsAllFinish();
+                        handlePublishFail(tp);
                     }
 
                     @Override
                     public void onNext(WBTopic wbTopic) {
                         L.debug("request success , data : {}", wbTopic);
-                        if(wbTopic != null){
-                            showTopicPublishSuccessNotification(tp);
-                            mPublishQueue.put(tp, true);
-                            stopServiceIfQueueIsAllFinish();
+                        if (wbTopic != null) {
+                            handlePublishSuccess(tp);
                         }
                     }
                 });
     }
 
-    private void publishWBComment(final TopicPublish tp){
-
+    protected void publishWBComment(final TopicPublish tp){
         RetrofitManager
                 .getWBService()
                 .publishComment(tp.getToken(), tp.getTopicDraft().getContent(), tp.getTopicDraft().getTargetTopicId(), tp.getTopicDraft().getIsCommentOrigin())
@@ -169,19 +176,42 @@ public class TopicPublishService extends Service{
                     @Override
                     public void onError(Throwable e) {
                         L.debug("request fail, error : {}", e);
-                        mPublishQueue.remove(tp);
-                        showTopicPublishFailNotification(tp);
-                        TopicDraftHelper.saveTopicDraft(tp.getTopicDraft());
-                        stopServiceIfQueueIsAllFinish();
+                        handlePublishFail(tp);
                     }
 
                     @Override
                     public void onNext(WBTopicComment wbTopicComment) {
                         L.debug("request success , data : {}", wbTopicComment);
                         if(wbTopicComment != null){
-                            showTopicPublishSuccessNotification(tp);
-                            mPublishQueue.put(tp, true);
-                            stopServiceIfQueueIsAllFinish();
+                            handlePublishSuccess(tp);
+                        }
+                    }
+                });
+    }
+
+    protected void repostWBTopic(final TopicPublish tp){
+        RetrofitManager
+                .getWBService()
+                .repostTopic(tp.getToken(), tp.getTopicDraft().getContent(), tp.getTopicDraft().getTargetTopicId(), tp.getTopicDraft().getIsCommentOrigin())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<WBTopic>() {
+                    @Override
+                    public void onCompleted() {
+                        L.debug("onCompleted invoke");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        L.debug("request fail, error : {}", e);
+                        handlePublishFail(tp);
+                    }
+
+                    @Override
+                    public void onNext(WBTopic wbTopic) {
+                        L.debug("request success , data : {}", wbTopic);
+                        if (wbTopic != null) {
+                            handlePublishSuccess(tp);
                         }
                     }
                 });
@@ -235,7 +265,7 @@ public class TopicPublishService extends Service{
         };
     }
 
-    private void showTopicPublishStartNotification(TopicPublish tp){
+    protected void showTopicPublishStartNotification(TopicPublish tp){
         Notification.Builder builder = new Notification.Builder(this)
                 .setTicker(getString(R.string.label_topic_publish_start))
                 .setContentTitle(getString(R.string.label_topic_publish_start))
@@ -246,7 +276,7 @@ public class TopicPublishService extends Service{
         NotificationUtil.show(builder.build(), mPublishNotificationQueue.get(tp));
     }
 
-    private void showTopicPublishSuccessNotification(final TopicPublish tp){
+    protected void showTopicPublishSuccessNotification(final TopicPublish tp){
         Notification.Builder builder = new Notification.Builder(this)
                 .setTicker(getString(R.string.label_topic_publish_success))
                 .setContentTitle(getString(R.string.label_topic_publish_success))
@@ -264,7 +294,7 @@ public class TopicPublishService extends Service{
         }, 3000);
     }
 
-    private void showTopicPublishFailNotification(TopicPublish tp){
+    protected void showTopicPublishFailNotification(TopicPublish tp){
         Notification.Builder builder = new Notification.Builder(this)
                 .setTicker(getString(R.string.label_topic_publish_fail))
                 .setContentTitle(getString(R.string.label_topic_publish_fail))
@@ -275,7 +305,7 @@ public class TopicPublishService extends Service{
         NotificationUtil.show(builder.build(), mPublishNotificationQueue.get(tp));
     }
 
-    private void stopServiceIfQueueIsAllFinish(){
+    protected void stopServiceIfQueueIsAllFinish(){
         boolean isAllFinish = true;
         Set<TopicPublish> set = mPublishQueue.keySet();
         for (TopicPublish tp : set) {
