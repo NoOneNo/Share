@@ -58,6 +58,7 @@ public interface WBService {
             (@Field("access_token") String token,
              @Field("comment") String comment,
              @Field("id") String id,
+             @Field("cid") String cid,
              @Field("comment_ori") Integer isForOriginalTopic);
 
     @GET(UrlFactory.WB_SEARCH_USER)
@@ -107,10 +108,6 @@ public interface WBService {
 
     @GET(UrlFactory.WB_GROUP)
     Observable<WBGroups> listGroups(@QueryMap Map<String, String> options);
-
-    @FormUrlEncoded
-    @POST(UrlFactory.WB_GROUP_ORDER)
-    Observable<String> updateGroupOrder(@QueryMap Map<String, String> options);
 
     @FormUrlEncoded
     @POST(UrlFactory.WB_GROUP_ORDER)

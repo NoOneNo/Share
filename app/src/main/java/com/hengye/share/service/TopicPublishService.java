@@ -49,13 +49,6 @@ public class TopicPublishService extends Service{
 
     public final static int MAX_PUBLISH_SIZE = 10;
 
-//    public static void publish(Context context, Topic topic, String token){
-//        Intent intent = new Intent(context, TopicPublishService.class);
-//        intent.putExtra("topic", topic);
-//        intent.putExtra("token", token);
-//        context.startService(intent);
-//    }
-
     public static void publish(Context context, TopicDraft topicDraft, String token){
         Intent intent = new Intent(context, TopicPublishService.class);
         intent.putExtra("topicDraft", topicDraft);
@@ -97,7 +90,6 @@ public class TopicPublishService extends Service{
     protected void addTopicPublishRequestToQueue(TopicPublish tp){
         mPublishQueue.put(tp, false);
         mPublishNotificationQueue.put(tp, new Random().nextInt(Integer.MAX_VALUE));
-//        RequestManager.addToRequestQueue(getWBTopicPublishRequest(tp));
         publish(tp);
         showTopicPublishStartNotification(tp);
     }
@@ -108,6 +100,7 @@ public class TopicPublishService extends Service{
                 publishWBComment(tp);
                 break;
             case TopicDraftHelper.REPLY_COMMENT:
+                replyWBComment(tp);
                 break;
             case TopicDraftHelper.REPOST_TOPIC:
                 repostWBTopic(tp);
@@ -211,6 +204,34 @@ public class TopicPublishService extends Service{
                     public void onNext(WBTopic wbTopic) {
                         L.debug("request success , data : {}", wbTopic);
                         if (wbTopic != null) {
+                            handlePublishSuccess(tp);
+                        }
+                    }
+                });
+    }
+
+    protected void replyWBComment(final TopicPublish tp){
+        RetrofitManager
+                .getWBService()
+                .replyComment(tp.getToken(), tp.getTopicDraft().getContent(), tp.getTopicDraft().getTargetTopicId(), tp.getTopicDraft().getTargetCommentId(), tp.getTopicDraft().getIsCommentOrigin())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<WBTopicComment>() {
+                    @Override
+                    public void onCompleted() {
+                        L.debug("onCompleted invoke");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        L.debug("request fail, error : {}", e);
+                        handlePublishFail(tp);
+                    }
+
+                    @Override
+                    public void onNext(WBTopicComment wbTopicComment) {
+                        L.debug("request success , data : {}", wbTopicComment);
+                        if(wbTopicComment != null){
                             handlePublishSuccess(tp);
                         }
                     }

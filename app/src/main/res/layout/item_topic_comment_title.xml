@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/content_margin_10dp"
-    tools:showIn="@layout/item_recyclerview_topic">
+    tools:showIn="@layout/item_topic_comment">
 
     <com.android.volley.view.NetworkImageViewPlus
         android:id="@+id/iv_topic_avatar"
@@ -21,7 +21,7 @@
         android:layout_toEndOf="@id/iv_topic_avatar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="我是一只小小小鸡仔"
+        tools:text="我是一只小小小鸡仔"
         android:textSize="@dimen/topic_username"
         android:textColor="@color/topic_username"
         android:singleLine="true" />
@@ -32,7 +32,7 @@
         android:layout_below="@id/tv_topic_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="11-3 来自 微博 weibo.com"
+        tools:text="11-3 来自 微博 weibo.com"
         android:textSize="@dimen/topic_description"
         android:textColor="@color/topic_description"
         android:singleLine="true" />

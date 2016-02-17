@@ -9,6 +9,7 @@ import android.support.design.widget.TabLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.hengye.share.R;
@@ -138,6 +139,24 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         mListView = (ListView) findViewById(R.id.list_view);
         mListView.addHeaderView(headerView);
         mListView.setAdapter(mAdapter = new TopicCommentAdapter(this, new ArrayList<TopicComment>()));
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                int actualPosition = position - mListView.getHeaderViewsCount();
+                TopicComment tc = mAdapter.getItem(actualPosition);
+                if(tc == null){
+                    return;
+                }
+                TopicDraft topicDraft = new TopicDraft();
+                topicDraft.setType(TopicDraftHelper.REPLY_COMMENT);
+                topicDraft.setTargetTopicId(mTopic.getId());
+                topicDraft.setTargetCommentId(tc.getId());
+                topicDraft.setIsCommentOrigin(false);
+                startActivity(TopicPublishActivity.getIntentToStart(TopicDetailActivity.this, topicDraft));
+            }
+        });
 
         mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override

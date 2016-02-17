@@ -35,9 +35,7 @@ public abstract class CommonAdapter<T, V extends ViewHolder<T>> extends BaseAdap
 
     abstract public V getViewHolder(View convertView);
 
-    abstract public
-    @LayoutRes
-    int getItemLayoutResId();
+    abstract public @LayoutRes int getItemLayoutResId();
 
     @Override
     public int getCount() {
