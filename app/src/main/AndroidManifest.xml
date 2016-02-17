@@ -127,6 +127,11 @@
             android:label="@string/title_activity_group_manage"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name="com.hengye.share.ui.activity.AccountManageActivity"
+            android:label="@string/title_activity_account_manage"
+            android:screenOrientation="portrait" />
+
         <activity android:name="com.hengye.share.ui.activity.TestActivity" />
     </application>
 

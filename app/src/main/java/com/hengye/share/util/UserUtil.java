@@ -150,6 +150,11 @@ public class UserUtil {
         }
     }
 
+    public static List<User> queryUsers(){
+        UserDao ud = GreenDaoManager.getDaoSession().getUserDao();
+        return ud.queryBuilder().list();
+    }
+
     public static void deleteGroupList(String uid, boolean isDeleteSystemGroup) {
         QueryBuilder<GroupList> qb = GreenDaoManager
                 .getDaoSession()

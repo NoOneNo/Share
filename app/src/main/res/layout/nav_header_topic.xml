@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/nav_header_height"
+    android:layout_height="wrap_content"
     android:background="@drawable/side_nav_bar"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
-    android:gravity="bottom">
+    android:orientation="vertical">
 
     <com.android.volley.view.NetworkImageView
         android:id="@+id/iv_avatar"
@@ -17,8 +16,19 @@
         android:layout_height="@dimen/nav_user_avatar"
         android:src="@android:drawable/sym_def_app_icon"/>
 
+    <ImageButton
+        android:id="@+id/iv_more_account"
+        android:layout_toEndOf="@id/iv_avatar"
+        android:layout_marginStart="@dimen/content_margin_10dp"
+        android:layout_width="@dimen/nav_user_avatar"
+        android:layout_height="@dimen/nav_user_avatar"
+        android:src="@drawable/compose_more_account_add"
+        android:background="@color/grey_300"
+        android:contentDescription="@null"/>
+
     <TextView
         android:id="@+id/tv_username"
+        android:layout_below="@id/iv_avatar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
@@ -28,11 +38,12 @@
 
     <TextView
         android:id="@+id/tv_sign"
-        android:layout_width="wrap_content"
+        android:layout_below="@id/tv_username"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
         android:singleLine="true"
         android:marqueeRepeatLimit="marquee_forever"
         android:ellipsize="marquee"/>
 
-</LinearLayout>
+</RelativeLayout>

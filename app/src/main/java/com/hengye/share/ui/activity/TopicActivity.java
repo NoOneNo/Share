@@ -15,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -127,6 +128,16 @@ public class TopicActivity extends BaseActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        ImageButton moreAccount = (ImageButton) navigationView.findViewById(R.id.iv_more_account);
+
+        moreAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(AccountManageActivity.class, AccountManageActivity.ACCOUNT_CHANGE);
+            }
+        });
+
         mAvatar = (NetworkImageView) navigationView.findViewById(R.id.iv_avatar);
         mUsername = (TextView) navigationView.findViewById(R.id.tv_username);
         mSign = (TextView) navigationView.findViewById(R.id.tv_sign);

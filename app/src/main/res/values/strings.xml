@@ -30,6 +30,7 @@
     <string name="title_activity_at_user">选择用户</string>
     <string name="title_activity_topic_draft">草稿箱</string>
     <string name="title_activity_group_manage">分组管理</string>
+    <string name="title_activity_account_manage">账号管理</string>
     <!-- Strings related to activity title-->
 
     <!-- Strings related to TopicGroup-->
@@ -53,7 +54,6 @@
     <!--<string name="title_page_repost">转发</string>-->
     <!-- Strings related to TopicComment-->
 
-
     <!-- Strings related to Topic-->
     <string name="label_time_and_from">%1$s 来自 %2$s</string>
     <string name="label_topic_repost">转发</string>
@@ -68,7 +68,6 @@
     <string name="label_division">|</string>
     <string name="label_fans">粉丝 %s</string>
     <!-- Strings related to PersonalHomePage -->
-
 
     <!-- Strings related to TopicPublish -->
     <string name="title_publish_topic">发微博</string>
@@ -99,6 +98,11 @@
     <string name="label_search_topic">微博</string>
     <string name="label_search_hint">搜索内容</string>
     <!-- Strings related to Search -->
+
+    <!-- Strings related to account manage-->
+    <string name="label_add_account">添加账号</string>
+    <string name="label_account_logout">退出当前账号</string>
+    <!-- Strings related to account manage-->
 
     <!-- Strings related to fragment title-->
     <string name="title_fragment_setting">设置</string>
