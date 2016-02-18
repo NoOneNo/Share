@@ -1,7 +1,6 @@
 package com.hengye.share.adapter.recyclerview;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +13,10 @@ import com.hengye.share.R;
 import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.ui.activity.AccountManageActivity;
 import com.hengye.share.ui.activity.ThirdPartyLoginActivity;
+import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.ui.widget.util.SelectorLoader;
 import com.hengye.share.util.RequestManager;
+import com.hengye.share.util.thirdparty.ThirdPartyUtils;
 
 import java.util.List;
 
@@ -56,9 +57,13 @@ public class AccountManageAdapter extends CommonAdapter<User, AccountManageAdapt
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    context.startActivity(new Intent(context, ThirdPartyLoginActivity.class));
+                    ((BaseActivity)context).startActivityForResult(ThirdPartyLoginActivity.class, ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO);
                 }
             });
+
+            SelectorLoader
+                    .getInstance()
+                    .setDefaultRippleBackground(v);
         }
     }
 
@@ -81,6 +86,10 @@ public class AccountManageAdapter extends CommonAdapter<User, AccountManageAdapt
             mAvatar = (NetworkImageViewPlus) findViewById(R.id.iv_avatar);
             mUsername = (TextView) findViewById(R.id.tv_username);
             mSelectBtn = (ImageButton) findViewById(R.id.btn_check);
+
+            SelectorLoader
+                    .getInstance()
+                    .setDefaultRippleBackground(v);
         }
 
         @Override

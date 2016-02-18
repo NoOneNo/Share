@@ -9,7 +9,6 @@ import com.hengye.share.R;
 
 public class DialogBuilder {
 
-
     public static Dialog getItemDialog(Context context, DialogInterface.OnClickListener onClickListener, CharSequence... items){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context)

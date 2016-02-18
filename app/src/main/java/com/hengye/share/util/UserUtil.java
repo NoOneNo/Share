@@ -33,6 +33,15 @@ public class UserUtil {
         mCurrentUser = user;
     }
 
+    public static void deleteUser(User user){
+        if(mCurrentUser != null && mCurrentUser.equals(user)){
+            mCurrentUser = null;
+            SPUtil.setUid(null);
+        }
+        UserDao ud = GreenDaoManager.getDaoSession().getUserDao();
+        ud.delete(user);
+    }
+
     public static String getUid() {
         if (getCurrentUser() == null) {
             return null;

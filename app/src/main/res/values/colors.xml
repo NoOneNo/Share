@@ -18,7 +18,9 @@
     <color name="bg_divider">@color/grey_300</color>
 
     <color name="background_default">#eeeeee</color>
+    <color name="background_default_white">#fffafafa</color>
 
+    <color name="transparent">@android:color/transparent</color>
     <color name="white">@android:color/white</color>
     <color name="black">@android:color/black</color>
 

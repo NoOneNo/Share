@@ -38,13 +38,13 @@ public class UserPresenter extends BasePresenter<UserMvpView> {
                 .subscribe(new BaseSubscriber<WBUserInfo>() {
                     @Override
                     public void handleViewOnFail(UserMvpView v, Throwable e) {
-
+                        v.loadFail();
                     }
 
                     @Override
                     public void handleViewOnSuccess(UserMvpView v, WBUserInfo wbUserInfo) {
                         v.handleUserInfo(wbUserInfo);
-                        v.handleUserInfo(User.getUser(wbUserInfo));
+                        v.loadSuccess(User.getUser(wbUserInfo));
                     }
 
 

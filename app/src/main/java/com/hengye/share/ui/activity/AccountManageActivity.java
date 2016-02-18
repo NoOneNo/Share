@@ -1,6 +1,9 @@
 package com.hengye.share.ui.activity;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,13 +16,15 @@ import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.ui.mvpview.AccountManageMvpView;
 import com.hengye.share.ui.presenter.AccountManagePresenter;
+import com.hengye.share.ui.widget.dialog.DialogBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
+import com.hengye.share.util.thirdparty.ThirdPartyUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AccountManageActivity extends BaseActivity implements AccountManageMvpView{
+public class AccountManageActivity extends BaseActivity implements AccountManageMvpView, DialogInterface.OnClickListener{
 
     public final static int ACCOUNT_CHANGE = 5;
 
@@ -38,17 +43,19 @@ public class AccountManageActivity extends BaseActivity implements AccountManage
 
     private AccountManagePresenter mPresenter;
     private AccountManageAdapter mAdapter;
-    private View mLogout;
+    private RecyclerView mRecyclerView;
+    private Dialog mLogoutDialog;
 
-    private int mAccountSelectOriginalIndex, mAccountSelectNowIndex;
+    private int mAccountSelectOriginalIndex = -1;
+    private int mAccountSelectNowIndex, mAccountSelectLongClickIndex;
     private View mAccountSelectBtn;
 
     private void initView(){
-        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(mAdapter = new AccountManageAdapter(this, new ArrayList<User>(), new AccountManageCallBack()));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setAdapter(mAdapter = new AccountManageAdapter(this, new ArrayList<User>(), new AccountManageCallBack()));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         mAdapter.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
             @Override
@@ -67,13 +74,56 @@ public class AccountManageActivity extends BaseActivity implements AccountManage
             }
         });
 
-        mLogout = findViewById(R.id.tv_logout);
+        mAdapter.setOnItemLongClickListener(new ViewUtil.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(View view, int position) {
+                mAccountSelectLongClickIndex = position;
+                mLogoutDialog.show();
+                return false;
+            }
+        });
+
+        View logout = findViewById(R.id.tv_logout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logout(mAdapter.getItem(mAccountSelectNowIndex));
+            }
+        });
+
+        mLogoutDialog = DialogBuilder.getItemDialog(this, this, getString(R.string.label_account_logout));
         mPresenter.loadUsers();
     }
 
     @Override
+    public void onClick(DialogInterface dialog, int which) {
+        switch (which){
+            case 0:
+            default:
+                logout(mAdapter.getItem(mAccountSelectLongClickIndex));
+                break;
+        }
+    }
+
+    private void logout(User user){
+        if(user != null){
+            UserUtil.deleteUser(user);
+            mAdapter.removeItem(mAccountSelectLongClickIndex);
+            //如果注销的是当前用户
+            if(mAccountSelectNowIndex == mAccountSelectLongClickIndex){
+                if(!mAdapter.isEmpty()){
+                    mRecyclerView.getChildAt(0).performClick();
+                }
+            }
+        }
+    }
+
+    @Override
     public void loadSuccess(List<User> data, int currentUserIndex) {
-        mAccountSelectNowIndex = mAccountSelectOriginalIndex = currentUserIndex;
+        if(mAccountSelectOriginalIndex == -1){
+            mAccountSelectOriginalIndex = currentUserIndex;
+        }
+        mAccountSelectNowIndex = currentUserIndex;
         mAdapter.refresh(data);
     }
 
@@ -92,6 +142,14 @@ public class AccountManageActivity extends BaseActivity implements AccountManage
             }
         }
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO && resultCode == Activity.RESULT_OK){
+            mPresenter.loadUsers();
+        }
     }
 
     public class AccountManageCallBack{

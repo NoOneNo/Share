@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.volley.view.NetworkImageView;
+import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.R;
 import com.hengye.share.model.AtUser;
 import com.hengye.share.model.UserInfo;
@@ -50,13 +50,13 @@ public class AtUserSelectAdapter extends CommonAdapter<AtUser, AtUserSelectAdapt
 
     public static class MainViewHolder extends CommonAdapter.ItemViewHolder<AtUser> {
 
-        NetworkImageView mAvatar;
+        NetworkImageViewPlus mAvatar;
         View mAvatarMask;
 
         public MainViewHolder(View v) {
             super(v);
 
-            mAvatar = (NetworkImageView) findViewById(R.id.iv_avatar);
+            mAvatar = (NetworkImageViewPlus) findViewById(R.id.iv_avatar);
             mAvatarMask = findViewById(R.id.iv_avatar_mask);
         }
 

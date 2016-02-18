@@ -5,11 +5,9 @@ import com.hengye.share.model.sina.WBUserInfo;
 
 public interface UserMvpView extends MvpView {
 
-    void loadSuccess();
+    void loadSuccess(User user);
 
     void loadFail();
-
-    void handleUserInfo(User user);
 
     void handleUserInfo(WBUserInfo wbUserInfo);
 }

@@ -2,59 +2,45 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clipToPadding="false"
-    android:clipChildren="false"
-    android:background="@drawable/ripple_default"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingStart="@dimen/activity_horizontal_margin"
-    android:paddingEnd="@dimen/activity_horizontal_margin">
+    android:orientation="horizontal">
 
     <com.android.volley.view.NetworkImageViewPlus
         android:id="@+id/iv_avatar"
-        android:layout_width="@dimen/at_user_avatar"
-        android:layout_height="@dimen/at_user_avatar"
-        android:contentDescription="@null"
+        android:layout_width="@dimen/user_avatar"
+        android:layout_height="@dimen/user_avatar"
+        android:layout_margin="@dimen/content_margin_default"
         android:src="@drawable/ic_user_avatar" />
 
     <TextView
         android:id="@+id/tv_username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/iv_avatar"
-        android:layout_toStartOf="@+id/fl_check"
-        android:layout_alignTop="@id/iv_avatar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_alignBottom="@id/iv_avatar"
-        android:gravity="center_vertical"
-        android:textSize="@dimen/at_user_name"
-        android:textColor="@color/grey_600"
-        android:singleLine="true"
-        android:paddingStart="@dimen/content_margin_10dp"
-        android:paddingEnd="@dimen/content_margin_10dp"
-        tools:text="余恒业"/>
-
-    <FrameLayout
-        android:id="@+id/fl_check"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_alignTop="@id/iv_avatar"
-        android:layout_alignBottom="@id/iv_avatar">
-        <ImageButton
-            android:id="@+id/btn_check"
-            android:layout_width="@dimen/at_user_check"
-            android:layout_height="@dimen/at_user_check"
-            android:layout_gravity="center_vertical"
-            android:contentDescription="@null"
-            android:background="@drawable/ic_check_normal"
-            android:src="@drawable/ic_check_select"/>
-    </FrameLayout>
+        android:layout_marginEnd="@dimen/content_margin_10dp"
+        android:layout_toEndOf="@id/iv_avatar"
+        android:gravity="center_vertical"
+        android:lines="1"
+        android:textColor="@color/grey_600"
+        android:textSize="@dimen/font_large"
+        tools:text="username" />
+
+    <ImageButton
+        android:id="@+id/btn_check"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/content_margin_10dp"
+        android:layout_width="@dimen/at_user_check"
+        android:layout_height="@dimen/at_user_check"
+        android:background="@drawable/ic_check_normal"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_check_select"
+        android:visibility="visible"/>
 
     <View
         style="@style/horizontal_line"
-        android:layout_marginTop="@dimen/content_margin_10dp"
         android:layout_below="@id/iv_avatar"/>
 
 </RelativeLayout>

@@ -140,7 +140,7 @@ public class TopicActivity extends BaseActivity
         if (UserUtil.isUserNameEmpty()) {
             mPresenter.loadWBUserInfo();
         } else {
-            handleUserInfo(UserUtil.getCurrentUser());
+            loadSuccess(UserUtil.getCurrentUser());
         }
 
     }
@@ -180,16 +180,6 @@ public class TopicActivity extends BaseActivity
             startActivity(LoginActivity.class);
         } else if (id == R.id.action_login_by_third) {
             startActivityForResult(AccountManageActivity.class, AccountManageActivity.ACCOUNT_CHANGE);
-//            startActivityForResult(ThirdPartyLoginActivity.class, ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO);
-//            if (isExistWeibo){
-//            try {
-//                mSsoHandler.authorize(ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO, new WBAuthListener(), null);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            }else{
-//                mWeiboAuth.anthorize(new WBAuthListener());
-//            }
         } else if (id == R.id.action_search) {
             startActivity(SearchActivity.class);
             Intent intent = new Intent(this, SearchActivity.class);
@@ -236,22 +226,6 @@ public class TopicActivity extends BaseActivity
         return true;
     }
 
-//    private void initData() {
-//        if (mWeiboAuth == null) {
-//            mWeiboAuth = ThirdPartyUtils.getWeiboData(TopicActivity.this);
-//        }
-//        if (mSsoHandler == null) {
-//            mSsoHandler = new SsoHandler(TopicActivity.this, mWeiboAuth);
-//        }
-//    }
-
-    @Override
-    public void handleUserInfo(User user) {
-        mAvatar.setImageUrl(user.getAvatar(), RequestManager.getImageLoader());
-        mUsername.setText(user.getName());
-        mSign.setText(user.getSign());
-    }
-
     private void updateNavigationView() {
 
         if (UserUtil.getCurrentUser() == null) {
@@ -264,7 +238,7 @@ public class TopicActivity extends BaseActivity
         } else if (UserUtil.isUserNameEmpty()) {
             mPresenter.loadWBUserInfo();
         } else {
-            handleUserInfo(UserUtil.getCurrentUser());
+            loadSuccess(UserUtil.getCurrentUser());
         }
     }
 
@@ -281,12 +255,14 @@ public class TopicActivity extends BaseActivity
     }
 
     @Override
-    public void handleUserInfo(WBUserInfo wbUserInfo) {
-
+    public void loadSuccess(User user) {
+        mAvatar.setImageUrl(user.getAvatar(), RequestManager.getImageLoader());
+        mUsername.setText(user.getName());
+        mSign.setText(user.getSign());
     }
 
     @Override
-    public void loadSuccess() {
+    public void handleUserInfo(WBUserInfo wbUserInfo) {
 
     }
 
@@ -299,16 +275,12 @@ public class TopicActivity extends BaseActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-//        if (requestCode == ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO && mSsoHandler != null) {
-//            mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
-//        }
         if (requestCode == AccountManageActivity.ACCOUNT_CHANGE && resultCode == Activity.RESULT_OK) {
-            mPresenter.loadWBUserInfo();
+            loadSuccess(UserUtil.getCurrentUser());
             if(mViewPager != null) {
                 mViewPager.setAdapter(mTopicFragmentAdapter = new TopicFragmentPager(getSupportFragmentManager(), this, getTopicGroups()));
                 adjustTabLayout();
             }
-//            mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
         } else if (requestCode == GroupManageActivity.GROUP_UPDATE && resultCode == Activity.RESULT_OK) {
             updateViewPager();
         }
@@ -320,29 +292,5 @@ public class TopicActivity extends BaseActivity
             adjustTabLayout();
         }
     }
-
-//    /**
-//     * 微博 Web 授权类，提供登陆等功能
-//     */
-//    private WeiboAuth mWeiboAuth;
-//
-//    /**
-//     * 注意：SsoHandler 仅当 SDK 支持 SSO 时有效
-//     */
-//    private SsoHandler mSsoHandler;
-//
-//    class WBAuthListener extends ParseTokenWeiboAuthListener {
-//
-//        @Override
-//        public void onComplete(Bundle values) {
-//            super.onComplete(values);
-//            if (mAccessToken != null && mAccessToken.isSessionValid()) {
-//                UserUtil.updateUser(mAccessToken);
-//                mPresenter.loadWBUserInfo();
-////                mPullToRefreshLayout.setRefreshing(true);
-////                RequestManager.addToRequestQueue(getWBTopicRequest(mAccessToken.getToken(), 0 + "", true));
-//            }
-//        }
-//    }
 
 }

@@ -8,10 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.android.volley.view.NetworkImageView;
+import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.R;
 import com.hengye.share.model.AtUser;
 import com.hengye.share.model.UserInfo;
+import com.hengye.share.ui.widget.util.SelectorLoader;
 import com.hengye.share.util.RequestManager;
 
 import java.util.List;
@@ -45,14 +46,18 @@ public class AtUserSearchAdapter extends CommonAdapter<AtUser, AtUserSearchAdapt
 
         ImageButton mCheckBox;
         TextView mUsername;
-        NetworkImageView mAvatar;
+        NetworkImageViewPlus mAvatar;
 
         public MainViewHolder(View v) {
             super(v);
 
             mCheckBox = (ImageButton) findViewById(R.id.btn_check);
             mUsername = (TextView) findViewById(R.id.tv_username);
-            mAvatar = (NetworkImageView) findViewById(R.id.iv_avatar);
+            mAvatar = (NetworkImageViewPlus) findViewById(R.id.iv_avatar);
+
+            SelectorLoader
+                    .getInstance()
+                    .setDefaultRippleBackground(v);
         }
 
         @Override

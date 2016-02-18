@@ -177,11 +177,6 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         int id = v.getId();
     }
 
-
-    @Override
-    public void handleUserInfo(User user) {
-    }
-
     @Override
     public void handleUserInfo(WBUserInfo wbUserInfo) {
         if(wbUserInfo != null){
@@ -190,7 +185,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     }
 
     @Override
-    public void loadSuccess() {
+    public void loadSuccess(User user) {
 
     }
 

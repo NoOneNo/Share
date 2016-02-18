@@ -4,14 +4,21 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.hengye.share.R;
+import com.hengye.share.model.greenrobot.User;
+import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.ui.base.BaseActivity;
+import com.hengye.share.ui.mvpview.UserMvpView;
+import com.hengye.share.ui.presenter.UserPresenter;
+import com.hengye.share.ui.widget.dialog.LoadingDialog;
+import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.thirdparty.ParseTokenWeiboAuthListener;
 import com.hengye.share.util.thirdparty.ThirdPartyUtils;
 import com.sina.weibo.sdk.auth.WeiboAuth;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
 
-public class ThirdPartyLoginActivity extends BaseActivity {
+public class ThirdPartyLoginActivity extends BaseActivity implements UserMvpView {
 
     @Override
     protected boolean setCustomTheme() {
@@ -19,8 +26,15 @@ public class ThirdPartyLoginActivity extends BaseActivity {
     }
 
     @Override
+    protected boolean setFinishPendingTransition() {
+        return false;
+    }
+
+    @Override
     protected void afterCreate(Bundle savedInstanceState) {
         super.afterCreate(savedInstanceState);
+
+        setupPresenter(mPresenter = new UserPresenter(this));
 
         initData();
 
@@ -31,13 +45,32 @@ public class ThirdPartyLoginActivity extends BaseActivity {
         }
     }
 
+    private LoadingDialog mLoadingDialog;
+    private UserPresenter mPresenter;
+
     private void initData() {
-        if (mWeiboAuth == null) {
-            mWeiboAuth = ThirdPartyUtils.getWeiboData(this);
-        }
-        if (mSsoHandler == null) {
-            mSsoHandler = new SsoHandler(this, mWeiboAuth);
-        }
+        mLoadingDialog = new LoadingDialog(this, getString(R.string.label_get_user_info));
+        mWeiboAuth = ThirdPartyUtils.getWeiboData(this);
+        mSsoHandler = new SsoHandler(this, mWeiboAuth);
+    }
+
+    @Override
+    public void loadSuccess(User user) {
+        mLoadingDialog.dismiss();
+        setResult(Activity.RESULT_OK);
+        finish();
+    }
+
+    @Override
+    public void loadFail() {
+        mLoadingDialog.dismiss();
+        ToastUtil.showToast(R.string.label_get_user_info_fail);
+        finish();
+    }
+
+    @Override
+    public void handleUserInfo(WBUserInfo wbUserInfo) {
+
     }
 
     @Override
@@ -66,11 +99,13 @@ public class ThirdPartyLoginActivity extends BaseActivity {
         public void onComplete(Bundle values) {
             super.onComplete(values);
             if (mAccessToken != null && mAccessToken.isSessionValid()) {
+                mLoadingDialog.show();
                 UserUtil.updateUser(mAccessToken);
-//                mPresenter.loadWBUserInfo();
-                setResult(Activity.RESULT_OK);
+                mPresenter.loadWBUserInfo(mAccessToken.getUid(), null);
+            } else {
+                finish();
             }
-            finish();
+
         }
 
         @Override

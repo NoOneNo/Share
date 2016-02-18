@@ -88,14 +88,12 @@ public class AtUserActivity extends BaseActivity implements AtUserMvpView {
         mRVSelectResult = (RecyclerView) findViewById(R.id.recycler_view_select_result);
         mSelectResultLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mRVSelectResult.setLayoutManager(mSelectResultLayoutManager);
-//        mRVSelectResult.setAdapter(mAtUserSelectAdapter = new AtUserSelectAdapter(this, getSelectResultData()));
 
         mRVSelectResult.setAdapter(mAtUserSelectAdapter = new AtUserSelectAdapter(this, mSelectResultData = mPresenter.getSelectResultData()));
         mRVSelectResult.setItemAnimator(new DefaultItemAnimator());
 
         mRVSearchResult = (RecyclerView) findViewById(R.id.recycler_view_search_result);
         mRVSearchResult.setLayoutManager(new LinearLayoutManager(this));
-//        mRVSearchResult.setAdapter(mAtUserSearchAdapter = new AtUserSearchAdapter(this, getSearchResultData()));
         mRVSearchResult.setAdapter(mAtUserSearchAdapter = new AtUserSearchAdapter(this, mSearchResultData = mPresenter.getSearchResultData()));
         mSearch = (EditText) findViewById(R.id.et_username);
 
@@ -359,11 +357,8 @@ public class AtUserActivity extends BaseActivity implements AtUserMvpView {
 
     @Override
     public void showSuccess(List<UserInfo> data) {
-//        if (isRefresh) {
         mPullToRefreshLayout.setRefreshing(false);
-//                } else {
         mPullToRefreshLayout.setLoading(false);
-//                }
 
         mSearchResultData = AtUser.getAtUser(data);
 
@@ -373,74 +368,10 @@ public class AtUserActivity extends BaseActivity implements AtUserMvpView {
 
     @Override
     public void showFail() {
-//                if (isRefresh) {
         mPullToRefreshLayout.setRefreshing(false);
-//                } else {
         mPullToRefreshLayout.setLoading(false);
-//                }
 
     }
-
-    //    private List<AtUser> getSelectResultData() {
-//        mSelectResultData = new ArrayList<>();
-//        return mSelectResultData;
-//    }
-//
-//    private List<AtUser> getSearchResultData() {
-//        mSearchResultData = SPUtil.getModule(new TypeToken<ArrayList<AtUser>>() {
-//        }.getType(), AtUser.class.getSimpleName() + UserUtil.getUid());
-//
-//        if (mSearchResultData == null) {
-//            mSearchResultData = new ArrayList<>();
-//        }
-//        return mSearchResultData;
-//    }
-
-    //https://api.weibo.com/2/friendships/friends.json?access_token=2.00OXW56CiGSdcC7b3b00d3940PueHq&count=200&uid=2207519004
-
-//    private GsonRequest getWBAttentionRequest(String token, String uid) {
-//        final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBAttentionUrl());
-//        ub.addParameter("access_token", token);
-//        ub.addParameter("uid", uid);
-//        ub.addParameter("count", 200);
-////        ub.addParameter("count", WBUtil.MAX_COUNT_REQUEST);
-//        return new GsonRequest<>(
-//                WBUserInfos.class,
-//                ub.getRequestUrl(),
-//                new Response.Listener<WBUserInfos>() {
-//                    @Override
-//                    public void onResponse(WBUserInfos response) {
-//                        L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
-//                        handleData(UserInfo.getUserInfos(response));
-//                    }
-//                }, new Response.ErrorListener() {
-//
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-////                if (isRefresh) {
-//                mPullToRefreshLayout.setRefreshing(false);
-////                } else {
-//                mPullToRefreshLayout.setLoading(false);
-////                }
-//                L.debug("request fail , url : {}, error : {}", ub.getRequestUrl(), error);
-//            }
-//
-//        });
-//    }
-//
-//    private void handleData(List<UserInfo> data) {
-////        if (isRefresh) {
-//        mPullToRefreshLayout.setRefreshing(false);
-////                } else {
-//        mPullToRefreshLayout.setLoading(false);
-////                }
-//
-//        mSearchResultData = AtUser.getAtUser(data);
-//
-//        SPUtil.setModule(mSearchResultData, AtUser.class.getSimpleName() + UserUtil.getUid());
-//        mAtUserSearchAdapter.refresh(mSearchResultData);
-////        mAtUserSearchAdapter.notifyDataSetChanged();
-//    }
 }
 
 
