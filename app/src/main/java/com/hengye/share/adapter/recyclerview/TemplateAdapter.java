@@ -24,7 +24,7 @@ public class TemplateAdapter extends CommonAdapter<String, TemplateAdapter.MainV
         }
 
         @Override
-        public void bindData(Context context, String string) {
+        public void bindData(Context context, String string, int position) {
 
         }
     }

@@ -152,7 +152,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
         }
 
         @Override
-        public void bindData(Context context, Topic topic) {
+        public void bindData(Context context, Topic topic, int position) {
             if(topic == null){
                 return;
             }

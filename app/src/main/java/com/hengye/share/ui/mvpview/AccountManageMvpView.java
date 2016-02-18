@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface AccountManageMvpView extends MvpView {
 
-    void loadSuccess(List<User> data);
+    void loadSuccess(List<User> data, int currentUserIndex);
 
     void loadFail();
 }

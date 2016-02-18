@@ -4,13 +4,10 @@ import com.hengye.share.model.greenrobot.GroupList;
 import com.hengye.share.model.sina.WBGroups;
 import com.hengye.share.ui.mvpview.GroupManageMvpView;
 import com.hengye.share.util.CommonUtil;
-import com.hengye.share.util.L;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import rx.Observable;

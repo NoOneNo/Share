@@ -25,7 +25,7 @@ public class TopicFavoritesAdapter extends CommonAdapter<TopicFavorites.TopicFav
     public void onBindBasicItemView(TopicAdapter.TopicViewHolder holder, int position) {
         holder.setOnItemClickListener(getOnItemClickListener());
         holder.setOnChildViewItemClickListener(getOnChildViewItemClickListener());
-        holder.bindData(getContext(), getItem(position).getTopic());
+        holder.bindData(getContext(), getItem(position).getTopic(), position);
     }
 
 }

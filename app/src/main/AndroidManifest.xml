@@ -56,6 +56,11 @@
         </activity>
 
         <activity
+            android:name="com.hengye.share.ui.activity.ThirdPartyLoginActivity"
+            android:theme="@style/FullScreenTheme.HasStatusBar">
+        </activity>
+
+        <activity
             android:name="com.hengye.share.ui.activity.TopicGalleryActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:launchMode="singleTop"

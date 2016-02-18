@@ -1,20 +1,17 @@
 package com.hengye.share.util;
 
 import com.hengye.share.model.Parent;
-import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.greenrobot.GreenDaoManager;
 import com.hengye.share.model.greenrobot.GroupList;
 import com.hengye.share.model.greenrobot.GroupListDao;
 import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.model.greenrobot.UserDao;
-import com.hengye.share.model.sina.WBGroups;
 import com.hengye.share.model.sina.WBUserInfo;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 
 import java.util.List;
 
 import de.greenrobot.dao.query.QueryBuilder;
-import de.greenrobot.dao.query.WhereCondition;
 
 public class UserUtil {
 
@@ -29,6 +26,11 @@ public class UserUtil {
 
     public static User updateCurrentUser() {
         return mCurrentUser = getDefaultUser();
+    }
+
+    public static void changeCurrentUser(User user){
+        SPUtil.setUid(user.getUid());
+        mCurrentUser = user;
     }
 
     public static String getUid() {

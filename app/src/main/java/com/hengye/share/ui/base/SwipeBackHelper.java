@@ -57,12 +57,6 @@ public class SwipeBackHelper implements SwipeBackActivityBase {
         return mActivity;
     }
 
-//    public View findViewById(int id) {
-//        View v = getActivity().findViewById(id);
-//        if (v == null && mHelper != null)
-//            return mHelper.findViewById(id);
-//        return v;
-//    }
 
     @Override
     public SwipeBackLayout getSwipeBackLayout() {

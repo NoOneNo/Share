@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.hengye.draglistview.DragSortController;
 import com.hengye.draglistview.DragSortListView;
 import com.hengye.share.R;
 import com.hengye.share.adapter.listview.GroupManageAdapter;

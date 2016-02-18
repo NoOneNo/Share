@@ -5,15 +5,13 @@ import android.text.TextUtils;
 import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.ui.mvpview.UserMvpView;
+import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.UrlBuilder;
-import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
-import com.hengye.share.util.thirdparty.WBUtil;
 
 import java.util.Map;
 
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -28,6 +26,10 @@ public class UserPresenter extends BasePresenter<UserMvpView> {
     }
 
     public void loadWBUserInfo(String uid, String name){
+        if(CommonUtil.isEmpty(uid, name)){
+            return;
+        }
+
         RetrofitManager
                 .getWBService()
                 .listUserInfo(getWBUserInfoParameter(uid, name))

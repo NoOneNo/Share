@@ -76,7 +76,7 @@ public class TopicGalleryActivity extends BaseActivity {
         mIndexStart = getIntent().getIntExtra(IMG_INDEX, 0);
         mRectList = (ArrayList<AnimationRect>) getIntent().getSerializableExtra(IMG_RECT_LIST);
 
-        if(CommonUtil.isEmptyCollection(mUrls, mRectList)){
+        if(CommonUtil.hasEmptyCollection(mUrls, mRectList)){
             this.finish();
         }
     }

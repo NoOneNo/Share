@@ -116,7 +116,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         mTabLayout.getTabAt(0).select();
         mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
         TopicAdapter.TopicViewHolder topicViewHolder = new TopicAdapter.TopicViewHolder(headerView.findViewById(R.id.item_topic));
-        topicViewHolder.bindData(this, mTopic);
+        topicViewHolder.bindData(this, mTopic, 0);
     }
 
     private void initView() {

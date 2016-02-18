@@ -34,7 +34,7 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
         holder.setOnChildViewItemClickListener(getOnChildViewItemClickListener());
         holder.setOnItemLongClickListener(getOnItemLongClickListener());
         holder.setOnChildViewItemLongClickListener(getOnChildViewItemLongClickListener());
-        holder.bindData(getContext(), getItem(position));
+//        holder.bindData(getContext(), getItem(position));
         holder.bindData(getContext(), getItem(position), position);
     }
 
@@ -74,9 +74,9 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
             return itemView.findViewById(id);
         }
 
-        public void bindData(Context context, T t){
-
-        }
+//        public void bindData(Context context, T t){
+//
+//        }
 
         public void bindData(Context context, T t, int position){
 

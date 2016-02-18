@@ -4,24 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/side_nav_bar"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical">
+    android:paddingStart="@dimen/activity_horizontal_margin"
+    android:paddingEnd="@dimen/activity_horizontal_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin">
 
     <com.android.volley.view.NetworkImageView
         android:id="@+id/iv_avatar"
-        android:layout_width="@dimen/nav_user_avatar"
-        android:layout_height="@dimen/nav_user_avatar"
+        android:layout_width="@dimen/user_avatar"
+        android:layout_height="@dimen/user_avatar"
         android:src="@android:drawable/sym_def_app_icon"/>
 
     <ImageButton
         android:id="@+id/iv_more_account"
         android:layout_toEndOf="@id/iv_avatar"
         android:layout_marginStart="@dimen/content_margin_10dp"
-        android:layout_width="@dimen/nav_user_avatar"
-        android:layout_height="@dimen/nav_user_avatar"
+        android:layout_width="@dimen/user_avatar"
+        android:layout_height="@dimen/user_avatar"
         android:src="@drawable/compose_more_account_add"
         android:background="@color/grey_300"
         android:contentDescription="@null"/>

@@ -12,7 +12,7 @@
     android:paddingStart="@dimen/activity_horizontal_margin"
     android:paddingEnd="@dimen/activity_horizontal_margin">
 
-    <com.android.volley.view.NetworkImageView
+    <com.android.volley.view.NetworkImageViewPlus
         android:id="@+id/iv_avatar"
         android:layout_width="@dimen/at_user_avatar"
         android:layout_height="@dimen/at_user_avatar"
@@ -52,13 +52,9 @@
             android:src="@drawable/ic_check_select"/>
     </FrameLayout>
 
-
     <View
-        android:id="@+id/bg_divider"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/bg_divider"
+        style="@style/horizontal_line"
         android:layout_marginTop="@dimen/content_margin_10dp"
-        android:layout_below="@id/iv_avatar"
-        android:background="@color/bg_divider"/>
+        android:layout_below="@id/iv_avatar"/>
 
 </RelativeLayout>

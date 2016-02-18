@@ -39,7 +39,7 @@ public class SearchUserAdapter extends CommonAdapter<UserInfo, SearchUserAdapter
         }
 
         @Override
-        public void bindData(Context context, UserInfo userInfo) {
+        public void bindData(Context context, UserInfo userInfo, int position) {
             username.setText(userInfo.getName());
             avatar.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());
         }
