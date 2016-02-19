@@ -24,7 +24,7 @@ import com.hengye.share.util.thirdparty.ThirdPartyUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AccountManageActivity extends BaseActivity implements AccountManageMvpView, DialogInterface.OnClickListener{
+public class AccountManageActivity extends BaseActivity implements AccountManageMvpView, DialogInterface.OnClickListener {
 
     public final static int ACCOUNT_CHANGE = 5;
 
@@ -46,11 +46,12 @@ public class AccountManageActivity extends BaseActivity implements AccountManage
     private RecyclerView mRecyclerView;
     private Dialog mLogoutDialog;
 
-    private int mAccountSelectOriginalIndex = -1;
-    private int mAccountSelectNowIndex, mAccountSelectLongClickIndex;
-    private View mAccountSelectBtn;
+    private User mSelectAccountOriginal;
+    private boolean mHasSelectOriginalAccount;
+    private int mSelectAccountNowIndex, mSelectAccountLongClickIndex;
+    private View mSelectAccountBtn;
 
-    private void initView(){
+    private void initView() {
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -60,24 +61,24 @@ public class AccountManageActivity extends BaseActivity implements AccountManage
         mAdapter.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                if(position == mAccountSelectNowIndex){
+                if (position == mSelectAccountNowIndex) {
                     return;
                 }
-                if(mAccountSelectBtn != null){
-                    mAccountSelectBtn.setVisibility(View.GONE);
+                if (mSelectAccountBtn != null) {
+                    mSelectAccountBtn.setVisibility(View.GONE);
                 }
-                mAccountSelectBtn = view.findViewById(R.id.btn_check);
-                if(mAccountSelectBtn != null){
-                    mAccountSelectBtn.setVisibility(View.VISIBLE);
+                mSelectAccountBtn = view.findViewById(R.id.btn_check);
+                if (mSelectAccountBtn != null) {
+                    mSelectAccountBtn.setVisibility(View.VISIBLE);
                 }
-                mAccountSelectNowIndex = position;
+                mSelectAccountNowIndex = position;
             }
         });
 
         mAdapter.setOnItemLongClickListener(new ViewUtil.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(View view, int position) {
-                mAccountSelectLongClickIndex = position;
+                mSelectAccountLongClickIndex = position;
                 mLogoutDialog.show();
                 return false;
             }
@@ -87,7 +88,7 @@ public class AccountManageActivity extends BaseActivity implements AccountManage
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                logout(mAdapter.getItem(mAccountSelectNowIndex));
+                logout(mAdapter.getItem(mSelectAccountNowIndex));
             }
         });
 
@@ -97,68 +98,86 @@ public class AccountManageActivity extends BaseActivity implements AccountManage
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
-        switch (which){
+        switch (which) {
             case 0:
             default:
-                logout(mAdapter.getItem(mAccountSelectLongClickIndex));
+                logout(mAdapter.getItem(mSelectAccountLongClickIndex));
                 break;
         }
     }
 
-    private void logout(User user){
-        if(user != null){
+    private void logout(User user) {
+        if (user != null) {
+            User accountSelectNow = mAdapter.getItem(mSelectAccountNowIndex);
             UserUtil.deleteUser(user);
-            mAdapter.removeItem(mAccountSelectLongClickIndex);
+            mAdapter.removeItem(user);
             //如果注销的是当前用户
-            if(mAccountSelectNowIndex == mAccountSelectLongClickIndex){
-                if(!mAdapter.isEmpty()){
+            if (user.equals(accountSelectNow)) {
+                if (!mAdapter.isEmpty()) {
                     mRecyclerView.getChildAt(0).performClick();
+                } else {
+                    mSelectAccountNowIndex = -1;
                 }
+            } else {
+                mSelectAccountNowIndex = mAdapter.getItemPosition(accountSelectNow);
             }
         }
     }
 
     @Override
     public void loadSuccess(List<User> data, int currentUserIndex) {
-        if(mAccountSelectOriginalIndex == -1){
-            mAccountSelectOriginalIndex = currentUserIndex;
+        if (!mHasSelectOriginalAccount) {
+            mHasSelectOriginalAccount = true;
+            if (0 <= currentUserIndex && currentUserIndex < data.size()) {
+                mSelectAccountOriginal = data.get(currentUserIndex);
+            }
         }
-        mAccountSelectNowIndex = currentUserIndex;
+        mSelectAccountNowIndex = currentUserIndex;
         mAdapter.refresh(data);
     }
 
     @Override
     public void loadFail() {
+        if (!mHasSelectOriginalAccount) {
+            mHasSelectOriginalAccount = true;
+        }
+    }
 
+    private boolean isChangeAccount(User original, User now) {
+        if (original == null && now == null) {
+            return false;
+        } else if (original == null || now == null) {
+            return true;
+        } else {
+            return !original.equals(now);
+        }
     }
 
     @Override
-    public void onBackPressed() {
-        if(mAccountSelectOriginalIndex != mAccountSelectNowIndex){
-            User user = mAdapter.getItem(mAccountSelectNowIndex);
-            if(user != null) {
-                setResult(Activity.RESULT_OK);
-                UserUtil.changeCurrentUser(user);
-            }
+    public void finish() {
+        User user = mAdapter.getItem(mSelectAccountNowIndex);
+        if (isChangeAccount(mSelectAccountOriginal, user)) {
+            setResult(Activity.RESULT_OK);
+            UserUtil.changeCurrentUser(user);
         }
-        super.onBackPressed();
+        super.finish();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO && resultCode == Activity.RESULT_OK){
+        if (requestCode == ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO && resultCode == Activity.RESULT_OK) {
             mPresenter.loadUsers();
         }
     }
 
-    public class AccountManageCallBack{
-        public int getAccountSelectIndex(){
-            return mAccountSelectNowIndex;
+    public class AccountManageCallBack {
+        public int getAccountSelectIndex() {
+            return mSelectAccountNowIndex;
         }
 
-        public void setAccountSelectBtn(View v){
-            mAccountSelectBtn = v;
+        public void setAccountSelectBtn(View v) {
+            mSelectAccountBtn = v;
         }
     }
 }

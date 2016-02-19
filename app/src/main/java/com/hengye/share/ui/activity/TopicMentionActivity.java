@@ -46,7 +46,7 @@ public class TopicMentionActivity extends BaseActivity{
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+                finish();
             }
         });
 

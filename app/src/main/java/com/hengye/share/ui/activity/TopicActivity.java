@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -18,7 +20,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.view.NetworkImageView;
+import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.R;
 import com.hengye.share.adapter.viewpager.TopicFragmentPager;
 import com.hengye.share.model.UserInfo;
@@ -27,6 +29,7 @@ import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.ui.activity.setting.SettingActivity;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.ui.fragment.TopicFavoritesFragment;
+import com.hengye.share.ui.fragment.TopicFragment;
 import com.hengye.share.ui.mvpview.UserMvpView;
 import com.hengye.share.ui.presenter.TopicPresenter;
 import com.hengye.share.ui.presenter.UserPresenter;
@@ -36,10 +39,6 @@ import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.UserUtil;
-import com.hengye.share.util.thirdparty.ParseTokenWeiboAuthListener;
-import com.hengye.share.util.thirdparty.ThirdPartyUtils;
-import com.sina.weibo.sdk.auth.WeiboAuth;
-import com.sina.weibo.sdk.auth.sso.SsoHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +80,7 @@ public class TopicActivity extends BaseActivity
 
     private ViewPager mViewPager;
     private TabLayout mTablayout;
-    private NetworkImageView mAvatar;
+    private NetworkImageViewPlus mAvatar;
     private TextView mUsername, mSign;
 
     private TopicFragmentPager mTopicFragmentAdapter;
@@ -133,7 +132,7 @@ public class TopicActivity extends BaseActivity
             }
         });
 
-        mAvatar = (NetworkImageView) navigationView.findViewById(R.id.iv_avatar);
+        mAvatar = (NetworkImageViewPlus) navigationView.findViewById(R.id.iv_avatar);
         mUsername = (TextView) navigationView.findViewById(R.id.tv_username);
         mSign = (TextView) navigationView.findViewById(R.id.tv_sign);
 
@@ -256,9 +255,15 @@ public class TopicActivity extends BaseActivity
 
     @Override
     public void loadSuccess(User user) {
-        mAvatar.setImageUrl(user.getAvatar(), RequestManager.getImageLoader());
-        mUsername.setText(user.getName());
-        mSign.setText(user.getSign());
+        if(user != null) {
+            mAvatar.setImageUrl(user.getAvatar(), RequestManager.getImageLoader());
+            mUsername.setText(user.getName());
+            mSign.setText(user.getSign());
+        }else{
+            mAvatar.setImageResource(R.drawable.ic_user_avatar);
+            mUsername.setText("");
+            mSign.setText("");
+        }
     }
 
     @Override
@@ -278,7 +283,26 @@ public class TopicActivity extends BaseActivity
         if (requestCode == AccountManageActivity.ACCOUNT_CHANGE && resultCode == Activity.RESULT_OK) {
             loadSuccess(UserUtil.getCurrentUser());
             if(mViewPager != null) {
-                mViewPager.setAdapter(mTopicFragmentAdapter = new TopicFragmentPager(getSupportFragmentManager(), this, getTopicGroups()));
+                mTopicFragmentAdapter.refresh(getTopicGroups());
+
+                //全部微博
+                String str1 = mTopicFragmentAdapter.getFragmentTags().get(0);
+                //互相关注
+                String str2 = mTopicFragmentAdapter.getFragmentTags().get(1);
+
+                Fragment fragment1 = getSupportFragmentManager().findFragmentByTag(str1);
+                Fragment fragment2 = getSupportFragmentManager().findFragmentByTag(str2);
+
+                if(fragment1 != null && fragment1 instanceof TopicFragment){
+                    TopicFragment topicFragment = (TopicFragment) fragment1;
+                    topicFragment.refresh();
+                }
+
+                if(fragment2 != null && fragment2 instanceof TopicFragment){
+                    TopicFragment topicFragment = (TopicFragment) fragment2;
+                    topicFragment.refresh();
+                }
+//                mViewPager.setAdapter(mTopicFragmentAdapter = new TopicFragmentPager(getSupportFragmentManager(), this, getTopicGroups()));
                 adjustTabLayout();
             }
         } else if (requestCode == GroupManageActivity.GROUP_UPDATE && resultCode == Activity.RESULT_OK) {

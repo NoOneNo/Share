@@ -94,7 +94,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     public void onClick(View v) {
         int id = v.getId();
         if(id == R.id.btn_back){
-            onBackPressed();
+            finish();
         }else if(id == R.id.btn_search){
             ViewUtil.hideKeyBoard(mContent);
             mLoadingDialog.show();

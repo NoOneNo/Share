@@ -106,6 +106,10 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
         mPresenter.loadCacheData();
     }
 
+    public void refresh(){
+        mPresenter.loadCacheData();
+    }
+
     @Override
     public void handleCache(List<Topic> data) {
         if(CommonUtil.isEmptyCollection(data)){

@@ -174,7 +174,6 @@ public class BaseActivity extends AppCompatActivity{
             }
             setTheme(mThemeResId);
         }
-
     }
 
     protected void replaceCustomThemeIfNeeded() {
@@ -213,7 +212,7 @@ public class BaseActivity extends AppCompatActivity{
             mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onBackPressed();
+                    finish();
                 }
             });
         }

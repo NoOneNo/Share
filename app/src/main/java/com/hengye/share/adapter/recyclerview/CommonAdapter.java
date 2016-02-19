@@ -189,7 +189,7 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
     }
 
     public boolean isEmpty() {
-        return mData.size() == 0;
+        return mData.isEmpty();
     }
 
     public T getItem(int position){

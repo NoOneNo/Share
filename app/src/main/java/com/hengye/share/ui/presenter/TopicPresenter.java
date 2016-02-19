@@ -315,11 +315,13 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
     }
 
     private String mModuleName;
+    private String mModuleUid;
 
     public String getModuleName() {
-        if (mModuleName == null) {
+        if (mModuleName == null || mModuleUid == null || !mModuleUid.equals(UserUtil.getUid())) {
+            mModuleUid = UserUtil.getUid();
             mModuleName = Topic.class.getSimpleName()
-                    + UserUtil.getUid()
+                    + mModuleUid
                     + "/"
                     + uid
                     + "/"

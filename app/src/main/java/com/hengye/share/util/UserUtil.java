@@ -29,7 +29,7 @@ public class UserUtil {
     }
 
     public static void changeCurrentUser(User user){
-        SPUtil.setUid(user.getUid());
+        SPUtil.setUid(user == null ? null : user.getUid());
         mCurrentUser = user;
     }
 
