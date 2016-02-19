@@ -32,21 +32,6 @@ import java.util.List;
 
 public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpView, View.OnClickListener{
 
-    @Override
-    protected String getRequestTag() {
-        return super.getRequestTag();
-    }
-
-    @Override
-    protected boolean setCustomTheme() {
-        return super.setCustomTheme();
-    }
-
-    @Override
-    protected boolean setToolBar() {
-        return true;
-    }
-
     public static Intent getIntentToStart(Context context, Topic topic) {
         Intent intent = new Intent(context, TopicDetailActivity.class);
         intent.putExtra(Topic.class.getSimpleName(), topic);

@@ -68,7 +68,7 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(mAdapter = new TopicAdapter(getContext(), new ArrayList<Topic>()));
+        recyclerView.setAdapter(mAdapter = new TopicAdapter(getContext(), new ArrayList<Topic>(), recyclerView));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.pull_to_refresh);

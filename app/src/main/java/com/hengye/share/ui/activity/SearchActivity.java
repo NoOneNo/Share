@@ -76,7 +76,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         mUserRV.setAdapter(mUserAdapter = new SearchUserAdapter(this, new ArrayList<UserInfo>()));
         mUserRV.setItemAnimator(new DefaultItemAnimator());
         mTopicRV = (RecyclerView) findViewById(R.id.recycler_view_topic);
-        mTopicRV.setAdapter(mTopicAdapter = new TopicAdapter(this, new ArrayList<Topic>()));
+        mTopicRV.setAdapter(mTopicAdapter = new TopicAdapter(this, new ArrayList<Topic>(), mTopicRV));
         mTopicRV.setLayoutManager(new LinearLayoutManager(this));
         mTopicRV.setItemAnimator(new DefaultItemAnimator());
 

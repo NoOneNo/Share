@@ -1,8 +1,13 @@
 package com.hengye.share.adapter.recyclerview;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -51,8 +56,11 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
     public static int mGalleryMaxWidth;
     private Dialog mLongClickDialog;
     private int mLongClickPosition;
-    public TopicAdapter(Context context, List<Topic> data) {
+    private RecyclerView mRecyclerView;
+    public TopicAdapter(Context context, List<Topic> data, RecyclerView recyclerView) {
         super(context, data);
+        mRecyclerView = recyclerView;
+
         int galleryMargin = context.getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin);
         mGalleryMaxWidth = context.getResources().getDisplayMetrics().widthPixels - 2 * galleryMargin;
 
@@ -110,7 +118,20 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
         if(id == R.id.rl_topic_title){
             IntentUtil.startActivity(getContext(), PersonalHomepageActivity.getIntentToStart(getContext(), getItem(position).getUserInfo()));
         }else if(id == R.id.tv_topic_content){
-            IntentUtil.startActivity(getContext(), TopicDetailActivity.getIntentToStart(getContext(), getItem(position)));
+//            IntentUtil.startActivity(getContext(), TopicDetailActivity.getIntentToStart(getContext(), getItem(position)));
+            TopicViewHolder vh = (TopicViewHolder)mRecyclerView.findViewHolderForAdapterPosition(position);
+            if(vh == null){
+                IntentUtil.startActivity(getContext(), TopicDetailActivity.getIntentToStart(getContext(), getItem(position)));
+            }else{
+                Activity activity = (Activity) getContext();
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        activity,
+                        new Pair<>(vh.itemView,
+                                getContext().getString(R.string.transition_name_topic))
+                );
+                ActivityCompat.startActivity(activity, TopicDetailActivity.getIntentToStart(getContext(), getItem(position)), options.toBundle());
+            }
+
         }else if(id == R.id.tv_topic_retweeted_content){
             Topic topic = getItem(position).getRetweetedTopic();
             if(topic != null) {
