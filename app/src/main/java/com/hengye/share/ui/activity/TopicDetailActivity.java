@@ -193,7 +193,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                 }
             }
         });
-        mPullToRefreshLayout.setRefreshing(true);
+//        mPullToRefreshLayout.setRefreshing(true);
     }
 
     private int getPublishType(){

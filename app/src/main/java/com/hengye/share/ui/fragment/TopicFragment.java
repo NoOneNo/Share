@@ -23,17 +23,6 @@ import java.util.List;
 
 public class TopicFragment extends BaseFragment implements TopicMvpView {
 
-    @Override
-    protected int getLayoutResId() {
-        return R.layout.fragment_topic;
-    }
-
-    private PullToRefreshLayout mPullToRefreshLayout;
-    private TopicAdapter mAdapter;
-    private TopicPresenter mPresenter;
-    private TopicPresenter.TopicGroup topicGroup;
-    private String uid, name;
-
     public static TopicFragment newInstance(TopicPresenter.TopicGroup topicGroup, String uid, String name) {
         TopicFragment fragment = new TopicFragment();
         Bundle bundle = new Bundle();
@@ -50,6 +39,17 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
 
     public static TopicFragment newInstance(TopicPresenter.TopicType topicType, String uid, String name) {
         return newInstance(new TopicPresenter.TopicGroup(topicType), uid, name);
+    }
+
+    private PullToRefreshLayout mPullToRefreshLayout;
+    private TopicAdapter mAdapter;
+    private TopicPresenter mPresenter;
+    private TopicPresenter.TopicGroup topicGroup;
+    private String uid, name;
+
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.fragment_topic;
     }
 
     @Override

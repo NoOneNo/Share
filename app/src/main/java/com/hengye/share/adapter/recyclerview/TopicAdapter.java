@@ -23,6 +23,7 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
 import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.R;
+import com.hengye.share.helper.TransitionHelper;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.UserInfo;
@@ -124,12 +125,20 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
                 IntentUtil.startActivity(getContext(), TopicDetailActivity.getIntentToStart(getContext(), getItem(position)));
             }else{
                 Activity activity = (Activity) getContext();
-                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        activity,
-                        new Pair<>(vh.itemView,
-                                getContext().getString(R.string.transition_name_topic))
-                );
-                ActivityCompat.startActivity(activity, TopicDetailActivity.getIntentToStart(getContext(), getItem(position)), options.toBundle());
+
+                final Pair[] pairs = TransitionHelper.createSafeTransitionParticipants(activity, false,
+                        new Pair<>(vh.mTopicLayout, activity.getString(R.string.transition_name_topic)));
+
+                ActivityOptionsCompat activityOptions = ActivityOptionsCompat
+                        .makeSceneTransitionAnimation(activity, pairs);
+                ActivityCompat.startActivity(activity, TopicDetailActivity.getIntentToStart(getContext(), getItem(position)), activityOptions.toBundle());
+
+//                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+//                        activity,
+//                        new Pair<>(vh.itemView,
+//                                getContext().getString(R.string.transition_name_topic))
+//                );
+//                ActivityCompat.startActivity(activity, TopicDetailActivity.getIntentToStart(getContext(), getItem(position)), options.toBundle());
             }
 
         }else if(id == R.id.tv_topic_retweeted_content){
@@ -152,6 +161,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
 
         TopicTitleViewHolder mTopicTitle;
         TopicContentViewHolder mTopic, mRetweetTopic;
+        View mTopicLayout;
         View mRetweetTopicLayout;
 
         public TopicViewHolder(View v) {
@@ -165,6 +175,8 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
             if (mRetweetTopic == null) {
                 mRetweetTopic = new TopicContentViewHolder();
             }
+
+            mTopicLayout = findViewById(R.id.ll_topic);
             mTopic.mContent = (TextView) findViewById(R.id.tv_topic_content);
             mTopic.mGallery = (GridGalleryView) findViewById(R.id.gl_topic_gallery);
             mRetweetTopicLayout = findViewById(R.id.ll_topic_retweeted);
