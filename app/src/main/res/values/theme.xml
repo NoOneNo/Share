@@ -14,14 +14,20 @@
 
         <item name="colorAccent">?attr/theme_accent_color</item>
 
-        <item name="android:colorBackground">@color/background_default</item>/
+        <item name="android:colorBackground">@color/background_default</item>
 
         <item name="android:actionMenuTextAppearance">@style/MenuTextStyle</item>
 
-        <item name="android:windowContentTransitions">true</item>
-
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <!--<item name="android:windowIsTranslucent">true</item>-->
+
+        <item name="android:windowIsTranslucent">false</item>
+
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowSharedElementsUseOverlay">true</item>
+        <item name="android:windowSharedElementEnterTransition">@android:transition/move</item>
+        <item name="android:windowSharedElementReturnTransition">@android:transition/move</item>
+        <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
+        <item name="android:windowSharedElementReenterTransition">@android:transition/move</item>
     </style>
 
     <style name="MenuTextStyle">

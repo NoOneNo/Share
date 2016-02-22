@@ -2,12 +2,15 @@ package com.hengye.share.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Rect;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
 import com.hengye.share.ui.base.BaseApplication;
+
+import java.lang.reflect.Field;
 
 public class ViewUtil {
 
@@ -85,5 +88,22 @@ public class ViewUtil {
                         .showSoftInput(paramEditText, 0);
             }
         });
+    }
+
+    public static int getStatusBarHeight(Context context) {
+        Class<?> c = null;
+        Object obj = null;
+        Field field = null;
+        int x = 0;
+        try {
+            c = Class.forName("com.android.internal.R$dimen");
+            obj = c.newInstance();
+            field = c.getField("status_bar_height");
+            x = Integer.parseInt(field.get(obj).toString());
+            return context.getResources().getDimensionPixelSize(x);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 }

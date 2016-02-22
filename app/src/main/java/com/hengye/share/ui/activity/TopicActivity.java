@@ -16,7 +16,10 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +42,7 @@ import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.UserUtil;
+import com.hengye.share.util.ViewUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,22 +51,12 @@ public class TopicActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, UserMvpView {
 
     @Override
-    protected boolean setCustomTheme() {
-        return true;
-    }
-
-    @Override
     protected boolean setToolBar() {
         return false;
     }
 
     @Override
     protected boolean canSwipeBack() {
-        return false;
-    }
-
-    @Override
-    protected boolean setFinishPendingTransition() {
         return false;
     }
 
@@ -122,6 +116,12 @@ public class TopicActivity extends BaseActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //修复因为布局使用fitsSystemWindows而导致DrawLayout内容间距不对的问题
+        RelativeLayout navHeader = (RelativeLayout) navigationView.findViewById(R.id.rl_header);
+        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams)navHeader.getLayoutParams();
+        lp.topMargin = ViewUtil.getStatusBarHeight(this);
+        navHeader.setLayoutParams(lp);
 
         ImageButton moreAccount = (ImageButton) navigationView.findViewById(R.id.iv_more_account);
         SelectorLoader.getInstance().setImageSelector(this, moreAccount, R.drawable.compose_more_account_add, R.drawable.compose_more_account_add_highlighted);

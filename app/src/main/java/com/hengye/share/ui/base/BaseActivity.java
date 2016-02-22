@@ -129,7 +129,7 @@ public class BaseActivity extends AppCompatActivity{
         if (mFirstClick) {
             mFirstClick = false;
             super.startActivityForResult(intent, requestCode, options);
-            overridePendingTransitionOnStart();
+//            overridePendingTransitionOnStart();
         }
     }
 
@@ -239,7 +239,7 @@ public class BaseActivity extends AppCompatActivity{
     protected void setupActivityHelper() {
         if (mSwipeHelper == null) {
             if(canSwipeBack() && SettingHelper.isSwipeBack()){
-                mSwipeHelper = new SwipeBackHelper(this);
+//                mSwipeHelper = new SwipeBackHelper(this);
             }
         }
     }

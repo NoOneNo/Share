@@ -104,6 +104,12 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         topicViewHolder.bindData(this, mTopic, 0);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+//    View headerView, headerViewAssist;
     private void initView() {
         if (mTopic == null) {
             return;
@@ -119,8 +125,20 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         mTabLayoutAssist.getTabAt(0).select();
         mTabLayoutAssist.setOnTabSelectedListener(mOnTabSelectedListener);
 
-        View headerView = LayoutInflater.from(this).inflate(R.layout.header_topic_detail, null);
+        View headerView = LayoutInflater.from(this).inflate(R.layout.header_topic_detail, mListView);
+//        headerView.setVisibility(View.INVISIBLE);
+//        headerViewAssist = findViewById(R.id.header_topic_detail);
         initHeaderView(headerView);
+//        initHeaderView(headerViewAssist);
+
+//        headerViewAssist.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                headerViewAssist.setVisibility(View.GONE);
+//                headerView.setVisibility(View.VISIBLE);
+//            }
+//        },1000);
+
         mListView = (ListView) findViewById(R.id.list_view);
         mListView.addHeaderView(headerView);
         mListView.setAdapter(mAdapter = new TopicCommentAdapter(this, new ArrayList<TopicComment>()));

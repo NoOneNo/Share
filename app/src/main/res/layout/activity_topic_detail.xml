@@ -4,8 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent">
+
+    <!--<include-->
+        <!--android:id="@+id/header_topic_detail"-->
+        <!--layout="@layout/header_topic_detail"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="vertical"-->
+        <!--android:paddingTop="@dimen/activity_vertical_margin"/>-->
 
     <com.hengye.swiperefresh.PullToRefreshLayout
         android:id="@+id/pull_to_refresh"
