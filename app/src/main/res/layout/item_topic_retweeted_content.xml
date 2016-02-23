@@ -6,21 +6,21 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/grey_50"
-    android:layout_marginTop="@dimen/content_margin_5dp"
     android:paddingTop="@dimen/content_margin_5dp"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingBottom="@dimen/content_margin_5dp"
     android:orientation="vertical"
-    android:visibility="visible"
-    tools:showIn="@layout/item_topic">
+    android:visibility="gone"
+    tools:visibility="visible"
+    tools:showIn="@layout/item_topic_total">
 
     <TextView
         android:id="@+id/tv_topic_retweeted_content"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="这是一条微博转发的内容"
-        android:textSize="16sp"
+        android:textSize="17sp"
         android:textColor="@color/topic_content" />
 
     <com.hengye.share.ui.view.GridGalleryView

@@ -6,8 +6,7 @@
     android:orientation="vertical">
 
     <include
-        android:id="@+id/item_topic"
-        layout="@layout/item_topic"
+        layout="@layout/item_topic_total"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"

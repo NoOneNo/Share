@@ -5,8 +5,9 @@
     android:id="@+id/rl_topic_title"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/content_margin_10dp"
-    tools:showIn="@layout/item_topic">
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    tools:showIn="@layout/item_topic_total">
 
     <com.android.volley.view.NetworkImageViewPlus
         android:id="@+id/iv_topic_avatar"
@@ -14,6 +15,7 @@
         android:layout_height="@dimen/topic_avatar"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:scaleType="fitXY"
+        android:background="@drawable/ic_user_avatar"
         android:contentDescription="@null"/>
 
     <TextView
@@ -21,7 +23,7 @@
         android:layout_toEndOf="@id/iv_topic_avatar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="我是一只小小小鸡仔"
+        tools:text="我是一只小小小鸡仔"
         android:textSize="@dimen/topic_username"
         android:textColor="@color/topic_username"
         android:singleLine="true" />
@@ -32,7 +34,7 @@
         android:layout_below="@id/tv_topic_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="11-3 来自 微博 weibo.com"
+        tools:text="11-3 来自 微博 weibo.com"
         android:textSize="@dimen/topic_description"
         android:textColor="@color/topic_description"
         android:singleLine="true" />

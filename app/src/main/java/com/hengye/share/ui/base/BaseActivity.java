@@ -129,7 +129,7 @@ public class BaseActivity extends AppCompatActivity{
         if (mFirstClick) {
             mFirstClick = false;
             super.startActivityForResult(intent, requestCode, options);
-//            overridePendingTransitionOnStart();
+            overridePendingTransitionOnStart();
         }
     }
 

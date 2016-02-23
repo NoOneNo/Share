@@ -66,7 +66,7 @@ public class TopicDraftActivity extends BaseActivity{
             @Override
             public void onItemClick(View view, int position) {
                 IntentUtil.startActivityForResult(TopicDraftActivity.this,
-                        TopicPublishActivity.getIntentToStart(TopicDraftActivity.this, mAdapter.getItem(position)), 1);
+                        TopicPublishActivity.getStartIntent(TopicDraftActivity.this, mAdapter.getItem(position)), 1);
             }
         });
     }

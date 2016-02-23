@@ -204,7 +204,7 @@ public class DataUtil {
         return value;
     }
 
-    private static String addRetweetedNamePrefix(Topic topic) {
+    public static String addRetweetedNamePrefix(Topic topic) {
         String str;
         if (!TextUtils.isEmpty(topic.getUserInfo().getName())) {
             //如果微博已经被删除，则名字为空

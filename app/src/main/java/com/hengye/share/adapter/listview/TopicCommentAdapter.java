@@ -1,17 +1,12 @@
 package com.hengye.share.adapter.listview;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicAdapter;
 import com.hengye.share.model.TopicComment;
-import com.hengye.share.model.greenrobot.TopicDraft;
-import com.hengye.share.model.greenrobot.TopicDraftHelper;
-import com.hengye.share.ui.activity.TopicPublishActivity;
 import com.hengye.share.ui.support.textspan.LongClickableLinkMovementMethod;
 import com.hengye.share.ui.support.textspan.TopicContentUrlOnTouchListener;
 import com.hengye.share.ui.view.GridGalleryView;
@@ -26,7 +21,7 @@ public class TopicCommentAdapter extends CommonAdapter<TopicComment, TopicCommen
 
     @Override
     public int getItemLayoutResId() {
-        return R.layout.item_topic_comment;
+        return R.layout.item_topic_total;
     }
 
     @Override

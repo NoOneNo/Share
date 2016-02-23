@@ -78,7 +78,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         }
     }
 
-    public static Intent getIntentToStart(Context context, UserInfo userInfo){
+    public static Intent getStartIntent(Context context, UserInfo userInfo){
         Intent intent = new Intent(context, PersonalHomepageActivity.class);
         intent.putExtra(UserInfo.class.getSimpleName(), userInfo);
         return intent;

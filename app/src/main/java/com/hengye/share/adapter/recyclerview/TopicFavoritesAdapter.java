@@ -18,7 +18,7 @@ public class TopicFavoritesAdapter extends CommonAdapter<TopicFavorites.TopicFav
 
     @Override
     public TopicAdapter.TopicViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
-        return new TopicAdapter.TopicViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_topic_notify, parent, false));
+        return new TopicAdapter.TopicViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_topic_total, parent, false));
     }
 
     @Override

@@ -6,7 +6,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
 
 import com.hengye.share.adapter.recyclerview.TopicAdapter;
 import com.hengye.share.model.Topic;
@@ -17,7 +16,6 @@ import com.hengye.share.adapter.recyclerview.SearchUserAdapter;
 import com.hengye.share.ui.mvpview.SearchMvpView;
 import com.hengye.share.ui.presenter.SearchPresenter;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
-import com.hengye.share.util.IntentUtil;
 import com.hengye.share.util.ViewUtil;
 
 import java.util.ArrayList;
@@ -83,7 +81,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         mUserAdapter.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                startActivity(PersonalHomepageActivity.getIntentToStart(SearchActivity.this, mUserAdapter.getItem(position)));
+                startActivity(PersonalHomepageActivity.getStartIntent(SearchActivity.this, mUserAdapter.getItem(position)));
             }
         });
 

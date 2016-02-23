@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.hengye.share.R;
 import com.hengye.share.adapter.listview.TopicCommentAdapter;
@@ -23,6 +24,7 @@ import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.ui.mvpview.TopicDetailMvpView;
 import com.hengye.share.ui.presenter.TopicDetailPresenter;
 import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
@@ -32,17 +34,20 @@ import java.util.List;
 
 public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpView, View.OnClickListener{
 
-    public static Intent getIntentToStart(Context context, Topic topic) {
+    public static Intent getStartIntent(Context context, Topic topic, boolean isRetweet) {
         Intent intent = new Intent(context, TopicDetailActivity.class);
-        intent.putExtra(Topic.class.getSimpleName(), topic);
+        intent.putExtra("topic", topic);
+        intent.putExtra("isRetweet", isRetweet);
         return intent;
     }
 
     Topic mTopic;
+    boolean mIsRetweet;
 
     @Override
     protected void handleBundleExtra() {
-        mTopic = (Topic) getIntent().getSerializableExtra(Topic.class.getSimpleName());
+        mTopic = (Topic) getIntent().getSerializableExtra("topic");
+        mIsRetweet = getIntent().getBooleanExtra("isRetweet", false);
     }
 
     @Override
@@ -92,6 +97,9 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     private TabLayout mTabLayout, mTabLayoutAssist;
     private int mTabLayoutHeight;
 
+    private View mTopicContentLayout;
+    private TextView mTopicContent;
+
     private TopicDetailPresenter mPresenter;
 
     private void initHeaderView(View headerView){
@@ -100,16 +108,33 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         mTabLayout.addTab((mTabLayout.newTab().setText("转发").setTag("tablayout")));
         mTabLayout.getTabAt(0).select();
         mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
-        TopicAdapter.TopicViewHolder topicViewHolder = new TopicAdapter.TopicViewHolder(headerView.findViewById(R.id.item_topic));
+
+        View topicLayout = headerView.findViewById(R.id.item_topic);
+
+        if(mIsRetweet){
+            mTopicContentLayout = headerView.findViewById(R.id.ll_topic);
+            mTopicContent = (TextView) headerView.findViewById(R.id.tv_topic_content);
+            mTopicContentLayout.setTransitionName(getString(R.string.transition_name_topic));
+        }else{
+            topicLayout.setTransitionName(getString(R.string.transition_name_topic));
+        }
+        TopicAdapter.TopicViewHolder topicViewHolder = new TopicAdapter.TopicViewHolder(topicLayout);
         topicViewHolder.bindData(this, mTopic, 0);
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if(mTabLayoutAssist != null && mTabLayoutAssist.getVisibility() == View.GONE){
+            if(mTopicContentLayout != null && mTopicContent != null && mIsRetweet){
+                mTopicContent.setText(DataUtil.addRetweetedNamePrefix(mTopic));
+                mTopicContentLayout.setBackgroundColor(getResources().getColor(R.color.grey_50));
+            }
+            super.onBackPressed();
+        }else{
+            finish();
+        }
     }
 
-//    View headerView, headerViewAssist;
     private void initView() {
         if (mTopic == null) {
             return;
@@ -126,18 +151,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         mTabLayoutAssist.setOnTabSelectedListener(mOnTabSelectedListener);
 
         View headerView = LayoutInflater.from(this).inflate(R.layout.header_topic_detail, mListView);
-//        headerView.setVisibility(View.INVISIBLE);
-//        headerViewAssist = findViewById(R.id.header_topic_detail);
         initHeaderView(headerView);
-//        initHeaderView(headerViewAssist);
-
-//        headerViewAssist.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                headerViewAssist.setVisibility(View.GONE);
-//                headerView.setVisibility(View.VISIBLE);
-//            }
-//        },1000);
 
         mListView = (ListView) findViewById(R.id.list_view);
         mListView.addHeaderView(headerView);
@@ -157,7 +171,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                 topicDraft.setTargetTopicId(mTopic.getId());
                 topicDraft.setTargetCommentId(tc.getId());
                 topicDraft.setIsCommentOrigin(false);
-                startActivity(TopicPublishActivity.getIntentToStart(TopicDetailActivity.this, topicDraft));
+                startActivity(TopicPublishActivity.getStartIntent(TopicDetailActivity.this, topicDraft));
             }
         });
 
@@ -170,7 +184,6 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if(firstVisibleItem == 0){
-//                    L.debug("firstVisibleItem position is 0");
 
                     View firstVisibleItemView = view.getChildAt(0);
                     if(firstVisibleItemView == null){
@@ -211,7 +224,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                 }
             }
         });
-//        mPullToRefreshLayout.setRefreshing(true);
+        mPullToRefreshLayout.setRefreshing(true);
     }
 
     private int getPublishType(){
@@ -231,7 +244,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             topicDraft.setType(getPublishType());
             topicDraft.setTargetTopicId(mTopic.getId());
             topicDraft.setIsCommentOrigin(false);
-            startActivity(TopicPublishActivity.getIntentToStart(this, topicDraft));
+            startActivity(TopicPublishActivity.getStartIntent(this, topicDraft));
         }
     }
 

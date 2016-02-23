@@ -73,7 +73,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
 
     @Override
     public TopicViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
-        return new TopicViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_topic, parent, false));
+        return new TopicViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_topic_total, parent, false));
     }
 
 
@@ -86,11 +86,11 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
         switch (which){
             case DialogBuilder.LONG_CLICK_TOPIC_REPOST:
                 IntentUtil.startActivity(getContext(),
-                        TopicPublishActivity.getIntentToStart(getContext(), TopicDraftHelper.getWBTopicDraftByTopicRepost(topic.getId())));
+                        TopicPublishActivity.getStartIntent(getContext(), TopicDraftHelper.getWBTopicDraftByTopicRepost(topic.getId())));
                 break;
             case DialogBuilder.LONG_CLICK_TOPIC_COMMENT:
                 IntentUtil.startActivity(getContext(),
-                        TopicPublishActivity.getIntentToStart(getContext(), TopicDraftHelper.getWBTopicDraftByTopicComment(topic.getId())));
+                        TopicPublishActivity.getStartIntent(getContext(), TopicDraftHelper.getWBTopicDraftByTopicComment(topic.getId())));
                 break;
             case DialogBuilder.LONG_CLICK_TOPIC_COLLECT:
                 WBTopic wbTopic = Topic.getWBTopic(topic);
@@ -104,7 +104,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
                     break;
                 }
                 IntentUtil.startActivity(getContext(),
-                        TopicPublishActivity.getIntentToStart(getContext(), TopicDraftHelper.getWBTopicDraftByTopicRepost(retweet.getId())));
+                        TopicPublishActivity.getStartIntent(getContext(), TopicDraftHelper.getWBTopicDraftByTopicRepost(retweet.getId())));
                 break;
             case DialogBuilder.LONG_CLICK_TOPIC_COPY:
                 break;
@@ -114,47 +114,42 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
     }
 
     @Override
-    public void onItemClick(View view, int position) {
-        int id = view.getId();
-        if(id == R.id.rl_topic_title){
-            IntentUtil.startActivity(getContext(), PersonalHomepageActivity.getIntentToStart(getContext(), getItem(position).getUserInfo()));
-        }else if(id == R.id.tv_topic_content){
-//            IntentUtil.startActivity(getContext(), TopicDetailActivity.getIntentToStart(getContext(), getItem(position)));
-            TopicViewHolder vh = (TopicViewHolder)mRecyclerView.findViewHolderForAdapterPosition(position);
-            if(vh == null){
-                IntentUtil.startActivity(getContext(), TopicDetailActivity.getIntentToStart(getContext(), getItem(position)));
-            }else{
-                Activity activity = (Activity) getContext();
-
-                final Pair[] pairs = TransitionHelper.createSafeTransitionParticipants(activity, false,
-                        new Pair<>(vh.mTopicLayout, activity.getString(R.string.transition_name_topic)));
-
-                ActivityOptionsCompat activityOptions = ActivityOptionsCompat
-                        .makeSceneTransitionAnimation(activity, pairs);
-                ActivityCompat.startActivity(activity, TopicDetailActivity.getIntentToStart(getContext(), getItem(position)), activityOptions.toBundle());
-
-//                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-//                        activity,
-//                        new Pair<>(vh.itemView,
-//                                getContext().getString(R.string.transition_name_topic))
-//                );
-//                ActivityCompat.startActivity(activity, TopicDetailActivity.getIntentToStart(getContext(), getItem(position)), options.toBundle());
-            }
-
-        }else if(id == R.id.tv_topic_retweeted_content){
-            Topic topic = getItem(position).getRetweetedTopic();
-            if(topic != null) {
-                IntentUtil.startActivity(getContext(), TopicDetailActivity.getIntentToStart(getContext(), topic));
-            }
-        }
-    }
-
-    @Override
     public boolean onItemLongClick(View view, int position) {
 
         mLongClickPosition = position;
         mLongClickDialog.show();
         return true;
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        int id = view.getId();
+        if(id == R.id.rl_topic_title){
+            IntentUtil.startActivity(getContext(), PersonalHomepageActivity.getStartIntent(getContext(), getItem(position).getUserInfo()));
+        }else if(id == R.id.tv_topic_content || id == R.id.gl_topic_gallery){
+            startTopicDetail(false, position);
+        }else if(id == R.id.tv_topic_retweeted_content || id == R.id.gl_topic_retweeted_gallery){
+            startTopicDetail(true, position);
+        }
+    }
+
+    public void startTopicDetail(boolean isRetweet, int position){
+        Topic topic = isRetweet ? getItem(position).getRetweetedTopic() : getItem(position);
+        if(topic == null){
+            return;
+        }
+
+        TopicViewHolder vh = (TopicViewHolder)mRecyclerView.findViewHolderForAdapterPosition(position);
+        if(vh == null){
+            IntentUtil.startActivity(getContext(), TopicDetailActivity.getStartIntent(getContext(), topic, isRetweet));
+        }else{
+            Activity activity = (Activity) getContext();
+            final Pair[] pairs = TransitionHelper.createSafeTransitionParticipants(activity, false,
+                    new Pair<>(isRetweet ? vh.mRetweetTopicLayout : vh.mTopicLayout, activity.getString(R.string.transition_name_topic)));
+            ActivityOptionsCompat activityOptions = ActivityOptionsCompat
+                    .makeSceneTransitionAnimation(activity, pairs);
+            ActivityCompat.startActivity(activity, TopicDetailActivity.getStartIntent(getContext(), topic, isRetweet), activityOptions.toBundle());
+        }
     }
 
     public static class TopicViewHolder extends CommonAdapter.ItemViewHolder<Topic> {
@@ -176,7 +171,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
                 mRetweetTopic = new TopicContentViewHolder();
             }
 
-            mTopicLayout = findViewById(R.id.ll_topic);
+            mTopicLayout = findViewById(R.id.item_topic);
             mTopic.mContent = (TextView) findViewById(R.id.tv_topic_content);
             mTopic.mGallery = (GridGalleryView) findViewById(R.id.gl_topic_gallery);
             mRetweetTopicLayout = findViewById(R.id.ll_topic_retweeted);
@@ -191,10 +186,11 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
             }
 
             mTopicTitle.initTopicTitle(context, topic);
-            registerChildViewItemClick(mTopicTitle.mTitle);
-
             mTopic.initTopicContent(context, topic, false);
+
+            registerChildViewItemClick(mTopicTitle.mTitle);
             registerChildViewItemClick(mTopic.mContent);
+            registerChildViewItemClick(mTopic.mGallery);
 
             registerChildViewItemLongClick(mTopicTitle.mTitle);
             registerChildViewItemLongClick(mTopic.mContent);
@@ -203,6 +199,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
                 mRetweetTopicLayout.setVisibility(View.VISIBLE);
                 mRetweetTopic.initTopicContent(context, topic.getRetweetedTopic(), true);
                 registerChildViewItemClick(mRetweetTopic.mContent);
+                registerChildViewItemClick(mRetweetTopic.mGallery);
                 registerChildViewItemLongClick(mRetweetTopic.mContent);
             } else {
                 mRetweetTopicLayout.setVisibility(View.GONE);

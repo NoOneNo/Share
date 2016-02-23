@@ -27,7 +27,7 @@
 
     <dimen name="bg_divider">0.5dp</dimen>
 
-    <dimen name="emotion_size">25dp</dimen>
+    <dimen name="emotion_size">20dp</dimen>
     <dimen name="icon_emoticon_padding">10dp</dimen>
 
 

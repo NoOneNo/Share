@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    tools:showIn="@layout/item_topic">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_topic"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background_default"
+    android:paddingTop="@dimen/content_margin_5dp"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingBottom="@dimen/content_margin_5dp"
+    android:orientation="vertical"
+    tools:showIn="@layout/item_topic_total">
     <TextView
         android:id="@+id/tv_topic_content"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="这是一条微博的内容"
-        android:textSize="16sp"
+        android:textSize="17sp"
         android:textColor="@color/topic_content" />
 
     <com.hengye.share.ui.view.GridGalleryView
@@ -15,4 +25,4 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/content_margin_5dp"/>
-</merge>
+</LinearLayout>

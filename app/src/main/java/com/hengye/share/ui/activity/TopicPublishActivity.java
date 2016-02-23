@@ -50,7 +50,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         return super.setToolBar();
     }
 
-    public static Intent getIntentToStart(Context context, TopicDraft topicDraft) {
+    public static Intent getStartIntent(Context context, TopicDraft topicDraft) {
         Intent intent = new Intent(context, TopicPublishActivity.class);
         intent.putExtra("topicDraft", topicDraft);
         return intent;

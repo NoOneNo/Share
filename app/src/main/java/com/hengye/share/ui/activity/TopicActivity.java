@@ -7,7 +7,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -18,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -202,7 +200,7 @@ public class TopicActivity extends BaseActivity
                 Toast.makeText(this, "请先登录", Toast.LENGTH_SHORT).show();
                 return true;
             }
-            startActivity(PersonalHomepageActivity.getIntentToStart(this, UserInfo.getUserInfo(UserUtil.getCurrentUser())));
+            startActivity(PersonalHomepageActivity.getStartIntent(this, UserInfo.getUserInfo(UserUtil.getCurrentUser())));
         } else if (id == R.id.nav_at_me) {
             startActivity(TopicMentionActivity.class);
         } else if (id == R.id.nav_comment) {

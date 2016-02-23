@@ -39,7 +39,6 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:scaleType="centerCrop"
-                android:background="@color/image_default_bg"
                 android:layout_centerHorizontal="true" />
 
             <LinearLayout
