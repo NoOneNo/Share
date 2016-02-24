@@ -22,6 +22,8 @@
 
         <item name="android:windowIsTranslucent">false</item>
 
+        <item name="android:screenOrientation">portrait</item>
+
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowSharedElementsUseOverlay">true</item>
         <item name="android:windowSharedElementEnterTransition">@android:transition/move</item>

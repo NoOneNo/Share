@@ -31,6 +31,7 @@
     <string name="title_activity_topic_draft">草稿箱</string>
     <string name="title_activity_group_manage">分组管理</string>
     <string name="title_activity_account_manage">账号管理</string>
+    <string name="title_activity_topic_theme">相关话题</string>
     <!-- Strings related to activity title-->
 
     <!-- Strings related to TopicGroup-->
@@ -41,6 +42,8 @@
     <string name="title_page_comment_by_me">我发出的评论</string>
     <string name="title_page_topic">微博</string>
     <string name="title_page_mention">提及</string>
+
+    <string name="title_page_theme">相关话题</string>
     <!-- Strings related to TopicGroup-->
 
     <!-- Strings related to GroupManager-->

@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.error.AuthFailureError;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
 import com.android.volley.view.NetworkImageViewPlus;
@@ -43,21 +44,25 @@ import com.hengye.share.util.DateUtil;
 import com.hengye.share.util.IntentUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
+import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHolder>
-    implements ViewUtil.OnItemClickListener, ViewUtil.OnItemLongClickListener, DialogInterface.OnClickListener{
+        implements ViewUtil.OnItemClickListener, ViewUtil.OnItemLongClickListener, DialogInterface.OnClickListener {
 
     public static int mGalleryMaxWidth;
     private Dialog mLongClickDialog;
     private int mLongClickPosition;
     private RecyclerView mRecyclerView;
+
     public TopicAdapter(Context context, List<Topic> data, RecyclerView recyclerView) {
         super(context, data);
         mRecyclerView = recyclerView;
@@ -80,10 +85,10 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
     @Override
     public void onClick(DialogInterface dialog, int which) {
         Topic topic = getItem(mLongClickPosition);
-        if(topic == null){
+        if (topic == null) {
             return;
         }
-        switch (which){
+        switch (which) {
             case DialogBuilder.LONG_CLICK_TOPIC_REPOST:
                 IntentUtil.startActivity(getContext(),
                         TopicPublishActivity.getStartIntent(getContext(), TopicDraftHelper.getWBTopicDraftByTopicRepost(topic.getId())));
@@ -94,13 +99,13 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
                 break;
             case DialogBuilder.LONG_CLICK_TOPIC_COLLECT:
                 WBTopic wbTopic = Topic.getWBTopic(topic);
-                if(wbTopic != null) {
+                if (wbTopic != null) {
                     RequestManager.addToRequestQueue(getWBCollectTopicRequest(topic.getId(), wbTopic.isFavorited()));
                 }
                 break;
             case DialogBuilder.LONG_CLICK_TOPIC_REPOST_ORIGIN:
                 Topic retweet = topic.getRetweetedTopic();
-                if(retweet == null){
+                if (retweet == null) {
                     break;
                 }
                 IntentUtil.startActivity(getContext(),
@@ -124,25 +129,25 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
     @Override
     public void onItemClick(View view, int position) {
         int id = view.getId();
-        if(id == R.id.iv_topic_avatar || id == R.id.tv_topic_username || id == R.id.tv_topic_description){
+        if (id == R.id.iv_topic_avatar || id == R.id.tv_topic_username || id == R.id.tv_topic_description) {
             IntentUtil.startActivity(getContext(), PersonalHomepageActivity.getStartIntent(getContext(), getItem(position).getUserInfo()));
-        }else if(id == R.id.tv_topic_content || id == R.id.gl_topic_gallery || id == R.id.ll_topic || id == R.id.rl_topic_title){
+        } else if (id == R.id.tv_topic_content || id == R.id.gl_topic_gallery || id == R.id.ll_topic || id == R.id.rl_topic_title) {
             startTopicDetail(false, position);
-        }else if(id == R.id.tv_topic_retweeted_content || id == R.id.gl_topic_retweeted_gallery || id == R.id.ll_topic_retweeted){
+        } else if (id == R.id.tv_topic_retweeted_content || id == R.id.gl_topic_retweeted_gallery || id == R.id.ll_topic_retweeted) {
             startTopicDetail(true, position);
         }
     }
 
-    public void startTopicDetail(boolean isRetweet, int position){
+    public void startTopicDetail(boolean isRetweet, int position) {
         Topic topic = isRetweet ? getItem(position).getRetweetedTopic() : getItem(position);
-        if(topic == null){
+        if (topic == null) {
             return;
         }
 
-        TopicViewHolder vh = (TopicViewHolder)mRecyclerView.findViewHolderForAdapterPosition(position);
-        if(vh == null){
+        TopicViewHolder vh = (TopicViewHolder) mRecyclerView.findViewHolderForAdapterPosition(position);
+        if (vh == null) {
             IntentUtil.startActivity(getContext(), TopicDetailActivity.getStartIntent(getContext(), topic, isRetweet));
-        }else{
+        } else {
             Activity activity = (Activity) getContext();
             final Pair[] pairs = TransitionHelper.createSafeTransitionParticipants(activity, false,
                     new Pair<>(isRetweet ? vh.mRetweetTopic.mTopicLayout : vh.mTopicItem, activity.getString(R.string.transition_name_topic)));
@@ -160,7 +165,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
 
         public TopicViewHolder(View v) {
             super(v);
-            if(mTopicTitle == null){
+            if (mTopicTitle == null) {
                 mTopicTitle = new TopicTitleViewHolder(v);
             }
             if (mTopic == null) {
@@ -183,7 +188,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
 
         @Override
         public void bindData(Context context, Topic topic, int position) {
-            if(topic == null){
+            if (topic == null) {
                 return;
             }
 
@@ -225,7 +230,8 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
         TextView mUsername, mDescription;
         View mTitle;
 
-        public TopicTitleViewHolder() {}
+        public TopicTitleViewHolder() {
+        }
 
         public TopicTitleViewHolder(View v) {
             mTitle = v.findViewById(R.id.rl_topic_title);
@@ -244,7 +250,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
             }
 
             UserInfo userInfo = topic.getUserInfo();
-            if(userInfo != null){
+            if (userInfo != null) {
                 mUsername.setText(userInfo.getName());
                 mAvatar.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());
             }
@@ -260,7 +266,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
             }
 
             UserInfo userInfo = topicComment.getUserInfo();
-            if(userInfo != null){
+            if (userInfo != null) {
                 mUsername.setText(userInfo.getName());
                 mAvatar.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());
             }
@@ -273,7 +279,8 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
         View mTopicLayout;
 
 
-        public TopicContentViewHolder(){}
+        public TopicContentViewHolder() {
+        }
 
         TopicContentUrlOnTouchListener mTopicContentUrlOnTouchListener = new TopicContentUrlOnTouchListener();
 
@@ -309,7 +316,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
                         NetworkImageViewPlus iv = (NetworkImageViewPlus) imageView;
                         iv.setImageUrl(urls.get(position), RequestManager.getImageLoader());
                     }
-                        });
+                });
                 mGallery.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
@@ -343,9 +350,9 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
 
     private GsonRequest getWBCollectTopicRequest(final String topicId, boolean isFavorite) {
         final UrlBuilder ub;
-        if(isFavorite){
+        if (isFavorite) {
             ub = new UrlBuilder(UrlFactory.getInstance().getWBDestroyFavoritesUrl());
-        }else{
+        } else {
             ub = new UrlBuilder(UrlFactory.getInstance().getWBCreateFavoritesUrl());
         }
 
@@ -358,19 +365,23 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
             @Override
             public void onResponse(WBTopic response) {
                 L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
-                if(response != null){
-                }
-
+                ToastUtil.showToast(response != null ? "收藏成功" : "收藏失败");
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
+                ToastUtil.showToast("收藏失败");
                 L.debug("request fail , url : {}, error : {}", ub.getRequestUrl(), volleyError);
             }
-        }){
+        }) {
             @Override
             public byte[] getBody() {
                 return ub.getBody();
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded; charset=UTF-8";
             }
         };
     }

@@ -68,7 +68,7 @@ public interface WBService {
     Observable<WBTopics> searchPublic(@QueryMap Map<String, String> options);
 
     @GET(UrlFactory.WB_SEARCH_TOPIC)
-    Observable<WBTopic> searchTopic(@QueryMap Map<String, String> options);
+    Observable<WBTopics> searchTopic(@QueryMap Map<String, String> options);
 
     @GET(UrlFactory.WB_FRIEND_TOPIC)
     Observable<WBTopics> listTopic(@QueryMap Map<String, String> options);

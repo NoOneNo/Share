@@ -275,14 +275,19 @@ public class TopicPublishService extends Service{
             }
 
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> header = new HashMap<>();
-                header.put("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-                header.put("Connection", "Keep-Alive");
-                header.put("Charset", "UTF-8");
-                header.put("Accept-Encoding", "gzip, deflate");
-                return header;
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded; charset=UTF-8";
             }
+
+//            @Override
+//            public Map<String, String> getHeaders() throws AuthFailureError {
+//                HashMap<String, String> header = new HashMap<>();
+//                header.put("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+//                header.put("Connection", "Keep-Alive");
+//                header.put("Charset", "UTF-8");
+//                header.put("Accept-Encoding", "gzip, deflate");
+//                return header;
+//            }
         };
     }
 

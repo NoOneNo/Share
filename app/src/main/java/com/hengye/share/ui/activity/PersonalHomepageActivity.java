@@ -47,16 +47,6 @@ import java.util.List;
 public class PersonalHomepageActivity extends BaseActivity implements View.OnClickListener, UserMvpView{
 
     @Override
-    protected String getRequestTag() {
-        return super.getRequestTag();
-    }
-
-    @Override
-    protected boolean setCustomTheme() {
-        return true;
-    }
-
-    @Override
     protected boolean setToolBar() {
         return false;
     }
@@ -70,10 +60,12 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
             if (data != null) {
                 String value = data.toString();
                 int index = value.lastIndexOf("@");
-                String newValue = value.substring(index + 1);
-                mUserInfo = new UserInfo();
-                mUserInfo.setName(newValue);
-                mUserInfo.setParent(new Parent(null, Parent.TYPE_WEIBO));
+                if(index != -1) {
+                    String newValue = value.substring(index + 1);
+                    mUserInfo = new UserInfo();
+                    mUserInfo.setName(newValue);
+                    mUserInfo.setParent(new Parent(null, Parent.TYPE_WEIBO));
+                }
             }
         }
     }
