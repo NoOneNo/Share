@@ -3,6 +3,7 @@ package com.hengye.share.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -57,8 +58,6 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        super.afterCreate(savedInstanceState);
-
         setupPresenter(mPresenter = new TopicDetailPresenter(this));
         initView();
     }
@@ -67,19 +66,19 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
             String str = (String)tab.getTag();
-            if("tablayout_assist".equals(str)){
+            if("tab_layout_assist".equals(str)){
                 mTabLayout.getTabAt(tab.getPosition()).select();
-            }else if("tablayout".equals(str)){
+            }else if("tab_layout".equals(str)){
                 mTabLayoutAssist.getTabAt(tab.getPosition()).select();
 
                 if(tab.getPosition() == 0){
                     mAdapter.setData(mCommentData);
                     mAdapter.notifyDataSetChanged();
-                    mListView.setSelection(1);
+                    mListView.setSelection(0);
                 }else if(tab.getPosition() == 1){
                     mAdapter.setData(mRepostData);
                     mAdapter.notifyDataSetChanged();
-                    mListView.setSelection(1);
+                    mListView.setSelection(0);
                 }
             }
         }
@@ -104,8 +103,8 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 
     private void initHeaderView(View headerView){
         mTabLayout = (TabLayout) headerView.findViewById(R.id.tab_layout);
-        mTabLayout.addTab((mTabLayout.newTab().setText("评论").setTag("tablayout")));
-        mTabLayout.addTab((mTabLayout.newTab().setText("转发").setTag("tablayout")));
+        mTabLayout.addTab((mTabLayout.newTab().setText(R.string.label_topic_comment).setTag("tab_layout")));
+        mTabLayout.addTab((mTabLayout.newTab().setText(R.string.label_topic_repost).setTag("tab_layout")));
         mTabLayout.getTabAt(0).select();
         mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
@@ -126,10 +125,11 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     public void onBackPressed() {
         if(mTabLayoutAssist != null && mTabLayoutAssist.getVisibility() == View.GONE){
             if(mTopicContentLayout != null && mTopicContent != null && mIsRetweet){
-                mTopicContent.setText(DataUtil.addRetweetedNamePrefix(mTopic));
+
+//                mTopicContent.setText(DataUtil.addRetweetedNamePrefix(mTopic));
                 mTopicContentLayout.setBackgroundColor(getResources().getColor(R.color.grey_50));
             }
-            super.onBackPressed();
+            finishAfterTransition();
         }else{
             finish();
         }
@@ -145,8 +145,8 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 
         mTabLayoutHeight = getResources().getDimensionPixelSize(R.dimen.tab_layout_height);
         mTabLayoutAssist = (TabLayout) findViewById(R.id.tab_layout_assist);
-        mTabLayoutAssist.addTab((mTabLayoutAssist.newTab().setText("评论").setTag("tablayout_assist")));
-        mTabLayoutAssist.addTab((mTabLayoutAssist.newTab().setText("转发").setTag("tablayout_assist")));
+        mTabLayoutAssist.addTab((mTabLayoutAssist.newTab().setText(R.string.label_topic_comment).setTag("tab_layout_assist")));
+        mTabLayoutAssist.addTab((mTabLayoutAssist.newTab().setText(R.string.label_topic_repost).setTag("tab_layout_assist")));
         mTabLayoutAssist.getTabAt(0).select();
         mTabLayoutAssist.setOnTabSelectedListener(mOnTabSelectedListener);
 
@@ -236,6 +236,25 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         return TopicDraftHelper.REPOST_TOPIC;
     }
 
+    private void updateTabLayout(boolean isComment, long totalNumber){
+
+        if(totalNumber == 0){
+            return;
+        }
+
+        TabLayout.Tab tab = mTabLayout.getTabAt(isComment ? 0 : 1);
+        TabLayout.Tab tabAssist = mTabLayoutAssist.getTabAt(isComment ? 0 : 1);
+
+        String str = String.format
+                (getString(isComment ? R.string.label_topic_comment_number : R.string.label_topic_repost_number)
+                        , totalNumber);
+        if(tab != null && tabAssist != null){
+            tab.setText(str);
+            tabAssist.setText(str);
+        }
+
+    }
+
     @Override
     public void onClick(View v) {
         int id = v.getId();
@@ -279,12 +298,14 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     }
 
     @Override
-    public void handleCommentData(boolean isComment, List<TopicComment> data, boolean isRefresh){
+    public void handleCommentData(boolean isComment, List<TopicComment> data, boolean isRefresh, long totalNumber){
         if(isRefresh){
             mPullToRefreshLayout.setRefreshing(false);
             if(CommonUtil.isEmptyCollection(data)){
                 return;
             }
+            updateTabLayout(isComment, totalNumber);
+
             if(isComment){
                 mCommentData = data;
             }else{

@@ -32,8 +32,6 @@ public class ThirdPartyLoginActivity extends BaseActivity implements UserMvpView
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        super.afterCreate(savedInstanceState);
-
         setupPresenter(mPresenter = new UserPresenter(this));
 
         initData();

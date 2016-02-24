@@ -88,8 +88,6 @@ public class TopicGalleryActivity extends BaseActivity {
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        super.afterCreate(savedInstanceState);
-
         mViewPager = (ViewPager) findViewById(R.id.select_photo_gallery_view_pager);
         mPages = (TextView) findViewById(R.id.select_photo_gallery_pages);
         mBackground = findViewById(android.R.id.content);

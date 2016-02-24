@@ -78,8 +78,6 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        super.afterCreate(savedInstanceState);
-
         initView();
         initData();
     }

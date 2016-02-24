@@ -50,8 +50,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        super.afterCreate(savedInstanceState);
-
         setupPresenter(mPresenter = new SearchPresenter(this));
         initView();
     }

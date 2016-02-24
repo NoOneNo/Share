@@ -28,7 +28,6 @@ public class TopicCommentActivity extends BaseActivity{
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        super.afterCreate(savedInstanceState);
         initView();
     }
 

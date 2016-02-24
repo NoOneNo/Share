@@ -12,7 +12,5 @@ public class TemplateActivity extends BaseActivity{
     }
 
     @Override
-    protected void afterCreate(Bundle savedInstanceState) {
-        super.afterCreate(savedInstanceState);
-    }
+    protected void afterCreate(Bundle savedInstanceState) {}
 }

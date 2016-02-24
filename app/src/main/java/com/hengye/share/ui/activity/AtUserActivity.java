@@ -59,7 +59,6 @@ public class AtUserActivity extends BaseActivity implements AtUserMvpView {
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        super.afterCreate(savedInstanceState);
         setupPresenter(mPresenter = new AtUserPresenter(this));
         initView();
         initViewSize();

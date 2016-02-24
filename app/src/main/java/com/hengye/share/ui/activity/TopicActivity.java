@@ -65,7 +65,6 @@ public class TopicActivity extends BaseActivity
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        super.afterCreate(savedInstanceState);
         setupPresenter(mPresenter = new UserPresenter(this));
         initView();
     }

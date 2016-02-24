@@ -58,6 +58,11 @@
     <string name="label_topic_copy">复制</string>
     <!-- Strings related to Topic-->
 
+    <!-- Strings related to TopicDetail-->
+    <string name="label_topic_repost_number">转发 (%s)</string>
+    <string name="label_topic_comment_number">评论 (%s)</string>
+    <!-- Strings related to TopicDetail-->
+
     <!-- Strings related to PersonalHomePage -->
     <string name="label_attention">关注 %s</string>
     <string name="label_division">|</string>
@@ -185,6 +190,5 @@
 
     <!-- Strings related to TransitionName-->
     <string name="transition_name_topic">transition:topic</string>
-    <!--<string name="title_page_repost">转发</string>-->
     <!-- Strings related to TransitionName-->
 </resources>

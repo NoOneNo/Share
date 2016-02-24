@@ -66,6 +66,7 @@ public class BaseActivity extends AppCompatActivity{
             mSwipeHelper.onCreate();
         }
 
+        setupContentView();
         afterCreate(savedInstanceState);
     }
 
@@ -77,11 +78,13 @@ public class BaseActivity extends AppCompatActivity{
         }
     }
 
-    protected void afterCreate(Bundle savedInstanceState) {
+    protected void setupContentView(){
         if(getLayoutResId() != 0){
             setContentView(getLayoutResId());
         }
     }
+
+    protected void afterCreate(Bundle savedInstanceState) {}
 
     protected @LayoutRes int getLayoutResId(){
         return 0;

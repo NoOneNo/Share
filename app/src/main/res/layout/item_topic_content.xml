@@ -14,7 +14,7 @@
     tools:showIn="@layout/item_topic_total">
     <TextView
         android:id="@+id/tv_topic_content"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="这是一条微博的内容"
         android:textSize="17sp"

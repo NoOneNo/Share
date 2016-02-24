@@ -54,9 +54,10 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailMvpView> {
 
                     @Override
                     public void handleViewOnSuccess(TopicDetailMvpView v, Object[] objects) {
-                        v.handleCommentData(true, TopicComment.getComments((WBTopicComments) objects[0]), isRefresh);
-                        v.handleCommentData(false, TopicComment.getComments((WBTopicReposts) objects[1]), isRefresh);
-
+                        WBTopicComments obj1 = (WBTopicComments) objects[0];
+                        WBTopicReposts obj2 = (WBTopicReposts) objects[1];
+                        v.handleCommentData(true, TopicComment.getComments(obj1), isRefresh, obj1.getTotal_number());
+                        v.handleCommentData(false, TopicComment.getComments(obj2), isRefresh, obj2.getTotal_number());
                         v.loadSuccess(isRefresh);
                     }
                 });
@@ -82,9 +83,9 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailMvpView> {
                     @Override
                     public void handleViewOnSuccess(TopicDetailMvpView v, Object o) {
                         if (isComment) {
-                            v.handleCommentData(isComment, TopicComment.getComments((WBTopicComments) o), isRefresh);
+                            v.handleCommentData(isComment, TopicComment.getComments((WBTopicComments) o), isRefresh, 0);
                         } else {
-                            v.handleCommentData(isComment, TopicComment.getComments((WBTopicReposts) o), isRefresh);
+                            v.handleCommentData(isComment, TopicComment.getComments((WBTopicReposts) o), isRefresh, 0);
                         }
                        v.loadSuccess(isRefresh);
                     }

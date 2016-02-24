@@ -43,8 +43,6 @@ public class TestActivity extends BaseActivity implements View.OnClickListener{
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        super.afterCreate(savedInstanceState);
-
         findViewById(R.id.btn_test).setOnClickListener(this);
         findViewById(R.id.btn_test2).setOnClickListener(this);
         findViewById(R.id.btn_test3).setOnClickListener(this);

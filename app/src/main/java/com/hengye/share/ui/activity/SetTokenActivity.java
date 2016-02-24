@@ -34,7 +34,6 @@ public class SetTokenActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        super.afterCreate(savedInstanceState);
         initView();
     }
 

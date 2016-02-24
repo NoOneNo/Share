@@ -91,8 +91,6 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        super.afterCreate(savedInstanceState);
-
         if(mUserInfo == null){
             PersonalHomepageActivity.this.finish();
         }else {
