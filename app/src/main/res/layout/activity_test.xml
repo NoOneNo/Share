@@ -33,7 +33,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="loading button"
-        android:onClick="clickLoading"
+        android:layout_centerInParent="true"/>
+
+    <Button
+        android:id="@+id/btn_test5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="list dialog"
         android:layout_centerInParent="true"/>
 
     <com.hengye.share.ui.widget.loading.FramesLoadingView

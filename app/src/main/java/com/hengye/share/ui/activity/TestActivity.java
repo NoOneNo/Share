@@ -8,9 +8,12 @@ import android.view.View;
 
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.R;
+import com.hengye.share.ui.widget.dialog.ListDialog;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
 import com.hengye.share.ui.widget.loading.FramesLoadingView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
@@ -35,6 +38,7 @@ public class TestActivity extends BaseActivity implements View.OnClickListener{
     private Handler backgroundHandler;
     private FramesLoadingView mLoading;
     private LoadingDialog mLoadingDialog;
+    private ListDialog mListDialog;
 
     @Override
     protected int getLayoutResId() {
@@ -47,7 +51,9 @@ public class TestActivity extends BaseActivity implements View.OnClickListener{
         findViewById(R.id.btn_test2).setOnClickListener(this);
         findViewById(R.id.btn_test3).setOnClickListener(this);
         findViewById(R.id.btn_test4).setOnClickListener(this);
+        findViewById(R.id.btn_test5).setOnClickListener(this);
         mLoading = (FramesLoadingView)findViewById(R.id.loading);
+        mListDialog = new ListDialog(this, new ArrayList<ListDialog.KeyValue>());
 
         BackgroundThread backgroundThread = new BackgroundThread();
         backgroundThread.start();
@@ -75,6 +81,8 @@ public class TestActivity extends BaseActivity implements View.OnClickListener{
             }else{
                 mLoading.start();
             }
+        }else if(v.getId() == R.id.btn_test5) {
+            mListDialog.show();
         }
     }
 

@@ -1,5 +1,6 @@
 package com.hengye.share.ui.widget.dialog;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
@@ -42,4 +43,14 @@ public class LoadingDialog extends Dialog {
 
     private TextView mContent;
 
+    @Override
+    public void dismiss() {
+        if(getContext() instanceof Activity){
+            Activity activity = (Activity) getContext();
+            if(activity.isDestroyed() || activity.isFinishing()){
+                return;
+            }
+        }
+        super.dismiss();
+    }
 }

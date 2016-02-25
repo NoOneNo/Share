@@ -4,10 +4,24 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import com.hengye.share.ui.base.BaseApplication;
+
 public class IntentUtil {
 
     private IntentUtil(){
 
+    }
+
+    /**
+     * 检测系统是否可以打开相应的intent;
+     * @param intent
+     * @return
+     */
+    public static boolean resolveActivity(Intent intent){
+        if(intent != null && intent.resolveActivity(BaseApplication.getInstance().getPackageManager()) != null){
+            return true;
+        }
+        return false;
     }
 
     public static void startActivity(Context context, Class clazz){

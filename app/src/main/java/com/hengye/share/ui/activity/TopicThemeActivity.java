@@ -43,7 +43,7 @@ public class TopicThemeActivity extends BaseActivity{
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
         if(mTopicTheme == null){
-            TopicThemeActivity.this.finish();
+            finish();
         }else{
             initView();
         }

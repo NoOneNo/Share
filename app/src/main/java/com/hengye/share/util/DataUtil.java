@@ -152,7 +152,7 @@ public class DataUtil {
             .compile("@[\\w\\p{InCJKUnifiedIdeographs}-]{1,26}");
     public static final Pattern EMOTION_URL = Pattern.compile("\\[(\\S+?)\\]");
 
-    public static final String WEB_SCHEME = "http://";
+    public static final String WEB_SCHEME = BuildConfig.APPLICATION_ID + ".http://";
     public static final String TOPIC_SCHEME = BuildConfig.APPLICATION_ID + ".topic://";
     public static final String MENTION_SCHEME = BuildConfig.APPLICATION_ID + ".mention://";
 
@@ -184,8 +184,9 @@ public class DataUtil {
         //添加表情
         addEmotions(context, value);
 
-        Linkify.addLinks(value, MENTION_URL, MENTION_SCHEME);
+//        Linkify.addLinks(value, Linkify.WEB_URLS);
         Linkify.addLinks(value, WEB_URL, WEB_SCHEME);
+        Linkify.addLinks(value, MENTION_URL, MENTION_SCHEME);
         Linkify.addLinks(value, TOPIC_URL, TOPIC_SCHEME);
 
         URLSpan[] urlSpans = value.getSpans(0, value.length(), URLSpan.class);

@@ -6,6 +6,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicAdapter;
@@ -94,7 +95,12 @@ public class TopicPageFragment extends BaseFragment implements TopicPageMvpView 
         mPullToRefreshLayout.setRefreshing(true);
     }
 
-    public void refresh(){
+    public void refresh(String keyword){
+        if(keyword == null || TextUtils.isEmpty(keyword.trim())){
+            return;
+        }
+        mPresenter.setKeyword(keyword);
+        mPullToRefreshLayout.setRefreshing(true);
     }
 
 

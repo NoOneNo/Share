@@ -48,7 +48,7 @@ public class ImageWebViewFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_image_webview, null);
 
-        mWebView = (WebView) view.findViewById(R.id.webview);
+        mWebView = (WebView) view.findViewById(R.id.web_view);
 
         mWebView.setBackgroundColor(getResources().getColor(android.R.color.transparent));
         mWebView.setVisibility(View.INVISIBLE);
