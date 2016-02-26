@@ -30,6 +30,7 @@
 
     <View
         style="@style/horizontal_line"
+        android:id="@+id/divider_line"
         android:layout_below="@id/iv_item"
         android:layout_marginTop="@dimen/content_margin_10dp"/>
 </RelativeLayout>

@@ -188,12 +188,14 @@ public class ListDialog extends Dialog {
 
             ImageView mIcon;
             TextView mText;
+            View mDivider;
 
             public MainViewHolder(View v) {
                 super(v);
 
                 mIcon = (ImageView) findViewById(R.id.iv_item);
                 mText = (TextView) findViewById(R.id.tv_item);
+                mDivider = findViewById(R.id.divider_line);
             }
 
             @Override

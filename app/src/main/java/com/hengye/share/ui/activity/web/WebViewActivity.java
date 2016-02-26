@@ -7,8 +7,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.DownloadListener;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
 import com.hengye.share.R;
 import com.hengye.share.ui.base.BaseActivity;
@@ -76,7 +78,8 @@ public class WebViewActivity extends BaseActivity implements View.OnClickListene
     private String mUrl;
 
     private WebView mWebView;
-    private LoadingDialog mLoadingDialog;
+    //    private LoadingDialog mLoadingDialog;
+    private ProgressBar mProgressBar;
     private ListDialog mListDialog;
 
     private ArrayList<ListDialog.KeyValue> getListDialogData() {
@@ -85,6 +88,21 @@ public class WebViewActivity extends BaseActivity implements View.OnClickListene
         data.add(new ListDialog.KeyValue(R.drawable.compose_camerabutton_background_highlighted, "复制链接"));
         data.add(new ListDialog.KeyValue(R.drawable.compose_camerabutton_background_highlighted, "在浏览器中打开"));
         return data;
+    }
+
+    private void initView() {
+
+//        mLoadingDialog = new LoadingDialog(this);
+        mWebView = (WebView) findViewById(R.id.web_view);
+        mProgressBar = (ProgressBar) findViewById(R.id.loading);
+        findViewById(R.id.btn_menu).setOnClickListener(this);
+
+        initToolbar();
+        initListDialog();
+        initWebView();
+
+
+        mWebView.loadUrl(mUrl);
     }
 
     private void initListDialog() {
@@ -107,7 +125,7 @@ public class WebViewActivity extends BaseActivity implements View.OnClickListene
                         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                         if (IntentUtil.resolveActivity(intent)) {
                             startActivity(intent);
-                        }else{
+                        } else {
                             ToastUtil.showToast(R.string.label_resolve_url_activity_fail);
                         }
                         break;
@@ -126,21 +144,7 @@ public class WebViewActivity extends BaseActivity implements View.OnClickListene
         });
     }
 
-    private void initView() {
-
-        mLoadingDialog = new LoadingDialog(this);
-        mWebView = (WebView) findViewById(R.id.web_view);
-        findViewById(R.id.btn_menu).setOnClickListener(this);
-
-        initToolbar();
-        initListDialog();
-        initWebView();
-
-
-        mWebView.loadUrl(mUrl);
-    }
-
-    private void initWebView(){
+    private void initWebView() {
         mWebView.getSettings().setJavaScriptEnabled(true);
 
         mWebView.setWebViewClient(new WebViewClient() {
@@ -152,13 +156,13 @@ public class WebViewActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                mLoadingDialog.show();
+                mProgressBar.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                mLoadingDialog.dismiss();
+                mProgressBar.setVisibility(View.GONE);
             }
         });
 
@@ -186,7 +190,18 @@ public class WebViewActivity extends BaseActivity implements View.OnClickListene
             }
         });
 
-//        mWebView.se
+        mWebView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+                if (newProgress == 100) {
+                    mProgressBar.setVisibility(View.GONE);
+                } else {
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    mProgressBar.setProgress(newProgress);
+                }
+            }
+        });
     }
 
     @Override
