@@ -4,5 +4,5 @@
     <dimen name="dialog_list_item_height">51dp</dimen>
 
     <dimen name="dialog_list_default_width">200dp</dimen>
-    <dimen name="dialog_list_default_max_height">350dp</dimen>
+    <dimen name="dialog_list_default_max_height">320dp</dimen>
 </resources>

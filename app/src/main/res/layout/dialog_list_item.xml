@@ -24,6 +24,7 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:textSize="@dimen/font_large"
+        android:textColor="@color/white"
         android:lines="1"
         tools:text="test"/>
 

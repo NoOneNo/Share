@@ -123,6 +123,11 @@
     <string name="title_fragment_about">关于</string>
     <!-- Strings related to fragment title-->
 
+    <!-- Strings related to WebView -->
+    <string name="label_resolve_url_activity_fail">找不到可以打开此链接的应用</string>
+    <string name="label_copy_url_to_clipboard_success">成功复制链接到剪切板</string>
+    <!-- Strings related to WebView-->
+
     <!-- Strings related to setting -->
     <string name="title_setting_common">常规设置</string>
     <string name="title_setting_common_basic">基本设置</string>

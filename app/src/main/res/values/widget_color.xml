@@ -3,4 +3,9 @@
 
     <color name="drag_background">#88ffffff</color>
 
+    <color name="side_transparent_dark_start">#00000000</color>
+
+    <color name="side_transparent_dark_center">#22666666</color>
+
+    <color name="side_transparent_dark_end">#ee222222</color>
 </resources>

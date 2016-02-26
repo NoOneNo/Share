@@ -2,17 +2,24 @@ package com.hengye.share.ui.widget.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.CommonAdapter;
+import com.hengye.share.ui.widget.util.SelectorLoader;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.ViewUtil;
 
@@ -26,78 +33,100 @@ public class ListDialog extends Dialog {
     }
 
     public ListDialog(Context context, ListAdapter listAdapter) {
+        this(context, listAdapter, 0 , 0);
+    }
+
+    public ListDialog(Context context, ListAdapter listAdapter, int width, int maxHeight) {
         super(context, R.style.ListDialog);
 
         mAdapter = listAdapter;
 
-        List<KeyValue> data = new ArrayList<>();
-        data.add(new KeyValue(R.drawable.compose_camerabutton_background_highlighted, "camera"));
-        data.add(new KeyValue(R.drawable.compose_camerabutton_background_highlighted, "photo"));
-        data.add(new KeyValue(R.drawable.compose_camerabutton_background_highlighted, "camera"));
-        mAdapter = new SimpleListAdapter(getContext(), data);
+        if(mWidth == 0 && maxHeight == 0){
+            initDefaultWidth();
+        }else{
+            mWidth = width;
+            mMaxHeight = maxHeight;
+        }
 
-        setOnItemListener(new ViewUtil.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                ToastUtil.showToast("click : " + position);
-            }
-        });
-
-        initDefaultWidth();
         initView();
     }
 
     private ListAdapter mAdapter;
     private RecyclerView mRecyclerView;
-    private ViewUtil.OnItemClickListener mOnItemListener;
+    private FrameLayout mRootLayout;
+    private View mShade;
+    private LinearLayoutManager mLayoutManager;
 
     private int mWidth, mMaxHeight;
 
-    private void initDefaultWidth(){
+    private void initDefaultWidth() {
         mWidth = getContext().getResources().getDimensionPixelSize(R.dimen.dialog_list_default_width);
         mMaxHeight = getContext().getResources().getDimensionPixelSize(R.dimen.dialog_list_default_max_height);
     }
 
-    private void initView(){
+    private void initView() {
         setContentView(R.layout.dialog_list);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.setAdapter(mAdapter);
-        if(getOnItemListener() != null){
-            mAdapter.setOnItemClickListener(getOnItemListener());
-        }
+        mShade = findViewById(R.id.shade);
 
+        mRootLayout = (FrameLayout) findViewById(R.id.fl_root);
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(mLayoutManager = new LinearLayoutManager(getContext()));
+        mRecyclerView.setAdapter(mAdapter);
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if (mAdapter.getLastItemPosition() == mLayoutManager.findLastCompletelyVisibleItemPosition()) {
+                    mShade.setVisibility(View.GONE);
+                } else {
+                    mShade.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         adjustDialogSize();
 
+        this.setCanceledOnTouchOutside(true);
     }
 
-    public void adjustDialogSize(){
+    public void adjustDialogSize() {
         int width, height;
 
         width = getWidth();
         height = mAdapter.getItemHeight() * mAdapter.getItemCount();
-        if(height > getMaxHeight()){
+        if (height > getMaxHeight()) {
             height = getMaxHeight();
+        }else{
+            mShade.setVisibility(View.GONE);
         }
 
-        ViewGroup.LayoutParams lp = mRecyclerView.getLayoutParams();
+        ViewGroup.LayoutParams lp = mRootLayout.getLayoutParams();
         lp.width = width;
         lp.height = height;
-        mRecyclerView.setLayoutParams(lp);
+        mRootLayout.setLayoutParams(lp);
     }
 
-    public void setOverScrollMode(int overScrollMode){
+    public void setOverScrollMode(int overScrollMode) {
         mRecyclerView.setOverScrollMode(overScrollMode);
     }
 
-    public ViewUtil.OnItemClickListener getOnItemListener() {
-        return mOnItemListener;
+    public void setBackgroundColor(@ColorRes int colorResId) {
+        mAdapter.setBackground(colorResId);
+//        mRecyclerView.setBackgroundColor(getContext().getResources().getColor(colorResId));
     }
 
     public void setOnItemListener(ViewUtil.OnItemClickListener onItemListener) {
-        this.mOnItemListener = onItemListener;
+        if(mAdapter != null){
+            mAdapter.setOnItemClickListener(onItemListener);
+        }
+    }
+
+    public ListAdapter getAdapter() {
+        return mAdapter;
     }
 
     public int getWidth() {
@@ -130,9 +159,29 @@ public class ListDialog extends Dialog {
             return mItemHeight;
         }
 
+        public void setItemHeight(int itemHeight) {
+            this.mItemHeight = itemHeight;
+        }
+
         @Override
         public MainViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
-            return new MainViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.dialog_list_item, parent, false));
+            View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_list_item, parent, false);
+
+            if(getBackground() != 0) {
+                SelectorLoader
+                        .getInstance()
+                        .setRippleBackground(view, R.color.grey_300, R.color.grey_300, getBackground());
+            }
+            return new MainViewHolder(view);
+        }
+
+        @Override
+        public void onBindBasicItemView(MainViewHolder holder, int position) {
+            super.onBindBasicItemView(holder, position);
+
+            if(getTextColor() != 0){
+                holder.mText.setTextColor(getTextColor());
+            }
         }
 
         public static class MainViewHolder extends CommonAdapter.ItemViewHolder<KeyValue> {
@@ -155,8 +204,10 @@ public class ListDialog extends Dialog {
         }
     }
 
-    public static class KeyValue{
-        private @DrawableRes int mIconResId;
+    public static class KeyValue {
+        private
+        @DrawableRes
+        int mIconResId;
         private String mText;
 
         public KeyValue(int mIconResId, String mText) {
@@ -188,5 +239,23 @@ public class ListDialog extends Dialog {
         }
 
         abstract protected int getItemHeight();
+
+        private int mTextColor, mBackground;
+
+        public int getTextColor() {
+            return mTextColor;
+        }
+
+        public void setTextColor(int textColor) {
+            this.mTextColor = textColor;
+        }
+
+        public int getBackground() {
+            return mBackground;
+        }
+
+        public void setBackground(@ColorRes int background) {
+            this.mBackground = background;
+        }
     }
 }

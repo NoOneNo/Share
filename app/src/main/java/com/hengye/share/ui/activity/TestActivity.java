@@ -6,6 +6,7 @@ import android.os.HandlerThread;
 import android.util.Log;
 import android.view.View;
 
+import com.hengye.share.ui.activity.web.WebViewActivity;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.R;
 import com.hengye.share.ui.widget.dialog.ListDialog;
@@ -52,7 +53,9 @@ public class TestActivity extends BaseActivity implements View.OnClickListener{
         findViewById(R.id.btn_test3).setOnClickListener(this);
         findViewById(R.id.btn_test4).setOnClickListener(this);
         findViewById(R.id.btn_test5).setOnClickListener(this);
+        findViewById(R.id.btn_test6).setOnClickListener(this);
         mLoading = (FramesLoadingView)findViewById(R.id.loading);
+        mLoading.stop();
         mListDialog = new ListDialog(this, new ArrayList<ListDialog.KeyValue>());
 
         BackgroundThread backgroundThread = new BackgroundThread();
@@ -83,6 +86,8 @@ public class TestActivity extends BaseActivity implements View.OnClickListener{
             }
         }else if(v.getId() == R.id.btn_test5) {
             mListDialog.show();
+        }else if(v.getId() == R.id.btn_test6) {
+            startActivity(WebViewActivity.getStartIntent(this, "www.baidu.com"));
         }
     }
 

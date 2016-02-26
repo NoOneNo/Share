@@ -5,16 +5,26 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.DownloadListener;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.hengye.share.R;
 import com.hengye.share.ui.base.BaseActivity;
+import com.hengye.share.ui.widget.dialog.DialogStyleHelper;
+import com.hengye.share.ui.widget.dialog.ListDialog;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
+import com.hengye.share.util.ClipboardUtil;
 import com.hengye.share.util.IntentUtil;
+import com.hengye.share.util.ToastUtil;
+import com.hengye.share.util.ViewUtil;
 
-public class WebViewActivity extends BaseActivity {
+import java.security.Key;
+import java.util.ArrayList;
+import java.util.List;
+
+public class WebViewActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void handleBundleExtra() {
@@ -28,6 +38,12 @@ public class WebViewActivity extends BaseActivity {
                 if (start != -1) {
                     mUrl = value.substring(start + 7);
                 }
+            }
+        }
+
+        if (mUrl != null) {
+            if (!mUrl.startsWith("http") || !mUrl.startsWith("ftp")) {
+                mUrl = "http://" + mUrl;
             }
         }
     }
@@ -60,21 +76,77 @@ public class WebViewActivity extends BaseActivity {
     private String mUrl;
 
     private WebView mWebView;
-
     private LoadingDialog mLoadingDialog;
+    private ListDialog mListDialog;
+
+    private ArrayList<ListDialog.KeyValue> getListDialogData() {
+        ArrayList<ListDialog.KeyValue> data = new ArrayList<>();
+        data.add(new ListDialog.KeyValue(R.drawable.compose_camerabutton_background_highlighted, "刷新"));
+        data.add(new ListDialog.KeyValue(R.drawable.compose_camerabutton_background_highlighted, "复制链接"));
+        data.add(new ListDialog.KeyValue(R.drawable.compose_camerabutton_background_highlighted, "在浏览器中打开"));
+        return data;
+    }
+
+    private void initListDialog() {
+        mListDialog = new ListDialog(this, getListDialogData());
+        DialogStyleHelper.setWebViewListDialogStyle(mListDialog);
+
+        mListDialog.setOnItemListener(new ViewUtil.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                switch (position) {
+                    case 0:
+                        mWebView.reload();
+                        break;
+                    case 1:
+                        ClipboardUtil.copy(mWebView.getUrl());
+                        ToastUtil.showToast(R.string.label_copy_url_to_clipboard_success);
+                        break;
+                    case 2:
+                        Uri uri = Uri.parse(mWebView.getUrl());
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        if (IntentUtil.resolveActivity(intent)) {
+                            startActivity(intent);
+                        }else{
+                            ToastUtil.showToast(R.string.label_resolve_url_activity_fail);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                getHandler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mListDialog.dismiss();
+                    }
+                }, 300);
+
+            }
+        });
+    }
 
     private void initView() {
 
-        initToolbar();
-
-        mWebView = (WebView) findViewById(R.id.web_view);
-
         mLoadingDialog = new LoadingDialog(this);
+        mWebView = (WebView) findViewById(R.id.web_view);
+        findViewById(R.id.btn_menu).setOnClickListener(this);
+
+        initToolbar();
+        initListDialog();
+        initWebView();
+
+
+        mWebView.loadUrl(mUrl);
+    }
+
+    private void initWebView(){
+        mWebView.getSettings().setJavaScriptEnabled(true);
 
         mWebView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
-                return true;
+                return false;
             }
 
             @Override
@@ -91,11 +163,11 @@ public class WebViewActivity extends BaseActivity {
         });
 
         mWebView.setDownloadListener(new DownloadListener() {
-			@Override
-			public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype,
-                    long contentLength) {
-				Uri uri = Uri.parse(url);
-	            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            @Override
+            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype,
+                                        long contentLength) {
+                Uri uri = Uri.parse(url);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 
                 if (IntentUtil.resolveActivity(intent)) {
                     startActivity(intent);
@@ -111,18 +183,30 @@ public class WebViewActivity extends BaseActivity {
 ////				long id = downloadManager.enqueue(request);
 //				downloadManager.enqueue(request);
 //                ToastUtil.showToast("已经开始下载，详情查看通知栏");
-			}
-		});
+            }
+        });
 
-        mWebView.loadUrl(mUrl);
+//        mWebView.se
     }
 
     @Override
     public void onBackPressed() {
-        if(mWebView.canGoBack()){
+        if (mWebView.canGoBack()) {
             mWebView.goBack();
-        }else {
+        } else {
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.btn_menu) {
+            if (mListDialog.isShowing()) {
+                mListDialog.dismiss();
+            } else {
+                mListDialog.show();
+            }
         }
     }
 }

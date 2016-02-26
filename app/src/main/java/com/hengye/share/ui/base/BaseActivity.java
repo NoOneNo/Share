@@ -2,6 +2,7 @@ package com.hengye.share.ui.base;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -46,6 +47,8 @@ public class BaseActivity extends AppCompatActivity{
     private SwipeBackHelper mSwipeHelper;
 
     private BasePresenter mPresenter;
+
+    private Handler mHandler;
 
     protected boolean mFirstClick = true;
 
@@ -255,4 +258,10 @@ public class BaseActivity extends AppCompatActivity{
         mPresenter = presenter;
     }
 
+    protected Handler getHandler(){
+        if(mHandler == null){
+            mHandler = new Handler();
+        }
+        return mHandler;
+    }
 }

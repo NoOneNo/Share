@@ -282,4 +282,5 @@ public class SelectorLoader {
     public void setDefaultRippleBackground(View view, @ColorRes int backgroundResId) {
         setRippleBackground(view, R.color.grey_300, R.color.ripple_light, backgroundResId);
     }
+
 }

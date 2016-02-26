@@ -65,7 +65,7 @@ public class TopicFragmentPager extends FragmentPagerAdapter {
         long itemId;
         try {
             GroupList gl = mTopicGroupGroups.get(position).getGroupList();
-            itemId = Long.valueOf(gl.getGid());
+            itemId = gl == null ? position : Long.valueOf(gl.getGid());
         }catch (Exception e){
             e.printStackTrace();
             itemId = position;

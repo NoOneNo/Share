@@ -18,9 +18,15 @@
 
         <!--<ProgressBar-->
             <!--android:layout_width="40dp"-->
-            <!--android:layout_height="40dp"-->
-            <!--/>-->
+            <!--android:layout_height="40dp"/>-->
 
+        <ImageButton
+            style="?android:actionButtonStyle"
+            android:id="@+id/btn_menu"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/compose_mentionbutton_background_highlighted"
+            android:contentDescription="@null"/>
     </com.hengye.share.ui.view.CommonToolBar>
 
 
