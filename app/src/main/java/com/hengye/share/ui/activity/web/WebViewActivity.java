@@ -43,11 +43,12 @@ public class WebViewActivity extends BaseActivity implements View.OnClickListene
             }
         }
 
-        if (mUrl != null) {
-            if (!mUrl.startsWith("http") || !mUrl.startsWith("ftp")) {
-                mUrl = "http://" + mUrl;
-            }
-        }
+//        if (mUrl != null) {
+//            mUrl.startsWith()
+//            if (!mUrl.startsWith("http") || !mUrl.startsWith("ftp")) {
+//                mUrl = "http://" + mUrl;
+//            }
+//        }
     }
 
     public static Intent getStartIntent(Context context, String url) {
@@ -100,7 +101,6 @@ public class WebViewActivity extends BaseActivity implements View.OnClickListene
         initToolbar();
         initListDialog();
         initWebView();
-
 
         mWebView.loadUrl(mUrl);
     }

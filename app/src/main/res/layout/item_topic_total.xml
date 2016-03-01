@@ -4,10 +4,8 @@
     android:id="@+id/item_topic"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@color/background_default"
-    android:descendantFocusability="blocksDescendants">
+    android:orientation="vertical">
+    <!--android:descendantFocusability="blocksDescendants"-->
 
     <include layout="@layout/item_topic" />
 

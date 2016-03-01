@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.error.AuthFailureError;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
 import com.android.volley.view.NetworkImageViewPlus;
@@ -39,6 +38,7 @@ import com.hengye.share.ui.support.textspan.LongClickableLinkMovementMethod;
 import com.hengye.share.ui.support.textspan.TopicContentUrlOnTouchListener;
 import com.hengye.share.ui.view.GridGalleryView;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
+import com.hengye.share.ui.widget.util.SelectorLoader;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DateUtil;
 import com.hengye.share.util.IntentUtil;
@@ -51,9 +51,7 @@ import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHolder>
         implements ViewUtil.OnItemClickListener, ViewUtil.OnItemLongClickListener, DialogInterface.OnClickListener {
@@ -131,9 +129,9 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
         int id = view.getId();
         if (id == R.id.iv_topic_avatar || id == R.id.tv_topic_username || id == R.id.tv_topic_description) {
             IntentUtil.startActivity(getContext(), PersonalHomepageActivity.getStartIntent(getContext(), getItem(position).getUserInfo()));
-        } else if (id == R.id.tv_topic_content || id == R.id.gl_topic_gallery || id == R.id.ll_topic || id == R.id.rl_topic_title) {
+        } else if (id == R.id.tv_topic_content || id == R.id.gl_topic_gallery || id == R.id.ll_topic_content || id == R.id.rl_topic_title) {
             startTopicDetail(false, position);
-        } else if (id == R.id.tv_topic_retweeted_content || id == R.id.gl_topic_retweeted_gallery || id == R.id.ll_topic_retweeted) {
+        } else if (id == R.id.tv_topic_retweeted_content || id == R.id.gl_topic_retweeted_gallery || id == R.id.ll_topic_retweeted_content) {
             startTopicDetail(true, position);
         }
     }
@@ -150,7 +148,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
         } else {
             Activity activity = (Activity) getContext();
             final Pair[] pairs = TransitionHelper.createSafeTransitionParticipants(activity, false,
-                    new Pair<>(isRetweet ? vh.mRetweetTopic.mTopicLayout : vh.mTopicItem, activity.getString(R.string.transition_name_topic)));
+                    new Pair<>(isRetweet ? vh.mRetweetTopic.mTopicLayout : vh.mTopicTotalItem, activity.getString(R.string.transition_name_topic)));
             ActivityOptionsCompat activityOptions = ActivityOptionsCompat
                     .makeSceneTransitionAnimation(activity, pairs);
             ActivityCompat.startActivity(activity, TopicDetailActivity.getStartIntent(getContext(), topic, isRetweet), activityOptions.toBundle());
@@ -161,7 +159,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
 
         TopicTitleViewHolder mTopicTitle;
         TopicContentViewHolder mTopic, mRetweetTopic;
-        View mTopicItem;
+        View mTopicTotalItem, mTopicItem;
 
         public TopicViewHolder(View v) {
             super(v);
@@ -175,25 +173,17 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
                 mRetweetTopic = new TopicContentViewHolder();
             }
 
-            mTopicItem = findViewById(R.id.item_topic);
+            mTopicItem = findViewById(R.id.ll_topic);
+            mTopicTotalItem = findViewById(R.id.item_topic);
 
             mTopic.mContent = (TextView) findViewById(R.id.tv_topic_content);
             mTopic.mGallery = (GridGalleryView) findViewById(R.id.gl_topic_gallery);
-            mTopic.mTopicLayout = findViewById(R.id.ll_topic);
+            mTopic.mTopicLayout = findViewById(R.id.ll_topic_content);
 
             mRetweetTopic.mContent = (TextView) findViewById(R.id.tv_topic_retweeted_content);
             mRetweetTopic.mGallery = (GridGalleryView) findViewById(R.id.gl_topic_retweeted_gallery);
-            mRetweetTopic.mTopicLayout = findViewById(R.id.ll_topic_retweeted);
-        }
+            mRetweetTopic.mTopicLayout = findViewById(R.id.ll_topic_retweeted_content);
 
-        @Override
-        public void bindData(Context context, Topic topic, int position) {
-            if (topic == null) {
-                return;
-            }
-
-            mTopicTitle.initTopicTitle(context, topic);
-            mTopic.initTopicContent(context, topic, false);
 
             registerChildViewItemClick(mTopicTitle.mAvatar);
             registerChildViewItemClick(mTopicTitle.mUsername);
@@ -208,16 +198,59 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
             registerChildViewItemLongClick(mTopic.mContent);
             registerChildViewItemLongClick(mTopic.mGallery);
             registerChildViewItemLongClick(mTopic.mTopicLayout);
+
+            registerChildViewItemClick(mRetweetTopic.mContent);
+            registerChildViewItemClick(mRetweetTopic.mGallery);
+            registerChildViewItemClick(mRetweetTopic.mTopicLayout);
+
+            registerChildViewItemLongClick(mRetweetTopic.mContent);
+            registerChildViewItemLongClick(mRetweetTopic.mGallery);
+            registerChildViewItemLongClick(mRetweetTopic.mTopicLayout);
+
+
+            registerChildViewItemLongClick(mTopicItem);
+
+            SelectorLoader
+                    .getInstance()
+                    .setRippleBackground(mTopicItem, R.color.grey_800, R.color.grey_800, R.color.background_default);
+//            SelectorLoader
+//                    .getInstance()
+//                    .setRippleBackground(findViewById(R.id.ll_topic_retweeted_content), R.color.grey_800, R.color.grey_800, R.color.background_default);
+            SelectorLoader.getInstance().setDefaultRippleBackground(findViewById(R.id.ll_topic_retweeted_content));
+        }
+
+        @Override
+        public void bindData(Context context, Topic topic, int position) {
+            if (topic == null) {
+                return;
+            }
+
+            mTopicTitle.initTopicTitle(context, topic);
+            mTopic.initTopicContent(context, topic, false);
+
+//            registerChildViewItemClick(mTopicTitle.mAvatar);
+//            registerChildViewItemClick(mTopicTitle.mUsername);
+//            registerChildViewItemClick(mTopicTitle.mDescription);
+//
+//            registerChildViewItemClick(mTopicTitle.mTitle);
+//            registerChildViewItemClick(mTopic.mContent);
+//            registerChildViewItemClick(mTopic.mGallery);
+//            registerChildViewItemClick(mTopic.mTopicLayout);
+//
+//            registerChildViewItemLongClick(mTopicTitle.mTitle);
+//            registerChildViewItemLongClick(mTopic.mContent);
+//            registerChildViewItemLongClick(mTopic.mGallery);
+//            registerChildViewItemLongClick(mTopic.mTopicLayout);
             if (topic.getRetweetedTopic() != null) {
                 mRetweetTopic.mTopicLayout.setVisibility(View.VISIBLE);
                 mRetweetTopic.initTopicContent(context, topic.getRetweetedTopic(), true);
-                registerChildViewItemClick(mRetweetTopic.mContent);
-                registerChildViewItemClick(mRetweetTopic.mGallery);
-                registerChildViewItemClick(mRetweetTopic.mTopicLayout);
-
-                registerChildViewItemLongClick(mRetweetTopic.mContent);
-                registerChildViewItemLongClick(mRetweetTopic.mGallery);
-                registerChildViewItemLongClick(mRetweetTopic.mTopicLayout);
+//                registerChildViewItemClick(mRetweetTopic.mContent);
+//                registerChildViewItemClick(mRetweetTopic.mGallery);
+//                registerChildViewItemClick(mRetweetTopic.mTopicLayout);
+//
+//                registerChildViewItemLongClick(mRetweetTopic.mContent);
+//                registerChildViewItemLongClick(mRetweetTopic.mGallery);
+//                registerChildViewItemLongClick(mRetweetTopic.mTopicLayout);
             } else {
                 mRetweetTopic.mTopicLayout.setVisibility(View.GONE);
             }

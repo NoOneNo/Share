@@ -87,7 +87,7 @@ public class TestActivity extends BaseActivity implements View.OnClickListener{
         }else if(v.getId() == R.id.btn_test5) {
             mListDialog.show();
         }else if(v.getId() == R.id.btn_test6) {
-            startActivity(WebViewActivity.getStartIntent(this, "www.baidu.com"));
+            startActivity(WebViewActivity.getStartIntent(this, "http://www.baidu.com"));
         }
     }
 

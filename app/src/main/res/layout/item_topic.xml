@@ -4,6 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:id="@+id/ll_topic"
+    android:background="@color/background_default"
     tools:showIn="@layout/item_topic_total">
 
     <include layout="@layout/item_topic_title" />

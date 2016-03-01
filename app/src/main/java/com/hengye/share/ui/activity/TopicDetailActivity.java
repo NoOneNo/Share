@@ -3,7 +3,6 @@ package com.hengye.share.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -25,7 +24,6 @@ import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.ui.mvpview.TopicDetailMvpView;
 import com.hengye.share.ui.presenter.TopicDetailPresenter;
 import com.hengye.share.util.CommonUtil;
-import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
@@ -111,7 +109,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         View topicLayout = headerView.findViewById(R.id.item_topic);
 
         if(mIsRetweet){
-            mTopicContentLayout = headerView.findViewById(R.id.ll_topic);
+            mTopicContentLayout = headerView.findViewById(R.id.ll_topic_content);
             mTopicContent = (TextView) headerView.findViewById(R.id.tv_topic_content);
             mTopicContentLayout.setTransitionName(getString(R.string.transition_name_topic));
         }else{
