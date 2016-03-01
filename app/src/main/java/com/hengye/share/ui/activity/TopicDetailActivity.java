@@ -25,6 +25,7 @@ import com.hengye.share.ui.mvpview.TopicDetailMvpView;
 import com.hengye.share.ui.presenter.TopicDetailPresenter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.UserUtil;
+import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
 
@@ -158,7 +159,6 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 int actualPosition = position - mListView.getHeaderViewsCount();
                 TopicComment tc = mAdapter.getItem(actualPosition);
                 if(tc == null){
@@ -170,6 +170,13 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                 topicDraft.setTargetCommentId(tc.getId());
                 topicDraft.setIsCommentOrigin(false);
                 startActivity(TopicPublishActivity.getStartIntent(TopicDetailActivity.this, topicDraft));
+            }
+        });
+        mAdapter.setOnChildViewItemClickListener(new ViewUtil.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+//                view.performClick();
+                mListView.performItemClick(null, position + mListView.getHeaderViewsCount(), mAdapter.getItemId(position));
             }
         });
 

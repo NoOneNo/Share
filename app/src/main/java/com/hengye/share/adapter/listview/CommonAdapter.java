@@ -7,12 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.hengye.share.util.ViewUtil;
+
 import java.util.List;
 
 public abstract class CommonAdapter<T, V extends ViewHolder<T>> extends BaseAdapter {
 
     protected Context mContext;
     protected List<T> mData;
+    private ViewUtil.OnItemClickListener mOnChildViewItemClickListener;
+    private ViewUtil.OnItemLongClickListener mOnChildViewItemLongClickListener;
 
     public CommonAdapter(Context context, List<T> data) {
         this.mContext = context;
@@ -25,10 +29,14 @@ public abstract class CommonAdapter<T, V extends ViewHolder<T>> extends BaseAdap
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(getItemLayoutResId(), parent, false);
             viewHolder = getViewHolder(convertView);
+            viewHolder.setOnChildViewItemClickListener(getOnChildViewItemClickListener());
+            viewHolder.setOnChildViewItemLongClickListener(getOnChildViewItemLongClickListener());
         } else {
             viewHolder = (V) convertView.getTag();
         }
-        viewHolder.bindData(getContext(), mData.get(position));
+
+        viewHolder.bindItemPosition(position);
+        viewHolder.bindData(getContext(), mData.get(position), position);
         return convertView;
 
     }
@@ -129,5 +137,21 @@ public abstract class CommonAdapter<T, V extends ViewHolder<T>> extends BaseAdap
 
     public Context getContext() {
         return mContext;
+    }
+
+    public ViewUtil.OnItemClickListener getOnChildViewItemClickListener() {
+        return mOnChildViewItemClickListener;
+    }
+
+    public void setOnChildViewItemClickListener(ViewUtil.OnItemClickListener onChildViewItemClickListener) {
+        this.mOnChildViewItemClickListener = onChildViewItemClickListener;
+    }
+
+    public ViewUtil.OnItemLongClickListener getOnChildViewItemLongClickListener() {
+        return mOnChildViewItemLongClickListener;
+    }
+
+    public void setmOnChildViewItemLongClickListener(ViewUtil.OnItemLongClickListener onChildViewItemLongClickListener) {
+        this.mOnChildViewItemLongClickListener = onChildViewItemLongClickListener;
     }
 }

@@ -2,10 +2,18 @@ package com.hengye.share.ui.fragment;
 
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
 
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicAdapter;
@@ -21,7 +29,7 @@ import com.hengye.swiperefresh.PullToRefreshLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopicFragment extends BaseFragment implements TopicMvpView {
+public class TopicFragment extends BaseFragment implements TopicMvpView, View.OnClickListener {
 
     public static TopicFragment newInstance(TopicPresenter.TopicGroup topicGroup, String uid, String name) {
         TopicFragment fragment = new TopicFragment();
@@ -42,6 +50,12 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
     }
 
     private PullToRefreshLayout mPullToRefreshLayout;
+    private RecyclerView mRecyclerView;
+    private ImageView mBackTopBtn;
+    private Animation mBackTopDisappearAnimation, mBackTopAppearAnimation;
+
+    private Handler mHandler = new Handler();
+
     private TopicAdapter mAdapter;
     private TopicPresenter mPresenter;
     private TopicPresenter.TopicGroup topicGroup;
@@ -54,7 +68,7 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
 
     @Override
     protected void handleBundleExtra() {
-        topicGroup = (TopicPresenter.TopicGroup)getArguments().getSerializable("topicGroup");
+        topicGroup = (TopicPresenter.TopicGroup) getArguments().getSerializable("topicGroup");
         uid = getArguments().getString("uid");
         name = getArguments().getString("name");
     }
@@ -66,10 +80,28 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
         mPresenter.setUid(uid);
         mPresenter.setName(name);
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(mAdapter = new TopicAdapter(getContext(), new ArrayList<Topic>(), recyclerView));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setAdapter(mAdapter = new TopicAdapter(getContext(), new ArrayList<Topic>(), mRecyclerView));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if(dy > 0){
+                    if(mBackTopBtn.getVisibility() == View.GONE){
+                        mBackTopAppearAnimation.reset();
+                        mBackTopBtn.startAnimation(mBackTopAppearAnimation);
+                        mBackTopBtn.setVisibility(View.VISIBLE);
+                    }
+
+                }else{
+                    mBackTopBtn.setVisibility(View.GONE);
+                }
+            }
+        });
+
 
         mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.pull_to_refresh);
         mPullToRefreshLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
@@ -103,20 +135,55 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
             }
         });
 
+        mBackTopBtn = (ImageView) findViewById(R.id.iv_back_top);
+        mBackTopBtn.setOnClickListener(this);
+
+        AlphaAnimation alphaAnim1 = new AlphaAnimation(1.0f, 0.3f);
+
+        TranslateAnimation translateAnim1 = new TranslateAnimation
+                (Animation.RELATIVE_TO_PARENT, 0,
+                        Animation.RELATIVE_TO_PARENT, 0,
+                        Animation.RELATIVE_TO_PARENT, 0,
+                        Animation.RELATIVE_TO_PARENT, -1.0f);
+
+        AnimationSet as1 = new AnimationSet(true);
+        as1.addAnimation(alphaAnim1);
+        as1.addAnimation(translateAnim1);
+        as1.setDuration(1000);
+        as1.setInterpolator(new AccelerateInterpolator());
+
+        AlphaAnimation alphaAnim2 = new AlphaAnimation(0.0f, 1.0f);
+
+        TranslateAnimation translateAnim2 = new TranslateAnimation
+                (Animation.RELATIVE_TO_PARENT, 0,
+                        Animation.RELATIVE_TO_PARENT, 0,
+                        Animation.RELATIVE_TO_PARENT, 0.3f,
+                        Animation.RELATIVE_TO_PARENT, 0f);
+
+        AnimationSet as2 = new AnimationSet(true);
+        as2.addAnimation(alphaAnim2);
+        as2.addAnimation(translateAnim2);
+        as2.setDuration(1000);
+        as2.setInterpolator(new AccelerateInterpolator());
+
+        mBackTopDisappearAnimation = as1;
+        mBackTopAppearAnimation = as2;
+
+
         mPresenter.loadCacheData();
     }
 
-    public void refresh(){
+    public void refresh() {
         mPresenter.loadCacheData();
     }
 
     @Override
     public void handleCache(List<Topic> data) {
-        if(CommonUtil.isEmptyCollection(data)){
-            if(mAdapter.isEmpty() && !UserUtil.isUserEmpty()) {
+        if (CommonUtil.isEmptyCollection(data)) {
+            if (mAdapter.isEmpty() && !UserUtil.isUserEmpty()) {
                 mPullToRefreshLayout.setRefreshing(true);
             }
-        }else{
+        } else {
             mAdapter.refresh(data);
         }
 
@@ -150,4 +217,34 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
         }
     }
 
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.iv_back_top) {
+            mRecyclerView.smoothScrollToPosition(0);
+            mBackTopBtn.startAnimation(mBackTopDisappearAnimation);
+        }
+    }
+
+    private Animation.AnimationListener mBackTopAnimationListener = new Animation.AnimationListener() {
+        @Override
+        public void onAnimationStart(Animation animation) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mRecyclerView.scrollToPosition(0);
+                }
+            });
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    };
 }

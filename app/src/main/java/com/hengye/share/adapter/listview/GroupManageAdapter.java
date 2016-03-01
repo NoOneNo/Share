@@ -58,7 +58,7 @@ public class GroupManageAdapter extends DropAdapter<GroupList, GroupManageAdapte
         }
 
         @Override
-        public void bindData(Context context, GroupList gl) {
+        public void bindData(Context context, GroupList gl, int position) {
             mGroupName.setText(gl.getName());
             mGroupCount.setText(String.format(context.getString(R.string.label_group_count), gl.getCount()));
         }

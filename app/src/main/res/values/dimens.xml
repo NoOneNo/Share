@@ -50,9 +50,11 @@
 
 
 
-    <dimen name="icon_size_small">20dp</dimen>
+    <dimen name="icon_size_small">30dp</dimen>
 
-    <dimen name="icon_size_normal">30dp</dimen>
+    <dimen name="icon_size_normal">40dp</dimen>
 
-    <dimen name="icon_size_large">40dp</dimen>
+    <dimen name="icon_size_large">50dp</dimen>
+
+    <dimen name="icon_size_large_2">60dp</dimen>
 </resources>
