@@ -23,6 +23,7 @@ import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.ui.mvpview.TopicDetailMvpView;
 import com.hengye.share.ui.presenter.TopicDetailPresenter;
+import com.hengye.share.ui.view.BackTopButton;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
@@ -180,7 +181,10 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             }
         });
 
-        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+        BackTopButton backTopBtn = (BackTopButton) findViewById(R.id.iv_back_top);
+        backTopBtn.setup(mListView);
+
+        backTopBtn.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
 
