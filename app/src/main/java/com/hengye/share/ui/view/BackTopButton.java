@@ -35,12 +35,18 @@ public class BackTopButton extends ImageView{
 
     private Animation mBackTopAnimation, mAppearAnimation;
 
+    private OnClickListener mOnBackTopListener;
+
     private Handler mHandler = new Handler();
 
     private void init(){
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if(getOnBackTopListener() != null){
+                    getOnBackTopListener().onClick(v);
+                }
                 smoothScrollToTop();
                 startAnimation(mBackTopAnimation);
             }
@@ -188,4 +194,12 @@ public class BackTopButton extends ImageView{
 
         }
     };
+
+    public OnClickListener getOnBackTopListener() {
+        return mOnBackTopListener;
+    }
+
+    public void setOnBackTopListener(OnClickListener backTopListener) {
+        this.mOnBackTopListener = backTopListener;
+    }
 }
