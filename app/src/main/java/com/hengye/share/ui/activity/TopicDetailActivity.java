@@ -25,6 +25,7 @@ import com.hengye.share.ui.mvpview.TopicDetailMvpView;
 import com.hengye.share.ui.presenter.TopicDetailPresenter;
 import com.hengye.share.ui.view.BackTopButton;
 import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.L;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
@@ -74,11 +75,11 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                 if(tab.getPosition() == 0){
                     mAdapter.setData(mCommentData);
                     mAdapter.notifyDataSetChanged();
-                    mListView.setSelection(0);
+                    mListView.setSelection(1);
                 }else if(tab.getPosition() == 1){
                     mAdapter.setData(mRepostData);
                     mAdapter.notifyDataSetChanged();
-                    mListView.setSelection(0);
+                    mListView.setSelection(1);
                 }
             }
         }
@@ -101,8 +102,8 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 
     private TopicDetailPresenter mPresenter;
 
-    private void initHeaderView(View headerView){
-        mTabLayout = (TabLayout) headerView.findViewById(R.id.tab_layout);
+    private void initHeaderView(View headerView, View headerViewAssist){
+        mTabLayout = (TabLayout) headerViewAssist.findViewById(R.id.tab_layout);
         mTabLayout.addTab((mTabLayout.newTab().setText(R.string.label_topic_comment).setTag("tab_layout")));
         mTabLayout.addTab((mTabLayout.newTab().setText(R.string.label_topic_repost).setTag("tab_layout")));
         mTabLayout.getTabAt(0).select();
@@ -150,11 +151,14 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         mTabLayoutAssist.getTabAt(0).select();
         mTabLayoutAssist.setOnTabSelectedListener(mOnTabSelectedListener);
 
-        View headerView = LayoutInflater.from(this).inflate(R.layout.header_topic_detail, mListView);
-        initHeaderView(headerView);
+        View headerView = LayoutInflater.from(this).inflate(R.layout.item_topic_total, null);
 
+        View headerViewAssist = LayoutInflater.from(this).inflate(R.layout.header_topic_detail, null);
+
+        initHeaderView(headerView, headerViewAssist);
         mListView = (ListView) findViewById(R.id.list_view);
         mListView.addHeaderView(headerView);
+        mListView.addHeaderView(headerViewAssist);
         mListView.setAdapter(mAdapter = new TopicCommentAdapter(this, new ArrayList<TopicComment>()));
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -194,7 +198,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if(firstVisibleItem == 0){
 
-                    View firstVisibleItemView = view.getChildAt(0);
+                    View firstVisibleItemView = view.getChildAt(1);
                     if(firstVisibleItemView == null){
                         return;
                     }

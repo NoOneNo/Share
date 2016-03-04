@@ -33,7 +33,7 @@ public class BackTopButton extends ImageView{
     private RecyclerView mRecyclerView;
     private ListView mListView;
 
-    private Animation mBackTopAnimation, mDisappearAnimation, mAppearAnimation;
+    private Animation mBackTopAnimation, mAppearAnimation;
 
     private Handler mHandler = new Handler();
 
@@ -74,13 +74,8 @@ public class BackTopButton extends ImageView{
         as2.setDuration(1000);
         as2.setInterpolator(new AccelerateInterpolator());
 
-        AlphaAnimation alphaAnim3 = new AlphaAnimation(1.0f, 0.0f);
-        alphaAnim3.setDuration(500);
-        alphaAnim3.setInterpolator(new AccelerateInterpolator());
-
         mBackTopAnimation = as1;
         mAppearAnimation = as2;
-        mDisappearAnimation = alphaAnim3;
 
         mBackTopAnimation.setAnimationListener(mBackTopAnimationListener);
     }
@@ -93,7 +88,7 @@ public class BackTopButton extends ImageView{
                 super.onScrolled(recyclerView, dx, dy);
                 if(dy > 0){
                     appear();
-                }else{
+                }else if(dy < -30){
                     disappear();
                 }
             }
@@ -122,13 +117,11 @@ public class BackTopButton extends ImageView{
     }
 
     private void disappear(){
-        startAnimation(mDisappearAnimation);
         setVisibility(View.GONE);
     }
 
     private void appear(){
         if(getVisibility() == View.GONE){
-            mAppearAnimation.reset();
             startAnimation(mAppearAnimation);
             setVisibility(View.VISIBLE);
         }
