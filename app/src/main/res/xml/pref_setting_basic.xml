@@ -36,8 +36,7 @@
 
         <Preference
             android:key="clear_photo_cache"
-            android:title="@string/title_setting_clear_photo_cache"
-            android:defaultValue="true"/>
+            android:title="@string/title_setting_clear_photo_cache"/>
 
         <CheckBoxPreference
             android:key="internal_browser"

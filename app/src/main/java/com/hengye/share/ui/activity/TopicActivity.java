@@ -40,6 +40,8 @@ import com.hengye.share.ui.widget.util.SelectorLoader;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
+import com.hengye.share.util.SettingHelper;
+import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
 
@@ -153,10 +155,21 @@ public class TopicActivity extends BaseActivity
         if (drawer.isDrawerOpen(GravityCompat.END)) {
             drawer.closeDrawer(GravityCompat.END);
         } else {
-            moveTaskToBack(false);
-//            super.onBackPressed();
+            if(SettingHelper.isExitOnBackPressed()){
+                if(System.currentTimeMillis() - mBackPressedTime > 2000){
+                    mBackPressedTime = System.currentTimeMillis();
+                    ToastUtil.showToast(R.string.tip_exit_on_back_pressed);
+                }else{
+                    android.os.Process.killProcess(android.os.Process.myPid());
+                    System.exit(0);
+                }
+            }else {
+                moveTaskToBack(false);
+            }
         }
     }
+
+    private long mBackPressedTime = 0;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -210,9 +223,8 @@ public class TopicActivity extends BaseActivity
         } else if (id == R.id.nav_setting) {
             startActivity(SettingActivity.class);
         } else if (id == R.id.nav_group_manage) {
-//            startActivity(GroupManageActivity.class);
             startActivityForResult(GroupManageActivity.class, GroupManageActivity.GROUP_UPDATE);
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_draft) {
             startActivity(TopicDraftActivity.class);
         } else if (id == R.id.nav_share) {
             startActivity(TestActivity.class);
@@ -288,23 +300,20 @@ public class TopicActivity extends BaseActivity
                 //互相关注
                 String str2 = mTopicFragmentAdapter.getFragmentTags().get(1);
 
-                Fragment fragment1 = getSupportFragmentManager().findFragmentByTag(str1);
-                Fragment fragment2 = getSupportFragmentManager().findFragmentByTag(str2);
-
-                if(fragment1 != null && fragment1 instanceof TopicFragment){
-                    TopicFragment topicFragment = (TopicFragment) fragment1;
-                    topicFragment.refresh();
-                }
-
-                if(fragment2 != null && fragment2 instanceof TopicFragment){
-                    TopicFragment topicFragment = (TopicFragment) fragment2;
-                    topicFragment.refresh();
-                }
+                refreshTopicFragment(getSupportFragmentManager().findFragmentByTag(str1));
+                refreshTopicFragment(getSupportFragmentManager().findFragmentByTag(str2));
 //                mViewPager.setAdapter(mTopicFragmentAdapter = new TopicFragmentPager(getSupportFragmentManager(), this, getTopicGroups()));
                 adjustTabLayout();
             }
         } else if (requestCode == GroupManageActivity.GROUP_UPDATE && resultCode == Activity.RESULT_OK) {
             updateViewPager();
+        }
+    }
+
+    private void refreshTopicFragment(Fragment fragment){
+        if(fragment != null && fragment instanceof TopicFragment){
+            TopicFragment topicFragment = (TopicFragment) fragment;
+            topicFragment.refresh();
         }
     }
 

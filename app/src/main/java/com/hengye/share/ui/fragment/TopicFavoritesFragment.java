@@ -127,7 +127,7 @@ public class TopicFavoritesFragment extends BaseFragment {
         final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBTopicFavoritesUrl());
         ub.addParameter("access_token", token);
         ub.addParameter("page", isRefresh ? mPageStart : mPageNo + 1);
-        ub.addParameter("count", WBUtil.MAX_COUNT_REQUEST);
+        ub.addParameter("count", WBUtil.getWBTopicRequestCount());
         return new GsonRequest<>(
                 WBTopicFavorites.class,
                 ub.getRequestUrl(),

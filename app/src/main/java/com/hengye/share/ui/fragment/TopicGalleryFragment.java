@@ -23,6 +23,8 @@ import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.util.ImageUtil;
 import com.hengye.share.util.RequestManager;
 
+import java.io.File;
+
 public class TopicGalleryFragment extends BaseFragment {
 
     public static TopicGalleryFragment newInstance(String url, AnimationRect rect,
@@ -59,14 +61,15 @@ public class TopicGalleryFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_topic_gallery, container, false);
 
-        String path = ImageDiskLruCache.getInstance().getDiskCachePath(mUrl);
-
-        if (path != null) {
-            displayImage(mUrl, path, mAnimateIn);
-            mAnimateIn = false;
-        } else {
-            int screenWidth = getResources().getDisplayMetrics().widthPixels;
-            RequestManager.addToRequestQueue(makeImageRequest(mUrl, screenWidth, 0, ImageView.ScaleType.FIT_XY), getRequestTag());
+        if (mUrl != null) {
+            String path = ImageDiskLruCache.getInstance().getDiskCachePath(mUrl);
+            if (path != null) {
+                displayImage(mUrl, path, mAnimateIn);
+                mAnimateIn = false;
+            }else {
+                int screenWidth = getResources().getDisplayMetrics().widthPixels;
+                RequestManager.addToRequestQueue(makeImageRequest(mUrl, screenWidth, 0, ImageView.ScaleType.FIT_XY), getRequestTag());
+            }
         }
 
         return view;

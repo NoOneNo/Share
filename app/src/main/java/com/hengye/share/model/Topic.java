@@ -63,7 +63,7 @@ public class Topic extends ParentInherit implements Serializable{
             List<String> imageUrls = new ArrayList<>();
             List<String> imageLargeUrls = new ArrayList<>();
             for(WBTopic.Pic_urlsEntity urlsEntity : entity.getPic_urls()){
-                imageUrls.add(WBUtil.getWBTopicImgUrl(urlsEntity.getThumbnail_pic(), WBUtil.IMAGE_TYPE_BMIDDLE));
+                imageUrls.add(WBUtil.getWBTopicImgUrl(urlsEntity.getThumbnail_pic()));
                 imageLargeUrls.add(WBUtil.getWBTopicImgUrl(urlsEntity.getThumbnail_pic(), WBUtil.IMAGE_TYPE_LARGE));
             }
             topic.setImageUrls(imageUrls);

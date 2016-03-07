@@ -23,6 +23,8 @@
 
     <string name="topic_gallery_image_large">原图</string>
 
+    <string name="tip_exit_on_back_pressed">再按一次退出应用</string>
+
     <!-- Strings related to activity title-->
     <string name="title_activity_login">Sign in</string>
     <string name="title_activity_setting">设置</string>
@@ -181,6 +183,7 @@
     <string name="title_setting_remind_by_ringtone_summary_null">无</string>
     <string name="title_setting_remind_by_vibration">震动提醒</string>
     <string name="title_setting_remind_by_lights">呼吸灯提醒</string>
+    <string name="title_setting_remind_by_lights_summary">需手机支持</string>
     <string name="title_setting_remind_time">提醒时间</string>
     <string name="title_setting_no_remind_at_night">夜间免打扰</string>
     <string name="title_setting_no_remind_at_night_summary">凌晨1点到早上8点关闭通知提醒</string>

@@ -131,4 +131,19 @@
         <item>green</item>
     </string-array>
     <!-- 主题设置 -->
+
+    <!-- 显示头像 -->
+    <string-array name="show_avatar_entries">
+        <item>微博</item>
+        <item>评论, 转发</item>
+    </string-array>
+    <string-array name="show_avatar_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="show_avatar_default_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <!-- 显示头像 -->
 </resources>

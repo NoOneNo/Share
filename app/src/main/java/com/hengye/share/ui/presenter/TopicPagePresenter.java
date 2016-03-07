@@ -83,7 +83,7 @@ public class TopicPagePresenter extends BasePresenter<TopicPageMvpView> {
 //            ub.addParameter("screen_name", name);
 //        }
 
-        ub.addParameter("count", WBUtil.MAX_COUNT_REQUEST);
+        ub.addParameter("count", WBUtil.getWBTopicRequestCount());
         return ub.getParameters();
     }
 

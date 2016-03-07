@@ -140,7 +140,7 @@ public class TopicNotifyFragment extends BaseFragment {
         } else {
             ub.addParameter("max_id", id);
         }
-        ub.addParameter("count", WBUtil.MAX_COUNT_REQUEST);
+        ub.addParameter("count", WBUtil.getWBTopicRequestCount());
         return new GsonRequest<>(
                 WBTopics.class,
                 ub.getRequestUrl(),
@@ -186,7 +186,7 @@ public class TopicNotifyFragment extends BaseFragment {
         } else {
             ub.addParameter("max_id", id);
         }
-        ub.addParameter("count", WBUtil.MAX_COUNT_REQUEST);
+        ub.addParameter("count", WBUtil.getWBTopicRequestCount());
         return new GsonRequest<>(
                 WBTopicComments.class,
                 ub.getRequestUrl(),

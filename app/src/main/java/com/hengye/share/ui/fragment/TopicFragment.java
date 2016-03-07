@@ -16,6 +16,7 @@ import com.hengye.share.ui.presenter.TopicPresenter;
 import com.hengye.share.ui.view.BackTopButton;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DataUtil;
+import com.hengye.share.util.SettingHelper;
 import com.hengye.share.util.UserUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
 
@@ -68,10 +69,23 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
         mPresenter.setUid(uid);
         mPresenter.setName(name);
 
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mAdapter = new TopicAdapter(getContext(), new ArrayList<Topic>(), recyclerView));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        if(SettingHelper.isPreRead()){
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    if(layoutManager.findLastVisibleItemPosition() > mAdapter.getItemCount() - 8){
+                        mPullToRefreshLayout.setLoading(true);
+                    }
+                }
+            });
+        }
 
         BackTopButton backTopBtn = (BackTopButton) findViewById(R.id.iv_back_top);
         backTopBtn.setup(recyclerView);

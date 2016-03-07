@@ -16,10 +16,12 @@
             android:entryValues="@array/menu_show_style_values"
             android:summary="%s"/>
 
-        <SwitchPreference
-            android:key="show_avator"
+        <MultiSelectListPreference
+            android:key="show_avatar"
             android:title="@string/title_setting_show_avator"
-            android:defaultValue="true"
+            android:entries="@array/notify_type_entries"
+            android:entryValues="@array/notify_type_values"
+            android:defaultValue="@array/notify_type_default_values"
             android:summary="@string/title_setting_show_avator_summary"/>
     </PreferenceCategory>
 

@@ -208,7 +208,7 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
             ub.addParameter("list_id", mTopicGroup.groupList.getGid());
         }
 
-        ub.addParameter("count", WBUtil.MAX_COUNT_REQUEST);
+        ub.addParameter("count", WBUtil.getWBTopicRequestCount());
         return ub.getParameters();
     }
 
@@ -227,7 +227,7 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
                     getMvpView().handleNoMoreTopics();
                     L.debug("no topic update");
                 } else {
-                    if (wbTopicIds.getStatuses().size() >= WBUtil.MAX_COUNT_REQUEST) {
+                    if (wbTopicIds.getStatuses().size() >= WBUtil.getWBTopicRequestCount()) {
                         //还有更新的微博，重新请求刷新
 //                                RequestManager.addToRequestQueue(getWBTopicRequest(token, 0 + "", true), getRequestTag());
                         L.debug("exist newer topic, request refresh again");

@@ -46,6 +46,7 @@
         <CheckBoxPreference
             android:key="remind_by_lights"
             android:title="@string/title_setting_remind_by_lights"
+            android:summary="@string/title_setting_remind_by_lights_summary"
             android:defaultValue="true"/>
     </PreferenceCategory>
 </PreferenceScreen>

@@ -44,6 +44,7 @@ import com.hengye.share.util.DateUtil;
 import com.hengye.share.util.IntentUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
+import com.hengye.share.util.SettingHelper;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
@@ -285,7 +286,9 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
             UserInfo userInfo = topic.getUserInfo();
             if (userInfo != null) {
                 mUsername.setText(userInfo.getName());
-                mAvatar.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());
+                if(SettingHelper.isShowTopicAvatar()){
+                    mAvatar.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());
+                }
             }
         }
 
@@ -301,7 +304,9 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
             UserInfo userInfo = topicComment.getUserInfo();
             if (userInfo != null) {
                 mUsername.setText(userInfo.getName());
-                mAvatar.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());
+                if(SettingHelper.isShowCommentAndRepostAvatar()) {
+                    mAvatar.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());
+                }
             }
         }
     }

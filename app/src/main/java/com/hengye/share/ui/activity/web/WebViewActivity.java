@@ -19,6 +19,7 @@ import com.hengye.share.ui.widget.dialog.ListDialog;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
 import com.hengye.share.util.ClipboardUtil;
 import com.hengye.share.util.IntentUtil;
+import com.hengye.share.util.SettingHelper;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.ViewUtil;
 
@@ -72,14 +73,28 @@ public class WebViewActivity extends BaseActivity implements View.OnClickListene
         if (mUrl == null) {
             finish();
         } else {
-            initView();
+            if(SettingHelper.isUseInternalBrowser()){
+                initView();
+            }else{
+                openExternalBrowser(mUrl);
+                finish();
+            }
+        }
+    }
+
+    private void openExternalBrowser(String url){
+        final Uri uri = Uri.parse(url);
+        final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        if(IntentUtil.resolveActivity(intent)){
+            startActivity(intent);
+        }else{
+            ToastUtil.showToast(R.string.dialog_text_cancel);
         }
     }
 
     private String mUrl;
 
     private WebView mWebView;
-    //    private LoadingDialog mLoadingDialog;
     private ProgressBar mProgressBar;
     private ListDialog mListDialog;
 
@@ -93,7 +108,7 @@ public class WebViewActivity extends BaseActivity implements View.OnClickListene
 
     private void initView() {
 
-//        mLoadingDialog = new LoadingDialog(this);
+        setContentView(R.layout.activity_webview);
         mWebView = (WebView) findViewById(R.id.web_view);
         mProgressBar = (ProgressBar) findViewById(R.id.loading);
         findViewById(R.id.btn_menu).setOnClickListener(this);
@@ -121,13 +136,7 @@ public class WebViewActivity extends BaseActivity implements View.OnClickListene
                         ToastUtil.showToast(R.string.label_copy_url_to_clipboard_success);
                         break;
                     case 2:
-                        Uri uri = Uri.parse(mWebView.getUrl());
-                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                        if (IntentUtil.resolveActivity(intent)) {
-                            startActivity(intent);
-                        } else {
-                            ToastUtil.showToast(R.string.label_resolve_url_activity_fail);
-                        }
+                        openExternalBrowser(mWebView.getUrl());
                         break;
                     default:
                         break;

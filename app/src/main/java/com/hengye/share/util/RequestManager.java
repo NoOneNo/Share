@@ -144,5 +144,11 @@ public class RequestManager {
 			return true;
 		}
 	}
+
+	public static void clearImageCache(){
+		if(mDiskBasedCache != null){
+			mDiskBasedCache.clear();
+		}
+	}
 }
 

@@ -329,7 +329,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                 if (CommonUtil.isEmptyCollection(adapterData)) {
 //                    //内容为空
 //                    mPullToRefreshLayout.setLoadEnable(false);
-                }else if (data.size() < WBUtil.MAX_COUNT_REQUEST) {
+                }else if (data.size() < WBUtil.getWBTopicRequestCount()) {
                     //结果小于请求条数
 //                    mPullToRefreshLayout.setLoadEnable(false);
                 }else{
@@ -346,7 +346,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                 Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
             } else {
                 //成功加载更多
-                if (data.size() < WBUtil.MAX_COUNT_REQUEST) {
+                if (data.size() < WBUtil.getWBTopicRequestCount()) {
                     //没有更多的数据可供加载
                     //不可靠，有可能继续加载还有数据
 //                    mPullToRefreshLayout.setLoadEnable(false);

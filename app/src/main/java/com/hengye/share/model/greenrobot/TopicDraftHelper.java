@@ -42,7 +42,13 @@ public class TopicDraftHelper {
         QueryBuilder<TopicDraft> qb = GreenDaoManager.getDaoSession().getTopicDraftDao().queryBuilder();
         qb.where(TopicDraftDao.Properties.Uid.eq(UserUtil.getUid()));
         qb.orderDesc(TopicDraftDao.Properties.Date);
-        return qb.list();
+
+        try{
+            return qb.list();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static void saveTopicDraft(TopicDraft topicDraft){

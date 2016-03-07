@@ -45,7 +45,7 @@ public class DataUtil {
                 } else {
                     return REFRESH_NO_MORE_DATA;
                 }
-            } else if (data.size() < WBUtil.MAX_COUNT_REQUEST) {
+            } else if (data.size() <= WBUtil.getWBTopicRequestCount()) {
                 //结果小于请求条数
                 return REFRESH_DATA_SIZE_LESS;
             } else {
@@ -59,7 +59,7 @@ public class DataUtil {
                 return LOAD_NO_DATA;
             } else {
                 //成功加载更多
-                if (data.size() < WBUtil.MAX_COUNT_REQUEST) {
+                if (data.size() < WBUtil.getWBTopicRequestCount()) {
                     //没有更多的数据可供加载
                     return LOAD_NO_MORE_DATA;
                 }else{
@@ -120,7 +120,7 @@ public class DataUtil {
                 //存储数据
                 break;
             case REFRESH_DATA_SIZE_EQUAL:
-                ToastUtil.showSnackBar("超过" + WBUtil.MAX_COUNT_REQUEST + "条新微博", v);
+                ToastUtil.showSnackBar("超过" + WBUtil.getWBTopicRequestCount() + "条新微博", v);
                 break;
             case LOAD_NO_DATA:
             case LOAD_NO_MORE_DATA:
