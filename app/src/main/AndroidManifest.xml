@@ -26,7 +26,7 @@
     <!-- -->
 
     <application
-        android:name=".ui.base.BaseApplication"
+        android:name="com.hengye.share.ui.base.BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -37,7 +37,7 @@
         <service android:name="com.hengye.share.service.TopicPublishService" />
 
         <activity
-            android:name=".ui.activity.GuidanceActivity"
+            android:name="com.hengye.share.ui.activity.GuidanceActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -47,16 +47,16 @@
         </activity>
 
         <activity
-            android:name=".ui.activity.TopicActivity"/>
+            android:name="com.hengye.share.ui.activity.TopicActivity"/>
 
         <activity
             android:name="com.hengye.share.ui.activity.LoginActivity"
             android:label="@string/title_activity_login"
-            android:parentActivityName=".ui.activity.TopicActivity"
+            android:parentActivityName="com.hengye.share.ui.activity.TopicActivity"
             android:windowSoftInputMode="adjustResize|stateVisible">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activity.TopicActivity" />
+                android:value="com.hengye.share.ui.activity.TopicActivity" />
         </activity>
 
         <activity
@@ -67,14 +67,14 @@
             android:name="com.hengye.share.ui.activity.TopicGalleryActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:launchMode="singleTop"
-            android:parentActivityName=".ui.activity.TopicActivity"
+            android:parentActivityName="com.hengye.share.ui.activity.TopicActivity"
             android:theme="@style/FullScreenTheme"/>
 
         <activity
             android:name=".ui.activity.FragmentActivity"/>
 
         <activity
-            android:name=".ui.activity.setting.SettingActivity"
+            android:name="com.hengye.share.ui.activity.setting.SettingActivity"
             android:label="@string/title_activity_setting">
             <intent-filter>
                 <action android:name="android.intent.action.MANAGE_NETWORK_USAGE" />
@@ -128,10 +128,10 @@
             android:name="com.hengye.share.ui.activity.TopicDetailActivity"/>
 
         <activity
-            android:name=".ui.activity.TopicMentionActivity"/>
+            android:name="com.hengye.share.ui.activity.TopicMentionActivity"/>
 
         <activity
-            android:name=".ui.activity.TopicCommentActivity"/>
+            android:name="com.hengye.share.ui.activity.TopicCommentActivity"/>
 
         <activity
             android:name="com.hengye.share.ui.activity.AtUserActivity"

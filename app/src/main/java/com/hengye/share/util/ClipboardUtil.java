@@ -6,7 +6,7 @@ import android.content.Context;
 
 import com.hengye.share.ui.base.BaseApplication;
 
-public class ClipboardUtil {
+public class ClipboardUtil extends ApplicationUtil{
 
     /**
      * 实现文本复制功能
@@ -16,7 +16,7 @@ public class ClipboardUtil {
     public static void copy(String content)
     {
         // 得到剪贴板管理器
-        ClipboardManager cm = (ClipboardManager) BaseApplication.getInstance().getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipboardManager cm = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
         cm.setPrimaryClip(ClipData.newPlainText(null, content));
     }
     /**
@@ -27,10 +27,10 @@ public class ClipboardUtil {
     public static String paste()
     {
         // 得到剪贴板管理器
-        ClipboardManager cm = (ClipboardManager)BaseApplication.getInstance().getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipboardManager cm = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = cm.getPrimaryClip();
         if (clip != null && clip.getItemCount() > 0) {
-            return clip.getItemAt(0).coerceToText(BaseApplication.getInstance()).toString();
+            return clip.getItemAt(0).coerceToText(getContext()).toString();
         }
         return null;
     }

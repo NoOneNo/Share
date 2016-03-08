@@ -7,14 +7,14 @@ import android.widget.Toast;
 
 import com.hengye.share.ui.base.BaseApplication;
 
-public class ToastUtil {
+public class ToastUtil extends ApplicationUtil{
 
     public static void showToast(CharSequence text){
-        Toast.makeText(BaseApplication.getInstance(), text, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
     }
 
     public static void showToast(@StringRes int resId){
-        Toast.makeText(BaseApplication.getInstance(), resId, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), resId, Toast.LENGTH_SHORT).show();
     }
 
     public static void showSnackBar(CharSequence text, View view){

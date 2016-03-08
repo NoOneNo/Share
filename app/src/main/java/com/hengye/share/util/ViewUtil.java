@@ -12,7 +12,7 @@ import com.hengye.share.ui.base.BaseApplication;
 
 import java.lang.reflect.Field;
 
-public class ViewUtil {
+public class ViewUtil extends ApplicationUtil{
 
     /**
      * Interface definition for a callback to be invoked when an item in this
@@ -69,13 +69,13 @@ public class ViewUtil {
     public static void hideKeyBoard(Activity activity) {
         View view = activity.getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager) BaseApplication.getInstance().getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 
     public static void hideKeyBoard(View paramEditText) {
-        ((InputMethodManager) BaseApplication.getInstance().getSystemService(Context.INPUT_METHOD_SERVICE))
+        ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE))
                 .hideSoftInputFromWindow(paramEditText.getWindowToken(), 0);
     }
 
@@ -84,7 +84,7 @@ public class ViewUtil {
         paramEditText.post(new Runnable() {
             @Override
             public void run() {
-                ((InputMethodManager) BaseApplication.getInstance().getSystemService(Context.INPUT_METHOD_SERVICE))
+                ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE))
                         .showSoftInput(paramEditText, 0);
             }
         });

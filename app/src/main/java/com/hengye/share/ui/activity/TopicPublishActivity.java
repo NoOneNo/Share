@@ -274,7 +274,6 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         @Override
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
             return DataUtil.convertNormalStringToSpannableString(TopicPublishActivity.this, String.valueOf(source));
-//            return DataUtil.convertNormalStringToSpannableString(TopicPublishActivity.this, mContent.getText().toString());
         }
     };
 

@@ -11,7 +11,7 @@ import com.hengye.share.ui.base.BaseApplication;
 
 import java.lang.reflect.Type;
 
-public class SPUtil {
+public class SPUtil extends ApplicationUtil{
 
     private SPUtil() {}
 
@@ -87,9 +87,5 @@ public class SPUtil {
         editor.putString(name, GsonUtil.getInstance().toJson(t));
         L.debug("save module, name : {}, json : {}", t.getClass().getSimpleName(), GsonUtil.getInstance().toJson(t));
         editor.apply();
-    }
-
-    private static BaseApplication getContext(){
-        return BaseApplication.getInstance();
     }
 }

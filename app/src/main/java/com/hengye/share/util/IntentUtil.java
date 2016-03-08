@@ -6,7 +6,7 @@ import android.content.Intent;
 
 import com.hengye.share.ui.base.BaseApplication;
 
-public class IntentUtil {
+public class IntentUtil extends ApplicationUtil{
 
     private IntentUtil(){
 
@@ -18,7 +18,7 @@ public class IntentUtil {
      * @return
      */
     public static boolean resolveActivity(Intent intent){
-        if(intent != null && intent.resolveActivity(BaseApplication.getInstance().getPackageManager()) != null){
+        if(intent != null && intent.resolveActivity(getContext().getPackageManager()) != null){
             return true;
         }
         return false;
