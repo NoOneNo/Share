@@ -18,11 +18,10 @@
 
         <MultiSelectListPreference
             android:key="show_avatar"
-            android:title="@string/title_setting_show_avator"
-            android:entries="@array/notify_type_entries"
-            android:entryValues="@array/notify_type_values"
-            android:defaultValue="@array/notify_type_default_values"
-            android:summary="@string/title_setting_show_avator_summary"/>
+            android:title="@string/title_setting_show_avatar_off"
+            android:entries="@array/show_avatar_entries"
+            android:entryValues="@array/show_avatar_values"
+            android:summary="@string/title_setting_show_avatar_summary"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/title_setting_browse">

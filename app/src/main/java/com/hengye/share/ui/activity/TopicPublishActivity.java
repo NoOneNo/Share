@@ -56,6 +56,12 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         return intent;
     }
 
+    public static Intent getStartIntent(Context context, String content) {
+        Intent intent = new Intent(context, TopicPublishActivity.class);
+        intent.putExtra("topicDraft", TopicDraftHelper.getWBTopicDraftByTopicPublish(content));
+        return intent;
+    }
+
     private TopicDraft mTopicDraft;
     private String mTopicDraftContent;
     private final static int DEFAULT_TYPE = TopicDraftHelper.PUBLISH_TOPIC;
@@ -86,7 +92,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     private EmoticonPicker mEmoticonPicker;
     private RelativeLayout mContainer;
     private EditText mContent;
-    private Dialog mSaveToDraftDialog;
+    private Dialog mSaveToDraftDialog, mSkipToLoginDialog;
 
     private void initView() {
         mContainer = (RelativeLayout) findViewById(R.id.rl_container);
@@ -217,6 +223,11 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void publishTopic() {
+
+        if(!checkCanPublicTopic()){
+            return;
+        }
+
         TopicPublishService.publish(this, generateTopicDraft(), UserUtil.getToken());
         finish();
     }
@@ -225,6 +236,26 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         TopicDraftHelper.saveTopicDraft(generateTopicDraft());
         setResult(Activity.RESULT_OK);
         ToastUtil.showToast(R.string.label_save_to_draft_success);
+    }
+
+    private boolean checkCanPublicTopic(){
+        boolean result = true;
+        if(TextUtils.isEmpty(mContent.getText().toString())){
+            result = false;
+            ToastUtil.showToast("为什么连一个空格都不给我??");
+        }else if(TextUtils.isEmpty(UserUtil.getToken())){
+            result = false;
+            showSkipToLoginDialog();
+        }
+
+        return result;
+    }
+
+    private void showSkipToLoginDialog(){
+        if(mSkipToLoginDialog == null){
+            mSkipToLoginDialog = AccountManageActivity.getLoginDialog(this);
+        }
+        mSkipToLoginDialog.show();
     }
 
     @Override
@@ -243,6 +274,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         @Override
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
             return DataUtil.convertNormalStringToSpannableString(TopicPublishActivity.this, String.valueOf(source));
+//            return DataUtil.convertNormalStringToSpannableString(TopicPublishActivity.this, mContent.getText().toString());
         }
     };
 

@@ -1,10 +1,13 @@
 package com.hengye.share.ui.fragment.setting;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
+import android.text.InputType;
 
+import com.hengye.share.ui.activity.TopicPublishActivity;
 import com.hengye.share.ui.base.BaseApplication;
 import com.hengye.share.R;
 import com.hengye.share.ui.fragment.BasePreferenceFragment;
@@ -42,19 +45,15 @@ public class SettingFragment extends BasePreferenceFragment {
             clazz = SettingNotifyFragment.class;
         }else if(title.equals(getString(R.string.title_setting_show_theme))){
             //主题
-//            clazz = SettingThemeFragment.class;
-            clazz = null;
         }else if(title.equals(getString(R.string.title_setting_show_reading_habit))){
             //阅读习惯
             clazz = SettingReadingHabitFragment.class;
         }else if(title.equals(getString(R.string.title_setting_other_feedback))){
             //意见反馈
-//            clazz = SettingFeedbackFragment.class;
-            clazz = null;
+            startActivity(TopicPublishActivity.getStartIntent(getActivity(), getFeedBackContent()));
         }else if(title.equals(getString(R.string.title_setting_other_about))){
             //关于
-//            clazz = SettingAboutFragment.class;
-            clazz = null;
+            clazz = SettingAboutFragment.class;
         }else{
             L.debug("preference title not found");
         }
@@ -81,4 +80,8 @@ public class SettingFragment extends BasePreferenceFragment {
         return super.onPreferenceTreeClick(preferenceScreen, preference);
     }
 
+
+    private String getFeedBackContent(){
+        return "#Share意见反馈# @我是一只小小小鸡仔 ";
+    }
 }

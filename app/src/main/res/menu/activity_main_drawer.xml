@@ -3,27 +3,27 @@
 
     <group android:checkableBehavior="single">
         <item android:id="@+id/nav_homepage" android:icon="@drawable/nav_home"
-            android:title="个人主页" />
+            android:title="@string/title_drawer_homepage" />
         <item android:id="@+id/nav_at_me" android:icon="@drawable/nav_mention"
-            android:title="提及" />
+            android:title="@string/title_drawer_at_me" />
         <item android:id="@+id/nav_comment" android:icon="@drawable/nav_comment"
-            android:title="评论" />
+            android:title="@string/title_drawer_comment" />
         <item android:id="@+id/nav_favorites" android:icon="@drawable/nav_favorite"
-            android:title="收藏的微博" />
+            android:title="@string/title_drawer_favorites" />
         <item android:id="@+id/nav_group_manage" android:icon="@drawable/nav_group"
-            android:title="分组管理" />
+            android:title="@string/title_drawer_group_manage" />
         <item android:id="@+id/nav_draft" android:icon="@drawable/nav_draft"
-            android:title="草稿箱" />
+            android:title="@string/title_drawer_draft" />
     </group>
 
-    <item android:title="其他">
+    <item android:title="@string/title_drawer_others">
         <menu>
             <group android:checkableBehavior="single">
                 <item android:id="@+id/nav_setting" android:icon="@drawable/nav_setting"
-                    android:title="设置" />
+                    android:title="@string/title_drawer_setting" />
 
                 <item android:id="@+id/nav_share" android:icon="@drawable/nav_share"
-                    android:title="分享" />
+                    android:title="@string/title_drawer_share" />
             </group>
         </menu>
     </item>

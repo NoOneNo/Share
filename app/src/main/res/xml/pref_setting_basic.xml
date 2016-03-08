@@ -7,7 +7,7 @@
     <PreferenceCategory android:title="@string/title_setting_common">
 
         <CheckBoxPreference
-            android:key="check_update"
+            android:key="launch_check_update"
             android:title="@string/title_setting_launch_check_update"
             android:defaultValue="true"/>
 

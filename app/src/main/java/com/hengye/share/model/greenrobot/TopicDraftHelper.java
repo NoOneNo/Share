@@ -22,6 +22,14 @@ public class TopicDraftHelper {
         return topic;
     }
 
+    public static TopicDraft getWBTopicDraftByTopicPublish(String content){
+        TopicDraft topicDraft = new TopicDraft();
+        topicDraft.setContent(content);
+        topicDraft.setType(TopicDraftHelper.PUBLISH_TOPIC);
+        topicDraft.setParentType(Parent.TYPE_WEIBO);
+        return topicDraft;
+    }
+
     public static TopicDraft getWBTopicDraftByTopicRepost(String targetTopicId){
         TopicDraft topicDraft = new TopicDraft();
         topicDraft.setTargetTopicId(targetTopicId);

@@ -141,9 +141,5 @@
         <item>1</item>
         <item>2</item>
     </string-array>
-    <string-array name="show_avatar_default_values">
-        <item>1</item>
-        <item>2</item>
-    </string-array>
     <!-- 显示头像 -->
 </resources>

@@ -288,6 +288,8 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
                 mUsername.setText(userInfo.getName());
                 if(SettingHelper.isShowTopicAvatar()){
                     mAvatar.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());
+                }else{
+                    mAvatar.setImageResource(R.drawable.ic_user_avatar);
                 }
             }
         }
@@ -306,6 +308,8 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
                 mUsername.setText(userInfo.getName());
                 if(SettingHelper.isShowCommentAndRepostAvatar()) {
                     mAvatar.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());
+                }else{
+                    mAvatar.setImageResource(R.drawable.ic_user_avatar);
                 }
             }
         }

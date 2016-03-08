@@ -2,6 +2,7 @@ package com.hengye.share.ui.activity;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.ui.mvpview.AccountManageMvpView;
 import com.hengye.share.ui.presenter.AccountManagePresenter;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
+import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.thirdparty.ThirdPartyUtils;
@@ -177,5 +179,18 @@ public class AccountManageActivity extends BaseActivity implements AccountManage
         public void setAccountSelectBtn(View v) {
             mSelectAccountBtn = v;
         }
+    }
+
+    public static Dialog getLoginDialog(final Context context){
+        SimpleTwoBtnDialog stbd = new SimpleTwoBtnDialog();
+        stbd.setContent("未发现已授权的账号，是否跳转到登录页面？");
+        stbd.setPositiveButtonClickListener(new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                context.startActivity(new Intent(context, AccountManageActivity.class));
+            }
+        });
+
+        return stbd.create(context);
     }
 }

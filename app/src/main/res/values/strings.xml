@@ -20,13 +20,25 @@
     <string name="action_settings">Settings</string>
     <string name="action_login">Login</string>
     <string name="action_login_by_third">Login By Third</string>
+    <string name="title_activity_login">Sign in</string>
+
 
     <string name="topic_gallery_image_large">原图</string>
-
     <string name="tip_exit_on_back_pressed">再按一次退出应用</string>
 
+    <!-- Strings related to activity drawer-->
+    <string name="title_drawer_homepage">个人主页</string>
+    <string name="title_drawer_at_me">提及</string>
+    <string name="title_drawer_comment">评论</string>
+    <string name="title_drawer_favorites">收藏</string>
+    <string name="title_drawer_group_manage">分组管理</string>
+    <string name="title_drawer_draft">草稿箱</string>
+    <string name="title_drawer_others">其他</string>
+    <string name="title_drawer_setting">设置</string>
+    <string name="title_drawer_share">分享</string>
+    <!-- Strings related to activity drawer-->
+
     <!-- Strings related to activity title-->
-    <string name="title_activity_login">Sign in</string>
     <string name="title_activity_setting">设置</string>
     <string name="title_activity_topic_notify">通知</string>
     <string name="title_activity_at_user">选择用户</string>
@@ -45,7 +57,6 @@
     <string name="title_page_comment_by_me">我发出的评论</string>
     <string name="title_page_topic">微博</string>
     <string name="title_page_mention">提及</string>
-
     <string name="title_page_theme">相关话题</string>
     <!-- Strings related to TopicGroup-->
 
@@ -191,12 +202,16 @@
 
     <string name="title_setting_font_zoom">字体缩放</string>
     <string name="title_setting_menu_show_style">功能菜单显示风格</string>
-    <string name="title_setting_show_avator">显示头像</string>
-    <string name="title_setting_show_avator_summary">关闭可以节省流量</string>
+    <string name="title_setting_show_avatar_off">不显示头像</string>
+    <string name="title_setting_show_avatar_summary">关闭可以节省流量</string>
     <string name="title_setting_browse">浏览设置</string>
     <string name="title_setting_read_order">阅读顺序</string>
     <string name="title_setting_read_order_summary">「顺序阅读」表示刷新时总是从最新微博开始阅读，「逆序阅读」表示刷新时保留上次的阅读位置，从加载新微博的最后一条向最新阅读</string>
     <string name="title_setting_auto_night_mode">自动进入夜间模式</string>
+
+    <string name="title_setting_check_update">检查更新</string>
+    <string name="title_setting_version_code">版本号</string>
+    <string name="title_setting_donate_to_developer">捐赠开发者</string>
 
     <!-- Strings related to setting -->
 

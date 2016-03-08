@@ -57,6 +57,12 @@ public class SettingHelper {
     public final static String KEY_HABIT_READ_ORDER = "read_order";
     //阅读习惯
 
+    //关于
+    public final static String KEY_ABOUT_CHECK_UPDATE = "check_update";
+    public final static String KEY_ABOUT_VERSION_CODE = "version_code";
+    public final static String KEY_ABOUT_DONATE_TO_DEVELOPER = "donate_to_developer";
+    //关于
+
     public static SharedPreferences getPreferences(){
         return PreferenceManager.getDefaultSharedPreferences(BaseApplication.getInstance());
     }
@@ -229,14 +235,14 @@ public class SettingHelper {
         return getStringSet(KEY_HABIT_SHOW_AVATAR);
     }
 
-    public static Boolean isShowTopicAvatar(){
+    public static boolean isShowTopicAvatar(){
         Set<String> value = isShowAvatar();
-        return value != null && value.contains("1");
+        return value == null || !value.contains("1");
     }
 
-    public static Boolean isShowCommentAndRepostAvatar(){
+    public static boolean isShowCommentAndRepostAvatar(){
         Set<String> value = isShowAvatar();
-        return value != null && value.contains("2");
+        return value == null || !value.contains("2");
     }
 
     //自动进入夜间模式
@@ -249,7 +255,13 @@ public class SettingHelper {
         return getString(KEY_HABIT_READ_ORDER);
     }
 
-
+    public static boolean isOrderReading(){
+        String value =  getString(KEY_HABIT_READ_ORDER);
+        if("1".equals(value)){
+            return true;
+        }
+        return false;
+    }
 
 
     public static String getString(String key){
@@ -258,12 +270,22 @@ public class SettingHelper {
 
     public static String getString(String key, String defaultValue){
         String value = (String)mCache.get(key);
-        return value != null ? value : getPreferences().getString(key, defaultValue);
+
+        if(value == null){
+            value = getPreferences().getString(key, defaultValue);
+            putValue(key, value);
+        }
+        return value;
     }
 
     public static Boolean getBoolean(String key, Boolean defaultValue){
         Boolean value = (Boolean)mCache.get(key);
-        return value != null ? value : getPreferences().getBoolean(key, defaultValue);
+
+        if(value == null){
+            value = getPreferences().getBoolean(key, defaultValue);
+            putValue(key, value);
+        }
+        return value;
     }
 
     public static Set<String> getStringSet(String key){
@@ -272,7 +294,12 @@ public class SettingHelper {
 
     public static Set<String> getStringSet(String key, Set<String> defaultValue){
         Set<String> value = (Set<String>)mCache.get(key);
-        return value != null ? value : getPreferences().getStringSet(key, defaultValue);
+
+        if(value == null){
+            value = getPreferences().getStringSet(key, defaultValue);
+            putValue(key, value);
+        }
+        return value;
     }
 
     public static void putValue(String key, Object value){

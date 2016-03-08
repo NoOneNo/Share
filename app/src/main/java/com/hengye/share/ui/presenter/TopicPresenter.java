@@ -16,6 +16,7 @@ import com.hengye.share.ui.mvpview.TopicMvpView;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.GsonUtil;
 import com.hengye.share.util.L;
+import com.hengye.share.util.SettingHelper;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
@@ -48,18 +49,15 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
     public void loadWBTopic(String id, final boolean isRefresh, boolean isLoadId) {
         switch (mTopicGroup.topicType) {
             case ALL:
-                if (isLoadId && isRefresh && !"0".equals(id)) {
-                    loadWBAllTopicIds(id);
-                } else {
-                    loadWBAllTopic(id, isRefresh);
-                }
-                break;
             case BILATERAL:
-                if (isLoadId && isRefresh && !"0".equals(id)) {
-                    loadWBBilateralTopicIds(id);
-                } else {
-                    loadWBBilateralTopic(id, isRefresh);
+            case GROUP_LIST:
+
+                boolean isNeedLoadId = false;
+                if (isRefresh && isLoadId && !"0".equals(id) && SettingHelper.isOrderReading()) {
+                    isNeedLoadId = true;
                 }
+                loadWBTopicIds(id, isRefresh, isNeedLoadId);
+
                 break;
             case TOPIC_AT_ME:
                 loadWBTopicAtMeTopic(id, isRefresh);
@@ -76,18 +74,35 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
             case HOMEPAGE:
                 loadWBHomepageTopic(id, isRefresh);
                 break;
-            case GROUP_LIST:
-                if (isLoadId && isRefresh && !"0".equals(id)) {
-                    loadWBGroupListTopicIds(id);
-                } else {
-                    loadWBGroupListTopic(id, isRefresh);
-                }
-                break;
             default:
                 break;
         }
+    }
 
-
+    public void loadWBTopicIds(String id, boolean isRefresh, boolean isNeedLoadId){
+        switch (mTopicGroup.topicType){
+            case ALL:
+                if(isNeedLoadId){
+                    loadWBAllTopicIds(id);
+                }else{
+                    loadWBAllTopic(id, isRefresh);
+                }
+                break;
+            case BILATERAL:
+                if(isNeedLoadId){
+                    loadWBBilateralTopicIds(id);
+                }else{
+                    loadWBBilateralTopic(id, isRefresh);
+                }
+                break;
+            case GROUP_LIST:
+                if(isNeedLoadId){
+                    loadWBGroupListTopicIds(id);
+                }else{
+                    loadWBGroupListTopic(id, isRefresh);
+                }
+                break;
+        }
     }
 
     public void loadWBAllTopicIds(final String since_id) {
@@ -227,13 +242,13 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
                     getMvpView().handleNoMoreTopics();
                     L.debug("no topic update");
                 } else {
-                    if (wbTopicIds.getStatuses().size() >= WBUtil.getWBTopicRequestCount()) {
+                    if (wbTopicIds.getStatuses().size() >= WBUtil.getWBTopicRequestCount() * 2) {
                         //还有更新的微博，重新请求刷新
 //                                RequestManager.addToRequestQueue(getWBTopicRequest(token, 0 + "", true), getRequestTag());
                         L.debug("exist newer topic, request refresh again");
                         loadWBTopic("0", true, false);
                     } else {
-                        //新的微博条数没有超过请求条数，显示更新多少条微博，根据请求的since_id获取微博
+                        //新的微博条数没有超过请求条数的2倍，显示更新多少条微博，根据请求的since_id获取微博
 //                                RequestManager.addToRequestQueue(getWBTopicRequest(token, since_id, true), getRequestTag());
                         L.debug("new topic is less than MAX_COUNT_REQUEST, request refresh by since_id");
                         loadWBTopic(since_id, true, false);

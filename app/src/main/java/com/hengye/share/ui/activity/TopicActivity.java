@@ -187,7 +187,8 @@ public class TopicActivity extends BaseActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_login) {
-            startActivity(LoginActivity.class);
+//            startActivity(LoginActivity.class);
+            startActivity(TestActivity.class);
         } else if (id == R.id.action_login_by_third) {
             startActivityForResult(AccountManageActivity.class, AccountManageActivity.ACCOUNT_CHANGE);
         } else if (id == R.id.action_search) {
@@ -227,7 +228,7 @@ public class TopicActivity extends BaseActivity
         } else if (id == R.id.nav_draft) {
             startActivity(TopicDraftActivity.class);
         } else if (id == R.id.nav_share) {
-            startActivity(TestActivity.class);
+            startActivity(TopicPublishActivity.getStartIntent(this , "#Share#Share微博客户端, 非常好用[赞]"));
         }
 
 //        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -291,22 +292,26 @@ public class TopicActivity extends BaseActivity
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == AccountManageActivity.ACCOUNT_CHANGE && resultCode == Activity.RESULT_OK) {
-            loadSuccess(UserUtil.getCurrentUser());
-            if(mViewPager != null) {
-                mTopicFragmentAdapter.refresh(getTopicGroups());
-
-                //全部微博
-                String str1 = mTopicFragmentAdapter.getFragmentTags().get(0);
-                //互相关注
-                String str2 = mTopicFragmentAdapter.getFragmentTags().get(1);
-
-                refreshTopicFragment(getSupportFragmentManager().findFragmentByTag(str1));
-                refreshTopicFragment(getSupportFragmentManager().findFragmentByTag(str2));
-//                mViewPager.setAdapter(mTopicFragmentAdapter = new TopicFragmentPager(getSupportFragmentManager(), this, getTopicGroups()));
-                adjustTabLayout();
-            }
+            updateView();
         } else if (requestCode == GroupManageActivity.GROUP_UPDATE && resultCode == Activity.RESULT_OK) {
             updateViewPager();
+        }
+    }
+
+    private void updateView(){
+        loadSuccess(UserUtil.getCurrentUser());
+        if(mViewPager != null) {
+            mTopicFragmentAdapter.refresh(getTopicGroups());
+
+            //全部微博
+            String str1 = mTopicFragmentAdapter.getFragmentTags().get(0);
+            //互相关注
+            String str2 = mTopicFragmentAdapter.getFragmentTags().get(1);
+
+            refreshTopicFragment(getSupportFragmentManager().findFragmentByTag(str1));
+            refreshTopicFragment(getSupportFragmentManager().findFragmentByTag(str2));
+//                mViewPager.setAdapter(mTopicFragmentAdapter = new TopicFragmentPager(getSupportFragmentManager(), this, getTopicGroups()));
+            adjustTabLayout();
         }
     }
 

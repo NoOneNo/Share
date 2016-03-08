@@ -75,6 +75,8 @@ public class SettingNotifyFragment extends BasePreferenceFragment {
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        super.onSharedPreferenceChanged(sharedPreferences, key);
+
         if (key.equals(SettingHelper.KEY_NOTIFY_OPEN)) {
             setNotifyItemsEnable(SettingHelper.isNotifyOpen());
         } else if (key.equals(SettingHelper.KEY_NOTIFY_TYPE)) {
