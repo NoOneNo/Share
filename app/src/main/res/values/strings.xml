@@ -25,6 +25,8 @@
 
     <string name="topic_gallery_image_large">原图</string>
     <string name="tip_exit_on_back_pressed">再按一次退出应用</string>
+    <string name="tip_no_network">无法连接到服务器，请检查你的网络设置。</string>
+
 
     <!-- Strings related to activity drawer-->
     <string name="title_drawer_homepage">个人主页</string>

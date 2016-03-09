@@ -1,12 +1,14 @@
 package com.hengye.share.util;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 public class NetworkUtil extends ApplicationUtil{
 
-    public static boolean hasNetwork() {
+    public static boolean isConnected() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if (networkInfo == null || !networkInfo.isConnected()) {
@@ -72,5 +74,17 @@ public class NetworkUtil extends ApplicationUtil{
             }
         }
         return false;
+    }
+
+    public static abstract class NetworkChangeReceiver extends BroadcastReceiver {
+
+        abstract public void onNetworkChange(boolean isConnected);
+
+        @Override
+        public void onReceive(final Context context, Intent intent) {
+            if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
+                onNetworkChange(NetworkUtil.isConnected());
+            }
+        }
     }
 }

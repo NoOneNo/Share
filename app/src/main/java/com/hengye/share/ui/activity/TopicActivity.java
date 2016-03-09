@@ -62,6 +62,11 @@ public class TopicActivity extends BaseActivity
     }
 
     @Override
+    protected boolean observeNetworkChange() {
+        return true;
+    }
+
+    @Override
     protected int getLayoutResId() {
         return R.layout.activity_topic;
     }
@@ -76,6 +81,7 @@ public class TopicActivity extends BaseActivity
     private TabLayout mTablayout;
     private NetworkImageViewPlus mAvatar;
     private TextView mUsername, mSign;
+    private View mNoNetwork;
 
     private TopicFragmentPager mTopicFragmentAdapter;
 
@@ -83,6 +89,8 @@ public class TopicActivity extends BaseActivity
 
 
     private void initView() {
+        mNoNetwork = findViewById(R.id.rl_no_network);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mTablayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -329,4 +337,10 @@ public class TopicActivity extends BaseActivity
         }
     }
 
+    @Override
+    protected void onNetworkChange(boolean isConnected) {
+        super.onNetworkChange(isConnected);
+
+        mNoNetwork.setVisibility(isConnected ? View.GONE : View.VISIBLE);
+    }
 }

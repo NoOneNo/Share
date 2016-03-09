@@ -1,6 +1,9 @@
 package com.hengye.share.ui.base;
 
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.LayoutRes;
@@ -14,6 +17,7 @@ import android.widget.LinearLayout;
 
 import com.hengye.share.R;
 import com.hengye.share.ui.presenter.BasePresenter;
+import com.hengye.share.util.NetworkUtil;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.SettingHelper;
 
@@ -42,6 +46,8 @@ public class BaseActivity extends AppCompatActivity{
         return true;
     }
 
+    protected boolean observeNetworkChange(){return false;}
+
     private int mThemeResId = 0;
 
     private SwipeBackHelper mSwipeHelper;
@@ -49,6 +55,8 @@ public class BaseActivity extends AppCompatActivity{
     private BasePresenter mPresenter;
 
     private Handler mHandler;
+
+    private NetworkUtil.NetworkChangeReceiver mNetworkChangeReceiver;
 
     protected boolean mFirstClick = true;
 
@@ -108,6 +116,7 @@ public class BaseActivity extends AppCompatActivity{
         super.onResume();
         resetFirstClick();
         replaceCustomThemeIfNeeded();
+        observeNetworkChangeIfNeeded(true);
         if (mSwipeHelper != null) {
             mSwipeHelper.onResume();
         }
@@ -142,6 +151,7 @@ public class BaseActivity extends AppCompatActivity{
     @Override
     protected void onPause() {
         super.onPause();
+        observeNetworkChangeIfNeeded(false);
     }
 
     @Override
@@ -263,5 +273,34 @@ public class BaseActivity extends AppCompatActivity{
             mHandler = new Handler();
         }
         return mHandler;
+    }
+
+    protected void observeNetworkChangeIfNeeded(boolean isStart){
+        if(!observeNetworkChange()){
+            return;
+        }
+
+        if(isStart){
+            IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+            registerReceiver(getNetworkChangeReceiver(), intentFilter);
+        }else{
+            unregisterReceiver(getNetworkChangeReceiver());
+        }
+    }
+
+    protected BroadcastReceiver getNetworkChangeReceiver(){
+        if(mNetworkChangeReceiver == null){
+            mNetworkChangeReceiver = new NetworkUtil.NetworkChangeReceiver() {
+                @Override
+                public void onNetworkChange(boolean isConnected) {
+                    BaseActivity.this.onNetworkChange(isConnected);
+                }
+            };
+        }
+        return mNetworkChangeReceiver;
+    }
+
+    protected void onNetworkChange(boolean isConnected) {
+
     }
 }
