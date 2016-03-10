@@ -5,8 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.provider.Settings;
 
 public class NetworkUtil extends ApplicationUtil{
+
+    public static void startSystemSetting(Context context){
+        context.startActivity(new Intent(Settings.ACTION_SETTINGS));
+    }
 
     public static boolean isConnected() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);

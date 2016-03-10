@@ -25,7 +25,6 @@ import com.hengye.share.ui.mvpview.TopicDetailMvpView;
 import com.hengye.share.ui.presenter.TopicDetailPresenter;
 import com.hengye.share.ui.view.BackTopButton;
 import com.hengye.share.util.CommonUtil;
-import com.hengye.share.util.L;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
@@ -103,7 +102,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     private TopicDetailPresenter mPresenter;
 
     private void initHeaderView(View headerView, View headerViewAssist){
-        mTabLayout = (TabLayout) headerViewAssist.findViewById(R.id.tab_layout);
+        mTabLayout = (TabLayout) headerViewAssist.findViewById(R.id.tab);
         mTabLayout.addTab((mTabLayout.newTab().setText(R.string.label_topic_comment).setTag("tab_layout")));
         mTabLayout.addTab((mTabLayout.newTab().setText(R.string.label_topic_repost).setTag("tab_layout")));
         mTabLayout.getTabAt(0).select();

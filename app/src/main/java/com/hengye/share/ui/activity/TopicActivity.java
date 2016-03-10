@@ -10,14 +10,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +40,7 @@ import com.hengye.share.ui.support.actionbar.ActionBarDrawerToggleCustom;
 import com.hengye.share.ui.widget.util.SelectorLoader;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
+import com.hengye.share.util.NetworkUtil;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.SettingHelper;
 import com.hengye.share.util.ToastUtil;
@@ -49,7 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TopicActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener, UserMvpView {
+        implements NavigationView.OnNavigationItemSelectedListener, UserMvpView , View.OnClickListener{
 
     @Override
     protected boolean setToolBar() {
@@ -78,7 +80,7 @@ public class TopicActivity extends BaseActivity
     }
 
     private ViewPager mViewPager;
-    private TabLayout mTablayout;
+    private TabLayout mTab;
     private NetworkImageViewPlus mAvatar;
     private TextView mUsername, mSign;
     private View mNoNetwork;
@@ -90,22 +92,19 @@ public class TopicActivity extends BaseActivity
 
     private void initView() {
         mNoNetwork = findViewById(R.id.rl_no_network);
+        mNoNetwork.setOnClickListener(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        mTablayout = (TabLayout) findViewById(R.id.tab_layout);
+
+        mTab = (TabLayout) findViewById(R.id.tab);
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
 
         mViewPager.setAdapter(mTopicFragmentAdapter = new TopicFragmentPager(getSupportFragmentManager(), this, getTopicGroups()));
         adjustTabLayout();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(TopicPublishActivity.class);
-            }
-        });
+        fab.setOnClickListener(this);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggleCustom toggle = new ActionBarDrawerToggleCustom(
@@ -122,6 +121,18 @@ public class TopicActivity extends BaseActivity
 
         toggle.syncState();
 
+        initNavigationView();
+        initSearch();
+
+        if (UserUtil.isUserNameEmpty()) {
+            mPresenter.loadWBUserInfo();
+        } else {
+            loadSuccess(UserUtil.getCurrentUser());
+        }
+
+    }
+
+    private void initNavigationView(){
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -133,28 +144,57 @@ public class TopicActivity extends BaseActivity
 
         ImageButton moreAccount = (ImageButton) navigationView.findViewById(R.id.iv_more_account);
         SelectorLoader.getInstance().setImageSelector(this, moreAccount, R.drawable.compose_more_account_add, R.drawable.compose_more_account_add_highlighted);
-        moreAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivityForResult(AccountManageActivity.class, AccountManageActivity.ACCOUNT_CHANGE);
-            }
-        });
+        moreAccount.setOnClickListener(this);
 
         mAvatar = (NetworkImageViewPlus) navigationView.findViewById(R.id.iv_avatar);
         mUsername = (TextView) navigationView.findViewById(R.id.tv_username);
         mSign = (TextView) navigationView.findViewById(R.id.tv_sign);
 
-        if (UserUtil.isUserNameEmpty()) {
-            mPresenter.loadWBUserInfo();
-        } else {
-            loadSuccess(UserUtil.getCurrentUser());
-        }
+        mUsername.setOnClickListener(this);
+        mSign.setOnClickListener(this);
+    }
+
+    private CardView mSearch;
+    private View mSearchLayout, mSearchBack, mSearchDividerLine;
+    private EditText mSearchContent;
+
+    private void initSearch(){
+        mSearch = (CardView) findViewById(R.id.card_search);
+
+        mSearchLayout = findViewById(R.id.ll_search);
+        mSearchBack = findViewById(R.id.iv_search_back);
+        mSearchDividerLine = findViewById(R.id.divider_line);
+        mSearchContent = (EditText) findViewById(R.id.et_search_content);
+
 
     }
 
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if(id == R.id.rl_no_network){
+            NetworkUtil.startSystemSetting(TopicActivity.this);
+        }else if(id == R.id.fab){
+            startActivity(TopicPublishActivity.class);
+        }else if(id == R.id.iv_more_account){
+            startActivityForResult(AccountManageActivity.class, AccountManageActivity.ACCOUNT_CHANGE);
+        }else if(id == R.id.tv_username || id == R.id.tv_sign){
+            String str = mUsername.getText().toString();
+            if(str.contains("小小小鸡仔") || str.contains("Jayden")){
+                testClickCount++;
+                if(testClickCount == 3){
+                    testClickCount = 0;
+                    startActivity(TestActivity.class);
+                }
+            }
+        }
+    }
+
+    private int testClickCount = 0;
+
     private void adjustTabLayout() {
-        mTablayout.setTabMode(mViewPager.getAdapter().getCount() > 3 ? TabLayout.MODE_SCROLLABLE : TabLayout.MODE_FIXED);
-        mTablayout.setupWithViewPager(mViewPager);
+        mTab.setTabMode(mViewPager.getAdapter().getCount() > 3 ? TabLayout.MODE_SCROLLABLE : TabLayout.MODE_FIXED);
+        mTab.setupWithViewPager(mViewPager);
     }
 
     @Override
@@ -194,17 +234,10 @@ public class TopicActivity extends BaseActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_login) {
-//            startActivity(LoginActivity.class);
-            startActivity(TestActivity.class);
-        } else if (id == R.id.action_login_by_third) {
-            startActivityForResult(AccountManageActivity.class, AccountManageActivity.ACCOUNT_CHANGE);
-        } else if (id == R.id.action_search) {
+        if (id == R.id.action_search) {
             startActivity(SearchActivity.class);
             Intent intent = new Intent(this, SearchActivity.class);
             startActivity(intent);
-        } else if (id == R.id.set_token) {
-            startActivity(SetTokenActivity.class);
         }
 
         return super.onOptionsItemSelected(item);
@@ -340,7 +373,6 @@ public class TopicActivity extends BaseActivity
     @Override
     protected void onNetworkChange(boolean isConnected) {
         super.onNetworkChange(isConnected);
-
         mNoNetwork.setVisibility(isConnected ? View.GONE : View.VISIBLE);
     }
 }

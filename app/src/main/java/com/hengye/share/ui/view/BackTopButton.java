@@ -40,6 +40,8 @@ public class BackTopButton extends ImageView{
     private Handler mHandler = new Handler();
 
     private void init(){
+        setVisibility(View.GONE);
+
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,9 +94,9 @@ public class BackTopButton extends ImageView{
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if(dy > 0){
+                if(dy > 10){
                     appear();
-                }else if(dy < -30){
+                }else if(dy < -20){
                     disappear();
                 }
             }
@@ -117,6 +119,7 @@ public class BackTopButton extends ImageView{
     public void scrollToTop(){
         if(mRecyclerView != null){
             mRecyclerView.scrollToPosition(0);
+            mRecyclerView.smoothScrollBy(0,1);
         }else if(mListView != null){
             mListView.setSelection(0);
         }

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 
@@ -16,6 +17,7 @@ import com.hengye.share.adapter.recyclerview.SearchUserAdapter;
 import com.hengye.share.ui.mvpview.SearchMvpView;
 import com.hengye.share.ui.presenter.SearchPresenter;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
+import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.ViewUtil;
 
 import java.util.ArrayList;
@@ -92,10 +94,20 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         if(id == R.id.btn_back){
             finish();
         }else if(id == R.id.btn_search){
+
+            if(!canSearchContent()){
+                ToastUtil.showToast("搜索内容不能为空");
+                return;
+            }
+
             ViewUtil.hideKeyBoard(mContent);
             mLoadingDialog.show();
             mPresenter.loadWBSearchContent(mContent.getText().toString().trim());
         }
+    }
+
+    private boolean canSearchContent(){
+        return !TextUtils.isEmpty(mContent.getText().toString());
     }
 
     @Override

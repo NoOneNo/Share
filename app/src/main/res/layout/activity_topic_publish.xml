@@ -34,7 +34,7 @@
             android:background="?attr/theme_color">
 
             <ImageButton
-                style="?android:actionButtonStyle"
+                style="?android:buttonBarButtonStyle"
                 android:id="@+id/btn_camera"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -42,7 +42,7 @@
                 android:src="@drawable/compose_camerabutton_background"/>
 
             <ImageButton
-                style="?android:actionButtonStyle"
+                style="?android:buttonBarButtonStyle"
                 android:id="@+id/btn_mention"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -50,7 +50,7 @@
                 android:src="@drawable/compose_mentionbutton_background"/>
 
             <ImageButton
-                style="?android:actionButtonStyle"
+                style="?android:buttonBarButtonStyle"
                 android:id="@+id/btn_emoticon"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -63,7 +63,7 @@
                 android:layout_weight="1"/>
 
             <ImageButton
-                style="?android:actionButtonStyle"
+                style="?android:buttonBarButtonStyle"
                 android:id="@+id/btn_publish"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

@@ -50,7 +50,7 @@ public class TopicCommentActivity extends BaseActivity{
             }
         });
 
-        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        mTabLayout = (TabLayout) findViewById(R.id.tab);
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         mViewPager.setAdapter(new TopicFragmentPager(getSupportFragmentManager(), this, getTopicGroups()));
 //        mViewPager.setAdapter(new TopicNotifyFragmentPager());

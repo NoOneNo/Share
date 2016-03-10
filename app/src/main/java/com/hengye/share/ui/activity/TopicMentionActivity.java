@@ -2,8 +2,6 @@ package com.hengye.share.ui.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -11,7 +9,6 @@ import android.view.View;
 import com.hengye.share.adapter.viewpager.TopicFragmentPager;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.R;
-import com.hengye.share.ui.fragment.TopicNotifyFragment;
 import com.hengye.share.ui.presenter.TopicPresenter;
 
 import java.util.ArrayList;
@@ -48,7 +45,7 @@ public class TopicMentionActivity extends BaseActivity{
             }
         });
 
-        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        mTabLayout = (TabLayout) findViewById(R.id.tab);
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         mViewPager.setAdapter(new TopicFragmentPager(getSupportFragmentManager(), this, getTopicGroups()));
         mTabLayout.setupWithViewPager(mViewPager);
