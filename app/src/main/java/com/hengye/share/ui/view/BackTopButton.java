@@ -16,6 +16,7 @@ import android.widget.ListView;
 
 public class BackTopButton extends ImageView{
 
+    应该在向上滑动的时候才显示按钮， 向下滑动时隐藏
     public BackTopButton(Context context) {
         this(context, null, -1);
     }
