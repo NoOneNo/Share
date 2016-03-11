@@ -196,7 +196,6 @@ public class TopicActivity extends BaseActivity
             }
         } else if (id == R.id.iv_search_back) {
             handleSearch();
-//            InitiateSearch.handleToolBar(this, mSearch, mSearchResult, mSearchContent);
         }
     }
 
@@ -246,7 +245,6 @@ public class TopicActivity extends BaseActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
             handleSearch();
-//            InitiateSearch.handleToolBar(this, mSearch, mSearchResult, mSearchContent);
 //            startActivity(SearchActivity.class);
 //            Intent intent = new Intent(this, SearchActivity.class);
 //            startActivity(intent);
