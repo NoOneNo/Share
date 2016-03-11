@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_search"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="4dp"
     android:visibility="invisible"
     app:cardBackgroundColor="@color/white"
@@ -19,7 +19,7 @@
         <LinearLayout
             android:id="@+id/ll_search"
             android:layout_width="match_parent"
-            android:layout_height="48dp">
+            android:layout_height="?android:attr/actionBarSize">
 
             <ImageView
                 android:id="@+id/iv_search_back"
@@ -29,7 +29,7 @@
                 android:clickable="true"
                 android:contentDescription="@null"
                 android:padding="12dp"
-                android:src="@drawable/btn_back" />
+                android:src="@drawable/compose_keyboardbutton_background" />
 
             <EditText
                 android:id="@+id/et_search_content"
@@ -64,10 +64,11 @@
             android:background="#eee" />
 
         <ListView
-            android:id="@+id/listView"
+            android:id="@+id/list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/divider_line"
-            android:divider="@color/white" />
+            android:divider="@color/white"
+            android:visibility="gone"/>
     </RelativeLayout>
 </android.support.v7.widget.CardView>

@@ -1,5 +1,6 @@
 package com.hengye.share.ui.activity;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,9 +17,11 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,7 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TopicActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener, UserMvpView , View.OnClickListener{
+        implements NavigationView.OnNavigationItemSelectedListener, UserMvpView, View.OnClickListener {
 
     @Override
     protected boolean setToolBar() {
@@ -83,7 +86,7 @@ public class TopicActivity extends BaseActivity
     private TabLayout mTab;
     private NetworkImageViewPlus mAvatar;
     private TextView mUsername, mSign;
-    private View mNoNetwork;
+    private View mNoNetwork, mAppBar;
 
     private TopicFragmentPager mTopicFragmentAdapter;
 
@@ -93,6 +96,8 @@ public class TopicActivity extends BaseActivity
     private void initView() {
         mNoNetwork = findViewById(R.id.rl_no_network);
         mNoNetwork.setOnClickListener(this);
+
+        mAppBar = findViewById(R.id.appbar);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -132,14 +137,14 @@ public class TopicActivity extends BaseActivity
 
     }
 
-    private void initNavigationView(){
+    private void initNavigationView() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         //修复因为布局使用fitsSystemWindows而导致DrawLayout内容间距不对的问题
         RelativeLayout navHeader = (RelativeLayout) navigationView.findViewById(R.id.rl_header);
-        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams)navHeader.getLayoutParams();
-        lp.topMargin = ViewUtil.getStatusBarHeight(this);
+        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) navHeader.getLayoutParams();
+        lp.topMargin = ViewUtil.getStatusBarHeight();
         navHeader.setLayoutParams(lp);
 
         ImageButton moreAccount = (ImageButton) navigationView.findViewById(R.id.iv_more_account);
@@ -157,36 +162,41 @@ public class TopicActivity extends BaseActivity
     private CardView mSearch;
     private View mSearchLayout, mSearchBack, mSearchDividerLine;
     private EditText mSearchContent;
+    private ListView mSearchResult;
 
-    private void initSearch(){
+    private void initSearch() {
         mSearch = (CardView) findViewById(R.id.card_search);
 
         mSearchLayout = findViewById(R.id.ll_search);
         mSearchBack = findViewById(R.id.iv_search_back);
         mSearchDividerLine = findViewById(R.id.divider_line);
         mSearchContent = (EditText) findViewById(R.id.et_search_content);
+        mSearchResult = (ListView) findViewById(R.id.list_view);
 
-
+        mSearchBack.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if(id == R.id.rl_no_network){
+        if (id == R.id.rl_no_network) {
             NetworkUtil.startSystemSetting(TopicActivity.this);
-        }else if(id == R.id.fab){
+        } else if (id == R.id.fab) {
             startActivity(TopicPublishActivity.class);
-        }else if(id == R.id.iv_more_account){
+        } else if (id == R.id.iv_more_account) {
             startActivityForResult(AccountManageActivity.class, AccountManageActivity.ACCOUNT_CHANGE);
-        }else if(id == R.id.tv_username || id == R.id.tv_sign){
+        } else if (id == R.id.tv_username || id == R.id.tv_sign) {
             String str = mUsername.getText().toString();
-            if(str.contains("小小小鸡仔") || str.contains("Jayden")){
+            if (str.contains("小小小鸡仔") || str.contains("Jayden")) {
                 testClickCount++;
-                if(testClickCount == 3){
+                if (testClickCount == 3) {
                     testClickCount = 0;
                     startActivity(TestActivity.class);
                 }
             }
+        } else if (id == R.id.iv_search_back) {
+            handleSearch();
+//            InitiateSearch.handleToolBar(this, mSearch, mSearchResult, mSearchContent);
         }
     }
 
@@ -203,15 +213,15 @@ public class TopicActivity extends BaseActivity
         if (drawer.isDrawerOpen(GravityCompat.END)) {
             drawer.closeDrawer(GravityCompat.END);
         } else {
-            if(SettingHelper.isExitOnBackPressed()){
-                if(System.currentTimeMillis() - mBackPressedTime > 2000){
+            if (SettingHelper.isExitOnBackPressed()) {
+                if (System.currentTimeMillis() - mBackPressedTime > 2000) {
                     mBackPressedTime = System.currentTimeMillis();
                     ToastUtil.showToast(R.string.tip_exit_on_back_pressed);
-                }else{
+                } else {
                     android.os.Process.killProcess(android.os.Process.myPid());
                     System.exit(0);
                 }
-            }else {
+            } else {
                 moveTaskToBack(false);
             }
         }
@@ -235,9 +245,11 @@ public class TopicActivity extends BaseActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
-            startActivity(SearchActivity.class);
-            Intent intent = new Intent(this, SearchActivity.class);
-            startActivity(intent);
+            handleSearch();
+//            InitiateSearch.handleToolBar(this, mSearch, mSearchResult, mSearchContent);
+//            startActivity(SearchActivity.class);
+//            Intent intent = new Intent(this, SearchActivity.class);
+//            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -269,7 +281,7 @@ public class TopicActivity extends BaseActivity
         } else if (id == R.id.nav_draft) {
             startActivity(TopicDraftActivity.class);
         } else if (id == R.id.nav_share) {
-            startActivity(TopicPublishActivity.getStartIntent(this , "#Share#Share微博客户端, 非常好用[赞]"));
+            startActivity(TopicPublishActivity.getStartIntent(this, "#Share#Share微博客户端, 非常好用[赞]"));
         }
 
 //        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -307,11 +319,11 @@ public class TopicActivity extends BaseActivity
 
     @Override
     public void loadSuccess(User user) {
-        if(user != null) {
+        if (user != null) {
             mAvatar.setImageUrl(user.getAvatar(), RequestManager.getImageLoader());
             mUsername.setText(user.getName());
             mSign.setText(user.getSign());
-        }else{
+        } else {
             mAvatar.setImageResource(R.drawable.ic_user_avatar);
             mUsername.setText("");
             mSign.setText("");
@@ -339,9 +351,9 @@ public class TopicActivity extends BaseActivity
         }
     }
 
-    private void updateView(){
+    private void updateView() {
         loadSuccess(UserUtil.getCurrentUser());
-        if(mViewPager != null) {
+        if (mViewPager != null) {
             mTopicFragmentAdapter.refresh(getTopicGroups());
 
             //全部微博
@@ -356,8 +368,8 @@ public class TopicActivity extends BaseActivity
         }
     }
 
-    private void refreshTopicFragment(Fragment fragment){
-        if(fragment != null && fragment instanceof TopicFragment){
+    private void refreshTopicFragment(Fragment fragment) {
+        if (fragment != null && fragment instanceof TopicFragment) {
             TopicFragment topicFragment = (TopicFragment) fragment;
             topicFragment.refresh();
         }
@@ -374,5 +386,86 @@ public class TopicActivity extends BaseActivity
     protected void onNetworkChange(boolean isConnected) {
         super.onNetworkChange(isConnected);
         mNoNetwork.setVisibility(isConnected ? View.GONE : View.VISIBLE);
+    }
+
+    private void handleSearch() {
+        handleSearch(mSearch.getVisibility() != View.VISIBLE);
+    }
+
+    private void handleSearch(boolean isShow) {
+        if (isShow) {
+            startSearchShowAnimation();
+        } else {
+            startSearchHideAnimation();
+        }
+    }
+
+
+    private void startSearchHideAnimation() {
+            final Animator searchHideAnimator = ViewAnimationUtils.createCircularReveal(mSearch,
+                    mSearch.getWidth(),
+                    ViewUtil.getActionBarHeight() / 2,
+                    (float) Math.hypot(mSearch.getWidth(), mSearch.getHeight()),
+                    0);
+            searchHideAnimator.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    mSearchContent.setText("");
+                    mSearch.setEnabled(false);
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mSearch.setVisibility(View.GONE);
+                    ViewUtil.hideKeyBoard(mSearchContent);
+                    mSearchResult.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
+            searchHideAnimator.setDuration(300);
+            searchHideAnimator.start();
+    }
+
+    private void startSearchShowAnimation() {
+        final Animator searchShowAnimator = ViewAnimationUtils.createCircularReveal(mSearch,
+                    mSearchContent.getWidth(),
+                    ViewUtil.getActionBarHeight() / 2,
+                    0,
+                    (float) Math.hypot(mSearch.getWidth(), mSearch.getHeight()));
+            searchShowAnimator.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    mSearch.setVisibility(View.VISIBLE);
+                    mSearch.setEnabled(true);
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mSearchResult.setVisibility(View.VISIBLE);
+                    ViewUtil.showKeyBoard(mSearchContent);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
+
+            searchShowAnimator.setDuration(300);
+            searchShowAnimator.start();
     }
 }

@@ -2,17 +2,19 @@ package com.hengye.share.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
+import com.hengye.share.R;
 import com.hengye.share.ui.base.BaseApplication;
 
 import java.lang.reflect.Field;
 
-public class ViewUtil extends ApplicationUtil{
+public class ViewUtil extends ApplicationUtil {
 
     /**
      * Interface definition for a callback to be invoked when an item in this
@@ -23,7 +25,7 @@ public class ViewUtil extends ApplicationUtil{
         /**
          * Callback method to be invoked when an item in this RecyclerView has
          * been clicked.
-         * <p/>
+         * <p>
          * Implementers can call getItemAtPosition(position) if they need
          * to access the data associated with the selected item.
          *
@@ -43,7 +45,7 @@ public class ViewUtil extends ApplicationUtil{
         /**
          * Callback method to be invoked when an item in this RecyclerView has
          * been clicked.
-         * <p/>
+         * <p>
          * Implementers can call getItemAtPosition(position) if they need
          * to access the data associated with the selected item.
          *
@@ -55,10 +57,10 @@ public class ViewUtil extends ApplicationUtil{
     }
 
     public static String getCacheKey(String url, int maxWidth, int maxHeight, ImageView.ScaleType scaleType) {
-        if(maxWidth == ViewGroup.LayoutParams.WRAP_CONTENT){
+        if (maxWidth == ViewGroup.LayoutParams.WRAP_CONTENT) {
             maxWidth = 0;
         }
-        if(maxHeight == ViewGroup.LayoutParams.WRAP_CONTENT){
+        if (maxHeight == ViewGroup.LayoutParams.WRAP_CONTENT) {
             maxHeight = 0;
         }
         return new StringBuilder(url.length() + 12).append("#W").append(maxWidth)
@@ -90,6 +92,10 @@ public class ViewUtil extends ApplicationUtil{
         });
     }
 
+    public static int getStatusBarHeight() {
+        return getStatusBarHeight(getContext());
+    }
+
     public static int getStatusBarHeight(Context context) {
         Class<?> c = null;
         Object obj = null;
@@ -106,4 +112,28 @@ public class ViewUtil extends ApplicationUtil{
             return 0;
         }
     }
+
+    //    public static int getStatusBarHeight(Activity paramActivity) {
+//        Rect localRect = new Rect();
+//        paramActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(localRect);
+//        return localRect.top;
+//    }
+    public static int getActionBarHeight() {
+        return getDimensionPixelSize(getContext(), android.R.attr.actionBarSize,
+                getContext().getResources().getDimensionPixelSize(R.dimen.action_bar_default_size));
+    }
+
+    public static int getActionBarHeight(Context context) {
+        return getDimensionPixelSize(context, android.R.attr.actionBarSize,
+                context.getResources().getDimensionPixelSize(R.dimen.action_bar_default_size));
+    }
+
+    public static int getDimensionPixelSize(Context context, int attr, int defaultValue) {
+        int[] attrs = new int[]{attr};
+        TypedArray ta = context.obtainStyledAttributes(attrs);
+        int value = ta.getDimensionPixelSize(0, defaultValue);
+        ta.recycle();
+        return value;
+    }
+
 }
