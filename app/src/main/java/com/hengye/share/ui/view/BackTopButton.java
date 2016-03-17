@@ -16,7 +16,6 @@ import android.widget.ListView;
 
 public class BackTopButton extends ImageView{
 
-    应该在向上滑动的时候才显示按钮， 向下滑动时隐藏
     public BackTopButton(Context context) {
         this(context, null, -1);
     }
@@ -74,7 +73,7 @@ public class BackTopButton extends ImageView{
         TranslateAnimation translateAnim2 = new TranslateAnimation
                 (Animation.RELATIVE_TO_PARENT, 0,
                         Animation.RELATIVE_TO_PARENT, 0,
-                        Animation.RELATIVE_TO_PARENT, 0.3f,
+                        Animation.RELATIVE_TO_PARENT, 0.5f,
                         Animation.RELATIVE_TO_PARENT, 0f);
 
         AnimationSet as2 = new AnimationSet(true);
@@ -96,9 +95,9 @@ public class BackTopButton extends ImageView{
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if(dy > 10){
-                    appear();
-                }else if(dy < -20){
                     disappear();
+                }else if(dy < 0){
+                    appear();
                 }
             }
         });
@@ -159,6 +158,7 @@ public class BackTopButton extends ImageView{
                     scrollToTop();
                 }
             });
+            disappear();
         }
 
         @Override
@@ -186,9 +186,9 @@ public class BackTopButton extends ImageView{
 
                 //向下滑
                 if(firstVisibleItem - mLastVisibleItem > 0){
-                    appear();
-                }else if(firstVisibleItem - mLastVisibleItem < 0){
                     disappear();
+                }else if(firstVisibleItem - mLastVisibleItem < 0){
+                    appear();
                 }
             }else{
                 disappear();
