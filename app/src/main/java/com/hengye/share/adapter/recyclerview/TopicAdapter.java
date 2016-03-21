@@ -229,29 +229,9 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
             mTopicTitle.initTopicTitle(context, topic);
             mTopic.initTopicContent(context, topic, false);
 
-//            registerChildViewItemClick(mTopicTitle.mAvatar);
-//            registerChildViewItemClick(mTopicTitle.mUsername);
-//            registerChildViewItemClick(mTopicTitle.mDescription);
-//
-//            registerChildViewItemClick(mTopicTitle.mTitle);
-//            registerChildViewItemClick(mTopic.mContent);
-//            registerChildViewItemClick(mTopic.mGallery);
-//            registerChildViewItemClick(mTopic.mTopicLayout);
-//
-//            registerChildViewItemLongClick(mTopicTitle.mTitle);
-//            registerChildViewItemLongClick(mTopic.mContent);
-//            registerChildViewItemLongClick(mTopic.mGallery);
-//            registerChildViewItemLongClick(mTopic.mTopicLayout);
             if (topic.getRetweetedTopic() != null) {
                 mRetweetTopic.mTopicLayout.setVisibility(View.VISIBLE);
                 mRetweetTopic.initTopicContent(context, topic.getRetweetedTopic(), true);
-//                registerChildViewItemClick(mRetweetTopic.mContent);
-//                registerChildViewItemClick(mRetweetTopic.mGallery);
-//                registerChildViewItemClick(mRetweetTopic.mTopicLayout);
-//
-//                registerChildViewItemLongClick(mRetweetTopic.mContent);
-//                registerChildViewItemLongClick(mRetweetTopic.mGallery);
-//                registerChildViewItemLongClick(mRetweetTopic.mTopicLayout);
             } else {
                 mRetweetTopic.mTopicLayout.setVisibility(View.GONE);
             }
