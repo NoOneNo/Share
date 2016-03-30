@@ -1,85 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_default">
-    
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:orientation="horizontal"
-        android:background="?attr/theme_color"
-        android:padding="@dimen/content_margin_5dp">
-        
-        <ImageButton
-            android:id="@+id/btn_back"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/content_margin_5dp"
-            android:layout_width="@dimen/icon_size_normal"
-            android:layout_height="@dimen/icon_size_normal"
-            android:src="@drawable/btn_back"
-            android:contentDescription="@null"
-            android:background="@null"/>
+    android:background="@color/background_default"
+    android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/et_search"
-            android:layout_toEndOf="@id/btn_back"
-            android:layout_toStartOf="@+id/btn_search"
-            android:layout_centerVertical="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:hint="@string/label_search_hint"
-            android:textColor="@color/white"
-            android:maxLines="1"/>
+    <include layout="@layout/item_search" />
 
-        <View
-            android:id="@+id/divider_line"
-            style="@style/horizontal_line"
-            android:background="?attr/theme_assist_color"
-            android:layout_alignStart="@id/et_search"
-            android:layout_below="@id/et_search"
-            android:layout_marginTop="@dimen/content_margin_5dp"/>
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="?attr/actionBarSize"-->
+        <!--android:background="?attr/theme_color"-->
+        <!--android:focusable="true"-->
+        <!--android:focusableInTouchMode="true"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:padding="@dimen/content_margin_5dp">-->
 
-        <ImageButton
-            android:id="@+id/btn_search"
-            android:layout_alignBottom="@id/et_search"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/content_margin_5dp"
-            android:layout_width="@dimen/icon_size_small"
-            android:layout_height="@dimen/icon_size_small"
-            android:src="@drawable/ic_search_2"
-            android:scaleType="fitXY"
-            android:contentDescription="@null"
-            android:background="@null"/>
-    </RelativeLayout>
+        <!--<ImageButton-->
+            <!--android:id="@+id/btn_back"-->
+            <!--android:layout_width="@dimen/icon_size_normal"-->
+            <!--android:layout_height="@dimen/icon_size_normal"-->
+            <!--android:layout_alignParentStart="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginEnd="@dimen/content_margin_5dp"-->
+            <!--android:background="@null"-->
+            <!--android:contentDescription="@null"-->
+            <!--android:src="@drawable/btn_back" />-->
+
+        <!--<EditText-->
+            <!--android:id="@+id/et_search"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_toEndOf="@id/btn_back"-->
+            <!--android:layout_toStartOf="@+id/btn_search"-->
+            <!--android:background="@null"-->
+            <!--android:hint="@string/label_search_hint"-->
+            <!--android:maxLines="1"-->
+            <!--android:textColor="@color/white" />-->
+
+        <!--<View-->
+            <!--android:id="@+id/divider_line"-->
+            <!--style="@style/horizontal_line"-->
+            <!--android:layout_alignStart="@id/et_search"-->
+            <!--android:layout_below="@id/et_search"-->
+            <!--android:layout_marginTop="@dimen/content_margin_5dp"-->
+            <!--android:background="?attr/theme_assist_color" />-->
+
+        <!--<ImageButton-->
+            <!--android:id="@+id/btn_search"-->
+            <!--android:layout_width="@dimen/icon_size_small"-->
+            <!--android:layout_height="@dimen/icon_size_small"-->
+            <!--android:layout_alignBottom="@id/et_search"-->
+            <!--android:layout_alignParentEnd="true"-->
+            <!--android:layout_marginEnd="@dimen/content_margin_5dp"-->
+            <!--android:background="@null"-->
+            <!--android:contentDescription="@null"-->
+            <!--android:scaleType="fitXY"-->
+            <!--android:src="@drawable/ic_search_2" />-->
+    <!--</RelativeLayout>-->
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/label_search_user"
-        android:padding="@dimen/content_margin_10dp"/>
+        android:padding="@dimen/content_margin_10dp"
+        android:text="@string/label_search_user" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_user"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:background="@color/white"
-        android:paddingTop="@dimen/content_margin_10dp"
-        android:paddingStart="@dimen/content_margin_10dp"
+        android:paddingBottom="@dimen/content_margin_10dp"
         android:paddingEnd="0dp"
-        android:paddingBottom="@dimen/content_margin_10dp"/>
+        android:paddingStart="@dimen/content_margin_10dp"
+        android:paddingTop="@dimen/content_margin_10dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/label_search_topic"
-        android:padding="@dimen/content_margin_10dp"/>
+        android:padding="@dimen/content_margin_10dp"
+        android:text="@string/label_search_topic" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_topic"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 </LinearLayout>

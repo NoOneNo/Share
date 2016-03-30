@@ -13,12 +13,16 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -49,6 +53,8 @@ import com.hengye.share.util.SettingHelper;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,6 +93,7 @@ public class TopicActivity extends BaseActivity
     private NetworkImageViewPlus mAvatar;
     private TextView mUsername, mSign;
     private View mNoNetwork, mAppBar;
+    private DrawerLayout mDrawer;
 
     private TopicFragmentPager mTopicFragmentAdapter;
 
@@ -111,11 +118,11 @@ public class TopicActivity extends BaseActivity
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggleCustom toggle = new ActionBarDrawerToggleCustom(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         toggle.setGravityCompat(GravityCompat.END);
-        drawer.setDrawerListener(toggle);
+        mDrawer.setDrawerListener(toggle);
         toggle.setDrawerListener(new DrawerLayout.SimpleDrawerListener() {
             @Override
             public void onDrawerOpened(View drawerView) {
@@ -160,7 +167,7 @@ public class TopicActivity extends BaseActivity
     }
 
     private CardView mSearch;
-    private View mSearchLayout, mSearchBack, mSearchDividerLine;
+    private View mSearchLayout, mSearchBack, mSearchClear, mSearchDividerLine;
     private EditText mSearchContent;
     private ListView mSearchResult;
 
@@ -169,11 +176,50 @@ public class TopicActivity extends BaseActivity
 
         mSearchLayout = findViewById(R.id.ll_search);
         mSearchBack = findViewById(R.id.iv_search_back);
+        mSearchClear = findViewById(R.id.iv_clear_content);
         mSearchDividerLine = findViewById(R.id.divider_line);
         mSearchContent = (EditText) findViewById(R.id.et_search_content);
         mSearchResult = (ListView) findViewById(R.id.list_view);
 
         mSearchBack.setOnClickListener(this);
+        mSearchClear.setOnClickListener(this);
+
+        mSearchContent.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (TextUtils.isEmpty(mSearchContent.getText().toString())){
+                    mSearchClear.setVisibility(View.GONE);
+                }else{
+                    mSearchClear.setVisibility(View.VISIBLE);
+                }
+            }
+
+        });
+
+        mSearchContent.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if(i == EditorInfo.IME_ACTION_SEARCH){
+                    String keywords = mSearchContent.getText().toString();
+                    if(!TextUtils.isEmpty(keywords.trim())){
+                        setHideAnimationOnStart();
+                        startActivity(SearchActivity.getStartIntent(TopicActivity.this, keywords));
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -196,6 +242,8 @@ public class TopicActivity extends BaseActivity
             }
         } else if (id == R.id.iv_search_back) {
             handleSearch();
+        } else if (id == R.id.iv_clear_content) {
+            clearSearchContent();
         }
     }
 
@@ -208,10 +256,11 @@ public class TopicActivity extends BaseActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.END)) {
-            drawer.closeDrawer(GravityCompat.END);
-        } else {
+        if (mDrawer.isDrawerOpen(GravityCompat.END)) {
+            mDrawer.closeDrawer(GravityCompat.END);
+        } else if(isSearchShow()){
+            handleSearch(false);
+        }else {
             if (SettingHelper.isExitOnBackPressed()) {
                 if (System.currentTimeMillis() - mBackPressedTime > 2000) {
                     mBackPressedTime = System.currentTimeMillis();
@@ -386,12 +435,20 @@ public class TopicActivity extends BaseActivity
         mNoNetwork.setVisibility(isConnected ? View.GONE : View.VISIBLE);
     }
 
-    private void handleSearch() {
-        handleSearch(mSearch.getVisibility() != View.VISIBLE);
+    private void clearSearchContent() {
+        mSearchContent.setText("");
     }
 
-    private void handleSearch(boolean isShow) {
-        if (isShow) {
+    private boolean isSearchShow(){
+        return mSearch.getVisibility() == View.VISIBLE;
+    }
+
+    private void handleSearch() {
+        handleSearch(!isSearchShow());
+    }
+
+    private void handleSearch(boolean isToShow) {
+        if (isToShow) {
             startSearchShowAnimation();
         } else {
             startSearchHideAnimation();
@@ -400,70 +457,70 @@ public class TopicActivity extends BaseActivity
 
 
     private void startSearchHideAnimation() {
-            final Animator searchHideAnimator = ViewAnimationUtils.createCircularReveal(mSearch,
-                    mSearch.getWidth(),
-                    ViewUtil.getActionBarHeight() / 2,
-                    (float) Math.hypot(mSearch.getWidth(), mSearch.getHeight()),
-                    0);
-            searchHideAnimator.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-                    mSearchContent.setText("");
-                    mSearch.setEnabled(false);
-                }
+        final Animator searchHideAnimator = ViewAnimationUtils.createCircularReveal(mSearch,
+                mSearch.getWidth(),
+                ViewUtil.getActionBarHeight() / 2,
+                (float) Math.hypot(mSearch.getWidth(), mSearch.getHeight()),
+                0);
+        searchHideAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                mSearchContent.setText("");
+                mSearch.setEnabled(false);
+            }
 
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mSearch.setVisibility(View.GONE);
-                    ViewUtil.hideKeyBoard(mSearchContent);
-                    mSearchResult.setVisibility(View.GONE);
-                }
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mSearch.setVisibility(View.GONE);
+                ViewUtil.hideKeyBoard(mSearchContent);
+                mSearchResult.setVisibility(View.GONE);
+            }
 
-                @Override
-                public void onAnimationCancel(Animator animation) {
+            @Override
+            public void onAnimationCancel(Animator animation) {
 
-                }
+            }
 
-                @Override
-                public void onAnimationRepeat(Animator animation) {
+            @Override
+            public void onAnimationRepeat(Animator animation) {
 
-                }
-            });
-            searchHideAnimator.setDuration(300);
-            searchHideAnimator.start();
+            }
+        });
+        searchHideAnimator.setDuration(300);
+        searchHideAnimator.start();
     }
 
     private void startSearchShowAnimation() {
         final Animator searchShowAnimator = ViewAnimationUtils.createCircularReveal(mSearch,
-                    mSearchContent.getWidth(),
-                    ViewUtil.getActionBarHeight() / 2,
-                    0,
-                    (float) Math.hypot(mSearch.getWidth(), mSearch.getHeight()));
-            searchShowAnimator.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-                    mSearch.setVisibility(View.VISIBLE);
-                    mSearch.setEnabled(true);
-                }
+                mSearchContent.getWidth(),
+                ViewUtil.getActionBarHeight() / 2,
+                0,
+                (float) Math.hypot(mSearch.getWidth(), mSearch.getHeight()));
+        searchShowAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                mSearch.setVisibility(View.VISIBLE);
+                mSearch.setEnabled(true);
+            }
 
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mSearchResult.setVisibility(View.VISIBLE);
-                    ViewUtil.showKeyBoard(mSearchContent);
-                }
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mSearchResult.setVisibility(View.VISIBLE);
+                ViewUtil.showKeyBoard(mSearchContent);
+            }
 
-                @Override
-                public void onAnimationCancel(Animator animation) {
+            @Override
+            public void onAnimationCancel(Animator animation) {
 
-                }
+            }
 
-                @Override
-                public void onAnimationRepeat(Animator animation) {
+            @Override
+            public void onAnimationRepeat(Animator animation) {
 
-                }
-            });
+            }
+        });
 
-            searchShowAnimator.setDuration(300);
-            searchShowAnimator.start();
+        searchShowAnimator.setDuration(300);
+        searchShowAnimator.start();
     }
 }

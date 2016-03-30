@@ -60,6 +60,9 @@ public class BaseActivity extends AppCompatActivity{
 
     protected boolean mFirstClick = true;
 
+    protected boolean mShowAnimationOnStart = true;
+    protected boolean mShowAnimationOnFinish = true;
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -163,11 +166,20 @@ public class BaseActivity extends AppCompatActivity{
     }
 
     protected void overridePendingTransitionOnStart(){
+        if(!isShowAnimationOnStart()){
+            setShowAnimationOnStart();
+            overridePendingTransition(0, 0);
+            return;
+        }
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
 
     protected void overridePendingTransitionOnFinish(){
+        if(!isShowAnimationOnFinish()){
+            overridePendingTransition(0, 0);
+            return;
+        }
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
@@ -303,4 +315,25 @@ public class BaseActivity extends AppCompatActivity{
     protected void onNetworkChange(boolean isConnected) {
 
     }
+
+    public boolean isShowAnimationOnStart(){
+        return mShowAnimationOnStart;
+    }
+
+    public void setHideAnimationOnStart() {
+        mShowAnimationOnStart = false;
+    }
+
+    public void setShowAnimationOnStart(){
+        mShowAnimationOnStart = true;
+    }
+
+    public boolean isShowAnimationOnFinish(){
+        return mShowAnimationOnFinish;
+    }
+
+    public void setHideAnimationOnFinish() {
+        mShowAnimationOnFinish = false;
+    }
+
 }
