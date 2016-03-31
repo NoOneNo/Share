@@ -19,6 +19,7 @@ import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.SearchUserAdapter;
 import com.hengye.share.ui.mvpview.SearchMvpView;
 import com.hengye.share.ui.presenter.SearchPresenter;
+import com.hengye.share.ui.view.SearchView;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.ViewUtil;
@@ -26,7 +27,7 @@ import com.hengye.share.util.ViewUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchActivity extends BaseActivity implements View.OnClickListener, SearchMvpView{
+public class SearchActivity extends BaseActivity implements SearchMvpView{
 
     @Override
     protected String getRequestTag() {
@@ -50,13 +51,13 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     protected boolean setFinishPendingTransition() {
-        return false;
+        return true;
     }
 
     @Override
     public void finish() {
-        setHideAnimationOnFinish();
         super.finish();
+        overridePendingTransition(0, 0);
     }
 
     @Override
@@ -84,13 +85,12 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         initView();
 
         if(!TextUtils.isEmpty(mKeywords)){
-            mContent.setText(mKeywords);
-            search();
-            ViewUtil.hideKeyBoard(mContent);
+            mSearchView.setSearchContent(mKeywords);
+            search(mKeywords);
         }
     }
 
-    private EditText mContent;
+    private SearchView mSearchView;
     private RecyclerView mUserRV, mTopicRV;
     private LoadingDialog mLoadingDialog;
 
@@ -100,9 +100,6 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private SearchPresenter mPresenter;
 
     private void initView(){
-        findViewById(R.id.card_search).setVisibility(View.VISIBLE);
-        findViewById(R.id.iv_search_back).setOnClickListener(this);
-        mContent = (EditText) findViewById(R.id.et_search_content);
         mUserRV = (RecyclerView) findViewById(R.id.recycler_view_user);
         mUserRV.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mUserRV.setAdapter(mUserAdapter = new SearchUserAdapter(this, new ArrayList<UserInfo>()));
@@ -121,29 +118,31 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
         mLoadingDialog = new LoadingDialog(this);
 
+        mSearchView = (SearchView) findViewById(R.id.search_view);
+
+        mSearchView.setMode(SearchView.MODE_FINISH, this);
+
+        mSearchView.setSearchListener(new SearchView.onSearchListener() {
+            @Override
+            public void onSearch(String content) {
+                search(content);
+            }
+        });
     }
 
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        if(id == R.id.iv_search_back){
-            finish();
-        }
-    }
-
-    private void search() {
-        if(!canSearchContent()){
-            ToastUtil.showToast("搜索内容不能为空");
+    private void search(String content) {
+        if(!canSearchContent(content)){
+            ToastUtil.showToast(R.string.label_search_content_is_null);
             return;
         }
 
-        ViewUtil.hideKeyBoard(mContent);
+        ViewUtil.hideKeyBoard(SearchActivity.this);
         mLoadingDialog.show();
-        mPresenter.loadWBSearchContent(mContent.getText().toString().trim());
+        mPresenter.loadWBSearchContent(content.trim());
     }
 
-    private boolean canSearchContent(){
-        return !TextUtils.isEmpty(mContent.getText().toString());
+    private boolean canSearchContent(String content){
+        return !TextUtils.isEmpty(content);
     }
 
     @Override

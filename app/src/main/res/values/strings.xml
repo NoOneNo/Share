@@ -116,6 +116,7 @@
     <string name="label_search_user">用户</string>
     <string name="label_search_topic">微博</string>
     <string name="label_search_hint">搜索内容</string>
+    <string name="label_search_content_is_null">搜索内容不能为空</string>
     <!-- Strings related to Search -->
 
     <!-- Strings related to account manage-->

@@ -44,6 +44,7 @@ import com.hengye.share.ui.mvpview.UserMvpView;
 import com.hengye.share.ui.presenter.TopicPresenter;
 import com.hengye.share.ui.presenter.UserPresenter;
 import com.hengye.share.ui.support.actionbar.ActionBarDrawerToggleCustom;
+import com.hengye.share.ui.view.SearchView;
 import com.hengye.share.ui.widget.util.SelectorLoader;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
@@ -166,58 +167,22 @@ public class TopicActivity extends BaseActivity
         mSign.setOnClickListener(this);
     }
 
-    private CardView mSearch;
-    private View mSearchLayout, mSearchBack, mSearchClear, mSearchDividerLine;
-    private EditText mSearchContent;
-    private ListView mSearchResult;
+
+    private SearchView mSearchView;
 
     private void initSearch() {
-        mSearch = (CardView) findViewById(R.id.card_search);
+        mSearchView = (SearchView) findViewById(R.id.search_view);
 
-        mSearchLayout = findViewById(R.id.ll_search);
-        mSearchBack = findViewById(R.id.iv_search_back);
-        mSearchClear = findViewById(R.id.iv_clear_content);
-        mSearchDividerLine = findViewById(R.id.divider_line);
-        mSearchContent = (EditText) findViewById(R.id.et_search_content);
-        mSearchResult = (ListView) findViewById(R.id.list_view);
+        mSearchView.setMode(SearchView.MODE_ANIMATION, this);
 
-        mSearchBack.setOnClickListener(this);
-        mSearchClear.setOnClickListener(this);
-
-        mSearchContent.addTextChangedListener(new TextWatcher() {
+        mSearchView.setSearchListener(new SearchView.onSearchListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (TextUtils.isEmpty(mSearchContent.getText().toString())){
-                    mSearchClear.setVisibility(View.GONE);
-                }else{
-                    mSearchClear.setVisibility(View.VISIBLE);
+            public void onSearch(String content) {
+                if (!TextUtils.isEmpty(content.trim())) {
+                    setHideAnimationOnStart();
+                    startActivity(SearchActivity.getStartIntent(TopicActivity.this, content));
+//                        overridePendingTransition(R.anim.fade_in, 0);
                 }
-            }
-
-        });
-
-        mSearchContent.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if(i == EditorInfo.IME_ACTION_SEARCH){
-                    String keywords = mSearchContent.getText().toString();
-                    if(!TextUtils.isEmpty(keywords.trim())){
-                        setHideAnimationOnStart();
-                        startActivity(SearchActivity.getStartIntent(TopicActivity.this, keywords));
-                    }
-                    return true;
-                }
-                return false;
             }
         });
     }
@@ -240,10 +205,6 @@ public class TopicActivity extends BaseActivity
                     startActivity(TestActivity.class);
                 }
             }
-        } else if (id == R.id.iv_search_back) {
-            handleSearch();
-        } else if (id == R.id.iv_clear_content) {
-            clearSearchContent();
         }
     }
 
@@ -258,9 +219,9 @@ public class TopicActivity extends BaseActivity
     public void onBackPressed() {
         if (mDrawer.isDrawerOpen(GravityCompat.END)) {
             mDrawer.closeDrawer(GravityCompat.END);
-        } else if(isSearchShow()){
-            handleSearch(false);
-        }else {
+        } else if (mSearchView.isSearchShow()) {
+            mSearchView.handleSearch(false);
+        } else {
             if (SettingHelper.isExitOnBackPressed()) {
                 if (System.currentTimeMillis() - mBackPressedTime > 2000) {
                     mBackPressedTime = System.currentTimeMillis();
@@ -293,10 +254,7 @@ public class TopicActivity extends BaseActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
-            handleSearch();
-//            startActivity(SearchActivity.class);
-//            Intent intent = new Intent(this, SearchActivity.class);
-//            startActivity(intent);
+            mSearchView.handleSearch();
         }
 
         return super.onOptionsItemSelected(item);
@@ -433,94 +391,5 @@ public class TopicActivity extends BaseActivity
     protected void onNetworkChange(boolean isConnected) {
         super.onNetworkChange(isConnected);
         mNoNetwork.setVisibility(isConnected ? View.GONE : View.VISIBLE);
-    }
-
-    private void clearSearchContent() {
-        mSearchContent.setText("");
-    }
-
-    private boolean isSearchShow(){
-        return mSearch.getVisibility() == View.VISIBLE;
-    }
-
-    private void handleSearch() {
-        handleSearch(!isSearchShow());
-    }
-
-    private void handleSearch(boolean isToShow) {
-        if (isToShow) {
-            startSearchShowAnimation();
-        } else {
-            startSearchHideAnimation();
-        }
-    }
-
-
-    private void startSearchHideAnimation() {
-        final Animator searchHideAnimator = ViewAnimationUtils.createCircularReveal(mSearch,
-                mSearch.getWidth(),
-                ViewUtil.getActionBarHeight() / 2,
-                (float) Math.hypot(mSearch.getWidth(), mSearch.getHeight()),
-                0);
-        searchHideAnimator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                mSearchContent.setText("");
-                mSearch.setEnabled(false);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mSearch.setVisibility(View.GONE);
-                ViewUtil.hideKeyBoard(mSearchContent);
-                mSearchResult.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-        searchHideAnimator.setDuration(300);
-        searchHideAnimator.start();
-    }
-
-    private void startSearchShowAnimation() {
-        final Animator searchShowAnimator = ViewAnimationUtils.createCircularReveal(mSearch,
-                mSearchContent.getWidth(),
-                ViewUtil.getActionBarHeight() / 2,
-                0,
-                (float) Math.hypot(mSearch.getWidth(), mSearch.getHeight()));
-        searchShowAnimator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                mSearch.setVisibility(View.VISIBLE);
-                mSearch.setEnabled(true);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mSearchResult.setVisibility(View.VISIBLE);
-                ViewUtil.showKeyBoard(mSearchContent);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-
-        searchShowAnimator.setDuration(300);
-        searchShowAnimator.start();
     }
 }

@@ -21,7 +21,7 @@ import com.hengye.share.util.NetworkUtil;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.SettingHelper;
 
-public class BaseActivity extends AppCompatActivity{
+public class BaseActivity extends AppCompatActivity {
 
     protected String getRequestTag() {
         return "BaseActivity";
@@ -46,7 +46,9 @@ public class BaseActivity extends AppCompatActivity{
         return true;
     }
 
-    protected boolean observeNetworkChange(){return false;}
+    protected boolean observeNetworkChange() {
+        return false;
+    }
 
     private int mThemeResId = 0;
 
@@ -61,7 +63,6 @@ public class BaseActivity extends AppCompatActivity{
     protected boolean mFirstClick = true;
 
     protected boolean mShowAnimationOnStart = true;
-    protected boolean mShowAnimationOnFinish = true;
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -92,15 +93,18 @@ public class BaseActivity extends AppCompatActivity{
         }
     }
 
-    protected void setupContentView(){
-        if(getLayoutResId() != 0){
+    protected void setupContentView() {
+        if (getLayoutResId() != 0) {
             setContentView(getLayoutResId());
         }
     }
 
-    protected void afterCreate(Bundle savedInstanceState) {}
+    protected void afterCreate(Bundle savedInstanceState) {
+    }
 
-    protected @LayoutRes int getLayoutResId(){
+    protected
+    @LayoutRes
+    int getLayoutResId() {
         return 0;
     }
 
@@ -129,16 +133,16 @@ public class BaseActivity extends AppCompatActivity{
     protected void onDestroy() {
         super.onDestroy();
         cancelPendingRequestsIfNeeded();
-        if(mPresenter != null){
+        if (mPresenter != null) {
             mPresenter.detachView();
         }
     }
 
-    public void startActivity(Class<?> cls){
+    public void startActivity(Class<?> cls) {
         startActivity(new Intent(this, cls));
     }
 
-    public void startActivityForResult(Class<?> cls, int requestCode){
+    public void startActivityForResult(Class<?> cls, int requestCode) {
         startActivityForResult(new Intent(this, cls), requestCode);
     }
 
@@ -160,27 +164,23 @@ public class BaseActivity extends AppCompatActivity{
     @Override
     public void finish() {
         super.finish();
-        if (setFinishPendingTransition()) {
-            overridePendingTransitionOnFinish();
-        }
+        overridePendingTransitionOnFinish();
     }
 
-    protected void overridePendingTransitionOnStart(){
-        if(!isShowAnimationOnStart()){
+    protected void overridePendingTransitionOnStart() {
+        if (!isShowAnimationOnStart()) {
             setShowAnimationOnStart();
-            overridePendingTransition(0, 0);
+//            overridePendingTransition(0, 0);
             return;
         }
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
 
-    protected void overridePendingTransitionOnFinish(){
-        if(!isShowAnimationOnFinish()){
-            overridePendingTransition(0, 0);
-            return;
+    protected void overridePendingTransitionOnFinish() {
+        if (setFinishPendingTransition()) {
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         }
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
     protected void handleBundleExtra() {
@@ -266,7 +266,7 @@ public class BaseActivity extends AppCompatActivity{
 
     protected void setupActivityHelper() {
         if (mSwipeHelper == null) {
-            if(canSwipeBack() && SettingHelper.isSwipeBack()){
+            if (canSwipeBack() && SettingHelper.isSwipeBack()) {
 //                mSwipeHelper = new SwipeBackHelper(this);
             }
         }
@@ -280,28 +280,28 @@ public class BaseActivity extends AppCompatActivity{
         mPresenter = presenter;
     }
 
-    protected Handler getHandler(){
-        if(mHandler == null){
+    protected Handler getHandler() {
+        if (mHandler == null) {
             mHandler = new Handler();
         }
         return mHandler;
     }
 
-    protected void observeNetworkChangeIfNeeded(boolean isStart){
-        if(!observeNetworkChange()){
+    protected void observeNetworkChangeIfNeeded(boolean isStart) {
+        if (!observeNetworkChange()) {
             return;
         }
 
-        if(isStart){
+        if (isStart) {
             IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
             registerReceiver(getNetworkChangeReceiver(), intentFilter);
-        }else{
+        } else {
             unregisterReceiver(getNetworkChangeReceiver());
         }
     }
 
-    protected BroadcastReceiver getNetworkChangeReceiver(){
-        if(mNetworkChangeReceiver == null){
+    protected BroadcastReceiver getNetworkChangeReceiver() {
+        if (mNetworkChangeReceiver == null) {
             mNetworkChangeReceiver = new NetworkUtil.NetworkChangeReceiver() {
                 @Override
                 public void onNetworkChange(boolean isConnected) {
@@ -316,7 +316,7 @@ public class BaseActivity extends AppCompatActivity{
 
     }
 
-    public boolean isShowAnimationOnStart(){
+    public boolean isShowAnimationOnStart() {
         return mShowAnimationOnStart;
     }
 
@@ -324,16 +324,8 @@ public class BaseActivity extends AppCompatActivity{
         mShowAnimationOnStart = false;
     }
 
-    public void setShowAnimationOnStart(){
+    public void setShowAnimationOnStart() {
         mShowAnimationOnStart = true;
-    }
-
-    public boolean isShowAnimationOnFinish(){
-        return mShowAnimationOnFinish;
-    }
-
-    public void setHideAnimationOnFinish() {
-        mShowAnimationOnFinish = false;
     }
 
 }
