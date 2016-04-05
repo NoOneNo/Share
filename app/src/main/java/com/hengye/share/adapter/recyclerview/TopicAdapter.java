@@ -39,6 +39,7 @@ import com.hengye.share.ui.support.textspan.TopicContentUrlOnTouchListener;
 import com.hengye.share.ui.view.GridGalleryView;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
 import com.hengye.share.ui.widget.util.SelectorLoader;
+import com.hengye.share.util.ClipboardUtil;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DateUtil;
 import com.hengye.share.util.IntentUtil;
@@ -111,6 +112,8 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
                         TopicPublishActivity.getStartIntent(getContext(), TopicDraftHelper.getWBTopicDraftByTopicRepost(retweet.getId())));
                 break;
             case DialogBuilder.LONG_CLICK_TOPIC_COPY:
+                ClipboardUtil.copy(topic.getContent());
+                ToastUtil.showToast(R.string.label_topic_copy_to_clipboard_success);
                 break;
             default:
                 break;

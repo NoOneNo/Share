@@ -75,6 +75,7 @@
     <string name="label_topic_collect">收藏</string>
     <string name="label_topic_repost_origin">转发原微博</string>
     <string name="label_topic_copy">复制</string>
+    <string name="label_topic_copy_to_clipboard_success">成功复制微博内容到剪切板</string>
     <!-- Strings related to Topic-->
 
     <!-- Strings related to TopicDetail-->

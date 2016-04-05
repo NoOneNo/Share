@@ -310,7 +310,13 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
 
     public ArrayList<Topic> findData() {
 
-        ShareJson shareJson = GreenDaoManager.getDaoSession().getShareJsonDao().load(getModuleName());
+        ShareJson shareJson = null;
+
+        try{
+            shareJson = GreenDaoManager.getDaoSession().getShareJsonDao().load(getModuleName());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         if (shareJson == null) {
             return new ArrayList<>();
