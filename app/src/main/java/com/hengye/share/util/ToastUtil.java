@@ -37,7 +37,7 @@ public class ToastUtil extends ApplicationUtil{
 
     public static Toast getToast(){
         if(mToast == null){
-            mToast = Toast.makeText(getContext(), 0, Toast.LENGTH_SHORT);
+            mToast = Toast.makeText(getContext(), "", Toast.LENGTH_SHORT);
         }
         return mToast;
     }

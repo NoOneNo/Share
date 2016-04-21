@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.R;
 import com.hengye.share.ui.fragment.setting.SettingFragment;
+import com.hengye.share.util.SettingHelper;
 
 
 public class SettingActivity extends BaseActivity {
@@ -27,6 +28,7 @@ public class SettingActivity extends BaseActivity {
         if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStack();
         }else {
+            SettingHelper.resetCache();
             super.onBackPressed();
         }
     }

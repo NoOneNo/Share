@@ -2,6 +2,7 @@ package com.hengye.share.ui.view;
 
 import android.content.Context;
 import android.os.Handler;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
@@ -90,13 +91,28 @@ public class BackTopButton extends ImageView{
 
     public void setup(RecyclerView recyclerView){
         mRecyclerView = recyclerView;
+
+        RecyclerView.LayoutManager lm = mRecyclerView.getLayoutManager();
+        LinearLayoutManager temp = null;
+        if(lm instanceof LinearLayoutManager){
+            temp = (LinearLayoutManager) lm;
+
+        }
+
+        final LinearLayoutManager llm = temp;
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                if(llm != null){
+                    if( 0 == llm.findFirstVisibleItemPosition()){
+                        disappear();
+                        return;
+                    }
+                }
                 if(dy > 10){
                     disappear();
-                }else if(dy < 0){
+                }else if(dy < -200){
                     appear();
                 }
             }
