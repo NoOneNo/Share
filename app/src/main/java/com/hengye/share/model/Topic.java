@@ -34,7 +34,7 @@ public class Topic extends ParentInherit implements Serializable{
     private transient SpannableString urlSpannableString;
 
     public static ArrayList<Topic> getTopics(WBTopics wbTopics){
-        if(wbTopics == null || CommonUtil.isEmptyCollection(wbTopics.getStatuses())){
+        if(wbTopics == null || CommonUtil.isEmpty(wbTopics.getStatuses())){
             return null;
         }
         ArrayList<Topic> topics = new ArrayList<>();
@@ -59,12 +59,12 @@ public class Topic extends ParentInherit implements Serializable{
         topic.setChannel(entity.getSource());
         topic.setContent(entity.getText());
         topic.setId(entity.getIdstr());
-        if(!CommonUtil.isEmptyCollection(entity.getPic_urls())){
+        if(!CommonUtil.isEmpty(entity.getPic_urls())){
             List<String> imageUrls = new ArrayList<>();
             List<String> imageLargeUrls = new ArrayList<>();
             for(WBTopic.Pic_urlsEntity urlsEntity : entity.getPic_urls()){
                 imageUrls.add(WBUtil.getWBTopicImgUrl(urlsEntity.getThumbnail_pic()));
-                imageLargeUrls.add(WBUtil.getWBTopicImgUrl(urlsEntity.getThumbnail_pic(), WBUtil.IMAGE_TYPE_LARGE));
+                imageLargeUrls.add(WBUtil.getWBTopicLargeImgUrl(urlsEntity.getThumbnail_pic()));
             }
             topic.setImageUrls(imageUrls);
             topic.setImageLargeUrls(imageLargeUrls);
@@ -79,7 +79,7 @@ public class Topic extends ParentInherit implements Serializable{
     }
 
     public static ArrayList<Topic> getTopics(WBTopicComments wbTopicComments){
-        if(wbTopicComments == null || CommonUtil.isEmptyCollection(wbTopicComments.getComments())){
+        if(wbTopicComments == null || CommonUtil.isEmpty(wbTopicComments.getComments())){
             return null;
         }
         ArrayList<Topic> topics = new ArrayList<>();
@@ -104,7 +104,7 @@ public class Topic extends ParentInherit implements Serializable{
         topic.setChannel(entity.getSource());
         topic.setContent(entity.getText());
         topic.setId(entity.getIdstr());
-//        if(!CommonUtil.isEmptyCollection(entity.getPic_urls())){
+//        if(!CommonUtil.isEmpty(entity.getPic_urls())){
 //            List<String> imageUrls = new ArrayList<>();
 //            List<String> imageLargeUrls = new ArrayList<>();
 //            for(WBTopic.Pic_urlsEntity urlsEntity : entity.getPic_urls()){

@@ -236,7 +236,7 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
 
             @Override
             public void handleViewOnSuccess(TopicMvpView v, WBTopicIds wbTopicIds) {
-                if (wbTopicIds == null || CommonUtil.isEmptyCollection(wbTopicIds.getStatuses())) {
+                if (wbTopicIds == null || CommonUtil.isEmpty(wbTopicIds.getStatuses())) {
                     //没有新的微博
                     getMvpView().stopLoading(true);
                     getMvpView().handleNoMoreTopics();
@@ -406,7 +406,7 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
         }
 
         public static List<TopicGroup> getTopicGroup(List<GroupList> groupLists) {
-            if (CommonUtil.isEmptyCollection(groupLists)) {
+            if (CommonUtil.isEmpty(groupLists)) {
                 return null;
             }
             List<TopicGroup> result = new ArrayList<>();

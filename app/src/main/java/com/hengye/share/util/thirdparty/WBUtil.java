@@ -49,6 +49,10 @@ public class WBUtil {
         return getWBTopicImgUrl(url, IMAGE_TYPE_THUMBNAIL, toType);
     }
 
+    public static String getWBTopicLargeImgUrl(String url) {
+        return getWBTopicImgUrl(url, IMAGE_TYPE_THUMBNAIL, IMAGE_TYPE_LARGE);
+    }
+
     public static String getWBTopicImgUrl(String url, String fromType, String toType) {
         if (TextUtils.isEmpty(url)) {
             return null;

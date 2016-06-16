@@ -2,6 +2,7 @@ package com.hengye.share.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -38,9 +39,9 @@ public class DataUtil {
 
         if (isRefresh) {
             //下拉刷新
-            if (CommonUtil.isEmptyCollection(data)) {
+            if (CommonUtil.isEmpty(data)) {
                 //没有内容更新
-                if (CommonUtil.isEmptyCollection(adapterData)) {
+                if (CommonUtil.isEmpty(adapterData)) {
                     return REFRESH_NO_DATA;
                 } else {
                     return REFRESH_NO_MORE_DATA;
@@ -54,7 +55,7 @@ public class DataUtil {
             }
         } else {
             //上拉加载
-            if (CommonUtil.isEmptyCollection(data)) {
+            if (CommonUtil.isEmpty(data)) {
                 //没有数据可供加载
                 return LOAD_NO_DATA;
             } else {
@@ -155,6 +156,34 @@ public class DataUtil {
     public static final String WEB_SCHEME = BuildConfig.APPLICATION_ID + ".http://";
     public static final String TOPIC_SCHEME = BuildConfig.APPLICATION_ID + ".topic://";
     public static final String MENTION_SCHEME = BuildConfig.APPLICATION_ID + ".mention://";
+
+    public static boolean isTopic(String url){
+        if(!TextUtils.isEmpty(url)){
+            if(url.startsWith(TOPIC_SCHEME)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isMention(String url){
+        if(!TextUtils.isEmpty(url)){
+            if(url.startsWith(MENTION_SCHEME)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+//    public static boolean isHttpUrl(String url){
+//        if(!TextUtils.isEmpty(url)){
+//            Uri uri = Uri.parse(url);
+//            if(url.startsWith("http://") || url.startsWith("https://")){
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
     public static void addTopicContentHighLightLinks(Context context, TopicComment topicComment) {
         topicComment.setUrlSpannableString(convertNormalStringToSpannableString(context, topicComment.getContent()));

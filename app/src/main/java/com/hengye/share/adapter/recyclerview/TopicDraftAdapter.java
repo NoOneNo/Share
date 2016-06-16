@@ -74,7 +74,7 @@ public class TopicDraftAdapter extends CommonAdapter<TopicDraft, TopicDraftAdapt
         public void bindData(Context context, TopicDraft topicDraft, int position) {
             L.debug("topicDraft id : {}", topicDraft.getId());
             registerChildViewItemClick(mSendAgain);
-            Topic topic = TopicDraftHelper.getTopic(topicDraft);
+            Topic topic = topicDraft.getTopic();
             if(topic != null) {
                 mTopicTitle.initTopicTitle(context, topic);
                 mTopic.initTopicContent(context, topic, false);

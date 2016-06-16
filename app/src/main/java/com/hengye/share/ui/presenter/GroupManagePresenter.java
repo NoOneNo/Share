@@ -30,7 +30,7 @@ public class GroupManagePresenter extends BasePresenter<GroupManageMvpView> {
 
         if(isReadCache){
             List<GroupList> list = UserUtil.queryGroupList();
-            if(!CommonUtil.isEmptyCollection(list)){
+            if(!CommonUtil.isEmpty(list)){
                 getMvpView().handleGroupList(list);
                 return;
             }
@@ -45,7 +45,7 @@ public class GroupManagePresenter extends BasePresenter<GroupManageMvpView> {
                     @Override
                     public Observable<List<GroupList>> call(WBGroups wbGroups) {
 
-                        if(wbGroups == null || CommonUtil.isEmptyCollection(wbGroups.getLists())){
+                        if(wbGroups == null || CommonUtil.isEmpty(wbGroups.getLists())){
                             return null;
                         }
 

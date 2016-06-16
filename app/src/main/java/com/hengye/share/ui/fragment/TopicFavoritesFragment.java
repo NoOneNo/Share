@@ -67,7 +67,7 @@ public class TopicFavoritesFragment extends BaseFragment {
         mPullToRefreshLayout.setOnLoadListener(new PullToRefreshLayout.OnLoadListener() {
             @Override
             public void onLoad() {
-                if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
+                if (!CommonUtil.isEmpty(mAdapter.getData())) {
 //                    String id = CommonUtil.getLastItem(mAdapter.getData()).getId();
                     RequestManager.addToRequestQueue(getWBTopicFavoritesRequest(UserUtil.getToken(), false), getRequestTag());
                 } else {

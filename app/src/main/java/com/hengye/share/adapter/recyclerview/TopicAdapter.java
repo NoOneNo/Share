@@ -316,7 +316,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
             mContent.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
             mContent.setOnTouchListener(mTopicContentUrlOnTouchListener);
 
-            if (!CommonUtil.isEmptyCollection(topic.getImageUrls())) {
+            if (!CommonUtil.isEmpty(topic.getImageUrls())) {
                 //加载图片
                 final List<String> urls = topic.getImageUrls();
                 mGallery.removeAllViews();

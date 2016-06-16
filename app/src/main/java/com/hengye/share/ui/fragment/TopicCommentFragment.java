@@ -75,7 +75,7 @@
 //                }
 //
 //                RequestManager.addToRequestQueue(getWBCommentRequest(mWBAccessToken.getToken(), mTopicId, "0", true), getRequestTag());
-////                if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
+////                if (!CommonUtil.isEmpty(mAdapter.getData())) {
 ////                    String id = mAdapter.getData().get(0).getId();
 ////                    RequestManager.addToRequestQueue(getWBTopicIdsRequest(mWBAccessToken.getToken(), id), getRequestTag());
 ////                }else{
@@ -86,7 +86,7 @@
 //        mPullToRefreshLayout.setOnLoadListener(new PullToRefreshLayout.OnLoadListener() {
 //            @Override
 //            public void onLoad() {
-//                if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
+//                if (!CommonUtil.isEmpty(mAdapter.getData())) {
 //                    String id = CommonUtil.getLastItem(mAdapter.getData()).getId();
 //                    RequestManager.addToRequestQueue(getWBCommentRequest(mWBAccessToken.getToken(), mTopicId, id, false), getRequestTag());
 //                } else {
@@ -127,9 +127,9 @@
 //                if (isRefresh) {
 //                    //下拉刷新
 //                    mPullToRefreshLayout.setRefreshing(false);
-//                    if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
+//                    if (!CommonUtil.isEmpty(mAdapter.getData())) {
 //                        //微博属于刷新
-//                        if (CommonUtil.isEmptyCollection(datas)) {
+//                        if (CommonUtil.isEmpty(datas)) {
 //                            //没有内容更新
 //                            Snackbar.make(mPullToRefreshLayout, "暂时没有内容", Snackbar.LENGTH_SHORT).show();
 //                            return;
@@ -145,7 +145,7 @@
 //                        }
 //                    } else {
 //                        //属于第一次加载
-//                        if (CommonUtil.isEmptyCollection(datas)) {
+//                        if (CommonUtil.isEmpty(datas)) {
 //                            //内容为空
 //                            mPullToRefreshLayout.setLoadEnable(false);
 //                        }else if (datas.size() < WBUtil.MAX_COUNT_REQUEST) {
@@ -161,7 +161,7 @@
 //                } else {
 //                    //上拉加载
 //                    mPullToRefreshLayout.setLoading(false);
-//                    if (CommonUtil.isEmptyCollection(datas)) {
+//                    if (CommonUtil.isEmpty(datas)) {
 //                        //没有数据可供加载
 //                        mPullToRefreshLayout.setLoadEnable(false);
 //                        Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();

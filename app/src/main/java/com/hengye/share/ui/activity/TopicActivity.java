@@ -304,7 +304,7 @@ public class TopicActivity extends BaseActivity
         topicGroupGroups.add(new TopicPresenter.TopicGroup(TopicPresenter.TopicType.ALL));
         topicGroupGroups.add(new TopicPresenter.TopicGroup(TopicPresenter.TopicType.BILATERAL));
         List<TopicPresenter.TopicGroup> temp = TopicPresenter.TopicGroup.getTopicGroup();
-        if (!CommonUtil.isEmptyCollection(temp)) {
+        if (!CommonUtil.isEmpty(temp)) {
             topicGroupGroups.addAll(temp);
         }
 

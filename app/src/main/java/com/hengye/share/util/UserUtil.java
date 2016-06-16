@@ -80,7 +80,7 @@ public class UserUtil {
                     .where(UserDao.Properties.Uid.eq(uid))
                     .list();
 //            List<User> users = ud.queryRaw("where UID = ?", uid);
-            if (!CommonUtil.isEmptyCollection(users)) {
+            if (!CommonUtil.isEmpty(users)) {
                 user = users.get(0);
             }
         }
@@ -92,7 +92,7 @@ public class UserUtil {
                     .limit(1)
                     .list();
 //           List<User> users = ud.queryRaw("limit 1");
-            if (!CommonUtil.isEmptyCollection(users)) {
+            if (!CommonUtil.isEmpty(users)) {
                 user = users.get(0);
             }
         }
@@ -108,7 +108,7 @@ public class UserUtil {
                         , UserDao.Properties.ParentType.eq(Parent.TYPE_WEIBO))
                 .list();
 //        List<User> users = ud.queryRaw("where UID = ? and PARENT_TYPE = ?", accessToken.getUid(), Parent.TYPE_WEIBO + "");
-        if (CommonUtil.isEmptyCollection(users)) {
+        if (CommonUtil.isEmpty(users)) {
             user = new User();
             user.setUid(accessToken.getUid());
             user.setToken(accessToken.getToken());
@@ -137,7 +137,7 @@ public class UserUtil {
                         , UserDao.Properties.ParentType.eq(Parent.TYPE_WEIBO))
                 .list();
 //        List<User> users = ud.queryRaw("where UID = ? and PARENT_TYPE = ?", wbUserInfo.getIdstr(), Parent.TYPE_WEIBO + "");
-        if (!CommonUtil.isEmptyCollection(users)) {
+        if (!CommonUtil.isEmpty(users)) {
             user = users.get(0);
             user.setName(wbUserInfo.getName());
             user.setAvatar(wbUserInfo.getAvatar_large());
@@ -154,7 +154,7 @@ public class UserUtil {
         UserDao ud = GreenDaoManager.getDaoSession().getUserDao();
         List<User> users = ud.queryBuilder().where(UserDao.Properties.Uid.eq(targetUser.getUid())).list();
 //        List<User> users = ud.queryRaw("where UID = ?", targetUser.getUid());
-        if (!CommonUtil.isEmptyCollection(users)) {
+        if (!CommonUtil.isEmpty(users)) {
             user = users.get(0);
             targetUser.setId(user.getId());
             ud.update(targetUser);
@@ -198,7 +198,7 @@ public class UserUtil {
     }
 
     public static void updateGroupList(List<GroupList> groupLists, String uid, boolean isUpdateSystemGroup) {
-        if (CommonUtil.isEmptyCollection(groupLists)) {
+        if (CommonUtil.isEmpty(groupLists)) {
             return;
         }
 

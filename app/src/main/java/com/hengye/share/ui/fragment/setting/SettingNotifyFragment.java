@@ -94,7 +94,7 @@ public class SettingNotifyFragment extends BasePreferenceFragment {
 
     private void updateNotifyTypeSummary() {
         Set<String> options = SettingHelper.getNotifyType();
-        if (!CommonUtil.isEmptyCollection(options)) {
+        if (!CommonUtil.isEmpty(options)) {
             String str = "";
             String[] summary = getResources().getStringArray(R.array.notify_type_entries);
             String[] values = getResources().getStringArray(R.array.notify_type_values);

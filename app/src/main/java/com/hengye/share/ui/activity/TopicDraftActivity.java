@@ -72,7 +72,7 @@ public class TopicDraftActivity extends BaseActivity{
     private List<TopicDraft> getTopicDraftData(){
 
         mTopicDraft = TopicDraftHelper.getTopicDraft();
-        if(CommonUtil.isEmptyCollection(mTopicDraft)){
+        if(CommonUtil.isEmpty(mTopicDraft)){
             mTopicDraft = new ArrayList<>();
         }
         return mTopicDraft;

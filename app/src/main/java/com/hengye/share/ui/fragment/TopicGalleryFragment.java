@@ -16,6 +16,7 @@ import com.android.volley.cache.BitmapCache;
 import com.android.volley.cache.ImageDiskLruCache;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.ImageRequest;
+import com.android.volley.toolbox.Util;
 import com.hengye.share.R;
 import com.hengye.share.ui.activity.TopicGalleryActivity;
 import com.hengye.share.ui.base.BaseFragment;
@@ -62,7 +63,12 @@ public class TopicGalleryFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_topic_gallery, container, false);
 
         if (mUrl != null) {
-            String path = ImageDiskLruCache.getInstance().getDiskCachePath(mUrl);
+            String path;
+            if(!Util.isHttpUrl(mUrl)){
+                path = mUrl;
+            }else {
+                path = ImageDiskLruCache.getInstance().getDiskCachePath(mUrl);
+            }
             if (path != null) {
                 displayImage(mUrl, path, mAnimateIn);
                 mAnimateIn = false;

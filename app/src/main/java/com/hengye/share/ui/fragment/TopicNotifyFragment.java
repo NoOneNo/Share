@@ -89,7 +89,7 @@ public class TopicNotifyFragment extends BaseFragment {
         mPullToRefreshLayout.setOnLoadListener(new PullToRefreshLayout.OnLoadListener() {
             @Override
             public void onLoad() {
-                if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
+                if (!CommonUtil.isEmpty(mAdapter.getData())) {
                     String id = CommonUtil.getLastItem(mAdapter.getData()).getId();
                     if(mNotifyType == NOTIFY_COMMENT) {
                         RequestManager.addToRequestQueue(getWBCommentRequest(UserUtil.getToken(), id, false, URL_COMMENT_TO_ME), getRequestTag());
@@ -215,9 +215,9 @@ public class TopicNotifyFragment extends BaseFragment {
 //        if (isRefresh) {
 //            //下拉刷新
 //            mPullToRefreshLayout.setRefreshing(false);
-//            if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
+//            if (!CommonUtil.isEmpty(mAdapter.getData())) {
 //                //微博属于刷新
-//                if (CommonUtil.isEmptyCollection(data)) {
+//                if (CommonUtil.isEmpty(data)) {
 //                    //没有内容更新
 //                    Snackbar.make(mPullToRefreshLayout, "没有新的微博", Snackbar.LENGTH_SHORT).show();
 //                    return;
@@ -233,7 +233,7 @@ public class TopicNotifyFragment extends BaseFragment {
 //                }
 //            } else {
 //                //属于第一次加载
-//                if (CommonUtil.isEmptyCollection(data)) {
+//                if (CommonUtil.isEmpty(data)) {
 //                    //内容为空
 //                    mPullToRefreshLayout.setLoadEnable(false);
 //                }
@@ -244,7 +244,7 @@ public class TopicNotifyFragment extends BaseFragment {
 //        } else {
 //            //上拉加载
 //            mPullToRefreshLayout.setLoading(false);
-//            if (CommonUtil.isEmptyCollection(data)) {
+//            if (CommonUtil.isEmpty(data)) {
 //                //没有数据可供加载
 //                mPullToRefreshLayout.setLoadEnable(false);
 //                Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();

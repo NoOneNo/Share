@@ -133,7 +133,7 @@ public class AtUserActivity extends BaseActivity implements AtUserMvpView {
     }
 
     private boolean handleAtUser() {
-        if (CommonUtil.isEmptyCollection(mSelectResultData)) {
+        if (CommonUtil.isEmpty(mSelectResultData)) {
             return false;
         }
 
@@ -239,7 +239,7 @@ public class AtUserActivity extends BaseActivity implements AtUserMvpView {
         });
         mPullToRefreshLayout.setLoadEnable(false);
 
-        if (CommonUtil.isEmptyCollection(mSearchResultData)) {
+        if (CommonUtil.isEmpty(mSearchResultData)) {
             mPullToRefreshLayout.setRefreshing(true);
         }
     }

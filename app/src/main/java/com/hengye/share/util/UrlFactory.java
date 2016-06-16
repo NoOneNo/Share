@@ -52,6 +52,8 @@ public class UrlFactory {
     public static final String WB_FAVORITES_TOPIC = "favorites.json";
     //发表微博
     public static final String WB_PUBLISH_TOPIC = "statuses/update.json";
+    //发表微博,并且上传一张图片
+    public static final String WB_PUBLISH_TOPIC_UPLOAD = "statuses/upload.json";
     //获取用户的关注列表
     public static final String WB_USER_ATTENTION = "friendships/friends.json";
     //对微博进行评论
@@ -224,6 +226,11 @@ public class UrlFactory {
     //发表微博
     public String getWBTopicPublishUrl() {
         return getWBUrlPrefix() + WB_PUBLISH_TOPIC;
+    }
+
+    //发表微博,并且上传一张图片
+    public String getWBTopicPublishPhotoUrl() {
+        return getWBUrlPrefix() + WB_PUBLISH_TOPIC_UPLOAD;
     }
 
     //获取用户的关注列表

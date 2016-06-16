@@ -13,12 +13,19 @@ import com.hengye.share.util.UrlFactory;
 
 import java.util.Map;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 import rx.Observable;
 
@@ -35,6 +42,20 @@ public interface WBService {
     @POST(UrlFactory.WB_PUBLISH_TOPIC)
     Observable<WBTopic> publishTopic
     (@Field("access_token") String token, @Field("status") String status);
+
+//
+//    @Headers({"Content-Type: multipart/form-data"})
+    @Multipart
+    @POST(UrlFactory.WB_PUBLISH_TOPIC_UPLOAD)
+    Observable<WBTopic> publishTopicWithPhoto
+            (@Part("access_token") RequestBody token,
+             @Part("status") RequestBody status,
+             @Part MultipartBody.Part file);
+
+    @Multipart
+    @POST(UrlFactory.WB_PUBLISH_TOPIC_UPLOAD)
+    Observable<WBTopic> publishTopicWithPhoto2
+            (MultipartBody file);
 
     @FormUrlEncoded
     @POST(UrlFactory.WB_COMMENT_TOPIC)

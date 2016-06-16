@@ -24,7 +24,7 @@ public class UserInfo extends ParentInherit implements Serializable{
     private String cover;//封面地址
 
     public static ArrayList<UserInfo> getUserInfos(WBUserInfos wbUserInfos){
-        if(wbUserInfos == null || CommonUtil.isEmptyCollection(wbUserInfos.getUsers())){
+        if(wbUserInfos == null || CommonUtil.isEmpty(wbUserInfos.getUsers())){
             return null;
         }
         ArrayList<UserInfo> userInfos = new ArrayList<>();

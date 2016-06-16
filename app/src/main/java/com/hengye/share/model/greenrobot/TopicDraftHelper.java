@@ -2,8 +2,13 @@ package com.hengye.share.model.greenrobot;
 
 import com.hengye.share.model.Parent;
 import com.hengye.share.model.Topic;
+import com.hengye.share.model.UserInfo;
+import com.hengye.share.model.sina.WBTopic;
+import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.UserUtil;
+import com.hengye.share.util.thirdparty.WBUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.dao.query.QueryBuilder;
@@ -19,6 +24,20 @@ public class TopicDraftHelper {
         Topic topic = new Topic();
         topic.setContent(topicDraft.getContent());
         topic.setDate(topicDraft.getDate().toString());
+        topic.setUserInfo(UserInfo.getUserInfo(UserUtil.getCurrentUser()));
+
+        List<String> imageUrls = new ArrayList<>();
+        List<String> imageLargeUrls = new ArrayList<>();
+
+        List<String> img = CommonUtil.split(topicDraft.getUrls(), ",");
+        if(!CommonUtil.isEmpty(img)) {
+            for (String url : img) {
+                imageUrls.add(WBUtil.getWBTopicImgUrl(url));
+                imageLargeUrls.add(WBUtil.getWBTopicLargeImgUrl(url));
+            }
+            topic.setImageUrls(imageUrls);
+            topic.setImageLargeUrls(imageLargeUrls);
+        }
         return topic;
     }
 

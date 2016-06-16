@@ -15,6 +15,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.hengye.photopicker.model.Photo;
+import com.hengye.photopicker.view.PickPhotoView;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.R;
 import com.hengye.share.model.AtUser;
@@ -25,6 +27,7 @@ import com.hengye.share.service.TopicPublishService;
 import com.hengye.share.ui.emoticon.EmoticonPicker;
 import com.hengye.share.ui.emoticon.EmoticonPickerUtil;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
+import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.DateUtil;
 import com.hengye.share.util.IntentUtil;
@@ -88,7 +91,8 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         initData();
     }
 
-    private ImageButton mMentionBtn, mEmoticonBtn, mPublishBtn;
+    private ImageButton mPhotoPickerBtn, mMentionBtn, mEmoticonBtn, mPublishBtn;
+    private PickPhotoView mPhotoPicker;
     private EmoticonPicker mEmoticonPicker;
     private RelativeLayout mContainer;
     private EditText mContent;
@@ -99,6 +103,8 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         mContent = (EditText) findViewById(R.id.et_topic_publish);
         mContent.setSelection(0);
         mContent.setOnClickListener(this);
+        mPhotoPickerBtn = (ImageButton) findViewById(R.id.btn_camera);
+        mPhotoPickerBtn.setOnClickListener(this);
         mMentionBtn = (ImageButton) findViewById(R.id.btn_mention);
         mMentionBtn.setOnClickListener(this);
         mEmoticonBtn = (ImageButton) findViewById(R.id.btn_emoticon);
@@ -108,6 +114,14 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         mEmoticonPicker = (EmoticonPicker) findViewById(R.id.emoticon_picker);
         mEmoticonPicker.setEditText(this, ((LinearLayout) findViewById(R.id.ll_root)),
                 mContent);
+        mPhotoPicker = (PickPhotoView) findViewById(R.id.pick_photo);
+        if(mTopicDraft.getUrls() != null){
+            ArrayList<Photo> photos = new ArrayList<>();
+            Photo photo = new Photo();
+            photo.setDataPath(mTopicDraft.getUrls());
+            photos.add(photo);
+            mPhotoPicker.setAddPhotos(photos);
+        }
         mContent.setFilters(new InputFilter[]{mAtUserInputFilter, mEmoticonPicker.getEmoticonInputFilter()});
         initSaveToDraftDialog();
     }
@@ -183,6 +197,9 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
             hideEmoticonPicker(true);
         } else if (id == R.id.btn_publish) {
             publishTopic();
+        } else if (id == R.id.btn_camera){
+            mPhotoPicker.performClick();
+//            PhotoPicker.startPhotoPicker(this);
         }
     }
 
@@ -218,6 +235,9 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
             td.setId(mTopicDraft.getId());
             td.setTargetTopicId(mTopicDraft.getTargetTopicId());
             td.setTargetCommentId(mTopicDraft.getTargetCommentId());
+        }
+        if(!CommonUtil.isEmpty(mPhotoPicker.getPhotos())){
+            td.setUrls(mPhotoPicker.getPhotos().get(0).getDataPath());
         }
         return td;
     }
@@ -268,6 +288,12 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
                 EmoticonPickerUtil.addContentToEditTextEnd(mContent, AtUser.getFormatAtUserName(result));
             }
         }
+
+        mPhotoPicker.handleResult(requestCode, resultCode, data);
+//        List<Photo> photos = PhotoPicker.resolvePhotoPicker(requestCode, resultCode, data);
+//        if(!CommonUtil.isEmpty(photos)){
+//
+//        }
     }
 
     private InputFilter mAtUserInputFilter = new InputFilter() {

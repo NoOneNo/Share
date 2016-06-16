@@ -11,36 +11,33 @@ import android.text.TextUtils;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.error.AuthFailureError;
 import com.android.volley.error.VolleyError;
-import com.android.volley.request.GsonRequest;
 import com.android.volley.request.StringRequest;
 import com.hengye.share.R;
-import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.TopicPublish;
 import com.hengye.share.model.greenrobot.TopicDraft;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.model.sina.WBTopicComment;
-import com.hengye.share.model.sina.WBTopicComments;
-import com.hengye.share.ui.activity.TopicDraftActivity;
 import com.hengye.share.util.L;
 import com.hengye.share.util.NotificationUtil;
-import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.retrofit.RetrofitManager;
 
+import java.io.File;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class TopicPublishService extends Service{
+public class TopicPublishService extends Service {
 
     private HashMap<TopicPublish, Boolean> mPublishQueue = new HashMap<>();
     private HashMap<TopicPublish, Integer> mPublishNotificationQueue = new HashMap<>();
@@ -49,7 +46,7 @@ public class TopicPublishService extends Service{
 
     public final static int MAX_PUBLISH_SIZE = 10;
 
-    public static void publish(Context context, TopicDraft topicDraft, String token){
+    public static void publish(Context context, TopicDraft topicDraft, String token) {
         Intent intent = new Intent(context, TopicPublishService.class);
         intent.putExtra("topicDraft", topicDraft);
         intent.putExtra("token", token);
@@ -68,7 +65,7 @@ public class TopicPublishService extends Service{
 
         TopicDraft topicDraft = (TopicDraft) intent.getSerializableExtra("topicDraft");
         String token = intent.getStringExtra("token");
-        if(topicDraft != null && !TextUtils.isEmpty(token)){
+        if (topicDraft != null && !TextUtils.isEmpty(token)) {
             addTopicPublishRequestToQueue(TopicPublish.getWBTopicPublish(topicDraft, token));
         }
 
@@ -87,155 +84,160 @@ public class TopicPublishService extends Service{
         return null;
     }
 
-    protected void addTopicPublishRequestToQueue(TopicPublish tp){
+    protected void addTopicPublishRequestToQueue(TopicPublish tp) {
         mPublishQueue.put(tp, false);
         mPublishNotificationQueue.put(tp, new Random().nextInt(Integer.MAX_VALUE));
-        publish(tp);
         showTopicPublishStartNotification(tp);
+        publish(tp);
     }
 
-    protected void publish(TopicPublish tp){
-        switch (tp.getTopicDraft().getType()) {
-            case TopicDraftHelper.PUBLISH_COMMENT:
-                publishWBComment(tp);
-                break;
-            case TopicDraftHelper.REPLY_COMMENT:
-                replyWBComment(tp);
-                break;
-            case TopicDraftHelper.REPOST_TOPIC:
-                repostWBTopic(tp);
-                break;
-            case TopicDraftHelper.PUBLISH_TOPIC:
-            default:
-                publishWBTopic(tp);
-                break;
+    protected void publish(TopicPublish tp) {
+        try {
+            switch (tp.getTopicDraft().getType()) {
+                case TopicDraftHelper.PUBLISH_COMMENT:
+                    publishWBComment(tp);
+                    break;
+                case TopicDraftHelper.REPLY_COMMENT:
+                    replyWBComment(tp);
+                    break;
+                case TopicDraftHelper.REPOST_TOPIC:
+                    repostWBTopic(tp);
+                    break;
+                case TopicDraftHelper.PUBLISH_TOPIC:
+                default:
+                    publishWBTopic(tp);
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            handlePublishFail(tp);
         }
     }
 
-    protected void handlePublishSuccess(TopicPublish tp){
+    protected void handlePublishSuccess(TopicPublish tp) {
         showTopicPublishSuccessNotification(tp);
         mPublishQueue.put(tp, true);
         stopServiceIfQueueIsAllFinish();
     }
 
-    protected void handlePublishFail(TopicPublish tp){
+    protected void handlePublishFail(TopicPublish tp) {
         mPublishQueue.remove(tp);
         showTopicPublishFailNotification(tp);
         TopicDraftHelper.saveTopicDraft(tp.getTopicDraft());
         stopServiceIfQueueIsAllFinish();
     }
 
-    protected void publishWBTopic(final TopicPublish tp){
+    protected void publishWBTopic(final TopicPublish tp) {
+        if (tp.getTopicDraft().getUrls() != null) {
+            publishWBTopicWithPhoto(tp);
+        } else {
+            publishWBTopicContentOnly(tp);
+        }
+    }
+
+    public abstract class PublishSubscriber<T> extends Subscriber<T>{
+
+        TopicPublish tp;
+
+        public PublishSubscriber(TopicPublish tp){
+            this.tp = tp;
+        }
+
+        @Override
+        public void onCompleted() {
+            L.debug("onCompleted invoke");
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            L.debug("request fail, error : {}", e);
+            handlePublishFail(tp);
+        }
+    }
+
+    public class PublishTopicSubscriber extends PublishSubscriber<WBTopic>{
+
+        public PublishTopicSubscriber(TopicPublish tp){
+            super(tp);
+        }
+
+        @Override
+        public void onNext(WBTopic wbTopic) {
+            L.debug("request success , data : {}", wbTopic);
+            if (wbTopic != null) {
+                handlePublishSuccess(tp);
+            }
+        }
+    }
+
+    public class PublishCommentSubscriber extends PublishSubscriber<WBTopicComment>{
+
+        public PublishCommentSubscriber(TopicPublish tp){
+            super(tp);
+        }
+
+        @Override
+        public void onNext(WBTopicComment wbTopicComment) {
+            L.debug("request success , data : {}", wbTopicComment);
+            if (wbTopicComment != null) {
+                handlePublishSuccess(tp);
+            }
+        }
+    }
+
+    protected void publishWBTopicContentOnly(final TopicPublish tp) {
 
         RetrofitManager
                 .getWBService()
                 .publishTopic(tp.getToken(), tp.getTopicDraft().getContent())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<WBTopic>() {
-                    @Override
-                    public void onCompleted() {
-                        L.debug("onCompleted invoke");
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        L.debug("request fail, error : {}", e);
-                        handlePublishFail(tp);
-                    }
-
-                    @Override
-                    public void onNext(WBTopic wbTopic) {
-                        L.debug("request success , data : {}", wbTopic);
-                        if (wbTopic != null) {
-                            handlePublishSuccess(tp);
-                        }
-                    }
-                });
+                .subscribe(new PublishTopicSubscriber(tp));
     }
 
-    protected void publishWBComment(final TopicPublish tp){
+    protected void publishWBTopicWithPhoto(final TopicPublish tp) {
+
+        RequestBody requestFile = RequestBody.create(MediaType.parse("application/otcet-stream"),
+                new File(tp.getTopicDraft().getUrls()));
+        MultipartBody.Part body = MultipartBody.Part.createFormData("pic", "share.png", requestFile);
+        RetrofitManager
+                .getWBService()
+                .publishTopicWithPhoto(
+                        RequestBody.create(MediaType.parse("multipart/form-data"),
+                                tp.getToken()),
+                        RequestBody.create(MediaType.parse("multipart/form-data"),
+                                tp.getTopicDraft().getContent()),
+                        body)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new PublishTopicSubscriber(tp));
+    }
+
+    protected void publishWBComment(final TopicPublish tp) {
         RetrofitManager
                 .getWBService()
                 .publishComment(tp.getToken(), tp.getTopicDraft().getContent(), tp.getTopicDraft().getTargetTopicId(), tp.getTopicDraft().getIsCommentOrigin())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<WBTopicComment>() {
-                    @Override
-                    public void onCompleted() {
-                        L.debug("onCompleted invoke");
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        L.debug("request fail, error : {}", e);
-                        handlePublishFail(tp);
-                    }
-
-                    @Override
-                    public void onNext(WBTopicComment wbTopicComment) {
-                        L.debug("request success , data : {}", wbTopicComment);
-                        if(wbTopicComment != null){
-                            handlePublishSuccess(tp);
-                        }
-                    }
-                });
+                .subscribe(new PublishCommentSubscriber(tp));
     }
 
-    protected void repostWBTopic(final TopicPublish tp){
+    protected void repostWBTopic(final TopicPublish tp) {
         RetrofitManager
                 .getWBService()
                 .repostTopic(tp.getToken(), tp.getTopicDraft().getContent(), tp.getTopicDraft().getTargetTopicId(), tp.getTopicDraft().getIsCommentOrigin())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<WBTopic>() {
-                    @Override
-                    public void onCompleted() {
-                        L.debug("onCompleted invoke");
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        L.debug("request fail, error : {}", e);
-                        handlePublishFail(tp);
-                    }
-
-                    @Override
-                    public void onNext(WBTopic wbTopic) {
-                        L.debug("request success , data : {}", wbTopic);
-                        if (wbTopic != null) {
-                            handlePublishSuccess(tp);
-                        }
-                    }
-                });
+                .subscribe(new PublishTopicSubscriber(tp));
     }
 
-    protected void replyWBComment(final TopicPublish tp){
+    protected void replyWBComment(final TopicPublish tp) {
         RetrofitManager
                 .getWBService()
                 .replyComment(tp.getToken(), tp.getTopicDraft().getContent(), tp.getTopicDraft().getTargetTopicId(), tp.getTopicDraft().getTargetCommentId(), tp.getTopicDraft().getIsCommentOrigin())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<WBTopicComment>() {
-                    @Override
-                    public void onCompleted() {
-                        L.debug("onCompleted invoke");
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        L.debug("request fail, error : {}", e);
-                        handlePublishFail(tp);
-                    }
-
-                    @Override
-                    public void onNext(WBTopicComment wbTopicComment) {
-                        L.debug("request success , data : {}", wbTopicComment);
-                        if(wbTopicComment != null){
-                            handlePublishSuccess(tp);
-                        }
-                    }
-                });
+                .subscribe(new PublishCommentSubscriber(tp));
     }
 
     private StringRequest getWBTopicPublishRequest(final TopicPublish tp) {
@@ -251,7 +253,7 @@ public class TopicPublishService extends Service{
             @Override
             public void onResponse(String response) {
                 L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
-                if(response != null){
+                if (response != null) {
                     showTopicPublishSuccessNotification(tp);
                     mPublishQueue.put(tp, true);
                     stopServiceIfQueueIsAllFinish();
@@ -267,7 +269,7 @@ public class TopicPublishService extends Service{
                 TopicDraftHelper.saveTopicDraft(tp.getTopicDraft());
                 stopServiceIfQueueIsAllFinish();
             }
-        }){
+        }) {
             @Override
             public byte[] getBody() {
                 return ub.getBody();
@@ -291,22 +293,22 @@ public class TopicPublishService extends Service{
         };
     }
 
-    protected void showTopicPublishStartNotification(TopicPublish tp){
+    protected void showTopicPublishStartNotification(TopicPublish tp) {
         Notification.Builder builder = new Notification.Builder(this)
                 .setTicker(getString(R.string.label_topic_publish_start))
                 .setContentTitle(getString(R.string.label_topic_publish_start))
-                .setContentText("topic publish")
+                .setContentText(getString(R.string.label_topic_publish))
                 .setOnlyAlertOnce(true)
                 .setOngoing(true)
                 .setSmallIcon(R.drawable.notification_icon_upload_white);
         NotificationUtil.show(builder.build(), mPublishNotificationQueue.get(tp));
     }
 
-    protected void showTopicPublishSuccessNotification(final TopicPublish tp){
+    protected void showTopicPublishSuccessNotification(final TopicPublish tp) {
         Notification.Builder builder = new Notification.Builder(this)
                 .setTicker(getString(R.string.label_topic_publish_success))
                 .setContentTitle(getString(R.string.label_topic_publish_success))
-                .setContentText("topic publish")
+                .setContentText(getString(R.string.label_topic_publish))
                 .setOnlyAlertOnce(true)
                 .setOngoing(false)
                 .setSmallIcon(R.drawable.notification_icon_upload_white);
@@ -320,18 +322,18 @@ public class TopicPublishService extends Service{
         }, 3000);
     }
 
-    protected void showTopicPublishFailNotification(TopicPublish tp){
+    protected void showTopicPublishFailNotification(TopicPublish tp) {
         Notification.Builder builder = new Notification.Builder(this)
                 .setTicker(getString(R.string.label_topic_publish_fail))
                 .setContentTitle(getString(R.string.label_topic_publish_fail))
-                .setContentText("topic publish")
+                .setContentText(getString(R.string.label_topic_publish))
                 .setOnlyAlertOnce(true)
                 .setOngoing(false)
                 .setSmallIcon(R.drawable.notification_icon_upload_white);
         NotificationUtil.show(builder.build(), mPublishNotificationQueue.get(tp));
     }
 
-    protected void stopServiceIfQueueIsAllFinish(){
+    protected void stopServiceIfQueueIsAllFinish() {
         boolean isAllFinish = true;
         Set<TopicPublish> set = mPublishQueue.keySet();
         for (TopicPublish tp : set) {

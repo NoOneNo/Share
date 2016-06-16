@@ -4,9 +4,9 @@ import com.hengye.share.util.UrlFactory;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
-import retrofit2.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitManager {
 
@@ -18,6 +18,7 @@ public class RetrofitManager {
 
     public static OkHttpClient getOkHttpClient(){
         if(mOkHttpClient == null) {
+//            CustomLoggingInterceptor logging = new CustomLoggingInterceptor();
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
             mOkHttpClient = new OkHttpClient.Builder()

@@ -34,7 +34,7 @@ public class TopicComment implements Serializable{
     private transient SpannableString urlSpannableString;
 
     public static ArrayList<TopicComment> getComments(WBTopicComments wbTopicComments){
-        if(wbTopicComments == null || CommonUtil.isEmptyCollection(wbTopicComments.getComments())){
+        if(wbTopicComments == null || CommonUtil.isEmpty(wbTopicComments.getComments())){
             return null;
         }
         ArrayList<TopicComment> topicComments = new ArrayList<>();
@@ -56,7 +56,7 @@ public class TopicComment implements Serializable{
         topicComment.setContent(entity.getText());
         topicComment.setId(entity.getIdstr());
         topicComment.setTopic(Topic.getTopic(entity.getStatus()));
-//        if(!CommonUtil.isEmptyCollection(entity.getPic_urls())){
+//        if(!CommonUtil.isEmpty(entity.getPic_urls())){
 //            List<String> imageUrls = new ArrayList<>();
 //            List<String> imageLargeUrls = new ArrayList<>();
 //            for(WBTopic.Pic_urlsEntity urlsEntity : entity.getPic_urls()){
@@ -71,7 +71,7 @@ public class TopicComment implements Serializable{
     }
 
     public static ArrayList<TopicComment> getComments(WBTopicReposts wbTopicReposts){
-        if(wbTopicReposts == null || CommonUtil.isEmptyCollection(wbTopicReposts.getReposts())){
+        if(wbTopicReposts == null || CommonUtil.isEmpty(wbTopicReposts.getReposts())){
             return null;
         }
         ArrayList<TopicComment> topicComments = new ArrayList<>();

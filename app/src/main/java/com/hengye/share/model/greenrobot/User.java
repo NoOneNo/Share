@@ -215,7 +215,7 @@ public class User implements java.io.Serializable {
     }
 
     public static ArrayList<User> getUsers(WBUserInfos wbUserInfos){
-        if(wbUserInfos == null || CommonUtil.isEmptyCollection(wbUserInfos.getUsers())){
+        if(wbUserInfos == null || CommonUtil.isEmpty(wbUserInfos.getUsers())){
             return null;
         }
         ArrayList<User> users = new ArrayList<>();

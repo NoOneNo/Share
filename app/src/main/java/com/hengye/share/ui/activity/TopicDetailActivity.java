@@ -227,7 +227,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         mPullToRefreshLayout.setOnLoadListener(new PullToRefreshLayout.OnLoadListener() {
             @Override
             public void onLoad() {
-                if (!CommonUtil.isEmptyCollection(mAdapter.getData())) {
+                if (!CommonUtil.isEmpty(mAdapter.getData())) {
                     String id = CommonUtil.getLastItem(mAdapter.getData()).getId();
                     mPresenter.loadWBCommentOrRepost(mTopic.getId(), id, false, isSelectedCommentTab());
                 } else {
@@ -313,7 +313,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     public void handleCommentData(boolean isComment, List<TopicComment> data, boolean isRefresh, long totalNumber){
         if(isRefresh){
             mPullToRefreshLayout.setRefreshing(false);
-            if(CommonUtil.isEmptyCollection(data)){
+            if(CommonUtil.isEmpty(data)){
                 return;
             }
             updateTabLayout(isComment, totalNumber);
@@ -325,7 +325,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             }
 //            if(mHasCommentRequestSuccess && mHasRepostRequestSuccess){
                 List<TopicComment> adapterData = isSelectedCommentTab() ? mCommentData : mRepostData;
-                if (CommonUtil.isEmptyCollection(adapterData)) {
+                if (CommonUtil.isEmpty(adapterData)) {
 //                    //内容为空
 //                    mPullToRefreshLayout.setLoadEnable(false);
                 }else if (data.size() < WBUtil.getWBTopicRequestCount()) {
@@ -339,7 +339,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         }else{
             List<TopicComment> targetData = isComment ? mCommentData : mRepostData;
             mPullToRefreshLayout.setLoading(false);
-            if (CommonUtil.isEmptyCollection(data)) {
+            if (CommonUtil.isEmpty(data)) {
                 //没有数据可供加载
                 mPullToRefreshLayout.setLoadEnable(false);
                 Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
@@ -358,7 +358,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                 }
 
                 //当只有1条数据并且重复，data会空
-                if (CommonUtil.isEmptyCollection(data)) {
+                if (CommonUtil.isEmpty(data)) {
                     mPullToRefreshLayout.setLoadEnable(false);
                     Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
                 }else{

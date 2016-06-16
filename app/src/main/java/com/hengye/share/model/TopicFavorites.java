@@ -12,7 +12,7 @@ import java.util.List;
 public class TopicFavorites {
 
     public static ArrayList<TopicFavorite> getTopicFavorites(WBTopicFavorites wbTopicFavorites){
-        if(wbTopicFavorites == null || CommonUtil.isEmptyCollection(wbTopicFavorites.getFavorites())){
+        if(wbTopicFavorites == null || CommonUtil.isEmpty(wbTopicFavorites.getFavorites())){
             return null;
         }
         ArrayList<TopicFavorite> topicFavorites = new ArrayList<>();
@@ -116,7 +116,7 @@ public class TopicFavorites {
         private long count;
 
         public static ArrayList<TopicFavoritesTag> getTopicFavoritesTags(List<WBTopicFavorites.WBTopicFavoritesTag> wbTopicFavoritesTags){
-            if(CommonUtil.isEmptyCollection(wbTopicFavoritesTags)){
+            if(CommonUtil.isEmpty(wbTopicFavoritesTags)){
                 return null;
             }
             ArrayList<TopicFavoritesTag> topicFavoritesTags = new ArrayList<>();

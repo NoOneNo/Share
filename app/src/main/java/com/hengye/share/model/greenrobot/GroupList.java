@@ -197,7 +197,7 @@ public class GroupList implements java.io.Serializable {
     }
 
     public static List<GroupList> getGroupLists(WBGroups wbGroups, String uid){
-        if(wbGroups == null || CommonUtil.isEmptyCollection(wbGroups.getLists())){
+        if(wbGroups == null || CommonUtil.isEmpty(wbGroups.getLists())){
             return null;
         }
         ArrayList<GroupList> groupLists = new ArrayList<>();

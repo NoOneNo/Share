@@ -131,7 +131,7 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
 
     @Override
     public void handleCache(List<Topic> data) {
-        if (CommonUtil.isEmptyCollection(data)) {
+        if (CommonUtil.isEmpty(data)) {
             if (mAdapter.isEmpty() && !UserUtil.isUserEmpty()) {
                 mPullToRefreshLayout.setRefreshing(true);
             }

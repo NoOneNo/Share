@@ -131,7 +131,7 @@ public class GroupManageActivity extends BaseActivity implements GroupManageMvpV
 
     @Override
     public void handleGroupList(List<GroupList> groupLists) {
-        if(!CommonUtil.isEmptyCollection(groupLists)){
+        if(!CommonUtil.isEmpty(groupLists)){
             if(groupLists.get(0).getVisible() == -1){
                 groupLists.remove(0);
             }

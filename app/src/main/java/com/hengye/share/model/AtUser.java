@@ -24,7 +24,7 @@ public class AtUser extends Select implements Serializable{
     }
 
     public static String getFormatAtUserName(List<String> username){
-        if(CommonUtil.isEmptyCollection(username)){
+        if(CommonUtil.isEmpty(username)){
             return "";
         }
         StringBuilder sb = new StringBuilder();
@@ -49,7 +49,7 @@ public class AtUser extends Select implements Serializable{
 
     public static ArrayList<AtUser> getAtUser(List<UserInfo> userInfos) {
         ArrayList<AtUser> temp = new ArrayList<>();
-        if (CommonUtil.isEmptyCollection(userInfos)) {
+        if (CommonUtil.isEmpty(userInfos)) {
             return temp;
         }
 
@@ -61,7 +61,7 @@ public class AtUser extends Select implements Serializable{
 
     public static ArrayList<AtUser> search(List<AtUser> targets, String str) {
         ArrayList<AtUser> result = new ArrayList<>();
-        if (CommonUtil.isEmptyCollection(targets)) {
+        if (CommonUtil.isEmpty(targets)) {
             return result;
         }
         for (AtUser au : targets) {

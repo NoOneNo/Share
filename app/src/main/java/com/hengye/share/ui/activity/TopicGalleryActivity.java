@@ -14,7 +14,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -26,7 +25,6 @@ import com.hengye.share.ui.fragment.TopicGalleryFragment;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.AnimationUtil;
-import com.hengye.share.util.L;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,7 +76,7 @@ public class TopicGalleryActivity extends BaseActivity {
         mIndexStart = getIntent().getIntExtra(IMG_INDEX, 0);
         mRectList = (ArrayList<AnimationRect>) getIntent().getSerializableExtra(IMG_RECT_LIST);
 
-        if(CommonUtil.hasEmptyCollection(mUrls, mRectList)){
+        if(CommonUtil.hasEmpty(mUrls, mRectList)){
             this.finish();
         }
     }
