@@ -1,6 +1,7 @@
 package com.hengye.share.ui.fragment;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -75,18 +76,6 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
         recyclerView.setAdapter(mAdapter = new TopicAdapter(getContext(), new ArrayList<Topic>(), recyclerView));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        if(SettingHelper.isPreRead()){
-            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
-                    if(layoutManager.findLastVisibleItemPosition() > mAdapter.getItemCount() - 8){
-                        mPullToRefreshLayout.setLoading(true);
-                    }
-                }
-            });
-        }
-
         BackTopButton backTopBtn = (BackTopButton) findViewById(R.id.iv_back_top);
         backTopBtn.setup(recyclerView);
 
@@ -123,7 +112,20 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
         });
 
         mPresenter.loadCacheData();
+
+//        if(SettingHelper.isPreRead()){
+//            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//                @Override
+//                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                    super.onScrolled(recyclerView, dx, dy);
+//                    if(layoutManager.findLastVisibleItemPosition() > mAdapter.getItemCount() - 8){
+//                        mPullToRefreshLayout.setLoading(true);
+//                    }
+//                }
+//            });
+//        }
     }
+
 
     public void refresh() {
         mPresenter.loadCacheData();

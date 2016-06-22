@@ -34,8 +34,8 @@ import com.hengye.share.ui.activity.TopicDetailActivity;
 import com.hengye.share.ui.activity.TopicGalleryActivity;
 import com.hengye.share.ui.activity.TopicPublishActivity;
 import com.hengye.share.ui.support.AnimationRect;
-import com.hengye.share.ui.support.textspan.LongClickableLinkMovementMethod;
-import com.hengye.share.ui.support.textspan.TopicContentUrlOnTouchListener;
+import com.hengye.share.ui.support.textspan.SimpleLinkMovementMethod;
+import com.hengye.share.ui.support.textspan.TopicUrlOnTouchListener;
 import com.hengye.share.ui.view.GridGalleryView;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
 import com.hengye.share.ui.widget.util.SelectorLoader;
@@ -307,14 +307,12 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
         public TopicContentViewHolder() {
         }
 
-        TopicContentUrlOnTouchListener mTopicContentUrlOnTouchListener = new TopicContentUrlOnTouchListener();
-
         public void initTopicContent(final Context context, Topic topic, boolean isRetweeted) {
 
             //不设置的话会被名字内容的点击事件覆盖，无法触发ItemView的onClick
             mContent.setText(topic.getUrlSpannableString(context));
-            mContent.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
-            mContent.setOnTouchListener(mTopicContentUrlOnTouchListener);
+            mContent.setMovementMethod(SimpleLinkMovementMethod.getInstance());
+            mContent.setOnTouchListener(TopicUrlOnTouchListener.getInstance());
 
             if (!CommonUtil.isEmpty(topic.getImageUrls())) {
                 //加载图片

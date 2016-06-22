@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentActivity;
 import android.text.ParcelableSpan;
 import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.style.CharacterStyle;
 import android.text.style.ClickableSpan;
 import android.view.View;
 
@@ -19,7 +20,7 @@ import com.hengye.share.util.L;
 import com.hengye.share.util.thirdparty.WBUtil;
 import com.sina.weibo.sdk.utils.Utility;
 
-public class TopicContentUrlSpan extends ClickableSpan implements ParcelableSpan {
+public class TopicContentUrlSpan extends CharacterStyle implements ParcelableSpan, SimpleClickableSpan {
 
     private final String mURL;
 
@@ -41,6 +42,7 @@ public class TopicContentUrlSpan extends ClickableSpan implements ParcelableSpan
     }
 
     public void writeToParcel(Parcel dest, int flags) {
+//        dest.writeString(mURL);
         dest.writeString(mURL);
     }
 
@@ -52,7 +54,7 @@ public class TopicContentUrlSpan extends ClickableSpan implements ParcelableSpan
     public void onClick(View widget) {
         Uri uri = Uri.parse(getURL());
         Context context = widget.getContext();
-        if (uri.getScheme().startsWith("http")) {
+        if (DataUtil.isHttpUrl(uri.getScheme())) {
             String url = uri.toString();
             if (WBUtil.isWBAccountIdLink(url)) {
                 Intent intent = new Intent(context, PersonalHomepageActivity.class);
@@ -78,6 +80,7 @@ public class TopicContentUrlSpan extends ClickableSpan implements ParcelableSpan
         }
     }
 
+    @Override
     public void onLongClick(View widget) {
         Uri data = Uri.parse(getURL());
         if (data != null) {

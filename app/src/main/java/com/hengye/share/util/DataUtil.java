@@ -3,23 +3,29 @@ package com.hengye.share.util;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
+import android.util.Patterns;
 import android.view.View;
 
 import com.hengye.share.BuildConfig;
+import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.CommonAdapter;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
 import com.hengye.share.ui.emoticon.Emoticon;
 import com.hengye.share.ui.support.textspan.TopicContentUrlSpan;
+import com.hengye.share.ui.support.textspan.TopicHttpUrlSpan;
 import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -63,7 +69,7 @@ public class DataUtil {
                 if (data.size() < WBUtil.getWBTopicRequestCount()) {
                     //没有更多的数据可供加载
                     return LOAD_NO_MORE_DATA;
-                }else{
+                } else {
                     return LOAD_DATA_SIZE_EQUAL;
                 }
             }
@@ -72,8 +78,8 @@ public class DataUtil {
     }
 
     public static <T, VH extends CommonAdapter.ItemViewHolder>
-    void handleCommonAdapter(int type, CommonAdapter<T, VH> adapter, List<T> data){
-        switch (type){
+    void handleCommonAdapter(int type, CommonAdapter<T, VH> adapter, List<T> data) {
+        switch (type) {
             case REFRESH_DATA_SIZE_LESS:
                 adapter.addAll(0, data);
                 break;
@@ -88,8 +94,8 @@ public class DataUtil {
     }
 
     public static <VH extends CommonAdapter.ItemViewHolder>
-    void handleTopicAdapter(int type, CommonAdapter<Topic, VH> adapter, List<Topic> data){
-        switch (type){
+    void handleTopicAdapter(int type, CommonAdapter<Topic, VH> adapter, List<Topic> data) {
+        switch (type) {
             case REFRESH_DATA_SIZE_LESS:
                 adapter.addAll(0, data);
                 break;
@@ -108,7 +114,7 @@ public class DataUtil {
         }
     }
 
-    public static void handleSnackBar(int type, View v, int size){
+    public static void handleSnackBar(int type, View v, int size) {
         switch (type) {
             case REFRESH_NO_MORE_DATA:
                 ToastUtil.showSnackBar("没有新的微博", v);
@@ -157,32 +163,41 @@ public class DataUtil {
     public static final String TOPIC_SCHEME = BuildConfig.APPLICATION_ID + ".topic://";
     public static final String MENTION_SCHEME = BuildConfig.APPLICATION_ID + ".mention://";
 
-    public static boolean isTopic(String url){
-        if(!TextUtils.isEmpty(url)){
-            if(url.startsWith(TOPIC_SCHEME)){
+    public static boolean isTopic(String url) {
+        if (!TextUtils.isEmpty(url)) {
+            if (url.startsWith(TOPIC_SCHEME)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean isMention(String url){
-        if(!TextUtils.isEmpty(url)){
-            if(url.startsWith(MENTION_SCHEME)){
+    public static boolean isMention(String url) {
+        if (!TextUtils.isEmpty(url)) {
+            if (url.startsWith(MENTION_SCHEME)) {
                 return true;
             }
         }
         return false;
     }
 
-//    public static boolean isHttpUrl(String url){
-//        if(!TextUtils.isEmpty(url)){
-//            Uri uri = Uri.parse(url);
-//            if(url.startsWith("http://") || url.startsWith("https://")){
-//                return true;
-//            }
-//        }
-//        return false;
+        public static boolean isHttpUrl(String url) {
+            if (!TextUtils.isEmpty(url)) {
+                Matcher m = WEB_URL.matcher(url);
+                while (m.find()) {
+                    return true;
+                }
+                return false;
+//                if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith(WEB_SCHEME)) {
+//                    return true;
+//                }
+            }
+            return false;
+        }
+//    public static boolean isHttpUrl(String url) {
+//        return matchLinks(url, Patterns.WEB_URL,
+//                new String[]{"http://", "https://", "rtsp://"},
+//                Linkify.sUrlMatchFilter, null);
 //    }
 
     public static void addTopicContentHighLightLinks(Context context, TopicComment topicComment) {
@@ -219,19 +234,109 @@ public class DataUtil {
         Linkify.addLinks(value, TOPIC_URL, TOPIC_SCHEME);
 
         URLSpan[] urlSpans = value.getSpans(0, value.length(), URLSpan.class);
-        if(urlSpans == null || urlSpans.length == 0){
+        if (urlSpans == null || urlSpans.length == 0) {
             return value;
         }
 
-        TopicContentUrlSpan topicContentUrlSpan = null;
-        for (URLSpan urlSpan : urlSpans) {
-            topicContentUrlSpan = new TopicContentUrlSpan(urlSpan.getURL());
-            int start = value.getSpanStart(urlSpan);
-            int end = value.getSpanEnd(urlSpan);
-            value.removeSpan(urlSpan);
-            value.setSpan(topicContentUrlSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        List<SpanPosition> sps = new ArrayList<>();
+        List<URLSpan> temp = Arrays.asList(urlSpans);
+        List<URLSpan> us = new ArrayList<>(temp);
+        int size = us.size();
+        for(int i = 0; i < size; i++){
+            URLSpan urlSpan = us.get(i);
+            if (isHttpUrl(urlSpan.getURL())) {
+                int start = value.getSpanStart(urlSpan);
+                int end = value.getSpanEnd(urlSpan);
+                if (start >= 0 && end >= 0 && value.length() >= end) {
+                    value.removeSpan(urlSpan);
+                    us.remove(i);
+                    i--;
+                    size--;
+
+                    CharSequence cs1 = value.subSequence(0, start);
+                    CharSequence cs2 = value.subSequence(end, value.length());
+//                    ➤➢
+                    value = SpannableString.valueOf(cs1.toString() + "➢网页链接" + cs2.toString());
+                    SpanPosition sp = new SpanPosition();
+                    sp.start = cs1.toString().length();
+                    sp.end = sp.start + "➢网页链接".length();
+                    sp.content = urlSpan.getURL();
+                    sps.add(sp);
+                }
+            }
         }
+
+        if(!CommonUtil.isEmpty(sps)){
+            for(SpanPosition sp : sps){
+                value.setSpan(new TopicContentUrlSpan(sp.content), sp.start, sp.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+
+        if(!CommonUtil.isEmpty(us)) {
+            for (URLSpan urlSpan : us) {
+                int start = value.getSpanStart(urlSpan);
+                int end = value.getSpanEnd(urlSpan);
+
+                if (start >= 0 && end >= 0 && value.length() >= end) {
+                    value.removeSpan(urlSpan);
+                    value.setSpan(new TopicContentUrlSpan(urlSpan.getURL()), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+            }
+        }
+
+//        for (URLSpan urlSpan : urlSpans) {
+//            int start = value.getSpanStart(urlSpan);
+//            int end = value.getSpanEnd(urlSpan);
+////            value.removeSpan(urlSpan);
+//
+//            if (isHttpUrl(urlSpan.getURL())) {
+////                if (start >= 0 && end >= 0 && value.length() >= end) {
+//////                    CharSequence cs1 = value.subSequence(0, start);
+//////                    CharSequence cs2 = value.subSequence(end, value.length());
+//////                    value = SpannableString.valueOf(cs1.toString() + "网页链接" + cs2.toString());
+////
+//////                    value.setSpan(new TopicHttpUrlSpan(urlSpan.getURL(), context, R.drawable.compose_mentionbutton_background_highlighted),
+//////                            start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//////                    value.setSpan(new TopicHttpUrlSpan(urlSpan.getURL()), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+////                    value.setSpan(new TopicContentUrlSpan(urlSpan.getURL()), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+////                }
+//            }else {
+//                value.removeSpan(urlSpan);
+//                value.setSpan(new TopicContentUrlSpan(urlSpan.getURL()), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//            }
+//        }
         return value;
+    }
+
+    public static class SpanPosition{
+        int start;
+        int end;
+        String content;
+
+        public int getStart() {
+            return start;
+        }
+
+        public void setStart(int start) {
+            this.start = start;
+        }
+
+        public int getEnd() {
+            return end;
+        }
+
+        public void setEnd(int end) {
+            this.end = end;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
     }
 
     public static String addRetweetedNamePrefix(Topic topic) {

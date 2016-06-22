@@ -8,7 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
-public class TopicContentUrlOnTouchListener implements View.OnTouchListener {
+public class SimpleLinkOnTouchListener implements View.OnTouchListener {
 
     private boolean find = false;
 
@@ -31,10 +31,10 @@ public class TopicContentUrlOnTouchListener implements View.OnTouchListener {
 
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
-                TopicContentUrlSpan[] urlSpans = value.getSpans(0, value.length(), TopicContentUrlSpan.class);
+                SimpleClickableSpan[] urlSpans = value.getSpans(0, value.length(), SimpleClickableSpan.class);
                 int findStart = 0;
                 int findEnd = 0;
-                for (TopicContentUrlSpan urlSpan : urlSpans) {
+                for (SimpleClickableSpan urlSpan : urlSpans) {
                     int start = value.getSpanStart(urlSpan);
                     int end = value.getSpanEnd(urlSpan);
                     if (start <= offset && offset <= end) {
@@ -48,11 +48,11 @@ public class TopicContentUrlOnTouchListener implements View.OnTouchListener {
 
                 float lineWidth = layout.getLineWidth(line);
 
-                find &= (lineWidth >= x);
+//                find &= (lineWidth >= x);
 
                 if (find) {
-                    LongClickableLinkMovementMethod.getInstance().onTouchEvent(tv, value, event);
-                    BackgroundColorSpan backgroundColorSpan = new BackgroundColorSpan(0xFFFF4081);
+                    SimpleLinkMovementMethod.getInstance().onTouchEvent(tv, value, event);
+                    BackgroundColorSpan backgroundColorSpan = new BackgroundColorSpan(getPressColor());
                     value.setSpan(backgroundColorSpan, findStart, findEnd,
                             Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                     //Android has a bug, sometime TextView wont change its value when you modify SpannableString,
@@ -63,14 +63,14 @@ public class TopicContentUrlOnTouchListener implements View.OnTouchListener {
                 return find;
             case MotionEvent.ACTION_MOVE:
                 if (find) {
-                    LongClickableLinkMovementMethod.getInstance().onTouchEvent(tv, value, event);
+                    SimpleLinkMovementMethod.getInstance().onTouchEvent(tv, value, event);
                 }
                 break;
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
                 if (find) {
-                    LongClickableLinkMovementMethod.getInstance().onTouchEvent(tv, value, event);
-                    LongClickableLinkMovementMethod.getInstance().removeLongClickCallback();
+                    SimpleLinkMovementMethod.getInstance().onTouchEvent(tv, value, event);
+                    SimpleLinkMovementMethod.getInstance().removeLongClickCallback();
 
                     BackgroundColorSpan[] backgroundColorSpans = value
                             .getSpans(0, value.length(), BackgroundColorSpan.class);
@@ -85,5 +85,9 @@ public class TopicContentUrlOnTouchListener implements View.OnTouchListener {
         }
 
         return false;
+    }
+
+    public int getPressColor(){
+        return 0x000000;
     }
 }

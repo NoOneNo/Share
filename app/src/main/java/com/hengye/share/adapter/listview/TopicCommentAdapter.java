@@ -2,22 +2,15 @@ package com.hengye.share.adapter.listview;
 
 import android.content.Context;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicAdapter;
 import com.hengye.share.model.TopicComment;
-import com.hengye.share.model.greenrobot.TopicDraft;
-import com.hengye.share.model.greenrobot.TopicDraftHelper;
-import com.hengye.share.ui.activity.TopicDetailActivity;
-import com.hengye.share.ui.activity.TopicPublishActivity;
-import com.hengye.share.ui.support.textspan.LongClickableLinkMovementMethod;
-import com.hengye.share.ui.support.textspan.TopicContentUrlOnTouchListener;
+import com.hengye.share.ui.support.textspan.SimpleLinkMovementMethod;
+import com.hengye.share.ui.support.textspan.TopicUrlOnTouchListener;
 import com.hengye.share.ui.view.GridGalleryView;
 import com.hengye.share.ui.widget.util.SelectorLoader;
-import com.hengye.share.util.ViewUtil;
 
 import java.util.List;
 
@@ -41,8 +34,6 @@ public class TopicCommentAdapter extends CommonAdapter<TopicComment, TopicCommen
 
         TopicAdapter.TopicContentViewHolder mTopic;
         TopicAdapter.TopicTitleViewHolder mTopicTitle;
-
-        TopicContentUrlOnTouchListener mTopicContentUrlOnTouchListener = new TopicContentUrlOnTouchListener();
 
         public TopicCommentViewHolder(View v) {
             super(v);
@@ -73,8 +64,8 @@ public class TopicCommentAdapter extends CommonAdapter<TopicComment, TopicCommen
         public void initCommentContent(final Context context, final TopicAdapter.TopicContentViewHolder holder, TopicComment topicComment) {
 
             holder.mContent.setText(topicComment.getUrlSpannableString(context));
-            holder.mContent.setMovementMethod(LongClickableLinkMovementMethod.getInstance());
-            holder.mContent.setOnTouchListener(mTopicContentUrlOnTouchListener);
+            holder.mContent.setMovementMethod(SimpleLinkMovementMethod.getInstance());
+            holder.mContent.setOnTouchListener(TopicUrlOnTouchListener.getInstance());
 
         }
     }
