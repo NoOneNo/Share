@@ -21,8 +21,10 @@ import com.hengye.share.R;
 import com.hengye.share.ui.activity.TopicGalleryActivity;
 import com.hengye.share.ui.base.BaseFragment;
 import com.hengye.share.ui.support.AnimationRect;
+import com.hengye.share.util.FileUtil;
 import com.hengye.share.util.ImageUtil;
 import com.hengye.share.util.RequestManager;
+import com.hengye.share.util.ToastUtil;
 
 import java.io.File;
 
@@ -40,9 +42,10 @@ public class TopicGalleryFragment extends BaseFragment {
         return fragment;
     }
 
-    String mUrl;
+    String mUrl, mPath;
     boolean mAnimateIn, mFirstEnter;
     AnimationRect mRect;
+    View mProgress;
 
     @Override
     protected void handleBundleExtra() {
@@ -57,11 +60,16 @@ public class TopicGalleryFragment extends BaseFragment {
         return "TopicGalleryFragment";
     }
 
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.fragment_topic_gallery;
+    }
+
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_topic_gallery, container, false);
+    public void onCreateView() {
 
+        mProgress = findViewById(R.id.progress_bar);
         if (mUrl != null) {
             String path;
             if(!Util.isHttpUrl(mUrl)){
@@ -72,17 +80,31 @@ public class TopicGalleryFragment extends BaseFragment {
             if (path != null) {
                 displayImage(mUrl, path, mAnimateIn);
                 mAnimateIn = false;
+                hideProgress();
             }else {
                 int screenWidth = getResources().getDisplayMetrics().widthPixels;
                 RequestManager.addToRequestQueue(makeImageRequest(mUrl, screenWidth, 0, ImageView.ScaleType.FIT_XY), getRequestTag());
             }
         }
 
-        return view;
+    }
+
+    public void saveImage(){
+        if(mPath != null){
+            String path;
+            if((path = FileUtil.saveImage(mPath)) != null){
+                ToastUtil.showToast(getString(R.string.topic_gallery_image_save_success, path));
+            }
+        }
+    }
+
+    private void hideProgress(){
+        mProgress.setVisibility(View.GONE);
     }
 
     private void displayImage(String url, String path, boolean animateIn) {
 
+        mPath = path;
         if (mFirstEnter && animateIn) {
             mFirstEnter = true;
             TopicGalleryActivity activity = (TopicGalleryActivity) getActivity();
@@ -135,10 +157,13 @@ public class TopicGalleryFragment extends BaseFragment {
                     displayImage(mUrl, path, false);
                     BitmapCache.getInstance().putBitmap(path, response);
                 }
+                hideProgress();
             }
         }, maxWidth, maxHeight, scaleType, Bitmap.Config.RGB_565, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                hideProgress();
+                ToastUtil.showToast(getString(R.string.tip_load_image_fail));
             }
         });
     }

@@ -1,5 +1,7 @@
 package com.hengye.share.ui.support;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -7,9 +9,18 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.view.View;
+import android.view.ViewPropertyAnimator;
+import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 
 import com.hengye.share.ui.base.BaseApplication;
+import com.hengye.share.ui.view.ClipImageView;
+import com.hengye.share.util.AnimationUtil;
+import com.hengye.share.util.L;
+
+import uk.co.senab.photoview.PhotoView;
 
 /**
  * User: qii
@@ -280,16 +291,16 @@ public class AnimationRect implements Parcelable {
         }
     }
 
-    public static float getClipLeft(AnimationRect animationRect, Rect finalBounds) {
+    public static float getClipLeft(AnimationRect animationRect, Rect finalBounds, float startScale) {
         final Rect startBounds = animationRect.scaledBitmapRect;
 
-        float startScale;
-        if ((float) finalBounds.width() / finalBounds.height()
-                > (float) startBounds.width() / startBounds.height()) {
-            startScale = (float) startBounds.height() / finalBounds.height();
-        } else {
-            startScale = (float) startBounds.width() / finalBounds.width();
-        }
+//        float startScale;
+//        if ((float) finalBounds.width() / finalBounds.height()
+//                > (float) startBounds.width() / startBounds.height()) {
+//            startScale = (float) startBounds.height() / finalBounds.height();
+//        } else {
+//            startScale = (float) startBounds.width() / finalBounds.width();
+//        }
 
         int oriBitmapScaledWidth = (int) (finalBounds.width() * startScale);
 
@@ -313,20 +324,22 @@ public class AnimationRect implements Parcelable {
             deltaLeft += deltaInvisibleLeft;
         }
 
+        deltaLeft += thumbnailAndOriDeltaRightSize / 2;
+        L.debug("getClipLeft : {}", (deltaLeft) / (float) oriBitmapScaledWidth);
         return (deltaLeft) / (float) oriBitmapScaledWidth;
     }
 
-    public static float getClipTop(AnimationRect animationRect, Rect finalBounds) {
+    public static float getClipTop(AnimationRect animationRect, Rect finalBounds, float startScale) {
 
         final Rect startBounds = animationRect.scaledBitmapRect;
 
-        float startScale;
-        if ((float) finalBounds.width() / finalBounds.height()
-                > (float) startBounds.width() / startBounds.height()) {
-            startScale = (float) startBounds.height() / finalBounds.height();
-        } else {
-            startScale = (float) startBounds.width() / finalBounds.width();
-        }
+//        float startScale;
+//        if ((float) finalBounds.width() / finalBounds.height()
+//                > (float) startBounds.width() / startBounds.height()) {
+//            startScale = (float) startBounds.height() / finalBounds.height();
+//        } else {
+//            startScale = (float) startBounds.width() / finalBounds.width();
+//        }
 
         int oriBitmapScaledHeight = (int) (finalBounds.height() * startScale);
 
@@ -355,16 +368,16 @@ public class AnimationRect implements Parcelable {
         return (deltaTop) / (float) oriBitmapScaledHeight;
     }
 
-    public static float getClipRight(AnimationRect animationRect, Rect finalBounds) {
+    public static float getClipRight(AnimationRect animationRect, Rect finalBounds, float startScale) {
         final Rect startBounds = animationRect.scaledBitmapRect;
 
-        float startScale;
-        if ((float) finalBounds.width() / finalBounds.height()
-                > (float) startBounds.width() / startBounds.height()) {
-            startScale = (float) startBounds.height() / finalBounds.height();
-        } else {
-            startScale = (float) startBounds.width() / finalBounds.width();
-        }
+//        float startScale;
+//        if ((float) finalBounds.width() / finalBounds.height()
+//                > (float) startBounds.width() / startBounds.height()) {
+//            startScale = (float) startBounds.height() / finalBounds.height();
+//        } else {
+//            startScale = (float) startBounds.width() / finalBounds.width();
+//        }
 
         int oriBitmapScaledWidth = (int) (finalBounds.width() * startScale);
 
@@ -388,21 +401,22 @@ public class AnimationRect implements Parcelable {
             deltaRight += deltaInvisibleRight;
         }
 
-        deltaRight += thumbnailAndOriDeltaRightSize;
+        deltaRight += thumbnailAndOriDeltaRightSize / 2;
 
+        L.debug("getClipRight : {}", (deltaRight) / (float) oriBitmapScaledWidth);
         return (deltaRight) / (float) oriBitmapScaledWidth;
     }
 
-    public static float getClipBottom(AnimationRect animationRect, Rect finalBounds) {
+    public static float getClipBottom(AnimationRect animationRect, Rect finalBounds, float startScale) {
         final Rect startBounds = animationRect.scaledBitmapRect;
 
-        float startScale;
-        if ((float) finalBounds.width() / finalBounds.height()
-                > (float) startBounds.width() / startBounds.height()) {
-            startScale = (float) startBounds.height() / finalBounds.height();
-        } else {
-            startScale = (float) startBounds.width() / finalBounds.width();
-        }
+//        float startScale;
+//        if ((float) finalBounds.width() / finalBounds.height()
+//                > (float) startBounds.width() / startBounds.height()) {
+//            startScale = (float) startBounds.height() / finalBounds.height();
+//        } else {
+//            startScale = (float) startBounds.width() / finalBounds.width();
+//        }
 
         int oriBitmapScaledHeight = (int) (finalBounds.height() * startScale);
 
@@ -430,5 +444,183 @@ public class AnimationRect implements Parcelable {
 
         deltaBottom += thumbnailAndOriDeltaBottomSize;
         return (deltaBottom) / (float) oriBitmapScaledHeight;
+    }
+
+    public static void runEnterAnimation(final ClipImageView photoView, final AnimationRect rect) {
+        runEnterAnimation(photoView, rect, null);
+    }
+
+    public static void runEnterAnimation(final ClipImageView photoView, final AnimationRect rect, final View target) {
+        photoView.getViewTreeObserver()
+                .addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                    @Override
+                    public boolean onPreDraw() {
+                        photoView.getViewTreeObserver().removeOnPreDrawListener(this);
+                        if (rect == null) {
+                            return true;
+                        }
+
+                        final Rect startBounds = new Rect(rect.scaledBitmapRect);
+                        final Rect finalBounds = AnimationRect
+                                .getBitmapRectFromImageView(photoView);
+
+                        if (finalBounds == null) {
+                            return true;
+                        }
+
+                        int deltaTop = startBounds.top - finalBounds.top;
+                        int deltaLeft = startBounds.left - finalBounds.left;
+
+                        float startScale;
+                        if ((float) finalBounds.width() / finalBounds.height()
+                                > (float) startBounds.width() / startBounds.height()) {
+                            startScale = (float) startBounds.height() / finalBounds.height();
+                        } else {
+                            startScale = (float) startBounds.width() / finalBounds.width();
+                        }
+
+                        int oriBitmapScaledWidth = (int) (finalBounds.width() * startScale);
+
+                        //sina server may cut thumbnail's right or bottom
+                        int thumbnailAndOriDeltaRightSize = Math
+                                .abs(rect.scaledBitmapRect.width() - oriBitmapScaledWidth);
+
+                        photoView.setPivotY(
+                                (photoView.getHeight() - finalBounds.height()) / 2);
+                        photoView.setPivotX((photoView.getWidth() - finalBounds.width()) / 2);
+
+                        photoView.setTranslationX(deltaLeft - thumbnailAndOriDeltaRightSize / 2);
+                        photoView.setTranslationY(deltaTop);
+
+                        photoView.setScaleX(startScale);
+                        photoView.setScaleY(startScale);
+
+                        ViewPropertyAnimator vpa = photoView.animate().translationY(0).translationX(0)
+                                .scaleY(1)
+                                .scaleX(1).setDuration(AnimationUtil.GALLERY_ANIMATION_DURATION)
+                                .setInterpolator(
+                                        new AccelerateDecelerateInterpolator());
+
+                        if(target != null){
+                            vpa.withEndAction(new Runnable() {
+                                @Override
+                                public void run() {
+                                    target.setVisibility(View.VISIBLE);
+                                    photoView.setVisibility(View.GONE);
+                                }
+                            });
+                        }
+
+                        AnimatorSet animationSet = new AnimatorSet();
+                        animationSet.setDuration(AnimationUtil.GALLERY_ANIMATION_DURATION);
+                        animationSet
+                                .setInterpolator(new AccelerateDecelerateInterpolator());
+
+                        animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
+                                "clipBottom",
+                                AnimationRect.getClipBottom(rect, finalBounds, startScale), 0));
+                        animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
+                                "clipRight",
+                                AnimationRect.getClipRight(rect, finalBounds, startScale), 0));
+                        animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
+                                "clipTop", AnimationRect.getClipTop(rect, finalBounds, startScale), 0));
+                        animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
+                                "clipLeft", AnimationRect.getClipLeft(rect, finalBounds, startScale), 0));
+
+                        animationSet.start();
+
+                        return true;
+                    }
+                });
+    }
+
+    public static void runExitAnimation(final ClipImageView photoView, final AnimationRect rect, ObjectAnimator backgroundAnimator) {
+
+//        if (Math.abs(photoView.getScale() - 1.0f) > 0.1f) {
+//            photoView.setScale(1, true);
+//            return;
+//        }
+
+        if (rect == null) {
+            photoView.animate().alpha(0);
+            backgroundAnimator.start();
+            return;
+        }
+
+        final Rect startBounds = rect.scaledBitmapRect;
+        final Rect finalBounds = AnimationRect.getBitmapRectFromImageView(photoView);
+
+        if (finalBounds == null) {
+            photoView.animate().alpha(0);
+            backgroundAnimator.start();
+            return;
+        }
+
+        if (isDevicePort() != rect.isScreenPortrait) {
+            photoView.animate().alpha(0);
+            backgroundAnimator.start();
+            return;
+        }
+
+        float startScale;
+        if ((float) finalBounds.width() / finalBounds.height()
+                > (float) startBounds.width() / startBounds.height()) {
+            startScale = (float) startBounds.height() / finalBounds.height();
+        } else {
+            startScale = (float) startBounds.width() / finalBounds.width();
+        }
+
+        final float startScaleFinal = startScale;
+
+        int deltaTop = startBounds.top - finalBounds.top;
+        int deltaLeft = startBounds.left - finalBounds.left;
+
+        photoView.setPivotY((photoView.getHeight() - finalBounds.height()) / 2);
+        photoView.setPivotX((photoView.getWidth() - finalBounds.width()) / 2);
+
+
+        int oriBitmapScaledWidth = (int) (finalBounds.width() * startScale);
+
+        //sina server may cut thumbnail's right or bottom
+        int thumbnailAndOriDeltaRightSize = Math
+                .abs(rect.scaledBitmapRect.width() - oriBitmapScaledWidth);
+
+        deltaLeft = (deltaLeft - thumbnailAndOriDeltaRightSize / 2);
+
+
+        photoView.animate().translationX(deltaLeft).translationY(deltaTop)
+                .scaleY(startScaleFinal)
+                .scaleX(startScaleFinal).setDuration(AnimationUtil.GALLERY_ANIMATION_DURATION)
+                .setInterpolator(new AccelerateDecelerateInterpolator())
+                .withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        photoView.animate().alpha(0.0f).setDuration(200);
+                    }
+                });
+
+        AnimatorSet animationSet = new AnimatorSet();
+        animationSet.setDuration(AnimationUtil.GALLERY_ANIMATION_DURATION);
+        animationSet.setInterpolator(new AccelerateDecelerateInterpolator());
+
+        animationSet.playTogether(backgroundAnimator);
+
+        animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
+                "clipBottom", 0,
+                AnimationRect.getClipBottom(rect, finalBounds, startScale)));
+        animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
+                "clipRight", 0,
+                AnimationRect.getClipRight(rect, finalBounds, startScale)));
+        animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
+                "clipTop", 0, AnimationRect.getClipTop(rect, finalBounds, startScale)));
+        animationSet.playTogether(ObjectAnimator.ofFloat(photoView,
+                "clipLeft", 0, AnimationRect.getClipLeft(rect, finalBounds, startScale)));
+
+        animationSet.start();
+    }
+
+    public static boolean isDevicePort() {
+        return BaseApplication.getInstance().getResources().getConfiguration().orientation
+                == Configuration.ORIENTATION_PORTRAIT;
     }
 }

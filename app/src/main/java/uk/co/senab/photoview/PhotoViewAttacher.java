@@ -65,8 +65,8 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     static final int EDGE_BOTH = 2;
 
     public static final float DEFAULT_MAX_SCALE = 3.0f;
-    public static final float DEFAULT_MID_SCALE = 1.75f;
-    public static final float DEFAULT_MIN_SCALE = 1.0f;
+    public static final float DEFAULT_MID_SCALE = 1.0f;
+    public static final float DEFAULT_MIN_SCALE = 0.75f;
 
     private float mMinScale = DEFAULT_MIN_SCALE;
     private float mMidScale = DEFAULT_MID_SCALE;
@@ -803,7 +803,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     /**
      * Resets the Matrix back to FIT_CENTER, and then displays it.s
      */
-    private void resetMatrix() {
+    public void resetMatrix() {
         mSuppMatrix.reset();
         setImageViewMatrix(getDrawMatrix());
         checkMatrixBounds();

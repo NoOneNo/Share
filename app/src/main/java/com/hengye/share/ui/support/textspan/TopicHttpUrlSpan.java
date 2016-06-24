@@ -2,6 +2,7 @@ package com.hengye.share.ui.support.textspan;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
@@ -32,6 +33,11 @@ public class TopicHttpUrlSpan extends ImageSpan implements SimpleClickableSpan{
      */
     public TopicHttpUrlSpan(String url, Context context, @DrawableRes int resourceId, int verticalAlignment) {
         super(context, resourceId, verticalAlignment);
+        mURL = url;
+    }
+
+    public TopicHttpUrlSpan(String url, Context context, Bitmap bitmap, int verticalAlignment) {
+        super(context, bitmap, verticalAlignment);
         mURL = url;
     }
 

@@ -7,6 +7,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.BackgroundColorSpan;
 import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
@@ -159,6 +160,8 @@ public class DataUtil {
             .compile("@[\\w\\p{InCJKUnifiedIdeographs}-]{1,26}");
     public static final Pattern EMOTION_URL = Pattern.compile("\\[(\\S+?)\\]");
 
+    public static final String WEB_URL_REPLACE = "➢网页链接";
+
     public static final String WEB_SCHEME = BuildConfig.APPLICATION_ID + ".http://";
     public static final String TOPIC_SCHEME = BuildConfig.APPLICATION_ID + ".topic://";
     public static final String MENTION_SCHEME = BuildConfig.APPLICATION_ID + ".mention://";
@@ -181,19 +184,19 @@ public class DataUtil {
         return false;
     }
 
-        public static boolean isHttpUrl(String url) {
-            if (!TextUtils.isEmpty(url)) {
-                Matcher m = WEB_URL.matcher(url);
-                while (m.find()) {
-                    return true;
-                }
-                return false;
+    public static boolean isHttpUrl(String url) {
+        if (!TextUtils.isEmpty(url)) {
+            Matcher m = WEB_URL.matcher(url);
+            while (m.find()) {
+                return true;
+            }
+            return false;
 //                if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith(WEB_SCHEME)) {
 //                    return true;
 //                }
-            }
-            return false;
         }
+        return false;
+    }
 //    public static boolean isHttpUrl(String url) {
 //        return matchLinks(url, Patterns.WEB_URL,
 //                new String[]{"http://", "https://", "rtsp://"},
@@ -225,27 +228,17 @@ public class DataUtil {
 
         SpannableString value = SpannableString.valueOf(hackTxt);
 
-        //添加表情
-        addEmotions(context, value);
-
 //        Linkify.addLinks(value, Linkify.WEB_URLS);
         Linkify.addLinks(value, WEB_URL, WEB_SCHEME);
-        Linkify.addLinks(value, MENTION_URL, MENTION_SCHEME);
-        Linkify.addLinks(value, TOPIC_URL, TOPIC_SCHEME);
 
         URLSpan[] urlSpans = value.getSpans(0, value.length(), URLSpan.class);
-        if (urlSpans == null || urlSpans.length == 0) {
-            return value;
-        }
-
-
-        List<SpanPosition> sps = new ArrayList<>();
-        List<URLSpan> temp = Arrays.asList(urlSpans);
-        List<URLSpan> us = new ArrayList<>(temp);
-        int size = us.size();
-        for(int i = 0; i < size; i++){
-            URLSpan urlSpan = us.get(i);
-            if (isHttpUrl(urlSpan.getURL())) {
+        if (urlSpans != null && urlSpans.length != 0) {
+            List<SpanPosition> sps = new ArrayList<>();
+            List<URLSpan> temp = Arrays.asList(urlSpans);
+            List<URLSpan> us = new ArrayList<>(temp);
+            int size = us.size();
+            for (int i = 0; i < size; i++) {
+                URLSpan urlSpan = us.get(i);
                 int start = value.getSpanStart(urlSpan);
                 int end = value.getSpanEnd(urlSpan);
                 if (start >= 0 && end >= 0 && value.length() >= end) {
@@ -254,34 +247,53 @@ public class DataUtil {
                     i--;
                     size--;
 
-                    CharSequence cs1 = value.subSequence(0, start);
-                    CharSequence cs2 = value.subSequence(end, value.length());
-//                    ➤➢
-                    value = SpannableString.valueOf(cs1.toString() + "➢网页链接" + cs2.toString());
                     SpanPosition sp = new SpanPosition();
-                    sp.start = cs1.toString().length();
-                    sp.end = sp.start + "➢网页链接".length();
+                    sp.start = start;
+                    sp.end = end;
                     sp.content = urlSpan.getURL();
                     sps.add(sp);
                 }
             }
-        }
 
-        if(!CommonUtil.isEmpty(sps)){
-            for(SpanPosition sp : sps){
-                value.setSpan(new TopicContentUrlSpan(sp.content), sp.start, sp.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            if (!CommonUtil.isEmpty(sps)) {
+                int totalIndentLength = 0;
+                for (SpanPosition sp : sps) {
+                    sp.start -= totalIndentLength;
+                    sp.end -= totalIndentLength;
+
+                    CharSequence cs1 = value.subSequence(0, sp.start);
+
+                    CharSequence cs2 = value.subSequence(sp.end, value.length());
+
+                    value = SpannableString.valueOf(cs1.toString() + WEB_URL_REPLACE + cs2.toString());
+                    totalIndentLength = totalIndentLength + (sp.end - sp.start) - WEB_URL_REPLACE.length();
+                    sp.end = sp.start + WEB_URL_REPLACE.length();
+                }
+
+                for (SpanPosition sp : sps) {
+                    value.setSpan(new TopicContentUrlSpan(sp.content), sp.start, sp.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
             }
         }
 
-        if(!CommonUtil.isEmpty(us)) {
-            for (URLSpan urlSpan : us) {
-                int start = value.getSpanStart(urlSpan);
-                int end = value.getSpanEnd(urlSpan);
+        //添加表情
+        addEmotions(context, value);
 
-                if (start >= 0 && end >= 0 && value.length() >= end) {
-                    value.removeSpan(urlSpan);
-                    value.setSpan(new TopicContentUrlSpan(urlSpan.getURL()), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                }
+        Linkify.addLinks(value, MENTION_URL, MENTION_SCHEME);
+        Linkify.addLinks(value, TOPIC_URL, TOPIC_SCHEME);
+
+        urlSpans = value.getSpans(0, value.length(), URLSpan.class);
+        if (urlSpans == null || urlSpans.length == 0) {
+            return value;
+        }
+
+        for (URLSpan urlSpan : urlSpans) {
+            int start = value.getSpanStart(urlSpan);
+            int end = value.getSpanEnd(urlSpan);
+
+            if (start >= 0 && end >= 0 && value.length() >= end) {
+                value.removeSpan(urlSpan);
+                value.setSpan(new TopicContentUrlSpan(urlSpan.getURL()), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
 
@@ -309,7 +321,7 @@ public class DataUtil {
         return value;
     }
 
-    public static class SpanPosition{
+    public static class SpanPosition {
         int start;
         int end;
         String content;
@@ -360,6 +372,7 @@ public class DataUtil {
                 Bitmap bitmap = Emoticon.getInstance().getEmoticonBitmap().get(str);
                 if (bitmap != null) {
                     ImageSpan localImageSpan = new ImageSpan(context, bitmap, ImageSpan.ALIGN_BOTTOM);
+//                    TopicHttpUrlSpan localImageSpan = new TopicHttpUrlSpan("www.baidu.com",context, bitmap, ImageSpan.ALIGN_BOTTOM);
                     value.setSpan(localImageSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }

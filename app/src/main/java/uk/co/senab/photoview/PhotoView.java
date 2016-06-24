@@ -256,4 +256,8 @@ public class PhotoView extends ClipImageView implements IPhotoView {
         super.onDetachedFromWindow();
     }
 
+    public void resetMatrix(){
+        mAttacher.resetMatrix();
+    }
+
 }

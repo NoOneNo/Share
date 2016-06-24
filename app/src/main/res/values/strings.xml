@@ -24,6 +24,8 @@
 
 
     <string name="topic_gallery_image_large">原图</string>
+    <string name="topic_gallery_image_save">保存</string>
+    <string name="topic_gallery_image_save_success">图片已保存至 : %s</string>
     <string name="tip_exit_on_back_pressed">再按一次退出应用</string>
     <string name="tip_no_network">无法连接到服务器，请检查你的网络设置。</string>
 
@@ -223,4 +225,8 @@
     <!-- Strings related to TransitionName-->
     <string name="transition_name_topic">transition:topic</string>
     <!-- Strings related to TransitionName-->
+
+    <!-- Strings related to Tip-->
+    <string name="tip_load_image_fail">加载图片失败</string>
+    <!-- Strings related to Tip-->
 </resources>

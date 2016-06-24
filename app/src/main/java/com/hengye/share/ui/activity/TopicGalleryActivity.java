@@ -35,11 +35,12 @@ public class TopicGalleryActivity extends BaseActivity {
     public final static String IMG_INDEX = "img_index";
     public final static String IMG_RECT_LIST = "img_rect_list";
     private ViewPager mViewPager;
+    private PhotoPagerAdapter mAdapter;
     private TextView mPages;
     private int mIndexStart;
     private ArrayList<String> mUrls;
     private ArrayList<AnimationRect> mRectList;
-    private View mBackground;
+    private View mBackground, mSaveBtn;
     private ColorDrawable mBackgroundColor;
 
     @Override
@@ -94,10 +95,17 @@ public class TopicGalleryActivity extends BaseActivity {
         mBackgroundColor = new ColorDrawable(Color.BLACK);
         mBackground.setBackground(mBackgroundColor);
         initViewPager();
+        mSaveBtn = findViewById(R.id.btn_image_save);
+        mSaveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAdapter.getItem(mViewPager.getCurrentItem()).saveImage();
+            }
+        });
     }
 
     public void initViewPager() {
-        mViewPager.setAdapter(new PhotoPagerAdapter(getSupportFragmentManager()));
+        mViewPager.setAdapter(mAdapter = new PhotoPagerAdapter(getSupportFragmentManager()));
         mViewPager.setCurrentItem(mIndexStart);// 设置当前显示标签页为显示页
         mPages.setText(mIndexStart + 1 + "/" + mUrls.size());
         mViewPager.addOnPageChangeListener(new GalleryPageChangeListener());// 页面变化时的监听器
@@ -131,7 +139,7 @@ public class TopicGalleryActivity extends BaseActivity {
         }
 
         @Override
-        public Fragment getItem(int position) {
+        public TopicGalleryFragment getItem(int position) {
 
             TopicGalleryFragment fragment = mFragmentMap.get(position);
             if (fragment == null) {
