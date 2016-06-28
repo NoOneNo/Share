@@ -83,6 +83,7 @@ public class SearchView extends FrameLayout implements View.OnClickListener{
                 return false;
             }
         });
+
     }
 
     private View mSearch, mBackBtn, mClearBtn;
@@ -174,7 +175,7 @@ public class SearchView extends FrameLayout implements View.OnClickListener{
 
     private void startSearchHideAnimation() {
         final Animator searchHideAnimator = ViewAnimationUtils.createCircularReveal(mSearch,
-                mSearch.getWidth(),
+                mSearch.getWidth() - 100,
                 ViewUtil.getActionBarHeight() / 2,
                 (float) Math.hypot(mSearch.getWidth(), mSearch.getHeight()),
                 0);
@@ -235,7 +236,6 @@ public class SearchView extends FrameLayout implements View.OnClickListener{
 
             }
         });
-
         searchShowAnimator.setDuration(300);
         searchShowAnimator.start();
     }
