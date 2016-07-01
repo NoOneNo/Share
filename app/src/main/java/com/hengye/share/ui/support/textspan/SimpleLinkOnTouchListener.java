@@ -48,7 +48,7 @@ public class SimpleLinkOnTouchListener implements View.OnTouchListener {
 
                 float lineWidth = layout.getLineWidth(line);
 
-//                find &= (lineWidth >= x);
+                find &= (lineWidth >= x);
 
                 if (find) {
                     SimpleLinkMovementMethod.getInstance().onTouchEvent(tv, value, event);

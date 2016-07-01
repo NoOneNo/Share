@@ -1,16 +1,16 @@
-package com.hengye.share.adapter.listview;
+package com.hengye.share.adapter.recyclerview;
 
 import android.content.Context;
-import android.view.MotionEvent;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hengye.share.R;
-import com.hengye.share.adapter.recyclerview.TopicAdapter;
+import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
-import com.hengye.share.ui.support.textspan.SimpleLinkMovementMethod;
 import com.hengye.share.ui.support.textspan.TopicUrlOnTouchListener;
-import com.hengye.share.ui.view.GridGalleryView;
 import com.hengye.share.ui.widget.util.SelectorLoader;
 
 import java.util.List;
@@ -22,16 +22,11 @@ public class TopicCommentAdapter extends CommonAdapter<TopicComment, TopicCommen
     }
 
     @Override
-    public int getItemLayoutResId() {
-        return R.layout.item_topic_total;
+    public TopicCommentViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
+        return new TopicCommentViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_topic_total, parent, false));
     }
 
-    @Override
-    public TopicCommentViewHolder getViewHolder(View convertView) {
-        return new TopicCommentViewHolder(convertView);
-    }
-
-    public static class TopicCommentViewHolder extends ViewHolder<TopicComment>{
+    public static class TopicCommentViewHolder extends CommonAdapter.ItemViewHolder<TopicComment> {
 
         TopicAdapter.TopicContentViewHolder mTopic;
         TopicAdapter.TopicTitleViewHolder mTopicTitle;
@@ -57,7 +52,7 @@ public class TopicCommentAdapter extends CommonAdapter<TopicComment, TopicCommen
 //            registerChildViewItemClick(mTopic.mContent);
 //            registerChildViewItemClick(mTopic.mGallery);
 
-            SelectorLoader.getInstance().setDefaultRippleBackground(mTopicItem);
+            SelectorLoader.getInstance().setDefaultRippleBackground(mTopicItem, R.color.white);
 
             mTopic.mContent.setOnTouchListener(TopicUrlOnTouchListener.getInstance());
         }

@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -29,6 +30,7 @@ import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
+import com.hengye.swiperefresh.listener.SwipeListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +62,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     protected void afterCreate(Bundle savedInstanceState) {
         setupPresenter(mPresenter = new TopicDetailPresenter(this));
         initView();
+//        startPostponedEnterTransition();
     }
 
     TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
@@ -101,15 +104,17 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 
     private TopicDetailPresenter mPresenter;
 
-    private void initHeaderView(View headerView, View headerViewAssist){
+    private void initHeaderTab(View headerViewAssist){
         mTabLayout = (TabLayout) headerViewAssist.findViewById(R.id.tab);
         mTabLayout.addTab((mTabLayout.newTab().setText(R.string.label_topic_comment).setTag("tab_layout")));
         mTabLayout.addTab((mTabLayout.newTab().setText(R.string.label_topic_repost).setTag("tab_layout")));
         mTabLayout.getTabAt(0).select();
         mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
-        View topicLayout = headerView.findViewById(R.id.item_topic);
+    }
 
+    private void initHeaderTopic(View headerView){
+        View topicLayout = headerView.findViewById(R.id.item_topic);
         if(mIsRetweet){
             mTopicContentLayout = headerView.findViewById(R.id.ll_topic_content);
             mTopicContent = (TextView) headerView.findViewById(R.id.tv_topic_content);
@@ -154,12 +159,35 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 
         View headerViewAssist = LayoutInflater.from(this).inflate(R.layout.header_topic_detail, null);
 
-        initHeaderView(headerView, headerViewAssist);
+//        View headerView2 = findViewById(R.id.item_topic);
+
+//        View headerViewAssist2 = findViewById(R.id.tab);
+
+//        initHeaderTab(headerViewAssist2);
+//        initHeaderTopic(headerView2);
+
+
+//        initHeaderTab(headerViewAssist);
+
+
+        initHeaderTopic(headerView);
+        initHeaderTab(headerViewAssist);
+
+
         mListView = (ListView) findViewById(R.id.list_view);
+        mListView.setAdapter(mAdapter = new TopicCommentAdapter(this, new ArrayList<TopicComment>()));
         mListView.addHeaderView(headerView);
         mListView.addHeaderView(headerViewAssist);
-        mListView.setAdapter(mAdapter = new TopicCommentAdapter(this, new ArrayList<TopicComment>()));
 
+        postponeEnterTransition();
+        mListView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                startPostponedEnterTransition();
+                mListView.getViewTreeObserver().removeOnPreDrawListener(this);
+                return true;
+            }
+        });
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -214,7 +242,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         });
 
         mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.pull_to_refresh);
-        mPullToRefreshLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
+        mPullToRefreshLayout.setOnRefreshListener(new SwipeListener.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (UserUtil.isUserEmpty()) {
@@ -224,7 +252,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                 mPresenter.loadWBCommentAndRepost(mTopic.getId(), "0", true);
             }
         });
-        mPullToRefreshLayout.setOnLoadListener(new PullToRefreshLayout.OnLoadListener() {
+        mPullToRefreshLayout.setOnLoadListener(new SwipeListener.OnLoadListener() {
             @Override
             public void onLoad() {
                 if (!CommonUtil.isEmpty(mAdapter.getData())) {
@@ -236,7 +264,12 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                 }
             }
         });
-        mPullToRefreshLayout.setRefreshing(true);
+
+        if (UserUtil.isUserEmpty()) {
+            mPullToRefreshLayout.setRefreshing(false);
+            return;
+        }
+        mPullToRefreshLayout.getRefreshListener().onRefresh();
     }
 
     private int getPublishType(){

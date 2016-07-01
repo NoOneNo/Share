@@ -15,6 +15,10 @@ public abstract class ViewHolder<T> {
         this.v = v;
     }
 
+    public View getParent(){
+        return v;
+    }
+
     public View findViewById(@IdRes int id){
         return v.findViewById(id);
     }

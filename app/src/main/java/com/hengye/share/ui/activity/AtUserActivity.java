@@ -31,6 +31,7 @@ import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
+import com.hengye.swiperefresh.listener.SwipeListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -231,7 +232,7 @@ public class AtUserActivity extends BaseActivity implements AtUserMvpView {
             }
         });
 
-        mPullToRefreshLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
+        mPullToRefreshLayout.setOnRefreshListener(new SwipeListener.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 mPresenter.loadWBAttention();

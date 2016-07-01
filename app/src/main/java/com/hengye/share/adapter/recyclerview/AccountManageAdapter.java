@@ -63,7 +63,7 @@ public class AccountManageAdapter extends CommonAdapter<User, AccountManageAdapt
 
             SelectorLoader
                     .getInstance()
-                    .setDefaultRippleBackground(v);
+                    .setDefaultRippleWhiteBackground(v);
         }
     }
 
@@ -89,7 +89,7 @@ public class AccountManageAdapter extends CommonAdapter<User, AccountManageAdapt
 
             SelectorLoader
                     .getInstance()
-                    .setDefaultRippleBackground(v);
+                    .setDefaultRippleWhiteBackground(v);
         }
 
         @Override

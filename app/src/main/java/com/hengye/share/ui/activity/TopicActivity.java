@@ -138,19 +138,20 @@ public class TopicActivity extends BaseActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        View header = navigationView.getHeaderView(0);
         //修复因为布局使用fitsSystemWindows而导致DrawLayout内容间距不对的问题
-        RelativeLayout navHeader = (RelativeLayout) navigationView.findViewById(R.id.rl_header);
+        RelativeLayout navHeader = (RelativeLayout) header.findViewById(R.id.rl_header);
         ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) navHeader.getLayoutParams();
         lp.topMargin = ViewUtil.getStatusBarHeight();
         navHeader.setLayoutParams(lp);
 
-        ImageButton moreAccount = (ImageButton) navigationView.findViewById(R.id.iv_more_account);
+        ImageButton moreAccount = (ImageButton) header.findViewById(R.id.iv_more_account);
         SelectorLoader.getInstance().setImageSelector(this, moreAccount, R.drawable.compose_more_account_add, R.drawable.compose_more_account_add_highlighted);
         moreAccount.setOnClickListener(this);
 
-        mAvatar = (NetworkImageViewPlus) navigationView.findViewById(R.id.iv_avatar);
-        mUsername = (TextView) navigationView.findViewById(R.id.tv_username);
-        mSign = (TextView) navigationView.findViewById(R.id.tv_sign);
+        mAvatar = (NetworkImageViewPlus) header.findViewById(R.id.iv_avatar);
+        mUsername = (TextView) header.findViewById(R.id.tv_username);
+        mSign = (TextView) header.findViewById(R.id.tv_sign);
 
         mUsername.setOnClickListener(this);
         mSign.setOnClickListener(this);

@@ -4,5 +4,6 @@
     android:id="@+id/tab"
     android:layout_width="match_parent"
     android:layout_height="@dimen/tab_layout_height"
-    android:layout_marginTop="@dimen/content_margin_5dp"
     android:background="@android:color/white" />
+
+    <!--android:layout_marginTop="@dimen/content_margin_5dp"-->

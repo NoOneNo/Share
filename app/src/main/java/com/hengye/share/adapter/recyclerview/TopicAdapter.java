@@ -1,9 +1,9 @@
 package com.hengye.share.adapter.recyclerview;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
@@ -33,8 +34,8 @@ import com.hengye.share.ui.activity.PersonalHomepageActivity;
 import com.hengye.share.ui.activity.TopicDetailActivity;
 import com.hengye.share.ui.activity.TopicGalleryActivity;
 import com.hengye.share.ui.activity.TopicPublishActivity;
+import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.ui.support.AnimationRect;
-import com.hengye.share.ui.support.textspan.SimpleLinkMovementMethod;
 import com.hengye.share.ui.support.textspan.TopicUrlOnTouchListener;
 import com.hengye.share.ui.view.GridGalleryView;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
@@ -128,16 +129,35 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
         return true;
     }
 
+    private Handler mHandler = new Handler();
+
     @Override
-    public void onItemClick(View view, int position) {
+    public void onItemClick(View view, final int position) {
         int id = view.getId();
         if (id == R.id.iv_topic_avatar || id == R.id.tv_topic_username || id == R.id.tv_topic_description) {
-            IntentUtil.startActivity(getContext(), PersonalHomepageActivity.getStartIntent(getContext(), getItem(position).getUserInfo()));
-        } else if (id == R.id.tv_topic_content || id == R.id.gl_topic_gallery || id == R.id.ll_topic_content || id == R.id.rl_topic_title) {
-            startTopicDetail(false, position);
-        } else if (id == R.id.tv_topic_retweeted_content || id == R.id.gl_topic_retweeted_gallery || id == R.id.ll_topic_retweeted_content) {
-            startTopicDetail(true, position);
+            //为了显示波纹效果再启动
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    IntentUtil.startActivity(getContext(), PersonalHomepageActivity.getStartIntent(getContext(), getItem(position).getUserInfo()));
+                }
+            }, 100);
+//            IntentUtil.startActivity(getContext(), PersonalHomepageActivity.getStartIntent(getContext(), getItem(position).getUserInfo()));
+        } else if (id == R.id.tv_topic_content || id == R.id.gl_topic_gallery || id == R.id.rl_topic_title || id == R.id.ll_topic_content || id == R.id.ll_topic_retweeted_content) {
+            final boolean isRetweeted = (Boolean) view.getTag();
+            //为了显示波纹效果再启动
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startTopicDetail(isRetweeted, position);
+                }
+            }, 200);
+//            startTopicDetail(isRetweeted, position);
         }
+
+//        else if (id == R.id.tv_topic_retweeted_content || id == R.id.gl_topic_retweeted_gallery || id == R.id.ll_topic_retweeted_content) {
+//            startTopicDetail(true, position);
+//        }
     }
 
     public void startTopicDetail(boolean isRetweet, int position) {
@@ -150,7 +170,9 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
         if (vh == null) {
             IntentUtil.startActivity(getContext(), TopicDetailActivity.getStartIntent(getContext(), topic, isRetweet));
         } else {
-            Activity activity = (Activity) getContext();
+            BaseActivity activity = (BaseActivity) getContext();
+            activity.setHideAnimationOnStart();
+            activity.getWindow().setAllowEnterTransitionOverlap(false);
             final Pair[] pairs = TransitionHelper.createSafeTransitionParticipants(activity, false,
                     new Pair<>(isRetweet ? vh.mRetweetTopic.mTopicLayout : vh.mTopicTotalItem, activity.getString(R.string.transition_name_topic)));
             ActivityOptionsCompat activityOptions = ActivityOptionsCompat
@@ -171,22 +193,22 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
                 mTopicTitle = new TopicTitleViewHolder(v);
             }
             if (mTopic == null) {
-                mTopic = new TopicContentViewHolder();
+                mTopic = new TopicContentViewHolder(findViewById(R.id.ll_topic_content));
             }
             if (mRetweetTopic == null) {
-                mRetweetTopic = new TopicContentViewHolder();
+                mRetweetTopic = new TopicContentViewHolder(findViewById(R.id.ll_topic_retweeted_content), true);
             }
 
             mTopicItem = findViewById(R.id.ll_topic);
             mTopicTotalItem = findViewById(R.id.item_topic);
 
-            mTopic.mContent = (TextView) findViewById(R.id.tv_topic_content);
-            mTopic.mGallery = (GridGalleryView) findViewById(R.id.gl_topic_gallery);
-            mTopic.mTopicLayout = findViewById(R.id.ll_topic_content);
-
-            mRetweetTopic.mContent = (TextView) findViewById(R.id.tv_topic_retweeted_content);
-            mRetweetTopic.mGallery = (GridGalleryView) findViewById(R.id.gl_topic_retweeted_gallery);
-            mRetweetTopic.mTopicLayout = findViewById(R.id.ll_topic_retweeted_content);
+//            mTopic.mContent = (TextView) findViewById(R.id.tv_topic_content);
+//            mTopic.mGallery = (GridGalleryView) findViewById(R.id.gl_topic_gallery);
+//            mTopic.mTopicLayout = findViewById(R.id.ll_topic_content);
+//
+//            mRetweetTopic.mContent = (TextView) findViewById(R.id.tv_topic_retweeted_content);
+//            mRetweetTopic.mGallery = (GridGalleryView) findViewById(R.id.gl_topic_retweeted_gallery);
+//            mRetweetTopic.mTopicLayout = findViewById(R.id.ll_topic_retweeted_content);
 
 
             registerChildViewItemClick(mTopicTitle.mAvatar);
@@ -214,14 +236,48 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
 
             registerChildViewItemLongClick(mTopicItem);
 
-            SelectorLoader
-                    .getInstance()
-                    .setRippleBackground(mTopicItem, R.color.grey_800, R.color.grey_800, R.color.background_default);
-//            SelectorLoader
-//                    .getInstance()
-//                    .setRippleBackground(findViewById(R.id.ll_topic_retweeted_content), R.color.grey_800, R.color.grey_800, R.color.background_default);
-            SelectorLoader.getInstance().setDefaultRippleBackground(findViewById(R.id.ll_topic_retweeted_content));
+            SelectorLoader.getInstance().setDefaultRippleBackground(mTopicItem);
+            SelectorLoader.getInstance().setDefaultRippleWhiteBackground(mRetweetTopic.mTopicLayout);
+
+            mTopicTitle.mAvatar.setOnTouchListener(mTopicOnTouchListener);
+            mTopicTitle.mUsername.setOnTouchListener(mTopicOnTouchListener);
+            mTopicTitle.mDescription.setOnTouchListener(mTopicOnTouchListener);
+            mTopicTitle.mTitle.setOnTouchListener(mTopicOnTouchListener);
+            mTopic.mContent.setOnTouchListener(mTopicOnTouchListener);
+            mTopic.mGallery.setOnTouchListener(mTopicOnTouchListener);
+            mRetweetTopic.mContent.setOnTouchListener(mRetweetedTopicOnTouchListener);
+            mRetweetTopic.mGallery.setOnTouchListener(mRetweetedTopicOnTouchListener);
         }
+
+        private View.OnTouchListener mTopicOnTouchListener = new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                mTopicItem.onTouchEvent(event);
+
+                int id = v.getId();
+                if(id == R.id.tv_topic_content) {
+                    return TopicUrlOnTouchListener.getInstance().onTouch(v, event);
+                }else{
+                    return false;
+                }
+            }
+        };
+
+        private View.OnTouchListener mRetweetedTopicOnTouchListener = new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                mRetweetTopic.mTopicLayout.onTouchEvent(event);
+
+                int id = v.getId();
+                if(id == R.id.tv_topic_content) {
+                    return TopicUrlOnTouchListener.getInstance().onTouch(v, event);
+                }else{
+                    return false;
+                }
+            }
+        };
 
         @Override
         public void bindData(Context context, Topic topic, int position) {
@@ -255,6 +311,8 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
             mAvatar = (NetworkImageViewPlus) v.findViewById(R.id.iv_topic_avatar);
             mUsername = (TextView) v.findViewById(R.id.tv_topic_username);
             mDescription = (TextView) v.findViewById(R.id.tv_topic_description);
+
+            mTitle.setTag(false);
         }
 
         public void initTopicTitle(final Context context, Topic topic) {
@@ -303,22 +361,33 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
         public GridGalleryView mGallery;
         View mTopicLayout;
 
+        public TopicContentViewHolder(View parent) {
+            this(parent, false);
+        }
 
-        public TopicContentViewHolder() {
+        public TopicContentViewHolder(View parent, boolean isRetweeted) {
+            mContent = (TextView) parent.findViewById(R.id.tv_topic_content);
+            mGallery = (GridGalleryView) parent.findViewById(R.id.gl_topic_gallery);
+            mTopicLayout = parent;
+
+            mContent.setTag(isRetweeted);
+            mGallery.setTag(isRetweeted);
+            mTopicLayout.setTag(isRetweeted);
         }
 
         public void initTopicContent(final Context context, Topic topic, boolean isRetweeted) {
 
             //不设置的话会被名字内容的点击事件覆盖，无法触发ItemView的onClick
             mContent.setText(topic.getUrlSpannableString(context));
-            mContent.setMovementMethod(SimpleLinkMovementMethod.getInstance());
-            mContent.setOnTouchListener(TopicUrlOnTouchListener.getInstance());
+//            mContent.setMovementMethod(SimpleLinkMovementMethod.getInstance());
+//            mContent.setOnTouchListener(TopicUrlOnTouchListener.getInstance());
+
 
             if (!CommonUtil.isEmpty(topic.getImageUrls())) {
                 //加载图片
                 final List<String> urls = topic.getImageUrls();
                 mGallery.removeAllViews();
-                mGallery.setTag(urls);
+                mGallery.setTag(View.NO_ID, urls);
                 mGallery.setMargin(context.getResources().getDimensionPixelSize(R.dimen.topic_gallery_iv_margin));
                 mGallery.setMaxWidth(mGalleryMaxWidth);
                 mGallery.setGridCount(urls.size());
@@ -346,7 +415,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
                         int id = view.getId();
                         if (id == View.NO_ID) {
                             GridLayout gridLayout = (GridLayout) view.getTag();
-                            ArrayList<String> urls = (ArrayList<String>) gridLayout.getTag();
+                            ArrayList<String> urls = (ArrayList<String>) gridLayout.getTag(View.NO_ID);
                             ArrayList<AnimationRect> animationRectArrayList
                                     = new ArrayList<>();
                             for (int i = 0; i < urls.size(); i++) {

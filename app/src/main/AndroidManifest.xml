@@ -125,7 +125,7 @@
             android:label="@string/title_activity_topic_draft"/>
 
         <activity
-            android:name="com.hengye.share.ui.activity.TopicDetailActivity"/>
+            android:name=".ui.activity.TopicDetailActivity"/>
 
         <activity
             android:name="com.hengye.share.ui.activity.TopicMentionActivity"/>

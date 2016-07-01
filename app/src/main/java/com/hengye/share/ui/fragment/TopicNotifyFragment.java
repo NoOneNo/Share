@@ -28,6 +28,7 @@ import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
+import com.hengye.swiperefresh.listener.SwipeListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +72,7 @@ public class TopicNotifyFragment extends BaseFragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.pull_to_refresh);
-        mPullToRefreshLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
+        mPullToRefreshLayout.setOnRefreshListener(new SwipeListener.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (UserUtil.isUserEmpty()) {
@@ -86,7 +87,7 @@ public class TopicNotifyFragment extends BaseFragment {
                 }
             }
         });
-        mPullToRefreshLayout.setOnLoadListener(new PullToRefreshLayout.OnLoadListener() {
+        mPullToRefreshLayout.setOnLoadListener(new SwipeListener.OnLoadListener() {
             @Override
             public void onLoad() {
                 if (!CommonUtil.isEmpty(mAdapter.getData())) {

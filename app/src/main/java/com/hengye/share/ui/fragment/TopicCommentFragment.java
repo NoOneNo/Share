@@ -66,7 +66,7 @@
 //
 //        mWBAccessToken = SPUtil.getSinaAccessToken();
 //        mPullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.pull_to_refresh);
-//        mPullToRefreshLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
+//        mPullToRefreshLayout.setOnRefreshListener(new SwipeListener.OnRefreshListener() {
 //            @Override
 //            public void onRefresh() {
 //                if (mWBAccessToken == null || TextUtils.isEmpty(mWBAccessToken.getToken())) {
@@ -83,7 +83,7 @@
 ////                }
 //            }
 //        });
-//        mPullToRefreshLayout.setOnLoadListener(new PullToRefreshLayout.OnLoadListener() {
+//        mPullToRefreshLayout.setOnLoadListener(new SwipeListener.OnLoadListener() {
 //            @Override
 //            public void onLoad() {
 //                if (!CommonUtil.isEmpty(mAdapter.getData())) {

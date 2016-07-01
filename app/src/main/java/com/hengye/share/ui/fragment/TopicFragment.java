@@ -20,6 +20,7 @@ import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.SettingHelper;
 import com.hengye.share.util.UserUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
+import com.hengye.swiperefresh.listener.SwipeListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +81,7 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
         backTopBtn.setup(recyclerView);
 
         mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.pull_to_refresh);
-        mPullToRefreshLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
+        mPullToRefreshLayout.setOnRefreshListener(new SwipeListener.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (UserUtil.isUserEmpty()) {
@@ -98,7 +99,7 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
             }
         });
 
-        mPullToRefreshLayout.setOnLoadListener(new PullToRefreshLayout.OnLoadListener() {
+        mPullToRefreshLayout.setOnLoadListener(new SwipeListener.OnLoadListener() {
             @Override
             public void onLoad() {
                 if (!mAdapter.isEmpty()) {

@@ -57,7 +57,7 @@ public class AtUserSearchAdapter extends CommonAdapter<AtUser, AtUserSearchAdapt
 
             SelectorLoader
                     .getInstance()
-                    .setDefaultRippleBackground(v);
+                    .setDefaultRippleWhiteBackground(v);
         }
 
         @Override

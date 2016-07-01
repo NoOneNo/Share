@@ -276,11 +276,15 @@ public class SelectorLoader {
     }
 
     public void setDefaultRippleBackground(View view) {
+        setDefaultRippleBackground(view, R.color.background_default);
+    }
+
+    public void setDefaultRippleWhiteBackground(View view) {
         setDefaultRippleBackground(view, R.color.background_default_white);
     }
 
     public void setDefaultRippleBackground(View view, @ColorRes int backgroundResId) {
-        setRippleBackground(view, R.color.grey_300, R.color.ripple_light, backgroundResId);
+        setRippleBackground(view, R.color.grey_450, R.color.ripple_light, backgroundResId);
     }
 
 }
