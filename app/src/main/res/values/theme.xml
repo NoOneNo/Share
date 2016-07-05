@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Base application theme. -->
-    <style name="BaseAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="BaseAppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <!--<item name="android:homeAsUpIndicator">@mipmap/btn_back</item>-->
         <item name="android:navigationBarColor">?attr/theme_color</item>
@@ -19,6 +19,11 @@
         <item name="android:actionMenuTextAppearance">@style/MenuTextStyle</item>
 
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
+        <item name="android:statusBarColor">@android:color/transparent</item>
+
+        <!-- 半透明 -->
+        <!--<item name="android:windowTranslucentStatus">true</item>-->
 
         <item name="android:windowIsTranslucent">false</item>
 

@@ -1,7 +1,6 @@
 package com.hengye.share.ui.fragment;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -17,7 +16,6 @@ import com.hengye.share.ui.presenter.TopicPresenter;
 import com.hengye.share.ui.view.BackTopButton;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DataUtil;
-import com.hengye.share.util.SettingHelper;
 import com.hengye.share.util.UserUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
 import com.hengye.swiperefresh.listener.SwipeListener;
@@ -112,6 +110,9 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
             }
         });
 
+
+        getLoadDataCallBack().initView();
+
         mPresenter.loadCacheData();
 
 //        if(SettingHelper.isPreRead()){
@@ -135,9 +136,8 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
     @Override
     public void handleCache(List<Topic> data) {
         if (CommonUtil.isEmpty(data)) {
-            if (mAdapter.isEmpty() && !UserUtil.isUserEmpty()) {
-                mPullToRefreshLayout.setRefreshing(true);
-            }
+            getLoadDataCallBack().refresh(true);
+//            mPullToRefreshLayout.setRefreshing(true);
         } else {
             mAdapter.refresh(data);
         }
@@ -147,7 +147,8 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
     @Override
     public void stopLoading(boolean isRefresh) {
         if (isRefresh) {
-            mPullToRefreshLayout.setRefreshing(false);
+            getLoadDataCallBack().refresh(false);
+//            mPullToRefreshLayout.setRefreshing(false);
         } else {
             mPullToRefreshLayout.setLoading(false);
         }
@@ -169,6 +170,37 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
                 || type == DataUtil.LOAD_NO_MORE_DATA
                 || type == DataUtil.LOAD_DATA_SIZE_EQUAL) {
             mPresenter.saveData(mAdapter.getData());
+        }
+    }
+
+    LoadDataCallBack mLoadDataCallBack;
+
+    public LoadDataCallBack getLoadDataCallBack() {
+        if(mLoadDataCallBack == null){
+            mLoadDataCallBack = new DefaultLoadDataCallBack();
+        }
+        return mLoadDataCallBack;
+    }
+
+    public void setLoadDataCallBack(LoadDataCallBack loadDataCallBack) {
+        this.mLoadDataCallBack = loadDataCallBack;
+    }
+
+    public interface LoadDataCallBack {
+        void initView();
+
+        void refresh(boolean isRefresh);
+    }
+
+    public class DefaultLoadDataCallBack implements LoadDataCallBack {
+        @Override
+        public void initView() {
+
+        }
+
+        @Override
+        public void refresh(boolean isRefresh) {
+            mPullToRefreshLayout.setRefreshing(isRefresh);
         }
     }
 }

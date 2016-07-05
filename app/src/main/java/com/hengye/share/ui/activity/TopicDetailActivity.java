@@ -159,20 +159,8 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 
         View headerViewAssist = LayoutInflater.from(this).inflate(R.layout.header_topic_detail, null);
 
-//        View headerView2 = findViewById(R.id.item_topic);
-
-//        View headerViewAssist2 = findViewById(R.id.tab);
-
-//        initHeaderTab(headerViewAssist2);
-//        initHeaderTopic(headerView2);
-
-
-//        initHeaderTab(headerViewAssist);
-
-
         initHeaderTopic(headerView);
         initHeaderTab(headerViewAssist);
-
 
         mListView = (ListView) findViewById(R.id.list_view);
         mListView.setAdapter(mAdapter = new TopicCommentAdapter(this, new ArrayList<TopicComment>()));
@@ -269,7 +257,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             mPullToRefreshLayout.setRefreshing(false);
             return;
         }
-        mPullToRefreshLayout.getRefreshListener().onRefresh();
+        mPullToRefreshLayout.getOnRefreshListener().onRefresh();
     }
 
     private int getPublishType(){

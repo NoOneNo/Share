@@ -229,4 +229,6 @@
     <!-- Strings related to Tip-->
     <string name="tip_load_image_fail">加载图片失败</string>
     <!-- Strings related to Tip-->
+
+    <string name="fling_behavior" translatable="false">com.hengye.share.ui.support.FlingBehavior</string>
 </resources>

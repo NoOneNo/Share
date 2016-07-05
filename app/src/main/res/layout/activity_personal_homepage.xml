@@ -1,43 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.hengye.swiperefresh.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_content"
+    android:id="@+id/swipe_refresh"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent">
 
-    <include layout="@layout/header_personal_homepage" />
-
-    <!--<android.support.v4.widget.NestedScrollView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:fillViewport="true"-->
-        <!--app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
-
-        <!--<com.hengye.swiperefresh.PullToRefreshLayout-->
-            <!--android:id="@+id/pull_to_refresh"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent">-->
-    <FrameLayout
-        android:id="@+id/content"
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-            <!--<android.support.v7.widget.RecyclerView-->
-                <!--android:id="@+id/recycler_view"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--app:layout_behavior="@string/appbar_scrolling_view_behavior" />-->
-        <!--</com.hengye.swiperefresh.PullToRefreshLayout>-->
-    <!--</android.support.v4.widget.NestedScrollView>-->
+        android:fitsSystemWindows="true">
 
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        android:clickable="true"
-        app:layout_anchor="@+id/appbar"
-        app:layout_anchorGravity="bottom|right|end" />
+        <include layout="@layout/header_personal_homepage" />
 
-</android.support.design.widget.CoordinatorLayout>
+        <FrameLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            android:clickable="true"
+            app:layout_anchor="@+id/appbar"
+            app:layout_anchorGravity="bottom|right|end" />
+
+    </android.support.design.widget.CoordinatorLayout>
+
+</com.hengye.swiperefresh.SwipeRefreshLayout>

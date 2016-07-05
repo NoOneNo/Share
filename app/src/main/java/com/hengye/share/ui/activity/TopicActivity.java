@@ -140,10 +140,15 @@ public class TopicActivity extends BaseActivity
 
         View header = navigationView.getHeaderView(0);
         //修复因为布局使用fitsSystemWindows而导致DrawLayout内容间距不对的问题
+        int contentPadding = getResources().getDimensionPixelSize(R.dimen.activity_vertical_margin);
         RelativeLayout navHeader = (RelativeLayout) header.findViewById(R.id.rl_header);
-        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) navHeader.getLayoutParams();
-        lp.topMargin = ViewUtil.getStatusBarHeight();
-        navHeader.setLayoutParams(lp);
+        navHeader.setPadding(contentPadding,
+                contentPadding + ViewUtil.getStatusBarHeight(),
+                contentPadding,
+                contentPadding);
+//        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) navHeader.getLayoutParams();
+//        lp.topMargin = ViewUtil.getStatusBarHeight();
+//        navHeader.setLayoutParams(lp);
 
         ImageButton moreAccount = (ImageButton) header.findViewById(R.id.iv_more_account);
         SelectorLoader.getInstance().setImageSelector(this, moreAccount, R.drawable.compose_more_account_add, R.drawable.compose_more_account_add_highlighted);
