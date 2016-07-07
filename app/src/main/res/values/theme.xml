@@ -20,7 +20,7 @@
 
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
 
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <!--<item name="android:statusBarColor">@android:color/transparent</item>-->
 
         <!-- 半透明 -->
         <!--<item name="android:windowTranslucentStatus">true</item>-->

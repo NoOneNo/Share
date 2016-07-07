@@ -1,18 +1,22 @@
 package com.hengye.share.ui.activity;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.android.volley.view.NetworkImageViewPlus;
@@ -76,6 +80,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         } else {
             setupPresenter(mPresenter = new UserPresenter(this));
             initView();
+            loadData();
         }
     }
 
@@ -100,6 +105,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                 finish();
             }
         });
+        toolbar.setBackgroundResource(R.drawable.gradient_toolbar_grey);
 
         mCollapsingToolbarLayout =
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
@@ -124,10 +130,77 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         mAppBarLayout = (AppBarLayout) findViewById(R.id.appbar);
         mSwipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
 
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        loadData();
+        mSwipeRefresh.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final int action = MotionEventCompat.getActionMasked(event);
 
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        //ACTION_DOWN不会被触发被SwipeRefreshLayout拦截了, 所以由ACTION_MOVE开始时获取当前AppBar高度
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+
+                        mIsBeingDragged = false;
+
+                        final ViewGroup.LayoutParams lp = mAppBarLayout.getLayoutParams();
+                        mAnimateToCorrectHeight = ValueAnimator.ofInt(lp.height, mAppBarHeight);
+                        mAnimateToCorrectHeight.setDuration(200);
+                        mAnimateToCorrectHeight.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator animation) {
+                                lp.height = (int) animation.getAnimatedValue();
+                                mAppBarLayout.requestLayout();
+                            }
+                        });
+                        mAnimateToCorrectHeight.start();
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+
+                        if (!mIsBeingDragged) {
+                            mIsBeingDragged = true;
+                            if(mAnimateToCorrectHeight != null) {
+                                mAnimateToCorrectHeight.pause();
+                            }
+                            mInitialDownY = event.getRawY();
+                            mAppBarHeight = mAppBarLayout.getLayoutParams().height;
+                            break;
+                        }
+
+                        float currentY = event.getRawY();
+                        int distance = (int) (DRAG_RATE * (currentY - mInitialDownY));
+
+                        if (distance > 0) {
+                            ViewGroup.LayoutParams lp_ = mAppBarLayout.getLayoutParams();
+                            lp_.height = mAppBarHeight + distance;
+
+                            if(lp_.height > getAppBarMaxHeight()){
+                                lp_.height = getAppBarMaxHeight();
+                            }
+                            mAppBarLayout.requestLayout();
+                        }
+
+                        break;
+                }
+                return false;
+            }
+        });
     }
+
+    private int getAppBarMaxHeight(){
+        if(mAppBarMaxHeight == 0){
+            mAppBarMaxHeight = (int)(mAppBarHeight * MAX_APP_BAR_HEIGHT_RATE);
+        }
+        return mAppBarMaxHeight;
+    }
+
+    private static final float MAX_APP_BAR_HEIGHT_RATE = 1.5f;
+    private static final float DRAG_RATE = .5f;
+    private int mAppBarHeight, mAppBarMaxHeight;
+    private float mInitialDownY;
+    private boolean mIsBeingDragged;
+    private ValueAnimator mAnimateToCorrectHeight;
 
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
@@ -141,7 +214,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 //        } else {
 //            mSwipeRefresh.setEnabled(true);
 //        }
-//        L.debug("vertical offset : {}, height : {}, minimumHeight : {}", verticalOffset, mCollapsingToolbarLayout.getHeight(), ViewCompat.getMinimumHeight(mCollapsingToolbarLayout));
+        L.debug("vertical offset : {}, height : {}, minimumHeight : {}", verticalOffset, mCollapsingToolbarLayout.getHeight(), ViewCompat.getMinimumHeight(mCollapsingToolbarLayout));
     }
 
     @Override
@@ -167,6 +240,8 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         mTopicFragment.setLoadDataCallBack(new TopicFragment.LoadDataCallBack() {
             @Override
             public void initView() {
+                RecyclerView recyclerView = (RecyclerView) mTopicFragment.findViewById(R.id.recycler_view);
+//                recyclerView.setNestedScrollingEnabled(false);
                 final PullToRefreshLayout pullToRefresh = (PullToRefreshLayout) mTopicFragment.findViewById(R.id.pull_to_refresh);
                 pullToRefresh.setRefreshEnable(false);
                 mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
