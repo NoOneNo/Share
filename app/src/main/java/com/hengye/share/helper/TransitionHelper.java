@@ -17,10 +17,18 @@
 package com.hengye.share.helper;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.view.View;
+
+import com.hengye.share.R;
+import com.hengye.share.ui.base.BaseActivity;
+import com.hengye.share.util.IntentUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,4 +79,24 @@ public class TransitionHelper {
         participants.add(new Pair<>(view, view.getTransitionName()));
     }
 
+    public static void startTransitionActivity(Context context, Intent intent, View startView, int transitionNameResId){
+        startTransitionActivity(context, intent, startView, context.getString(transitionNameResId));
+    }
+
+    public static void startTransitionActivity(Context context, Intent intent, View startView, String transitionName){
+        if(startView == null){
+            IntentUtil.startActivity(context, intent);
+            return;
+        }
+        Activity activity = (Activity) context;
+        if(activity instanceof BaseActivity){
+            ((BaseActivity)activity).setHideAnimationOnStart();
+        }
+        activity.getWindow().setAllowEnterTransitionOverlap(false);
+        final Pair[] pairs = TransitionHelper.createSafeTransitionParticipants(activity, false,
+                new Pair<>(startView, transitionName));
+        ActivityOptionsCompat activityOptions = ActivityOptionsCompat
+                .makeSceneTransitionAnimation(activity, pairs);
+        ActivityCompat.startActivity(activity, intent, activityOptions.toBundle());
+    }
 }

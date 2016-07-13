@@ -33,7 +33,8 @@
 
     <dimen name="search_user_avatar">60dp</dimen>
 
-    <dimen name="user_avatar">45dp</dimen>
+    <!--<dimen name="user_avatar">45dp</dimen>-->
+    <dimen name="user_avatar">42dp</dimen>
 
     <dimen name="topic_username">14sp</dimen>
     <dimen name="topic_avatar">35dp</dimen>
@@ -41,14 +42,17 @@
     <dimen name="topic_content">16sp</dimen>
     <dimen name="topic_gallery_iv_margin">4dp</dimen>
 
-    <dimen name="header_personal_homepage_height">300dp</dimen>
+    <dimen name="header_personal_homepage_height">270dp</dimen>
+    <dimen name="header_personal_avatar">60dp</dimen>
 
-    <dimen name="at_user_avatar">40dp</dimen>
+    <!--<dimen name="at_user_avatar">40dp</dimen>-->
+    <dimen name="at_user_avatar">@dimen/user_avatar</dimen>
     <dimen name="at_user_name">18sp</dimen>
     <dimen name="at_user_check">20dp</dimen>
     <dimen name="at_user_et_search_margin_start">25dp</dimen>
 
 
+    <dimen name="icon_size_tiny">20dp</dimen>
 
     <dimen name="icon_size_small">30dp</dimen>
 

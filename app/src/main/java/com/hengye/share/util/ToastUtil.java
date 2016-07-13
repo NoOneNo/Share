@@ -5,6 +5,7 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.Toast;
 
+import com.hengye.share.R;
 import com.hengye.share.ui.base.BaseApplication;
 
 public class ToastUtil extends ApplicationUtil{
@@ -40,5 +41,9 @@ public class ToastUtil extends ApplicationUtil{
             mToast = Toast.makeText(getContext(), "", Toast.LENGTH_SHORT);
         }
         return mToast;
+    }
+
+    public static void showNetWorkErrorToast(){
+        showToast(R.string.tip_no_network);
     }
 }

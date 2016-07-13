@@ -53,4 +53,15 @@ public class LoadingDialog extends Dialog {
         }
         super.dismiss();
     }
+
+    @Override
+    public void show() {
+        if(getContext() instanceof Activity){
+            Activity activity = (Activity) getContext();
+            if(activity.isDestroyed() || activity.isFinishing()){
+                return;
+            }
+        }
+        super.show();
+    }
 }

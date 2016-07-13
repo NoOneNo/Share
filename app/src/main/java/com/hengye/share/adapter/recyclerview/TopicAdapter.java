@@ -139,7 +139,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    IntentUtil.startActivity(getContext(), PersonalHomepageActivity.getStartIntent(getContext(), getItem(position).getUserInfo()));
+                   startPersonHomePage(position);
                 }
             }, 100);
 //            IntentUtil.startActivity(getContext(), PersonalHomepageActivity.getStartIntent(getContext(), getItem(position).getUserInfo()));
@@ -160,25 +160,26 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
 //        }
     }
 
+    public void startPersonHomePage(int position){
+        Topic topic = getItem(position);
+        TopicViewHolder vh = (TopicViewHolder) mRecyclerView.findViewHolderForAdapterPosition(position);
+        if (topic == null || vh == null) {
+            return;
+        }
+        PersonalHomepageActivity.start(getContext(), vh.mTopicTitle.mAvatar, topic.getUserInfo());
+    }
+
     public void startTopicDetail(boolean isRetweet, int position) {
         Topic topic = isRetweet ? getItem(position).getRetweetedTopic() : getItem(position);
-        if (topic == null) {
+        TopicViewHolder vh = (TopicViewHolder) mRecyclerView.findViewHolderForAdapterPosition(position);
+        if (topic == null || vh == null) {
             return;
         }
 
-        TopicViewHolder vh = (TopicViewHolder) mRecyclerView.findViewHolderForAdapterPosition(position);
-        if (vh == null) {
-            IntentUtil.startActivity(getContext(), TopicDetailActivity.getStartIntent(getContext(), topic, isRetweet));
-        } else {
-            BaseActivity activity = (BaseActivity) getContext();
-            activity.setHideAnimationOnStart();
-            activity.getWindow().setAllowEnterTransitionOverlap(false);
-            final Pair[] pairs = TransitionHelper.createSafeTransitionParticipants(activity, false,
-                    new Pair<>(isRetweet ? vh.mRetweetTopic.mTopicLayout : vh.mTopicTotalItem, activity.getString(R.string.transition_name_topic)));
-            ActivityOptionsCompat activityOptions = ActivityOptionsCompat
-                    .makeSceneTransitionAnimation(activity, pairs);
-            ActivityCompat.startActivity(activity, TopicDetailActivity.getStartIntent(getContext(), topic, isRetweet), activityOptions.toBundle());
-        }
+        TopicDetailActivity.start(getContext(),
+                isRetweet ? vh.mRetweetTopic.mTopicLayout : vh.mTopicTotalItem,
+                topic,
+                isRetweet);
     }
 
     public static class TopicViewHolder extends CommonAdapter.ItemViewHolder<Topic> {

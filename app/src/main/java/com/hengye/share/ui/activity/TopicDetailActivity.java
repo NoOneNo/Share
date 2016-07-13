@@ -17,8 +17,10 @@ import android.widget.TextView;
 import com.hengye.share.R;
 import com.hengye.share.adapter.listview.TopicCommentAdapter;
 import com.hengye.share.adapter.recyclerview.TopicAdapter;
+import com.hengye.share.helper.TransitionHelper;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
+import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.greenrobot.TopicDraft;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.ui.base.BaseActivity;
@@ -36,6 +38,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpView, View.OnClickListener{
+
+    public static void start(Context context, View startView, Topic topic, boolean isRetweet) {
+        Intent intent = getStartIntent(context, topic, isRetweet);
+        TransitionHelper.startTransitionActivity(context, intent, startView, R.string.transition_name_topic);
+    }
 
     public static Intent getStartIntent(Context context, Topic topic, boolean isRetweet) {
         Intent intent = new Intent(context, TopicDetailActivity.class);
@@ -128,16 +135,17 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 
     @Override
     public void onBackPressed() {
-        if(mTabLayoutAssist != null && mTabLayoutAssist.getVisibility() == View.GONE){
-            if(mTopicContentLayout != null && mTopicContent != null && mIsRetweet){
-
-//                mTopicContent.setText(DataUtil.addRetweetedNamePrefix(mTopic));
-                mTopicContentLayout.setBackgroundColor(getResources().getColor(R.color.grey_50));
-            }
-            finishAfterTransition();
-        }else{
-            finish();
-        }
+        finish();
+//        if(mTabLayoutAssist != null && mTabLayoutAssist.getVisibility() == View.GONE){
+//            if(mTopicContentLayout != null && mTopicContent != null && mIsRetweet){
+//
+////                mTopicContent.setText(DataUtil.addRetweetedNamePrefix(mTopic));
+//                mTopicContentLayout.setBackgroundColor(getResources().getColor(R.color.grey_50));
+//            }
+//            finishAfterTransition();
+//        }else{
+//            finish();
+//        }
     }
 
     private void initView() {
@@ -171,8 +179,8 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         mListView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
-                startPostponedEnterTransition();
                 mListView.getViewTreeObserver().removeOnPreDrawListener(this);
+                startPostponedEnterTransition();
                 return true;
             }
         });

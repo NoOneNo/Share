@@ -80,6 +80,7 @@ public class UrlFactory {
     public static final String WB_FAVORITES_DESTROY = "favorites/destroy.json";
 
     //--- 以下都没写方法
+    public static final String WB_OAUTH_TOKEN = "https://api.weibo.com/oauth2/access_token";
     //获取好友的分组信息
     public static final String WB_GROUP = "friendships/groups.json";
     //创建好友分组
@@ -96,6 +97,10 @@ public class UrlFactory {
     public static final String WB_GROUP_MEMBER = "friendships/groups/members.json";
     //调整当前登录用户的好友分组顺序
     public static final String WB_GROUP_ORDER = "friendships/groups/order.json";
+    //关注某用户
+    public static final String WB_FOLLOW_CREATE = "friendships/create.json";
+    //取消关注某用户
+    public static final String WB_FOLLOW_DESTROY = "friendships/destroy.json";
     /**
      * 微博接口
      */

@@ -19,21 +19,21 @@
 
     <!-- 横线 样式 -->
     <style name="horizontal_line">
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">@dimen/divider_height</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:background">@drawable/list_divider</item>
     </style>
 
     <!-- 竖线 样式 -->
     <style name="vertical_line">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">@dimen/divider_height</item>
         <item name="android:background">@drawable/list_divider</item>
     </style>
 
     <style name="PersonalHomepageExpandedTitleAppearance">
         <!--<item name="android:id">?attr/tv_expanded_title</item>-->
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/white</item>
     </style>
 

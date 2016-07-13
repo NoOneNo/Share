@@ -37,19 +37,24 @@ public class ThirdPartyLoginActivity extends BaseActivity implements UserMvpView
         initData();
 
         try {
-            mSsoHandler.authorize(ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO, new WBAuthListener(), null);
+            mSsoHandler.authorize(ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO, mWeiboAuthListener, null);
         } catch (Exception e) {
+            startActivityForResult(WeiboWebLoginActivity.class, WEIBO_WEB_LOGIN);
+//            mWeiboAuth.anthorize(new WBAuthListener());
             e.printStackTrace();
         }
     }
 
+    private final static int WEIBO_WEB_LOGIN = 3;
     private LoadingDialog mLoadingDialog;
     private UserPresenter mPresenter;
+    private WBAuthListener mWeiboAuthListener;
 
     private void initData() {
         mLoadingDialog = new LoadingDialog(this, getString(R.string.label_get_user_info));
         mWeiboAuth = ThirdPartyUtils.getWeiboData(this);
         mSsoHandler = new SsoHandler(this, mWeiboAuth);
+        mWeiboAuthListener = new WBAuthListener();
     }
 
     @Override
@@ -77,6 +82,12 @@ public class ThirdPartyLoginActivity extends BaseActivity implements UserMvpView
 
         if (requestCode == ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO && mSsoHandler != null) {
             mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
+        }else if(requestCode == WEIBO_WEB_LOGIN){
+            if(resultCode != RESULT_OK || data == null){
+                finish();
+            }else{
+                mWeiboAuthListener.onComplete(data.getExtras());
+            }
         }
     }
 

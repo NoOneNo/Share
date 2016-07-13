@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -112,7 +113,7 @@ public class TopicActivity extends BaseActivity
         ActionBarDrawerToggleCustom toggle = new ActionBarDrawerToggleCustom(
                 this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         toggle.setGravityCompat(GravityCompat.END);
-        mDrawer.setDrawerListener(toggle);
+        mDrawer.addDrawerListener(toggle);
         toggle.setDrawerListener(new DrawerLayout.SimpleDrawerListener() {
             @Override
             public void onDrawerOpened(View drawerView) {
@@ -150,11 +151,13 @@ public class TopicActivity extends BaseActivity
 //        lp.topMargin = ViewUtil.getStatusBarHeight();
 //        navHeader.setLayoutParams(lp);
 
-        ImageButton moreAccount = (ImageButton) header.findViewById(R.id.iv_more_account);
+        ImageView moreAccount = (ImageView) header.findViewById(R.id.iv_more_account);
         SelectorLoader.getInstance().setImageSelector(this, moreAccount, R.drawable.compose_more_account_add, R.drawable.compose_more_account_add_highlighted);
         moreAccount.setOnClickListener(this);
 
         mAvatar = (NetworkImageViewPlus) header.findViewById(R.id.iv_avatar);
+        mAvatar.setFadeInImage(false);
+        mAvatar.setDefaultImageResId(R.drawable.ic_user_avatar);
         mUsername = (TextView) header.findViewById(R.id.tv_username);
         mSign = (TextView) header.findViewById(R.id.tv_sign);
 
@@ -265,9 +268,9 @@ public class TopicActivity extends BaseActivity
 //            UserInfo userInfo = getUserInfo();
             if (UserUtil.getCurrentUser() == null) {
                 Toast.makeText(this, "请先登录", Toast.LENGTH_SHORT).show();
-                return true;
+                return false;
             }
-            startActivity(PersonalHomepageActivity.getStartIntent(this, UserInfo.getUserInfo(UserUtil.getCurrentUser())));
+            PersonalHomepageActivity.start(this, mAvatar, UserInfo.getUserInfo(UserUtil.getCurrentUser()));
         } else if (id == R.id.nav_at_me) {
             startActivity(TopicMentionActivity.class);
         } else if (id == R.id.nav_comment) {
@@ -286,7 +289,7 @@ public class TopicActivity extends BaseActivity
 
 //        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 //        drawer.closeDrawer(GravityCompat.END);
-        return true;
+        return false;
     }
 
     private void updateNavigationView() {

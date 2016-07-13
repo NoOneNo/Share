@@ -1,26 +1,37 @@
 package com.hengye.share.ui.activity;
 
+import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Matrix;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.view.MotionEventCompat;
-import android.support.v4.view.ViewCompat;
+import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.R;
+import com.hengye.share.helper.TransitionHelper;
 import com.hengye.share.model.Parent;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.greenrobot.User;
@@ -30,17 +41,42 @@ import com.hengye.share.ui.fragment.TopicFragment;
 import com.hengye.share.ui.mvpview.UserMvpView;
 import com.hengye.share.ui.presenter.TopicPresenter;
 import com.hengye.share.ui.presenter.UserPresenter;
+import com.hengye.share.util.IntentUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
+import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
+import com.hengye.share.util.ViewUtil;
+import com.hengye.share.util.retrofit.RetrofitManager;
 import com.hengye.swiperefresh.PullToRefreshLayout;
 import com.hengye.swiperefresh.SwipeRefreshLayout;
 
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 public class PersonalHomepageActivity extends BaseActivity implements View.OnClickListener, AppBarLayout.OnOffsetChangedListener, UserMvpView {
+
+    public static void start(Context context, View startView, UserInfo userInfo) {
+        Intent intent = getStartIntent(context, userInfo);
+        TransitionHelper.startTransitionActivity(context, intent, startView, R.string.transition_name_avatar);
+    }
+
+    public static Intent getStartIntent(Context context, UserInfo userInfo) {
+        Intent intent = new Intent(context, PersonalHomepageActivity.class);
+        intent.putExtra(UserInfo.class.getSimpleName(), userInfo);
+        return intent;
+    }
 
     @Override
     protected boolean setToolBar() {
         return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
     @Override
@@ -60,12 +96,6 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                 }
             }
         }
-    }
-
-    public static Intent getStartIntent(Context context, UserInfo userInfo) {
-        Intent intent = new Intent(context, PersonalHomepageActivity.class);
-        intent.putExtra(UserInfo.class.getSimpleName(), userInfo);
-        return intent;
     }
 
     @Override
@@ -90,28 +120,56 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     private SwipeRefreshLayout mSwipeRefresh;
     private AppBarLayout mAppBarLayout;
     private CoordinatorLayout mCoordinatorLayout;
+    private FloatingActionButton mFollowButton;
 
     private UserInfo mUserInfo;
+    private WBUserInfo mWBUserInfo;
 
     private UserPresenter mPresenter;
 
+    @SuppressWarnings("ConstantConditions")
     private void initView() {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        toolbar.setBackgroundResource(R.drawable.gradient_toolbar_grey);
+//        toolbar.
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                finish();
+//            }
+//        });
 
+//        toolbar.setBackgroundResource(R.drawable.gradient_toolbar_grey);
+
+        mFollowButton = (FloatingActionButton) findViewById(R.id.fab);
+        mFollowButton.setOnClickListener(this);
         mCollapsingToolbarLayout =
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
 
         mCover = (NetworkImageViewPlus) findViewById(R.id.iv_cover);
+        mCover.setFadeInImage(false);
+//        mCover.setScaleType(ImageView.ScaleType.MATRIX);
+//        mCover.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                mCover.setImageMatrix(setCoverMatrix());
+//            }
+//        });
+
+        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.main_content);
+        mAppBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+//        postponeEnterTransition();
+        mCover.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                mCover.getViewTreeObserver().removeOnPreDrawListener(this);
+//                startPostponedEnterTransition();
+                startCoverShowAnimation();
+                return true;
+            }
+        });
         mAvatar = (NetworkImageViewPlus) findViewById(R.id.iv_avatar);
+        mAvatar.setTransitionName(getString(R.string.transition_name_avatar));
 
         mDivision = (TextView) findViewById(R.id.tv_division);
         mAttention = (TextView) findViewById(R.id.tv_attention);
@@ -126,10 +184,11 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
             }
         }
 
-        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.main_content);
-        mAppBarLayout = (AppBarLayout) findViewById(R.id.appbar);
         mSwipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
 
+        mSwipeRefresh.setColorSchemeResources(android.R.color.holo_blue_dark,
+                android.R.color.holo_green_light, android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
         mSwipeRefresh.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -160,11 +219,12 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 
                         if (!mIsBeingDragged) {
                             mIsBeingDragged = true;
-                            if(mAnimateToCorrectHeight != null) {
+                            if (mAnimateToCorrectHeight != null) {
                                 mAnimateToCorrectHeight.pause();
                             }
                             mInitialDownY = event.getRawY();
                             mAppBarHeight = mAppBarLayout.getLayoutParams().height;
+
                             break;
                         }
 
@@ -173,12 +233,17 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 
                         if (distance > 0) {
                             ViewGroup.LayoutParams lp_ = mAppBarLayout.getLayoutParams();
-                            lp_.height = mAppBarHeight + distance;
-
-                            if(lp_.height > getAppBarMaxHeight()){
-                                lp_.height = getAppBarMaxHeight();
+                            int height = mAppBarHeight + distance;
+                            if (height > getAppBarMaxHeight()) {
+                                if (lp_.height == getAppBarMaxHeight()) {
+                                    //如果已经到达高度的最大值
+                                    break;
+                                }
+                                height = getAppBarMaxHeight();
                             }
+                            lp_.height = height;
                             mAppBarLayout.requestLayout();
+
                         }
 
                         break;
@@ -186,11 +251,45 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                 return false;
             }
         });
+
     }
 
-    private int getAppBarMaxHeight(){
-        if(mAppBarMaxHeight == 0){
-            mAppBarMaxHeight = (int)(mAppBarHeight * MAX_APP_BAR_HEIGHT_RATE);
+    private void startCoverShowAnimation() {
+
+        final Animator coverShowAnimator = ViewAnimationUtils.createCircularReveal(mAppBarLayout,
+                mAppBarLayout.getWidth() / 2,
+                mAppBarLayout.getHeight() / 2,
+                0,
+                (float) Math.hypot(mAppBarLayout.getWidth(), mAppBarLayout.getWidth()));
+        coverShowAnimator.setInterpolator(new FastOutLinearInInterpolator());
+        coverShowAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+//                startPostponedEnterTransition();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+
+        coverShowAnimator.setDuration(500);
+        coverShowAnimator.start();
+    }
+
+    private int getAppBarMaxHeight() {
+        if (mAppBarMaxHeight == 0) {
+            mAppBarMaxHeight = (int) (mAppBarHeight * MAX_APP_BAR_HEIGHT_RATE);
         }
         return mAppBarMaxHeight;
     }
@@ -214,7 +313,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 //        } else {
 //            mSwipeRefresh.setEnabled(true);
 //        }
-        L.debug("vertical offset : {}, height : {}, minimumHeight : {}", verticalOffset, mCollapsingToolbarLayout.getHeight(), ViewCompat.getMinimumHeight(mCollapsingToolbarLayout));
+//        L.debug("vertical offset : {}, height : {}, minimumHeight : {}", verticalOffset, mCollapsingToolbarLayout.getHeight(), ViewCompat.getMinimumHeight(mCollapsingToolbarLayout));
     }
 
     @Override
@@ -265,7 +364,10 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     }
 
     private void initUserInfo(WBUserInfo wbUserInfo) {
+        mWBUserInfo = wbUserInfo;
         mCollapsingToolbarLayout.setTitle(wbUserInfo.getName());
+//        mCover.setImageResource(R.drawable.bg_test);
+        mCover.setAutoClipBitmap(false);
         mCover.setImageUrl(wbUserInfo.getCover_image_phone(), RequestManager.getImageLoader());
         mAvatar.setImageUrl(wbUserInfo.getAvatar_large(), RequestManager.getImageLoader());
 
@@ -294,6 +396,12 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         int id = v.getId();
+
+        if (id == R.id.fab) {
+            if (mWBUserInfo != null) {
+                follow(!mWBUserInfo.isFollowing(), mWBUserInfo.getIdstr());
+            }
+        }
     }
 
     @Override
@@ -312,4 +420,101 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     public void loadFail() {
 
     }
+
+    public void follow(final boolean isFollow, String uid) {
+
+        Observable<WBUserInfo> observable;
+
+        observable = isFollow ?
+                RetrofitManager
+                        .getWBService()
+                        .followCreate(UserUtil.getToken(), uid) :
+                RetrofitManager
+                        .getWBService()
+                        .followDestroy(UserUtil.getToken(), uid);
+
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<WBUserInfo>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        ToastUtil.showNetWorkErrorToast();
+                    }
+
+                    @Override
+                    public void onNext(WBUserInfo wbUserInfo) {
+                        if (wbUserInfo != null) {
+                            if (isFollow) {
+                                ToastUtil.showToast(R.string.label_follow_create_success);
+                            } else {
+                                ToastUtil.showToast(R.string.label_follow_destroy_success);
+                            }
+                            if (mWBUserInfo != null) {
+                                mWBUserInfo.setFollowing(isFollow);
+                            }
+//                            initUserInfo(wbUserInfo);
+                        }
+                    }
+                });
+    }
+
+//    private Matrix setCoverMatrix() {
+//
+//        Matrix drawMatrix = new Matrix();
+//
+//        if (mCover.getDrawable() == null) {
+//            return drawMatrix;
+//        }
+//
+//        int dWidth = mCover.getDrawable().getIntrinsicWidth();
+//        int dHeight = mCover.getDrawable().getIntrinsicHeight();
+//
+//        int vWidth = mCover.getWidth();
+//        int vHeight = mCover.getHeight();
+//        float scale;
+//        float dx = 0, dy = 0;
+//        scale = (float) vWidth / (float) dWidth;
+//        dy = vHeight - dHeight * scale;
+//        if (dy < 0) {
+//            dy /= 2;
+//        } else {
+//            dy = 0;
+//            if (dWidth * vHeight * 1.5 > vWidth * dHeight) {
+//                scale = (float) vHeight / (float) dHeight;
+//
+//                dx = (vWidth - dWidth * scale) * 0.5f;
+//            }
+////            已经计算scale, dy
+////            else {
+////                scale = (float) vWidth / (float) dWidth;
+////                dy = (vHeight - dHeight * scale) * 0.5f;
+////            }
+//        }
+//
+//        drawMatrix.setScale(scale, scale);
+//        drawMatrix.postTranslate(Math.round(dx), Math.round(dy));
+//        return drawMatrix;
+//    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -76,8 +76,11 @@ public class SwipeBackHelper implements SwipeBackActivityBase {
 
     public void setSwipeBackEdgeMode() {
         int mode = 1;
+        String s = SettingHelper.getSwipeBack();
         try {
-            mode = Integer.valueOf(SettingHelper.getSwipeBack());
+            if(s != null){
+                mode = Integer.valueOf(SettingHelper.getSwipeBack());
+            }
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }

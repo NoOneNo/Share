@@ -1,30 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Base application theme. -->
+     <!--Base application theme. -->
     <!--<style name="AppTheme" parent="BaseAppTheme">-->
         <!--&lt;!&ndash; Customize your theme here. &ndash;&gt;-->
-        <!--<item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
-    <!--</style>-->
-
-    <!--<style name="AppTheme" parent="BaseAppTheme">-->
-        <!--<item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
-    <!--</style>-->
-
-    <!--<style name="ShareAppTheme.CategorySelectionActivity">-->
-
-        <!--<item name="android:windowSharedElementsUseOverlay">true</item>-->
-        <!--<item name="android:windowSharedElementEnterTransition">@android:transition/move</item>-->
-        <!--<item name="android:windowSharedElementReturnTransition">@android:transition/move</item>-->
-        <!--<item name="android:windowSharedElementExitTransition">@android:transition/move</item>-->
-        <!--<item name="android:windowSharedElementReenterTransition">@android:transition/move</item>-->
-    <!--</style>-->
-    <!--<style name="AppTheme" parent="BaseAppTheme">-->
-
-        <!--&lt;!&ndash;<item name="android:windowAllowEnterTransitionOverlap">true</item>&ndash;&gt;-->
-        <!--&lt;!&ndash;<item name="android:windowAllowReturnTransitionOverlap">true</item>&ndash;&gt;-->
-
-        <!--&lt;!&ndash;<item name="android:windowSharedElementExitTransition">@android:transition/move</item>&ndash;&gt;-->
-        <!--<item name="android:windowSharedElementEnterTransition">@android:transition/move</item>-->
-
+        <!--<item name="android:windowIsTranslucent">true</item>-->
+        <!--&lt;!&ndash;<item name="android:windowDrawsSystemBarBackgrounds">true</item>&ndash;&gt;-->
     <!--</style>-->
 </resources>

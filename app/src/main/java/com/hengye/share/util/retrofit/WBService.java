@@ -11,12 +11,14 @@ import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.model.sina.WBUserInfos;
 import com.hengye.share.util.UrlFactory;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
+import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
@@ -30,6 +32,10 @@ import retrofit2.http.QueryMap;
 import rx.Observable;
 
 public interface WBService {
+
+    @FormUrlEncoded
+    @POST(UrlFactory.WB_OAUTH_TOKEN)
+    Observable<HashMap<String, String>> oauthToken(@FieldMap Map<String, String> options);
 
     @GET(UrlFactory.WB_COMMENT_SHOW)
     Observable<WBTopicComments> listComment(@QueryMap Map<String, String> options);
@@ -136,4 +142,16 @@ public interface WBService {
             @Field("access_token") String token,
             @Field("count") String count,
             @Field("list_ids") String ids);
+
+    @FormUrlEncoded
+    @POST(UrlFactory.WB_FOLLOW_CREATE)
+    Observable<WBUserInfo> followCreate(
+            @Field("access_token") String token,
+            @Field("uid") String count);
+
+    @FormUrlEncoded
+    @POST(UrlFactory.WB_FOLLOW_DESTROY)
+    Observable<WBUserInfo> followDestroy(
+            @Field("access_token") String token,
+            @Field("uid") String count);
 }

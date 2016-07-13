@@ -14,7 +14,7 @@ buildscript {
 
 task info(type: Exec) {
 
-    println GradleVersion.current().getVersion()
+    println 'Gradle Version : ' + GradleVersion.current().getVersion()
 }
 
 

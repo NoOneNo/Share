@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 
+import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.adapter.recyclerview.TopicAdapter;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.UserInfo;
@@ -112,7 +113,8 @@ public class SearchActivity extends BaseActivity implements SearchMvpView{
         mUserAdapter.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                startActivity(PersonalHomepageActivity.getStartIntent(SearchActivity.this, mUserAdapter.getItem(position)));
+                View avatar = view.findViewById(R.id.iv_avatar);
+                PersonalHomepageActivity.start(SearchActivity.this, avatar, mUserAdapter.getItem(position));
             }
         });
 
