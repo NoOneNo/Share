@@ -2,17 +2,19 @@
 <resources>
 
     <!-- Strings related to theme-->
-    <color name="theme_blue_primary">#3F51B5</color>
-    <color name="theme_blue_primary_dark">#203F9F</color>
-    <!--<color name="theme_blue_highlight">#443F51B5</color>-->
+    <color name="theme_blue_primary">#485DCE</color>
+    <color name="theme_blue_primary_dark">#3F51B5</color>
+    <!--<color name="theme_blue_highlight">#3F51B5</color>-->
     <!--<color name="theme_blue_secondary_dark">#203F9F</color>-->
-    <color name="theme_blue_accent">#203F9F</color>
+    <color name="theme_blue_accent">#3F51B5</color>
 
     <color name="theme_green_primary">#50BBA7</color>
     <color name="theme_green_primary_dark">#309887</color>
-    <!--<color name="theme_green_highlight">#4450BBA7</color>-->
-    <!--<color name="theme_green_secondary_dark">#309887</color>-->
     <color name="theme_green_accent">#309887</color>
+
+    <color name="theme_pink_primary">#FF4081</color>
+    <color name="theme_pink_primary_dark">#DA2562</color>
+    <color name="theme_pink_accent">#DA2562</color>
     <!-- Strings related to theme-->
 
     <color name="divider_color">#ffdbdbdb</color>
@@ -43,4 +45,6 @@
     <color name="topic_name_at">#5061BB</color>
 
     <color name="image_default_bg">#ffe0e0e0</color>
+
+    <color name="touch_effect">#9ccc</color>
 </resources>

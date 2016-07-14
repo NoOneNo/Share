@@ -3,6 +3,7 @@ package com.hengye.share.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,44 +17,12 @@ import java.lang.reflect.Field;
 
 public class ViewUtil extends ApplicationUtil {
 
-    /**
-     * Interface definition for a callback to be invoked when an item in this
-     * RecyclerView has been clicked.
-     */
-    public interface OnItemClickListener {
-
-        /**
-         * Callback method to be invoked when an item in this RecyclerView has
-         * been clicked.
-         * <p>
-         * Implementers can call getItemAtPosition(position) if they need
-         * to access the data associated with the selected item.
-         *
-         * @param view     The view within the AdapterView that was clicked (this
-         *                 will be a view provided by the adapter)
-         * @param position The position of the view in the adapter.
-         */
-        void onItemClick(View view, int position);
+    public static Bitmap mDrawingCacheBitmap;
+    public static Bitmap getDrawingCacheBitmap(){
+        return mDrawingCacheBitmap;
     }
-
-    /**
-     * Interface definition for a callback to be invoked when an item in this
-     * RecyclerView has been clicked.
-     */
-    public interface OnItemLongClickListener {
-
-        /**
-         * Callback method to be invoked when an item in this RecyclerView has
-         * been clicked.
-         * <p>
-         * Implementers can call getItemAtPosition(position) if they need
-         * to access the data associated with the selected item.
-         *
-         * @param view     The view within the AdapterView that was clicked (this
-         *                 will be a view provided by the adapter)
-         * @param position The position of the view in the adapter.
-         */
-        boolean onItemLongClick(View view, int position);
+    public static void setDrawingCacheBitmap(Bitmap bitmap){
+        mDrawingCacheBitmap = bitmap;
     }
 
     public static String getCacheKey(String url, int maxWidth, int maxHeight, ImageView.ScaleType scaleType) {
@@ -136,4 +105,43 @@ public class ViewUtil extends ApplicationUtil {
         return value;
     }
 
+    /**
+     * Interface definition for a callback to be invoked when an item in this
+     * RecyclerView has been clicked.
+     */
+    public interface OnItemClickListener {
+
+        /**
+         * Callback method to be invoked when an item in this RecyclerView has
+         * been clicked.
+         * <p>
+         * Implementers can call getItemAtPosition(position) if they need
+         * to access the data associated with the selected item.
+         *
+         * @param view     The view within the AdapterView that was clicked (this
+         *                 will be a view provided by the adapter)
+         * @param position The position of the view in the adapter.
+         */
+        void onItemClick(View view, int position);
+    }
+
+    /**
+     * Interface definition for a callback to be invoked when an item in this
+     * RecyclerView has been clicked.
+     */
+    public interface OnItemLongClickListener {
+
+        /**
+         * Callback method to be invoked when an item in this RecyclerView has
+         * been clicked.
+         * <p>
+         * Implementers can call getItemAtPosition(position) if they need
+         * to access the data associated with the selected item.
+         *
+         * @param view     The view within the AdapterView that was clicked (this
+         *                 will be a view provided by the adapter)
+         * @param position The position of the view in the adapter.
+         */
+        boolean onItemLongClick(View view, int position);
+    }
 }

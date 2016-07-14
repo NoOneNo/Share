@@ -40,7 +40,7 @@ public class GroupManageActivity extends BaseActivity implements GroupManageMvpV
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        setupPresenter(mPresenter = new GroupManagePresenter(this));
+        addPresenter(mPresenter = new GroupManagePresenter(this));
 
         initView();
 

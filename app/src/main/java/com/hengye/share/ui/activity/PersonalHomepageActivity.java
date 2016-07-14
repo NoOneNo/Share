@@ -4,19 +4,13 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Matrix;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.util.Pair;
 import android.support.v4.view.MotionEventCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -26,7 +20,6 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.view.NetworkImageViewPlus;
@@ -41,12 +34,11 @@ import com.hengye.share.ui.fragment.TopicFragment;
 import com.hengye.share.ui.mvpview.UserMvpView;
 import com.hengye.share.ui.presenter.TopicPresenter;
 import com.hengye.share.ui.presenter.UserPresenter;
-import com.hengye.share.util.IntentUtil;
+import com.hengye.share.ui.widget.fab.CheckableFab;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
-import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
 import com.hengye.swiperefresh.PullToRefreshLayout;
 import com.hengye.swiperefresh.SwipeRefreshLayout;
@@ -108,7 +100,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         if (mUserInfo == null) {
             PersonalHomepageActivity.this.finish();
         } else {
-            setupPresenter(mPresenter = new UserPresenter(this));
+            addPresenter(mPresenter = new UserPresenter(this));
             initView();
             loadData();
         }
@@ -120,7 +112,8 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     private SwipeRefreshLayout mSwipeRefresh;
     private AppBarLayout mAppBarLayout;
     private CoordinatorLayout mCoordinatorLayout;
-    private FloatingActionButton mFollowButton;
+//    private FloatingActionButton mFollowButton;
+    private CheckableFab mFollowButton;
 
     private UserInfo mUserInfo;
     private WBUserInfo mWBUserInfo;
@@ -141,7 +134,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 
 //        toolbar.setBackgroundResource(R.drawable.gradient_toolbar_grey);
 
-        mFollowButton = (FloatingActionButton) findViewById(R.id.fab);
+        mFollowButton = (CheckableFab) findViewById(R.id.fab);
         mFollowButton.setOnClickListener(this);
         mCollapsingToolbarLayout =
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
@@ -454,6 +447,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                             } else {
                                 ToastUtil.showToast(R.string.label_follow_destroy_success);
                             }
+                            mFollowButton.setChecked(isFollow);
                             if (mWBUserInfo != null) {
                                 mWBUserInfo.setFollowing(isFollow);
                             }

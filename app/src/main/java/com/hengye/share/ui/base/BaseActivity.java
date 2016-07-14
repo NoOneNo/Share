@@ -3,6 +3,8 @@ package com.hengye.share.ui.base;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +22,10 @@ import com.hengye.share.ui.presenter.BasePresenter;
 import com.hengye.share.util.NetworkUtil;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.SettingHelper;
+import com.hengye.share.util.ViewUtil;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -54,7 +60,8 @@ public class BaseActivity extends AppCompatActivity {
 
     private SwipeBackHelper mSwipeHelper;
 
-    private BasePresenter mPresenter;
+//    private BasePresenter mPresenter;
+    private Set<BasePresenter> mPresenters;
 
     private Handler mHandler;
 
@@ -81,8 +88,27 @@ public class BaseActivity extends AppCompatActivity {
             mSwipeHelper.onCreate();
         }
 
-        setupContentView();
+        setUpContentView();
         afterCreate(savedInstanceState);
+
+//        final Bitmap cacheBitmap = ViewUtil.getDrawingCacheBitmap();
+//        if(cacheBitmap != null) {
+//            final ViewGroup rootView = (ViewGroup) ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
+//            final View maskView = new View(this);
+//            maskView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+//            rootView.addView(maskView);
+//            cacheBitmap.setHasAlpha(true);
+//            maskView.setBackground(new BitmapDrawable(cacheBitmap));
+//            ViewUtil.setDrawingCacheBitmap(null);
+//
+//            getHandler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    maskView.setBackground(null);
+//                    cacheBitmap.recycle();
+//                }
+//            }, 500);
+//        }
     }
 
     @Override
@@ -93,7 +119,7 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    protected void setupContentView() {
+    protected void setUpContentView() {
         if (getLayoutResId() != 0) {
             setContentView(getLayoutResId());
         }
@@ -133,8 +159,14 @@ public class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         cancelPendingRequestsIfNeeded();
-        if (mPresenter != null) {
-            mPresenter.detachView();
+        detachMvpView();
+    }
+
+    protected void detachMvpView(){
+        if(mPresenters != null){
+            for(BasePresenter presenter : mPresenters){
+                presenter.detachView();
+            }
         }
     }
 
@@ -179,7 +211,7 @@ public class BaseActivity extends AppCompatActivity {
 
     protected void overridePendingTransitionOnFinish() {
         if (setFinishPendingTransition()) {
-            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+//            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         }
     }
 
@@ -210,12 +242,17 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     protected void reStartActivity() {
+
+//        ViewGroup rootView = (ViewGroup) ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
+//        rootView.buildDrawingCache();
+//
+//        ViewUtil.setDrawingCacheBitmap(Bitmap.createBitmap(rootView.getDrawingCache()));
         Intent intent = getIntent();
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        overridePendingTransition(0, 0);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         finish();
-        overridePendingTransition(0, 0);
+//        setHideAnimationOnStart();
         startActivity(intent);
     }
 
@@ -276,8 +313,11 @@ public class BaseActivity extends AppCompatActivity {
         mFirstClick = true;
     }
 
-    public void setupPresenter(BasePresenter presenter) {
-        mPresenter = presenter;
+    public void addPresenter(BasePresenter presenter) {
+        if(mPresenters == null){
+            mPresenters = new HashSet<>();
+        }
+        mPresenters.add(presenter);
     }
 
     protected Handler getHandler() {

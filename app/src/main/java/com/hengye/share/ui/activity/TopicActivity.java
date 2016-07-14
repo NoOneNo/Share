@@ -15,8 +15,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -74,8 +73,13 @@ public class TopicActivity extends BaseActivity
     }
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        setupPresenter(mPresenter = new UserPresenter(this));
+        addPresenter(mPresenter = new UserPresenter(this));
         initView();
     }
 
@@ -278,6 +282,7 @@ public class TopicActivity extends BaseActivity
         } else if (id == R.id.nav_favorites) {
             startActivity(FragmentActivity.getStartIntent(this, TopicFavoritesFragment.class));
         } else if (id == R.id.nav_setting) {
+//            mDrawer.closeDrawer(GravityCompat.END);
             startActivity(SettingActivity.class);
         } else if (id == R.id.nav_group_manage) {
             startActivityForResult(GroupManageActivity.class, GroupManageActivity.GROUP_UPDATE);

@@ -2,6 +2,7 @@ package com.hengye.share.ui.fragment.setting;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
@@ -19,6 +20,11 @@ public class SettingFragment extends BasePreferenceFragment {
     @Override
     public String getTitle() {
         return BaseApplication.getInstance().getString(R.string.title_fragment_setting);
+    }
+
+    @Override
+    protected boolean isRegisterOnSharedPreferenceChangeListener() {
+        return true;
     }
 
     @Override
@@ -81,6 +87,15 @@ public class SettingFragment extends BasePreferenceFragment {
         return super.onPreferenceTreeClick(preferenceScreen, preference);
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        super.onSharedPreferenceChanged(sharedPreferences, key);
+
+        if (key.equals(SettingHelper.KEY_THEME_APP)) {
+//            SettingHelper.removeCache(key);
+            getActivity().onBackPressed();
+        }
+    }
 
     private String getFeedBackContent(){
         return "#Share意见反馈# @我是一只小小小鸡仔 ";

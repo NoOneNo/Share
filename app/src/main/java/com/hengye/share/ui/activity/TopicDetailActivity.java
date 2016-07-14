@@ -20,7 +20,6 @@ import com.hengye.share.adapter.recyclerview.TopicAdapter;
 import com.hengye.share.helper.TransitionHelper;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
-import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.greenrobot.TopicDraft;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.ui.base.BaseActivity;
@@ -67,7 +66,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        setupPresenter(mPresenter = new TopicDetailPresenter(this));
+        addPresenter(mPresenter = new TopicDetailPresenter(this));
         initView();
 //        startPostponedEnterTransition();
     }

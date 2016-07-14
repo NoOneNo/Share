@@ -69,6 +69,7 @@ public class SettingHelper {
 
     public final static String THEME_COLOR_BLUE= "blue";
     public final static String THEME_COLOR_GREEN = "green";
+    public final static String THEME_COLOR_PINK = "pink";
     public final static String THEME_COLOR_DEFAULT = THEME_COLOR_GREEN;
     public final static int THEME_RES_ID_DEFAULT = R.style.ShareAppTheme_Green;
 
@@ -92,6 +93,8 @@ public class SettingHelper {
             return R.style.ShareAppTheme_Blue;
         }else if(color.equals(THEME_COLOR_GREEN)){
             return R.style.ShareAppTheme_Green;
+        }else if(color.equals(THEME_COLOR_PINK)){
+            return R.style.ShareAppTheme_Pink;
         }else{
             return THEME_RES_ID_DEFAULT;
         }
@@ -314,6 +317,10 @@ public class SettingHelper {
     public static void putBoolean(String key, Boolean value){
         putValue(key, value);
         getPreferences().edit().putBoolean(key, value).apply();
+    }
+
+    public static void removeCache(String key){
+        mCache.remove(key);
     }
 
     public static void resetCache(){

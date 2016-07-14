@@ -8,13 +8,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.EditText;
 
-import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.adapter.recyclerview.TopicAdapter;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.UserInfo;
-import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.SearchUserAdapter;
@@ -82,7 +79,7 @@ public class SearchActivity extends BaseActivity implements SearchMvpView{
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        setupPresenter(mPresenter = new SearchPresenter(this));
+        addPresenter(mPresenter = new SearchPresenter(this));
         initView();
 
         if(!TextUtils.isEmpty(mKeywords)){

@@ -37,7 +37,7 @@ public class AccountManageActivity extends BaseActivity implements AccountManage
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        setupPresenter(mPresenter = new AccountManagePresenter(this));
+        addPresenter(mPresenter = new AccountManagePresenter(this));
         initView();
     }
 
