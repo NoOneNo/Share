@@ -46,6 +46,10 @@
 
     </style>
 
+    <style name="AppTheme.Main">
+        <item name="android:windowIsTranslucent">false</item>
+    </style>
+
     <style name="ShareAppTheme" parent="AppTheme">
         <item name="theme_color">@color/theme_green_primary</item>
         <item name="theme_dark_color">@color/theme_green_primary_dark</item>

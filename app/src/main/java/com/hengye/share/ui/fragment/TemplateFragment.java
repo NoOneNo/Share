@@ -1,6 +1,12 @@
 package com.hengye.share.ui.fragment;
 
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import com.hengye.share.ui.base.BaseFragment;
 
 public class TemplateFragment extends BaseFragment {
@@ -11,5 +17,5 @@ public class TemplateFragment extends BaseFragment {
     }
 
     @Override
-    protected void onCreateView() {}
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {}
 }

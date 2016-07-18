@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.support.annotation.DimenRes;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -17,12 +19,30 @@ import java.lang.reflect.Field;
 
 public class ViewUtil extends ApplicationUtil {
 
-    public static Bitmap mDrawingCacheBitmap;
-    public static Bitmap getDrawingCacheBitmap(){
-        return mDrawingCacheBitmap;
+//    public static Bitmap mDrawingCacheBitmap;
+//    public static Bitmap getDrawingCacheBitmap(){
+//        return mDrawingCacheBitmap;
+//    }
+//    public static void setDrawingCacheBitmap(Bitmap bitmap){
+//        mDrawingCacheBitmap = bitmap;
+//    }
+
+    public static int dp2px(@DimenRes int dpResId) {
+        return dp2px(getContext().getResources().getDimension(dpResId));
     }
-    public static void setDrawingCacheBitmap(Bitmap bitmap){
-        mDrawingCacheBitmap = bitmap;
+
+    public static int dp2px(float dpValue) {
+        float reSize = getContext().getResources().getDisplayMetrics().density;
+        return (int)((double)(dpValue * reSize) + 0.5D);
+    }
+
+    public static int px2dp(int pxValue) {
+        float reSize = getContext().getResources().getDisplayMetrics().density;
+        return (int)((double)((float)pxValue / reSize) + 0.5D);
+    }
+
+    public static float sp2px(int spValue) {
+        return TypedValue.applyDimension(2, (float)spValue, getContext().getResources().getDisplayMetrics());
     }
 
     public static String getCacheKey(String url, int maxWidth, int maxHeight, ImageView.ScaleType scaleType) {
@@ -90,11 +110,6 @@ public class ViewUtil extends ApplicationUtil {
     public static int getActionBarHeight() {
         return getDimensionPixelSize(getContext(), android.R.attr.actionBarSize,
                 getContext().getResources().getDimensionPixelSize(R.dimen.action_bar_default_size));
-    }
-
-    public static int getActionBarHeight(Context context) {
-        return getDimensionPixelSize(context, android.R.attr.actionBarSize,
-                context.getResources().getDimensionPixelSize(R.dimen.action_bar_default_size));
     }
 
     public static int getDimensionPixelSize(Context context, int attr, int defaultValue) {

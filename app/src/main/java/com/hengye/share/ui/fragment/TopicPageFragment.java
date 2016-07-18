@@ -2,21 +2,19 @@ package com.hengye.share.ui.fragment;
 
 
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicAdapter;
 import com.hengye.share.model.Topic;
 import com.hengye.share.ui.base.BaseFragment;
-import com.hengye.share.ui.mvpview.TopicMvpView;
 import com.hengye.share.ui.mvpview.TopicPageMvpView;
 import com.hengye.share.ui.presenter.TopicPagePresenter;
-import com.hengye.share.ui.presenter.TopicPresenter;
-import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
@@ -58,9 +56,9 @@ public class TopicPageFragment extends BaseFragment implements TopicPageMvpView 
     }
 
     @Override
-    protected void onCreateView() {
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-        setupPresenter(mPresenter = new TopicPagePresenter(this, topicGroup));
+        addPresenter(mPresenter = new TopicPagePresenter(this, topicGroup));
         mPresenter.setKeyword(mKeyword);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);

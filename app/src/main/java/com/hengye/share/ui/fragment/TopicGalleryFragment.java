@@ -65,9 +65,8 @@ public class TopicGalleryFragment extends BaseFragment {
         return R.layout.fragment_topic_gallery;
     }
 
-    @Nullable
     @Override
-    public void onCreateView() {
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
         mProgress = findViewById(R.id.progress_bar);
         if (mUrl != null) {

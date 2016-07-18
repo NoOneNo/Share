@@ -170,6 +170,13 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    public void addPresenter(BasePresenter presenter) {
+        if(mPresenters == null){
+            mPresenters = new HashSet<>();
+        }
+        mPresenters.add(presenter);
+    }
+
     public void startActivity(Class<?> cls) {
         startActivity(new Intent(this, cls));
     }
@@ -211,7 +218,7 @@ public class BaseActivity extends AppCompatActivity {
 
     protected void overridePendingTransitionOnFinish() {
         if (setFinishPendingTransition()) {
-//            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         }
     }
 
@@ -311,13 +318,6 @@ public class BaseActivity extends AppCompatActivity {
 
     public void resetFirstClick() {
         mFirstClick = true;
-    }
-
-    public void addPresenter(BasePresenter presenter) {
-        if(mPresenters == null){
-            mPresenters = new HashSet<>();
-        }
-        mPresenters.add(presenter);
     }
 
     protected Handler getHandler() {

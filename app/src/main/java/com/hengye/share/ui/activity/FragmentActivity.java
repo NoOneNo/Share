@@ -53,9 +53,9 @@ public class FragmentActivity extends BaseActivity {
     protected Class<? extends BaseFragment> getBaseFragmentClass() {
         try {
             Class clazz = (Class) getIntent().getSerializableExtra(FRAGMENT_CLASS);
-            if (clazz.getSuperclass().getSimpleName().equals(BaseFragment.BASE_FRAGMENT)) {
+//            if (clazz.getSuperclass().getSimpleName().equals(BaseFragment.BASE_FRAGMENT)) {
                 return clazz;
-            }
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }

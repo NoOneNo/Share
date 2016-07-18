@@ -50,6 +50,7 @@
 
     <dimen name="header_personal_homepage_height">270dp</dimen>
     <dimen name="header_personal_avatar">60dp</dimen>
+    <dimen name="header_personal_avatar_collapse">35dp</dimen>
 
     <!--<dimen name="at_user_avatar">40dp</dimen>-->
     <dimen name="at_user_avatar">@dimen/user_avatar</dimen>

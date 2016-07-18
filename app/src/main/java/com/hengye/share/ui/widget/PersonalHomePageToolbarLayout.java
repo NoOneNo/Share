@@ -1,0 +1,260 @@
+package com.hengye.share.ui.widget;
+
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
+import android.view.View;
+import android.view.ViewParent;
+import android.view.WindowManager;
+
+import com.hengye.share.R;
+import com.hengye.share.util.ViewUtil;
+
+/**
+ * Created by yuhy on 16/7/6.
+ */
+public class PersonalHomePageToolbarLayout extends CollapsingToolbarLayout {
+
+    public PersonalHomePageToolbarLayout(Context context) {
+        this(context, null);
+    }
+
+    public PersonalHomePageToolbarLayout(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public PersonalHomePageToolbarLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    private void init() {
+
+        if (isInEditMode()) {
+            return;
+        }
+//        avatarSize = ViewUtil.dp2px(R.dimen.header_personal_avatar);
+        avatarSize = ViewUtil.dp2px(60f);
+//        finalAvatarSize = ViewUtil.dp2px(R.dimen.header_personal_avatar_collapse);
+        finalAvatarSize = ViewUtil.dp2px(35f);
+//        avatarMarginLeft = ViewUtil.dp2px(getResources().getDimension(R.dimen.header_personal_avatar_collapse));
+        avatarFinalMarginLeft = ViewUtil.dp2px(16f);
+
+//        avatarBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_user_avatar);
+    }
+
+    /**
+     * Set whether the content scrim and/or status bar scrim should be shown or not. Any change
+     * in the vertical scroll may overwrite this value. Any visibility change will be animated if
+     * this view has already been laid out.
+     *
+     * @param shown whether the scrims should be shown
+     * @see #getStatusBarScrim()
+     * @see #getContentScrim()
+     */
+    boolean mScrimsShownFlag = true;
+
+    public void setScrimsShown(boolean shown) {
+        super.setScrimsShown(shown);
+        if (mScrimsShownFlag == shown) {
+            return;
+        } else {
+            mScrimsShownFlag = shown;
+        }
+        if (getContext() instanceof Activity) {
+            if (mScrimsShownFlag) {
+                ((Activity) getContext()).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            } else {
+                ((Activity) getContext()).getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            }
+        }
+    }
+
+    AppBarLayout appBarLayout;
+    Toolbar toolbar;
+    View avatar, userInfoLayout;
+    boolean onCoverSet;
+    int mHeight;
+    Matrix avatarMatrix;
+    int maxVerticalOffset;
+    int verticalOffset;
+    Bitmap avatarBitmap;
+
+    private int avatarSize;// 头像尺寸
+    private int finalAvatarSize;// 缩小后的头像尺寸
+    private int avatarMarginLeft;// 头像左侧Margin
+    private int avatarFinalMarginLeft;// 头像缩小后的Margin
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+        // Add an OnOffsetChangedListener if possible
+        final ViewParent parent = getParent();
+        if (parent instanceof AppBarLayout) {
+            ((AppBarLayout) parent).addOnOffsetChangedListener(innerOffsetChangedListener);
+
+//            layDetail = findViewById(R.id.layDetail);
+//            layRealDetail = findViewById(R.id.layRealDetail);
+            toolbar = (Toolbar) findViewById(R.id.toolbar);
+            appBarLayout = (AppBarLayout) parent;
+            avatar = findViewById(R.id.iv_avatar);
+            userInfoLayout = findViewById(R.id.ll_user_info);
+//            collapsingToolbarLayout = this;
+//            imgCover = (ImageView) findViewById(R.id.imgCover);
+//            tabLayout = (TabLayout) appBarLayout.findViewById(R.id.tabLayout);
+//            layName = findViewById(R.id.layName);
+        }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        // Remove our OnOffsetChangedListener if possible and it exists
+        final ViewParent parent = getParent();
+        if (parent instanceof AppBarLayout) {
+            ((AppBarLayout) parent).removeOnOffsetChangedListener(innerOffsetChangedListener);
+        }
+
+        super.onDetachedFromWindow();
+    }
+
+    public void setAvatarBitmap(Bitmap bitmap) {
+        avatarBitmap = bitmap;
+        innerOffsetChangedListener.onOffsetChanged(appBarLayout, verticalOffset);
+        invalidate();
+    }
+
+    private void maybeSetup() {
+        if (appBarLayout == null) {
+            return;
+        }
+
+        // 将Cover的高度重新Measure一次
+//        if (!onCoverSet && appBarLayout.getHeight() > 0) {
+//            onCoverSet = true;
+//
+//            CollapsingToolbarLayout.LayoutParams lp = (CollapsingToolbarLayout.LayoutParams) imgCover.getLayoutParams();
+//            lp.height = layDetail.getHeight() + coverHeight;
+//            imgCover.setLayoutParams(lp);
+//            imgCover.setPadding(imgCover.getPaddingLeft(), imgCover.getPaddingTop(), imgCover.getPaddingRight(), layDetail.getHeight());
+//        }
+
+        if (mHeight != getHeight()) {
+            mHeight = getHeight();
+
+            // 计算Detail的layout_collapseParallaxMultiplier，使其收起来时刚好高度为ToolBar的高度
+//            CollapsingToolbarLayout.LayoutParams params = (CollapsingToolbarLayout.LayoutParams) layDetail.getLayoutParams();
+//            // 最大移动的距离
+//            maxVerticalOffset = appBarLayout.getHeight() - (statusbarHeight + toolbar.getHeight() + tabLayout.getHeight()) - 2;
+            maxVerticalOffset = getHeight() - (ViewUtil.getStatusBarHeight() + toolbar.getHeight());
+//            // 计算移动后的top减去移动前的top就是需要offset，再用offset计算出multiplier
+//            float multiplier = ((maxVerticalOffset + statusbarHeight) -
+//                    (collapsingToolbarLayout.getHeight() - layDetail.getHeight())) * 1.0f / maxVerticalOffset;
+//            if (params.getParallaxMultiplier() != multiplier) {
+//                params.setParallaxMultiplier(multiplier);
+//            }
+
+            avatarMatrix = new Matrix();
+
+//            setNameBitmap();
+        }
+    }
+
+    private AppBarLayout.OnOffsetChangedListener innerOffsetChangedListener = new AppBarLayout.OnOffsetChangedListener() {
+
+        @Override
+        public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+            maybeSetup();
+
+//            if (layNameBitmap == null) {
+//                setNameBitmap();
+//            }
+            if (avatarBitmap == null) {
+                return;
+            }
+
+            PersonalHomePageToolbarLayout.this.verticalOffset = verticalOffset;
+
+            // offset移动的比例
+            float factor = -verticalOffset * 1.0f / maxVerticalOffset;
+
+            if (avatarMatrix != null) {
+                // 从avatarSize变化到finalAvatarSize，是根据这个factor逐渐变化的，计算它的dsize变化值
+                float dsize = (avatarSize - finalAvatarSize) * factor;
+                // 计算现在需要显示的avatar尺寸
+                float avatarToSize = avatarSize - dsize;
+                // 缩放
+                float scale = avatarToSize * 1.0f / avatarBitmap.getWidth();
+                avatarMatrix.setScale(scale, scale);
+
+                // 初始化Top
+//                float startAvatarTop = getHeight() - layDetail.getHeight() - avatarToSize * 3.0f / 4;
+                float startAvatarTop = userInfoLayout.getTop();
+                avatarMarginLeft = avatar.getLeft();
+                // 最终显示的Top
+                float toAvatarTop = maxVerticalOffset + ViewUtil.getStatusBarHeight() + (toolbar.getHeight() - finalAvatarSize) * 1.0f / 2;
+                float avatarTop = startAvatarTop - (startAvatarTop - toAvatarTop) * factor;
+
+                // 初始化MarginLeft
+                float startMargin = avatarMarginLeft;
+                float toMargin = avatarFinalMarginLeft;
+                float margin = startMargin - (startMargin - toMargin) * factor;
+
+                // 平移
+                avatarMatrix.postTranslate(margin, avatarTop);
+            }
+
+//            if (layNameMatrix != null) {
+//                float dsize = (layNameBitmap.getHeight() - finalLayNameSize) * factor;
+//                float nameToSize = layNameBitmap.getHeight() - dsize;
+//                float scale = nameToSize * 1.0f / layNameBitmap.getHeight();
+//                layNameMatrix.setScale(scale, scale);
+//
+//                float startNameTop = getHeight() - layDetail.getHeight() + layNameMarginTop;
+//                float toNameTop = maxVerticalOffset + statusbarHeight + (toolbar.getHeight() - finalLayNameSize) * 1.0f / 2;
+//                float nameTop = startNameTop - (startNameTop - toNameTop) * factor;
+//
+//                float startMargin = avatarMarginLeft;
+//                float toMargin = avatarFinalMarginLeft + finalAvatarSize + layNameMarginLeft;
+//                float margin = startMargin - (startMargin - toMargin) * factor;
+//
+//                layNameMatrix.postTranslate(margin, nameTop);
+//            }
+//
+//            if (layRealDetail != null) {
+//                layRealDetail.setAlpha(1.0f - factor * 0.7f);
+//            }
+        }
+
+    };
+
+    @Override
+    public void draw(Canvas canvas) {
+        super.draw(canvas);
+
+        if (avatarMatrix != null && avatarBitmap != null) {
+            final int saveCount = canvas.save();
+
+//            if (!isScrimsShown()) {
+//                mTempRect.set(0, -verticalOffset, getWidth(), statusbarHeight + -verticalOffset);
+//                mInsetForeground.setBounds(mTempRect);
+//                mInsetForeground.draw(canvas);
+//            }
+//
+//            if (layNameBitmap != null) {
+//                canvas.drawBitmap(layNameBitmap, layNameMatrix, null);
+//            }
+
+            canvas.drawBitmap(avatarBitmap, avatarMatrix, null);
+
+            canvas.restoreToCount(saveCount);
+        }
+    }
+
+}

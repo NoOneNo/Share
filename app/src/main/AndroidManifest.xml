@@ -47,7 +47,9 @@
         </activity>
 
         <activity
-            android:name="com.hengye.share.ui.activity.TopicActivity"/>
+            android:name="com.hengye.share.ui.activity.TopicActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.Main"/>
 
         <activity
             android:name="com.hengye.share.ui.activity.LoginActivity"

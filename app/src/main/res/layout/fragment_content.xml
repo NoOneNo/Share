@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--<include layout="@layout/tool_bar" />-->
+
+    <!--<ImageView-->
+        <!--android:id="@+id/loading"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:scaleType="center"-->
+        <!--android:src="@drawable/loading_share"-->
+        <!--android:visibility="visible"-->
+        <!--tools:visibility="gone" />-->
+
+    <!--<include-->
+        <!--android:id="@+id/empty"-->
+        <!--layout="@layout/widget_empty" />-->
+
+    <!--<include-->
+        <!--android:id="@+id/no_network"-->
+        <!--layout="@layout/widget_no_network" />-->
+
+
+    <!--<FrameLayout-->
+        <!--android:id="@+id/content"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent" />-->
+</LinearLayout>

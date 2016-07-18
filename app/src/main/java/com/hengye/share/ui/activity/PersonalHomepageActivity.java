@@ -4,13 +4,14 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.MotionEventCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -30,10 +31,12 @@ import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.ui.base.BaseActivity;
+import com.hengye.share.ui.fragment.PersonalHomepageFragment;
 import com.hengye.share.ui.fragment.TopicFragment;
 import com.hengye.share.ui.mvpview.UserMvpView;
 import com.hengye.share.ui.presenter.TopicPresenter;
 import com.hengye.share.ui.presenter.UserPresenter;
+import com.hengye.share.ui.widget.PersonalHomePageToolbarLayout;
 import com.hengye.share.ui.widget.fab.CheckableFab;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
@@ -108,12 +111,13 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 
     private TextView mDivision, mAttention, mFans, mSign;
     private NetworkImageViewPlus mCover, mAvatar;
-    private CollapsingToolbarLayout mCollapsingToolbarLayout;
+    private PersonalHomePageToolbarLayout mCollapsingToolbarLayout;
     private SwipeRefreshLayout mSwipeRefresh;
     private AppBarLayout mAppBarLayout;
     private CoordinatorLayout mCoordinatorLayout;
-//    private FloatingActionButton mFollowButton;
+    //    private FloatingActionButton mFollowButton;
     private CheckableFab mFollowButton;
+    private TabLayout mTab;
 
     private UserInfo mUserInfo;
     private WBUserInfo mWBUserInfo;
@@ -137,7 +141,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         mFollowButton = (CheckableFab) findViewById(R.id.fab);
         mFollowButton.setOnClickListener(this);
         mCollapsingToolbarLayout =
-                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+                (PersonalHomePageToolbarLayout) findViewById(R.id.collapsing_toolbar);
 
         mCover = (NetworkImageViewPlus) findViewById(R.id.iv_cover);
         mCover.setFadeInImage(false);
@@ -163,6 +167,12 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         });
         mAvatar = (NetworkImageViewPlus) findViewById(R.id.iv_avatar);
         mAvatar.setTransitionName(getString(R.string.transition_name_avatar));
+        mAvatar.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                setUpAvatarToToolbar();
+            }
+        });
 
         mDivision = (TextView) findViewById(R.id.tv_division);
         mAttention = (TextView) findViewById(R.id.tv_attention);
@@ -176,6 +186,11 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                 mPresenter.loadWBUserInfo(mUserInfo.getUid(), mUserInfo.getName());
             }
         }
+
+        mTab = (TabLayout) findViewById(R.id.tab);
+        mTab.addTab(mTab.newTab().setText("关于"), false);
+        mTab.addTab(mTab.newTab().setText("微博"), true);
+        mTab.addTab(mTab.newTab().setText("相册"), false);
 
         mSwipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
 
@@ -196,14 +211,14 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 
                         mIsBeingDragged = false;
 
-                        final ViewGroup.LayoutParams lp = mAppBarLayout.getLayoutParams();
-                        mAnimateToCorrectHeight = ValueAnimator.ofInt(lp.height, mAppBarHeight);
+                        final ViewGroup.LayoutParams lp = mCollapsingToolbarLayout.getLayoutParams();
+                        mAnimateToCorrectHeight = ValueAnimator.ofInt(lp.height, mToolBarHeight);
                         mAnimateToCorrectHeight.setDuration(200);
                         mAnimateToCorrectHeight.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                             @Override
                             public void onAnimationUpdate(ValueAnimator animation) {
                                 lp.height = (int) animation.getAnimatedValue();
-                                mAppBarLayout.requestLayout();
+                                mCollapsingToolbarLayout.requestLayout();
                             }
                         });
                         mAnimateToCorrectHeight.start();
@@ -216,7 +231,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                                 mAnimateToCorrectHeight.pause();
                             }
                             mInitialDownY = event.getRawY();
-                            mAppBarHeight = mAppBarLayout.getLayoutParams().height;
+                            mToolBarHeight = mCollapsingToolbarLayout.getLayoutParams().height;
 
                             break;
                         }
@@ -225,17 +240,17 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                         int distance = (int) (DRAG_RATE * (currentY - mInitialDownY));
 
                         if (distance > 0) {
-                            ViewGroup.LayoutParams lp_ = mAppBarLayout.getLayoutParams();
-                            int height = mAppBarHeight + distance;
-                            if (height > getAppBarMaxHeight()) {
-                                if (lp_.height == getAppBarMaxHeight()) {
+                            ViewGroup.LayoutParams lp_ = mCollapsingToolbarLayout.getLayoutParams();
+                            int height = mToolBarHeight + distance;
+                            if (height > getToolBarMaxHeight()) {
+                                if (lp_.height == getToolBarMaxHeight()) {
                                     //如果已经到达高度的最大值
                                     break;
                                 }
-                                height = getAppBarMaxHeight();
+                                height = getToolBarMaxHeight();
                             }
                             lp_.height = height;
-                            mAppBarLayout.requestLayout();
+                            mCollapsingToolbarLayout.requestLayout();
 
                         }
 
@@ -247,6 +262,21 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 
     }
 
+    private void setUpAvatarToToolbar(){
+        if (mAvatar.getDrawable() == null || !(mAvatar.getDrawable() instanceof BitmapDrawable)) {
+            return;
+        }
+        BitmapDrawable bd = (BitmapDrawable) mAvatar.getDrawable();
+        final Bitmap bitmap = bd.getBitmap();
+        getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mCollapsingToolbarLayout.setAvatarBitmap(bitmap);
+                mAvatar.setVisibility(View.INVISIBLE);
+            }
+        }, 350);
+    }
+
     private void startCoverShowAnimation() {
 
         final Animator coverShowAnimator = ViewAnimationUtils.createCircularReveal(mAppBarLayout,
@@ -255,41 +285,20 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                 0,
                 (float) Math.hypot(mAppBarLayout.getWidth(), mAppBarLayout.getWidth()));
         coverShowAnimator.setInterpolator(new FastOutLinearInInterpolator());
-        coverShowAnimator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-//                startPostponedEnterTransition();
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-
         coverShowAnimator.setDuration(500);
         coverShowAnimator.start();
     }
 
-    private int getAppBarMaxHeight() {
-        if (mAppBarMaxHeight == 0) {
-            mAppBarMaxHeight = (int) (mAppBarHeight * MAX_APP_BAR_HEIGHT_RATE);
+    private int getToolBarMaxHeight() {
+        if (mToolBarMaxHeight == 0) {
+            mToolBarMaxHeight = (int) (mToolBarHeight * MAX_APP_BAR_HEIGHT_RATE);
         }
-        return mAppBarMaxHeight;
+        return mToolBarMaxHeight;
     }
 
     private static final float MAX_APP_BAR_HEIGHT_RATE = 1.5f;
     private static final float DRAG_RATE = .5f;
-    private int mAppBarHeight, mAppBarMaxHeight;
+    private int mToolBarHeight, mToolBarMaxHeight;
     private float mInitialDownY;
     private boolean mIsBeingDragged;
     private ValueAnimator mAnimateToCorrectHeight;
@@ -321,20 +330,21 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         mAppBarLayout.removeOnOffsetChangedListener(this);
     }
 
-    TopicFragment mTopicFragment;
+//    TopicFragment mTopicFragment;
+    PersonalHomepageFragment mFragment;
 
-    private void setupTopicFragment() {
+    private void setupTopicFragment(WBUserInfo wbUserInfo) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content, mTopicFragment = TopicFragment.newInstance(TopicPresenter.TopicType.HOMEPAGE, mUserInfo.getUid(), mUserInfo.getName()))
+                .replace(R.id.content, mFragment = PersonalHomepageFragment.newInstance(wbUserInfo))
                 .commit();
 
-        mTopicFragment.setLoadDataCallBack(new TopicFragment.LoadDataCallBack() {
+        mFragment.setCallBack(new TopicFragment.LoadDataCallBack() {
             @Override
             public void initView() {
-                RecyclerView recyclerView = (RecyclerView) mTopicFragment.findViewById(R.id.recycler_view);
+                RecyclerView recyclerView = (RecyclerView) mFragment.getTopicFragment().findViewById(R.id.recycler_view);
 //                recyclerView.setNestedScrollingEnabled(false);
-                final PullToRefreshLayout pullToRefresh = (PullToRefreshLayout) mTopicFragment.findViewById(R.id.pull_to_refresh);
+                final PullToRefreshLayout pullToRefresh = (PullToRefreshLayout) mFragment.getTopicFragment().findViewById(R.id.pull_to_refresh);
                 pullToRefresh.setRefreshEnable(false);
                 mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
@@ -363,11 +373,13 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         mCover.setAutoClipBitmap(false);
         mCover.setImageUrl(wbUserInfo.getCover_image_phone(), RequestManager.getImageLoader());
         mAvatar.setImageUrl(wbUserInfo.getAvatar_large(), RequestManager.getImageLoader());
-
+//        mAvatar.setDefaultImageResId(R.drawable.ic_user_avatar);
         mDivision.setVisibility(View.VISIBLE);
         mAttention.setText(String.format(getString(R.string.label_attention), wbUserInfo.getFriends_count()));
         mFans.setText(String.format(getString(R.string.label_fans), wbUserInfo.getFollowers_count()));
         mSign.setText(wbUserInfo.getDescription());
+        mFollowButton.setChecked(mWBUserInfo.isFollowing());
+        mFollowButton.setVisibility(View.VISIBLE);
     }
 
     private boolean loadData() {
@@ -377,7 +389,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         if (mUserInfo.getParent().isWeiBo()) {
             L.debug("userInfo : {}", mUserInfo.getParent().getJson());
             if (!TextUtils.isEmpty(mUserInfo.getUid()) || !TextUtils.isEmpty(mUserInfo.getName())) {
-                setupTopicFragment();
+                setupTopicFragment(mUserInfo.getWBUserInfoFromParent());
 //                SwipeRefreshLayout
 //                PullToRefreshLayout pullToRefreshLayout = (PullToRefreshLayout) mTopicFragment.findViewById(R.id.pull_to_refresh);
 //                pullToRefreshLayout.setRefreshEnable(false);

@@ -2,10 +2,14 @@ package com.hengye.share.ui.fragment;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicAdapter;
@@ -63,9 +67,9 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
     }
 
     @Override
-    protected void onCreateView() {
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-        setupPresenter(mPresenter = new TopicPresenter(this, topicGroup));
+        addPresenter(mPresenter = new TopicPresenter(this, topicGroup));
         mPresenter.setUid(uid);
         mPresenter.setName(name);
 

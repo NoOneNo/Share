@@ -9,6 +9,9 @@ import android.view.View;
 import com.hengye.share.ui.activity.web.WebViewActivity;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.R;
+import com.hengye.share.ui.fragment.TestContentFragment;
+import com.hengye.share.ui.fragment.TestTabLayoutFragment;
+import com.hengye.share.ui.fragment.encapsulation.ContentFragment;
 import com.hengye.share.ui.widget.dialog.ListDialog;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
 import com.hengye.share.ui.widget.loading.FramesLoadingView;
@@ -88,7 +91,8 @@ public class TestActivity extends BaseActivity implements View.OnClickListener{
         }else if(v.getId() == R.id.btn_test5) {
             mListDialog.show();
         }else if(v.getId() == R.id.btn_test6) {
-            startActivity(WebViewActivity.getStartIntent(this, "http://www.baidu.com"));
+            startActivity(FragmentActivity.getStartIntent(this, TestTabLayoutFragment.class));
+//            startActivity(WebViewActivity.getStartIntent(this, "http://www.baidu.com"));
         }else if(v.getId() == R.id.btn_test7) {
             startActivity(SetTokenActivity.class);
         }
