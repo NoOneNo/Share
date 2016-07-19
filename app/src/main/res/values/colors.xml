@@ -35,6 +35,16 @@
     <color name="grey_100">#fff5f5f5</color>
     <color name="grey_50">#fffafafa</color>
 
+    <!--<dimen name="spacing_nano">2dp</dimen>-->
+    <!--<dimen name="spacing_micro">4dp</dimen>-->
+    <!--<dimen name="spacing_normal">8dp</dimen>-->
+    <!--<dimen name="spacing_double">16dp</dimen>-->
+    <!--<dimen name="spacing_huge">72dp</dimen>-->
+
+    <color name="text_light">@android:color/white</color>
+    <color name="text_grey">#757575</color>
+    <color name="text_dark">#424242</color>
+
     <color name="ripple_dark">#42ffffff</color>
     <color name="ripple_light">#1f000000</color>
 

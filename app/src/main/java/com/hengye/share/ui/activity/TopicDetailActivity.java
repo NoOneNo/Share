@@ -27,6 +27,7 @@ import com.hengye.share.ui.mvpview.TopicDetailMvpView;
 import com.hengye.share.ui.presenter.TopicDetailPresenter;
 import com.hengye.share.ui.view.BackTopButton;
 import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
@@ -287,7 +288,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 
         String str = String.format
                 (getString(isComment ? R.string.label_topic_comment_number : R.string.label_topic_repost_number)
-                        , totalNumber);
+                        , DataUtil.getCounter(totalNumber));
         if(tab != null && tabAssist != null){
             tab.setText(str);
             tabAssist.setText(str);

@@ -1,17 +1,15 @@
 package com.hengye.share.ui.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import com.hengye.share.R;
 import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.ui.fragment.encapsulation.TabLayoutFragment;
-import com.hengye.share.ui.fragment.encapsulation.TabsFragment;
 import com.hengye.share.ui.presenter.TopicPresenter;
+import com.hengye.share.util.DataUtil;
+import com.hengye.share.util.ResUtil;
 
 import java.util.ArrayList;
 
@@ -48,9 +46,9 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
     @Override
     protected ArrayList<TabItem> generateTabs() {
         ArrayList<TabItem> tabItems = new ArrayList<>();
-        TabItem tabItem1 = new TabItem(1, "关于");
-        TabItem tabItem2 = new TabItem(2, "微博");
-        TabItem tabItem3 = new TabItem(3, "相册");
+        TabItem tabItem1 = new TabItem(1, ResUtil.getString(R.string.label_tab_about));
+        TabItem tabItem2 = new TabItem(2, ResUtil.getString(R.string.label_tab_topic, DataUtil.getCounter(mWbUserInfo.getStatuses_count())));
+        TabItem tabItem3 = new TabItem(3, ResUtil.getString(R.string.label_tab_album));
 
         tabItems.add(tabItem1);
         tabItems.add(tabItem2);
@@ -66,7 +64,7 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
         Fragment fragment;
         switch (tabItem.getType()){
             case 1:
-                fragment = new TestContentFragment();
+                fragment = PersonalHomepageAboutFragment.newInstance(mWbUserInfo);
                 break;
             case 2:
                 fragment = getTopicFragment();

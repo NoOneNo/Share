@@ -11,6 +11,10 @@ import java.util.Map;
 
 public class CommonUtil {
 
+    public static boolean noEmpty(String... strings) {
+        return !hasEmpty(strings);
+    }
+
     public static boolean hasEmpty(String... strings) {
         for (String str : strings) {
             if (isEmpty(str)) {

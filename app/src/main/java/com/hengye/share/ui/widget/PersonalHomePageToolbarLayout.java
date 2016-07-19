@@ -39,12 +39,9 @@ public class PersonalHomePageToolbarLayout extends CollapsingToolbarLayout {
         if (isInEditMode()) {
             return;
         }
-//        avatarSize = ViewUtil.dp2px(R.dimen.header_personal_avatar);
-        avatarSize = ViewUtil.dp2px(60f);
-//        finalAvatarSize = ViewUtil.dp2px(R.dimen.header_personal_avatar_collapse);
-        finalAvatarSize = ViewUtil.dp2px(35f);
-//        avatarMarginLeft = ViewUtil.dp2px(getResources().getDimension(R.dimen.header_personal_avatar_collapse));
-        avatarFinalMarginLeft = ViewUtil.dp2px(16f);
+        avatarSize = ViewUtil.dp2px(R.dimen.header_personal_expanded_avatar);
+        finalAvatarSize = ViewUtil.dp2px(R.dimen.header_personal_collapsed_avatar);
+        avatarFinalMarginLeft = ViewUtil.dp2px(R.dimen.spacing_double);
 
 //        avatarBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_user_avatar);
     }
@@ -105,7 +102,7 @@ public class PersonalHomePageToolbarLayout extends CollapsingToolbarLayout {
             toolbar = (Toolbar) findViewById(R.id.toolbar);
             appBarLayout = (AppBarLayout) parent;
             avatar = findViewById(R.id.iv_avatar);
-            userInfoLayout = findViewById(R.id.ll_user_info);
+            userInfoLayout = findViewById(R.id.fl_user_info);
 //            collapsingToolbarLayout = this;
 //            imgCover = (ImageView) findViewById(R.id.imgCover);
 //            tabLayout = (TabLayout) appBarLayout.findViewById(R.id.tabLayout);

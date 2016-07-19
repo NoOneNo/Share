@@ -26,7 +26,7 @@
         android:layout_marginStart="@dimen/content_margin_10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/font_normal"
+        android:textSize="@dimen/text_small"
         android:textColor="@color/grey_850"
         android:lines="1"
         tools:text="特别关注"/>
@@ -38,7 +38,7 @@
         android:layout_marginEnd="@dimen/content_margin_10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/font_small"
+        android:textSize="@dimen/text_micro"
         android:textColor="@color/grey_600"
         android:lines="1"
         tools:text="5人"/>

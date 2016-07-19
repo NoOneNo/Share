@@ -81,7 +81,7 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setCustomThemeIfNeeded(savedInstanceState);
         super.onCreate(savedInstanceState);
-        handleBundleExtra();
+        handleBundleExtra(getIntent());
         setupActivityHelper();
 
         if (mSwipeHelper != null) {
@@ -222,7 +222,7 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    protected void handleBundleExtra() {
+    protected void handleBundleExtra(Intent intent) {
 
     }
 

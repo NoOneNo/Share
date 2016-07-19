@@ -33,6 +33,8 @@ public class MyDaoGenerator {
         entity.addStringProperty("gender");
         entity.addStringProperty("sign");
         entity.addStringProperty("cover");
+        entity.addStringProperty("account");
+        entity.addStringProperty("password");
     }
 
 

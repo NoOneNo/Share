@@ -1,6 +1,7 @@
 package com.hengye.share.util;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.text.Spannable;
@@ -25,6 +26,7 @@ import com.hengye.share.ui.support.textspan.TopicHttpUrlSpan;
 import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -151,6 +153,19 @@ public class DataUtil {
         }
     }
 
+    public static String getCounter(long count, String append) {
+        if (count < 10000) {
+            return String.valueOf(count) + append;
+        }else if (count < 100 * 10000) {
+            return new DecimalFormat("#.0").format(count * 1.0f / 10000) + append + ResUtil.getString(R.string.unit_ten_thousand);
+        }else {
+            return new DecimalFormat("#").format(count * 1.0f / 10000) + append + ResUtil.getString(R.string.unit_ten_thousand);
+        }
+    }
+
+    public static String getCounter(long count) {
+        return getCounter(count, "");
+    }
 
     public static final Pattern WEB_URL = Pattern
             .compile("http://[a-zA-Z0-9+&@#/%?=~_\\-|!:,\\.;]*[a-zA-Z0-9+&@#/%=~_|]");

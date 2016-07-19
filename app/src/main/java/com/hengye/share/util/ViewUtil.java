@@ -17,7 +17,7 @@ import com.hengye.share.ui.base.BaseApplication;
 
 import java.lang.reflect.Field;
 
-public class ViewUtil extends ApplicationUtil {
+public class ViewUtil extends ResUtil {
 
 //    public static Bitmap mDrawingCacheBitmap;
 //    public static Bitmap getDrawingCacheBitmap(){
@@ -28,7 +28,7 @@ public class ViewUtil extends ApplicationUtil {
 //    }
 
     public static int dp2px(@DimenRes int dpResId) {
-        return dp2px(getContext().getResources().getDimension(dpResId));
+        return dp2px(getDimenFloatValue(dpResId));
     }
 
     public static int dp2px(float dpValue) {
@@ -41,8 +41,14 @@ public class ViewUtil extends ApplicationUtil {
         return (int)((double)((float)pxValue / reSize) + 0.5D);
     }
 
-    public static float sp2px(int spValue) {
-        return TypedValue.applyDimension(2, (float)spValue, getContext().getResources().getDisplayMetrics());
+    public static int sp2px(@DimenRes int spResId) {
+        return sp2px(getDimenFloatValue(spResId));
+    }
+
+    public static int sp2px(float spValue) {
+        float reSize = getContext().getResources().getDisplayMetrics().scaledDensity;
+        return (int)((double)(spValue * reSize) + 0.5D);
+//        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, spValue, getContext().getResources().getDisplayMetrics());
     }
 
     public static String getCacheKey(String url, int maxWidth, int maxHeight, ImageView.ScaleType scaleType) {

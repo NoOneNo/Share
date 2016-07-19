@@ -9,4 +9,8 @@ public class ApplicationUtil {
     protected static Application getContext(){
         return BaseApplication.getInstance();
     }
+
+    protected static Resources getResources(){
+        return getContext().getResources();
+    }
 }

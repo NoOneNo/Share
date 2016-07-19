@@ -1,10 +1,10 @@
 package com.hengye.share.ui.activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
+import android.view.View;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -12,23 +12,26 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.hengye.share.R;
-import com.hengye.share.model.sina.WBTopicComments;
 import com.hengye.share.ui.base.BaseActivity;
-import com.hengye.share.ui.mvpview.MvpView;
-import com.hengye.share.ui.presenter.BasePresenter;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
 import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.FileUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.Utility;
 import com.hengye.share.util.retrofit.RetrofitManager;
 import com.hengye.share.util.thirdparty.ThirdPartyUtils;
-import com.sina.weibo.sdk.auth.WeiboParameters;
+import com.hengye.share.util.thirdparty.ThirdPartyUtils.WeiboApp;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -38,11 +41,35 @@ import rx.schedulers.Schedulers;
  */
 public class WeiboWebLoginActivity extends BaseActivity {
 
+    LoadingDialog mLoadingDialog;
+    WebView mWebView;
+    WeiboApp mApp;
+    String mAccount, mPassword;
+    boolean mHasAutoFillAccount = false;
+
+    //    public static final String URL_OAUTH2_ACCESS_AUTHORIZE = "https://open.weibo.cn/oauth2/authorize";
+    public static final String URL_OAUTH2_ACCESS_AUTHORIZE = "https://api.weibo.com/oauth2/authorize";
+
+
     @Override
     protected int getLayoutResId() {
         return R.layout.activity_weibo_web_login;
     }
 
+    @Override
+    protected void handleBundleExtra(Intent intent) {
+        super.handleBundleExtra(intent);
+        String appKey = intent.getStringExtra("appKey");
+        if (appKey != null) {
+            mApp = WeiboApp.valueOf(appKey);
+        } else {
+            mApp = WeiboApp.SHARE;
+        }
+        mAccount = intent.getStringExtra("account");
+        mPassword = intent.getStringExtra("password");
+    }
+
+    @SuppressWarnings("deprecation")
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
         super.afterCreate(savedInstanceState);
@@ -52,78 +79,136 @@ public class WeiboWebLoginActivity extends BaseActivity {
         mWebView = (WebView) findViewById(R.id.web_view);
 
         mWebView.setWebViewClient(new WeiboWebViewClient());
-
+        mWebView.setWebChromeClient(new WeiboWebChromeClient());
         WebSettings settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
-        settings.setSaveFormData(false);
-        settings.setSavePassword(false);
-        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-        settings.setRenderPriority(WebSettings.RenderPriority.HIGH);
+        settings.setDomStorageEnabled(true);
+        settings.setAppCacheEnabled(true);
+        settings.setDefaultTextEncodingName("utf-8");
+        mWebView.addJavascriptInterface(new LoginJavaScriptInterface(), "loginjs");
 
-        CookieSyncManager.createInstance(this);
-        CookieManager cookieManager = CookieManager.getInstance();
-        cookieManager.removeAllCookie();
-
-        mWebView.loadUrl(getWeiboOAuthUrl());
+        loadData();
+        mWebView.loadUrl(getOAuthUrl());
     }
 
-    LoadingDialog mLoadingDialog;
-    WebView mWebView;
+    private void loadData() {
+        Observable
+                .create(new Observable.OnSubscribe<String>() {
+                    @Override
+                    public void call(Subscriber<? super String> subscriber) {
+                        String url = getEncapsulationLoginUrl();
+                        if(url == null){
+                            subscriber.onError(new Throwable("get encapsulation login url fail"));
+                        }else{
+                            subscriber.onNext(url);
+                        }
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<String>() {
+                    @Override
+                    public void onCompleted() {
 
-    public static final String DIRECT_URL = "https://api.weibo.com/oauth2/default.html";
+                    }
 
-//    public static final String URL_OAUTH2_ACCESS_AUTHORIZE = "https://open.weibo.cn/oauth2/authorize";
-    public static final String URL_OAUTH2_ACCESS_AUTHORIZE = "https://api.weibo.com/oauth2/authorize";
+                    @Override
+                    public void onError(Throwable e) {
+                        ToastUtil.showToast(R.string.tip_error);
+                    }
 
-    private String getWeiboOAuthUrl() {
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put("client_id", ThirdPartyUtils.getAppKeyForWeibo());
-//        parameters.put("response_type", "token");
-        parameters.put("redirect_uri", DIRECT_URL);
-        parameters.put("display", "mobile");
-        return URL_OAUTH2_ACCESS_AUTHORIZE + "?" + Utility.encodeUrl(parameters);
-//                + "&scope=friendships_groups_read,friendships_groups_write";
+                    @Override
+                    public void onNext(String s) {
+                        mWebView.loadDataWithBaseURL("https://api.weibo.com", s, "text/html", "UTF-8", "");
+                    }
+                });
+    }
+
+    final class LoginJavaScriptInterface {
+
+        public LoginJavaScriptInterface() {
+        }
+
+        @JavascriptInterface
+        public void setAccount(String account, String password) {
+            mAccount = account;
+            mPassword = password;
+        }
+
     }
 
     private class WeiboWebViewClient extends WebViewClient {
 
         @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-//            view.loadUrl(url);
-            return super.shouldOverrideUrlLoading(view, url);
+        public boolean shouldOverrideUrlLoading(WebView view, final String url) {
+            L.debug("load url = %s", view.getUrl());
+            // 授权成功
+            if (url != null && url.startsWith(ThirdPartyUtils.getWeiboRedirectUrl(mApp))) {
+                handleRedirectUrl(url);
+                // 把WebView隐藏，因为重定向页面可能是个错误的页面
+                mWebView.setVisibility(View.INVISIBLE);
+                return false;
+            }
+            return true;
         }
 
-        @Override
-        public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            if (url.startsWith(DIRECT_URL)) {
-                handleRedirectUrl(view, url);
-                view.stopLoading();
-                return;
-            }
-            super.onPageStarted(view, url, favicon);
-        }
+//        @Override
+//        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+//            if (url.startsWith(DIRECT_URL)) {
+//                handleRedirectUrl(view, url);
+//                view.stopLoading();
+//                return;
+//            }
+//            super.onPageStarted(view, url, favicon);
+//        }
 
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
             super.onReceivedError(view, request, error);
             ToastUtil.showToast("出现错误");
-//            new SinaWeiboErrorDialog().show(getSupportFragmentManager(), "");
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-//            if (!url.equals("about:blank")) {
-//            }
         }
     }
 
-    private void handleRedirectUrl(WebView view, String url) {
+    private class WeiboWebChromeClient extends WebChromeClient {
+        @Override
+        public void onProgressChanged(WebView view, int newProgress) {
+            super.onProgressChanged(view, newProgress);
+            if (newProgress < 100) {
+//                mProgressBar.setVisibility(View.VISIBLE);
+//                mProgressBar.setProgress(newProgress);
+
+                L.debug("progress = %d , url = %s", newProgress, view.getUrl());
+            } else if (newProgress == 100) {
+//                mProgressBar.setVisibility(View.GONE);
+
+                L.debug("progress = 100 , url = %s", view.getUrl());
+
+                // 填充账号
+                if (CommonUtil.noEmpty(mAccount, mPassword, view.getUrl())) {
+                    if (!mHasAutoFillAccount && view.getUrl().equalsIgnoreCase("about:blank")) {
+                        L.debug("fillAccount(%s, %s)", mAccount, mPassword);
+                        mWebView.loadUrl("javascript:fillAccount()");
+                        mHasAutoFillAccount = true;
+                    }
+                }
+            }
+            super.onProgressChanged(view, newProgress);
+        }
+    }
+
+    private void handleRedirectUrl(String url) {
         Bundle values = Utility.parseUrl(url);
         String error = values.getString("error");
         String error_code = values.getString("error_code");
         String code = values.getString("code");
 
         if (error == null && error_code == null && code != null) {
+            L.debug("授权成功, code = " + code);
+
             mLoadingDialog.show();
 
 //            client_id=2403130832&
@@ -132,17 +217,17 @@ public class WeiboWebLoginActivity extends BaseActivity {
 //                    code=d1a089df9eb52c695aab5fea4af6ac3d
 //                    &redirect_uri=https://api.weibo.com/oauth2/default.html
             UrlBuilder ub = new UrlBuilder();
-            ub.addParameter("client_id", ThirdPartyUtils.getAppKeyForWeibo());
-            ub.addParameter("client_secret", ThirdPartyUtils.getAppSecretForWeibo());
+            ub.addParameter("client_id", ThirdPartyUtils.getAppKeyForWeibo(mApp));
+            ub.addParameter("client_secret", ThirdPartyUtils.getAppSecretForWeibo(mApp));
             ub.addParameter("grant_type", "authorization_code");
-            ub.addParameter("redirect_uri", DIRECT_URL);
+            ub.addParameter("redirect_uri", ThirdPartyUtils.getWeiboRedirectUrl(mApp));
             ub.addParameter("code", code);
             RetrofitManager
                     .getWBService()
                     .oauthToken(ub.getParameters())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Subscriber<HashMap<String, String>>(){
+                    .subscribe(new Subscriber<HashMap<String, String>>() {
                         @Override
                         public void onCompleted() {
 
@@ -158,11 +243,13 @@ public class WeiboWebLoginActivity extends BaseActivity {
                         @Override
                         public void onNext(HashMap<String, String> map) {
                             mLoadingDialog.dismiss();
-                            if(!CommonUtil.isEmpty(map)){
+                            if (!CommonUtil.isEmpty(map)) {
                                 Bundle bundle = new Bundle();
-                                for(Map.Entry<String, String> entry : map.entrySet()){
+                                for (Map.Entry<String, String> entry : map.entrySet()) {
                                     bundle.putString(entry.getKey(), entry.getValue());
                                 }
+                                bundle.putString("account", mAccount);
+                                bundle.putString("password", mPassword);
                                 Intent intent = new Intent();
                                 intent.putExtras(bundle);
                                 setResult(RESULT_OK, intent);
@@ -177,6 +264,19 @@ public class WeiboWebLoginActivity extends BaseActivity {
         }
     }
 
+    private String getOAuthUrl() {
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("client_id", ThirdPartyUtils.getAppKeyForWeibo(mApp));
+//        parameters.put("response_type", "token");
+        parameters.put("redirect_uri", ThirdPartyUtils.getWeiboRedirectUrl(mApp));
+        parameters.put("display", "mobile");
+        if (mApp == WeiboApp.WEICO) {
+            parameters.put("forcelogin", "true");
+        }
+        return URL_OAUTH2_ACCESS_AUTHORIZE + "?" + Utility.encodeUrl(parameters);
+//                + "&scope=friendships_groups_read,friendships_groups_write";
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -186,5 +286,48 @@ public class WeiboWebLoginActivity extends BaseActivity {
             ToastUtil.showToast(R.string.label_cancel_authorize);
             finish();
         }
+    }
+
+    private String getEncapsulationLoginUrl(){
+        int count = 3;
+        while (count-- >= 0) {
+            try {
+                String js = FileUtil.readAssetsFile("oauth.js");
+                js = js.replace("%username%", mAccount).replace("%password%", mPassword);
+
+                Document dom = Jsoup.connect(getOAuthUrl()).get();
+                String html = dom.toString();
+                html = html.replace("<html>", "<html id='all' >").replace("</head>", js + "</head>")
+                        .replace("action-type=\"submit\"", "action-type=\"submit\" id=\"submit\"");
+
+                // 通过监听input标签的oninput事件，来获取账户密码
+                // onchange是value改变，且焦点改变才触发
+                // oninput是value改变就触发
+                try {
+                    dom = Jsoup.parse(html);
+                    Element inputAccount = dom.select("input#userId").first();
+                    inputAccount.attr("oninput", "getAccount()");
+
+                    Element pwdAccount = dom.select("input#passwd").first();
+                    pwdAccount.attr("oninput", "getAccount()");
+
+                    L.debug(inputAccount.toString());
+                    L.debug(pwdAccount.toString());
+
+                    html = dom.toString();
+
+                    L.debug("添加input监听事件");
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                }
+
+                L.debug("封装后的url : \n{}",html);
+
+                return html;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }

@@ -72,9 +72,9 @@ public class SearchActivity extends BaseActivity implements SearchMvpView{
     private String mKeywords;
 
     @Override
-    protected void handleBundleExtra() {
-        super.handleBundleExtra();
-        mKeywords = getIntent().getStringExtra("keywords");
+    protected void handleBundleExtra(Intent intent) {
+        super.handleBundleExtra(intent);
+        mKeywords = intent.getStringExtra("keywords");
     }
 
     @Override

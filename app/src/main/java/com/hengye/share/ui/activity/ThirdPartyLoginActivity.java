@@ -109,7 +109,7 @@ public class ThirdPartyLoginActivity extends BaseActivity implements UserMvpView
             super.onComplete(values);
             if (mAccessToken != null && mAccessToken.isSessionValid()) {
                 mLoadingDialog.show();
-                UserUtil.updateUser(mAccessToken);
+                UserUtil.updateUser(mAccessToken, values.getString("account"), values.getString("password"));
                 mPresenter.loadWBUserInfo(mAccessToken.getUid(), null);
             } else {
                 finish();

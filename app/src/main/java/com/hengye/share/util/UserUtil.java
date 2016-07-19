@@ -100,6 +100,10 @@ public class UserUtil {
     }
 
     public static void updateUser(Oauth2AccessToken accessToken) {
+        updateUser(accessToken, null, null);
+    }
+
+    public static void updateUser(Oauth2AccessToken accessToken, String account, String password) {
         User user;
         UserDao ud = GreenDaoManager.getDaoSession().getUserDao();
         List<User> users = ud
@@ -110,17 +114,25 @@ public class UserUtil {
 //        List<User> users = ud.queryRaw("where UID = ? and PARENT_TYPE = ?", accessToken.getUid(), Parent.TYPE_WEIBO + "");
         if (CommonUtil.isEmpty(users)) {
             user = new User();
+            user.setParentType(Parent.TYPE_WEIBO);
             user.setUid(accessToken.getUid());
             user.setToken(accessToken.getToken());
             user.setRefreshToken(accessToken.getRefreshToken());
             user.setExpiresIn(accessToken.getExpiresTime());
-            user.setParentType(Parent.TYPE_WEIBO);
+            if(CommonUtil.noEmpty(account, password)){
+                user.setAccount(account);
+                user.setPassword(password);
+            }
             ud.insert(user);
         } else {
             user = users.get(0);
             user.setToken(accessToken.getToken());
             user.setRefreshToken(accessToken.getRefreshToken());
             user.setExpiresIn(accessToken.getExpiresTime());
+            if(CommonUtil.noEmpty(account, password)){
+                user.setAccount(account);
+                user.setPassword(password);
+            }
             ud.update(user);
         }
 

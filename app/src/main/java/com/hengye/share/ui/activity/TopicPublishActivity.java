@@ -65,6 +65,10 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         return intent;
     }
 
+    public static Intent getAtTaStartIntent(Context context, String name) {
+        return getStartIntent(context, "@" + name + " ");
+    }
+
     private TopicDraft mTopicDraft;
     private String mTopicDraftContent;
     private final static int DEFAULT_TYPE = TopicDraftHelper.PUBLISH_TOPIC;

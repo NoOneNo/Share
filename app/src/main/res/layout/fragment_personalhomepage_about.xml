@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end">
+
+            <Button
+                android:id="@+id/btn_at_ta"
+                style="?android:buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_at_ta" />
+
+            <Button
+                android:id="@+id/btn_private_message"
+                style="?android:buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_private_message" />
+
+            <Button
+                android:id="@+id/btn_detail_info"
+                style="?android:buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_detail_info" />
+        </LinearLayout>
+
+        <include
+            android:id="@+id/item_remark"
+            layout="@layout/item_text_key_value_v" />
+
+        <include
+            android:id="@+id/item_group"
+            layout="@layout/item_text_key_value_v" />
+
+        <include
+            android:id="@+id/item_wb_auth"
+            layout="@layout/item_text_key_value_v" />
+
+        <include
+            android:id="@+id/item_location"
+            layout="@layout/item_text_key_value_v" />
+
+        <include
+            android:id="@+id/item_sign"
+            layout="@layout/item_text_key_value_v" />
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

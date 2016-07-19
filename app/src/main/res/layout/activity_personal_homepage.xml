@@ -22,7 +22,6 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-        <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
 
         <!--<android.support.design.widget.FloatingActionButton-->
         <com.hengye.share.ui.widget.fab.CheckableFab
@@ -31,10 +30,10 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"
             android:clickable="true"
-            android:visibility="gone"
             tools:visibility="visible"
-            app:layout_anchor="@+id/appbar"
-            app:layout_anchorGravity="bottom|right|end" />
+            app:fabSize="mini"
+            app:layout_anchor="@+id/fl_user_info_bg"
+            app:layout_anchorGravity="end" />
 
     </android.support.design.widget.CoordinatorLayout>
 

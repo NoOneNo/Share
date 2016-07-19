@@ -38,10 +38,13 @@ import com.hengye.share.ui.presenter.TopicPresenter;
 import com.hengye.share.ui.presenter.UserPresenter;
 import com.hengye.share.ui.widget.PersonalHomePageToolbarLayout;
 import com.hengye.share.ui.widget.fab.CheckableFab;
+import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
+import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
+import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
 import com.hengye.swiperefresh.PullToRefreshLayout;
 import com.hengye.swiperefresh.SwipeRefreshLayout;
@@ -115,6 +118,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     private SwipeRefreshLayout mSwipeRefresh;
     private AppBarLayout mAppBarLayout;
     private CoordinatorLayout mCoordinatorLayout;
+    private View mUserDescription;
     //    private FloatingActionButton mFollowButton;
     private CheckableFab mFollowButton;
     private TabLayout mTab;
@@ -142,25 +146,17 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         mFollowButton.setOnClickListener(this);
         mCollapsingToolbarLayout =
                 (PersonalHomePageToolbarLayout) findViewById(R.id.collapsing_toolbar);
-
+        mUserDescription = findViewById(R.id.ll_user_desc);
+//        mCollapsingToolbarLayout.setexpan
         mCover = (NetworkImageViewPlus) findViewById(R.id.iv_cover);
         mCover.setFadeInImage(false);
-//        mCover.setScaleType(ImageView.ScaleType.MATRIX);
-//        mCover.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//            @Override
-//            public void onGlobalLayout() {
-//                mCover.setImageMatrix(setCoverMatrix());
-//            }
-//        });
 
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.main_content);
         mAppBarLayout = (AppBarLayout) findViewById(R.id.appbar);
-//        postponeEnterTransition();
         mCover.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
                 mCover.getViewTreeObserver().removeOnPreDrawListener(this);
-//                startPostponedEnterTransition();
                 startCoverShowAnimation();
                 return true;
             }
@@ -188,9 +184,6 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         }
 
         mTab = (TabLayout) findViewById(R.id.tab);
-        mTab.addTab(mTab.newTab().setText("关于"), false);
-        mTab.addTab(mTab.newTab().setText("微博"), true);
-        mTab.addTab(mTab.newTab().setText("相册"), false);
 
         mSwipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
 
@@ -375,11 +368,29 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         mAvatar.setImageUrl(wbUserInfo.getAvatar_large(), RequestManager.getImageLoader());
 //        mAvatar.setDefaultImageResId(R.drawable.ic_user_avatar);
         mDivision.setVisibility(View.VISIBLE);
-        mAttention.setText(String.format(getString(R.string.label_attention), wbUserInfo.getFriends_count()));
-        mFans.setText(String.format(getString(R.string.label_fans), wbUserInfo.getFollowers_count()));
+        mAttention.setText(String.format(getString(R.string.label_attention), DataUtil.getCounter(wbUserInfo.getFriends_count())));
+        mFans.setText(String.format(getString(R.string.label_fans), DataUtil.getCounter(wbUserInfo.getFollowers_count())));
         mSign.setText(wbUserInfo.getDescription());
         mFollowButton.setChecked(mWBUserInfo.isFollowing());
-        mFollowButton.setVisibility(View.VISIBLE);
+//        mFollowButton.setVisibility(View.VISIBLE);
+
+        mUserDescription.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                mUserDescription.getViewTreeObserver().removeOnPreDrawListener(this);
+                float textHeight = ViewUtil.sp2px(R.dimen.text_large);
+                int avatarMarginTop = ViewUtil.dp2px(R.dimen.header_personal_avatar_margin_top);
+                int descHeight = mUserDescription.getHeight();
+                float marginBottom = descHeight + (avatarMarginTop - textHeight) / 2;
+                mCollapsingToolbarLayout.setExpandedTitleMarginBottom((int)marginBottom);
+
+                ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mFollowButton.getLayoutParams();
+                lp.bottomMargin = descHeight;
+                mFollowButton.setLayoutParams(lp);
+                mFollowButton.requestLayout();
+                return true;
+            }
+        });
     }
 
     private boolean loadData() {

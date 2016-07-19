@@ -33,12 +33,12 @@
 
     <style name="PersonalHomepageExpandedTitleAppearance">
         <!--<item name="android:id">?attr/tv_expanded_title</item>-->
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">@dimen/text_large</item>
         <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="PersonalHomepageTitleAppearance">
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">@dimen/text_normal</item>
         <item name="android:textColor">@android:color/black</item>
     </style>
 </resources>

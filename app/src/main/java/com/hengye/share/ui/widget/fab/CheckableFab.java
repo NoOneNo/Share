@@ -17,17 +17,24 @@
 package com.hengye.share.ui.widget.fab;
 
 import android.content.Context;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.util.AttributeSet;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Checkable;
 
 import com.hengye.share.R;
+import com.hengye.share.util.L;
+import com.hengye.share.util.ViewUtil;
 
 
 /**
  * A {@link FloatingActionButton} that implements {@link Checkable} to allow display of different
  * icons in it's states.
  */
+@CoordinatorLayout.DefaultBehavior(CheckableFab.Behavior.class)
 public class CheckableFab extends FloatingActionButton implements Checkable {
 
     private static final int[] CHECKED = {android.R.attr.state_checked};
@@ -74,5 +81,47 @@ public class CheckableFab extends FloatingActionButton implements Checkable {
     @Override
     public void toggle() {
         setChecked(!mIsChecked);
+    }
+
+
+    public static class Behavior extends FloatingActionButton.Behavior {
+
+        private final int MIN_HEIGHT = ViewUtil.dp2px(R.dimen.header_personal_avatar_margin_top);
+
+        private AppBarLayout mAppBarLayout;
+        private int mMinimumHeight;
+
+        @Override
+        public boolean onDependentViewChanged(CoordinatorLayout parent, FloatingActionButton child,
+                                              View dependency) {
+            final CoordinatorLayout.LayoutParams lp =
+                    (CoordinatorLayout.LayoutParams) child.getLayoutParams();
+
+            if (lp.getAnchorId() == dependency.getId()) {
+                updateFab(parent, child);
+                return false;
+            } else {
+                return super.onDependentViewChanged(parent, child, dependency);
+            }
+        }
+
+        private void updateFab(CoordinatorLayout parent, FloatingActionButton child) {
+            if(mAppBarLayout == null){
+                mAppBarLayout = (AppBarLayout) parent.findViewById(R.id.appbar);
+            }
+            if(mAppBarLayout == null){
+                return;
+            }
+
+            int top = mAppBarLayout.getTop();
+            if(top > 0){
+                return;
+            }
+            if(-top  > 2 * mAppBarLayout.getMinimumHeight()){
+                child.hide();
+            }else{
+                child.show();
+            }
+        }
     }
 }

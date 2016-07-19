@@ -2,23 +2,44 @@ package com.hengye.share.util;
 
 import android.os.Environment;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * Created by yuhy on 16/6/24.
  */
-public class FileUtil {
+public class FileUtil extends ApplicationUtil{
+
+    public static String readAssetsFile(String file) {
+        StringBuilder sb = new StringBuilder();
+
+        try {
+            InputStream e = getResources().getAssets().open(file);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(e, "UTF-8"));
+            String readLine = null;
+
+            while((readLine = reader.readLine()) != null) {
+                sb.append(readLine);
+            }
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+
+        return sb.toString();
+    }
 
 
     /**
      * 判断文件是否存在
      *
-     * @param path
+     * @param path 文件路径
      * @return
      */
     public static boolean isFileExist(String path) {
