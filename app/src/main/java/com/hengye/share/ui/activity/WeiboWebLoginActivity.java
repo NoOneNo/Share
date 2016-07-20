@@ -88,7 +88,7 @@ public class WeiboWebLoginActivity extends BaseActivity {
         mWebView.addJavascriptInterface(new LoginJavaScriptInterface(), "loginjs");
 
         loadData();
-        mWebView.loadUrl(getOAuthUrl());
+//        mWebView.loadUrl(getOAuthUrl());
     }
 
     private void loadData() {
@@ -152,24 +152,9 @@ public class WeiboWebLoginActivity extends BaseActivity {
             return true;
         }
 
-//        @Override
-//        public void onPageStarted(WebView view, String url, Bitmap favicon) {
-//            if (url.startsWith(DIRECT_URL)) {
-//                handleRedirectUrl(view, url);
-//                view.stopLoading();
-//                return;
-//            }
-//            super.onPageStarted(view, url, favicon);
-//        }
-
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
             super.onReceivedError(view, request, error);
             ToastUtil.showToast("出现错误");
-        }
-
-        @Override
-        public void onPageFinished(WebView view, String url) {
-            super.onPageFinished(view, url);
         }
     }
 
@@ -293,7 +278,9 @@ public class WeiboWebLoginActivity extends BaseActivity {
         while (count-- >= 0) {
             try {
                 String js = FileUtil.readAssetsFile("oauth.js");
-                js = js.replace("%username%", mAccount).replace("%password%", mPassword);
+                if(CommonUtil.noEmpty(mAccount, mPassword)) {
+                    js = js.replace("%username%", mAccount).replace("%password%", mPassword);
+                }
 
                 Document dom = Jsoup.connect(getOAuthUrl()).get();
                 String html = dom.toString();

@@ -16,25 +16,22 @@ import com.hengye.share.R;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.ui.widget.dialog.DialogStyleHelper;
 import com.hengye.share.ui.widget.dialog.ListDialog;
-import com.hengye.share.ui.widget.dialog.LoadingDialog;
 import com.hengye.share.util.ClipboardUtil;
 import com.hengye.share.util.IntentUtil;
-import com.hengye.share.util.SettingHelper;
+import com.hengye.share.helper.SettingHelper;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.ViewUtil;
 
-import java.security.Key;
 import java.util.ArrayList;
-import java.util.List;
 
 public class WebViewActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
-    protected void handleBundleExtra() {
+    protected void handleBundleExtra(Intent intent) {
         mUrl = getIntent().getStringExtra("url");
 
         if (mUrl == null) {
-            Uri data = getIntent().getData();
+            Uri data = intent.getData();
             if (data != null && data.toString() != null) {
                 String value = data.toString();
                 int start = value.indexOf("http://");

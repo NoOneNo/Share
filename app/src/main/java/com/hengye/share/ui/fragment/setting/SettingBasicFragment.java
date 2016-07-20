@@ -2,7 +2,6 @@ package com.hengye.share.ui.fragment.setting;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 
@@ -11,7 +10,7 @@ import com.hengye.share.R;
 import com.hengye.share.ui.fragment.BasePreferenceFragment;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
 import com.hengye.share.util.RequestManager;
-import com.hengye.share.util.SettingHelper;
+import com.hengye.share.helper.SettingHelper;
 import com.hengye.share.util.ToastUtil;
 
 public class SettingBasicFragment extends BasePreferenceFragment{

@@ -1,4 +1,4 @@
-package com.hengye.share.util;
+package com.hengye.share.helper;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;

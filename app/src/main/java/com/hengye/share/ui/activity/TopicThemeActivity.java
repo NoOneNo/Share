@@ -13,11 +13,11 @@ import com.hengye.share.ui.presenter.TopicPagePresenter;
 public class TopicThemeActivity extends BaseActivity{
 
     @Override
-    protected void handleBundleExtra() {
-        mTopicTheme = getIntent().getStringExtra("topicTheme");
+    protected void handleBundleExtra(Intent intent) {
+        mTopicTheme = intent.getStringExtra("topicTheme");
 
         if(mTopicTheme == null) {
-            Uri data = getIntent().getData();
+            Uri data = intent.getData();
             if (data != null && data.toString() != null) {
                 String value = data.toString();
                 int start = value.indexOf("#");

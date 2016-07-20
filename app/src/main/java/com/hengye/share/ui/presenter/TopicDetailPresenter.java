@@ -6,7 +6,7 @@ import com.hengye.share.model.sina.WBTopicReposts;
 import com.hengye.share.ui.mvpview.TopicDetailMvpView;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
-import com.hengye.share.util.retrofit.ObjectConverter;
+import com.hengye.share.util.rxjava.ObjectConverter;
 import com.hengye.share.util.retrofit.RetrofitManager;
 import com.hengye.share.util.retrofit.WBService;
 import com.hengye.share.util.thirdparty.WBUtil;
@@ -14,7 +14,6 @@ import com.hengye.share.util.thirdparty.WBUtil;
 import java.util.Map;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 

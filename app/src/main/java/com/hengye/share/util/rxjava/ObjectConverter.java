@@ -1,4 +1,4 @@
-package com.hengye.share.util.retrofit;
+package com.hengye.share.util.rxjava;
 
 import rx.functions.Func2;
 

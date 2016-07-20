@@ -1,10 +1,8 @@
 package com.hengye.share.ui.base;
 
 import android.app.Activity;
-import android.os.Bundle;
-import android.view.View;
 
-import com.hengye.share.util.SettingHelper;
+import com.hengye.share.helper.SettingHelper;
 
 import me.imid.swipebacklayout.lib.SwipeBackLayout;
 import me.imid.swipebacklayout.lib.Utils;

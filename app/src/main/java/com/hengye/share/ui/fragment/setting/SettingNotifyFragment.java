@@ -11,7 +11,7 @@ import com.hengye.share.ui.base.BaseApplication;
 import com.hengye.share.R;
 import com.hengye.share.ui.fragment.BasePreferenceFragment;
 import com.hengye.share.util.CommonUtil;
-import com.hengye.share.util.SettingHelper;
+import com.hengye.share.helper.SettingHelper;
 
 import java.util.ArrayList;
 import java.util.List;

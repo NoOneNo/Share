@@ -35,6 +35,7 @@ public class User implements java.io.Serializable {
     private String cover;
     private String account;
     private String password;
+    private String adToken;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -54,7 +55,7 @@ public class User implements java.io.Serializable {
         this.id = id;
     }
 
-    public User(Long id, String uid, String token, int parentType, String parentJson, String refreshToken, Long expiresIn, String name, String avatar, String gender, String sign, String cover, String account, String password) {
+    public User(Long id, String uid, String token, int parentType, String parentJson, String refreshToken, Long expiresIn, String name, String avatar, String gender, String sign, String cover, String account, String password, String adToken) {
         this.id = id;
         this.uid = uid;
         this.token = token;
@@ -69,6 +70,7 @@ public class User implements java.io.Serializable {
         this.cover = cover;
         this.account = account;
         this.password = password;
+        this.adToken = adToken;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -191,6 +193,14 @@ public class User implements java.io.Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getAdToken() {
+        return adToken;
+    }
+
+    public void setAdToken(String adToken) {
+        this.adToken = adToken;
     }
 
     /** Convenient call for {@link AbstractDao#delete(Object)}. Entity must attached to an entity context. */

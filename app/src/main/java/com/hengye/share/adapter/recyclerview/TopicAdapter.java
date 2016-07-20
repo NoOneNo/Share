@@ -4,9 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.TextUtils;
@@ -24,7 +21,6 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
 import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.R;
-import com.hengye.share.helper.TransitionHelper;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.UserInfo;
@@ -34,7 +30,6 @@ import com.hengye.share.ui.activity.PersonalHomepageActivity;
 import com.hengye.share.ui.activity.TopicDetailActivity;
 import com.hengye.share.ui.activity.TopicGalleryActivity;
 import com.hengye.share.ui.activity.TopicPublishActivity;
-import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.ui.support.textspan.TopicUrlOnTouchListener;
 import com.hengye.share.ui.view.GridGalleryView;
@@ -46,7 +41,7 @@ import com.hengye.share.util.DateUtil;
 import com.hengye.share.util.IntentUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
-import com.hengye.share.util.SettingHelper;
+import com.hengye.share.helper.SettingHelper;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
@@ -62,6 +57,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
     public static int mGalleryMaxWidth;
     private Dialog mLongClickDialog;
     private int mLongClickPosition;
+    private boolean mIsRetweetedLongClick;
     private RecyclerView mRecyclerView;
 
     public TopicAdapter(Context context, List<Topic> data, RecyclerView recyclerView) {
@@ -89,6 +85,13 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
         if (topic == null) {
             return;
         }
+        if(mIsRetweetedLongClick){
+            if(topic.getRetweetedTopic() == null){
+                return;
+            }else {
+                topic = topic.getRetweetedTopic();
+            }
+        }
         switch (which) {
             case DialogBuilder.LONG_CLICK_TOPIC_REPOST:
                 IntentUtil.startActivity(getContext(),
@@ -104,14 +107,6 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
                     RequestManager.addToRequestQueue(getWBCollectTopicRequest(topic.getId(), wbTopic.isFavorited()));
                 }
                 break;
-            case DialogBuilder.LONG_CLICK_TOPIC_REPOST_ORIGIN:
-                Topic retweet = topic.getRetweetedTopic();
-                if (retweet == null) {
-                    break;
-                }
-                IntentUtil.startActivity(getContext(),
-                        TopicPublishActivity.getStartIntent(getContext(), TopicDraftHelper.getWBTopicDraftByTopicRepost(retweet.getId())));
-                break;
             case DialogBuilder.LONG_CLICK_TOPIC_COPY:
                 ClipboardUtil.copy(topic.getContent());
                 ToastUtil.showToast(R.string.label_topic_copy_to_clipboard_success);
@@ -123,8 +118,13 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
 
     @Override
     public boolean onItemLongClick(View view, int position) {
+        boolean isRetweeted = false;
+        if(view.getTag() != null && view.getTag() instanceof Boolean){
+            isRetweeted = (Boolean) view.getTag();
+        }
 
         mLongClickPosition = position;
+        mIsRetweetedLongClick = isRetweeted;
         mLongClickDialog.show();
         return true;
     }
@@ -254,12 +254,14 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
-                mTopicItem.onTouchEvent(event);
-
                 int id = v.getId();
                 if(id == R.id.tv_topic_content) {
-                    return TopicUrlOnTouchListener.getInstance().onTouch(v, event);
+                    if(!TopicUrlOnTouchListener.getInstance().onTouch(v, event)) {
+                        mTopicItem.onTouchEvent(event);
+                    }
+                    return false;
                 }else{
+                    mTopicItem.onTouchEvent(event);
                     return false;
                 }
             }
@@ -269,12 +271,14 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
-                mRetweetTopic.mTopicLayout.onTouchEvent(event);
-
                 int id = v.getId();
                 if(id == R.id.tv_topic_content) {
-                    return TopicUrlOnTouchListener.getInstance().onTouch(v, event);
+                    if(!TopicUrlOnTouchListener.getInstance().onTouch(v, event)){
+                        mRetweetTopic.mTopicLayout.onTouchEvent(event);
+                    }
+                    return false;
                 }else{
+                    mRetweetTopic.mTopicLayout.onTouchEvent(event);
                     return false;
                 }
             }

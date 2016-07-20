@@ -1,19 +1,17 @@
 package com.hengye.share.ui.fragment.setting;
 
 import android.app.Fragment;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
-import android.text.InputType;
 
 import com.hengye.share.ui.activity.TopicPublishActivity;
 import com.hengye.share.ui.base.BaseApplication;
 import com.hengye.share.R;
 import com.hengye.share.ui.fragment.BasePreferenceFragment;
 import com.hengye.share.util.L;
-import com.hengye.share.util.SettingHelper;
+import com.hengye.share.helper.SettingHelper;
 
 public class SettingFragment extends BasePreferenceFragment {
 

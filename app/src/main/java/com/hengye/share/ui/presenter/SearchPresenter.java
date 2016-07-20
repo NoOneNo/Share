@@ -8,7 +8,7 @@ import com.hengye.share.ui.mvpview.SearchMvpView;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.UserUtil;
-import com.hengye.share.util.retrofit.ObjectConverter;
+import com.hengye.share.util.rxjava.ObjectConverter;
 import com.hengye.share.util.retrofit.RetrofitManager;
 import com.hengye.share.util.retrofit.WBService;
 

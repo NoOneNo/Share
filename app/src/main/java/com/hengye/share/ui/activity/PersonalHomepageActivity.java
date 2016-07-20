@@ -78,11 +78,11 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     }
 
     @Override
-    protected void handleBundleExtra() {
-        mUserInfo = (UserInfo) getIntent().getSerializableExtra(UserInfo.class.getSimpleName());
+    protected void handleBundleExtra(Intent intent) {
+        mUserInfo = (UserInfo) intent.getSerializableExtra(UserInfo.class.getSimpleName());
 
         if (mUserInfo == null) {
-            Uri data = getIntent().getData();
+            Uri data = intent.getData();
             if (data != null) {
                 String value = data.toString();
                 int index = value.lastIndexOf("@");

@@ -37,6 +37,7 @@ public class UserDao extends AbstractDao<User, Long> {
         public final static Property Cover = new Property(11, String.class, "cover", false, "COVER");
         public final static Property Account = new Property(12, String.class, "account", false, "ACCOUNT");
         public final static Property Password = new Property(13, String.class, "password", false, "PASSWORD");
+        public final static Property AdToken = new Property(14, String.class, "adToken", false, "AD_TOKEN");
     };
 
     private DaoSession daoSession;
@@ -68,7 +69,8 @@ public class UserDao extends AbstractDao<User, Long> {
                 "\"SIGN\" TEXT," + // 10: sign
                 "\"COVER\" TEXT," + // 11: cover
                 "\"ACCOUNT\" TEXT," + // 12: account
-                "\"PASSWORD\" TEXT);"); // 13: password
+                "\"PASSWORD\" TEXT," + // 13: password
+                "\"AD_TOKEN\" TEXT);"); // 14: adToken
     }
 
     /** Drops the underlying database table. */
@@ -139,6 +141,11 @@ public class UserDao extends AbstractDao<User, Long> {
         if (password != null) {
             stmt.bindString(14, password);
         }
+ 
+        String adToken = entity.getAdToken();
+        if (adToken != null) {
+            stmt.bindString(15, adToken);
+        }
     }
 
     @Override
@@ -170,7 +177,8 @@ public class UserDao extends AbstractDao<User, Long> {
             cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // sign
             cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // cover
             cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // account
-            cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13) // password
+            cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // password
+            cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14) // adToken
         );
         return entity;
     }
@@ -192,6 +200,7 @@ public class UserDao extends AbstractDao<User, Long> {
         entity.setCover(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
         entity.setAccount(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
         entity.setPassword(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
+        entity.setAdToken(cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14));
      }
     
     /** @inheritdoc */

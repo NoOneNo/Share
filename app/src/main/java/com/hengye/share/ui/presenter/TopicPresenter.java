@@ -16,7 +16,7 @@ import com.hengye.share.ui.mvpview.TopicMvpView;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.GsonUtil;
 import com.hengye.share.util.L;
-import com.hengye.share.util.SettingHelper;
+import com.hengye.share.helper.SettingHelper;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;

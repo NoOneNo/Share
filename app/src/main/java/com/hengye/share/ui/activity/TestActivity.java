@@ -15,6 +15,9 @@ import com.hengye.share.ui.fragment.encapsulation.ContentFragment;
 import com.hengye.share.ui.widget.dialog.ListDialog;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
 import com.hengye.share.ui.widget.loading.FramesLoadingView;
+import com.hengye.share.util.intercept.Action;
+import com.hengye.share.util.intercept.Interception;
+import com.hengye.share.util.intercept.Interceptor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +30,7 @@ import rx.android.schedulers.HandlerScheduler;
 import rx.exceptions.OnErrorThrowable;
 import rx.functions.Func0;
 import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
 
@@ -91,7 +95,8 @@ public class TestActivity extends BaseActivity implements View.OnClickListener{
         }else if(v.getId() == R.id.btn_test5) {
             mListDialog.show();
         }else if(v.getId() == R.id.btn_test6) {
-            startActivity(FragmentActivity.getStartIntent(this, TestTabLayoutFragment.class));
+            testInterceptor();
+//            startActivity(FragmentActivity.getStartIntent(this, TestTabLayoutFragment.class));
 //            startActivity(WebViewActivity.getStartIntent(this, "http://www.baidu.com"));
         }else if(v.getId() == R.id.btn_test7) {
             startActivity(SetTokenActivity.class);
@@ -111,9 +116,9 @@ public class TestActivity extends BaseActivity implements View.OnClickListener{
             }
         })
 //                // Run on a background thread
-//                .subscribeOn(HandlerScheduler.from(backgroundHandler))
-//                        // Be notified on the main thread
-//                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(HandlerScheduler.from(backgroundHandler))
+                        // Be notified on the main thread
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Float>() {
                     @Override
                     public void onCompleted() {
@@ -135,7 +140,7 @@ public class TestActivity extends BaseActivity implements View.OnClickListener{
     void onRunSchedulerExampleButtonClicked() {
         sampleObservable()
                 // Run on a background thread
-                .subscribeOn(HandlerScheduler.from(backgroundHandler))
+                .subscribeOn(Schedulers.computation())
                         // Be notified on the main thread
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<String>() {
@@ -176,4 +181,45 @@ public class TestActivity extends BaseActivity implements View.OnClickListener{
             super("SchedulerSample-BackgroundThread", THREAD_PRIORITY_BACKGROUND);
         }
     }
+
+    public void testInterceptor(){
+        Interceptor.create(new Action() {
+            @Override
+            public void run() {
+                startActivity(TopicPublishActivity.getStartIntent(TestActivity.this, "test"));
+            }
+        }, new Interception() {
+            @Override
+            public boolean isIntercept() {
+                if()
+                return false;
+            }
+        });
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

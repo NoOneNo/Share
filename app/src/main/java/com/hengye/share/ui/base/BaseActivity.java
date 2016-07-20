@@ -3,8 +3,6 @@ package com.hengye.share.ui.base;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,8 +19,7 @@ import com.hengye.share.R;
 import com.hengye.share.ui.presenter.BasePresenter;
 import com.hengye.share.util.NetworkUtil;
 import com.hengye.share.util.RequestManager;
-import com.hengye.share.util.SettingHelper;
-import com.hengye.share.util.ViewUtil;
+import com.hengye.share.helper.SettingHelper;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -209,7 +206,6 @@ public class BaseActivity extends AppCompatActivity {
     protected void overridePendingTransitionOnStart() {
         if (!isShowAnimationOnStart()) {
             setShowAnimationOnStart();
-//            overridePendingTransition(0, 0);
             return;
         }
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);

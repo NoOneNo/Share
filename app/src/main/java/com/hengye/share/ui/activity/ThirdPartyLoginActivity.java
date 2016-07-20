@@ -36,13 +36,14 @@ public class ThirdPartyLoginActivity extends BaseActivity implements UserMvpView
 
         initData();
 
-        try {
-            mSsoHandler.authorize(ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO, mWeiboAuthListener, null);
-        } catch (Exception e) {
-            startActivityForResult(WeiboWebLoginActivity.class, WEIBO_WEB_LOGIN);
-//            mWeiboAuth.anthorize(new WBAuthListener());
-            e.printStackTrace();
-        }
+        startActivityForResult(WeiboWebLoginActivity.class, WEIBO_WEB_LOGIN);
+//        try {
+//            mSsoHandler.authorize(ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO, mWeiboAuthListener, null);
+//        } catch (Exception e) {
+//            startActivityForResult(WeiboWebLoginActivity.class, WEIBO_WEB_LOGIN);
+////            mWeiboAuth.anthorize(new WBAuthListener());
+//            e.printStackTrace();
+//        }
     }
 
     private final static int WEIBO_WEB_LOGIN = 3;

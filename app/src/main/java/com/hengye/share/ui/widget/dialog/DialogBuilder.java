@@ -20,7 +20,6 @@ public class DialogBuilder {
     public final static int LONG_CLICK_TOPIC_COMMENT = 1;
     public final static int LONG_CLICK_TOPIC_COLLECT = 2;
     public final static int LONG_CLICK_TOPIC_COPY = 3;
-    public final static int LONG_CLICK_TOPIC_REPOST_ORIGIN = 4;
     public final static int LONG_CLICK_TOPIC_LENGTH = 4;
     public static Dialog getOnLongClickTopicDialog(Context context, DialogInterface.OnClickListener onClickListener){
 

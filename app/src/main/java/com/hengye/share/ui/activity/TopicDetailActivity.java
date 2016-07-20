@@ -55,9 +55,9 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     boolean mIsRetweet;
 
     @Override
-    protected void handleBundleExtra() {
-        mTopic = (Topic) getIntent().getSerializableExtra("topic");
-        mIsRetweet = getIntent().getBooleanExtra("isRetweet", false);
+    protected void handleBundleExtra(Intent intent) {
+        mTopic = (Topic) intent.getSerializableExtra("topic");
+        mIsRetweet = intent.getBooleanExtra("isRetweet", false);
     }
 
     @Override

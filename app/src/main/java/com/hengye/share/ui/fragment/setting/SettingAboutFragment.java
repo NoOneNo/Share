@@ -1,7 +1,6 @@
 package com.hengye.share.ui.fragment.setting;
 
 import android.app.Dialog;
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -9,14 +8,11 @@ import android.preference.PreferenceScreen;
 
 import com.hengye.share.BuildConfig;
 import com.hengye.share.R;
-import com.hengye.share.ui.activity.TopicPublishActivity;
 import com.hengye.share.ui.activity.web.WebViewActivity;
 import com.hengye.share.ui.fragment.BasePreferenceFragment;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
 import com.hengye.share.util.ClipboardUtil;
-import com.hengye.share.util.RequestManager;
-import com.hengye.share.util.SettingHelper;
-import com.hengye.share.util.ToastUtil;
+import com.hengye.share.helper.SettingHelper;
 
 public class SettingAboutFragment extends BasePreferenceFragment{
 

@@ -74,8 +74,8 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     private final static int DEFAULT_TYPE = TopicDraftHelper.PUBLISH_TOPIC;
 
     @Override
-    protected void handleBundleExtra() {
-        mTopicDraft = (TopicDraft) getIntent().getSerializableExtra("topicDraft");
+    protected void handleBundleExtra(Intent intent) {
+        mTopicDraft = (TopicDraft) intent.getSerializableExtra("topicDraft");
         if (mTopicDraft != null) {
             mTopicDraftContent = mTopicDraft.getContent();
         } else {
