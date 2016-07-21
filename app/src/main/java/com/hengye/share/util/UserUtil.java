@@ -21,6 +21,9 @@ public class UserUtil {
         if (mCurrentUser == null) {
             mCurrentUser = getDefaultUser();
         }
+        if (mCurrentUser == null) {
+            mCurrentUser = new User();
+        }
         return mCurrentUser;
     }
 
@@ -28,13 +31,13 @@ public class UserUtil {
         return mCurrentUser = getDefaultUser();
     }
 
-    public static void changeCurrentUser(User user){
+    public static void changeCurrentUser(User user) {
         SPUtil.setUid(user == null ? null : user.getUid());
         mCurrentUser = user;
     }
 
-    public static void deleteUser(User user){
-        if(mCurrentUser != null && mCurrentUser.equals(user)){
+    public static void deleteUser(User user) {
+        if (mCurrentUser != null && mCurrentUser.equals(user)) {
             mCurrentUser = null;
             SPUtil.setUid(null);
         }
@@ -43,31 +46,31 @@ public class UserUtil {
     }
 
     public static String getUid() {
-        if (getCurrentUser() == null) {
-            return null;
-        } else {
-            return getCurrentUser().getUid();
-        }
+        return getCurrentUser().getUid();
     }
 
     public static String getToken() {
-        if (getCurrentUser() == null) {
-            return null;
-        } else {
-            return getCurrentUser().getToken();
-        }
+        return getCurrentUser().getToken();
+    }
+
+    public static String getAdToken() {
+        return getCurrentUser().getAdToken();
     }
 
     public static boolean isUserEmpty() {
-        return getCurrentUser() == null;
+        return isTokenEmpty();
     }
 
     public static boolean isUserNameEmpty() {
-        return getCurrentUser() == null || getCurrentUser().getName() == null;
+        return getCurrentUser().getName() == null;
     }
 
     public static boolean isTokenEmpty() {
         return getToken() == null;
+    }
+
+    public static boolean isAdTokenEmpty() {
+        return getAdToken() == null;
     }
 
     public static User getDefaultUser() {
@@ -119,7 +122,7 @@ public class UserUtil {
             user.setToken(accessToken.getToken());
             user.setRefreshToken(accessToken.getRefreshToken());
             user.setExpiresIn(accessToken.getExpiresTime());
-            if(CommonUtil.noEmpty(account, password)){
+            if (CommonUtil.noEmpty(account, password)) {
                 user.setAccount(account);
                 user.setPassword(password);
             }
@@ -129,7 +132,7 @@ public class UserUtil {
             user.setToken(accessToken.getToken());
             user.setRefreshToken(accessToken.getRefreshToken());
             user.setExpiresIn(accessToken.getExpiresTime());
-            if(CommonUtil.noEmpty(account, password)){
+            if (CommonUtil.noEmpty(account, password)) {
                 user.setAccount(account);
                 user.setPassword(password);
             }
@@ -170,10 +173,14 @@ public class UserUtil {
             user = users.get(0);
             targetUser.setId(user.getId());
             ud.update(targetUser);
+
+            if(getCurrentUser().equals(targetUser)){
+                updateCurrentUser();
+            }
         }
     }
 
-    public static List<User> queryUsers(){
+    public static List<User> queryUsers() {
         UserDao ud = GreenDaoManager.getDaoSession().getUserDao();
         return ud.queryBuilder().list();
     }
@@ -229,13 +236,11 @@ public class UserUtil {
     }
 
     public static List<GroupList> queryGroupList(boolean isQuerySystemGroup) {
-        User user = getCurrentUser();
-        if (user == null) {
+        if (isUserEmpty()) {
             return null;
         }
-        return queryGroupList(user.getUid(), isQuerySystemGroup);
+        return queryGroupList(getCurrentUser().getUid(), isQuerySystemGroup);
     }
-
 
 
     public static List<GroupList> queryGroupList(String uid, boolean isQuerySystemGroup) {
@@ -252,8 +257,11 @@ public class UserUtil {
                     , GroupListDao.Properties.Visible.notEq("-1"));
         }
 
-        return qb
-                .where(GroupListDao.Properties.Uid.eq(uid))
-                .list();
+        try{
+            return qb.list();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }

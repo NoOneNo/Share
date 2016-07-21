@@ -1,5 +1,8 @@
 package com.hengye.share.ui.activity;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -14,10 +17,15 @@ import com.hengye.share.ui.fragment.TestTabLayoutFragment;
 import com.hengye.share.ui.fragment.encapsulation.ContentFragment;
 import com.hengye.share.ui.widget.dialog.ListDialog;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
+import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
 import com.hengye.share.ui.widget.loading.FramesLoadingView;
+import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.L;
+import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.intercept.Action;
 import com.hengye.share.util.intercept.Interception;
 import com.hengye.share.util.intercept.Interceptor;
+import com.hengye.share.util.thirdparty.ThirdPartyUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +42,7 @@ import rx.schedulers.Schedulers;
 
 import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
 
-public class TestActivity extends BaseActivity implements View.OnClickListener{
+public class TestActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected String getRequestTag() {
@@ -62,7 +70,7 @@ public class TestActivity extends BaseActivity implements View.OnClickListener{
         findViewById(R.id.btn_test5).setOnClickListener(this);
         findViewById(R.id.btn_test6).setOnClickListener(this);
         findViewById(R.id.btn_test7).setOnClickListener(this);
-        mLoading = (FramesLoadingView)findViewById(R.id.loading);
+        mLoading = (FramesLoadingView) findViewById(R.id.loading);
         mLoading.stop();
         mListDialog = new ListDialog(this, new ArrayList<ListDialog.KeyValue>());
 
@@ -73,32 +81,32 @@ public class TestActivity extends BaseActivity implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.btn_test) {
+        if (v.getId() == R.id.btn_test) {
             onRunSchedulerExampleButtonClicked();
-        }else if(v.getId() == R.id.btn_test2) {
+        } else if (v.getId() == R.id.btn_test2) {
             onRunSchedulerExampleButtonClicked2();
-        }else if(v.getId() == R.id.btn_test3) {
-            if(mLoadingDialog == null){
+        } else if (v.getId() == R.id.btn_test3) {
+            if (mLoadingDialog == null) {
                 mLoadingDialog = new LoadingDialog(this, "正在加载中...", false);
             }
-            if(mLoadingDialog.isShowing()){
+            if (mLoadingDialog.isShowing()) {
                 mLoadingDialog.dismiss();
-            }else{
+            } else {
                 mLoadingDialog.show();
             }
-        }else if(v.getId() == R.id.btn_test4) {
-            if(mLoading.isRunning()){
+        } else if (v.getId() == R.id.btn_test4) {
+            if (mLoading.isRunning()) {
                 mLoading.stop();
-            }else{
+            } else {
                 mLoading.start();
             }
-        }else if(v.getId() == R.id.btn_test5) {
+        } else if (v.getId() == R.id.btn_test5) {
             mListDialog.show();
-        }else if(v.getId() == R.id.btn_test6) {
+        } else if (v.getId() == R.id.btn_test6) {
             testInterceptor();
 //            startActivity(FragmentActivity.getStartIntent(this, TestTabLayoutFragment.class));
 //            startActivity(WebViewActivity.getStartIntent(this, "http://www.baidu.com"));
-        }else if(v.getId() == R.id.btn_test7) {
+        } else if (v.getId() == R.id.btn_test7) {
             startActivity(SetTokenActivity.class);
         }
     }
@@ -117,7 +125,7 @@ public class TestActivity extends BaseActivity implements View.OnClickListener{
         })
 //                // Run on a background thread
                 .subscribeOn(HandlerScheduler.from(backgroundHandler))
-                        // Be notified on the main thread
+                // Be notified on the main thread
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Float>() {
                     @Override
@@ -141,7 +149,7 @@ public class TestActivity extends BaseActivity implements View.OnClickListener{
         sampleObservable()
                 // Run on a background thread
                 .subscribeOn(Schedulers.computation())
-                        // Be notified on the main thread
+                // Be notified on the main thread
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<String>() {
                     @Override
@@ -182,19 +190,65 @@ public class TestActivity extends BaseActivity implements View.OnClickListener{
         }
     }
 
-    public void testInterceptor(){
-        Interceptor.create(new Action() {
+    private Dialog mLoginDialog;
+    private Interceptor mInterceptor;
+
+    public Dialog getLoginDialog() {
+        if (mLoginDialog == null) {
+            SimpleTwoBtnDialog build = new SimpleTwoBtnDialog();
+            build.setContent("需要高级授权, 是否继续?");
+            build.setPositiveButtonClickListener(new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    startActivityForResult(ThirdPartyLoginActivity.getAdTokenStartIntent(TestActivity.this), 3);
+                }
+            });
+            mLoginDialog = build.create(this);
+        }
+        return mLoginDialog;
+    }
+
+    public void testInterceptor() {
+        if (mInterceptor != null) {
+            mInterceptor.detroy();
+        }
+        mInterceptor = Interceptor.create(new Action() {
             @Override
             public void run() {
-                startActivity(TopicPublishActivity.getStartIntent(TestActivity.this, "test"));
+                getHandler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        startActivity(TopicPublishActivity.getStartIntent(TestActivity.this, "test"));
+                    }
+                });
             }
         }, new Interception() {
             @Override
             public boolean isIntercept() {
-                if()
+
+                if (UserUtil.isAdTokenEmpty()) {
+                    getLoginDialog().show();
+                    return true;
+                }
                 return false;
             }
         });
+        mInterceptor.start();
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 3) {
+            if (resultCode == RESULT_OK && data != null) {
+                L.debug("bundle : {}", data.getExtras().toString());
+                if (mInterceptor != null) {
+                    startActivity(WebViewActivity.getStartIntent(TestActivity.this, "http://www.baidu.com"));
+                    mInterceptor.next();
+                }
+            }
+        }
     }
 }
 

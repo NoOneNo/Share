@@ -234,6 +234,10 @@ public class User implements java.io.Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
+        if(uid == null){
+            return false;
+        }
+
         User user = (User) o;
 
         return uid.equals(user.uid);

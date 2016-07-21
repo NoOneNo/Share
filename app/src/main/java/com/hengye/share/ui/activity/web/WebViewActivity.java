@@ -212,11 +212,11 @@ public class WebViewActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void onBackPressed() {
-        if (mWebView.canGoBack()) {
-            mWebView.goBack();
-        } else {
+//        if (mWebView.canGoBack()) {
+//            mWebView.goBack();
+//        } else {
             super.onBackPressed();
-        }
+//        }
     }
 
     @Override

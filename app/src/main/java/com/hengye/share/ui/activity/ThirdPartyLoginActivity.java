@@ -1,6 +1,7 @@
 package com.hengye.share.ui.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -20,6 +21,12 @@ import com.sina.weibo.sdk.auth.sso.SsoHandler;
 
 public class ThirdPartyLoginActivity extends BaseActivity implements UserMvpView {
 
+    public static Intent getAdTokenStartIntent(Context context){
+        Intent intent = new Intent(context, ThirdPartyLoginActivity.class);
+        intent.putExtra("appKey", ThirdPartyUtils.WeiboApp.WEICO.name());
+        return intent;
+    }
+
     @Override
     protected boolean setCustomTheme() {
         return false;
@@ -35,8 +42,12 @@ public class ThirdPartyLoginActivity extends BaseActivity implements UserMvpView
         addPresenter(mPresenter = new UserPresenter(this));
 
         initData();
-
-        startActivityForResult(WeiboWebLoginActivity.class, WEIBO_WEB_LOGIN);
+        String appName = getIntent().getStringExtra("appKey");
+        if(appName != null && appName.equals(ThirdPartyUtils.WeiboApp.WEICO.name())){
+            startActivityForResult(WeiboWebLoginActivity.getAdTokenStartIntent(this), WEIBO_WEB_LOGIN);
+        }else {
+            startActivityForResult(WeiboWebLoginActivity.class, WEIBO_WEB_LOGIN);
+        }
 //        try {
 //            mSsoHandler.authorize(ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO, mWeiboAuthListener, null);
 //        } catch (Exception e) {
@@ -108,10 +119,25 @@ public class ThirdPartyLoginActivity extends BaseActivity implements UserMvpView
         @Override
         public void onComplete(Bundle values) {
             super.onComplete(values);
+            ThirdPartyUtils.WeiboApp app = ThirdPartyUtils.WeiboApp.valueOf(values.getString("appKey", ThirdPartyUtils.WeiboApp.SHARE.name()));
+
             if (mAccessToken != null && mAccessToken.isSessionValid()) {
-                mLoadingDialog.show();
-                UserUtil.updateUser(mAccessToken, values.getString("account"), values.getString("password"));
-                mPresenter.loadWBUserInfo(mAccessToken.getUid(), null);
+                String account = values.getString("account");
+                String password = values.getString("password");
+                if(app == ThirdPartyUtils.WeiboApp.SHARE){
+                    mLoadingDialog.show();
+                    mPresenter.loadWBUserInfo(mAccessToken.getUid(), null);
+                    UserUtil.updateUser(mAccessToken, account, password);
+                }else if(mAccessToken.getUid() != null && mAccessToken.getUid().equals(UserUtil.getUid())){
+                    User user = UserUtil.getCurrentUser();
+                    user.setAccount(account);
+                    user.setPassword(password);
+                    user.setAdToken(mAccessToken.getToken());
+                    ToastUtil.showToast(R.string.tip_authorize_success);
+                    setResult(Activity.RESULT_OK);
+                    finish();
+                }
+
             } else {
                 finish();
             }

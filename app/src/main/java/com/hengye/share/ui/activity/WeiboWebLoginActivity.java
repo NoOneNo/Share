@@ -1,5 +1,6 @@
 package com.hengye.share.ui.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.hengye.share.util.FileUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UrlBuilder;
+import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.Utility;
 import com.hengye.share.util.retrofit.RetrofitManager;
 import com.hengye.share.util.thirdparty.ThirdPartyUtils;
@@ -41,14 +43,33 @@ import rx.schedulers.Schedulers;
  */
 public class WeiboWebLoginActivity extends BaseActivity {
 
+    public static Intent getStartIntent(Context context, WeiboApp app){
+        return getStartIntent(context, app, false);
+    }
+
+    public static Intent getStartIntent(Context context, WeiboApp app, boolean isCurrentUser){
+        Intent intent = new Intent(context, WeiboWebLoginActivity.class);
+        intent.putExtra("appKey", app.name());
+
+        if(isCurrentUser && !UserUtil.isUserEmpty()){
+            intent.putExtra("account", UserUtil.getCurrentUser().getAccount());
+            intent.putExtra("password", UserUtil.getCurrentUser().getPassword());
+        }
+        return intent;
+    }
+
+    public static Intent getAdTokenStartIntent(Context context){
+        return getStartIntent(context, WeiboApp.WEICO, true);
+    }
+
+    public static final String URL_OAUTH2_ACCESS_AUTHORIZE = "https://api.weibo.com/oauth2/authorize";
+    public static final String URL_BASE = "https://api.weibo.com";
+
     LoadingDialog mLoadingDialog;
     WebView mWebView;
     WeiboApp mApp;
     String mAccount, mPassword;
     boolean mHasAutoFillAccount = false;
-
-    //    public static final String URL_OAUTH2_ACCESS_AUTHORIZE = "https://open.weibo.cn/oauth2/authorize";
-    public static final String URL_OAUTH2_ACCESS_AUTHORIZE = "https://api.weibo.com/oauth2/authorize";
 
 
     @Override
@@ -119,7 +140,7 @@ public class WeiboWebLoginActivity extends BaseActivity {
 
                     @Override
                     public void onNext(String s) {
-                        mWebView.loadDataWithBaseURL("https://api.weibo.com", s, "text/html", "UTF-8", "");
+                        mWebView.loadDataWithBaseURL(URL_BASE, s, "text/html", "UTF-8", "");
                     }
                 });
     }
@@ -235,6 +256,7 @@ public class WeiboWebLoginActivity extends BaseActivity {
                                 }
                                 bundle.putString("account", mAccount);
                                 bundle.putString("password", mPassword);
+                                bundle.putString("appKey", mApp.name());
                                 Intent intent = new Intent();
                                 intent.putExtras(bundle);
                                 setResult(RESULT_OK, intent);

@@ -53,7 +53,6 @@ public class SetTokenActivity extends BaseActivity implements View.OnClickListen
         if(id == R.id.btn_update_token){
             User user = UserUtil.getCurrentUser();
             user.setToken(mTokenEdit.getText().toString().trim());
-            UserUtil.updateUser(user);
             UserUtil.updateCurrentUser();
         }
     }
