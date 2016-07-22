@@ -57,7 +57,7 @@ public class AccountManageAdapter extends CommonAdapter<User, AccountManageAdapt
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((BaseActivity)context).startActivityForResult(ThirdPartyLoginActivity.class, ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO);
+                    ((BaseActivity)context).startActivityForResult(ThirdPartyLoginActivity.getStartIntent(context, false), ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO);
                 }
             });
 

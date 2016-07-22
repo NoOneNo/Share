@@ -57,7 +57,8 @@ public class BaseActivity extends AppCompatActivity {
 
     private SwipeBackHelper mSwipeHelper;
 
-//    private BasePresenter mPresenter;
+    private ActivityHelper mActivityHelper = new ActivityHelper();
+
     private Set<BasePresenter> mPresenters;
 
     private Handler mHandler;
@@ -68,19 +69,17 @@ public class BaseActivity extends AppCompatActivity {
 
     protected boolean mShowAnimationOnStart = true;
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt("theme", mThemeResId);
+    public ActivityHelper getActivityHelper(){
+        return mActivityHelper;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mActivityHelper.dispatchActivityCreated(this, savedInstanceState);
         setCustomThemeIfNeeded(savedInstanceState);
         super.onCreate(savedInstanceState);
         handleBundleExtra(getIntent());
-        setupActivityHelper();
-
+        setUpSwipeHelper();
         if (mSwipeHelper != null) {
             mSwipeHelper.onCreate();
         }
@@ -116,13 +115,82 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
+        mActivityHelper.dispatchActivityStarted(this);
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        mActivityHelper.dispatchActivityResumed(this);
+        super.onResume();
+        resetFirstClick();
+        replaceCustomThemeIfNeeded();
+        observeNetworkChangeIfNeeded(true);
+        if (mSwipeHelper != null) {
+            mSwipeHelper.onResume();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        mActivityHelper.dispatchActivityPaused(this);
+        super.onPause();
+        observeNetworkChangeIfNeeded(false);
+    }
+
+    @Override
+    protected void onStop() {
+        mActivityHelper.dispatchActivityStopped(this);
+        super.onStop();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        mActivityHelper.dispatchActivitySaveInstanceState(this, outState);
+        super.onSaveInstanceState(outState);
+        outState.putInt("theme", mThemeResId);
+    }
+
+    @Override
+    protected void onDestroy() {
+        mActivityHelper.dispatchActivityDestroyed(this);
+        super.onDestroy();
+        cancelPendingRequestsIfNeeded();
+        detachMvpView();
+        mActivityHelper.clear();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mActivityHelper.dispatchActivityResulted(this, requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode, @Nullable Bundle options) {
+        if (mFirstClick) {
+            mFirstClick = false;
+            super.startActivityForResult(intent, requestCode, options);
+            overridePendingTransitionOnStart();
+        }
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransitionOnFinish();
+    }
+
+    protected void handleBundleExtra(Intent intent) {}
+
+    protected void afterCreate(Bundle savedInstanceState) {}
+
     protected void setUpContentView() {
         if (getLayoutResId() != 0) {
             setContentView(getLayoutResId());
         }
-    }
-
-    protected void afterCreate(Bundle savedInstanceState) {
     }
 
     protected
@@ -141,22 +209,20 @@ public class BaseActivity extends AppCompatActivity {
         setToolBarIfNeeded(view);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        resetFirstClick();
-        replaceCustomThemeIfNeeded();
-        observeNetworkChangeIfNeeded(true);
-        if (mSwipeHelper != null) {
-            mSwipeHelper.onResume();
+
+    protected void overridePendingTransitionOnStart() {
+        if (!isShowAnimationOnStart()) {
+            setShowAnimationOnStart();
+            return;
         }
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        cancelPendingRequestsIfNeeded();
-        detachMvpView();
+
+    protected void overridePendingTransitionOnFinish() {
+        if (setFinishPendingTransition()) {
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        }
     }
 
     protected void detachMvpView(){
@@ -180,46 +246,6 @@ public class BaseActivity extends AppCompatActivity {
 
     public void startActivityForResult(Class<?> cls, int requestCode) {
         startActivityForResult(new Intent(this, cls), requestCode);
-    }
-
-    @Override
-    public void startActivityForResult(Intent intent, int requestCode, @Nullable Bundle options) {
-        if (mFirstClick) {
-            mFirstClick = false;
-            super.startActivityForResult(intent, requestCode, options);
-            overridePendingTransitionOnStart();
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        observeNetworkChangeIfNeeded(false);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransitionOnFinish();
-    }
-
-    protected void overridePendingTransitionOnStart() {
-        if (!isShowAnimationOnStart()) {
-            setShowAnimationOnStart();
-            return;
-        }
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-    }
-
-
-    protected void overridePendingTransitionOnFinish() {
-        if (setFinishPendingTransition()) {
-            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-        }
-    }
-
-    protected void handleBundleExtra(Intent intent) {
-
     }
 
     protected void cancelPendingRequestsIfNeeded() {
@@ -304,7 +330,7 @@ public class BaseActivity extends AppCompatActivity {
         return getTitle();
     }
 
-    protected void setupActivityHelper() {
+    protected void setUpSwipeHelper() {
         if (mSwipeHelper == null) {
             if (canSwipeBack() && SettingHelper.isSwipeBack()) {
                 mSwipeHelper = new SwipeBackHelper(this);
@@ -316,7 +342,7 @@ public class BaseActivity extends AppCompatActivity {
         mFirstClick = true;
     }
 
-    protected Handler getHandler() {
+    public Handler getHandler() {
         if (mHandler == null) {
             mHandler = new Handler();
         }

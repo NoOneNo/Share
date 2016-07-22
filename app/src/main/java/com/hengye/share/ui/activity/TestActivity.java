@@ -12,23 +12,18 @@ import android.view.View;
 import com.hengye.share.ui.activity.web.WebViewActivity;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.R;
-import com.hengye.share.ui.fragment.TestContentFragment;
-import com.hengye.share.ui.fragment.TestTabLayoutFragment;
-import com.hengye.share.ui.fragment.encapsulation.ContentFragment;
 import com.hengye.share.ui.widget.dialog.ListDialog;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
 import com.hengye.share.ui.widget.loading.FramesLoadingView;
-import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.intercept.Action;
+import com.hengye.share.util.intercept.AdTokenInterceptor;
 import com.hengye.share.util.intercept.Interception;
 import com.hengye.share.util.intercept.Interceptor;
-import com.hengye.share.util.thirdparty.ThirdPartyUtils;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
@@ -191,7 +186,7 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private Dialog mLoginDialog;
-    private Interceptor mInterceptor;
+//    private Interceptor mInterceptor;
 
     public Dialog getLoginDialog() {
         if (mLoginDialog == null) {
@@ -208,47 +203,24 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
         return mLoginDialog;
     }
 
-    public void testInterceptor() {
-        if (mInterceptor != null) {
-            mInterceptor.detroy();
-        }
-        mInterceptor = Interceptor.create(new Action() {
-            @Override
-            public void run() {
-                getHandler().post(new Runnable() {
-                    @Override
-                    public void run() {
-                        startActivity(TopicPublishActivity.getStartIntent(TestActivity.this, "test"));
-                    }
-                });
-            }
-        }, new Interception() {
-            @Override
-            public boolean isIntercept() {
+    AdTokenInterceptor mAdTokenInterceptor;
 
-                if (UserUtil.isAdTokenEmpty()) {
-                    getLoginDialog().show();
-                    return true;
+    public void testInterceptor() {
+        if (mAdTokenInterceptor == null) {
+            mAdTokenInterceptor = new AdTokenInterceptor(this, new Action() {
+                @Override
+                public void run() {
+                    startActivity(TopicPublishActivity.getStartIntent(TestActivity.this, "test"));
                 }
-                return false;
-            }
-        });
-        mInterceptor.start();
+            });
+        }
+        mAdTokenInterceptor.start();
     }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 3) {
-            if (resultCode == RESULT_OK && data != null) {
-                L.debug("bundle : {}", data.getExtras().toString());
-                if (mInterceptor != null) {
-                    startActivity(WebViewActivity.getStartIntent(TestActivity.this, "http://www.baidu.com"));
-                    mInterceptor.next();
-                }
-            }
-        }
     }
 }
 

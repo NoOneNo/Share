@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class Interceptor {
 
-    private Interceptor() {
+    protected Interceptor() {
         interceptions = new ArrayList<>();
     }
 
@@ -33,6 +33,8 @@ public class Interceptor {
 
     List<Interception> interceptions;
     Action action;
+    int index = 0;
+    boolean isIntercept = false;
 
     public List<Interception> getInterceptions(){
         return interceptions;
@@ -57,47 +59,68 @@ public class Interceptor {
         return this;
     }
 
-    public void detroy(){
+    public void destroy(){
         interceptions.clear();
         action = null;
+    }
+
+    public void start(){
+        index = 0;
+        isIntercept = false;
+        resume();
     }
 
     /**
      * 开启拦截
      */
-    public void start() {
-        while (!interceptions.isEmpty()) {
-            Interception interception = interceptions.get(0);
+    public void resume() {
+        while (!interceptions.isEmpty() && index < interceptions.size()) {
+            Interception interception = interceptions.get(index);
 
             if (interception.isIntercept()) {
+                isIntercept = true;
                 return;
             }
-            interceptions.remove(0);
+            index++;
+//            interceptions.remove(0);
         }
-        runAction();
+        tryRunAction();
     }
 
     /**
      * 表示当前拦截已经通过,可以进行下一个拦截的操作
      */
     public void next() {
-        if (interceptions.isEmpty()) {
-            runAction();
+        index++;
+        if (index == interceptions.size()) {
+            tryRunAction();
             return;
         }
-        interceptions.remove(0);
         start();
     }
 
-    public void runAction(){
+    /**
+     * 如果发生过拦截, 则返回true
+     * @return
+     */
+    public boolean isIntercept(){
+        return isIntercept;
+    }
+
+    protected void tryRunAction(){
         if(action != null){
-            action.run();
+            runAction();
         }
+    }
+
+    protected void runAction(){
+        action.run();
     }
 
     public void removeCurrentInterception(){
         if(!interceptions.isEmpty()){
-            interceptions.remove(0);
+            interceptions.remove(index);
         }
     }
+
 }

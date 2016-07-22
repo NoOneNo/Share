@@ -230,11 +230,17 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
     }
 
     public void addAll(List<T> data) {
+        if(data == null){
+            return;
+        }
         mData.addAll(data);
         notifyDataSetChanged();
     }
 
     public void addAll(int position, List<T> data) {
+        if(data == null){
+            return;
+        }
         mData.addAll(position, data);
         notifyDataSetChanged();
     }

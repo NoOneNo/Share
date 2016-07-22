@@ -71,7 +71,7 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
                 break;
             case 3:
             default:
-                fragment = new TestContentFragment();
+                fragment = TopicAlbumFragment.newInstance(mWbUserInfo.getIdstr(), mWbUserInfo.getName());
                 break;
 
         }

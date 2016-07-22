@@ -24,7 +24,7 @@ public class SearchPresenter extends BasePresenter<SearchMvpView> {
 
     public void loadWBSearchContent(String content){
         final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBSearchUserUrl());
-        ub.addParameter("access_token", UserUtil.getToken());
+        ub.addParameter("access_token", UserUtil.getAdToken());
         ub.addParameter("q", content);
         ub.addParameter("sid", "o_weico");
 

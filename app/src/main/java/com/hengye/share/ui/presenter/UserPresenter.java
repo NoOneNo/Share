@@ -58,7 +58,11 @@ public class UserPresenter extends BasePresenter<UserMvpView> {
 
     public Map<String, String> getWBUserInfoParameter(String uid, String name) {
         final UrlBuilder ub = new UrlBuilder();
-        ub.addParameter("access_token", UserUtil.getToken());
+        String token = UserUtil.getAdToken();
+        if(token == null){
+            token = UserUtil.getToken();
+        }
+        ub.addParameter("access_token", token);
         if (!TextUtils.isEmpty(uid)) {
             ub.addParameter("uid", uid);
         } else if (!TextUtils.isEmpty(name)) {

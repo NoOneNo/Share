@@ -21,6 +21,12 @@ import com.sina.weibo.sdk.auth.sso.SsoHandler;
 
 public class ThirdPartyLoginActivity extends BaseActivity implements UserMvpView {
 
+    public static Intent getStartIntent(Context context, boolean isCurrentUser){
+        Intent intent = new Intent(context, ThirdPartyLoginActivity.class);
+        intent.putExtra("isCurrentUser", isCurrentUser);
+        return intent;
+    }
+
     public static Intent getAdTokenStartIntent(Context context){
         Intent intent = new Intent(context, ThirdPartyLoginActivity.class);
         intent.putExtra("appKey", ThirdPartyUtils.WeiboApp.WEICO.name());
@@ -43,10 +49,11 @@ public class ThirdPartyLoginActivity extends BaseActivity implements UserMvpView
 
         initData();
         String appName = getIntent().getStringExtra("appKey");
+        boolean isCurrentUser = getIntent().getBooleanExtra("isCurrentUser", true);
         if(appName != null && appName.equals(ThirdPartyUtils.WeiboApp.WEICO.name())){
             startActivityForResult(WeiboWebLoginActivity.getAdTokenStartIntent(this), WEIBO_WEB_LOGIN);
         }else {
-            startActivityForResult(WeiboWebLoginActivity.class, WEIBO_WEB_LOGIN);
+            startActivityForResult(WeiboWebLoginActivity.getStartIntent(this, ThirdPartyUtils.WeiboApp.SHARE, isCurrentUser), WEIBO_WEB_LOGIN);
         }
 //        try {
 //            mSsoHandler.authorize(ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO, mWeiboAuthListener, null);
@@ -126,13 +133,14 @@ public class ThirdPartyLoginActivity extends BaseActivity implements UserMvpView
                 String password = values.getString("password");
                 if(app == ThirdPartyUtils.WeiboApp.SHARE){
                     mLoadingDialog.show();
-                    mPresenter.loadWBUserInfo(mAccessToken.getUid(), null);
                     UserUtil.updateUser(mAccessToken, account, password);
+                    mPresenter.loadWBUserInfo(mAccessToken.getUid(), null);
                 }else if(mAccessToken.getUid() != null && mAccessToken.getUid().equals(UserUtil.getUid())){
                     User user = UserUtil.getCurrentUser();
                     user.setAccount(account);
                     user.setPassword(password);
                     user.setAdToken(mAccessToken.getToken());
+                    UserUtil.updateUser(user);
                     ToastUtil.showToast(R.string.tip_authorize_success);
                     setResult(Activity.RESULT_OK);
                     finish();

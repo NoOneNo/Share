@@ -1,28 +1,51 @@
 package com.hengye.share.ui.base;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
-public abstract class BaseActivityHelper{
+/**
+ * Created by yuhy on 16/7/22.
+ */
+public class BaseActivityHelper implements ActivityHelper.ActivityLifecycleListener{
 
-    public BaseActivityHelper(Activity activity){
-        this.mActivity = activity;
+    @Override
+    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
     }
 
-    private Activity mActivity;
+    @Override
+    public void onActivityStarted(Activity activity) {
 
-    protected Activity getActivity() {
-        return mActivity;
     }
 
-    public View findViewById(int id) {
-        return mActivity.findViewById(id);
+    @Override
+    public void onActivityResumed(Activity activity) {
+
     }
 
-    protected abstract void onCreate(Bundle savedInstanceState);
+    @Override
+    public void onActivityPaused(Activity activity) {
 
-    protected abstract void onPostCreate(Bundle savedInstanceState);
+    }
 
-    protected abstract void onResume();
+    @Override
+    public void onActivityStopped(Activity activity) {
+
+    }
+
+    @Override
+    public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+    }
+
+    @Override
+    public void onActivityDestroyed(Activity activity) {
+
+    }
+
+    @Override
+    public void onActivityResulted(Activity activity, int requestCode, int resultCode, Intent data) {
+
+    }
 }

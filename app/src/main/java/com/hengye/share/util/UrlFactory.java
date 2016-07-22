@@ -81,6 +81,8 @@ public class UrlFactory {
 
     //--- 以下都没写方法
     public static final String WB_OAUTH_TOKEN = "https://api.weibo.com/oauth2/access_token";
+//    获取好友的相册列表
+//    public static final String WB_USER_ALBUM = "friendships/groups.json";
     //获取好友的分组信息
     public static final String WB_GROUP = "friendships/groups.json";
     //创建好友分组

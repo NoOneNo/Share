@@ -49,7 +49,9 @@ public class WeiboWebLoginActivity extends BaseActivity {
 
     public static Intent getStartIntent(Context context, WeiboApp app, boolean isCurrentUser){
         Intent intent = new Intent(context, WeiboWebLoginActivity.class);
-        intent.putExtra("appKey", app.name());
+        if(app != null) {
+            intent.putExtra("appKey", app.name());
+        }
 
         if(isCurrentUser && !UserUtil.isUserEmpty()){
             intent.putExtra("account", UserUtil.getCurrentUser().getAccount());

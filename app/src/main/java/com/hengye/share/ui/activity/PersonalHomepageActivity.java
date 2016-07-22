@@ -12,6 +12,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.MotionEventCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -34,14 +35,12 @@ import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.ui.fragment.PersonalHomepageFragment;
 import com.hengye.share.ui.fragment.TopicFragment;
 import com.hengye.share.ui.mvpview.UserMvpView;
-import com.hengye.share.ui.presenter.TopicPresenter;
 import com.hengye.share.ui.presenter.UserPresenter;
 import com.hengye.share.ui.widget.PersonalHomePageToolbarLayout;
 import com.hengye.share.ui.widget.fab.CheckableFab;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
-import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
@@ -108,7 +107,6 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         } else {
             addPresenter(mPresenter = new UserPresenter(this));
             initView();
-            loadData();
         }
     }
 
@@ -255,7 +253,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 
     }
 
-    private void setUpAvatarToToolbar(){
+    private void setUpAvatarToToolbar() {
         if (mAvatar.getDrawable() == null || !(mAvatar.getDrawable() instanceof BitmapDrawable)) {
             return;
         }
@@ -303,11 +301,6 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         } else {
             mSwipeRefresh.setEnabled(false);
         }
-//        if (mCollapsingToolbarLayout.getHeight() + verticalOffset < 2 * ViewCompat.getMinimumHeight(mCollapsingToolbarLayout)) {
-//            mSwipeRefresh.setEnabled(false);
-//        } else {
-//            mSwipeRefresh.setEnabled(true);
-//        }
 //        L.debug("vertical offset : {}, height : {}, minimumHeight : {}", verticalOffset, mCollapsingToolbarLayout.getHeight(), ViewCompat.getMinimumHeight(mCollapsingToolbarLayout));
     }
 
@@ -323,10 +316,10 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         mAppBarLayout.removeOnOffsetChangedListener(this);
     }
 
-//    TopicFragment mTopicFragment;
+    //    TopicFragment mTopicFragment;
     PersonalHomepageFragment mFragment;
 
-    private void setupTopicFragment(WBUserInfo wbUserInfo) {
+    private void setupFragment(WBUserInfo wbUserInfo) {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content, mFragment = PersonalHomepageFragment.newInstance(wbUserInfo))
@@ -345,11 +338,28 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                         pullToRefresh.getOnRefreshListener().onRefresh();
                     }
                 });
+
+                mFragment.getViewPager().addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                    @Override
+                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                    }
+
+                    @Override
+                    public void onPageSelected(int position) {
+
+                    }
+
+                    @Override
+                    public void onPageScrollStateChanged(int state) {
+                        mSwipeRefresh.setEnabled(state != ViewPager.SCROLL_STATE_DRAGGING);
+                    }
+                });
             }
 
             @Override
-            public void refresh(final boolean isRefresh) {
-                if (isRefresh) {
+            public void refresh(final boolean isRefreshing) {
+                if (isRefreshing) {
                     mSwipeRefresh.setRefreshing(true);
                     mSwipeRefresh.getOnRefreshListener().onRefresh();
                 } else {
@@ -382,7 +392,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                 int avatarMarginTop = ViewUtil.dp2px(R.dimen.header_personal_avatar_margin_top);
                 int descHeight = mUserDescription.getHeight();
                 float marginBottom = descHeight + (avatarMarginTop - textHeight) / 2;
-                mCollapsingToolbarLayout.setExpandedTitleMarginBottom((int)marginBottom);
+                mCollapsingToolbarLayout.setExpandedTitleMarginBottom((int) marginBottom);
 
                 ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mFollowButton.getLayoutParams();
                 lp.bottomMargin = descHeight;
@@ -391,22 +401,17 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                 return true;
             }
         });
+
+        loadData(wbUserInfo);
     }
 
-    private boolean loadData() {
-        if (mUserInfo == null || UserUtil.isUserEmpty()) {
-            return false;
+    private void loadData(WBUserInfo wbUserInfo) {
+        if (wbUserInfo == null || UserUtil.isUserEmpty()) {
+            return;
         }
-        if (mUserInfo.getParent().isWeiBo()) {
-            L.debug("userInfo : {}", mUserInfo.getParent().getJson());
-            if (!TextUtils.isEmpty(mUserInfo.getUid()) || !TextUtils.isEmpty(mUserInfo.getName())) {
-                setupTopicFragment(mUserInfo.getWBUserInfoFromParent());
-//                SwipeRefreshLayout
-//                PullToRefreshLayout pullToRefreshLayout = (PullToRefreshLayout) mTopicFragment.findViewById(R.id.pull_to_refresh);
-//                pullToRefreshLayout.setRefreshEnable(false);
-            }
+        if (mFragment == null) {
+            setupFragment(wbUserInfo);
         }
-        return false;
     }
 
     @Override

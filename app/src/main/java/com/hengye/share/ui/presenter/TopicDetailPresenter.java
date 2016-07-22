@@ -39,9 +39,10 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailMvpView> {
     public void loadWBCommentAndRepost(String topicId, String id, final boolean isRefresh) {
         WBService service = RetrofitManager.getWBService();
         Map<String, String> params = getParameter(UserUtil.getToken(), topicId, id, isRefresh);
+        Map<String, String> repostParams = getParameter(UserUtil.getAdToken(), topicId, id, isRefresh);
         Observable.zip(
                 service.listComment(params),
-                service.listRepost(params),
+                service.listRepost(repostParams),
                 ObjectConverter.getObjectConverter2())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -65,7 +66,7 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailMvpView> {
     @SuppressWarnings("unchecked")
     public void loadWBCommentOrRepost(String topicId, String id, final boolean isRefresh, final boolean isComment) {
         WBService service = RetrofitManager.getWBService();
-        Map<String, String> params = getParameter(UserUtil.getToken(), topicId, id, isRefresh);
+        Map<String, String> params = getParameter(isComment ? UserUtil.getToken() : UserUtil.getAdToken(), topicId, id, isRefresh);
 
         Observable observable = isComment ? service.listComment(params) : service.listRepost(params);
 

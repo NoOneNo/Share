@@ -44,6 +44,8 @@ import com.hengye.share.helper.SettingHelper;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
+import com.hengye.share.util.intercept.Action;
+import com.hengye.share.util.intercept.AdTokenInterceptor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -170,6 +172,7 @@ public class TopicActivity extends BaseActivity
 
 
     private SearchView mSearchView;
+    private String mContent;
 
     private void initSearch() {
         mSearchView = (SearchView) findViewById(R.id.search_view);
@@ -179,9 +182,11 @@ public class TopicActivity extends BaseActivity
         mSearchView.setSearchListener(new SearchView.onSearchListener() {
             @Override
             public void onSearch(String content) {
-                if (!TextUtils.isEmpty(content.trim())) {
+                mContent = content;
+                if (!TextUtils.isEmpty(mContent.trim())) {
                     setHideAnimationOnStart();
-                    startActivity(SearchActivity.getStartIntent(TopicActivity.this, content));
+                    getAdTokenInterceptor().setAction(mStartSearch).start();
+//                    startActivity(SearchActivity.getStartIntent(TopicActivity.this, mContent));
 //                        overridePendingTransition(R.anim.fade_in, 0);
                 }
             }
@@ -284,7 +289,8 @@ public class TopicActivity extends BaseActivity
 //            mDrawer.closeDrawer(GravityCompat.END);
             startActivity(SettingActivity.class);
         } else if (id == R.id.nav_group_manage) {
-            startActivityForResult(GroupManageActivity.class, GroupManageActivity.GROUP_UPDATE);
+            getAdTokenInterceptor().setAction(mStartGroup).start();
+//            startActivityForResult(GroupManageActivity.class, GroupManageActivity.GROUP_UPDATE);
         } else if (id == R.id.nav_draft) {
             startActivity(TopicDraftActivity.class);
         } else if (id == R.id.nav_share) {
@@ -394,4 +400,26 @@ public class TopicActivity extends BaseActivity
         super.onNetworkChange(isConnected);
         mNoNetwork.setVisibility(isConnected ? View.GONE : View.VISIBLE);
     }
+
+    Action mStartGroup, mStartSearch;
+    AdTokenInterceptor mAdTokenInterceptor;
+    public AdTokenInterceptor getAdTokenInterceptor(){
+        if(mAdTokenInterceptor == null){
+            mAdTokenInterceptor = new AdTokenInterceptor(this, null);
+            mStartGroup = new Action() {
+                @Override
+                public void run() {
+                    startActivityForResult(GroupManageActivity.class, GroupManageActivity.GROUP_UPDATE);
+                }
+            };
+            mStartSearch = new Action() {
+                @Override
+                public void run() {
+                    startActivity(SearchActivity.getStartIntent(TopicActivity.this, mContent));
+                }
+            };
+        }
+        return mAdTokenInterceptor;
+    }
+
 }

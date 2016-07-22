@@ -370,7 +370,10 @@ public class WBTopic implements Serializable{
         return darwin_tags;
     }
 
-    public static class VisibleEntity {
+    public static class VisibleEntity implements Serializable{
+
+        private static final long serialVersionUID = -5270600301367680541L;
+
         private int type;
         private int list_id;
 

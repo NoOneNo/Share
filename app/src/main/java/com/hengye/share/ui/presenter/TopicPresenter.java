@@ -180,9 +180,11 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
     }
 
     public void loadWBHomepageTopic(String id, final boolean isRefresh) {
+        Map<String, String> params = getWBAllTopicParameter(id, isRefresh);
+        params.put("access_token", UserUtil.getAdToken());
         RetrofitManager
                 .getWBService()
-                .listUserTopic(getWBAllTopicParameter(id, isRefresh))
+                .listUserTopic(params)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(getWBTopicsSubscriber(isRefresh));

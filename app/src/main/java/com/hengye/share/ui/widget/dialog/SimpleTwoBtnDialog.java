@@ -4,8 +4,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.StringRes;
 
 import com.hengye.share.R;
+import com.hengye.share.util.ResUtil;
 
 public class SimpleTwoBtnDialog{
 
@@ -66,12 +68,20 @@ public class SimpleTwoBtnDialog{
         this.title = title;
     }
 
+    public void setTitle(@StringRes int resId){
+        setTitle(ResUtil.getString(resId));
+    }
+
     public String getContent() {
         return content;
     }
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public void setContent(@StringRes int resId) {
+        setContent(ResUtil.getString(resId));
     }
 
     public CharSequence getNegativeButtonText(Context context) {

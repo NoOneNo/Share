@@ -85,10 +85,12 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                     mAdapter.setData(mCommentData);
                     mAdapter.notifyDataSetChanged();
                     mListView.setSelection(1);
+                    mPullToRefreshLayout.setLoadEnable(mLoadCommentEnable);
                 }else if(tab.getPosition() == 1){
                     mAdapter.setData(mRepostData);
                     mAdapter.notifyDataSetChanged();
                     mListView.setSelection(1);
+                    mPullToRefreshLayout.setLoadEnable(mLoadReposttEnable);
                 }
             }
         }
@@ -105,6 +107,8 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     private TopicCommentAdapter mAdapter;
     private TabLayout mTabLayout, mTabLayoutAssist;
     private int mTabLayoutHeight;
+    private boolean mLoadCommentEnable = true;
+    private boolean mLoadReposttEnable = true;
 
     private View mTopicContentLayout;
     private TextView mTopicContent;
@@ -238,6 +242,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         });
 
         mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.pull_to_refresh);
+        mPullToRefreshLayout.setLoadEnable(true);
         mPullToRefreshLayout.setOnRefreshListener(new SwipeListener.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -361,7 +366,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                     //结果小于请求条数
 //                    mPullToRefreshLayout.setLoadEnable(false);
                 }else{
-                    mPullToRefreshLayout.setLoadEnable(true);
+                    handleLoadMore(true, isComment);
                 }
                 mAdapter.refresh(adapterData);
 //            }
@@ -370,7 +375,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             mPullToRefreshLayout.setLoading(false);
             if (CommonUtil.isEmpty(data)) {
                 //没有数据可供加载
-                mPullToRefreshLayout.setLoadEnable(false);
+                handleLoadMore(false, isComment);
                 Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
             } else {
                 //成功加载更多
@@ -388,7 +393,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 
                 //当只有1条数据并且重复，data会空
                 if (CommonUtil.isEmpty(data)) {
-                    mPullToRefreshLayout.setLoadEnable(false);
+                    handleLoadMore(false, isComment);
                     Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
                 }else{
                     targetData.addAll(data);
@@ -400,6 +405,20 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             }else if(!isComment && isSelectedRepostTab()){
                 mAdapter.notifyDataSetChanged();
             }
+        }
+
+    }
+
+    public void handleLoadMore(boolean enable, boolean isComment){
+        if(isComment){
+            mLoadCommentEnable = false;
+        }else{
+            mLoadReposttEnable = false;
+        }
+        if(isSelectedCommentTab() && isComment){
+            mPullToRefreshLayout.setLoadEnable(false);
+        }else if(isSelectedRepostTab() && !isComment){
+            mPullToRefreshLayout.setLoadEnable(false);
         }
 
     }

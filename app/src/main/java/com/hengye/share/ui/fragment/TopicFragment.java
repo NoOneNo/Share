@@ -203,8 +203,8 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
         }
 
         @Override
-        public void refresh(boolean isRefresh) {
-            mPullToRefreshLayout.setRefreshing(isRefresh);
+        public void refresh(boolean isRefreshing) {
+            mPullToRefreshLayout.setRefreshing(isRefreshing);
         }
     }
 }
