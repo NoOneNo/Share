@@ -1,28 +1,21 @@
 package com.hengye.share.ui.fragment;
 
 
-import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 
 import com.android.volley.cache.BitmapCache;
 import com.android.volley.toolbox.BitmapUtil;
-import com.hengye.share.ui.base.BaseApplication;
 import com.hengye.share.R;
 import com.hengye.share.ui.base.BaseFragment;
 import com.hengye.share.ui.support.AnimationRect;
-import com.hengye.share.ui.view.ClipImageView;
-import com.hengye.share.util.AnimationUtil;
+import com.hengye.share.ui.widget.image.ClipImageView;
 
 import java.io.File;
 import java.io.IOException;

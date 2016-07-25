@@ -7,9 +7,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicAdapter;
@@ -17,12 +16,12 @@ import com.hengye.share.model.Topic;
 import com.hengye.share.ui.base.BaseFragment;
 import com.hengye.share.ui.mvpview.TopicMvpView;
 import com.hengye.share.ui.presenter.TopicPresenter;
-import com.hengye.share.ui.view.BackTopButton;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
 import com.hengye.swiperefresh.listener.SwipeListener;
+import com.hengye.share.ui.fragment.PersonalHomepageFragment.LoadDataCallBack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +47,7 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
     }
 
     private PullToRefreshLayout mPullToRefreshLayout;
-
+    private RecyclerView mRecyclerView;
     private TopicAdapter mAdapter;
     private TopicPresenter mPresenter;
     private TopicPresenter.TopicGroup topicGroup;
@@ -67,6 +66,12 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
     }
 
     @Override
+    public boolean onToolbarDoubleClick(Toolbar toolbar) {
+        mRecyclerView.getLayoutManager().scrollToPosition(0);
+        return true;
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
         addPresenter(mPresenter = new TopicPresenter(this, topicGroup));
@@ -74,13 +79,10 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
         mPresenter.setName(name);
 
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(mAdapter = new TopicAdapter(getContext(), new ArrayList<Topic>(), recyclerView));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        BackTopButton backTopBtn = (BackTopButton) findViewById(R.id.iv_back_top);
-        backTopBtn.setup(recyclerView);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(mAdapter = new TopicAdapter(getContext(), new ArrayList<Topic>(), mRecyclerView));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.pull_to_refresh);
         mPullToRefreshLayout.setOnRefreshListener(new SwipeListener.OnRefreshListener() {
@@ -120,10 +122,10 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
         mPresenter.loadCacheData();
 
 //        if(SettingHelper.isPreRead()){
-//            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 //                @Override
-//                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                    super.onScrolled(recyclerView, dx, dy);
+//                public void onScrolled(RecyclerView mRecyclerView, int dx, int dy) {
+//                    super.onScrolled(mRecyclerView, dx, dy);
 //                    if(layoutManager.findLastVisibleItemPosition() > mAdapter.getItemCount() - 8){
 //                        mPullToRefreshLayout.setLoading(true);
 //                    }
@@ -190,10 +192,8 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
         this.mLoadDataCallBack = loadDataCallBack;
     }
 
-    public interface LoadDataCallBack {
-        void initView();
-
-        void refresh(boolean isRefresh);
+    public PullToRefreshLayout getPullToRefresh(){
+        return mPullToRefreshLayout;
     }
 
     public class DefaultLoadDataCallBack implements LoadDataCallBack {

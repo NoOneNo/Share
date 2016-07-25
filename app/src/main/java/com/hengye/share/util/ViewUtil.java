@@ -165,4 +165,8 @@ public class ViewUtil extends ResUtil {
          */
         boolean onItemLongClick(View view, int position);
     }
+
+    public interface OnDoubleClickListener {
+        boolean onDoubleClick(View view);
+    }
 }

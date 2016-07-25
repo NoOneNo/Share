@@ -66,11 +66,11 @@ public class TopicAlbumPresenter extends BasePresenter<TopicAlbumMvpView> {
             if (!CommonUtil.isEmpty(topic.getImageUrls())) {
                 urls.addAll(topic.getImageUrls());
             }
-            if (topic.getRetweetedTopic() != null) {
-                if (!CommonUtil.isEmpty(topic.getRetweetedTopic().getImageUrls())) {
-                    urls.addAll(topic.getRetweetedTopic().getImageUrls());
-                }
-            }
+//            if (topic.getRetweetedTopic() != null) {
+//                if (!CommonUtil.isEmpty(topic.getRetweetedTopic().getImageUrls())) {
+//                    urls.addAll(topic.getRetweetedTopic().getImageUrls());
+//                }
+//            }
         }
         return urls;
     }
@@ -94,8 +94,8 @@ public class TopicAlbumPresenter extends BasePresenter<TopicAlbumMvpView> {
             ub.addParameter("screen_name", name);
         }
 
-        // 相册
-        ub.addParameter("feature", "2");
+        // 原创相册
+        ub.addParameter("feature", "12");
 
         ub.addParameter("count", WBUtil.getWBTopicRequestCount());
         return ub.getParameters();

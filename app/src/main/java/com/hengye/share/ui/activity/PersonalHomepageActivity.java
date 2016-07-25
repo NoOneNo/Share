@@ -110,6 +110,14 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         }
     }
 
+    @Override
+    public boolean onToolbarDoubleClick(Toolbar toolbar) {
+        if(mFragment != null){
+            return mFragment.onToolbarDoubleClick(toolbar);
+        }
+        return super.onToolbarDoubleClick(toolbar);
+    }
+
     private TextView mDivision, mAttention, mFans, mSign;
     private NetworkImageViewPlus mCover, mAvatar;
     private PersonalHomePageToolbarLayout mCollapsingToolbarLayout;
@@ -129,7 +137,10 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     @SuppressWarnings("ConstantConditions")
     private void initView() {
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        initToolbar();
+//        getToolbar().setNavigationIcon(null);
+        getToolbar().getNavigationIcon().setVisible(false, false);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        toolbar.
 //        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -172,14 +183,6 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         mAttention = (TextView) findViewById(R.id.tv_attention);
         mFans = (TextView) findViewById(R.id.tv_fans);
         mSign = (TextView) findViewById(R.id.tv_sign);
-        if (mUserInfo.getParent().isWeiBo()) {
-            WBUserInfo wbUserInfo = mUserInfo.getWBUserInfoFromParent();
-            if (wbUserInfo != null) {
-                initUserInfo(wbUserInfo);
-            } else {
-                mPresenter.loadWBUserInfo(mUserInfo.getUid(), mUserInfo.getName());
-            }
-        }
 
         mTab = (TabLayout) findViewById(R.id.tab);
 
@@ -251,6 +254,15 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
             }
         });
 
+        if (mUserInfo.getParent().isWeiBo()) {
+            WBUserInfo wbUserInfo = mUserInfo.getWBUserInfoFromParent();
+            if (wbUserInfo != null) {
+                initUserInfo(wbUserInfo);
+            } else {
+                mSwipeRefresh.setRefreshing(true);
+                mPresenter.loadWBUserInfo(mUserInfo.getUid(), mUserInfo.getName());
+            }
+        }
     }
 
     private void setUpAvatarToToolbar() {
@@ -320,53 +332,12 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     PersonalHomepageFragment mFragment;
 
     private void setupFragment(WBUserInfo wbUserInfo) {
+        mFragment = PersonalHomepageFragment.newInstance(wbUserInfo);
+        mFragment.setSwipeRefresh(mSwipeRefresh);
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content, mFragment = PersonalHomepageFragment.newInstance(wbUserInfo))
+                .replace(R.id.content, mFragment)
                 .commit();
-
-        mFragment.setCallBack(new TopicFragment.LoadDataCallBack() {
-            @Override
-            public void initView() {
-                RecyclerView recyclerView = (RecyclerView) mFragment.getTopicFragment().findViewById(R.id.recycler_view);
-//                recyclerView.setNestedScrollingEnabled(false);
-                final PullToRefreshLayout pullToRefresh = (PullToRefreshLayout) mFragment.getTopicFragment().findViewById(R.id.pull_to_refresh);
-                pullToRefresh.setRefreshEnable(false);
-                mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        pullToRefresh.getOnRefreshListener().onRefresh();
-                    }
-                });
-
-                mFragment.getViewPager().addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                    @Override
-                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-                    }
-
-                    @Override
-                    public void onPageSelected(int position) {
-
-                    }
-
-                    @Override
-                    public void onPageScrollStateChanged(int state) {
-                        mSwipeRefresh.setEnabled(state != ViewPager.SCROLL_STATE_DRAGGING);
-                    }
-                });
-            }
-
-            @Override
-            public void refresh(final boolean isRefreshing) {
-                if (isRefreshing) {
-                    mSwipeRefresh.setRefreshing(true);
-                    mSwipeRefresh.getOnRefreshListener().onRefresh();
-                } else {
-                    mSwipeRefresh.setRefreshing(false);
-                }
-            }
-        });
     }
 
     private void initUserInfo(WBUserInfo wbUserInfo) {
@@ -427,6 +398,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 
     @Override
     public void handleUserInfo(WBUserInfo wbUserInfo) {
+        mSwipeRefresh.setRefreshing(false);
         if (wbUserInfo != null) {
             initUserInfo(wbUserInfo);
         }
@@ -439,7 +411,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 
     @Override
     public void loadFail() {
-
+        mSwipeRefresh.setRefreshing(false);
     }
 
     public void follow(final boolean isFollow, String uid) {

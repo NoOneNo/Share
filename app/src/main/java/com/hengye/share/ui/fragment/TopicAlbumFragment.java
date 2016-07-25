@@ -3,8 +3,10 @@ package com.hengye.share.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.hengye.share.R;
@@ -12,15 +14,17 @@ import com.hengye.share.adapter.recyclerview.TopicAlbumAdapter;
 import com.hengye.share.ui.base.BaseFragment;
 import com.hengye.share.ui.mvpview.TopicAlbumMvpView;
 import com.hengye.share.ui.presenter.TopicAlbumPresenter;
-import com.hengye.share.ui.presenter.TopicPresenter;
+import com.hengye.share.ui.widget.recyclerview.GridItemDecoration;
 import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.ViewUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
 import com.hengye.swiperefresh.listener.SwipeListener;
+import com.hengye.share.ui.fragment.PersonalHomepageFragment.LoadDataCallBack;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopicAlbumFragment extends BaseFragment implements TopicAlbumMvpView{
+public class TopicAlbumFragment extends BaseFragment implements TopicAlbumMvpView, SwipeListener.OnRefreshListener {
 
     public static TopicAlbumFragment newInstance(String uid, String name) {
         TopicAlbumFragment fragment = new TopicAlbumFragment();
@@ -51,6 +55,12 @@ public class TopicAlbumFragment extends BaseFragment implements TopicAlbumMvpVie
     }
 
     @Override
+    public boolean onToolbarDoubleClick(Toolbar toolbar) {
+        mRecyclerView.getLayoutManager().scrollToPosition(0);
+        return true;
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -62,45 +72,76 @@ public class TopicAlbumFragment extends BaseFragment implements TopicAlbumMvpVie
         mPullToRefresh.setLoadEnable(true);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
-        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        GridLayoutManager staggeredGridLayoutManager = new GridLayoutManager(getContext(), 3, LinearLayoutManager.VERTICAL, false);
 
+        mRecyclerView.addItemDecoration(new GridItemDecoration(ViewUtil.dp2px(R.dimen.content_margin_3dp)));
         mRecyclerView.setLayoutManager(staggeredGridLayoutManager);
         mRecyclerView.setAdapter(mAdapter = new TopicAlbumAdapter(getContext(), new ArrayList<String>()));
 
-        mPresenter.loadTopicAlbum(true);
-        mPullToRefresh.setOnRefreshListener(new SwipeListener.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mPresenter.loadTopicAlbum(true);
-            }
-        });
+        mPullToRefresh.setRefreshEnable(false);
         mPullToRefresh.setOnLoadListener(new SwipeListener.OnLoadListener() {
             @Override
             public void onLoad() {
                 mPresenter.loadTopicAlbum(false);
             }
         });
+
+        onRefresh();
     }
 
     @Override
     public void stopLoading(boolean isRefresh) {
-        if(isRefresh){
-            mPullToRefresh.setRefreshing(false);
-        }else{
+        if (isRefresh) {
+            getLoadDataCallBack().refresh(false);
+        } else {
             mPullToRefresh.setLoading(false);
         }
     }
 
     @Override
     public void handleAlbumData(List<String> urls, boolean isRefresh) {
-        if(isRefresh){
+        if (isRefresh) {
             mAdapter.refresh(urls);
             mPullToRefresh.setLoadEnable(true);
-        }else{
+        } else {
             mAdapter.addAll(urls);
-            if(CommonUtil.isEmpty(urls)){
+            if (CommonUtil.isEmpty(urls)) {
                 mPullToRefresh.setLoadEnable(false);
             }
+        }
+    }
+
+    @Override
+    public void onRefresh() {
+        mPresenter.loadTopicAlbum(true);
+    }
+
+    LoadDataCallBack mLoadDataCallBack;
+
+    public LoadDataCallBack getLoadDataCallBack() {
+        if(mLoadDataCallBack == null){
+            mLoadDataCallBack = new DefaultLoadDataCallBack();
+        }
+        return mLoadDataCallBack;
+    }
+
+    public void setLoadDataCallBack(LoadDataCallBack loadDataCallBack) {
+        this.mLoadDataCallBack = loadDataCallBack;
+    }
+
+    public PullToRefreshLayout getPullToRefresh(){
+        return mPullToRefresh;
+    }
+
+    public class DefaultLoadDataCallBack implements LoadDataCallBack {
+        @Override
+        public void initView() {
+
+        }
+
+        @Override
+        public void refresh(boolean isRefreshing) {
+            mPullToRefresh.setRefreshing(isRefreshing);
         }
     }
 }

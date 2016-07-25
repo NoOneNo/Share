@@ -42,14 +42,4 @@
         android:layout_margin="@dimen/fab_margin"
         android:src="@android:drawable/ic_menu_edit" />
 
-    <com.hengye.share.ui.view.BackTopButton
-        android:id="@+id/iv_back_top"
-        android:layout_gravity="bottom|end"
-        android:layout_width="@dimen/icon_size_large"
-        android:layout_height="@dimen/icon_size_large"
-        android:layout_marginBottom="80dp"
-        android:layout_marginEnd="20dp"
-        android:scaleType="centerCrop"
-        android:contentDescription="@null"
-        android:src="@drawable/ic_back_top"/>
 </FrameLayout>

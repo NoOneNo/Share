@@ -4,7 +4,7 @@
     android:layout_width="match_parent"  
     android:layout_height="match_parent">
      	  
-	<!--<com.hengye.share.ui.view.TouchImageView-->
+	<!--<com.hengye.share.ui.widget.image.TouchImageView-->
 	    <!--android:id="@+id/iv_normalayout_width="match_parent"-->
 	    <!--android:layout_height="match_parent"-->
 	    <!--android:contentDescription="@null"-->

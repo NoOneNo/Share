@@ -1,16 +1,12 @@
 package com.hengye.share.adapter.listview;
 
 import android.content.Context;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.TextView;
 
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicAdapter;
 import com.hengye.share.model.TopicComment;
-import com.hengye.share.ui.support.textspan.SimpleLinkMovementMethod;
 import com.hengye.share.ui.support.textspan.TopicUrlOnTouchListener;
-import com.hengye.share.ui.view.GridGalleryView;
 import com.hengye.share.ui.widget.util.SelectorLoader;
 
 import java.util.List;

@@ -10,7 +10,7 @@
  * Extends Android ImageView to include pinch zooming, panning, fling and double tap zoom.
  */
 
-package com.hengye.share.ui.view;
+package com.hengye.share.ui.widget.image;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;

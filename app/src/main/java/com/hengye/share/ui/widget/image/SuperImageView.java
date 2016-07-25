@@ -1,4 +1,4 @@
-package com.hengye.share.ui.widget;
+package com.hengye.share.ui.widget.image;
 
 import android.content.Context;
 import android.util.AttributeSet;

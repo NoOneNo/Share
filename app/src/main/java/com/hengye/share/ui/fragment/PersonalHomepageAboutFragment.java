@@ -1,6 +1,8 @@
 package com.hengye.share.ui.fragment;
 
 import android.os.Bundle;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -36,6 +38,12 @@ public class PersonalHomepageAboutFragment extends BaseFragment implements View.
     }
 
     @Override
+    public boolean onToolbarDoubleClick(Toolbar toolbar) {
+        mScrollView.scrollTo(0, 0);
+        return true;
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mRemark = findViewById(R.id.item_remark);
@@ -43,6 +51,8 @@ public class PersonalHomepageAboutFragment extends BaseFragment implements View.
         mWBAuth = findViewById(R.id.item_wb_auth);
         mLocation = findViewById(R.id.item_location);
         mSign = findViewById(R.id.item_sign);
+
+        mScrollView = (NestedScrollView) findViewById(R.id.scrollView);
 
         findViewById(R.id.btn_at_ta).setOnClickListener(this);
         findViewById(R.id.btn_private_message).setOnClickListener(this);
@@ -52,6 +62,7 @@ public class PersonalHomepageAboutFragment extends BaseFragment implements View.
 
     WBUserInfo mWbUserInfo;
     View mRemark, mGroup, mWBAuth, mLocation, mSign;
+    NestedScrollView mScrollView;
 
     @Override
     public void onClick(View v) {
@@ -63,6 +74,7 @@ public class PersonalHomepageAboutFragment extends BaseFragment implements View.
 
     public void updateUserInfo(WBUserInfo wbUserInfo){
         mWbUserInfo = wbUserInfo;
+        updateUserInfo();
     }
 
     public void updateUserInfo(){

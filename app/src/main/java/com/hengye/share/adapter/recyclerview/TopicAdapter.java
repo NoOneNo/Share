@@ -32,7 +32,7 @@ import com.hengye.share.ui.activity.TopicGalleryActivity;
 import com.hengye.share.ui.activity.TopicPublishActivity;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.ui.support.textspan.TopicUrlOnTouchListener;
-import com.hengye.share.ui.view.GridGalleryView;
+import com.hengye.share.ui.widget.image.GridGalleryView;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
 import com.hengye.share.ui.widget.util.SelectorLoader;
 import com.hengye.share.util.ClipboardUtil;

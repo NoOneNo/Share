@@ -17,9 +17,11 @@ import android.widget.LinearLayout;
 
 import com.hengye.share.R;
 import com.hengye.share.ui.presenter.BasePresenter;
+import com.hengye.share.ui.view.CommonToolBar;
 import com.hengye.share.util.NetworkUtil;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.helper.SettingHelper;
+import com.hengye.share.util.ViewUtil.OnDoubleClickListener;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -299,7 +301,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void initToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = (CommonToolBar) findViewById(R.id.toolbar);
         if (mToolbar != null) {
             setSupportActionBar(mToolbar);
             mToolbar.setTitle(getToolbarTitle());
@@ -309,10 +311,17 @@ public class BaseActivity extends AppCompatActivity {
                     onBackPressed();
                 }
             });
+            mToolbar.setOnDoubleClickListener(mOnDoubleClickListener = new OnDoubleClickListener() {
+                @Override
+                public boolean onDoubleClick(View view) {
+                    return onToolbarDoubleClick(mToolbar);
+                }
+            });
         }
     }
 
-    private Toolbar mToolbar;
+    private CommonToolBar mToolbar;
+    private OnDoubleClickListener mOnDoubleClickListener;
 
     public Toolbar getToolbar() {
         return mToolbar;
@@ -324,6 +333,10 @@ public class BaseActivity extends AppCompatActivity {
 
     public void updateToolbarTitle(@StringRes int resId) {
         mToolbar.setTitle(getString(resId));
+    }
+
+    public boolean onToolbarDoubleClick(Toolbar toolbar){
+        return false;
     }
 
     protected CharSequence getToolbarTitle() {

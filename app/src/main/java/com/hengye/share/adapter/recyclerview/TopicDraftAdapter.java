@@ -5,14 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.hengye.share.R;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.greenrobot.TopicDraft;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.service.TopicPublishService;
-import com.hengye.share.ui.view.GridGalleryView;
 import com.hengye.share.util.L;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;

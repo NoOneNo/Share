@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.hengye.share.ui.base.BaseFragment;
 import com.hengye.share.ui.fragment.encapsulation.TabLayoutFragment;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class TestTabLayoutFragment extends TabLayoutFragment {
     }
 
     @Override
-    protected Fragment newFragment(TabItem tabItem) {
+    protected BaseFragment newFragment(TabItem tabItem) {
         return new TestContentFragment();
     }
 }
