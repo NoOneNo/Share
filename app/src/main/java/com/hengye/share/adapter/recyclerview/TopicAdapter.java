@@ -433,7 +433,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
                             }
 
                             TopicGalleryActivity
-                                    .startWithIntent(context, urls, animationRectArrayList, position);
+                                    .startWithIntent(context, urls, position, animationRectArrayList);
                         }
                     }
                 });

@@ -1,21 +1,11 @@
 package com.hengye.share.ui.widget.util;
 
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.view.View;
 
 public class ShapeLoader {
-
-    private float DENSITY;
-
-    /**
-     * 用于代码设置控件
-     */
-    private ShapeLoader(){
-        DENSITY = Resources.getSystem().getDisplayMetrics().density;
-    }
 
     /**
      * singleton
@@ -334,7 +324,4 @@ public class ShapeLoader {
         return gradientDrawable;
     }
 
-    public float dp2Px(float dp){
-        return Math.round(dp * DENSITY);
-    }
 }

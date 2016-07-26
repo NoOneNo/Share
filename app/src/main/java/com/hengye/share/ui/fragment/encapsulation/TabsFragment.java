@@ -22,10 +22,10 @@ import java.util.Map;
 /**
  * Created by yuhy on 16/7/18.
  */
-public abstract class TabsFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
+public abstract class TabsFragment extends ContentFragment implements ViewPager.OnPageChangeListener {
 
     @Override
-    public int getLayoutResId() {
+    public int getContentResId() {
         return R.layout.fragment_tabs;
     }
 
@@ -157,8 +157,8 @@ public abstract class TabsFragment extends BaseFragment implements ViewPager.OnP
     public void onDestroy() {
         try {
             destroyFragments();
-        } catch (Exception var2) {
-            var2.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         super.onDestroy();

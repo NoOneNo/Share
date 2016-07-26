@@ -75,9 +75,9 @@ public class PersonalHomePageToolbarLayout extends CollapsingToolbarLayout {
 
     AppBarLayout appBarLayout;
     Toolbar toolbar;
-    View avatar, userInfoLayout;
+    View avatar, userInfoBgLayout, userInfoLayout;
     boolean onCoverSet;
-    int mHeight;
+    int mAppBarHeight;
     Matrix avatarMatrix;
     int maxVerticalOffset;
     int verticalOffset;
@@ -87,6 +87,12 @@ public class PersonalHomePageToolbarLayout extends CollapsingToolbarLayout {
     private int finalAvatarSize;// 缩小后的头像尺寸
     private int avatarMarginLeft;// 头像左侧Margin
     private int avatarFinalMarginLeft;// 头像缩小后的Margin
+
+//    private Bitmap layNameBitmap;// 包括名字、性别、认证三个要素的截图
+//    private Matrix layNameMatrix;
+//    private int layNameMarginTop;// 名字顶部的margin
+//    private int layNameMarginLeft;
+//    private int finalLayNameSize;
 
     @Override
     protected void onAttachedToWindow() {
@@ -102,7 +108,9 @@ public class PersonalHomePageToolbarLayout extends CollapsingToolbarLayout {
             toolbar = (Toolbar) findViewById(R.id.toolbar);
             appBarLayout = (AppBarLayout) parent;
             avatar = findViewById(R.id.iv_avatar);
-            userInfoLayout = findViewById(R.id.fl_user_info);
+            userInfoBgLayout = findViewById(R.id.fl_user_info);
+            userInfoLayout = findViewById(R.id.ll_user_desc);
+//            userInfoBgLayout = findViewById(R.id.fl_user_info_bg);
 //            collapsingToolbarLayout = this;
 //            imgCover = (ImageView) findViewById(R.id.imgCover);
 //            tabLayout = (TabLayout) appBarLayout.findViewById(R.id.tabLayout);
@@ -142,20 +150,20 @@ public class PersonalHomePageToolbarLayout extends CollapsingToolbarLayout {
 //            imgCover.setPadding(imgCover.getPaddingLeft(), imgCover.getPaddingTop(), imgCover.getPaddingRight(), layDetail.getHeight());
 //        }
 
-        if (mHeight != getHeight()) {
-            mHeight = getHeight();
+        if (mAppBarHeight != appBarLayout.getHeight()) {
+            mAppBarHeight = appBarLayout.getHeight();
 
-            // 计算Detail的layout_collapseParallaxMultiplier，使其收起来时刚好高度为ToolBar的高度
-//            CollapsingToolbarLayout.LayoutParams params = (CollapsingToolbarLayout.LayoutParams) layDetail.getLayoutParams();
-//            // 最大移动的距离
-//            maxVerticalOffset = appBarLayout.getHeight() - (statusbarHeight + toolbar.getHeight() + tabLayout.getHeight()) - 2;
             maxVerticalOffset = getHeight() - (ViewUtil.getStatusBarHeight() + toolbar.getHeight());
-//            // 计算移动后的top减去移动前的top就是需要offset，再用offset计算出multiplier
-//            float multiplier = ((maxVerticalOffset + statusbarHeight) -
-//                    (collapsingToolbarLayout.getHeight() - layDetail.getHeight())) * 1.0f / maxVerticalOffset;
-//            if (params.getParallaxMultiplier() != multiplier) {
-//                params.setParallaxMultiplier(multiplier);
-//            }
+            // 计算Detail的layout_collapseParallaxMultiplier，使其收起来时刚好高度为ToolBar的高度
+            CollapsingToolbarLayout.LayoutParams params = (CollapsingToolbarLayout.LayoutParams) userInfoBgLayout.getLayoutParams();
+            // 最大移动的距离
+//            maxVerticalOffset = appBarLayout.getHeight() - (statusbarHeight + toolbar.getHeight() + tabLayout.getHeight()) - 2;
+            // 计算移动后的top减去移动前的top就是需要offset，再用offset计算出multiplier
+            float multiplier = ((maxVerticalOffset + ViewUtil.getStatusBarHeight()) -
+                    (getHeight() - userInfoBgLayout.getHeight())) * 1.0f / maxVerticalOffset;
+            if (params.getParallaxMultiplier() != multiplier) {
+                params.setParallaxMultiplier(multiplier);
+            }
 
             avatarMatrix = new Matrix();
 
@@ -181,6 +189,15 @@ public class PersonalHomePageToolbarLayout extends CollapsingToolbarLayout {
             // offset移动的比例
             float factor = -verticalOffset * 1.0f / maxVerticalOffset;
 
+            if(userInfoBgLayout.getBackground() != null) {
+                float bgAlpha = (float) (0.8 + 0.2 * factor);
+//                userInfoBgLayout.getBackground().setAlpha((int) (255 * bgAlpha));
+            }
+
+            float descAlpha = 1 - factor;
+            userInfoLayout.setAlpha(descAlpha);
+
+
             if (avatarMatrix != null) {
                 // 从avatarSize变化到finalAvatarSize，是根据这个factor逐渐变化的，计算它的dsize变化值
                 float dsize = (avatarSize - finalAvatarSize) * factor;
@@ -192,7 +209,7 @@ public class PersonalHomePageToolbarLayout extends CollapsingToolbarLayout {
 
                 // 初始化Top
 //                float startAvatarTop = getHeight() - layDetail.getHeight() - avatarToSize * 3.0f / 4;
-                float startAvatarTop = userInfoLayout.getTop();
+                float startAvatarTop = userInfoBgLayout.getTop() - avatar.getHeight() / 2;
                 avatarMarginLeft = avatar.getLeft();
                 // 最终显示的Top
                 float toAvatarTop = maxVerticalOffset + ViewUtil.getStatusBarHeight() + (toolbar.getHeight() - finalAvatarSize) * 1.0f / 2;
@@ -213,8 +230,8 @@ public class PersonalHomePageToolbarLayout extends CollapsingToolbarLayout {
 //                float scale = nameToSize * 1.0f / layNameBitmap.getHeight();
 //                layNameMatrix.setScale(scale, scale);
 //
-//                float startNameTop = getHeight() - layDetail.getHeight() + layNameMarginTop;
-//                float toNameTop = maxVerticalOffset + statusbarHeight + (toolbar.getHeight() - finalLayNameSize) * 1.0f / 2;
+//                float startNameTop = userInfoBgLayout.getTop();
+//                float toNameTop = maxVerticalOffset + ViewUtil.getStatusBarHeight() + (toolbar.getHeight() - finalAvatarSize) * 1.0f / 2;
 //                float nameTop = startNameTop - (startNameTop - toNameTop) * factor;
 //
 //                float startMargin = avatarMarginLeft;
@@ -223,7 +240,7 @@ public class PersonalHomePageToolbarLayout extends CollapsingToolbarLayout {
 //
 //                layNameMatrix.postTranslate(margin, nameTop);
 //            }
-//
+
 //            if (layRealDetail != null) {
 //                layRealDetail.setAlpha(1.0f - factor * 0.7f);
 //            }

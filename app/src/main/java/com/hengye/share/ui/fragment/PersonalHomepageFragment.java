@@ -43,6 +43,11 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
     }
 
     @Override
+    public boolean isLayoutInflateMode() {
+        return false;
+    }
+
+    @Override
     public void onViewCreated(View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getViewPager().setCurrentItem(1);
@@ -88,6 +93,7 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
             case 2:
             default:
                 mTopicAlbumFragment = TopicAlbumFragment.newInstance(mWbUserInfo.getIdstr(), mWbUserInfo.getName());
+                mTopicAlbumFragment.setLoadDataCallBack(getLoadDataCallBack(mTopicAlbumFragment));
                 fragment = mTopicAlbumFragment;
                 break;
 
@@ -134,10 +140,18 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
 //                        mPersonalHomepageAboutFragment
                         break;
                     case 1:
-                        mTopicFragment.getPullToRefresh().getOnRefreshListener().onRefresh();
+                        if(mTopicFragment != null) {
+                            mTopicFragment.getPullToRefresh().getOnRefreshListener().onRefresh();
+                        }else{
+                            mSwipeRefresh.setRefreshing(false);
+                        }
                         break;
                     case 2:
-                        mTopicAlbumFragment.onRefresh();
+                        if(mTopicAlbumFragment != null) {
+                            mTopicAlbumFragment.onRefresh();
+                        }else{
+                            mSwipeRefresh.setRefreshing(false);
+                        }
                     default:
                         mSwipeRefresh.setRefreshing(false);
                         break;
@@ -160,7 +174,7 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
             @Override
             public void refresh(boolean isRefreshing) {
                 if (isRefreshing) {
-                    mSwipeRefresh.setRefreshing(true);
+                    mSwipeRefresh.setRefreshing(true, false);
                     if(baseFragment instanceof SwipeListener.OnRefreshListener){
                         ((SwipeListener.OnRefreshListener) baseFragment).onRefresh();
                     }else if(baseFragment instanceof TopicFragment){

@@ -31,8 +31,8 @@
             android:layout_margin="@dimen/fab_margin"
             android:clickable="true"
             tools:visibility="visible"
-            app:fabSize="mini"
-            app:layout_anchor="@+id/fl_user_info_bg"
+            app:fabSize="normal"
+            app:layout_anchor="@+id/fl_user_info"
             app:layout_anchorGravity="end" />
 
     </android.support.design.widget.CoordinatorLayout>

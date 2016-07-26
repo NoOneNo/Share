@@ -54,7 +54,7 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
         }
 
         public ItemViewHolder(View itemView, ViewUtil.OnItemClickListener onItemClickListener) {
-            this(itemView, null, false);
+            this(itemView, onItemClickListener, false);
         }
 
         public ItemViewHolder(View itemView, boolean isAddHeaderView) {

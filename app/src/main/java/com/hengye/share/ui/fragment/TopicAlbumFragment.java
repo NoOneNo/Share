@@ -11,15 +11,15 @@ import android.view.View;
 
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicAlbumAdapter;
+import com.hengye.share.ui.activity.TopicGalleryActivity;
 import com.hengye.share.ui.base.BaseFragment;
+import com.hengye.share.ui.fragment.PersonalHomepageFragment.LoadDataCallBack;
 import com.hengye.share.ui.mvpview.TopicAlbumMvpView;
 import com.hengye.share.ui.presenter.TopicAlbumPresenter;
-import com.hengye.share.ui.widget.recyclerview.GridItemDecoration;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.ViewUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
 import com.hengye.swiperefresh.listener.SwipeListener;
-import com.hengye.share.ui.fragment.PersonalHomepageFragment.LoadDataCallBack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +74,6 @@ public class TopicAlbumFragment extends BaseFragment implements TopicAlbumMvpVie
 
         GridLayoutManager staggeredGridLayoutManager = new GridLayoutManager(getContext(), 3, LinearLayoutManager.VERTICAL, false);
 
-        mRecyclerView.addItemDecoration(new GridItemDecoration(ViewUtil.dp2px(R.dimen.content_margin_3dp)));
         mRecyclerView.setLayoutManager(staggeredGridLayoutManager);
         mRecyclerView.setAdapter(mAdapter = new TopicAlbumAdapter(getContext(), new ArrayList<String>()));
 
@@ -86,7 +85,24 @@ public class TopicAlbumFragment extends BaseFragment implements TopicAlbumMvpVie
             }
         });
 
-        onRefresh();
+        mAdapter.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                TopicGalleryActivity.startWithIntent(getActivity(), (ArrayList<String>)mAdapter.getData(), position);
+            }
+        });
+
+        mPresenter.loadCacheData();
+//        onRefresh();
+    }
+
+    @Override
+    public void handleCache(List<String> data) {
+        if(CommonUtil.isEmpty(data)){
+            onRefresh();
+        }else{
+            mAdapter.refresh(data);
+        }
     }
 
     @Override
@@ -109,6 +125,7 @@ public class TopicAlbumFragment extends BaseFragment implements TopicAlbumMvpVie
                 mPullToRefresh.setLoadEnable(false);
             }
         }
+        mPresenter.saveData(mAdapter.getData());
     }
 
     @Override

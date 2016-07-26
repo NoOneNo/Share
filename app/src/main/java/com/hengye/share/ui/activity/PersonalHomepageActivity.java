@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,6 +23,8 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.android.volley.view.NetworkImageViewPlus;
@@ -124,6 +127,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     private SwipeRefreshLayout mSwipeRefresh;
     private AppBarLayout mAppBarLayout;
     private CoordinatorLayout mCoordinatorLayout;
+    private View mUserInfoLayout;
     private View mUserDescription;
     //    private FloatingActionButton mFollowButton;
     private CheckableFab mFollowButton;
@@ -134,10 +138,17 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 
     private UserPresenter mPresenter;
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        initStatusBar();
+        super.onCreate(savedInstanceState);
+    }
+
     @SuppressWarnings("ConstantConditions")
     private void initView() {
 
         initToolbar();
+        updateToolbarTitle(" ");
 //        getToolbar().setNavigationIcon(null);
         getToolbar().getNavigationIcon().setVisible(false, false);
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -155,6 +166,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         mFollowButton.setOnClickListener(this);
         mCollapsingToolbarLayout =
                 (PersonalHomePageToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        mCollapsingToolbarLayout.setTitle(" ");
         mUserDescription = findViewById(R.id.ll_user_desc);
 //        mCollapsingToolbarLayout.setexpan
         mCover = (NetworkImageViewPlus) findViewById(R.id.iv_cover);
@@ -162,10 +174,13 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.main_content);
         mAppBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+
+//        postponeEnterTransition();
         mCover.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
                 mCover.getViewTreeObserver().removeOnPreDrawListener(this);
+//                startPostponedEnterTransition();
                 startCoverShowAnimation();
                 return true;
             }
@@ -179,6 +194,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
             }
         });
 
+        mUserInfoLayout = findViewById(R.id.fl_user_info);
         mDivision = (TextView) findViewById(R.id.tv_division);
         mAttention = (TextView) findViewById(R.id.tv_attention);
         mFans = (TextView) findViewById(R.id.tv_fans);
@@ -263,6 +279,41 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                 mPresenter.loadWBUserInfo(mUserInfo.getUid(), mUserInfo.getName());
             }
         }
+        postponeEnterTransition();
+        mAvatar.setVisibility(View.INVISIBLE);
+        setUpAvatar();
+    }
+
+    private void initStatusBar(){
+//        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+//        Window window = getWindow();
+//        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+//                | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+//        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//        );//| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+////            window.setStatusBarColor(Utils.resolveColor(activity, R.attr.theme_statusbar_color, Color.BLUE));
+//        window.setStatusBarColor(Color.parseColor("#20000000"));
+////        window.setNavigationBarColor(getResources().getColor(R.attr.theme_color));
+    }
+
+    private void setUpAvatar(){
+        mUserInfoLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mUserInfoLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                int height = mUserInfoLayout.getHeight();
+                ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mAvatar.getLayoutParams();
+
+                int targetHeight = height - mAvatar.getHeight() / 2;
+                if(targetHeight != lp.bottomMargin){
+                    lp.bottomMargin = targetHeight;
+                    mAvatar.requestLayout();
+                }
+                mAvatar.setVisibility(View.VISIBLE);
+                startPostponedEnterTransition();
+            }
+        });
     }
 
     private void setUpAvatarToToolbar() {
@@ -271,6 +322,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         }
         BitmapDrawable bd = (BitmapDrawable) mAvatar.getDrawable();
         final Bitmap bitmap = bd.getBitmap();
+        //等待头像的转场动画完毕再设置bitmap
         getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -280,9 +332,10 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         }, 350);
     }
 
+    Animator coverShowAnimator;
     private void startCoverShowAnimation() {
 
-        final Animator coverShowAnimator = ViewAnimationUtils.createCircularReveal(mAppBarLayout,
+        coverShowAnimator = ViewAnimationUtils.createCircularReveal(mAppBarLayout,
                 mAppBarLayout.getWidth() / 2,
                 mAppBarLayout.getHeight() / 2,
                 0,
@@ -342,19 +395,19 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 
     private void initUserInfo(WBUserInfo wbUserInfo) {
         mWBUserInfo = wbUserInfo;
-        mCollapsingToolbarLayout.setTitle(wbUserInfo.getName());
+        mCollapsingToolbarLayout.setTitle(" " + wbUserInfo.getName());
 //        mCover.setImageResource(R.drawable.bg_test);
         mCover.setAutoClipBitmap(false);
         mCover.setImageUrl(wbUserInfo.getCover_image_phone(), RequestManager.getImageLoader());
+        mAvatar.setDefaultImageResId(R.drawable.ic_user_avatar);
         mAvatar.setImageUrl(wbUserInfo.getAvatar_large(), RequestManager.getImageLoader());
-//        mAvatar.setDefaultImageResId(R.drawable.ic_user_avatar);
         mDivision.setVisibility(View.VISIBLE);
         mAttention.setText(String.format(getString(R.string.label_attention), DataUtil.getCounter(wbUserInfo.getFriends_count())));
         mFans.setText(String.format(getString(R.string.label_fans), DataUtil.getCounter(wbUserInfo.getFollowers_count())));
         mSign.setText(wbUserInfo.getDescription());
         mFollowButton.setChecked(mWBUserInfo.isFollowing());
 //        mFollowButton.setVisibility(View.VISIBLE);
-
+        mUserDescription.setVisibility(View.VISIBLE);
         mUserDescription.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
@@ -376,12 +429,21 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         loadData(wbUserInfo);
     }
 
-    private void loadData(WBUserInfo wbUserInfo) {
+    private void loadData(final WBUserInfo wbUserInfo) {
         if (wbUserInfo == null || UserUtil.isUserEmpty()) {
             return;
         }
         if (mFragment == null) {
-            setupFragment(wbUserInfo);
+            if(coverShowAnimator != null && !coverShowAnimator.isRunning()){
+                setupFragment(wbUserInfo);
+            }else{
+                getHandler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        setupFragment(wbUserInfo);
+                    }
+                }, 500);
+            }
         }
     }
 
@@ -401,6 +463,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         mSwipeRefresh.setRefreshing(false);
         if (wbUserInfo != null) {
             initUserInfo(wbUserInfo);
+            setUpAvatar();
         }
     }
 
@@ -421,10 +484,10 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         observable = isFollow ?
                 RetrofitManager
                         .getWBService()
-                        .followCreate(UserUtil.getToken(), uid) :
+                        .followCreate(UserUtil.getAdToken(), uid) :
                 RetrofitManager
                         .getWBService()
-                        .followDestroy(UserUtil.getToken(), uid);
+                        .followDestroy(UserUtil.getAdToken(), uid);
 
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

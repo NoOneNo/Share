@@ -16,7 +16,7 @@ import com.hengye.share.R;
 public abstract class TabLayoutFragment extends TabsFragment {
 
     @Override
-    public int getLayoutResId() {
+    public int getContentResId() {
         return R.layout.fragment_tablayout;
     }
 

@@ -123,7 +123,10 @@ public class WBTopic implements Serializable{
 
     private String deleted;//1代表微博已删除
 
-    public static class Pic_urlsEntity {
+    public static class Pic_urlsEntity implements Serializable{
+
+        private static final long serialVersionUID = 4005756573688221817L;
+
         //默认返回缩略图
         //要得到高清图或者原图，把地址"http://ww1.sinaimg.cn/thumbnail/6dab804cjw1exv392snomj21kw23ukjl.jpg"
         //中的thumbnail换成对应的bmiddle(高清)或者large(原图)

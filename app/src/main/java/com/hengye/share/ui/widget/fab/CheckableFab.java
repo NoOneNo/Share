@@ -17,16 +17,22 @@
 package com.hengye.share.ui.widget.fab;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Checkable;
 
 import com.hengye.share.R;
+import com.hengye.share.ui.widget.util.DrawableLoader;
 import com.hengye.share.util.L;
+import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.ViewUtil;
 
 
@@ -52,7 +58,10 @@ public class CheckableFab extends FloatingActionButton implements Checkable {
 
     public CheckableFab(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        setImageResource(R.drawable.btn_fab_follow);
+        if(isInEditMode()){
+            return;
+        }
+        setImageDrawable(DrawableLoader.setTintDrawable(R.drawable.btn_fab_follow, R.color.theme_pink_primary_dark));
     }
 
     @Override

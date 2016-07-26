@@ -87,11 +87,12 @@ public class ViewUtil extends ResUtil {
         });
     }
 
+    public static int statusBarHeight = 0;
     public static int getStatusBarHeight() {
-        return getStatusBarHeight(getContext());
-    }
+        if(statusBarHeight != 0){
+            return statusBarHeight;
+        }
 
-    public static int getStatusBarHeight(Context context) {
         Class<?> c = null;
         Object obj = null;
         Field field = null;
@@ -101,7 +102,8 @@ public class ViewUtil extends ResUtil {
             obj = c.newInstance();
             field = c.getField("status_bar_height");
             x = Integer.parseInt(field.get(obj).toString());
-            return context.getResources().getDimensionPixelSize(x);
+            statusBarHeight =  getResources().getDimensionPixelSize(x);
+            return statusBarHeight;
         } catch (Exception e) {
             e.printStackTrace();
             return 0;

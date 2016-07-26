@@ -136,6 +136,9 @@ public class TopicGalleryFragment extends BaseFragment {
     }
 
     public boolean canFinishWithAnimation() {
+        if(mRect == null){
+            return false;
+        }
         Fragment fragment = getChildFragmentManager().findFragmentById(R.id.content);
         if (fragment instanceof ImageNormalFragment) {
             return true;

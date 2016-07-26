@@ -2,10 +2,15 @@ package com.hengye.share.ui.presenter;
 
 import android.text.TextUtils;
 
+import com.google.gson.reflect.TypeToken;
 import com.hengye.share.model.Topic;
+import com.hengye.share.model.greenrobot.GreenDaoManager;
+import com.hengye.share.model.greenrobot.ShareJson;
 import com.hengye.share.model.sina.WBTopics;
 import com.hengye.share.ui.mvpview.TopicAlbumMvpView;
+import com.hengye.share.ui.mvpview.TopicMvpView;
 import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.GsonUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
@@ -15,7 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import rx.Observable;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class TopicAlbumPresenter extends BasePresenter<TopicAlbumMvpView> {
@@ -57,11 +65,11 @@ public class TopicAlbumPresenter extends BasePresenter<TopicAlbumMvpView> {
                 });
     }
 
-    public List<String> getImageUrls(List<Topic> topics) {
+    public ArrayList<String> getImageUrls(List<Topic> topics) {
         if (CommonUtil.isEmpty(topics)) {
             return null;
         }
-        List<String> urls = new ArrayList<>();
+        ArrayList<String> urls = new ArrayList<>();
         for (Topic topic : topics) {
             if (!CommonUtil.isEmpty(topic.getImageUrls())) {
                 urls.addAll(topic.getImageUrls());
@@ -99,6 +107,63 @@ public class TopicAlbumPresenter extends BasePresenter<TopicAlbumMvpView> {
 
         ub.addParameter("count", WBUtil.getWBTopicRequestCount());
         return ub.getParameters();
+    }
+
+    public void loadCacheData(){
+        Observable
+                .create(new Observable.OnSubscribe<ArrayList<String>>() {
+                    @Override
+                    public void call(Subscriber<? super ArrayList<String>> subscriber) {
+                        subscriber.onNext(findData());
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new BaseAction1<ArrayList<String>>() {
+                    @Override
+                    public void handleView(TopicAlbumMvpView v, ArrayList<String> urls) {
+                        v.handleCache(urls);
+                    }
+                });
+    }
+
+    public ArrayList<String> findData() {
+
+        ShareJson shareJson = null;
+
+        try{
+            shareJson = GreenDaoManager.getDaoSession().getShareJsonDao().load(getModuleName());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        if (shareJson == null) {
+            return new ArrayList<>();
+        }
+
+        ArrayList<String> data = GsonUtil.fromJson(shareJson.getJson()
+                , new TypeToken<ArrayList<String>>(){}.getType());
+
+        return data == null ? new ArrayList<String>() : data;
+    }
+
+    public void saveData(List<String> data) {
+        GreenDaoManager
+                .getDaoSession()
+                .getShareJsonDao()
+                .insertOrReplace(new ShareJson(getModuleName(), GsonUtil.toJson(data)));
+    }
+
+    private String mModuleName;
+
+    public String getModuleName() {
+        if (mModuleName == null) {
+            mModuleName = TopicAlbumPresenter.class.getSimpleName()
+                    + uid
+                    + "/"
+                    + name;
+        }
+        return mModuleName;
     }
 
 

@@ -17,18 +17,12 @@ import com.hengye.share.ui.base.BaseFragment;
  */
 public abstract class ContentFragment extends BaseFragment {
 
-    abstract public int getContentResId();
-
-    abstract public void initContent(LayoutInflater inflater, @Nullable Bundle savedInstanceState);
-
     @Override
     public int getLayoutResId() {
         return R.layout.fragment_content;
     }
 
-//    public int getToolBarResId(){
-//        return R.layout.tool_bar;
-//    }
+    abstract public int getContentResId();
 
     public int getLoadingResId(){
         return R.layout.widget_loading;
@@ -42,33 +36,36 @@ public abstract class ContentFragment extends BaseFragment {
         return R.layout.widget_no_network;
     }
 
+    /**
+     * 如果为true, 则把getEmptyResId等当做layoutId添加进父view, 否则当做viewId查找获得相应的view;
+     * @return
+     */
+    public boolean isLayoutInflateMode(){
+        return true;
+    }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-        mLayoutInflater = LayoutInflater.from(getContext());
+        if(isLayoutInflateMode()){
+            LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+            ViewGroup vg = (ViewGroup) view;
+            layoutInflater.inflate(getLoadingResId(), vg);
+            layoutInflater.inflate(getEmptyResId(), vg);
+            layoutInflater.inflate(getNoNetworkResId(), vg);
+            layoutInflater.inflate(getContentResId(), vg);
 
-//        mToolbar = (CommonToolBar) findViewById(R.id.toolbar);
-//        if (setToolBar()) {
-//            mToolbar.setTitle(getTitle());
-//        } else {
-//            mToolbar.setVisibility(View.GONE);
-//        }
+            mLoading = vg.getChildAt(0);
+            mEmpty = vg.getChildAt(1);
+            mNoNetwork = vg.getChildAt(2);
+            mContent = vg.getChildAt(3);
+        }else{
+            mLoading = findViewById(getLoadingResId());
+            mEmpty = findViewById(getEmptyResId());
+            mNoNetwork = findViewById(getNoNetworkResId());
+            mContent = findViewById(getContentResId());
+        }
 
-        ViewGroup vg = (ViewGroup) view;
-
-        mLayoutInflater.inflate(getLoadingResId(), vg);
-        mLayoutInflater.inflate(getEmptyResId(), vg);
-        mLayoutInflater.inflate(getNoNetworkResId(), vg);
-        mLayoutInflater.inflate(getContentResId(), vg);
-
-        mLoading = vg.getChildAt(0);
-        mLoading.setVisibility(View.GONE);
-        mEmpty = vg.getChildAt(1);
-        mEmpty.setVisibility(View.GONE);
-        mNoNetwork = vg.getChildAt(2);
-        mNoNetwork.setVisibility(View.GONE);
-        mContent = vg.getChildAt(3);
-        mContent.setVisibility(View.GONE);
 
         mViews.append(TYPE_LOADING, mLoading);
         mViews.append(TYPE_EMPTY, mEmpty);
@@ -78,7 +75,9 @@ public abstract class ContentFragment extends BaseFragment {
         initLoading();
         initEmpty();
         initNoNetwork();
-        initContent(mLayoutInflater, savedInstanceState);
+        initContent(savedInstanceState);
+
+        showContent();
     }
 
     private static final int TYPE_LOADING = 1;
@@ -88,25 +87,25 @@ public abstract class ContentFragment extends BaseFragment {
 
     private SparseArray<View> mViews = new SparseArray<>();
     private int[] mViewTypes = new int[]{TYPE_LOADING, TYPE_EMPTY, TYPE_NO_NETWORK, TYPE_CONTENT};
-    private ImageView mLoadingIV;
-    private AnimationDrawable mLoadingDrawable;
+//    private ImageView mLoadingIV;
+//    private AnimationDrawable mLoadingDrawable;
     private View mLoading, mEmpty, mNoNetwork, mContent;
-    private LayoutInflater mLayoutInflater;
 
     protected void initLoading(){
-        mLoadingIV = (ImageView) getLoading().findViewById(R.id.loading);
-        mLoadingDrawable = (AnimationDrawable) mLoadingIV.getDrawable();
+
+//        mLoadingIV = (ImageView) getLoading().findViewById(R.id.loading);
+//        mLoadingDrawable = (AnimationDrawable) mLoadingIV.getDrawable();
     }
 
-    protected void initEmpty(){
-    }
+    protected void initEmpty(){}
 
-    protected void initNoNetwork(){
-    }
+    protected void initNoNetwork(){}
+
+    protected void initContent(@Nullable Bundle savedInstanceState){}
 
     public void hideLoading(){
         mLoading.setVisibility(View.GONE);
-        mLoadingDrawable.stop();
+//        mLoadingDrawable.stop();
     }
 
     public View getLoading() {
@@ -127,7 +126,10 @@ public abstract class ContentFragment extends BaseFragment {
 
     public void showLoading() {
         showView(TYPE_LOADING);
-        mLoadingDrawable.start();
+//        if(mLoadingDrawable == null){
+//            mLoadingDrawable = (AnimationDrawable) mLoadingIV.getDrawable();
+//        }
+//        mLoadingDrawable.start();
     }
 
     public void showNoNetwork() {

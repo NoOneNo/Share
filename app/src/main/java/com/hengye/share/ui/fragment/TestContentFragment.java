@@ -28,7 +28,7 @@ public class TestContentFragment extends ContentFragment {
     }
 
     @Override
-    public void initContent(LayoutInflater inflater, @Nullable Bundle savedInstanceState) {
+    public void initContent(@Nullable Bundle savedInstanceState) {
 //        showContent();
 //        showLoading();
         showEmpty();

@@ -16,7 +16,7 @@
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@drawable/ic_follow_selected" android:state_checked="true" />
-    <item android:drawable="@drawable/ic_follow_unselected" android:state_checked="false" />
+    <item android:drawable="@drawable/ic_favorite_black_48dp" android:state_checked="true" />
+    <item android:drawable="@drawable/ic_favorite_border_black_48dp" android:state_checked="false" />
 
 </selector>

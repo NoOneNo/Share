@@ -16,6 +16,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -58,14 +59,19 @@ public class TopicGalleryActivity extends BaseActivity {
         return "TopicGalleryActivity";
     }
 
-    public static void startWithIntent(Context context, ArrayList<String> urls, ArrayList<AnimationRect> rectList,
-                                   int index) {
+    public static void startWithIntent(Context context, ArrayList<String> urls,
+                                       int index) {
+        startWithIntent(context, urls, index, null);
+    }
+
+    public static void startWithIntent(Context context, ArrayList<String> urls,
+                                   int index, ArrayList<AnimationRect> rectList) {
         Intent intent = new Intent(context, TopicGalleryActivity.class);
         intent.putExtra(IMG_URLS, urls);
         intent.putExtra(IMG_RECT_LIST, rectList);
         intent.putExtra(IMG_INDEX, index);
         context.startActivity(intent);
-        if(context instanceof Activity){
+        if(rectList != null && context instanceof Activity){
             ((Activity)context).overridePendingTransition(0, 0);
         }
     }
@@ -77,7 +83,7 @@ public class TopicGalleryActivity extends BaseActivity {
         mIndexStart = intent.getIntExtra(IMG_INDEX, 0);
         mRectList = (ArrayList<AnimationRect>) intent.getSerializableExtra(IMG_RECT_LIST);
 
-        if(CommonUtil.hasEmpty(mUrls, mRectList)){
+        if(CommonUtil.isEmpty(mUrls)){
             this.finish();
         }
     }
@@ -146,7 +152,7 @@ public class TopicGalleryActivity extends BaseActivity {
 
                 boolean animateIn = (mIndexStart == position) && !mHasAnimateIn;
                 fragment = TopicGalleryFragment
-                        .newInstance(mUrls.get(position), mRectList.get(position), animateIn,
+                        .newInstance(mUrls.get(position), mRectList == null ? null : mRectList.get(position), animateIn,
                                 mIndexStart == position);
                 mHasAnimateIn = true;
                 mFragmentMap.put(position, fragment);

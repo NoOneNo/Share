@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.hengye.share.R;
 import com.hengye.share.ui.widget.util.ShapeLoader;
+import com.hengye.share.util.ViewUtil;
 
 public class LoadingDialog extends Dialog {
 
@@ -34,7 +35,7 @@ public class LoadingDialog extends Dialog {
         mContent = (TextView) findViewById(R.id.tv_content);
         mContent.setText(text);
         View parent = findViewById(R.id.rl_dialog);
-        shapeLoader.setRectConnerBackground(parent, getContext().getResources().getColor(R.color.white), shapeLoader.dp2Px(10));
+        shapeLoader.setRectConnerBackground(parent, getContext().getResources().getColor(R.color.white), ViewUtil.dp2px(10f));
 
         if (isNeedToShow) {
             show();
