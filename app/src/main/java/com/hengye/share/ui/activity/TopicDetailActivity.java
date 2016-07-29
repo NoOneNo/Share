@@ -60,7 +60,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     }
 
     @Override
-    protected int getLayoutResId() {
+    public int getLayoutResId() {
         return R.layout.activity_topic_detail;
     }
 
@@ -132,8 +132,31 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         }else{
             topicLayout.setTransitionName(getString(R.string.transition_name_topic));
         }
-        TopicAdapter.TopicViewHolder topicViewHolder = new TopicAdapter.TopicViewHolder(topicLayout);
+        final TopicAdapter.TopicViewHolder topicViewHolder = new TopicAdapter.TopicViewHolder(topicLayout);
         topicViewHolder.bindData(this, mTopic, 0);
+        topicViewHolder.setOnChildViewItemClickListener(new ViewUtil.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                int id = view.getId();
+                if (id == R.id.tv_topic_content || id == R.id.gl_topic_gallery || id == R.id.ll_topic_retweeted_content) {
+                    final boolean isRetweeted = (Boolean) view.getTag();
+                    if(!isRetweeted){
+                        return;
+                    }
+                    //为了显示波纹效果再启动
+                    getHandler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            TopicDetailActivity.start(TopicDetailActivity.this,
+                                    topicViewHolder.mRetweetTopic.mTopicLayout,
+                                    mTopic.getRetweetedTopic(),
+                                    true);
+                        }
+                    }, 200);
+//            startTopicDetail(isRetweeted, position);
+                }
+            }
+        });
     }
 
     @Override
@@ -205,9 +228,34 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         });
         mAdapter.setOnChildViewItemClickListener(new ViewUtil.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
-//                view.performClick();
-                mListView.performItemClick(null, position + mListView.getHeaderViewsCount(), mAdapter.getItemId(position));
+            public void onItemClick(View view, final int position) {
+                int id = view.getId();
+                if (id == R.id.iv_topic_avatar || id == R.id.tv_topic_username || id == R.id.tv_topic_description) {
+                    //为了显示波纹效果再启动
+//                    getHandler().postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+                            TopicComment tc = mAdapter.getItem(position);
+                            int childPosition = position - (mListView.getFirstVisiblePosition() - mListView.getHeaderViewsCount());
+                            View startView = null;
+                            View convertView = mListView.getChildAt(childPosition);
+                            if(convertView != null && convertView.getTag() != null){
+                                TopicCommentAdapter.TopicCommentViewHolder tcv = (TopicCommentAdapter.TopicCommentViewHolder)convertView.getTag();
+                                if(tcv != null){
+                                    startView = tcv.mTopicTitle.mAvatar;
+                                }
+                            }
+                            if(startView == null){
+                                PersonalHomepageActivity.start(TopicDetailActivity.this, tc.getUserInfo());
+                            }else{
+                                PersonalHomepageActivity.start(TopicDetailActivity.this, startView, tc.getUserInfo());
+                            }
+
+//                        }
+//                    }, 100);
+                }else {
+                    mListView.performItemClick(null, position + mListView.getHeaderViewsCount(), mAdapter.getItemId(position));
+                }
             }
         });
 
@@ -357,6 +405,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                 List<TopicComment> adapterData = isSelectedCommentTab() ? mCommentData : mRepostData;
                 if (CommonUtil.isEmpty(adapterData)) {
 //                    //内容为空
+                    handleLoadMore(false, isComment);
 //                    mPullToRefreshLayout.setLoadEnable(false);
                 }else if (data.size() < WBUtil.getWBTopicRequestCount()) {
                     //结果小于请求条数
@@ -412,9 +461,9 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             mLoadReposttEnable = false;
         }
         if(isSelectedCommentTab() && isComment){
-            mPullToRefreshLayout.setLoadEnable(false);
+            mPullToRefreshLayout.setLoadEnable(enable);
         }else if(isSelectedRepostTab() && !isComment){
-            mPullToRefreshLayout.setLoadEnable(false);
+            mPullToRefreshLayout.setLoadEnable(enable);
         }
 
     }

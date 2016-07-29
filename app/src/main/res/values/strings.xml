@@ -36,6 +36,8 @@
     <string name="tip_need_advanced_authorize">需要高级授权, 是否继续?</string>
     <string name="tip_authorize_success">授权成功</string>
 
+    <string name="tip_empty">内容为空</string>
+
     <string name="unit_ten_thousand">万</string>
 
 
@@ -119,6 +121,8 @@
     <string name="label_topic_publish_success">发表成功</string>
     <string name="label_topic_publish_fail">发表失败</string>
     <string name="label_topic_publish">@string/app_name</string>
+    <string name="label_topic_publish_field_empty">请填写内容或选择图片</string>
+    <string name="label_topic_picture_publish_content_empty">分享图片</string>
     <!-- Strings related to TopicPublish -->
 
     <!-- Strings related to TopicDraft -->

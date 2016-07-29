@@ -31,10 +31,12 @@ import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.DateUtil;
 import com.hengye.share.util.IntentUtil;
+import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TopicPublishActivity extends BaseActivity implements View.OnClickListener {
 
@@ -85,7 +87,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     }
 
     @Override
-    protected int getLayoutResId() {
+    public int getLayoutResId() {
         return R.layout.activity_topic_publish;
     }
 
@@ -102,6 +104,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     private EditText mContent;
     private Dialog mSaveToDraftDialog, mSkipToLoginDialog;
 
+    @SuppressWarnings("ConstantConditions")
     private void initView() {
         mContainer = (RelativeLayout) findViewById(R.id.rl_container);
         mContent = (EditText) findViewById(R.id.et_topic_publish);
@@ -121,9 +124,12 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         mPhotoPicker = (PickPhotoView) findViewById(R.id.pick_photo);
         if(mTopicDraft.getUrls() != null){
             ArrayList<Photo> photos = new ArrayList<>();
-            Photo photo = new Photo();
-            photo.setDataPath(mTopicDraft.getUrls());
-            photos.add(photo);
+            List<String> urls = CommonUtil.split(mTopicDraft.getUrls(), ",");
+            for(String url : urls){
+                Photo photo = new Photo();
+                photo.setDataPath(url);
+                photos.add(photo);
+            }
             mPhotoPicker.setAddPhotos(photos);
         }
         mContent.setFilters(new InputFilter[]{mAtUserInputFilter, mEmoticonPicker.getEmoticonInputFilter()});
@@ -241,7 +247,18 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
             td.setTargetCommentId(mTopicDraft.getTargetCommentId());
         }
         if(!CommonUtil.isEmpty(mPhotoPicker.getPhotos())){
-            td.setUrls(mPhotoPicker.getPhotos().get(0).getDataPath());
+
+            if(CommonUtil.isEmpty(td.getContent())){
+                td.setContent(ResUtil.getString(R.string.label_topic_picture_publish_content_empty));
+            }
+
+            List<Photo> photos = mPhotoPicker.getPhotos();
+            List<String> urls = new ArrayList<>();
+            for(Photo photo : photos){
+                urls.add(photo.getDataPath());
+            }
+            td.setUrls(CommonUtil.toSplit(urls, ","));
+//            td.setUrls(mPhotoPicker.getPhotos().get(0).getDataPath());
         }
         return td;
     }
@@ -264,9 +281,9 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
 
     private boolean checkCanPublicTopic(){
         boolean result = true;
-        if(TextUtils.isEmpty(mContent.getText().toString())){
+        if(TextUtils.isEmpty(mContent.getText().toString()) && CommonUtil.isEmpty(mPhotoPicker.getPhotos())){
             result = false;
-            ToastUtil.showToast("为什么连一个空格都不给我??");
+            ToastUtil.showToast(R.string.label_topic_publish_field_empty);
         }else if(TextUtils.isEmpty(UserUtil.getToken())){
             result = false;
             showSkipToLoginDialog();

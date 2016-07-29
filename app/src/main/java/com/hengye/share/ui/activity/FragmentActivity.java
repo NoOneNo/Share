@@ -44,6 +44,7 @@ public class FragmentActivity extends BaseActivity {
         if (mFragment == null) {
             try {
                 mFragment = getBaseFragmentClass().newInstance();
+                mFragment.setArguments(getIntent().getExtras());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -69,7 +70,7 @@ public class FragmentActivity extends BaseActivity {
     }
 
     @Override
-    protected int getLayoutResId() {
+    public int getLayoutResId() {
         return R.layout.activity_fragment;
     }
 

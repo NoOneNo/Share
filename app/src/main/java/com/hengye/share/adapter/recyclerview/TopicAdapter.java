@@ -184,9 +184,9 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
 
     public static class TopicViewHolder extends CommonAdapter.ItemViewHolder<Topic> {
 
-        TopicTitleViewHolder mTopicTitle;
-        TopicContentViewHolder mTopic, mRetweetTopic;
-        View mTopicTotalItem, mTopicItem;
+        public TopicTitleViewHolder mTopicTitle;
+        public TopicContentViewHolder mTopic, mRetweetTopic;
+        public View mTopicTotalItem, mTopicItem;
 
         public TopicViewHolder(View v) {
             super(v);
@@ -254,6 +254,17 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
+//                int id = v.getId();
+//                if(id == R.id.tv_topic_content) {
+//                    if(!TopicUrlOnTouchListener.getInstance().onTouch(v, event)) {
+//                        return mTopicItem.onTouchEvent(event);
+//                    }else{
+//                        return true;
+//                    }
+//
+//                }else{
+//                    return mTopicItem.onTouchEvent(event);
+//                }
                 int id = v.getId();
                 if(id == R.id.tv_topic_content) {
                     if(!TopicUrlOnTouchListener.getInstance().onTouch(v, event)) {
@@ -271,6 +282,17 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
+//                int id = v.getId();
+//                if(id == R.id.tv_topic_content) {
+//                    if(!TopicUrlOnTouchListener.getInstance().onTouch(v, event)) {
+//                        return mRetweetTopic.mTopicLayout.onTouchEvent(event);
+//                    }else{
+//                        return true;
+//                    }
+//
+//                }else{
+//                    return mRetweetTopic.mTopicLayout.onTouchEvent(event);
+//                }
                 int id = v.getId();
                 if(id == R.id.tv_topic_content) {
                     if(!TopicUrlOnTouchListener.getInstance().onTouch(v, event)){
@@ -304,9 +326,9 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
 
     public static class TopicTitleViewHolder {
 
-        NetworkImageViewPlus mAvatar;
-        TextView mUsername, mDescription;
-        View mTitle;
+        public NetworkImageViewPlus mAvatar;
+        public TextView mUsername, mDescription;
+        public View mTitle;
 
         public TopicTitleViewHolder() {
         }
@@ -314,6 +336,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
         public TopicTitleViewHolder(View v) {
             mTitle = v.findViewById(R.id.rl_topic_title);
             mAvatar = (NetworkImageViewPlus) v.findViewById(R.id.iv_topic_avatar);
+            mAvatar.setAutoClipBitmap(false);
             mUsername = (TextView) v.findViewById(R.id.tv_topic_username);
             mDescription = (TextView) v.findViewById(R.id.tv_topic_description);
 
@@ -364,7 +387,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
     public static class TopicContentViewHolder {
         public TextView mContent;
         public GridGalleryView mGallery;
-        View mTopicLayout;
+        public View mTopicLayout;
 
         public TopicContentViewHolder(View parent) {
             this(parent, false);

@@ -60,7 +60,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     }
 
     @Override
-    protected int getLayoutResId() {
+    public int getLayoutResId() {
         return R.layout.activity_login;
     }
 

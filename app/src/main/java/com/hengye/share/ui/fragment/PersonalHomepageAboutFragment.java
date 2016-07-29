@@ -33,7 +33,7 @@ public class PersonalHomepageAboutFragment extends BaseFragment implements View.
     }
 
     @Override
-    protected int getLayoutResId() {
+    public int getLayoutResId() {
         return R.layout.fragment_personalhomepage_about;
     }
 

@@ -12,7 +12,7 @@ import com.hengye.share.ui.base.BaseFragment;
 public class TemplateFragment extends BaseFragment {
 
     @Override
-    protected int getLayoutResId() {
+    public int getLayoutResId() {
         return super.getLayoutResId();
     }
 

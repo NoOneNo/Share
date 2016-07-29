@@ -31,7 +31,7 @@ public class AccountManageActivity extends BaseActivity implements AccountManage
     public final static int ACCOUNT_CHANGE = 5;
 
     @Override
-    protected int getLayoutResId() {
+    public int getLayoutResId() {
         return R.layout.activity_account_manage;
     }
 

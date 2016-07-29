@@ -57,6 +57,14 @@ public class UserUtil {
         return getCurrentUser().getAdToken();
     }
 
+    public static String getPriorToken(){
+        String token = getAdToken();
+        if(token != null){
+            return token;
+        }
+        return getToken();
+    }
+
     public static boolean isUserEmpty() {
         return isTokenEmpty();
     }

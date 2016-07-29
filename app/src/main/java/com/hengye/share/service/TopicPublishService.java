@@ -19,22 +19,32 @@ import com.hengye.share.model.greenrobot.TopicDraft;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.model.sina.WBTopicComment;
+import com.hengye.share.model.sina.WBUploadPicture;
+import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.NotificationUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
+import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
+import com.hengye.share.util.retrofit.WBService;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+
+import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.functions.FuncN;
 import rx.schedulers.Schedulers;
 
 public class TopicPublishService extends Service {
@@ -127,61 +137,11 @@ public class TopicPublishService extends Service {
         stopServiceIfQueueIsAllFinish();
     }
 
-    protected void publishWBTopic(final TopicPublish tp) {
+    protected void publishWBTopic(final TopicPublish tp) throws Exception {
         if (tp.getTopicDraft().getUrls() != null) {
             publishWBTopicWithPhoto(tp);
         } else {
             publishWBTopicContentOnly(tp);
-        }
-    }
-
-    public abstract class PublishSubscriber<T> extends Subscriber<T>{
-
-        TopicPublish tp;
-
-        public PublishSubscriber(TopicPublish tp){
-            this.tp = tp;
-        }
-
-        @Override
-        public void onCompleted() {
-            L.debug("onCompleted invoke");
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            L.debug("request fail, error : {}", e);
-            handlePublishFail(tp);
-        }
-    }
-
-    public class PublishTopicSubscriber extends PublishSubscriber<WBTopic>{
-
-        public PublishTopicSubscriber(TopicPublish tp){
-            super(tp);
-        }
-
-        @Override
-        public void onNext(WBTopic wbTopic) {
-            L.debug("request success , data : {}", wbTopic);
-            if (wbTopic != null) {
-                handlePublishSuccess(tp);
-            }
-        }
-    }
-
-    public class PublishCommentSubscriber extends PublishSubscriber<WBTopicComment>{
-
-        public PublishCommentSubscriber(TopicPublish tp){
-            super(tp);
-        }
-
-        @Override
-        public void onNext(WBTopicComment wbTopicComment) {
-            L.debug("request success , data : {}", wbTopicComment);
-            if (wbTopicComment != null) {
-                handlePublishSuccess(tp);
-            }
         }
     }
 
@@ -195,14 +155,26 @@ public class TopicPublishService extends Service {
                 .subscribe(new PublishTopicSubscriber(tp));
     }
 
-    protected void publishWBTopicWithPhoto(final TopicPublish tp) {
+    protected void publishWBTopicWithPhoto(final TopicPublish tp) throws Exception {
+        List<String> urls = CommonUtil.split(tp.getTopicDraft().getUrls(), ",");
 
+        if (urls == null) {
+            throw new Exception("photo url is invalid!");
+        }
+        if (urls.size() == 1) {
+            publishWBTopicWithSinglePhoto(tp);
+        } else {
+            publishWBTopicWithMultiplePhoto(tp, urls);
+        }
+    }
+
+    protected void publishWBTopicWithSinglePhoto(final TopicPublish tp) {
         RequestBody requestFile = RequestBody.create(MediaType.parse("application/otcet-stream"),
                 new File(tp.getTopicDraft().getUrls()));
         MultipartBody.Part body = MultipartBody.Part.createFormData("pic", "share.png", requestFile);
         RetrofitManager
                 .getWBService()
-                .publishTopicWithPhoto(
+                .publishTopicWithSinglePhoto(
                         RequestBody.create(MediaType.parse("multipart/form-data"),
                                 tp.getToken()),
                         RequestBody.create(MediaType.parse("multipart/form-data"),
@@ -211,6 +183,51 @@ public class TopicPublishService extends Service {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new PublishTopicSubscriber(tp));
+    }
+
+    protected void publishWBTopicWithMultiplePhoto(final TopicPublish tp, List<String> urls) throws Exception {
+
+        Observable.zip(
+                Observable
+                        .from(urls)
+                        .map(new Func1<String, Observable<WBUploadPicture>>() {
+                            @Override
+                            public Observable<WBUploadPicture> call(String s) {
+
+                                RequestBody requestFile = RequestBody.create(MediaType.parse("application/otcet-stream"),
+                                        new File(s));
+                                MultipartBody.Part body = MultipartBody.Part.createFormData("pic", "share.png", requestFile);
+                                WBService service = RetrofitManager.getWBService();
+                                return service.uploadPicture(RequestBody.create(MediaType.parse("multipart/form-data"),
+                                        UserUtil.getPriorToken()), body);
+                            }
+                        })
+                , new FuncN<List<String>>() {
+                    @Override
+                    public List<String> call(Object... args) {
+                        if (args == null) {
+                            return null;
+                        }
+                        List<String> urls = new ArrayList<>();
+                        for (Object obj : args) {
+                            urls.add(((WBUploadPicture) obj).getPic_id());
+                        }
+                        return urls;
+                    }
+                })
+                .flatMap(new Func1<List<String>, Observable<WBTopic>>() {
+                    @Override
+                    public Observable<WBTopic> call(List<String> urls) {
+                        return RetrofitManager
+                                .getWBService()
+                                .publishTopicWithMultiplePhoto(UserUtil.getPriorToken(), tp.getTopicDraft().getContent(), CommonUtil.toSplit(urls, ","));
+
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new PublishTopicSubscriber(tp));
+
     }
 
     protected void publishWBComment(final TopicPublish tp) {
@@ -238,6 +255,57 @@ public class TopicPublishService extends Service {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new PublishCommentSubscriber(tp));
+    }
+
+
+    public abstract class PublishSubscriber<T> extends Subscriber<T> {
+
+        TopicPublish tp;
+
+        public PublishSubscriber(TopicPublish tp) {
+            this.tp = tp;
+        }
+
+        @Override
+        public void onCompleted() {
+            L.debug("onCompleted invoke");
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            L.debug("request fail, error : {}", e);
+            handlePublishFail(tp);
+        }
+    }
+
+    public class PublishTopicSubscriber extends PublishSubscriber<WBTopic> {
+
+        public PublishTopicSubscriber(TopicPublish tp) {
+            super(tp);
+        }
+
+        @Override
+        public void onNext(WBTopic wbTopic) {
+            L.debug("request success , data : {}", wbTopic);
+            if (wbTopic != null) {
+                handlePublishSuccess(tp);
+            }
+        }
+    }
+
+    public class PublishCommentSubscriber extends PublishSubscriber<WBTopicComment> {
+
+        public PublishCommentSubscriber(TopicPublish tp) {
+            super(tp);
+        }
+
+        @Override
+        public void onNext(WBTopicComment wbTopicComment) {
+            L.debug("request success , data : {}", wbTopicComment);
+            if (wbTopicComment != null) {
+                handlePublishSuccess(tp);
+            }
+        }
     }
 
     private StringRequest getWBTopicPublishRequest(final TopicPublish tp) {

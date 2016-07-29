@@ -7,11 +7,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.hengye.share.handler.data.base.DataAdapter;
 import com.hengye.share.util.ViewUtil;
 
 import java.util.List;
 
-public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends HeaderAdapter<VH> {
+public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends HeaderAdapter<VH> implements DataAdapter<T> {
 
     private Context mContext;
     private List<T> mData;

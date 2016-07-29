@@ -4,29 +4,27 @@ package com.hengye.share.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicAdapter;
+import com.hengye.share.handler.data.TopicIdHandler;
+import com.hengye.share.handler.data.TopicIdPager;
+import com.hengye.share.handler.data.base.DataHandler;
+import com.hengye.share.handler.data.base.DataType;
+import com.hengye.share.handler.data.base.Pager;
 import com.hengye.share.model.Topic;
-import com.hengye.share.ui.base.BaseFragment;
+import com.hengye.share.ui.fragment.PersonalHomepageFragment.LoadDataCallBack;
+import com.hengye.share.ui.fragment.encapsulation.paging.RecyclerRefreshFragment;
 import com.hengye.share.ui.mvpview.TopicMvpView;
 import com.hengye.share.ui.presenter.TopicPresenter;
 import com.hengye.share.util.CommonUtil;
-import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.UserUtil;
-import com.hengye.swiperefresh.PullToRefreshLayout;
-import com.hengye.swiperefresh.listener.SwipeListener;
-import com.hengye.share.ui.fragment.PersonalHomepageFragment.LoadDataCallBack;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopicFragment extends BaseFragment implements TopicMvpView {
+public class TopicFragment extends RecyclerRefreshFragment<Topic> implements TopicMvpView {
 
     public static TopicFragment newInstance(TopicPresenter.TopicGroup topicGroup, String uid, String name) {
         TopicFragment fragment = new TopicFragment();
@@ -46,17 +44,15 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
         return newInstance(new TopicPresenter.TopicGroup(topicType), uid, name);
     }
 
-    private PullToRefreshLayout mPullToRefreshLayout;
-    private RecyclerView mRecyclerView;
     private TopicAdapter mAdapter;
     private TopicPresenter mPresenter;
     private TopicPresenter.TopicGroup topicGroup;
     private String uid, name;
 
-    @Override
-    protected int getLayoutResId() {
-        return R.layout.fragment_topic;
-    }
+//    @Override
+//    public int getLayoutResId() {
+//        return R.layout.fragment_topic;
+//    }
 
     @Override
     protected void handleBundleExtra() {
@@ -67,73 +63,61 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
 
     @Override
     public boolean onToolbarDoubleClick(Toolbar toolbar) {
-        mRecyclerView.getLayoutManager().scrollToPosition(0);
+        getRecyclerView().getLayoutManager().scrollToPosition(0);
         return true;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
+        super.onViewCreated(view, savedInstanceState);
+        setAdapter(mAdapter = new TopicAdapter(getContext(), new ArrayList<Topic>(), getRecyclerView()));
+        mTopicPager = new TopicIdPager(mAdapter);
+        mHandler = new TopicIdHandler<>(mAdapter);
+
         addPresenter(mPresenter = new TopicPresenter(this, topicGroup));
         mPresenter.setUid(uid);
         mPresenter.setName(name);
-
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(mAdapter = new TopicAdapter(getContext(), new ArrayList<Topic>(), mRecyclerView));
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.pull_to_refresh);
-        mPullToRefreshLayout.setOnRefreshListener(new SwipeListener.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (UserUtil.isUserEmpty()) {
-                    mPullToRefreshLayout.setRefreshing(false);
-                    return;
-                }
-
-                if (!mAdapter.isEmpty()) {
-                    String id = mAdapter.getData().get(0).getId();
-//                    mPresenter.loadWBAllTopicIds(id);
-                    mPresenter.loadWBTopic(id, true);
-                } else {
-                    mPresenter.loadWBTopic("0", true);
-                }
-            }
-        });
-
-        mPullToRefreshLayout.setOnLoadListener(new SwipeListener.OnLoadListener() {
-            @Override
-            public void onLoad() {
-                if (!mAdapter.isEmpty()) {
-                    String id = CommonUtil.getLastItem(mAdapter.getData()).getId();
-                    mPresenter.loadWBTopic(id, false);
-                } else {
-                    mPullToRefreshLayout.setLoading(false);
-                    mPullToRefreshLayout.setLoadEnable(false);
-                }
-            }
-        });
-
 
         getLoadDataCallBack().initView();
 
         mPresenter.loadCacheData();
 
-//        if(SettingHelper.isPreRead()){
-//            mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//                @Override
-//                public void onScrolled(RecyclerView mRecyclerView, int dx, int dy) {
-//                    super.onScrolled(mRecyclerView, dx, dy);
-//                    if(layoutManager.findLastVisibleItemPosition() > mAdapter.getItemCount() - 8){
-//                        mPullToRefreshLayout.setLoading(true);
-//                    }
-//                }
-//            });
-//        }
     }
 
+    @Override
+    public String getTitle() {
+        return "testTopic";
+    }
+
+    @Override
+    public void onRefresh() {
+        super.onRefresh();
+        if (UserUtil.isUserEmpty()) {
+            setRefreshing(false);
+            return;
+        }
+        mPresenter.loadWBTopic(mTopicPager.getFirstPage(), true);
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        mPresenter.loadWBTopic(mTopicPager.getNextPage(), false);
+    }
+
+    TopicIdPager mTopicPager;
+    TopicIdHandler<Topic> mHandler;
+
+    @Override
+    public DataHandler<Topic> getDataHandler() {
+        return mHandler;
+    }
+
+    @Override
+    public Pager getPager() {
+        return mTopicPager;
+    }
 
     public void refresh() {
         mPresenter.loadCacheData();
@@ -143,38 +127,33 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
     public void handleCache(List<Topic> data) {
         if (CommonUtil.isEmpty(data)) {
             getLoadDataCallBack().refresh(true);
-//            mPullToRefreshLayout.setRefreshing(true);
+//            getPullToRefresh().setRefreshing(true);
         } else {
             mAdapter.refresh(data);
+            setLoadEnable(true);
         }
-
     }
 
     @Override
     public void stopLoading(boolean isRefresh) {
         if (isRefresh) {
             getLoadDataCallBack().refresh(false);
-//            mPullToRefreshLayout.setRefreshing(false);
+//            getPullToRefresh().setRefreshing(false);
         } else {
-            mPullToRefreshLayout.setLoading(false);
+            setLoading(false);
         }
     }
 
     @Override
     public void handleNoMoreTopics() {
-        Snackbar.make(mPullToRefreshLayout, "没有新的微博", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(getParent(), "没有新的微博", Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void handleTopicData(List<Topic> data, boolean isRefresh) {
-        int type = DataUtil.handlePagingData(mAdapter.getData(), data, isRefresh);
-        DataUtil.handleTopicAdapter(type, mAdapter, data);
-        DataUtil.handlePullToRefresh(type, mPullToRefreshLayout);
-        DataUtil.handleSnackBar(type, mPullToRefreshLayout, data == null ? 0 : data.size());
-        if (type == DataUtil.REFRESH_DATA_SIZE_LESS
-                || type == DataUtil.REFRESH_DATA_SIZE_EQUAL
-                || type == DataUtil.LOAD_NO_MORE_DATA
-                || type == DataUtil.LOAD_DATA_SIZE_EQUAL) {
+        int type = handleData(isRefresh, data);
+        DataType.handleSnackBar(type, getRecyclerView(), data == null ? 0 : data.size());
+        if(DataType.hasNewData(type)){
             mPresenter.saveData(mAdapter.getData());
         }
     }
@@ -182,7 +161,7 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
     LoadDataCallBack mLoadDataCallBack;
 
     public LoadDataCallBack getLoadDataCallBack() {
-        if(mLoadDataCallBack == null){
+        if (mLoadDataCallBack == null) {
             mLoadDataCallBack = new DefaultLoadDataCallBack();
         }
         return mLoadDataCallBack;
@@ -190,10 +169,6 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
 
     public void setLoadDataCallBack(LoadDataCallBack loadDataCallBack) {
         this.mLoadDataCallBack = loadDataCallBack;
-    }
-
-    public PullToRefreshLayout getPullToRefresh(){
-        return mPullToRefreshLayout;
     }
 
     public class DefaultLoadDataCallBack implements LoadDataCallBack {
@@ -204,7 +179,7 @@ public class TopicFragment extends BaseFragment implements TopicMvpView {
 
         @Override
         public void refresh(boolean isRefreshing) {
-            mPullToRefreshLayout.setRefreshing(isRefreshing);
+            setRefreshing(isRefreshing);
         }
     }
 }

@@ -61,7 +61,7 @@ public class TopicGalleryFragment extends BaseFragment {
     }
 
     @Override
-    protected int getLayoutResId() {
+    public int getLayoutResId() {
         return R.layout.fragment_topic_gallery;
     }
 

@@ -59,7 +59,7 @@ public class SearchActivity extends BaseActivity implements SearchMvpView{
     }
 
     @Override
-    protected int getLayoutResId() {
+    public int getLayoutResId() {
         return R.layout.activity_search;
     }
 

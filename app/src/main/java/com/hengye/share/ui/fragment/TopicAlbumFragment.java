@@ -44,7 +44,7 @@ public class TopicAlbumFragment extends BaseFragment implements TopicAlbumMvpVie
     String uid, name;
 
     @Override
-    protected int getLayoutResId() {
+    public int getLayoutResId() {
         return R.layout.fragment_topic_album;
     }
 

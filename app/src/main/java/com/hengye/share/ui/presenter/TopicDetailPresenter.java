@@ -4,6 +4,7 @@ import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.sina.WBTopicComments;
 import com.hengye.share.model.sina.WBTopicReposts;
 import com.hengye.share.ui.mvpview.TopicDetailMvpView;
+import com.hengye.share.util.L;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.rxjava.ObjectConverter;
@@ -15,6 +16,7 @@ import java.util.Map;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 public class TopicDetailPresenter extends BasePresenter<TopicDetailMvpView> {
@@ -40,6 +42,7 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailMvpView> {
         WBService service = RetrofitManager.getWBService();
         Map<String, String> params = getParameter(UserUtil.getToken(), topicId, id, isRefresh);
         Map<String, String> repostParams = getParameter(UserUtil.getAdToken(), topicId, id, isRefresh);
+
         Observable.zip(
                 service.listComment(params),
                 service.listRepost(repostParams),

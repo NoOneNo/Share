@@ -7,7 +7,7 @@ import com.hengye.share.ui.base.BaseActivity;
 public class TemplateActivity extends BaseActivity{
 
     @Override
-    protected int getLayoutResId() {
+    public int getLayoutResId() {
         return super.getLayoutResId();
     }
 

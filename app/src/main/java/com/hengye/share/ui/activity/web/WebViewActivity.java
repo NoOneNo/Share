@@ -61,7 +61,7 @@ public class WebViewActivity extends BaseActivity implements View.OnClickListene
     }
 
     @Override
-    protected int getLayoutResId() {
+    public int getLayoutResId() {
         return R.layout.activity_webview;
     }
 

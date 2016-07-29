@@ -10,6 +10,7 @@ import com.hengye.share.R;
 import com.hengye.share.adapter.viewpager.TopicFragmentPager;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.ui.presenter.TopicPresenter;
+import com.hengye.share.util.ResUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,12 @@ public class TopicCommentActivity extends BaseActivity{
     }
 
     @Override
-    protected int getLayoutResId() {
+    protected CharSequence getToolbarTitle() {
+        return ResUtil.getString(R.string.title_page_comment);
+    }
+
+    @Override
+    public int getLayoutResId() {
         return R.layout.activity_topic_comment;
     }
 
@@ -41,16 +47,7 @@ public class TopicCommentActivity extends BaseActivity{
 
     private void initView(){
 
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-
-//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                finish();
-//            }
-//        });
-
+        initToolbar();
         mTabLayout = (TabLayout) findViewById(R.id.tab);
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         mViewPager.setAdapter(new TopicFragmentPager(getSupportFragmentManager(), this, getTopicGroups()));

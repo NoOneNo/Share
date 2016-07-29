@@ -28,7 +28,7 @@ public class SetTokenActivity extends BaseActivity implements View.OnClickListen
     }
 
     @Override
-    protected int getLayoutResId() {
+    public int getLayoutResId() {
         return R.layout.activity_set_token;
     }
 

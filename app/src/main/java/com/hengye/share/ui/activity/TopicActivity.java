@@ -69,7 +69,7 @@ public class TopicActivity extends BaseActivity
     }
 
     @Override
-    protected int getLayoutResId() {
+    public int getLayoutResId() {
         return R.layout.activity_topic;
     }
 

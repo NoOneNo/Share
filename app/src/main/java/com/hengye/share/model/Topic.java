@@ -17,7 +17,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Topic extends ParentInherit implements Serializable{
+public class Topic extends ParentInherit implements TopicId, Serializable{
 
     private static final long serialVersionUID = 971288752432928272L;
 

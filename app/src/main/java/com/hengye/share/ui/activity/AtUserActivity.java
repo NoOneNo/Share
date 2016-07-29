@@ -54,7 +54,7 @@ public class AtUserActivity extends BaseActivity implements AtUserMvpView {
     }
 
     @Override
-    protected int getLayoutResId() {
+    public int getLayoutResId() {
         return R.layout.activity_at_user;
     }
 

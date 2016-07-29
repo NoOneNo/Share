@@ -1,6 +1,7 @@
 package com.hengye.share.adapter.listview;
 
 import android.content.Context;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.hengye.share.R;
@@ -29,9 +30,9 @@ public class TopicCommentAdapter extends CommonAdapter<TopicComment, TopicCommen
 
     public static class TopicCommentViewHolder extends ViewHolder<TopicComment>{
 
-        TopicAdapter.TopicContentViewHolder mTopic;
-        TopicAdapter.TopicTitleViewHolder mTopicTitle;
-        View mTopicItem;
+        public TopicAdapter.TopicContentViewHolder mTopic;
+        public TopicAdapter.TopicTitleViewHolder mTopicTitle;
+        public View mTopicItem;
 
         public TopicCommentViewHolder(View v) {
             super(v);
@@ -50,13 +51,39 @@ public class TopicCommentAdapter extends CommonAdapter<TopicComment, TopicCommen
             //不设置的话会被名字内容的点击事件覆盖，无法触发ItemView的onClick
             mTopic.mContent.setTag(v);
             mTopic.mGallery.setTag(v);
-//            registerChildViewItemClick(mTopic.mContent);
+            registerChildViewItemClick(mTopicTitle.mAvatar);
+            registerChildViewItemClick(mTopicTitle.mUsername);
+            registerChildViewItemClick(mTopicTitle.mDescription);
+
 //            registerChildViewItemClick(mTopic.mGallery);
 
             SelectorLoader.getInstance().setDefaultRippleBackground(mTopicItem);
 
-            mTopic.mContent.setOnTouchListener(TopicUrlOnTouchListener.getInstance());
+            mTopicTitle.mAvatar.setOnTouchListener(mTopicOnTouchListener);
+            mTopicTitle.mUsername.setOnTouchListener(mTopicOnTouchListener);
+            mTopicTitle.mDescription.setOnTouchListener(mTopicOnTouchListener);
+//            mTopicTitle.mTitle.setOnTouchListener(mTopicOnTouchListener);
+            mTopic.mContent.setOnTouchListener(mTopicOnTouchListener);
+//            mTopic.mGallery.setOnTouchListener(mTopicOnTouchListener);
+//            mTopic.mContent.setOnTouchListener(TopicUrlOnTouchListener.getInstance());
         }
+
+        private View.OnTouchListener mTopicOnTouchListener = new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int id = v.getId();
+                if(id == R.id.tv_topic_content) {
+                    if(!TopicUrlOnTouchListener.getInstance().onTouch(v, event)) {
+                        return mTopicItem.onTouchEvent(event);
+                    }else{
+                        return true;
+                    }
+
+                }else{
+                    return mTopicItem.onTouchEvent(event);
+                }
+            }
+        };
 
         @Override
         public void bindData(Context context, TopicComment topicComment, int position) {

@@ -50,7 +50,7 @@ public class BaseFragment extends Fragment {
 
     protected void handleBundleExtra(){}
 
-    protected @LayoutRes int getLayoutResId(){
+    public @LayoutRes int getLayoutResId(){
         return 0;
     }
 
@@ -86,6 +86,11 @@ public class BaseFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initView(savedInstanceState);
+    }
+
+    public void initView(Bundle savedInstanceState){
+
     }
 
     @Override

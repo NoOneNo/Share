@@ -49,7 +49,11 @@ public class UrlBuilder {
     }
 
     public void addParameter(String key, String value){
-        mParameters.put(key, value);
+        mParameters.put(key, String.valueOf(value));
+    }
+
+    public void addParameter(String key, Object value){
+        mParameters.put(key, value.toString());
     }
 
     public void addParameter(String key, int value){
@@ -57,6 +61,10 @@ public class UrlBuilder {
     }
 
     public void addParameter(String key, float value) {
+        mParameters.put(key, String.valueOf(value));
+    }
+
+    public void addParameter(String key, double value) {
         mParameters.put(key, String.valueOf(value));
     }
 

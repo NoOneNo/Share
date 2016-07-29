@@ -7,6 +7,7 @@ import com.hengye.share.model.sina.WBTopicComments;
 import com.hengye.share.model.sina.WBTopicIds;
 import com.hengye.share.model.sina.WBTopicReposts;
 import com.hengye.share.model.sina.WBTopics;
+import com.hengye.share.model.sina.WBUploadPicture;
 import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.model.sina.WBUserInfos;
 import com.hengye.share.util.UrlFactory;
@@ -43,25 +44,31 @@ public interface WBService {
     @GET(UrlFactory.WB_REPOST_SHOW)
     Observable<WBTopicReposts> listRepost(@QueryMap Map<String, String> options);
 
-//    @Headers({"Content-Type: application/x-www-form-urlencoded"})
+    //    @Headers({"Content-Type: application/x-www-form-urlencoded"})
     @FormUrlEncoded
     @POST(UrlFactory.WB_PUBLISH_TOPIC)
     Observable<WBTopic> publishTopic
     (@Field("access_token") String token, @Field("status") String status);
 
-//
-//    @Headers({"Content-Type: multipart/form-data"})
+    //    @Headers({"Content-Type: multipart/form-data"})
     @Multipart
     @POST(UrlFactory.WB_PUBLISH_TOPIC_UPLOAD)
-    Observable<WBTopic> publishTopicWithPhoto
-            (@Part("access_token") RequestBody token,
-             @Part("status") RequestBody status,
-             @Part MultipartBody.Part file);
+    Observable<WBTopic> publishTopicWithSinglePhoto
+    (@Part("access_token") RequestBody token,
+     @Part("status") RequestBody status,
+     @Part MultipartBody.Part file);
+
+
+    @FormUrlEncoded
+    @POST(UrlFactory.WB_PUBLISH_TOPIC_PICTURE)
+    Observable<WBTopic> publishTopicWithMultiplePhoto
+            (@Field("access_token") String token, @Field("status") String status, @Field("pic_id") String pic_id);
 
     @Multipart
-    @POST(UrlFactory.WB_PUBLISH_TOPIC_UPLOAD)
-    Observable<WBTopic> publishTopicWithPhoto2
-            (MultipartBody file);
+    @POST(UrlFactory.WB_UPLOAD_PICTURE)
+    Observable<WBUploadPicture> uploadPicture
+            (@Part("access_token") RequestBody token,
+             @Part MultipartBody.Part file);
 
     @FormUrlEncoded
     @POST(UrlFactory.WB_COMMENT_TOPIC)

@@ -9,10 +9,13 @@ import android.os.HandlerThread;
 import android.util.Log;
 import android.view.View;
 
+import com.hengye.share.model.sina.WBUploadPicture;
 import com.hengye.share.ui.activity.web.WebViewActivity;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.R;
 import com.hengye.share.ui.fragment.TestTabLayoutFragment;
+import com.hengye.share.ui.fragment.TestTopicFragment;
+import com.hengye.share.ui.presenter.TopicPresenter;
 import com.hengye.share.ui.widget.dialog.ListDialog;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
@@ -23,17 +26,25 @@ import com.hengye.share.util.intercept.Action;
 import com.hengye.share.util.intercept.AdTokenInterceptor;
 import com.hengye.share.util.intercept.Interception;
 import com.hengye.share.util.intercept.Interceptor;
+import com.hengye.share.util.retrofit.RetrofitManager;
+import com.hengye.share.util.retrofit.WBService;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.android.schedulers.HandlerScheduler;
 import rx.exceptions.OnErrorThrowable;
+import rx.functions.Action1;
 import rx.functions.Func0;
 import rx.functions.Func1;
+import rx.functions.FuncN;
 import rx.schedulers.Schedulers;
 
 import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
@@ -53,7 +64,7 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
     private ListDialog mListDialog;
 
     @Override
-    protected int getLayoutResId() {
+    public int getLayoutResId() {
         return R.layout.activity_test;
     }
 
@@ -100,7 +111,9 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
             mListDialog.show();
         } else if (v.getId() == R.id.btn_test6) {
 //            testInterceptor();
-            startActivity(FragmentActivity.getStartIntent(this, TestTabLayoutFragment.class));
+
+//            TestTopicFragment.newInstance(new TopicPresenter.TopicGroup(TopicPresenter.TopicType.ALL));
+            startActivity(FragmentActivity.getStartIntent(this, TestTopicFragment.class));
 //            startActivity(WebViewActivity.getStartIntent(this, "http://www.baidu.com"));
         } else if (v.getId() == R.id.btn_test7) {
             startActivity(SetTokenActivity.class);
@@ -142,27 +155,67 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
     }
 
     void onRunSchedulerExampleButtonClicked() {
-        sampleObservable()
-                // Run on a background thread
-                .subscribeOn(Schedulers.computation())
-                // Be notified on the main thread
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<String>() {
-                    @Override
-                    public void onCompleted() {
-                        Log.d(TAG, "onCompleted()");
-                    }
+//        sampleObservable()
+//                // Run on a background thread
+//                .subscribeOn(Schedulers.computation())
+//                // Be notified on the main thread
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Subscriber<String>() {
+//                    @Override
+//                    public void onCompleted() {
+//                        Log.d(TAG, "onCompleted()");
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        Log.e(TAG, "onError()", e);
+//                    }
+//
+//                    @Override
+//                    public void onNext(String string) {
+//                        Log.d(TAG, "onNext(" + string + ")");
+//                    }
+//                });
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e(TAG, "onError()", e);
-                    }
 
+//        Observable
+//                .from(new String[]{"1", "2", "3"})
+//                .map(new Func1<String, Observable<String>>() {
+//                    @Override
+//                    public Observable<String> call(String s) {
+//                        return Observable.just(s + "end");
+//                    }
+//                }).flatMap(new Func1<Observable<String>, Observable<?>>() {
+//            @Override
+//            public Observable<?> call(Observable<String> stringObservable) {
+//                return null;
+//            }
+//        })
+
+        Observable.zip(
+                Observable
+                        .from(new String[]{"1", "2", "3"})
+                        .map(new Func1<String, Observable<String>>() {
+                            @Override
+                            public Observable<String> call(String s) {
+                                return Observable.just(s + "end");
+                            }
+                        }), new FuncN<String>() {
                     @Override
-                    public void onNext(String string) {
-                        Log.d(TAG, "onNext(" + string + ")");
+                    public String call(Object... args) {
+                        StringBuilder sb = new StringBuilder();
+                        for(Object arg : args){
+                            sb.append(arg);
+                        }
+                        return sb.toString();
                     }
-                });
+                }).subscribe(new Action1<String>() {
+
+            @Override
+            public void call(String o) {
+                L.debug("result, o :{}", o);
+            }
+        });
     }
 
     static Observable<String> sampleObservable() {

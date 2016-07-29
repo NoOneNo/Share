@@ -1,13 +1,11 @@
 package com.hengye.share.ui.fragment.encapsulation;
 
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.hengye.share.R;
 import com.hengye.share.ui.base.BaseFragment;
@@ -46,6 +44,7 @@ public abstract class ContentFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         if(isLayoutInflateMode()){
             LayoutInflater layoutInflater = LayoutInflater.from(getContext());

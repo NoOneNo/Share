@@ -36,7 +36,7 @@ public class TopicThemeActivity extends BaseActivity{
     }
 
     @Override
-    protected int getLayoutResId() {
+    public int getLayoutResId() {
         return R.layout.activity_topic_theme;
     }
 

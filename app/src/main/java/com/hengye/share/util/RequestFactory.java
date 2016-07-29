@@ -12,13 +12,18 @@ import com.hengye.share.model.sina.WBUserInfo;
  */
 public class RequestFactory {
 
+    /** Lazy initialization via inner-class holder. */
     private static class RequestFactoryHolder {
+        /** A singleton instance. */
         private final static RequestFactory INSTANCE = new RequestFactory();
     }
 
     private RequestFactory() {
     }
 
+    /**
+     * @return a singleton instance of this stateless operator.
+     */
     public static RequestFactory getInstance() {
         return RequestFactoryHolder.INSTANCE;
     }

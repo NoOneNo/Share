@@ -63,6 +63,10 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         TransitionHelper.startTransitionActivity(context, intent, startView, R.string.transition_name_avatar);
     }
 
+    public static void start(Context context, UserInfo userInfo) {
+        context.startActivity(getStartIntent(context, userInfo));
+    }
+
     public static Intent getStartIntent(Context context, UserInfo userInfo) {
         Intent intent = new Intent(context, PersonalHomepageActivity.class);
         intent.putExtra(UserInfo.class.getSimpleName(), userInfo);
@@ -99,7 +103,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     }
 
     @Override
-    protected int getLayoutResId() {
+    public int getLayoutResId() {
         return R.layout.activity_personal_homepage;
     }
 
@@ -385,6 +389,10 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     PersonalHomepageFragment mFragment;
 
     private void setupFragment(WBUserInfo wbUserInfo) {
+        if(isDestroyed() || isFinishing()){
+            return;
+        }
+
         mFragment = PersonalHomepageFragment.newInstance(wbUserInfo);
         mFragment.setSwipeRefresh(mSwipeRefresh);
         getSupportFragmentManager()
@@ -399,6 +407,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 //        mCover.setImageResource(R.drawable.bg_test);
         mCover.setAutoClipBitmap(false);
         mCover.setImageUrl(wbUserInfo.getCover_image_phone(), RequestManager.getImageLoader());
+        mAvatar.setAutoClipBitmap(false);
         mAvatar.setDefaultImageResId(R.drawable.ic_user_avatar);
         mAvatar.setImageUrl(wbUserInfo.getAvatar_large(), RequestManager.getImageLoader());
         mDivision.setVisibility(View.VISIBLE);

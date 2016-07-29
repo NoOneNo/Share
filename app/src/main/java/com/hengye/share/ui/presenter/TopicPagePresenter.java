@@ -5,6 +5,8 @@ import android.text.TextUtils;
 
 import com.google.gson.reflect.TypeToken;
 import com.hengye.share.R;
+import com.hengye.share.handler.data.NumberPager;
+import com.hengye.share.handler.data.base.Pager;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.greenrobot.GreenDaoManager;
 import com.hengye.share.model.greenrobot.GroupList;
@@ -37,13 +39,12 @@ public class TopicPagePresenter extends BasePresenter<TopicPageMvpView> {
     private TopicGroup mTopicGroup;
     private String mKeyword;
     private String uid, name;
+    private NumberPager mPager;
 
-    private int mPage = PAGE_START;
-    public final static int PAGE_START = 1;
-
-    public TopicPagePresenter(TopicPageMvpView mvpView, TopicGroup topicGroup) {
+    public TopicPagePresenter(TopicPageMvpView mvpView, TopicGroup topicGroup, NumberPager pager) {
         super(mvpView);
         mTopicGroup = topicGroup;
+        mPager = pager;
     }
 
     public void loadWBTopic(boolean isRefresh) {
@@ -58,18 +59,17 @@ public class TopicPagePresenter extends BasePresenter<TopicPageMvpView> {
     }
 
     public void loadWBThemeTopic(boolean isRefresh) {
-        int targetPage = isRefresh ? PAGE_START : mPage + 1;
         RetrofitManager
                 .getWBService()
-                .searchTopic(getWBAllTopicParameter(targetPage))
+                .searchTopic(getWBAllTopicParameter(mPager.getPage(isRefresh)))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(getWBTopicsSubscriber(targetPage, isRefresh));
+                .subscribe(getWBTopicsSubscriber(isRefresh));
     }
 
     public Map<String, String> getWBAllTopicParameter(int page) {
         final UrlBuilder ub = new UrlBuilder();
-        ub.addParameter("access_token", UserUtil.getToken());
+        ub.addParameter("access_token", UserUtil.getPriorToken());
 
         ub.addParameter("page", page);
 
@@ -87,7 +87,7 @@ public class TopicPagePresenter extends BasePresenter<TopicPageMvpView> {
         return ub.getParameters();
     }
 
-    public Subscriber<WBTopics> getWBTopicsSubscriber(final int targetPage, final boolean isRefresh) {
+    public Subscriber<WBTopics> getWBTopicsSubscriber(final boolean isRefresh) {
         return new BaseSubscriber<WBTopics>() {
             @Override
             public void handleViewOnFail(TopicPageMvpView v, Throwable e) {
@@ -96,9 +96,6 @@ public class TopicPagePresenter extends BasePresenter<TopicPageMvpView> {
 
             @Override
             public void handleViewOnSuccess(TopicPageMvpView v, WBTopics wbTopics) {
-                if(wbTopics != null){
-                    mPage = targetPage;
-                }
                 v.stopLoading(isRefresh);
                 v.handleTopicData(Topic.getTopics(wbTopics), isRefresh);
             }

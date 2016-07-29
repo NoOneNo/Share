@@ -71,7 +71,7 @@ public class CommonUtil {
         String toSplit();
     }
 
-    public static <T extends ToSplit> String toSplit(List<T> list, String separator) {
+    public static <T extends ToSplit> String toSplitAppointed(List<T> list, String separator) {
         if (isEmpty(list) || isEmpty(separator)) {
             return null;
         }
@@ -90,7 +90,7 @@ public class CommonUtil {
         return sb.toString();
     }
 
-    public static String toSplitString(List list, String separator) {
+    public static String toSplit(List list, String separator) {
         if (isEmpty(list) || isEmpty(separator)) {
             return null;
         }

@@ -11,8 +11,16 @@ import android.view.View;
 
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicAdapter;
+import com.hengye.share.handler.data.DefaultDataHandler;
+import com.hengye.share.handler.data.NumberPager;
+import com.hengye.share.handler.data.TopicIdHandler;
+import com.hengye.share.handler.data.TopicIdPager;
+import com.hengye.share.handler.data.base.DataHandler;
+import com.hengye.share.handler.data.base.DataType;
+import com.hengye.share.handler.data.base.Pager;
 import com.hengye.share.model.Topic;
 import com.hengye.share.ui.base.BaseFragment;
+import com.hengye.share.ui.fragment.encapsulation.paging.RecyclerRefreshFragment;
 import com.hengye.share.ui.mvpview.TopicPageMvpView;
 import com.hengye.share.ui.presenter.TopicPagePresenter;
 import com.hengye.share.util.DataUtil;
@@ -23,7 +31,7 @@ import com.hengye.swiperefresh.listener.SwipeListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopicPageFragment extends BaseFragment implements TopicPageMvpView {
+public class TopicPageFragment extends RecyclerRefreshFragment<Topic> implements TopicPageMvpView {
 
     public static TopicPageFragment newInstance(TopicPagePresenter.TopicGroup topicGroup, String keyword) {
         TopicPageFragment fragment = new TopicPageFragment();
@@ -38,86 +46,76 @@ public class TopicPageFragment extends BaseFragment implements TopicPageMvpView 
         return newInstance(new TopicPagePresenter.TopicGroup(topicType), keyword);
     }
 
-    private PullToRefreshLayout mPullToRefreshLayout;
     private TopicAdapter mAdapter;
     private TopicPagePresenter mPresenter;
     private TopicPagePresenter.TopicGroup topicGroup;
+
+    private NumberPager mPager;
+    private DefaultDataHandler<Topic> mHandler;
     private String mKeyword;
 
     @Override
-    protected int getLayoutResId() {
-        return R.layout.fragment_topic;
-    }
-
-    @Override
     protected void handleBundleExtra() {
-        topicGroup = (TopicPagePresenter.TopicGroup)getArguments().getSerializable("topicGroup");
+        topicGroup = (TopicPagePresenter.TopicGroup) getArguments().getSerializable("topicGroup");
         mKeyword = getArguments().getString("keyword");
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-
-        addPresenter(mPresenter = new TopicPagePresenter(this, topicGroup));
+        super.onViewCreated(view, savedInstanceState);
+        setAdapter(mAdapter = new TopicAdapter(getContext(), new ArrayList<Topic>(), getRecyclerView()));
+        mPager = new NumberPager();
+        mHandler = new DefaultDataHandler<>(mAdapter);
+        addPresenter(mPresenter = new TopicPagePresenter(this, topicGroup, mPager));
         mPresenter.setKeyword(mKeyword);
-
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(mAdapter = new TopicAdapter(getContext(), new ArrayList<Topic>(), recyclerView));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.pull_to_refresh);
-        mPullToRefreshLayout.setOnRefreshListener(new SwipeListener.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (UserUtil.isUserEmpty()) {
-                    mPullToRefreshLayout.setRefreshing(false);
-                    return;
-                }
-
-                mPresenter.loadWBTopic(true);
-            }
-        });
-
-        mPullToRefreshLayout.setOnLoadListener(new SwipeListener.OnLoadListener() {
-            @Override
-            public void onLoad() {
-                if (!mAdapter.isEmpty()) {
-                    mPresenter.loadWBTopic(false);
-                } else {
-                    mPullToRefreshLayout.setLoading(false);
-                    mPullToRefreshLayout.setLoadEnable(false);
-                }
-            }
-        });
-
-        mPullToRefreshLayout.setRefreshing(true);
+        setRefreshing(true);
     }
 
-    public void refresh(String keyword){
-        if(keyword == null || TextUtils.isEmpty(keyword.trim())){
+    @Override
+    public void onRefresh() {
+        super.onRefresh();
+        if (UserUtil.isUserEmpty()) {
+            setRefreshing(false);
+            return;
+        }
+        mPresenter.loadWBTopic(true);
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        if (!mAdapter.isEmpty()) {
+            mPresenter.loadWBTopic(false);
+        }
+    }
+
+    @Override
+    public Pager getPager() {
+        return mPager;
+    }
+
+    @Override
+    public DataHandler<Topic> getDataHandler() {
+        return mHandler;
+    }
+
+    public void refresh(String keyword) {
+        if (keyword == null || TextUtils.isEmpty(keyword.trim())) {
             return;
         }
         mPresenter.setKeyword(keyword);
-        mPullToRefreshLayout.setRefreshing(true);
+        setRefreshing(true);
     }
-
 
     @Override
     public void stopLoading(boolean isRefresh) {
-        if (isRefresh) {
-            mPullToRefreshLayout.setRefreshing(false);
-        } else {
-            mPullToRefreshLayout.setLoading(false);
-        }
+        onTaskComplete();
     }
 
     @Override
     public void handleTopicData(List<Topic> data, boolean isRefresh) {
-        int type = DataUtil.handlePagingData(mAdapter.getData(), data, isRefresh);
-        DataUtil.handleTopicAdapter(type, mAdapter, data);
-        DataUtil.handlePullToRefresh(type, mPullToRefreshLayout);
-        DataUtil.handleSnackBar(type, mPullToRefreshLayout, data == null ? 0 : data.size());
+        int type = handleData(isRefresh, data);
+        DataType.handleSnackBar(type, getParent(), data == null ? 0 : data.size());
     }
 
 }

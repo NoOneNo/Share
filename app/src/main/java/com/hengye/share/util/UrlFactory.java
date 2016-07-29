@@ -54,6 +54,10 @@ public class UrlFactory {
     public static final String WB_PUBLISH_TOPIC = "statuses/update.json";
     //发表微博,并且上传一张图片
     public static final String WB_PUBLISH_TOPIC_UPLOAD = "statuses/upload.json";
+    //上传一张图片
+    public static final String WB_UPLOAD_PICTURE = "statuses/upload_pic.json";
+    //发表微博, 可上传多张图片,高级接口
+    public static final String WB_PUBLISH_TOPIC_PICTURE = "statuses/upload_url_text.json";
     //获取用户的关注列表
     public static final String WB_USER_ATTENTION = "friendships/friends.json";
     //对微博进行评论
