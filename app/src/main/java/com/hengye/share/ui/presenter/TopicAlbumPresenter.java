@@ -3,6 +3,7 @@ package com.hengye.share.ui.presenter;
 import android.text.TextUtils;
 
 import com.google.gson.reflect.TypeToken;
+import com.hengye.share.model.KeyValue;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.greenrobot.GreenDaoManager;
 import com.hengye.share.model.greenrobot.ShareJson;
@@ -44,13 +45,14 @@ public class TopicAlbumPresenter extends BasePresenter<TopicAlbumMvpView> {
                 .subscribe(new BaseSubscriber<WBTopics>() {
                     @Override
                     public void handleViewOnFail(TopicAlbumMvpView v, Throwable e) {
+                        super.handleViewOnFail(v, e);
                         v.stopLoading(isRefresh);
                     }
 
                     @Override
                     public void handleViewOnSuccess(TopicAlbumMvpView v, WBTopics wbTopics) {
 
-                        List<Topic> topics = Topic.getTopics(wbTopics);
+                        ArrayList<Topic> topics = Topic.getTopics(wbTopics);
 
                         if (isRefresh) {
                             currentId = "0";
@@ -60,27 +62,31 @@ public class TopicAlbumPresenter extends BasePresenter<TopicAlbumMvpView> {
                             }
                         }
                         v.stopLoading(isRefresh);
-                        v.handleAlbumData(getImageUrls(topics), isRefresh);
+
+                        if(isRefresh){
+                            saveData(topics);
+                        }
+                        KeyValue<ArrayList<Topic>, ArrayList<String>> kv = getImageUrls(topics);
+                        v.handleAlbumData(kv.getKey(), kv.getValue(), isRefresh);
                     }
                 });
     }
 
-    public ArrayList<String> getImageUrls(List<Topic> topics) {
+    public static KeyValue<ArrayList<Topic>, ArrayList<String>> getImageUrls(List<Topic> topics) {
         if (CommonUtil.isEmpty(topics)) {
-            return null;
+            return new KeyValue<>(null, null);
         }
         ArrayList<String> urls = new ArrayList<>();
+        ArrayList<Topic> imageTopics = new ArrayList<>();
         for (Topic topic : topics) {
             if (!CommonUtil.isEmpty(topic.getImageUrls())) {
-                urls.addAll(topic.getImageUrls());
+                for(String url : topic.getImageUrls()) {
+                    urls.add(url);
+                    imageTopics.add(topic);
+                }
             }
-//            if (topic.getRetweetedTopic() != null) {
-//                if (!CommonUtil.isEmpty(topic.getRetweetedTopic().getImageUrls())) {
-//                    urls.addAll(topic.getRetweetedTopic().getImageUrls());
-//                }
-//            }
         }
-        return urls;
+        return new KeyValue<>(imageTopics, urls);
     }
 
 
@@ -111,43 +117,42 @@ public class TopicAlbumPresenter extends BasePresenter<TopicAlbumMvpView> {
 
     public void loadCacheData(){
         Observable
-                .create(new Observable.OnSubscribe<ArrayList<String>>() {
+                .create(new Observable.OnSubscribe<ArrayList<Topic>>() {
                     @Override
-                    public void call(Subscriber<? super ArrayList<String>> subscriber) {
+                    public void call(Subscriber<? super ArrayList<Topic>> subscriber) {
                         subscriber.onNext(findData());
                     }
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new BaseAction1<ArrayList<String>>() {
+                .subscribe(new BaseAction1<ArrayList<Topic>>() {
                     @Override
-                    public void handleView(TopicAlbumMvpView v, ArrayList<String> urls) {
-                        v.handleCache(urls);
+                    public void handleView(TopicAlbumMvpView v, ArrayList<Topic> topics) {
+                        KeyValue<ArrayList<Topic>, ArrayList<String>> kv = getImageUrls(topics);
+                        v.handleCache(kv.getKey(), kv.getValue());
                     }
                 });
     }
 
-    public ArrayList<String> findData() {
+    public ArrayList<Topic> findData() {
 
         ShareJson shareJson = null;
-
+        ArrayList<Topic> data = null;
         try{
             shareJson = GreenDaoManager.getDaoSession().getShareJsonDao().load(getModuleName());
+            if (shareJson == null) {
+                return new ArrayList<>();
+            }
+            data = GsonUtil.fromJson(shareJson.getJson()
+                    , new TypeToken<ArrayList<Topic>>(){}.getType());
         }catch (Exception e){
             e.printStackTrace();
         }
 
-        if (shareJson == null) {
-            return new ArrayList<>();
-        }
-
-        ArrayList<String> data = GsonUtil.fromJson(shareJson.getJson()
-                , new TypeToken<ArrayList<String>>(){}.getType());
-
-        return data == null ? new ArrayList<String>() : data;
+        return data == null ? new ArrayList<Topic>() : data;
     }
 
-    public void saveData(List<String> data) {
+    public void saveData(List<Topic> data) {
         GreenDaoManager
                 .getDaoSession()
                 .getShareJsonDao()

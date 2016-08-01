@@ -17,13 +17,18 @@ public class FragmentActivity extends BaseActivity {
 
     public final static String FRAGMENT_CLASS = "fragment_class";
 
-    public static <T extends BaseFragment> Intent getStartIntent(Context context, Class<T> clazz) {
-        return getStartIntent(context, clazz, null);
+    public static <T extends BaseFragment> Intent getStartIntent(Context context, Class<T> fragmentClazz) {
+        return getStartIntent(context, fragmentClazz, null);
     }
 
-    public static <T extends BaseFragment> Intent getStartIntent(Context context, Class<T> clazz, Bundle extras) {
-        Intent intent = new Intent(context, FragmentActivity.class);
-        intent.putExtra(FRAGMENT_CLASS, clazz);
+    public static <T extends BaseFragment> Intent getStartIntent(Context context, Class<T> fragmentClazz, Bundle extras) {
+        return getStartIntent(context, fragmentClazz, extras, FragmentActivity.class);
+    }
+
+//
+    public static <T extends BaseFragment, A extends FragmentActivity> Intent getStartIntent(Context context, Class<T> fragmentClazz, Bundle extras, Class<A> activityClazz) {
+        Intent intent = new Intent(context, activityClazz);
+        intent.putExtra(FRAGMENT_CLASS, fragmentClazz);
         if (extras != null) {
             intent.putExtras(extras);
         }

@@ -45,7 +45,7 @@
 //    String mTopicId;
 //
 //    @Override
-//    protected void handleBundleExtra() {
+//    protected void handleBundleExtra(Bundle bundle) {
 //        mTopicId = getArguments().getString("topicId");
 //    }
 //

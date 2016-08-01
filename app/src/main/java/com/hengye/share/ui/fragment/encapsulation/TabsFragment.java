@@ -2,13 +2,12 @@ package com.hengye.share.ui.fragment.encapsulation;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
+import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import com.hengye.share.R;
@@ -43,10 +42,16 @@ public abstract class TabsFragment extends ContentFragment implements ViewPager.
         }
     }
 
+    protected
+    @IdRes
+    int getViewPagerId() {
+        return R.id.view_pager;
+    }
+
     protected ViewPager findViewPager() {
-        ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
-        if(viewPager == null){
-            viewPager = (ViewPager) getActivity().findViewById(R.id.view_pager);
+        ViewPager viewPager = (ViewPager) findViewById(getViewPagerId());
+        if (viewPager == null) {
+            viewPager = (ViewPager) getActivity().findViewById(getViewPagerId());
         }
         return viewPager;
     }
@@ -57,9 +62,12 @@ public abstract class TabsFragment extends ContentFragment implements ViewPager.
         return mViewPager;
     }
 
-    FragmentPagerAdapter mInnerAdapter;
+    public FragmentPagerAdapter getAdapter(){
+        return mAdapter;
+    }
+
+    FragmentPagerAdapter mAdapter;
     ArrayList<TabItem> mItems;
-    Map<String, BaseFragment> mFragments;
     int mCurrentPosition = 0;
 
     public void onSaveInstanceState(Bundle outState) {
@@ -75,21 +83,30 @@ public abstract class TabsFragment extends ContentFragment implements ViewPager.
         mItems = savedInstanceState == null ? generateTabs() : (ArrayList) savedInstanceState.getSerializable("items");
         mCurrentPosition = savedInstanceState == null ? 0 : savedInstanceState.getInt("position");
 
-        mFragments = new HashMap<>();
-        mInnerAdapter = new TabsAdapter(getActivity().getSupportFragmentManager());
+        mAdapter = createAdapter();
+        if (mAdapter != null) {
+            mViewPager.setAdapter(mAdapter);
+        }
         mViewPager.setOffscreenPageLimit(0);
-        mViewPager.setAdapter(mInnerAdapter);
-        if (mCurrentPosition >= mInnerAdapter.getCount()) {
+        if (mCurrentPosition >= mAdapter.getCount()) {
             mCurrentPosition = 0;
         }
-
         mViewPager.setCurrentItem(mCurrentPosition);
         mViewPager.addOnPageChangeListener(this);
     }
 
-    protected void updateViewPager(){
+
+    public void setAdapter(FragmentPagerAdapter adapter) {
+        mViewPager.setAdapter(adapter);
+    }
+
+    protected FragmentPagerAdapter createAdapter() {
+        return new TabsAdapter(getActivity().getSupportFragmentManager());
+    }
+
+    protected void updateViewPager() {
         mItems = generateTabs();
-        mInnerAdapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();
     }
 
     protected void destroyFragments() {
@@ -112,8 +129,8 @@ public abstract class TabsFragment extends ContentFragment implements ViewPager.
 //                }
 //
 //                e1.commit();
-            } catch (Throwable var5) {
-                var5.printStackTrace();
+            } catch (Throwable e) {
+                e.printStackTrace();
             }
         }
 
@@ -121,34 +138,25 @@ public abstract class TabsFragment extends ContentFragment implements ViewPager.
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
     }
 
     @Override
     public void onPageSelected(int position) {
         mCurrentPosition = position;
-//        if (configLastPositionKey() != null) {
-//            ActivityHelper.putShareData(GlobalContext.getInstance(), "PagerLastPosition" + configLastPositionKey(), ((TabItem) mItems.get(position)).getType());
-//        }
-//
-//        android.app.Fragment fragment = getCurrentFragment();
-//        if (fragment instanceof ATabsFragment.ITabInitData) {
-//            ((ATabsFragment.ITabInitData) fragment).onTabRequestData();
-//        }
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
-
     }
 
-    public String makeFragmentName(int position) {
-        return ((TabItem) mItems.get(position)).getTitle();
+    protected ArrayList<TabItem> generateTabs() {
+        return null;
+//        throw new RuntimeException("must override this method");
     }
 
-    protected abstract ArrayList<TabItem> generateTabs();
-
-    protected abstract BaseFragment newFragment(TabItem tabItem);
+    protected BaseFragment newFragment(TabItem tabItem) {
+        throw new RuntimeException("must override this method");
+    }
 
     protected int delayTabInit() {
         return 0;
@@ -164,48 +172,33 @@ public abstract class TabsFragment extends ContentFragment implements ViewPager.
         super.onDestroy();
     }
 
-    public BaseFragment getCurrentFragment() {
-        return mViewPager != null && mInnerAdapter != null && mInnerAdapter.getCount() >= mCurrentPosition ? mFragments.get(makeFragmentName(mCurrentPosition)) : null;
+    public Fragment getCurrentFragment() {
+        return getFragment(mViewPager.getCurrentItem());
     }
 
-    public int getCurrentPosition(){
-        return mCurrentPosition;
+    public int getCurrentPosition() {
+        return mViewPager.getCurrentItem();
     }
 
-    public BaseFragment getFragment(String tabTitle) {
-        if (mFragments != null && !TextUtils.isEmpty(tabTitle)) {
-            for (int i = 0; i < mItems.size(); ++i) {
-                if (tabTitle.equals(((TabItem) mItems.get(i)).getTitle())) {
-                    return mFragments.get(makeFragmentName(i));
-                }
-            }
-
-            return null;
-        } else {
-            return null;
-        }
-    }
-
-    public BaseFragment getFragment(int index) {
-        return mItems.size() > index ? mFragments.get(makeFragmentName(index)) : null;
-    }
-
-    public Map<String, BaseFragment> getFragments() {
-        return mFragments;
+    public Fragment getFragment(int position) {
+        return mAdapter.getItem(position);
     }
 
     class TabsAdapter extends FragmentPagerAdapter {
 
+        Map<String, BaseFragment> mFragments;
+
         public TabsAdapter(FragmentManager fm) {
             super(fm);
+            mFragments = new HashMap<>();
         }
 
         @Override
         public BaseFragment getItem(int position) {
-            BaseFragment fragment = mFragments.get(this.makeFragmentName_(position));
+            BaseFragment fragment = mFragments.get(this.makeFragmentName(position));
             if (fragment == null) {
                 fragment = newFragment(mItems.get(position));
-                mFragments.put(this.makeFragmentName_(position), fragment);
+                mFragments.put(this.makeFragmentName(position), fragment);
             }
 
             return fragment;
@@ -225,8 +218,26 @@ public abstract class TabsFragment extends ContentFragment implements ViewPager.
             return (mItems.get(position)).getTitle();
         }
 
-        protected String makeFragmentName_(int position) {
-            return TabsFragment.this.makeFragmentName(position);
+        protected String makeFragmentName(int position) {
+            return mItems.get(position).getTitle();
+        }
+
+        public Map<String, BaseFragment> getFragments() {
+            return mFragments;
+        }
+
+        public BaseFragment getFragment(String tabTitle) {
+            if (mFragments != null && !TextUtils.isEmpty(tabTitle)) {
+                for (int i = 0; i < mItems.size(); ++i) {
+                    if (tabTitle.equals(((TabItem) mItems.get(i)).getTitle())) {
+                        return mFragments.get(makeFragmentName(i));
+                    }
+                }
+
+                return null;
+            } else {
+                return null;
+            }
         }
     }
 

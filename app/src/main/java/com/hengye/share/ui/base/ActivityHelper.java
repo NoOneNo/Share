@@ -11,8 +11,19 @@ public class ActivityHelper {
     private ArrayList<ActivityLifecycleListener> mActivityLifecycleListener =
             new ArrayList<>();
 
+    private ActivityActionInterceptListener mActivityActionInterceptListener;
+
     public void clear(){
         mActivityLifecycleListener.clear();
+        unregisterActivityActionInterceptListener();
+    }
+
+    public void registerActivityActionInterceptListener(ActivityActionInterceptListener listener) {
+        mActivityActionInterceptListener = listener;
+    }
+
+    public void unregisterActivityActionInterceptListener() {
+        mActivityActionInterceptListener = null;
     }
 
     public void registerActivityLifecycleListener(ActivityLifecycleListener listener) {
@@ -101,6 +112,13 @@ public class ActivityHelper {
         }
     }
 
+    /* package */ boolean onBackPressed() {
+        if(mActivityActionInterceptListener != null){
+            return mActivityActionInterceptListener.onBackPressed();
+        }
+        return false;
+    }
+
     private Object[] collectActivityLifecycleListener() {
         Object[] callbacks = null;
         synchronized (mActivityLifecycleListener) {
@@ -111,7 +129,7 @@ public class ActivityHelper {
         return callbacks;
     }
 
-    interface ActivityLifecycleListener {
+    public interface ActivityLifecycleListener {
 
         void onActivityCreated(Activity activity, Bundle savedInstanceState);
         void onActivityStarted(Activity activity);
@@ -121,5 +139,58 @@ public class ActivityHelper {
         void onActivitySaveInstanceState(Activity activity, Bundle outState);
         void onActivityDestroyed(Activity activity);
         void onActivityResulted(Activity activity, int requestCode, int resultCode, Intent data);
+    }
+
+    public interface ActivityActionInterceptListener{
+        boolean onBackPressed();//是否拦截, 如果返回true则拦截, 不调用Activity的onBackPressed;
+    }
+
+    public static class DefaultActivityLifecycleListener implements ActivityLifecycleListener{
+        @Override
+        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityResulted(Activity activity, int requestCode, int resultCode, Intent data) {
+
+        }
+    }
+
+    public static class DefaultActivityActionInterceptListener implements ActivityActionInterceptListener{
+        @Override
+        public boolean onBackPressed() {
+            return false;
+        }
     }
 }

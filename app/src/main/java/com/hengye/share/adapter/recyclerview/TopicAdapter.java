@@ -26,10 +26,12 @@ import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.model.sina.WBTopic;
+import com.hengye.share.ui.activity.GalleryActivity;
 import com.hengye.share.ui.activity.PersonalHomepageActivity;
 import com.hengye.share.ui.activity.TopicDetailActivity;
 import com.hengye.share.ui.activity.TopicGalleryActivity;
 import com.hengye.share.ui.activity.TopicPublishActivity;
+import com.hengye.share.ui.fragment.GalleryFragment;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.ui.support.textspan.TopicUrlOnTouchListener;
 import com.hengye.share.ui.widget.image.GridGalleryView;
@@ -455,7 +457,9 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
                                 }
                             }
 
-                            TopicGalleryActivity
+//                            TopicGalleryActivity
+//                                    .startWithIntent(context, urls, position, animationRectArrayList);
+                            GalleryActivity
                                     .startWithIntent(context, urls, position, animationRectArrayList);
                         }
                     }

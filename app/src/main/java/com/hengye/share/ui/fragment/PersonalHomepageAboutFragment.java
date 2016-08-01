@@ -27,9 +27,8 @@ public class PersonalHomepageAboutFragment extends BaseFragment implements View.
     }
 
     @Override
-    protected void handleBundleExtra() {
-        super.handleBundleExtra();
-        mWbUserInfo = (WBUserInfo)getArguments().getSerializable("wbUserInfo");
+    protected void handleBundleExtra(Bundle bundle) {
+        mWbUserInfo = (WBUserInfo)bundle.getSerializable("wbUserInfo");
     }
 
     @Override

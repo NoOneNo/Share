@@ -38,6 +38,7 @@ public class SearchPresenter extends BasePresenter<SearchMvpView> {
                 .subscribe(new BaseSubscriber<Object[]>() {
                     @Override
                     public void handleViewOnFail(SearchMvpView v, Throwable e) {
+                        super.handleViewOnFail(v, e);
                         v.loadFail();
                     }
 

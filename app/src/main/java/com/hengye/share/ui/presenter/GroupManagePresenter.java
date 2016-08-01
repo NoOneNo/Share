@@ -56,24 +56,22 @@ public class GroupManagePresenter extends BasePresenter<GroupManageMvpView> {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<GroupList>>() {
+                .subscribe(new BaseSubscriber<List<GroupList>>() {
                     @Override
-                    public void onCompleted() {
+                    public void handleViewOnSuccess(GroupManageMvpView v, List<GroupList> groupLists) {
                         getMvpView().loadSuccess();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        getMvpView().loadFail();
-                    }
-
-                    @Override
-                    public void onNext(List<GroupList> groupLists) {
-
                         setIsGroupUpdate(true);
                         getMvpView().handleGroupList(groupLists);
                     }
+
+                    @Override
+                    public void handleViewOnFail(GroupManageMvpView v, Throwable e) {
+                        super.handleViewOnFail(v, e);
+                        getMvpView().loadFail();
+                    }
                 });
+
+
     }
 
     public void updateGroupOrder(final List<GroupList> data){
@@ -97,20 +95,16 @@ public class GroupManagePresenter extends BasePresenter<GroupManageMvpView> {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Boolean>() {
+                .subscribe(new BaseSubscriber<Boolean>() {
                     @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        getMvpView().updateGroupOrderCallBack(false);
-                    }
-
-                    @Override
-                    public void onNext(Boolean isSuccess) {
+                    public void handleViewOnSuccess(GroupManageMvpView v, Boolean isSuccess) {
                         getMvpView().updateGroupOrderCallBack(isSuccess);
+                    }
+
+                    @Override
+                    public void handleViewOnFail(GroupManageMvpView v, Throwable e) {
+                        super.handleViewOnFail(v, e);
+                        getMvpView().updateGroupOrderCallBack(false);
                     }
                 });
 
@@ -127,21 +121,17 @@ public class GroupManagePresenter extends BasePresenter<GroupManageMvpView> {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Boolean>() {
+                .subscribe(new BaseSubscriber<Boolean>() {
                     @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        getMvpView().checkGroupOrder(false);
-                    }
-
-                    @Override
-                    public void onNext(Boolean isChange) {
+                    public void handleViewOnSuccess(GroupManageMvpView v, Boolean isChange) {
                         setIsGroupUpdate(isChange);
                         getMvpView().checkGroupOrder(isChange);
+                    }
+
+                    @Override
+                    public void handleViewOnFail(GroupManageMvpView v, Throwable e) {
+                        super.handleViewOnFail(v, e);
+                        getMvpView().checkGroupOrder(false);
                     }
                 });
     }

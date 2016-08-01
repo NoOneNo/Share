@@ -31,9 +31,9 @@ public class ImageWebViewFragment extends BaseFragment {
     boolean mAnimateIn;
 
     @Override
-    protected void handleBundleExtra() {
-        mPath = getArguments().getString("path");
-        mAnimateIn = getArguments().getBoolean("animationIn");
+    protected void handleBundleExtra(Bundle bundle) {
+        mPath = bundle.getString("path");
+        mAnimateIn = bundle.getBoolean("animationIn");
     }
 
     @Override

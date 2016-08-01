@@ -61,7 +61,7 @@
 //    int mNotifyType;
 //
 //    @Override
-//    protected void handleBundleExtra() {
+//    protected void handleBundleExtra(Bundle bundle) {
 //        mNotifyType = getArguments().getInt("notifyType");
 //    }
 //

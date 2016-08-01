@@ -119,7 +119,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 
     @Override
     public boolean onToolbarDoubleClick(Toolbar toolbar) {
-        if(mFragment != null){
+        if (mFragment != null) {
             return mFragment.onToolbarDoubleClick(toolbar);
         }
         return super.onToolbarDoubleClick(toolbar);
@@ -288,7 +288,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         setUpAvatar();
     }
 
-    private void initStatusBar(){
+    private void initStatusBar() {
 //        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 //        Window window = getWindow();
 //        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
@@ -301,7 +301,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 ////        window.setNavigationBarColor(getResources().getColor(R.attr.theme_color));
     }
 
-    private void setUpAvatar(){
+    private void setUpAvatar() {
         mUserInfoLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -310,7 +310,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                 ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mAvatar.getLayoutParams();
 
                 int targetHeight = height - mAvatar.getHeight() / 2;
-                if(targetHeight != lp.bottomMargin){
+                if (targetHeight != lp.bottomMargin) {
                     lp.bottomMargin = targetHeight;
                     mAvatar.requestLayout();
                 }
@@ -337,6 +337,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     }
 
     Animator coverShowAnimator;
+
     private void startCoverShowAnimation() {
 
         coverShowAnimator = ViewAnimationUtils.createCircularReveal(mAppBarLayout,
@@ -389,7 +390,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     PersonalHomepageFragment mFragment;
 
     private void setupFragment(WBUserInfo wbUserInfo) {
-        if(isDestroyed() || isFinishing()){
+        if (isDestroyed() || isFinishing()) {
             return;
         }
 
@@ -443,9 +444,9 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
             return;
         }
         if (mFragment == null) {
-            if(coverShowAnimator != null && !coverShowAnimator.isRunning()){
+            if (coverShowAnimator != null && !coverShowAnimator.isRunning()) {
                 setupFragment(wbUserInfo);
-            }else{
+            } else {
                 getHandler().postDelayed(new Runnable() {
                     @Override
                     public void run() {

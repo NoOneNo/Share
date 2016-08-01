@@ -26,6 +26,8 @@
     <color name="white">@android:color/white</color>
     <color name="black">@android:color/black</color>
 
+    <color name="transparent_grey">#22757575</color>
+
     <color name="grey_900">#ff212121</color>
     <color name="grey_850">#ff303030</color>
     <color name="grey_800">#ff424242</color>

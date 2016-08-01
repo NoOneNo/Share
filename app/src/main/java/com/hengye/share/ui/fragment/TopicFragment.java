@@ -55,10 +55,10 @@ public class TopicFragment extends RecyclerRefreshFragment<Topic> implements Top
 //    }
 
     @Override
-    protected void handleBundleExtra() {
-        topicGroup = (TopicPresenter.TopicGroup) getArguments().getSerializable("topicGroup");
-        uid = getArguments().getString("uid");
-        name = getArguments().getString("name");
+    protected void handleBundleExtra(Bundle bundle) {
+        topicGroup = (TopicPresenter.TopicGroup) bundle.getSerializable("topicGroup");
+        uid = bundle.getString("uid");
+        name = bundle.getString("name");
     }
 
     @Override

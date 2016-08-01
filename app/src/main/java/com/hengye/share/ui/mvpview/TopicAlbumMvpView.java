@@ -1,12 +1,14 @@
 package com.hengye.share.ui.mvpview;
 
-import java.util.List;
+import com.hengye.share.model.Topic;
+
+import java.util.ArrayList;
 
 public interface TopicAlbumMvpView extends MvpView {
 
     void stopLoading(boolean isRefresh);
 
-    void handleAlbumData(List<String> urls, boolean isRefresh);
+    void handleAlbumData(ArrayList<Topic> topics, ArrayList<String> urls, boolean isRefresh);
 
-    void handleCache(List<String> data);
+    void handleCache(ArrayList<Topic> topics, ArrayList<String> urls);
 }

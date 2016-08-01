@@ -41,10 +41,10 @@ public class ImageGifFragment extends BaseFragment {
     AnimationRect mRect;
 
     @Override
-    protected void handleBundleExtra() {
-        mPath = getArguments().getString("path");
-        mAnimateIn = getArguments().getBoolean("animationIn");
-        mRect = getArguments().getParcelable("rect");
+    protected void handleBundleExtra(Bundle bundle) {
+        mPath = bundle.getString("path");
+        mAnimateIn = bundle.getBoolean("animationIn");
+        mRect = bundle.getParcelable("rect");
     }
 
     @Override

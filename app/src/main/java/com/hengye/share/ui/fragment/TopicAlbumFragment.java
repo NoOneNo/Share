@@ -11,6 +11,8 @@ import android.view.View;
 
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicAlbumAdapter;
+import com.hengye.share.model.Topic;
+import com.hengye.share.ui.activity.GalleryActivity;
 import com.hengye.share.ui.activity.TopicGalleryActivity;
 import com.hengye.share.ui.base.BaseFragment;
 import com.hengye.share.ui.fragment.PersonalHomepageFragment.LoadDataCallBack;
@@ -35,12 +37,14 @@ public class TopicAlbumFragment extends BaseFragment implements TopicAlbumMvpVie
         return fragment;
     }
 
+    public static ArrayList<Topic> topics;
+    public static ArrayList<String> urls;
+
     PullToRefreshLayout mPullToRefresh;
     RecyclerView mRecyclerView;
     TopicAlbumAdapter mAdapter;
-
     TopicAlbumPresenter mPresenter;
-
+    ArrayList<Topic> mTopics;
     String uid, name;
 
     @Override
@@ -49,15 +53,37 @@ public class TopicAlbumFragment extends BaseFragment implements TopicAlbumMvpVie
     }
 
     @Override
-    protected void handleBundleExtra() {
-        uid = getArguments().getString("uid");
-        name = getArguments().getString("name");
+    protected void handleBundleExtra(Bundle bundle) {
+        uid = bundle.getString("uid");
+        name = bundle.getString("name");
     }
 
     @Override
     public boolean onToolbarDoubleClick(Toolbar toolbar) {
         mRecyclerView.getLayoutManager().scrollToPosition(0);
         return true;
+    }
+
+    public void handleStaticData(boolean isReset){
+        if(isReset){
+            topics = null;
+            urls = null;
+        }else{
+            topics = mTopics;
+            urls = (ArrayList<String>) mAdapter.getData();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        handleStaticData(true);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        handleStaticData(true);
     }
 
     @Override
@@ -88,20 +114,23 @@ public class TopicAlbumFragment extends BaseFragment implements TopicAlbumMvpVie
         mAdapter.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                TopicGalleryActivity.startWithIntent(getActivity(), (ArrayList<String>)mAdapter.getData(), position);
+                handleStaticData(false);
+                GalleryActivity.startWithIntent(getActivity(), null, position, null, null);
             }
         });
+
 
         mPresenter.loadCacheData();
 //        onRefresh();
     }
 
     @Override
-    public void handleCache(List<String> data) {
-        if(CommonUtil.isEmpty(data)){
+    public void handleCache(ArrayList<Topic> topics, ArrayList<String> urls) {
+        if(CommonUtil.isEmpty(urls)){
             onRefresh();
         }else{
-            mAdapter.refresh(data);
+            handleTopics(topics, true);
+            mAdapter.refresh(urls);
         }
     }
 
@@ -115,7 +144,7 @@ public class TopicAlbumFragment extends BaseFragment implements TopicAlbumMvpVie
     }
 
     @Override
-    public void handleAlbumData(List<String> urls, boolean isRefresh) {
+    public void handleAlbumData(ArrayList<Topic> topics, ArrayList<String> urls, boolean isRefresh) {
         if (isRefresh) {
             mAdapter.refresh(urls);
             mPullToRefresh.setLoadEnable(true);
@@ -125,12 +154,23 @@ public class TopicAlbumFragment extends BaseFragment implements TopicAlbumMvpVie
                 mPullToRefresh.setLoadEnable(false);
             }
         }
-        mPresenter.saveData(mAdapter.getData());
+        handleTopics(topics, isRefresh);
     }
 
     @Override
     public void onRefresh() {
         mPresenter.loadTopicAlbum(true);
+    }
+
+    public void handleTopics(ArrayList<Topic> topics, boolean isRefresh){
+        if(isRefresh) {
+            if(mTopics != null) {
+                mTopics.clear();
+            }
+            mTopics = topics;
+        }else{
+            mTopics.addAll(topics);
+        }
     }
 
     LoadDataCallBack mLoadDataCallBack;

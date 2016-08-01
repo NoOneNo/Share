@@ -9,20 +9,18 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.R;
-import com.hengye.share.ui.fragment.TopicGalleryFragment;
+import com.hengye.share.ui.fragment.ImageFragment;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.AnimationUtil;
@@ -134,7 +132,7 @@ public class TopicGalleryActivity extends BaseActivity {
         }
     }
 
-    private HashMap<Integer, TopicGalleryFragment> mFragmentMap = new HashMap<>();
+    private HashMap<Integer, ImageFragment> mFragmentMap = new HashMap<>();
 
     private boolean mHasAnimateIn = false;
 
@@ -145,13 +143,13 @@ public class TopicGalleryActivity extends BaseActivity {
         }
 
         @Override
-        public TopicGalleryFragment getItem(int position) {
+        public ImageFragment getItem(int position) {
 
-            TopicGalleryFragment fragment = mFragmentMap.get(position);
+            ImageFragment fragment = mFragmentMap.get(position);
             if (fragment == null) {
 
                 boolean animateIn = (mIndexStart == position) && !mHasAnimateIn;
-                fragment = TopicGalleryFragment
+                fragment = ImageFragment
                         .newInstance(mUrls.get(position), mRectList == null ? null : mRectList.get(position), animateIn,
                                 mIndexStart == position);
                 mHasAnimateIn = true;
@@ -171,8 +169,8 @@ public class TopicGalleryActivity extends BaseActivity {
         @Override
         public void setPrimaryItem(ViewGroup container, int position, Object object) {
             super.setPrimaryItem(container, position, object);
-            if (object instanceof TopicGalleryFragment) {
-                mFragmentMap.put(position, (TopicGalleryFragment) object);
+            if (object instanceof ImageFragment) {
+                mFragmentMap.put(position, (ImageFragment) object);
             }
         }
 
@@ -205,7 +203,7 @@ public class TopicGalleryActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        TopicGalleryFragment fragment = mFragmentMap.get(mViewPager.getCurrentItem());
+        ImageFragment fragment = mFragmentMap.get(mViewPager.getCurrentItem());
         if (fragment != null && fragment.canFinishWithAnimation()) {
             fragment.runExitAnimation(getHideBackgroundAnimation());
         } else {

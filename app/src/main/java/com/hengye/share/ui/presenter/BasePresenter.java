@@ -70,7 +70,9 @@ public class BasePresenter<T extends MvpView> implements Presenter<T> {
 
         abstract public void handleViewOnSuccess(T v, D d);
 
-        abstract public void handleViewOnFail(T v, Throwable e);
+        public void handleViewOnFail(T v, Throwable e){
+            e.printStackTrace();
+        }
     }
 
     public abstract class BaseAction1<A> implements Action1<A>{

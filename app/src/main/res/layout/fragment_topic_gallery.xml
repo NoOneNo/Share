@@ -1,22 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/select_photo_gallery_layout"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+	<include
+		layout="@layout/fragment_gallery"/>
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
-        android:visibility="visible"
-        style="@android:style/Widget.Holo.Light.ProgressBar"/>
-
+	<TextView
+		android:id="@+id/tv_text"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@color/transparent_grey"
+		android:layout_marginBottom="80dp"
+		android:layout_gravity="bottom"
+		android:maxLines="4"
+		android:ellipsize="end"
+		android:textSize="@dimen/text_normal"
+		android:textColor="@color/white"
+		tools:text="topic description"/>
 
 </FrameLayout>

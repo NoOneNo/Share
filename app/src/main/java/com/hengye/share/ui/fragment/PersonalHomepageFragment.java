@@ -32,9 +32,8 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
     }
 
     @Override
-    protected void handleBundleExtra() {
-        super.handleBundleExtra();
-        mWbUserInfo = (WBUserInfo)getArguments().getSerializable("wbUserInfo");
+    protected void handleBundleExtra(Bundle bundle) {
+        mWbUserInfo = (WBUserInfo)bundle.getSerializable("wbUserInfo");
     }
 
     @Override
@@ -108,7 +107,7 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
     @Override
     public boolean onToolbarDoubleClick(Toolbar toolbar) {
         if(getCurrentFragment() != null){
-            return getCurrentFragment().onToolbarDoubleClick(toolbar);
+            return ((BaseFragment)getCurrentFragment()).onToolbarDoubleClick(toolbar);
         }
         return super.onToolbarDoubleClick(toolbar);
     }

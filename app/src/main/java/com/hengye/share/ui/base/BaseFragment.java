@@ -45,10 +45,10 @@ public class BaseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        handleBundleExtra();
+        handleBundleExtra(getArguments());
     }
 
-    protected void handleBundleExtra(){}
+    protected void handleBundleExtra(Bundle bundle){}
 
     public @LayoutRes int getLayoutResId(){
         return 0;

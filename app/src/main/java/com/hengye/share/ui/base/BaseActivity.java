@@ -180,6 +180,13 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        if(!mActivityHelper.onBackPressed()){
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     public void finish() {
         super.finish();
         overridePendingTransitionOnFinish();

@@ -55,9 +55,9 @@ public class TopicPageFragment extends RecyclerRefreshFragment<Topic> implements
     private String mKeyword;
 
     @Override
-    protected void handleBundleExtra() {
-        topicGroup = (TopicPagePresenter.TopicGroup) getArguments().getSerializable("topicGroup");
-        mKeyword = getArguments().getString("keyword");
+    protected void handleBundleExtra(Bundle bundle) {
+        topicGroup = (TopicPagePresenter.TopicGroup) bundle.getSerializable("topicGroup");
+        mKeyword = bundle.getString("keyword");
     }
 
     @Override

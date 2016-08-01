@@ -47,7 +47,6 @@ public class UserPresenter extends BasePresenter<UserMvpView> {
                         v.loadSuccess(User.getUser(wbUserInfo));
                     }
 
-
                     @Override
                     public void onNext(WBUserInfo wbUserInfo) {
                         UserUtil.updateUserInfo(wbUserInfo);
