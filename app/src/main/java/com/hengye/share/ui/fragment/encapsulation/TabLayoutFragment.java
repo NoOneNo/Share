@@ -48,7 +48,7 @@ public abstract class TabLayoutFragment extends TabsFragment {
         mTabLayout.setupWithViewPager(getViewPager());
         (new Handler()).postDelayed(new Runnable() {
             public void run() {
-                mTabLayout.setScrollPosition(TabLayoutFragment.this.mCurrentPosition, 0.0F, true);
+                mTabLayout.setScrollPosition(getCurrentPosition(), 0.0F, true);
             }
         }, 150L);
     }

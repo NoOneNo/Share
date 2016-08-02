@@ -6,6 +6,7 @@ import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
@@ -21,87 +22,40 @@ import java.util.Map;
 /**
  * Created by yuhy on 16/7/18.
  */
-public abstract class TabsFragment extends ContentFragment implements ViewPager.OnPageChangeListener {
-
-    @Override
-    public int getContentResId() {
-        return R.layout.fragment_tabs;
-    }
+public abstract class TabsFragment extends ViewPagerFragment{
 
     @Override
     public void onViewCreated(View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (delayTabInit() == 0) {
-            setUpViewPager(savedInstanceState);
+            setUpTabs(savedInstanceState);
         } else {
             (new Handler()).postDelayed(new Runnable() {
                 public void run() {
-                    setUpViewPager(savedInstanceState);
+                    setUpTabs(savedInstanceState);
                 }
             }, (long) delayTabInit());
         }
     }
 
-    protected
-    @IdRes
-    int getViewPagerId() {
-        return R.id.view_pager;
-    }
-
-    protected ViewPager findViewPager() {
-        ViewPager viewPager = (ViewPager) findViewById(getViewPagerId());
-        if (viewPager == null) {
-            viewPager = (ViewPager) getActivity().findViewById(getViewPagerId());
-        }
-        return viewPager;
-    }
-
-    ViewPager mViewPager;
-
-    public ViewPager getViewPager() {
-        return mViewPager;
-    }
-
+    @Override
     public FragmentPagerAdapter getAdapter(){
         return mAdapter;
     }
 
     FragmentPagerAdapter mAdapter;
     ArrayList<TabItem> mItems;
-    int mCurrentPosition = 0;
 
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mCurrentPosition = mViewPager.getCurrentItem();
         outState.putSerializable("items", mItems);
-        outState.putInt("position", mCurrentPosition);
     }
 
-    protected void setUpViewPager(Bundle savedInstanceState) {
+    protected void setUpTabs(Bundle savedInstanceState) {
 
-        mViewPager = findViewPager();
-        mItems = savedInstanceState == null ? generateTabs() : (ArrayList) savedInstanceState.getSerializable("items");
-        mCurrentPosition = savedInstanceState == null ? 0 : savedInstanceState.getInt("position");
+        mItems = savedInstanceState == null ? generateTabs() : (ArrayList<TabItem>) savedInstanceState.getSerializable("items");
 
-        mAdapter = createAdapter();
-        if (mAdapter != null) {
-            mViewPager.setAdapter(mAdapter);
-        }
-        mViewPager.setOffscreenPageLimit(0);
-        if (mCurrentPosition >= mAdapter.getCount()) {
-            mCurrentPosition = 0;
-        }
-        mViewPager.setCurrentItem(mCurrentPosition);
-        mViewPager.addOnPageChangeListener(this);
-    }
-
-
-    public void setAdapter(FragmentPagerAdapter adapter) {
-        mViewPager.setAdapter(adapter);
-    }
-
-    protected FragmentPagerAdapter createAdapter() {
-        return new TabsAdapter(getActivity().getSupportFragmentManager());
+        getViewPager().setAdapter(mAdapter = new TabsAdapter(getFragmentManager()));
     }
 
     protected void updateViewPager() {
@@ -136,27 +90,9 @@ public abstract class TabsFragment extends ContentFragment implements ViewPager.
 
     }
 
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-    }
+    protected abstract ArrayList<TabItem> generateTabs();
 
-    @Override
-    public void onPageSelected(int position) {
-        mCurrentPosition = position;
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-    }
-
-    protected ArrayList<TabItem> generateTabs() {
-        return null;
-//        throw new RuntimeException("must override this method");
-    }
-
-    protected BaseFragment newFragment(TabItem tabItem) {
-        throw new RuntimeException("must override this method");
-    }
+    protected abstract BaseFragment newFragment(TabItem tabItem);
 
     protected int delayTabInit() {
         return 0;
@@ -173,11 +109,7 @@ public abstract class TabsFragment extends ContentFragment implements ViewPager.
     }
 
     public Fragment getCurrentFragment() {
-        return getFragment(mViewPager.getCurrentItem());
-    }
-
-    public int getCurrentPosition() {
-        return mViewPager.getCurrentItem();
+        return getFragment(getCurrentPosition());
     }
 
     public Fragment getFragment(int position) {

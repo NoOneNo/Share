@@ -9,7 +9,7 @@ import android.view.View;
 
 import com.hengye.share.adapter.recyclerview.TopicAdapter;
 import com.hengye.share.handler.data.TopicIdHandler;
-import com.hengye.share.handler.data.TopicIdPager;
+import com.hengye.share.handler.data.TopicAdapterIdPager;
 import com.hengye.share.handler.data.base.DataHandler;
 import com.hengye.share.handler.data.base.DataType;
 import com.hengye.share.handler.data.base.Pager;
@@ -72,7 +72,7 @@ public class TopicFragment extends RecyclerRefreshFragment<Topic> implements Top
 
         super.onViewCreated(view, savedInstanceState);
         setAdapter(mAdapter = new TopicAdapter(getContext(), new ArrayList<Topic>(), getRecyclerView()));
-        mTopicPager = new TopicIdPager(mAdapter);
+        mTopicPager = new TopicAdapterIdPager(mAdapter);
         mHandler = new TopicIdHandler<>(mAdapter);
 
         addPresenter(mPresenter = new TopicPresenter(this, topicGroup));
@@ -106,7 +106,7 @@ public class TopicFragment extends RecyclerRefreshFragment<Topic> implements Top
         mPresenter.loadWBTopic(mTopicPager.getNextPage(), false);
     }
 
-    TopicIdPager mTopicPager;
+    TopicAdapterIdPager mTopicPager;
     TopicIdHandler<Topic> mHandler;
 
     @Override

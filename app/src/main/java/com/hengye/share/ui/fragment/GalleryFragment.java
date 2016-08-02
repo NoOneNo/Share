@@ -16,14 +16,13 @@ import android.widget.TextView;
 import com.hengye.share.R;
 import com.hengye.share.ui.base.ActivityHelper;
 import com.hengye.share.ui.base.BaseActivity;
-import com.hengye.share.ui.fragment.encapsulation.TabsFragment;
+import com.hengye.share.ui.fragment.encapsulation.ViewPagerFragment;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.util.AnimationUtil;
-import com.hengye.share.util.CommonUtil;
 
 import java.util.ArrayList;
 
-public class GalleryFragment extends TabsFragment {
+public class GalleryFragment extends ViewPagerFragment {
 
     public final static String IMG_URLS = "img_paths";
     public final static String IMG_INDEX = "img_index";
@@ -88,6 +87,7 @@ public class GalleryFragment extends TabsFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setAdapter(mAdapter = new PhotoPagerAdapter(getFragmentManager()));
         mBackground = getActivity().findViewById(android.R.id.content);
         mBackgroundColor = new ColorDrawable(Color.BLACK);
         mBackground.setBackground(mBackgroundColor);
@@ -120,11 +120,6 @@ public class GalleryFragment extends TabsFragment {
 
     public void updatePage(int pageNo) {
         mPages.setText(pageNo + 1 + "/" + getImageSize());
-    }
-
-    @Override
-    protected FragmentPagerAdapter createAdapter() {
-        return mAdapter = new PhotoPagerAdapter(getFragmentManager());
     }
 
     @Override

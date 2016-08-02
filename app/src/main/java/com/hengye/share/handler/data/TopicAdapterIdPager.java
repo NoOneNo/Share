@@ -1,30 +1,25 @@
 package com.hengye.share.handler.data;
 
+import com.hengye.share.handler.data.base.DataAdapter;
 import com.hengye.share.handler.data.base.Pager;
 import com.hengye.share.model.TopicId;
 import com.hengye.share.util.CommonUtil;
 
-import java.util.List;
-
 /**
  * Created by yuhy on 16/7/28.
  */
-public class TopicIdPager extends Pager {
+public class TopicAdapterIdPager extends Pager {
 
-    public TopicIdPager(List<? extends TopicId> adapter){
-        mIds = adapter;
+    public TopicAdapterIdPager(DataAdapter<? extends TopicId> adapter){
+        mAdapter = adapter;
     }
 
-    List<? extends TopicId> mIds;
-
-    public void refreshIds(List<? extends TopicId> ids){
-        this.mIds = ids;
-    }
+    DataAdapter<? extends TopicId> mAdapter;
 
     @Override
     public String getFirstPage() {
-        if (!CommonUtil.isEmpty(mIds)) {
-            return mIds.get(0).getId();
+        if (!mAdapter.isEmpty()) {
+            return mAdapter.getData().get(0).getId();
         } else {
             return "0";
         }
@@ -32,8 +27,8 @@ public class TopicIdPager extends Pager {
 
     @Override
     public String getNextPage() {
-        if (!CommonUtil.isEmpty(mIds)) {
-            long id = Long.valueOf(CommonUtil.getLastItem(mIds).getId());
+        if (!mAdapter.isEmpty()) {
+            long id = Long.valueOf(CommonUtil.getLastItem(mAdapter.getData()).getId());
             return String.valueOf(id - 1);
 
         }

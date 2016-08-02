@@ -38,7 +38,7 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
 
     @Override
     public int getLayoutResId() {
-        return R.layout.fragment_tabs;
+        return R.layout.fragment_viewpager;
     }
 
     @Override

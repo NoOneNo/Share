@@ -17,7 +17,7 @@
 //import com.hengye.share.handler.data.DefaultDataHandler;
 //import com.hengye.share.handler.data.NumberPager;
 //import com.hengye.share.handler.data.TopicIdHandler;
-//import com.hengye.share.handler.data.TopicIdPager;
+//import com.hengye.share.handler.data.TopicAdapterIdPager;
 //import com.hengye.share.handler.data.base.DataHandler;
 //import com.hengye.share.handler.data.base.Pager;
 //import com.hengye.share.model.Topic;
@@ -66,14 +66,14 @@
 //    }
 //
 //    private TopicNotifyAdapter mAdapter;
-//    private TopicIdPager mPager;
+//    private TopicAdapterIdPager mPager;
 //    TopicIdHandler<Topic> mHandler;
 //
 //    @Override
 //    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 //        super.onViewCreated(view, savedInstanceState);
 //
-//        mPager = new TopicIdPager(mAdapter);
+//        mPager = new TopicAdapterIdPager(mAdapter);
 //        mHandler = new TopicIdHandler<>(mAdapter);
 //        setAdapter(mAdapter = new TopicNotifyAdapter(getActivity(), new ArrayList<Topic>()));
 //        mAdapter.setOnItemClickListener(new ViewUtil.OnItemClickListener() {

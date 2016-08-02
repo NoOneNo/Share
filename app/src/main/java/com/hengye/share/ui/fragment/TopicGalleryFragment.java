@@ -1,6 +1,8 @@
 package com.hengye.share.ui.fragment;
 
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -8,13 +10,14 @@ import com.hengye.share.R;
 import com.hengye.share.model.Topic;
 import com.hengye.share.ui.activity.TopicDetailActivity;
 import com.hengye.share.ui.support.AnimationRect;
+import com.hengye.share.ui.support.textspan.TopicUrlOnTouchListener;
 
 import java.util.ArrayList;
 
 /**
  * Created by yuhy on 16/8/1.
  */
-public class TopicGalleryFragment extends GalleryFragment{
+public class TopicGalleryFragment extends GalleryFragment {
 
     public static Bundle getStartArguments(ArrayList<String> urls,
                                            int index, ArrayList<AnimationRect> rectList, ArrayList<Topic> topics) {
@@ -25,16 +28,13 @@ public class TopicGalleryFragment extends GalleryFragment{
 
     @Override
     protected int getImageSize() {
-        if(TopicAlbumFragment.urls != null){
-            return TopicAlbumFragment.urls.size();
-        }
-        return 0;
+        return urls.size();
     }
 
     @Override
     protected String getImageUrl(int position) {
-        if(TopicAlbumFragment.urls != null && 0 <= position && position < TopicAlbumFragment.urls.size()){
-            return TopicAlbumFragment.urls.get(position);
+        if (urls != null && 0 <= position && position < urls.size()) {
+            return urls.get(position);
         }
         return null;
     }
@@ -56,15 +56,29 @@ public class TopicGalleryFragment extends GalleryFragment{
         mTopicContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mIsDragging) {
+                    return;
+                }
                 Topic topic = getTopic(getCurrentPosition());
-                if(topic != null) {
+                if (topic != null) {
                     startActivity(TopicDetailActivity.getStartIntent(getContext(), topic, false));
                 }
             }
         });
+
+        mTopicContent.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                getViewPager().onTouchEvent(event);
+                return false;
+            }
+        });
     }
 
+    final ArrayList<String> urls = new ArrayList<>(TopicAlbumFragment.urls);
+    final ArrayList<Topic> topics = new ArrayList<>(TopicAlbumFragment.topics);
     TextView mTopicContent;
+    boolean mIsDragging;
 
     @Override
     public void updatePage(int pageNo) {
@@ -72,16 +86,22 @@ public class TopicGalleryFragment extends GalleryFragment{
         mTopicContent.setText(getTopicContent(pageNo));
     }
 
-    protected Topic getTopic(int position){
-        if(TopicAlbumFragment.topics != null && 0 <= position && position < TopicAlbumFragment.topics.size()){
-            return TopicAlbumFragment.topics.get(position);
+    @Override
+    public void onPageScrollStateChanged(int state) {
+        super.onPageScrollStateChanged(state);
+        mIsDragging = state != ViewPager.SCROLL_STATE_IDLE;
+    }
+
+    protected Topic getTopic(int position) {
+        if (0 <= position && position < topics.size()) {
+            return topics.get(position);
         }
         return null;
     }
 
-    protected String getTopicContent(int position){
+    protected String getTopicContent(int position) {
         Topic topic = getTopic(position);
-        if(topic != null){
+        if (topic != null) {
             return topic.getContent();
         }
         return null;

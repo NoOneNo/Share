@@ -30,16 +30,15 @@ import rx.schedulers.Schedulers;
 public class TopicAlbumPresenter extends BasePresenter<TopicAlbumMvpView> {
 
     private String uid, name;
-    private String currentId = "0";
 
     public TopicAlbumPresenter(TopicAlbumMvpView mvpView) {
         super(mvpView);
     }
 
-    public void loadTopicAlbum(final boolean isRefresh) {
+    public void loadTopicAlbum(String id, final boolean isRefresh) {
         RetrofitManager
                 .getWBService()
-                .listUserTopic(getParameter(isRefresh))
+                .listUserTopic(getParameter(id, isRefresh))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseSubscriber<WBTopics>() {
@@ -54,13 +53,6 @@ public class TopicAlbumPresenter extends BasePresenter<TopicAlbumMvpView> {
 
                         ArrayList<Topic> topics = Topic.getTopics(wbTopics);
 
-                        if (isRefresh) {
-                            currentId = "0";
-                        } else {
-                            if (!CommonUtil.isEmpty(topics)) {
-                                currentId = topics.get(topics.size() - 1).getId();
-                            }
-                        }
                         v.stopLoading(isRefresh);
 
                         if(isRefresh){
@@ -90,7 +82,7 @@ public class TopicAlbumPresenter extends BasePresenter<TopicAlbumMvpView> {
     }
 
 
-    public Map<String, String> getParameter(final boolean isRefresh) {
+    public Map<String, String> getParameter(String id, final boolean isRefresh) {
         final UrlBuilder ub = new UrlBuilder();
         String token = UserUtil.getAdToken();
         if (token == null) {
@@ -98,9 +90,9 @@ public class TopicAlbumPresenter extends BasePresenter<TopicAlbumMvpView> {
         }
         ub.addParameter("access_token", token);
         if (isRefresh) {
-            ub.addParameter("since_id", currentId);
+            ub.addParameter("since_id", id);
         } else {
-            ub.addParameter("max_id", currentId);
+            ub.addParameter("max_id", id);
         }
         if (!TextUtils.isEmpty(uid)) {
             ub.addParameter("uid", uid);

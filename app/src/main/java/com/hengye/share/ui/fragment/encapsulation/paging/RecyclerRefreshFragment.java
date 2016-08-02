@@ -13,7 +13,7 @@ import static com.hengye.share.handler.data.base.DataType.LOAD_NO_DATA;
 /**
  * Created by yuhy on 16/7/27.
  */
-public abstract class RecyclerRefreshFragment<T> extends RecyclerFragment<T> {
+public abstract class RecyclerRefreshFragment<T> extends RecyclerFragment<T>{
 
     @Override
     public int getContentResId() {

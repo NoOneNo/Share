@@ -3,30 +3,20 @@ package com.hengye.share.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicAdapter;
 import com.hengye.share.handler.data.DefaultDataHandler;
 import com.hengye.share.handler.data.NumberPager;
-import com.hengye.share.handler.data.TopicIdHandler;
-import com.hengye.share.handler.data.TopicIdPager;
 import com.hengye.share.handler.data.base.DataHandler;
 import com.hengye.share.handler.data.base.DataType;
 import com.hengye.share.handler.data.base.Pager;
 import com.hengye.share.model.Topic;
-import com.hengye.share.ui.base.BaseFragment;
 import com.hengye.share.ui.fragment.encapsulation.paging.RecyclerRefreshFragment;
 import com.hengye.share.ui.mvpview.TopicPageMvpView;
 import com.hengye.share.ui.presenter.TopicPagePresenter;
-import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.UserUtil;
-import com.hengye.swiperefresh.PullToRefreshLayout;
-import com.hengye.swiperefresh.listener.SwipeListener;
 
 import java.util.ArrayList;
 import java.util.List;
