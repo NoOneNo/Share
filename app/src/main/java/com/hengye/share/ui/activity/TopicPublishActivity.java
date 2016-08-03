@@ -72,7 +72,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     }
 
     private TopicDraft mTopicDraft;
-    private String mTopicDraftContent;
+    private String mTopicDraftContent, mTopicDraftImages;
     private final static int DEFAULT_TYPE = TopicDraftHelper.PUBLISH_TOPIC;
 
     @Override
@@ -80,6 +80,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         mTopicDraft = (TopicDraft) intent.getSerializableExtra("topicDraft");
         if (mTopicDraft != null) {
             mTopicDraftContent = mTopicDraft.getContent();
+            mTopicDraftImages = mTopicDraft.getUrls();
         } else {
             mTopicDraft = new TopicDraft();
             mTopicDraft.setType(DEFAULT_TYPE);
@@ -122,10 +123,10 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         mEmoticonPicker.setEditText(this, ((LinearLayout) findViewById(R.id.ll_root)),
                 mContent);
         mPhotoPicker = (PickPhotoView) findViewById(R.id.pick_photo);
-        if(mTopicDraft.getUrls() != null){
+        if (mTopicDraft.getUrls() != null) {
             ArrayList<Photo> photos = new ArrayList<>();
             List<String> urls = CommonUtil.split(mTopicDraft.getUrls(), ",");
-            for(String url : urls){
+            for (String url : urls) {
                 Photo photo = new Photo();
                 photo.setDataPath(url);
                 photos.add(photo);
@@ -207,7 +208,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
             hideEmoticonPicker(true);
         } else if (id == R.id.btn_publish) {
             publishTopic();
-        } else if (id == R.id.btn_camera){
+        } else if (id == R.id.btn_camera) {
             mPhotoPicker.performClick();
 //            PhotoPicker.startPhotoPicker(this);
         }
@@ -215,22 +216,28 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onBackPressed() {
-        if (shouldSaveToDraft()) {
+        if (hasChangeContent()) {
             mSaveToDraftDialog.show();
         } else {
             super.onBackPressed();
         }
     }
 
-    private boolean shouldSaveToDraft() {
+    private boolean hasChangeContent() {
         String str = mContent.getText().toString();
-        if (TextUtils.isEmpty(str)) {
-            return false;
-        }
-        if (str.equals(mTopicDraftContent)) {
+        if (CommonUtil.isEquals(mTopicDraftContent, str) && CommonUtil.isEquals(mTopicDraftImages, getPhotoPickerUrls())) {
             return false;
         }
         return true;
+    }
+
+    private String getPhotoPickerUrls() {
+        List<Photo> photos = mPhotoPicker.getPhotos();
+        List<String> urls = new ArrayList<>();
+        for (Photo photo : photos) {
+            urls.add(photo.getDataPath());
+        }
+        return CommonUtil.toSplit(urls, ",");
     }
 
     private TopicDraft generateTopicDraft() {
@@ -238,7 +245,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         td.setUid(UserUtil.getUid());
         td.setContent(mContent.getText().toString());
 //        td.setDate(DateUtil.getChinaGMTDateFormat());
-        td.setDate(DateUtil.getChinaGMTDate());
+        td.setDate(hasChangeContent() ? DateUtil.getChinaGMTDate() : mTopicDraft.getDate());
         td.setType(mTopicDraft.getType());
         td.setParentType(Parent.TYPE_WEIBO);
         if (mTopicDraft != null) {
@@ -246,18 +253,13 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
             td.setTargetTopicId(mTopicDraft.getTargetTopicId());
             td.setTargetCommentId(mTopicDraft.getTargetCommentId());
         }
-        if(!CommonUtil.isEmpty(mPhotoPicker.getPhotos())){
+        if (!CommonUtil.isEmpty(mPhotoPicker.getPhotos())) {
 
-            if(CommonUtil.isEmpty(td.getContent())){
+            if (CommonUtil.isEmpty(td.getContent())) {
                 td.setContent(ResUtil.getString(R.string.label_topic_picture_publish_content_empty));
             }
 
-            List<Photo> photos = mPhotoPicker.getPhotos();
-            List<String> urls = new ArrayList<>();
-            for(Photo photo : photos){
-                urls.add(photo.getDataPath());
-            }
-            td.setUrls(CommonUtil.toSplit(urls, ","));
+            td.setUrls(getPhotoPickerUrls());
 //            td.setUrls(mPhotoPicker.getPhotos().get(0).getDataPath());
         }
         return td;
@@ -265,7 +267,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
 
     private void publishTopic() {
 
-        if(!checkCanPublicTopic()){
+        if (!checkCanPublicTopic()) {
             return;
         }
 
@@ -279,12 +281,12 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         ToastUtil.showToast(R.string.label_save_to_draft_success);
     }
 
-    private boolean checkCanPublicTopic(){
+    private boolean checkCanPublicTopic() {
         boolean result = true;
-        if(TextUtils.isEmpty(mContent.getText().toString()) && CommonUtil.isEmpty(mPhotoPicker.getPhotos())){
+        if (TextUtils.isEmpty(mContent.getText().toString()) && CommonUtil.isEmpty(mPhotoPicker.getPhotos())) {
             result = false;
             ToastUtil.showToast(R.string.label_topic_publish_field_empty);
-        }else if(TextUtils.isEmpty(UserUtil.getToken())){
+        } else if (TextUtils.isEmpty(UserUtil.getToken())) {
             result = false;
             showSkipToLoginDialog();
         }
@@ -292,8 +294,8 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         return result;
     }
 
-    private void showSkipToLoginDialog(){
-        if(mSkipToLoginDialog == null){
+    private void showSkipToLoginDialog() {
+        if (mSkipToLoginDialog == null) {
             mSkipToLoginDialog = AccountManageActivity.getLoginDialog(this);
         }
         mSkipToLoginDialog.show();

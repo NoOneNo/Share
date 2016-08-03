@@ -1,4 +1,4 @@
-package com.hengye.share.util.retrofit;
+package com.hengye.share.util.retrofit.weibo;
 
 import com.hengye.share.model.sina.WBGroups;
 import com.hengye.share.model.sina.WBTopic;

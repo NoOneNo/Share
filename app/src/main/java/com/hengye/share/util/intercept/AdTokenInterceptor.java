@@ -20,6 +20,10 @@ public class AdTokenInterceptor extends Interceptor{
     Dialog mLoginDialog;
     BaseActivity mActivity;
 
+    public AdTokenInterceptor(BaseActivity activity) {
+        this(activity, null);
+    }
+
     public AdTokenInterceptor(BaseActivity activity, Action action) {
         this.mActivity = activity;
         Interception interception = new Interception() {

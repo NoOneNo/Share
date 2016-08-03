@@ -93,6 +93,11 @@ public abstract class CommonAdapter<T, V extends ViewHolder<T>> extends BaseAdap
         notifyDataSetChanged();
     }
 
+    public void updateItem(int position, T item){
+        mData.set(position, item);
+        notifyDataSetChanged();
+    }
+
     public T removeItem(int position) {
         T t = mData.remove(position);
         notifyDataSetChanged();

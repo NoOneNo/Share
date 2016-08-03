@@ -494,10 +494,10 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         observable = isFollow ?
                 RetrofitManager
                         .getWBService()
-                        .followCreate(UserUtil.getAdToken(), uid) :
+                        .followCreate(UserUtil.getPriorToken(), uid) :
                 RetrofitManager
                         .getWBService()
-                        .followDestroy(UserUtil.getAdToken(), uid);
+                        .followDestroy(UserUtil.getPriorToken(), uid);
 
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

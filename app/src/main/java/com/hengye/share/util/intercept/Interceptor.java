@@ -17,6 +17,14 @@ public class Interceptor {
         return new Interceptor();
     }
 
+    public static Interceptor create(Interception interception) {
+        return create(null, interception);
+    }
+
+    public static Interceptor create(Interception... interceptions) {
+        return create(null, interceptions);
+    }
+
     public static Interceptor create(Action action, Interception interception) {
         Interceptor interceptor = create();
         interceptor.add(interception);
@@ -92,11 +100,7 @@ public class Interceptor {
      */
     public void next() {
         index++;
-        if (index == interceptions.size()) {
-            tryRunAction();
-            return;
-        }
-        start();
+        resume();
     }
 
     /**

@@ -37,7 +37,7 @@ public class GroupManagePresenter extends BasePresenter<GroupManageMvpView> {
         }
 
         final UrlBuilder ub = new UrlBuilder();
-        ub.addParameter("access_token", UserUtil.getAdToken());
+        ub.addParameter("access_token", UserUtil.getPriorToken());
         RetrofitManager
                 .getWBService()
                 .listGroups(ub.getParameters())
@@ -77,7 +77,7 @@ public class GroupManagePresenter extends BasePresenter<GroupManageMvpView> {
     public void updateGroupOrder(final List<GroupList> data){
         RetrofitManager
                 .getWBService()
-                .updateGroupOrder(UserUtil.getAdToken(), data.size() + "", GroupList.getGroupIds(data))
+                .updateGroupOrder(UserUtil.getPriorToken(), data.size() + "", GroupList.getGroupIds(data))
                 .flatMap(new Func1<WBGroups.WBGroupUpdateOrder, Observable<Boolean>>() {
                     @Override
                     public Observable<Boolean> call(WBGroups.WBGroupUpdateOrder result) {

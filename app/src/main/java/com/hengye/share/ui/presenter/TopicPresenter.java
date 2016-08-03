@@ -181,7 +181,7 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
 
     public void loadWBHomepageTopic(String id, final boolean isRefresh) {
         Map<String, String> params = getWBAllTopicParameter(id, isRefresh);
-        params.put("access_token", UserUtil.getAdToken());
+        params.put("access_token", UserUtil.getPriorToken());
         RetrofitManager
                 .getWBService()
                 .listUserTopic(params)

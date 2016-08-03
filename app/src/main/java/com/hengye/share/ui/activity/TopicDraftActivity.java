@@ -1,12 +1,17 @@
 package com.hengye.share.ui.activity;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.hengye.share.service.TopicPublishService;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicDraftAdapter;
@@ -14,6 +19,7 @@ import com.hengye.share.model.greenrobot.TopicDraft;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.IntentUtil;
+import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
 
 import java.util.ArrayList;
@@ -42,18 +48,37 @@ public class TopicDraftActivity extends BaseActivity{
     }
 
     @Override
-    protected void afterCreate(Bundle savedInstanceState) {
-        initView();
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mPublishResultBroadcastReceiver);
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void afterCreate(Bundle savedInstanceState) {
+        initView();
+        mPublishResultBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                TopicDraft topicDraft = (TopicDraft) intent.getSerializableExtra(TopicPublishService.EXTRA_DRAFT);
+                boolean isSuccess = intent.getBooleanExtra(TopicPublishService.ACTION_RESULT, false);
+                if(topicDraft != null && !isSuccess){
+                    int index = mAdapter.getData().indexOf(topicDraft);
+                    if(index != -1){
+                        mAdapter.updateItem(index, topicDraft);
+                    }else{
+                        mAdapter.addItem(0, topicDraft);
+                    }
+
+                }
+            }
+        };
+        LocalBroadcastManager.getInstance(this).registerReceiver(mPublishResultBroadcastReceiver, new IntentFilter(TopicPublishService.ACTION_RESULT));
     }
 
     private RecyclerView mRecyclerView;
     private TopicDraftAdapter mAdapter;
     private List<TopicDraft> mTopicDraft;
+    private BroadcastReceiver mPublishResultBroadcastReceiver;
 
     private void initView(){
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -65,6 +90,18 @@ public class TopicDraftActivity extends BaseActivity{
             public void onItemClick(View view, int position) {
                 IntentUtil.startActivityForResult(TopicDraftActivity.this,
                         TopicPublishActivity.getStartIntent(TopicDraftActivity.this, mAdapter.getItem(position)), 1);
+            }
+        });
+        mAdapter.setOnChildViewItemClickListener(new ViewUtil.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                int id = view.getId();
+                if(id == R.id.btn_topic_send_again){
+                    TopicDraft topicDraft = mAdapter.getItem(position);
+                    TopicDraftHelper.removeTopicDraft(topicDraft);
+                    mAdapter.removeItem(position);
+                    TopicPublishService.publish(TopicDraftActivity.this, topicDraft, UserUtil.getToken());
+                }
             }
         });
     }

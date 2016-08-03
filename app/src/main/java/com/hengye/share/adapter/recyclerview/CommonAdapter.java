@@ -216,6 +216,11 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
         notifyItemInserted(getBasicItemVirtualPosition(mData.size() - 1));
     }
 
+    public void updateItem(int position, T item){
+        mData.set(position, item);
+        notifyItemChanged(getBasicItemVirtualPosition(position));
+    }
+
     public T removeItem(int position) {
         T t = mData.remove(position);
         notifyItemRemoved(getBasicItemVirtualPosition(position));

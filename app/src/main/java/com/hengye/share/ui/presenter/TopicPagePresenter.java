@@ -69,6 +69,7 @@ public class TopicPagePresenter extends BasePresenter<TopicPageMvpView> {
 
     public Map<String, String> getWBAllTopicParameter(int page) {
         final UrlBuilder ub = new UrlBuilder();
+//        ub.addParameter("access_token", "2.00tJ6X3GiGSdcC5f7433b5a40iAPJB");
         ub.addParameter("access_token", UserUtil.getPriorToken());
 
         ub.addParameter("page", page);

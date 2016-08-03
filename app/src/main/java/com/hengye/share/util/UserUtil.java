@@ -53,7 +53,7 @@ public class UserUtil {
         return getCurrentUser().getToken();
     }
 
-    public static String getAdToken() {
+    protected static String getAdToken() {
         return getCurrentUser().getAdToken();
     }
 

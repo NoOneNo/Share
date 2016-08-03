@@ -63,6 +63,14 @@ public class CommonUtil {
         return false;
     }
 
+    public static boolean isEquals(String str1, String str2) {
+        if (str1 == null) {
+            return str2 == null;
+        }else{
+            return str1.equals(str2);
+        }
+    }
+
     public static <T> T getLastItem(List<T> list) {
         return list.get(list.size() - 1);
     }
@@ -112,9 +120,9 @@ public class CommonUtil {
         if (isEmpty(str)) {
             return null;
         }
-        try{
+        try {
             return Arrays.asList(str.split(separator));
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;

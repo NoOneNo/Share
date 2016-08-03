@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
@@ -27,7 +28,7 @@ import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
-import com.hengye.share.util.retrofit.WBService;
+import com.hengye.share.util.retrofit.weibo.WBService;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -49,18 +50,29 @@ import rx.schedulers.Schedulers;
 
 public class TopicPublishService extends Service {
 
+    public static final int MAX_PUBLISH_SIZE = 10;
+    public static final String ACTION_RESULT = "PUBLISH_RESULT";
+    public static final String EXTRA_RESULT = "PUBLISH_RESULT";
+    public static final String EXTRA_DRAFT = "TOPIC_DRAFT";
+
     private HashMap<TopicPublish, Boolean> mPublishQueue = new HashMap<>();
     private HashMap<TopicPublish, Integer> mPublishNotificationQueue = new HashMap<>();
 
     private Handler mHandler = new Handler();
-
-    public final static int MAX_PUBLISH_SIZE = 10;
+    private LocalBroadcastManager mLocalBroadcastManager;
 
     public static void publish(Context context, TopicDraft topicDraft, String token) {
         Intent intent = new Intent(context, TopicPublishService.class);
         intent.putExtra("topicDraft", topicDraft);
         intent.putExtra("token", token);
         context.startService(intent);
+    }
+
+    protected LocalBroadcastManager getLocalBroadcastManager(){
+        if(mLocalBroadcastManager == null){
+            mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
+        }
+        return mLocalBroadcastManager;
     }
 
     @Override
@@ -96,7 +108,6 @@ public class TopicPublishService extends Service {
 
     protected void addTopicPublishRequestToQueue(TopicPublish tp) {
         mPublishQueue.put(tp, false);
-        mPublishNotificationQueue.put(tp, new Random().nextInt(Integer.MAX_VALUE));
         showTopicPublishStartNotification(tp);
         publish(tp);
     }
@@ -125,9 +136,10 @@ public class TopicPublishService extends Service {
     }
 
     protected void handlePublishSuccess(TopicPublish tp) {
-        showTopicPublishSuccessNotification(tp);
         mPublishQueue.put(tp, true);
+        showTopicPublishSuccessNotification(tp);
         stopServiceIfQueueIsAllFinish();
+        sendResultBroadcast(tp, true);
     }
 
     protected void handlePublishFail(TopicPublish tp) {
@@ -135,6 +147,14 @@ public class TopicPublishService extends Service {
         showTopicPublishFailNotification(tp);
         TopicDraftHelper.saveTopicDraft(tp.getTopicDraft());
         stopServiceIfQueueIsAllFinish();
+        sendResultBroadcast(tp, false);
+    }
+
+    protected void sendResultBroadcast(TopicPublish tp, boolean isSuccess){
+        Intent intent = new Intent(ACTION_RESULT);
+        intent.putExtra(EXTRA_RESULT, isSuccess);
+        intent.putExtra(EXTRA_DRAFT, tp.getTopicDraft());
+        getLocalBroadcastManager().sendBroadcast(intent);
     }
 
     protected void publishWBTopic(final TopicPublish tp) throws Exception {
@@ -308,68 +328,19 @@ public class TopicPublishService extends Service {
         }
     }
 
-    private StringRequest getWBTopicPublishRequest(final TopicPublish tp) {
-
-
-        final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBTopicPublishUrl());
-        ub.addParameter("access_token", tp.getToken());
-        ub.addParameter("status", tp.getTopicDraft().getContent());
-        return new StringRequest(Request.Method.POST,
-//                WBTopic.class,
-                ub.getUrl()
-                , new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
-                if (response != null) {
-                    showTopicPublishSuccessNotification(tp);
-                    mPublishQueue.put(tp, true);
-                    stopServiceIfQueueIsAllFinish();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                L.debug("request fail , url : {}, error : {}", ub.getRequestUrl(), volleyError);
-                mPublishQueue.remove(tp);
-                showTopicPublishFailNotification(tp);
-                TopicDraftHelper.saveTopicDraft(tp.getTopicDraft());
-                stopServiceIfQueueIsAllFinish();
-            }
-        }) {
-            @Override
-            public byte[] getBody() {
-                return ub.getBody();
-//                return null;
-            }
-
-            @Override
-            public String getBodyContentType() {
-                return "application/x-www-form-urlencoded; charset=UTF-8";
-            }
-
-//            @Override
-//            public Map<String, String> getHeaders() throws AuthFailureError {
-//                HashMap<String, String> header = new HashMap<>();
-//                header.put("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-//                header.put("Connection", "Keep-Alive");
-//                header.put("Charset", "UTF-8");
-//                header.put("Accept-Encoding", "gzip, deflate");
-//                return header;
-//            }
-        };
-    }
-
     protected void showTopicPublishStartNotification(TopicPublish tp) {
         Notification.Builder builder = new Notification.Builder(this)
                 .setTicker(getString(R.string.label_topic_publish_start))
                 .setContentTitle(getString(R.string.label_topic_publish_start))
                 .setContentText(getString(R.string.label_topic_publish))
                 .setOnlyAlertOnce(true)
-                .setOngoing(true)
+                .setOngoing(false)
                 .setSmallIcon(R.drawable.notification_icon_upload_white);
-        NotificationUtil.show(builder.build(), mPublishNotificationQueue.get(tp));
+
+        int id = new Random().nextInt(Integer.MAX_VALUE);
+        NotificationUtil.show(builder.build(), id);
+        
+        addNotificationId(tp, id);
     }
 
     protected void showTopicPublishSuccessNotification(final TopicPublish tp) {
@@ -380,12 +351,13 @@ public class TopicPublishService extends Service {
                 .setOnlyAlertOnce(true)
                 .setOngoing(false)
                 .setSmallIcon(R.drawable.notification_icon_upload_white);
-        NotificationUtil.show(builder.build(), mPublishNotificationQueue.get(tp));
+        NotificationUtil.show(builder.build(), getNotificationId(tp));
 
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                NotificationUtil.cancel(mPublishNotificationQueue.get(tp));
+                NotificationUtil.cancel(getNotificationId(tp));
+                removeNotificationId(tp);
             }
         }, 3000);
     }
@@ -398,7 +370,24 @@ public class TopicPublishService extends Service {
                 .setOnlyAlertOnce(true)
                 .setOngoing(false)
                 .setSmallIcon(R.drawable.notification_icon_upload_white);
-        NotificationUtil.show(builder.build(), mPublishNotificationQueue.get(tp));
+        NotificationUtil.show(builder.build(), getNotificationId(tp));
+        removeNotificationId(tp);
+    }
+
+    protected int getNotificationId(TopicPublish tp){
+        Integer id = mPublishNotificationQueue.get(tp);
+        if(id == null){
+            return 0;
+        }
+        return id;
+    }
+
+    protected void addNotificationId(TopicPublish tp, int id){
+        mPublishNotificationQueue.put(tp, id);
+    }
+
+    protected void removeNotificationId(TopicPublish tp){
+        mPublishNotificationQueue.remove(tp);
     }
 
     protected void stopServiceIfQueueIsAllFinish() {
@@ -417,6 +406,62 @@ public class TopicPublishService extends Service {
         }
     }
 }
+
+
+//    private StringRequest getWBTopicPublishRequest(final TopicPublish tp) {
+//
+//
+//        final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBTopicPublishUrl());
+//        ub.addParameter("access_token", tp.getToken());
+//        ub.addParameter("status", tp.getTopicDraft().getContent());
+//        return new StringRequest(Request.Method.POST,
+////                WBTopic.class,
+//                ub.getUrl()
+//                , new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//                L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
+//                if (response != null) {
+//                    showTopicPublishSuccessNotification(tp);
+//                    mPublishQueue.put(tp, true);
+//                    stopServiceIfQueueIsAllFinish();
+//                }
+//
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError volleyError) {
+//                L.debug("request fail , url : {}, error : {}", ub.getRequestUrl(), volleyError);
+//                mPublishQueue.remove(tp);
+//                showTopicPublishFailNotification(tp);
+//                TopicDraftHelper.saveTopicDraft(tp.getTopicDraft());
+//                stopServiceIfQueueIsAllFinish();
+//            }
+//        }) {
+//            @Override
+//            public byte[] getBody() {
+//                return ub.getBody();
+////                return null;
+//            }
+//
+//            @Override
+//            public String getBodyContentType() {
+//                return "application/x-www-form-urlencoded; charset=UTF-8";
+//            }
+//
+////            @Override
+////            public Map<String, String> getHeaders() throws AuthFailureError {
+////                HashMap<String, String> header = new HashMap<>();
+////                header.put("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+////                header.put("Connection", "Keep-Alive");
+////                header.put("Charset", "UTF-8");
+////                header.put("Accept-Encoding", "gzip, deflate");
+////                return header;
+////            }
+//        };
+//    }
+
+
 
 
 

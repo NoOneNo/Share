@@ -10,7 +10,7 @@ import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.rxjava.ObjectConverter;
 import com.hengye.share.util.retrofit.RetrofitManager;
-import com.hengye.share.util.retrofit.WBService;
+import com.hengye.share.util.retrofit.weibo.WBService;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -24,7 +24,7 @@ public class SearchPresenter extends BasePresenter<SearchMvpView> {
 
     public void loadWBSearchContent(String content){
         final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBSearchUserUrl());
-        ub.addParameter("access_token", UserUtil.getAdToken());
+        ub.addParameter("access_token", UserUtil.getPriorToken());
         ub.addParameter("q", content);
         ub.addParameter("sid", "o_weico");
 

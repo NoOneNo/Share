@@ -11,18 +11,18 @@ import com.hengye.share.model.Topic;
 import com.hengye.share.model.greenrobot.TopicDraft;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.service.TopicPublishService;
+import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
+import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
 
 import java.util.List;
 
-public class TopicDraftAdapter extends CommonAdapter<TopicDraft, TopicDraftAdapter.TopicDraftViewHolder>
-        implements ViewUtil.OnItemClickListener{
+public class TopicDraftAdapter extends CommonAdapter<TopicDraft, TopicDraftAdapter.TopicDraftViewHolder> {
 
     public TopicDraftAdapter(Context context, List<TopicDraft> data) {
         super(context, data);
-        setOnChildViewItemClickListener(this);
     }
 
     @Override
@@ -33,17 +33,6 @@ public class TopicDraftAdapter extends CommonAdapter<TopicDraft, TopicDraftAdapt
     @Override
     public void onBindBasicItemView(TopicDraftViewHolder holder, int position) {
         super.onBindBasicItemView(holder, position);
-    }
-
-    @Override
-    public void onItemClick(View view, int position) {
-        int id = view.getId();
-        if(id == R.id.btn_topic_send_again){
-            TopicDraft topicDraft = getItem(position);
-            TopicDraftHelper.removeTopicDraft(topicDraft);
-            removeItem(position);
-            TopicPublishService.publish(getContext(), topicDraft, UserUtil.getToken());
-        }
     }
 
     public static class TopicDraftViewHolder extends CommonAdapter.ItemViewHolder<TopicDraft> {
@@ -62,6 +51,7 @@ public class TopicDraftAdapter extends CommonAdapter<TopicDraft, TopicDraftAdapt
                 mTopic = new TopicAdapter.TopicContentViewHolder(findViewById(R.id.ll_topic_content));
             }
 
+            findViewById(R.id.ll_topic_retweeted_content).setVisibility(View.GONE);
 //            mTopic.mContent = (TextView) findViewById(R.id.tv_topic_content);
 //            mTopic.mGallery = (GridGalleryView) findViewById(R.id.gl_topic_gallery);
             mSendAgain = (Button) findViewById(R.id.btn_topic_send_again);
@@ -73,8 +63,12 @@ public class TopicDraftAdapter extends CommonAdapter<TopicDraft, TopicDraftAdapt
             L.debug("topicDraft id : {}", topicDraft.getId());
             registerChildViewItemClick(mSendAgain);
             Topic topic = topicDraft.getTopic();
-            if(topic != null) {
+            if (topic != null) {
                 mTopicTitle.initTopicTitle(context, topic);
+                String time = mTopicTitle.mDescription.getText().toString();
+                if (!CommonUtil.isEmpty(time)) {
+                    mTopicTitle.mDescription.setText(ResUtil.getString(R.string.label_edit_when, time));
+                }
                 mTopic.initTopicContent(context, topic, false);
             }
         }

@@ -1,6 +1,11 @@
 package com.hengye.share.util.retrofit;
 
 import com.hengye.share.util.UrlFactory;
+import com.hengye.share.util.retrofit.weibo.WBGsonConverterFactory;
+import com.hengye.share.util.retrofit.weibo.WBService;
+import com.hengye.share.util.retrofit.weibo.WBServiceProxyHandler;
+
+import java.lang.reflect.Proxy;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -32,7 +37,7 @@ public class RetrofitManager {
         if(mWBRetrofit == null) {
             mWBRetrofit = new Retrofit.Builder()
                     .baseUrl(UrlFactory.getWBUrlPrefix())
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(WBGsonConverterFactory.create())
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .client(getOkHttpClient())
                     .build();
@@ -43,8 +48,16 @@ public class RetrofitManager {
 
     public static WBService getWBService(){
         if(mWBService == null) {
-            mWBService = getWBRetrofit().create(WBService.class);
+//            WBService wbService = getWBRetrofit().create(WBService.class);
+            mWBService = getWBServiceProxy();
         }
         return mWBService;
     }
+
+    public static WBService getWBServiceProxy(){
+        WBService wbService = getWBRetrofit().create(WBService.class);
+        WBServiceProxyHandler mProxyHandler = new WBServiceProxyHandler(wbService);
+        return (WBService) Proxy.newProxyInstance(WBService.class.getClassLoader(), new Class<?>[]{WBService.class}, mProxyHandler);
+    }
+
 }

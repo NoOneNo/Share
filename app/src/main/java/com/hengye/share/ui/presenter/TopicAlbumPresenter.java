@@ -84,10 +84,7 @@ public class TopicAlbumPresenter extends BasePresenter<TopicAlbumMvpView> {
 
     public Map<String, String> getParameter(String id, final boolean isRefresh) {
         final UrlBuilder ub = new UrlBuilder();
-        String token = UserUtil.getAdToken();
-        if (token == null) {
-            token = UserUtil.getToken();
-        }
+        String token = UserUtil.getPriorToken();
         ub.addParameter("access_token", token);
         if (isRefresh) {
             ub.addParameter("since_id", id);

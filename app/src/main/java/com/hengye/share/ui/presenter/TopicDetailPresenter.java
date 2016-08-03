@@ -4,19 +4,17 @@ import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.sina.WBTopicComments;
 import com.hengye.share.model.sina.WBTopicReposts;
 import com.hengye.share.ui.mvpview.TopicDetailMvpView;
-import com.hengye.share.util.L;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.rxjava.ObjectConverter;
 import com.hengye.share.util.retrofit.RetrofitManager;
-import com.hengye.share.util.retrofit.WBService;
+import com.hengye.share.util.retrofit.weibo.WBService;
 import com.hengye.share.util.thirdparty.WBUtil;
 
 import java.util.Map;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 public class TopicDetailPresenter extends BasePresenter<TopicDetailMvpView> {
@@ -41,7 +39,8 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailMvpView> {
     public void loadWBCommentAndRepost(String topicId, String id, final boolean isRefresh) {
         WBService service = RetrofitManager.getWBService();
         Map<String, String> params = getParameter(UserUtil.getToken(), topicId, id, isRefresh);
-        Map<String, String> repostParams = getParameter(UserUtil.getAdToken(), topicId, id, isRefresh);
+//        Map<String, String> repostParams = getParameter(UserUtil.getToken(), topicId, id, isRefresh);
+        Map<String, String> repostParams = getParameter(UserUtil.getPriorToken(), topicId, id, isRefresh);
 
         Observable.zip(
                 service.listComment(params),
@@ -69,7 +68,7 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailMvpView> {
     @SuppressWarnings("unchecked")
     public void loadWBCommentOrRepost(String topicId, String id, final boolean isRefresh, final boolean isComment) {
         WBService service = RetrofitManager.getWBService();
-        Map<String, String> params = getParameter(isComment ? UserUtil.getToken() : UserUtil.getAdToken(), topicId, id, isRefresh);
+        Map<String, String> params = getParameter(isComment ? UserUtil.getToken() : UserUtil.getPriorToken(), topicId, id, isRefresh);
 
         Observable observable = isComment ? service.listComment(params) : service.listRepost(params);
 

@@ -6,6 +6,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -71,12 +72,22 @@ public class BaseActivity extends AppCompatActivity {
 
     protected boolean mShowAnimationOnStart = true;
 
+    private static BaseActivity mInstance;
+
     public ActivityHelper getActivityHelper(){
         return mActivityHelper;
     }
 
+    public static BaseActivity getCurrentActivity(){
+        if(mInstance != null && !mInstance.isDestroyed()){
+            return mInstance;
+        }
+        return null;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mInstance = this;
         mActivityHelper.dispatchActivityCreated(this, savedInstanceState);
         setCustomThemeIfNeeded(savedInstanceState);
         super.onCreate(savedInstanceState);
@@ -159,6 +170,10 @@ public class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         mActivityHelper.dispatchActivityDestroyed(this);
         super.onDestroy();
+        mInstance = null;
+        if(mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
         cancelPendingRequestsIfNeeded();
         detachMvpView();
         mActivityHelper.clear();
@@ -364,7 +379,7 @@ public class BaseActivity extends AppCompatActivity {
 
     public Handler getHandler() {
         if (mHandler == null) {
-            mHandler = new Handler();
+            mHandler = new Handler(Looper.getMainLooper());
         }
         return mHandler;
     }

@@ -191,6 +191,23 @@ public class TopicDraft implements java.io.Serializable {
     }
 
     // KEEP METHODS - put your custom methods here
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TopicDraft that = (TopicDraft) o;
+
+        return id.equals(that.id);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
     public void setIsCommentOrigin(boolean isCommentOrigin){
         setIsCommentOrigin(isCommentOrigin ? 1 : 0);
     }
