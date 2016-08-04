@@ -46,7 +46,7 @@ public class Topic extends ParentInherit implements TopicId, Serializable{
 
     public static Topic getTopic(WBTopic entity){
         Topic topic = new Topic();
-        topic.setParent(new Parent(GsonUtil.getInstance().toJson(entity), Parent.TYPE_WEIBO));
+        topic.setParent(new Parent(GsonUtil.toJson(entity), Parent.TYPE_WEIBO));
         if(entity == null){
             return topic;
         }
@@ -91,7 +91,7 @@ public class Topic extends ParentInherit implements TopicId, Serializable{
 
     public static Topic getTopic(WBTopicComment entity){
         Topic topic = new Topic();
-        topic.setParent(new Parent(GsonUtil.getInstance().toJson(entity), Parent.TYPE_WEIBO));
+        topic.setParent(new Parent(GsonUtil.toJson(entity), Parent.TYPE_WEIBO));
         if(entity == null){
             return topic;
         }
@@ -134,7 +134,15 @@ public class Topic extends ParentInherit implements TopicId, Serializable{
         if(topic.getParent() == null || topic.getParent().getType() != Parent.TYPE_WEIBO){
             return null;
         }
-        return GsonUtil.getInstance().fromJson(topic.getParent().getJson(), WBTopic.class);
+        return GsonUtil.fromJson(topic.getParent().getJson(), WBTopic.class);
+    }
+
+    public static Topic fromJson(String json){
+        return GsonUtil.fromJson(json, Topic.class);
+    }
+
+    public String toJson(){
+        return GsonUtil.toJson(this);
     }
 
     @Override
@@ -171,11 +179,15 @@ public class Topic extends ParentInherit implements TopicId, Serializable{
                 '}';
     }
 
-    public SpannableString getUrlSpannableString(Context context) {
+    public SpannableString getUrlSpannableString() {
+        return getUrlSpannableString(false);
+    }
+
+    public SpannableString getUrlSpannableString(boolean isRetweeted) {
         if (!TextUtils.isEmpty(urlSpannableString)) {
             return urlSpannableString;
         } else {
-            DataUtil.addTopicContentHighLightLinks(context, this);
+            DataUtil.addTopicContentHighLightLinks(this, isRetweeted);
             return urlSpannableString;
         }
     }

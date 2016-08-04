@@ -61,6 +61,7 @@ public class ElasticScrollView extends ScrollView {
     public boolean onTouchEvent(MotionEvent ev) {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                action_up = false;
                 preY = (int)ev.getY();
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -79,21 +80,21 @@ public class ElasticScrollView extends ScrollView {
     protected void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY) {
         super.onOverScrolled(scrollX, scrollY, clampedX, clampedY);
         this.scrollBy(0, delY / 2);
-        if (action_up) {
-            this.scrollTo(0, 0);
-        }
+//        if (action_up) {
+//            this.scrollTo(0, 0);
+//        }
     }
 
     // 最关键的地方。
     //支持到SDK8需要增加@SuppressLint("NewApi")。
-//    @SuppressLint("NewApi")
-//    @Override
-//    protected boolean overScrollBy(int deltaX, int deltaY, int scrollX,
-//                                   int scrollY, int scrollRangeX, int scrollRangeY,
-//                                   int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
-//
-//        return super.overScrollBy(deltaX, deltaY, scrollX, scrollY,
-//                scrollRangeX, scrollRangeY, maxOverScrollX, newMaxOverScrollY,
-//                isTouchEvent);
-//    }
+    @SuppressLint("NewApi")
+    @Override
+    protected boolean overScrollBy(int deltaX, int deltaY, int scrollX,
+                                   int scrollY, int scrollRangeX, int scrollRangeY,
+                                   int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent) {
+
+        return super.overScrollBy(deltaX, deltaY, scrollX, scrollY,
+                scrollRangeX, scrollRangeY, maxOverScrollX, newMaxOverScrollY,
+                isTouchEvent);
+    }
 }

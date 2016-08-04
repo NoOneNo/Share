@@ -167,7 +167,7 @@ public class UserUtil {
             user.setCover(wbUserInfo.getCover_image_phone());
             user.setGender(wbUserInfo.getGender());
             user.setSign(wbUserInfo.getDescription());
-            user.setParentJson(GsonUtil.getInstance().toJson(wbUserInfo));
+            user.setParentJson(GsonUtil.toJson(wbUserInfo));
             ud.update(user);
         }
     }

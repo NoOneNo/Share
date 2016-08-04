@@ -1,11 +1,14 @@
 package com.hengye.share.ui.activity;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -22,11 +25,13 @@ import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.greenrobot.TopicDraft;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
+import com.hengye.share.service.TopicPublishService;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.ui.mvpview.TopicDetailMvpView;
 import com.hengye.share.ui.presenter.TopicDetailPresenter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DataUtil;
+import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
@@ -65,10 +70,17 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mPublishResultBroadcastReceiver);
+    }
+
+    @Override
     protected void afterCreate(Bundle savedInstanceState) {
         addPresenter(mPresenter = new TopicDetailPresenter(this));
         initView();
-//        startPostponedEnterTransition();
+        initBroadcastReceiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mPublishResultBroadcastReceiver, new IntentFilter(TopicPublishService.ACTION_RESULT));
     }
 
     TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
@@ -111,8 +123,11 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 
     private View mTopicContentLayout;
     private TextView mTopicContent;
+    private FloatingActionButton mFab;
 
     private TopicDetailPresenter mPresenter;
+
+    private BroadcastReceiver mPublishResultBroadcastReceiver;
 
     private void initHeaderTab(View headerViewAssist){
         mTabLayout = (TabLayout) headerViewAssist.findViewById(R.id.tab);
@@ -132,7 +147,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         }else{
             topicLayout.setTransitionName(getString(R.string.transition_name_topic));
         }
-        final TopicAdapter.TopicViewHolder topicViewHolder = new TopicAdapter.TopicViewHolder(topicLayout);
+        final TopicAdapter.TopicDefaultViewHolder topicViewHolder = new TopicAdapter.TopicDefaultViewHolder(topicLayout);
         topicViewHolder.bindData(this, mTopic, 0);
         topicViewHolder.setOnChildViewItemClickListener(new ViewUtil.OnItemClickListener() {
             @Override
@@ -179,8 +194,8 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             return;
         }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(this);
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
+        mFab.setOnClickListener(this);
 
         mTabLayoutHeight = getResources().getDimensionPixelSize(R.dimen.tab_layout_height);
         mTabLayoutAssist = (TabLayout) findViewById(R.id.tab_layout_assist);
@@ -221,7 +236,9 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                 TopicDraft topicDraft = new TopicDraft();
                 topicDraft.setType(TopicDraftHelper.REPLY_COMMENT);
                 topicDraft.setTargetTopicId(mTopic.getId());
+                topicDraft.setTargetTopicJson(mTopic.toJson());
                 topicDraft.setTargetCommentId(tc.getId());
+                topicDraft.setTargetCommentUserName(tc.getUserInfo().getName());
                 topicDraft.setIsCommentOrigin(false);
                 startActivity(TopicPublishActivity.getStartIntent(TopicDetailActivity.this, topicDraft));
             }
@@ -317,6 +334,51 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         mPullToRefreshLayout.getOnRefreshListener().onRefresh();
     }
 
+    private void initBroadcastReceiver(){
+        mPublishResultBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                boolean isSuccess = intent.getBooleanExtra(TopicPublishService.EXTRA_IS_SUCCESS, false);
+                int type = intent.getIntExtra(TopicPublishService.EXTRA_TYPE, -1);
+                if(isSuccess){
+                    TopicComment tc = (TopicComment) intent.getSerializableExtra(TopicPublishService.EXTRA_RESULT);
+                    if(tc == null){
+                        return;
+                    }
+                    if(type == TopicDraftHelper.REPOST_TOPIC){
+                        mTabLayout.getTabAt(1).select();
+                    }else{
+                        mTabLayout.getTabAt(0).select();
+                    }
+                    mAdapter.addItem(0, tc);
+                }else{
+                    final TopicDraft topicDraft = (TopicDraft) intent.getSerializableExtra(TopicPublishService.EXTRA_DRAFT);
+                    if(topicDraft == null){
+                        return;
+                    }
+
+                    int resId;
+                    if(type == TopicDraftHelper.REPOST_TOPIC){
+                        resId = R.string.label_topic_publish_repost_fail;
+                    }else if(type == TopicDraftHelper.PUBLISH_COMMENT){
+                        resId = R.string.label_topic_publish_comment_fail;
+                    }else{
+                        resId = R.string.label_topic_reply_comment_fail;
+                    }
+                    Snackbar sb = ToastUtil.getSnackBar(resId, mFab);
+                    sb.setDuration(Snackbar.LENGTH_LONG);
+                    sb.setAction(R.string.label_topic_publish_retry, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            TopicPublishService.publish(TopicDetailActivity.this, topicDraft);
+                        }
+                    });
+                    sb.show();
+                }
+            }
+        };
+    }
+
     private int getPublishType(){
         if(mTabLayout != null){
             if(mTabLayout.getSelectedTabPosition() == 0){
@@ -352,6 +414,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             TopicDraft topicDraft = new TopicDraft();
             topicDraft.setType(getPublishType());
             topicDraft.setTargetTopicId(mTopic.getId());
+            topicDraft.setTargetTopicJson(mTopic.toJson());
             topicDraft.setIsCommentOrigin(false);
             startActivity(TopicPublishActivity.getStartIntent(this, topicDraft));
         }

@@ -29,9 +29,7 @@ import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.ui.activity.GalleryActivity;
 import com.hengye.share.ui.activity.PersonalHomepageActivity;
 import com.hengye.share.ui.activity.TopicDetailActivity;
-import com.hengye.share.ui.activity.TopicGalleryActivity;
 import com.hengye.share.ui.activity.TopicPublishActivity;
-import com.hengye.share.ui.fragment.GalleryFragment;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.ui.support.textspan.TopicUrlOnTouchListener;
 import com.hengye.share.ui.widget.image.GridGalleryView;
@@ -53,7 +51,7 @@ import com.hengye.share.util.ViewUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHolder>
+public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicDefaultViewHolder>
         implements ViewUtil.OnItemClickListener, ViewUtil.OnItemLongClickListener, DialogInterface.OnClickListener {
 
     public static int mGalleryMaxWidth;
@@ -76,8 +74,8 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
     }
 
     @Override
-    public TopicViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
-        return new TopicViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_topic_total, parent, false));
+    public TopicDefaultViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
+        return new TopicDefaultViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_topic_total, parent, false));
     }
 
 
@@ -164,7 +162,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
 
     public void startPersonHomePage(int position){
         Topic topic = getItem(position);
-        TopicViewHolder vh = (TopicViewHolder) mRecyclerView.findViewHolderForAdapterPosition(position);
+        TopicDefaultViewHolder vh = (TopicDefaultViewHolder) mRecyclerView.findViewHolderForAdapterPosition(position);
         if (topic == null || vh == null) {
             return;
         }
@@ -173,18 +171,35 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
 
     public void startTopicDetail(boolean isRetweet, int position) {
         Topic topic = isRetweet ? getItem(position).getRetweetedTopic() : getItem(position);
-        TopicViewHolder vh = (TopicViewHolder) mRecyclerView.findViewHolderForAdapterPosition(position);
-        if (topic == null || vh == null) {
-            return;
-        }
-
-        TopicDetailActivity.start(getContext(),
-                isRetweet ? vh.mRetweetTopic.mTopicLayout : vh.mTopicTotalItem,
-                topic,
-                isRetweet);
+        TopicDefaultViewHolder vh = (TopicDefaultViewHolder) mRecyclerView.findViewHolderForAdapterPosition(position);
+        TopicViewHolder.startTopicDetail(getContext(), vh, isRetweet, topic);
     }
 
-    public static class TopicViewHolder extends CommonAdapter.ItemViewHolder<Topic> {
+    public static class TopicDefaultViewHolder extends TopicViewHolder<Topic> {
+
+        public TopicDefaultViewHolder(View v) {
+            super(v);
+        }
+
+        @Override
+        public void bindData(Context context, Topic topic, int position) {
+            if (topic == null) {
+                return;
+            }
+
+            mTopicTitle.initTopicTitle(context, topic);
+            mTopic.initTopicContent(context, topic, false);
+
+            if (topic.getRetweetedTopic() != null) {
+                mRetweetTopic.mTopicLayout.setVisibility(View.VISIBLE);
+                mRetweetTopic.initTopicContent(context, topic.getRetweetedTopic(), true);
+            } else {
+                mRetweetTopic.mTopicLayout.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    public static class TopicViewHolder<T> extends CommonAdapter.ItemViewHolder<T> {
 
         public TopicTitleViewHolder mTopicTitle;
         public TopicContentViewHolder mTopic, mRetweetTopic;
@@ -284,17 +299,6 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
-//                int id = v.getId();
-//                if(id == R.id.tv_topic_content) {
-//                    if(!TopicUrlOnTouchListener.getInstance().onTouch(v, event)) {
-//                        return mRetweetTopic.mTopicLayout.onTouchEvent(event);
-//                    }else{
-//                        return true;
-//                    }
-//
-//                }else{
-//                    return mRetweetTopic.mTopicLayout.onTouchEvent(event);
-//                }
                 int id = v.getId();
                 if(id == R.id.tv_topic_content) {
                     if(!TopicUrlOnTouchListener.getInstance().onTouch(v, event)){
@@ -308,21 +312,15 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
             }
         };
 
-        @Override
-        public void bindData(Context context, Topic topic, int position) {
-            if (topic == null) {
+        public static void startTopicDetail(Context context, TopicViewHolder tvh, boolean isRetweet, Topic topic) {
+            if (topic == null || tvh == null) {
                 return;
             }
 
-            mTopicTitle.initTopicTitle(context, topic);
-            mTopic.initTopicContent(context, topic, false);
-
-            if (topic.getRetweetedTopic() != null) {
-                mRetweetTopic.mTopicLayout.setVisibility(View.VISIBLE);
-                mRetweetTopic.initTopicContent(context, topic.getRetweetedTopic(), true);
-            } else {
-                mRetweetTopic.mTopicLayout.setVisibility(View.GONE);
-            }
+            TopicDetailActivity.start(context,
+                    isRetweet ? tvh.mRetweetTopic.mTopicLayout : tvh.mTopicTotalItem,
+                    topic,
+                    isRetweet);
         }
     }
 
@@ -408,7 +406,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicViewHol
         public void initTopicContent(final Context context, Topic topic, boolean isRetweeted) {
 
             //不设置的话会被名字内容的点击事件覆盖，无法触发ItemView的onClick
-            mContent.setText(topic.getUrlSpannableString(context));
+            mContent.setText(topic.getUrlSpannableString(isRetweeted));
 //            mContent.setMovementMethod(SimpleLinkMovementMethod.getInstance());
 //            mContent.setOnTouchListener(TopicUrlOnTouchListener.getInstance());
 

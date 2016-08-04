@@ -11,10 +11,18 @@ import java.util.Map;
 
 public class CommonUtil {
 
+    /**
+     * @param strings
+     * @return 是否都没有空的值, 没有则返回true;
+     */
     public static boolean noEmpty(String... strings) {
         return !hasEmpty(strings);
     }
 
+    /**
+     * @param strings
+     * @return 是否有空的值, 有则返回true;
+     */
     public static boolean hasEmpty(String... strings) {
         for (String str : strings) {
             if (isEmpty(str)) {
@@ -24,13 +32,19 @@ public class CommonUtil {
         return false;
     }
 
+    /**
+     * Returns true if the string is null or 0-length.
+     * @param str the string to be examined
+     * @return true if str is null or zero length
+     */
     public static boolean isEmpty(String str) {
-        if (!TextUtils.isEmpty(str)) {
-            return false;
-        }
-        return true;
+        return TextUtils.isEmpty(str);
     }
 
+    /**
+     * @param strings
+     * @return 是否都是空的值, 是则返回true
+     */
     public static boolean isEmpty(String... strings) {
         for (String str : strings) {
             if (!isEmpty(str)) {
@@ -65,11 +79,21 @@ public class CommonUtil {
 
     public static boolean isEquals(String str1, String str2) {
         if (str1 == null) {
-            return str2 == null;
+            return isEmpty(str2);
         }else{
             return str1.equals(str2);
         }
     }
+
+    public static boolean hasEquals(int target, int... excepts){
+        for(int except : excepts){
+            if(target == except){
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public static <T> T getLastItem(List<T> list) {
         return list.get(list.size() - 1);

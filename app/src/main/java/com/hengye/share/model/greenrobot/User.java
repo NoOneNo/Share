@@ -263,7 +263,7 @@ public class User implements java.io.Serializable {
     public static User getUser(WBUserInfo wbUserInfo){
         User user = new User();
         user.setParentType(Parent.TYPE_WEIBO);
-        user.setParentJson(GsonUtil.getInstance().toJson(wbUserInfo));
+        user.setParentJson(GsonUtil.toJson(wbUserInfo));
         if(wbUserInfo == null){
             return user;
         }
@@ -277,7 +277,7 @@ public class User implements java.io.Serializable {
     }
 
     public WBUserInfo getWBUserInfoFromParent(){
-        return GsonUtil.getInstance().fromJson(getParentJson(), WBUserInfo.class);
+        return GsonUtil.fromJson(getParentJson(), WBUserInfo.class);
     }
     // KEEP METHODS END
 

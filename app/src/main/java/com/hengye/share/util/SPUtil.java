@@ -61,7 +61,7 @@ public class SPUtil extends ApplicationUtil{
         String json = getSharedPreferences().getString(name, null);
         if(!TextUtils.isEmpty(json)){
             try{
-                return GsonUtil.getInstance().fromJson(json, type);
+                return GsonUtil.fromJson(json, type);
             }catch (JsonParseException e){
                 e.printStackTrace();
             }
@@ -73,7 +73,7 @@ public class SPUtil extends ApplicationUtil{
         String json = getSharedPreferences().getString(name, null);
         if(!TextUtils.isEmpty(json)){
             try{
-                return GsonUtil.getInstance().fromJson(json, clazz);
+                return GsonUtil.fromJson(json, clazz);
             }catch (JsonSyntaxException e){
                 e.printStackTrace();
             }
@@ -84,8 +84,8 @@ public class SPUtil extends ApplicationUtil{
 
     public static synchronized <T> void setModule(T t, String name){
         SharedPreferences.Editor editor = getSharedPreferences().edit();
-        editor.putString(name, GsonUtil.getInstance().toJson(t));
-        L.debug("save module, name : {}, json : {}", t.getClass().getSimpleName(), GsonUtil.getInstance().toJson(t));
+        editor.putString(name, GsonUtil.toJson(t));
+        L.debug("save module, name : {}, json : {}", t.getClass().getSimpleName(), GsonUtil.toJson(t));
         editor.apply();
     }
 }

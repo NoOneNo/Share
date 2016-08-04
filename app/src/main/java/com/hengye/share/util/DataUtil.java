@@ -38,9 +38,9 @@ public class DataUtil {
     public static String getCounter(long count, String append) {
         if (count < 10000) {
             return String.valueOf(count) + append;
-        }else if (count < 100 * 10000) {
+        } else if (count < 100 * 10000) {
             return new DecimalFormat("#.0").format(count * 1.0f / 10000) + append + ResUtil.getString(R.string.unit_ten_thousand);
-        }else {
+        } else {
             return new DecimalFormat("#").format(count * 1.0f / 10000) + append + ResUtil.getString(R.string.unit_ten_thousand);
         }
     }
@@ -100,20 +100,16 @@ public class DataUtil {
 //                Linkify.sUrlMatchFilter, null);
 //    }
 
-    public static void addTopicContentHighLightLinks(Context context, TopicComment topicComment) {
-        topicComment.setUrlSpannableString(convertNormalStringToSpannableString(context, topicComment.getContent()));
+    public static void addTopicContentHighLightLinks(TopicComment topicComment) {
+        topicComment.setUrlSpannableString(convertNormalStringToSpannableString(topicComment.getContent()));
     }
 
-    public static void addTopicContentHighLightLinks(Context context, Topic topic) {
-        topic.setUrlSpannableString(convertNormalStringToSpannableString(context, topic.getContent()));
-
-        if (topic.getRetweetedTopic() != null) {
-            String str = addRetweetedNamePrefix(topic.getRetweetedTopic());
-            topic.getRetweetedTopic().setUrlSpannableString(convertNormalStringToSpannableString(context, str));
-        }
+    public static void addTopicContentHighLightLinks(Topic topic, boolean isRetweeted) {
+        String str = isRetweeted ? addRetweetedNamePrefix(topic) : topic.getContent();
+        topic.setUrlSpannableString(convertNormalStringToSpannableString(str));
     }
 
-    public static SpannableString convertNormalStringToSpannableString(Context context, String txt) {
+    public static SpannableString convertNormalStringToSpannableString(String txt) {
         //hack to fix android imagespan bug,see http://stackoverflow.com/questions/3253148/imagespan-is-cut-off-incorrectly-aligned
         //if string only contains emotion tags,add a empty char to the end
         String hackTxt;
@@ -174,7 +170,7 @@ public class DataUtil {
         }
 
         //添加表情
-        addEmotions(context, value);
+        addEmotions(value);
 
         Linkify.addLinks(value, MENTION_URL, MENTION_SCHEME);
         Linkify.addLinks(value, TOPIC_URL, TOPIC_SCHEME);
@@ -259,7 +255,7 @@ public class DataUtil {
         return str;
     }
 
-    private static void addEmotions(Context context, SpannableString value) {
+    private static void addEmotions(SpannableString value) {
         Matcher localMatcher = EMOTION_URL.matcher(value);
         while (localMatcher.find()) {
             String str = localMatcher.group();
@@ -268,7 +264,7 @@ public class DataUtil {
             if (end - start < 8) {
                 Bitmap bitmap = Emoticon.getInstance().getEmoticonBitmap().get(str);
                 if (bitmap != null) {
-                    ImageSpan localImageSpan = new ImageSpan(context, bitmap, ImageSpan.ALIGN_BOTTOM);
+                    ImageSpan localImageSpan = new ImageSpan(ApplicationUtil.getContext(), bitmap, ImageSpan.ALIGN_BOTTOM);
 //                    TopicHttpUrlSpan localImageSpan = new TopicHttpUrlSpan("www.baidu.com",context, bitmap, ImageSpan.ALIGN_BOTTOM);
                     value.setSpan(localImageSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }

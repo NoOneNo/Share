@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
 public class GsonUtil {
     private static Gson mGson = new Gson();
 
-    public static Gson getInstance() {
+    private static Gson getInstance() {
         return mGson;
     }
 
@@ -21,6 +21,15 @@ public class GsonUtil {
     public static <T> T fromJson(String json, Type typeOfT){
         try {
             return getInstance().fromJson(json, typeOfT);
+        }catch (JsonSyntaxException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static <T> T fromJson(String json, Class<T> clazz){
+        try {
+            return getInstance().fromJson(json, clazz);
         }catch (JsonSyntaxException e){
             e.printStackTrace();
         }

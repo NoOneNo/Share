@@ -9,13 +9,6 @@ import de.greenrobot.dao.DaoException;
 import de.greenrobot.dao.AbstractDao;
 
 import com.hengye.share.model.Topic;
-import com.hengye.share.model.greenrobot.DaoSession;
-import com.hengye.share.model.sina.WBTopic;
-import com.hengye.share.util.CommonUtil;
-import com.hengye.share.util.thirdparty.WBUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 // KEEP INCLUDES END
 /**
  * Entity mapped to table "TOPIC_DRAFT".
@@ -29,8 +22,10 @@ public class TopicDraft implements java.io.Serializable {
     private String urls;
     /** Not-null value. */
     private String uid;
+    private String targetTopicJson;
     private String targetTopicId;
     private String targetCommentId;
+    private String targetCommentUserName;
     private Integer isCommentOrigin;
     private Integer isMention;
     private Integer type;
@@ -45,6 +40,8 @@ public class TopicDraft implements java.io.Serializable {
 
     // KEEP FIELDS - put your custom fields here
     private static final long serialVersionUID = -3380622281318260025L;
+
+    private int notificationId = -1;
     // KEEP FIELDS END
 
     public TopicDraft() {
@@ -54,14 +51,16 @@ public class TopicDraft implements java.io.Serializable {
         this.id = id;
     }
 
-    public TopicDraft(Long id, String content, java.util.Date date, String urls, String uid, String targetTopicId, String targetCommentId, Integer isCommentOrigin, Integer isMention, Integer type, Integer parentType) {
+    public TopicDraft(Long id, String content, java.util.Date date, String urls, String uid, String targetTopicJson, String targetTopicId, String targetCommentId, String targetCommentUserName, Integer isCommentOrigin, Integer isMention, Integer type, Integer parentType) {
         this.id = id;
         this.content = content;
         this.date = date;
         this.urls = urls;
         this.uid = uid;
+        this.targetTopicJson = targetTopicJson;
         this.targetTopicId = targetTopicId;
         this.targetCommentId = targetCommentId;
+        this.targetCommentUserName = targetCommentUserName;
         this.isCommentOrigin = isCommentOrigin;
         this.isMention = isMention;
         this.type = type;
@@ -118,6 +117,14 @@ public class TopicDraft implements java.io.Serializable {
         this.uid = uid;
     }
 
+    public String getTargetTopicJson() {
+        return targetTopicJson;
+    }
+
+    public void setTargetTopicJson(String targetTopicJson) {
+        this.targetTopicJson = targetTopicJson;
+    }
+
     public String getTargetTopicId() {
         return targetTopicId;
     }
@@ -132,6 +139,14 @@ public class TopicDraft implements java.io.Serializable {
 
     public void setTargetCommentId(String targetCommentId) {
         this.targetCommentId = targetCommentId;
+    }
+
+    public String getTargetCommentUserName() {
+        return targetCommentUserName;
+    }
+
+    public void setTargetCommentUserName(String targetCommentUserName) {
+        this.targetCommentUserName = targetCommentUserName;
     }
 
     public Integer getIsCommentOrigin() {
@@ -216,17 +231,33 @@ public class TopicDraft implements java.io.Serializable {
         setIsMention(isMention ? 0 : 1);
     }
 
-    private transient Topic mTopic;
+    private transient Topic topic, targetTopic;
 
     public Topic getTopic(){
-        if(mTopic == null){
-            mTopic = generateTopic();
+        if(topic == null){
+            topic = generateTopic();
         }
-        return mTopic;
+        return topic;
     }
+
+    public Topic getTargetTopic(){
+        if(getTargetTopicJson() != null && targetTopic == null){
+            targetTopic = Topic.fromJson(getTargetTopicJson());
+        }
+        return targetTopic;
+    }
+
 
     public Topic generateTopic(){
         return TopicDraftHelper.getTopic(this);
+    }
+
+    public int getNotificationId() {
+        return notificationId;
+    }
+
+    public void setNotificationId(int notificationId) {
+        this.notificationId = notificationId;
     }
     // KEEP METHODS END
 

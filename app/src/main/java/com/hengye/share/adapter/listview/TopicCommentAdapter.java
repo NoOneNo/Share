@@ -93,7 +93,7 @@ public class TopicCommentAdapter extends CommonAdapter<TopicComment, TopicCommen
 
         public void initCommentContent(final Context context, final TopicAdapter.TopicContentViewHolder holder, TopicComment topicComment) {
 
-            holder.mContent.setText(topicComment.getUrlSpannableString(context));
+            holder.mContent.setText(topicComment.getUrlSpannableString());
         }
     }
 }

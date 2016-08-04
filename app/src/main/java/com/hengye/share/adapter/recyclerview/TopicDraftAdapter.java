@@ -9,13 +9,9 @@ import android.widget.Button;
 import com.hengye.share.R;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.greenrobot.TopicDraft;
-import com.hengye.share.model.greenrobot.TopicDraftHelper;
-import com.hengye.share.service.TopicPublishService;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.ResUtil;
-import com.hengye.share.util.UserUtil;
-import com.hengye.share.util.ViewUtil;
 
 import java.util.List;
 
@@ -35,25 +31,13 @@ public class TopicDraftAdapter extends CommonAdapter<TopicDraft, TopicDraftAdapt
         super.onBindBasicItemView(holder, position);
     }
 
-    public static class TopicDraftViewHolder extends CommonAdapter.ItemViewHolder<TopicDraft> {
+    public static class TopicDraftViewHolder extends TopicAdapter.TopicViewHolder<TopicDraft> {
 
-        TopicAdapter.TopicTitleViewHolder mTopicTitle;
-        TopicAdapter.TopicContentViewHolder mTopic;
         Button mSendAgain;
 
-        public TopicDraftViewHolder(View v) {
+        public TopicDraftViewHolder(View v){
             super(v);
 
-            if (mTopicTitle == null) {
-                mTopicTitle = new TopicAdapter.TopicTitleViewHolder(v);
-            }
-            if (mTopic == null) {
-                mTopic = new TopicAdapter.TopicContentViewHolder(findViewById(R.id.ll_topic_content));
-            }
-
-            findViewById(R.id.ll_topic_retweeted_content).setVisibility(View.GONE);
-//            mTopic.mContent = (TextView) findViewById(R.id.tv_topic_content);
-//            mTopic.mGallery = (GridGalleryView) findViewById(R.id.gl_topic_gallery);
             mSendAgain = (Button) findViewById(R.id.btn_topic_send_again);
             mSendAgain.setVisibility(View.VISIBLE);
         }
@@ -71,6 +55,63 @@ public class TopicDraftAdapter extends CommonAdapter<TopicDraft, TopicDraftAdapt
                 }
                 mTopic.initTopicContent(context, topic, false);
             }
+
+            if(topicDraft.getTargetTopic() == null){
+                mRetweetTopic.mTopicLayout.setVisibility(View.GONE);
+            }else{
+                mRetweetTopic.mTopicLayout.setVisibility(View.VISIBLE);
+                mRetweetTopic.initTopicContent(context, topicDraft.getTargetTopic(), true);
+            }
         }
+
     }
+
+//    public static class TopicDraftViewHolder extends CommonAdapter.ItemViewHolder<TopicDraft> {
+//
+//        TopicAdapter.TopicTitleViewHolder mTopicTitle;
+//        TopicAdapter.TopicContentViewHolder mTopic, mTargetTopic;
+//        Button mSendAgain;
+//
+//        public TopicDraftViewHolder(View v) {
+//            super(v);
+//
+//            if (mTopicTitle == null) {
+//                mTopicTitle = new TopicAdapter.TopicTitleViewHolder(v);
+//            }
+//            if (mTopic == null) {
+//                mTopic = new TopicAdapter.TopicContentViewHolder(findViewById(R.id.ll_topic_content));
+//            }
+//
+//            if(mTargetTopic == null){
+//                mTargetTopic = new TopicAdapter.TopicContentViewHolder(findViewById(R.id.ll_topic_retweeted_content), true);
+//            }
+//
+////            mTopic.mContent = (TextView) findViewById(R.id.tv_topic_content);
+////            mTopic.mGallery = (GridGalleryView) findViewById(R.id.gl_topic_gallery);
+//            mSendAgain = (Button) findViewById(R.id.btn_topic_send_again);
+//            mSendAgain.setVisibility(View.VISIBLE);
+//        }
+//
+//        @Override
+//        public void bindData(Context context, TopicDraft topicDraft, int position) {
+//            L.debug("topicDraft id : {}", topicDraft.getId());
+//            registerChildViewItemClick(mSendAgain);
+//            Topic topic = topicDraft.getTopic();
+//            if (topic != null) {
+//                mTopicTitle.initTopicTitle(context, topic);
+//                String time = mTopicTitle.mDescription.getText().toString();
+//                if (!CommonUtil.isEmpty(time)) {
+//                    mTopicTitle.mDescription.setText(ResUtil.getString(R.string.label_edit_when, time));
+//                }
+//                mTopic.initTopicContent(context, topic, false);
+//            }
+//
+//            if(topicDraft.getTargetTopic() == null){
+//                mTargetTopic.mTopicLayout.setVisibility(View.GONE);
+//            }else{
+//                mTargetTopic.mTopicLayout.setVisibility(View.VISIBLE);
+//                mTargetTopic.initTopicContent(context, topicDraft.getTargetTopic(), true);
+//            }
+//        }
+//    }
 }

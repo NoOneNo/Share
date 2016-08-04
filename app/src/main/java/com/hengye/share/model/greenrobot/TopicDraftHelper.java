@@ -85,4 +85,8 @@ public class TopicDraftHelper {
     public static void removeTopicDraft(TopicDraft topicDraft){
         GreenDaoManager.getDaoSession().getTopicDraftDao().delete(topicDraft);
     }
+
+    public static void removeAllTopicDraft(){
+        GreenDaoManager.getDaoSession().getTopicDraftDao().deleteAll();
+    }
 }

@@ -19,19 +19,23 @@ public class ToastUtil extends ApplicationUtil{
     }
 
     public static void showToast(@StringRes int resId){
-        Toast toast = getToast();
-        toast.setText(resId);
-        toast.setDuration(Toast.LENGTH_SHORT);
-        toast.show();
-//        Toast.makeText(getContext(), resId, Toast.LENGTH_SHORT).show();
+        showToast(ResUtil.getString(resId));
     }
 
     public static void showSnackBar(CharSequence text, View view){
-        Snackbar.make(view, text, Snackbar.LENGTH_SHORT).show();
+        getSnackBar(text, view).show();
     }
 
     public static void showSnackBar(@StringRes int resId, View view){
-        Snackbar.make(view, resId, Snackbar.LENGTH_SHORT).show();
+        getSnackBar(resId, view).show();
+    }
+
+    public static Snackbar getSnackBar(@StringRes int resId, View view) {
+        return getSnackBar(ResUtil.getString(resId), view);
+    }
+
+    public static Snackbar getSnackBar(CharSequence text, View view){
+        return Snackbar.make(view, text, Snackbar.LENGTH_SHORT);
     }
 
     private static Toast mToast;

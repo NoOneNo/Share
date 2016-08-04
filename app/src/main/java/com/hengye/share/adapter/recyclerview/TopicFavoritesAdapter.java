@@ -9,7 +9,7 @@ import com.hengye.share.model.TopicFavorites;
 
 import java.util.List;
 
-public class TopicFavoritesAdapter extends CommonAdapter<TopicFavorites.TopicFavorite, TopicAdapter.TopicViewHolder> {
+public class TopicFavoritesAdapter extends CommonAdapter<TopicFavorites.TopicFavorite, TopicAdapter.TopicDefaultViewHolder> {
 
 
     public TopicFavoritesAdapter(Context context, List<TopicFavorites.TopicFavorite> data) {
@@ -17,12 +17,12 @@ public class TopicFavoritesAdapter extends CommonAdapter<TopicFavorites.TopicFav
     }
 
     @Override
-    public TopicAdapter.TopicViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
-        return new TopicAdapter.TopicViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_topic_total, parent, false));
+    public TopicAdapter.TopicDefaultViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
+        return new TopicAdapter.TopicDefaultViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_topic_total, parent, false));
     }
 
     @Override
-    public void onBindBasicItemView(TopicAdapter.TopicViewHolder holder, int position) {
+    public void onBindBasicItemView(TopicAdapter.TopicDefaultViewHolder holder, int position) {
         holder.setOnItemClickListener(getOnItemClickListener());
         holder.setOnChildViewItemClickListener(getOnChildViewItemClickListener());
         holder.bindData(getContext(), getItem(position).getTopic(), position);

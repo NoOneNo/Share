@@ -46,7 +46,7 @@ public class TopicComment implements Serializable{
 
     public static TopicComment getComment(WBTopicComment entity){
         TopicComment topicComment = new TopicComment();
-        topicComment.setParent(new Parent(GsonUtil.getInstance().toJson(entity), Parent.TYPE_WEIBO));
+        topicComment.setParent(new Parent(GsonUtil.toJson(entity), Parent.TYPE_WEIBO));
         if(entity == null){
             return topicComment;
         }
@@ -83,7 +83,7 @@ public class TopicComment implements Serializable{
 
     public static TopicComment getComment(WBTopic entity){
         TopicComment topicComment = new TopicComment();
-        topicComment.setParent(new Parent(GsonUtil.getInstance().toJson(entity), Parent.TYPE_WEIBO));
+        topicComment.setParent(new Parent(GsonUtil.toJson(entity), Parent.TYPE_WEIBO));
         if(entity == null){
             return topicComment;
         }
@@ -111,11 +111,11 @@ public class TopicComment implements Serializable{
                 '}';
     }
 
-    public SpannableString getUrlSpannableString(Context context) {
+    public SpannableString getUrlSpannableString() {
         if (!TextUtils.isEmpty(urlSpannableString)) {
             return urlSpannableString;
         } else {
-            DataUtil.addTopicContentHighLightLinks(context, this);
+            DataUtil.addTopicContentHighLightLinks(this);
             return urlSpannableString;
         }
     }

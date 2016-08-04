@@ -36,7 +36,7 @@ public class UserInfo extends ParentInherit implements Serializable{
 
     public static UserInfo getUserInfo(WBUserInfo wbUserInfo){
         UserInfo userInfo = new UserInfo();
-        userInfo.setParent(new Parent(GsonUtil.getInstance().toJson(wbUserInfo), Parent.TYPE_WEIBO));
+        userInfo.setParent(new Parent(GsonUtil.toJson(wbUserInfo), Parent.TYPE_WEIBO));
         if(wbUserInfo == null){
             return userInfo;
         }
@@ -50,7 +50,7 @@ public class UserInfo extends ParentInherit implements Serializable{
     }
 
     public WBUserInfo getWBUserInfoFromParent(){
-        return GsonUtil.getInstance().fromJson(getParent().getJson(), WBUserInfo.class);
+        return GsonUtil.fromJson(getParent().getJson(), WBUserInfo.class);
     }
 
     public static UserInfo getUserInfo(User user){

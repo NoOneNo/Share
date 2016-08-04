@@ -121,6 +121,10 @@
     <string name="label_topic_publish_success">发表成功</string>
     <string name="label_topic_publish_fail">发表失败</string>
     <string name="label_topic_publish">@string/app_name</string>
+    <string name="label_topic_publish_retry">重试</string>
+    <string name="label_topic_publish_comment_fail">评论微博失败</string>
+    <string name="label_topic_reply_comment_fail">回复评论失败</string>
+    <string name="label_topic_publish_repost_fail">转发微博失败</string>
     <string name="label_topic_publish_field_empty">请填写内容或选择图片</string>
     <string name="label_topic_picture_publish_content_empty">分享图片</string>
     <!-- Strings related to TopicPublish -->
@@ -129,6 +133,7 @@
     <string name="label_save_to_draft">是否保存到草稿箱？</string>
     <string name="label_save_to_draft_override">发现草稿已存在，是否覆盖？</string>
     <string name="label_save_to_draft_success">保存成功</string>
+    <string name="label_delete_draft">删除</string>
     <string name="label_edit_when">编辑于 %s</string>
     <!-- Strings related to TopicDraft -->
 

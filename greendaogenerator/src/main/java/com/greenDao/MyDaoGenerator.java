@@ -7,7 +7,7 @@ import de.greenrobot.daogenerator.Schema;
 public class MyDaoGenerator {
 
     public static void main(String[] args) throws Exception {
-        Schema schema = new Schema(1003, "com.hengye.share.model.greenrobot");
+        Schema schema = new Schema(1005, "com.hengye.share.model.greenrobot");
 
         schema.enableKeepSectionsByDefault();
         schema.enableActiveEntitiesByDefault();
@@ -47,8 +47,10 @@ public class MyDaoGenerator {
         entity.addDateProperty("date");
         entity.addStringProperty("urls");
         entity.addStringProperty("uid").notNull();
+        entity.addStringProperty("targetTopicJson");
         entity.addStringProperty("targetTopicId");
         entity.addStringProperty("targetCommentId");
+        entity.addStringProperty("targetCommentUserName");
         entity.addIntProperty("isCommentOrigin");
         entity.addIntProperty("isMention");
         entity.addIntProperty("type");

@@ -24,7 +24,7 @@ public class TopicFavorites {
 
     public static TopicFavorite getTopicFavorite(WBTopicFavorite entity){
         TopicFavorite topicFavorite = new TopicFavorite();
-        topicFavorite.setParent(new Parent(GsonUtil.getInstance().toJson(entity), Parent.TYPE_WEIBO));
+        topicFavorite.setParent(new Parent(GsonUtil.toJson(entity), Parent.TYPE_WEIBO));
         if(entity == null){
             return topicFavorite;
         }

@@ -233,6 +233,9 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
 
     private String getPhotoPickerUrls() {
         List<Photo> photos = mPhotoPicker.getPhotos();
+        if(photos == null){
+            return null;
+        }
         List<String> urls = new ArrayList<>();
         for (Photo photo : photos) {
             urls.add(photo.getDataPath());
@@ -251,6 +254,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         if (mTopicDraft != null) {
             td.setId(mTopicDraft.getId());
             td.setTargetTopicId(mTopicDraft.getTargetTopicId());
+            td.setTargetTopicJson(mTopicDraft.getTargetTopicJson());
             td.setTargetCommentId(mTopicDraft.getTargetCommentId());
         }
         if (!CommonUtil.isEmpty(mPhotoPicker.getPhotos())) {
@@ -322,7 +326,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     private InputFilter mAtUserInputFilter = new InputFilter() {
         @Override
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            return DataUtil.convertNormalStringToSpannableString(TopicPublishActivity.this, String.valueOf(source));
+            return DataUtil.convertNormalStringToSpannableString(String.valueOf(source));
         }
     };
 
