@@ -41,4 +41,12 @@
         <item name="android:textSize">@dimen/text_normal</item>
         <item name="android:textColor">@android:color/black</item>
     </style>
+
+    <!--<style name="TopicPublishToolButtonStyle" parent="@style/Base.Widget.AppCompat.ButtonBar">-->
+        <!--<item name="android:paddingTop">5dip</item>-->
+        <!--<item name="android:paddingLeft">4dip</item>-->
+        <!--<item name="android:paddingRight">4dip</item>-->
+        <!--<item name="android:paddingBottom">1dip</item>-->
+        <!--<item name="android:background">@android:drawable/bottom_bar</item>-->
+    <!--</style>-->
 </resources>

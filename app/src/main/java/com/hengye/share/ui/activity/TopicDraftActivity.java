@@ -15,15 +15,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.hengye.share.adapter.recyclerview.TopicAdapter;
-import com.hengye.share.model.Topic;
-import com.hengye.share.service.TopicPublishService;
-import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.R;
+import com.hengye.share.adapter.recyclerview.TopicAdapter;
 import com.hengye.share.adapter.recyclerview.TopicDraftAdapter;
+import com.hengye.share.model.Topic;
 import com.hengye.share.model.greenrobot.TopicDraft;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
+import com.hengye.share.service.TopicPublishService;
+import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
+import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.IntentUtil;
 import com.hengye.share.util.UserUtil;
@@ -87,7 +88,7 @@ public class TopicDraftActivity extends BaseActivity implements DialogInterface.
     private TopicDraftAdapter mAdapter;
     private List<TopicDraft> mTopicDraft;
     private BroadcastReceiver mPublishResultBroadcastReceiver;
-    private Dialog mItemLongClickDialog;
+    private Dialog mItemLongClickDialog, mConfirmToDeleteDialog;
     private int mItemLongClickPosition;
 
     private void initView() {
@@ -138,12 +139,38 @@ public class TopicDraftActivity extends BaseActivity implements DialogInterface.
             @Override
             public boolean onItemLongClick(View view, int position) {
                 mItemLongClickPosition = position;
-                mItemLongClickDialog.show();
+                getItemLongClickDialog().show();
                 return false;
             }
         });
 
-        mItemLongClickDialog = DialogBuilder.getItemDialog(this, this, getString(R.string.label_delete_draft));
+    }
+
+    private Dialog getItemLongClickDialog(){
+        if(mItemLongClickDialog == null){
+            mItemLongClickDialog = DialogBuilder.getItemDialog(this, this, getString(R.string.label_delete_draft));
+        }
+        return mItemLongClickDialog;
+    }
+
+    private Dialog getConfirmToDeleteDialog(){
+        if(mConfirmToDeleteDialog == null){
+            SimpleTwoBtnDialog stbd = new SimpleTwoBtnDialog();
+            stbd.setContent(R.string.label_delete_all_drafts);
+            stbd.setPositiveButtonClickListener(new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (!mAdapter.isEmpty()) {
+                        TopicDraftHelper.removeAllTopicDraft();
+                        mAdapter.refresh(null);
+                    }
+                }
+            });
+
+            mConfirmToDeleteDialog = stbd.create(this);
+
+        }
+        return mConfirmToDeleteDialog;
     }
 
     @Override
@@ -170,10 +197,7 @@ public class TopicDraftActivity extends BaseActivity implements DialogInterface.
         int id = item.getItemId();
 
         if (id == R.id.action_delete) {
-            if (!mAdapter.isEmpty()) {
-                TopicDraftHelper.removeAllTopicDraft();
-                mAdapter.refresh(null);
-            }
+            getConfirmToDeleteDialog().show();
         }
         return super.onOptionsItemSelected(item);
     }

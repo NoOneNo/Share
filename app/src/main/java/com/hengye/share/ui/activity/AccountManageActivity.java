@@ -183,7 +183,7 @@ public class AccountManageActivity extends BaseActivity implements AccountManage
 
     public static Dialog getLoginDialog(final Context context){
         SimpleTwoBtnDialog stbd = new SimpleTwoBtnDialog();
-        stbd.setContent("未发现已授权的账号，是否跳转到登录页面？");
+        stbd.setContent(R.string.label_to_login);
         stbd.setPositiveButtonClickListener(new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

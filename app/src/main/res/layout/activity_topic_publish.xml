@@ -39,7 +39,8 @@
             android:id="@+id/ll_topic_publish_tools"
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="@dimen/topic_publish_tool_bar_height"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
             android:background="?attr/theme_color">
 
@@ -55,18 +56,20 @@
             <ImageButton
                 style="?android:buttonBarButtonStyle"
                 android:id="@+id/btn_mention"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="@dimen/icon_size_large"
+                android:layout_height="@dimen/icon_size_large"
                 android:contentDescription="@null"
-                android:src="@drawable/compose_mentionbutton_background"/>
+                android:src="@drawable/ic_person_add_white_48dp"
+                android:scaleType="fitXY"/>
 
             <ImageButton
                 style="?android:buttonBarButtonStyle"
                 android:id="@+id/btn_emoticon"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="@dimen/icon_size_large"
+                android:layout_height="@dimen/icon_size_large"
                 android:contentDescription="@null"
-                android:src="@drawable/compose_emoticonbutton_background"/>
+                android:src="@drawable/ic_mood_white_48dp"
+                android:scaleType="fitXY"/>
 
             <View
                 android:layout_width="0dp"
@@ -76,10 +79,11 @@
             <ImageButton
                 style="?android:buttonBarButtonStyle"
                 android:id="@+id/btn_publish"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="@dimen/icon_size_large"
+                android:layout_height="@dimen/icon_size_large"
                 android:contentDescription="@null"
-                android:src="@android:drawable/ic_menu_send"/>
+                android:src="@drawable/ic_send_white_48dp"
+                android:scaleType="fitXY"/>
 
         </LinearLayout>
 

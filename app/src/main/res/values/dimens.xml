@@ -63,14 +63,16 @@
     <dimen name="at_user_check">20dp</dimen>
     <dimen name="at_user_et_search_margin_start">25dp</dimen>
 
+    <dimen name="topic_publish_tool_bar_height">50dp</dimen>
+
 
     <dimen name="icon_size_tiny">20dp</dimen>
 
-    <dimen name="icon_size_small">30dp</dimen>
+    <dimen name="icon_size_small">28dp</dimen>
 
-    <dimen name="icon_size_normal">40dp</dimen>
+    <dimen name="icon_size_normal">38dp</dimen>
 
-    <dimen name="icon_size_large">50dp</dimen>
+    <dimen name="icon_size_large">48dp</dimen>
 
-    <dimen name="icon_size_large_2">60dp</dimen>
+    <dimen name="icon_size_large_2">58dp</dimen>
 </resources>

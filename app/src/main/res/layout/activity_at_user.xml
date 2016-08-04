@@ -27,10 +27,10 @@
 
             <ImageView
                 android:id="@+id/ic_search"
-                android:layout_width="@dimen/icon_size_tiny"
-                android:layout_height="@dimen/icon_size_tiny"
+                android:layout_width="@dimen/icon_size_small"
+                android:layout_height="@dimen/icon_size_small"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_search_2"
+                android:src="@drawable/ic_search_black_48dp"
                 android:scaleType="fitCenter"/>
 
             <View

@@ -133,6 +133,8 @@
     <string name="label_save_to_draft">是否保存到草稿箱？</string>
     <string name="label_save_to_draft_override">发现草稿已存在，是否覆盖？</string>
     <string name="label_save_to_draft_success">保存成功</string>
+    <string name="label_delete_all_drafts">是否清空所有草稿？</string>
+    <string name="label_title_delete_all_drafts">清空草稿箱</string>
     <string name="label_delete_draft">删除</string>
     <string name="label_edit_when">编辑于 %s</string>
     <!-- Strings related to TopicDraft -->
@@ -157,6 +159,7 @@
     <string name="label_account_logout">退出</string>
     <string name="label_get_user_info_fail">获取用户信息失败</string>
     <string name="label_get_user_info">正在获取用户信息&#8230;</string>
+    <string name="label_to_login">未发现已授权的账号，是否跳转到登录页面？</string>
     <!-- Strings related to account manage-->
 
     <!-- Strings related to fragment title-->

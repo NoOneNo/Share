@@ -4,8 +4,8 @@
     tools:context=".MainActivity">
 
     <item android:id="@+id/action_search"
-        android:title=""
+        android:title="@string/label_search"
         android:orderInCategory="180"
-        android:icon="@drawable/ic_search_2"
+        android:icon="@drawable/ic_search_white_48dp"
         app:showAsAction="ifRoom"/>
 </menu>
