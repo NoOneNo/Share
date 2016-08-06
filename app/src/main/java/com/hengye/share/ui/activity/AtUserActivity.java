@@ -25,6 +25,7 @@ import com.hengye.share.model.AtUser;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.ui.mvpview.AtUserMvpView;
 import com.hengye.share.ui.presenter.AtUserPresenter;
+import com.hengye.share.ui.view.listener.OnItemClickListener;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.ToastUtil;
@@ -146,7 +147,7 @@ public class AtUserActivity extends BaseActivity implements AtUserMvpView {
 
 
     private void initListener() {
-        mAtUserSearchAdapter.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
+        mAtUserSearchAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 AtUser select = mAtUserSearchAdapter.getItem(position);
@@ -160,7 +161,7 @@ public class AtUserActivity extends BaseActivity implements AtUserMvpView {
             }
         });
 
-        mAtUserSelectAdapter.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
+        mAtUserSelectAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 AtUser select = mAtUserSelectAdapter.getItem(position);

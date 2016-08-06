@@ -22,7 +22,7 @@ import com.hengye.share.ui.view.CommonToolBar;
 import com.hengye.share.util.NetworkUtil;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.helper.SettingHelper;
-import com.hengye.share.util.ViewUtil.OnDoubleClickListener;
+import com.hengye.share.ui.view.listener.OnDoubleClickListener;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -326,7 +326,9 @@ public class BaseActivity extends AppCompatActivity {
         mToolbar = (CommonToolBar) findViewById(R.id.toolbar);
         if (mToolbar != null) {
             setSupportActionBar(mToolbar);
-            mToolbar.setTitle(getToolbarTitle());
+            if(mToolbar.getTitle() == null) {
+                mToolbar.setTitle(getToolbarTitle());
+            }
             mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -345,7 +347,7 @@ public class BaseActivity extends AppCompatActivity {
     private CommonToolBar mToolbar;
     private OnDoubleClickListener mOnDoubleClickListener;
 
-    public Toolbar getToolbar() {
+    public CommonToolBar getToolbar() {
         return mToolbar;
     }
 

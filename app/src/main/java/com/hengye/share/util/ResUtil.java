@@ -57,4 +57,8 @@ public class ResUtil extends ApplicationUtil {
                 "Resource ID #0x" + Integer.toHexString(id) + " type #0x"
                         + Integer.toHexString(value.type) + " is not valid");
     }
+
+    public static int getDimensionPixelSize(@DimenRes int id) throws Resources.NotFoundException {
+        return getResources().getDimensionPixelSize(id);
+    }
 }

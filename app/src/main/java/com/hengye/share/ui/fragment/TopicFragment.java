@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicAdapter;
 import com.hengye.share.handler.data.TopicIdHandler;
 import com.hengye.share.handler.data.TopicAdapterIdPager;
@@ -18,6 +19,7 @@ import com.hengye.share.ui.fragment.PersonalHomepageFragment.LoadDataCallBack;
 import com.hengye.share.ui.fragment.encapsulation.paging.RecyclerRefreshFragment;
 import com.hengye.share.ui.mvpview.TopicMvpView;
 import com.hengye.share.ui.presenter.TopicPresenter;
+import com.hengye.share.ui.widget.fab.FabAnimator;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.UserUtil;
 
@@ -44,10 +46,10 @@ public class TopicFragment extends RecyclerRefreshFragment<Topic> implements Top
         return newInstance(new TopicPresenter.TopicGroup(topicType), uid, name);
     }
 
-    private TopicAdapter mAdapter;
-    private TopicPresenter mPresenter;
-    private TopicPresenter.TopicGroup topicGroup;
-    private String uid, name;
+    TopicAdapter mAdapter;
+    TopicPresenter mPresenter;
+    TopicPresenter.TopicGroup topicGroup;
+    String uid, name;
 
 //    @Override
 //    public int getLayoutResId() {
@@ -83,6 +85,16 @@ public class TopicFragment extends RecyclerRefreshFragment<Topic> implements Top
 
         mPresenter.loadCacheData();
 
+        View fab = getActivity().findViewById(R.id.fab);
+        if(fab != null) {
+            FabAnimator.create(fab).attachToRecyclerView(getRecyclerView());
+        }
+    }
+
+    public void scrollToTop(){
+        if(getRecyclerView() != null) {
+            getRecyclerView().scrollToPosition(0);
+        }
     }
 
     @Override

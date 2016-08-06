@@ -30,8 +30,8 @@
                 android:layout_width="@dimen/icon_size_small"
                 android:layout_height="@dimen/icon_size_small"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_search_black_48dp"
-                android:scaleType="fitCenter"/>
+                style="@style/ThemeColor.TintStyle"
+                android:src="@drawable/ic_search_white_48dp"/>
 
             <View
                 style="@style/horizontal_line"

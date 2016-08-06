@@ -4,7 +4,8 @@ import android.content.Context;
 import android.support.annotation.IdRes;
 import android.view.View;
 
-import com.hengye.share.util.ViewUtil;
+import com.hengye.share.ui.view.listener.OnItemClickListener;
+import com.hengye.share.ui.view.listener.OnItemLongClickListener;
 
 public abstract class ViewHolder<T> {
 
@@ -66,22 +67,22 @@ public abstract class ViewHolder<T> {
         }
     };
 
-    ViewUtil.OnItemClickListener mOnChildViewItemClickListener;
-    ViewUtil.OnItemLongClickListener mOnChildViewItemLongClickListener;
+    OnItemClickListener mOnChildViewItemClickListener;
+    OnItemLongClickListener mOnChildViewItemLongClickListener;
 
-    public ViewUtil.OnItemLongClickListener getOnChildViewItemLongClickListener() {
+    public OnItemLongClickListener getOnChildViewItemLongClickListener() {
         return mOnChildViewItemLongClickListener;
     }
 
-    public void setOnChildViewItemLongClickListener(ViewUtil.OnItemLongClickListener onChildViewItemLongClickListener) {
+    public void setOnChildViewItemLongClickListener(OnItemLongClickListener onChildViewItemLongClickListener) {
         this.mOnChildViewItemLongClickListener = onChildViewItemLongClickListener;
     }
 
-    public ViewUtil.OnItemClickListener getOnChildViewItemClickListener() {
+    public OnItemClickListener getOnChildViewItemClickListener() {
         return mOnChildViewItemClickListener;
     }
 
-    public void setOnChildViewItemClickListener(ViewUtil.OnItemClickListener onChildViewItemClickListener) {
+    public void setOnChildViewItemClickListener(OnItemClickListener onChildViewItemClickListener) {
         this.mOnChildViewItemClickListener = onChildViewItemClickListener;
     }
 }

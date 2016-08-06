@@ -104,7 +104,7 @@ public class SearchView extends FrameLayout implements View.OnClickListener{
         setup(activity);
 
         if(mode != MODE_ANIMATION){
-            mSearch.setVisibility(View.VISIBLE);
+            setVisibility(View.VISIBLE);
         }
     }
 
@@ -157,7 +157,7 @@ public class SearchView extends FrameLayout implements View.OnClickListener{
     }
 
     public boolean isSearchShow(){
-        return mSearch.getVisibility() == View.VISIBLE;
+        return getVisibility() == View.VISIBLE;
     }
 
     public void handleSearch() {
@@ -174,21 +174,21 @@ public class SearchView extends FrameLayout implements View.OnClickListener{
 
 
     private void startSearchHideAnimation() {
-        final Animator searchHideAnimator = ViewAnimationUtils.createCircularReveal(mSearch,
-                mSearch.getWidth() - 100,
+        final Animator searchHideAnimator = ViewAnimationUtils.createCircularReveal(this,
+                getWidth() - 100,
                 ViewUtil.getActionBarHeight() / 2,
-                (float) Math.hypot(mSearch.getWidth(), mSearch.getHeight()),
+                (float) Math.hypot(getWidth(), getHeight()),
                 0);
         searchHideAnimator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
                 mSearchContent.setText("");
-                mSearch.setEnabled(false);
+                setEnabled(false);
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                mSearch.setVisibility(View.GONE);
+                setVisibility(View.GONE);
                 ViewUtil.hideKeyBoard(mSearchContent);
                 mSearchResult.setVisibility(View.GONE);
             }
@@ -208,16 +208,16 @@ public class SearchView extends FrameLayout implements View.OnClickListener{
     }
 
     private void startSearchShowAnimation() {
-        final Animator searchShowAnimator = ViewAnimationUtils.createCircularReveal(mSearch,
+        final Animator searchShowAnimator = ViewAnimationUtils.createCircularReveal(this,
                 mSearchContent.getWidth(),
                 ViewUtil.getActionBarHeight() / 2,
                 0,
-                (float) Math.hypot(mSearch.getWidth(), mSearch.getHeight()));
+                (float) Math.hypot(getWidth(), getHeight()));
         searchShowAnimator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-                mSearch.setVisibility(View.VISIBLE);
-                mSearch.setEnabled(true);
+                setVisibility(View.VISIBLE);
+                setEnabled(true);
             }
 
             @Override

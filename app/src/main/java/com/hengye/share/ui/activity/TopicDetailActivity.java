@@ -29,11 +29,12 @@ import com.hengye.share.service.TopicPublishService;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.ui.mvpview.TopicDetailMvpView;
 import com.hengye.share.ui.presenter.TopicDetailPresenter;
+import com.hengye.share.ui.view.listener.OnItemClickListener;
+import com.hengye.share.ui.widget.fab.FabAnimator;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
-import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
 import com.hengye.swiperefresh.listener.SwipeListener;
@@ -41,7 +42,7 @@ import com.hengye.swiperefresh.listener.SwipeListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpView, View.OnClickListener{
+public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpView, View.OnClickListener {
 
     public static void start(Context context, View startView, Topic topic, boolean isRetweet) {
         Intent intent = getStartIntent(context, topic, isRetweet);
@@ -86,18 +87,18 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
-            String str = (String)tab.getTag();
-            if("tab_layout_assist".equals(str)){
+            String str = (String) tab.getTag();
+            if ("tab_layout_assist".equals(str)) {
                 mTabLayout.getTabAt(tab.getPosition()).select();
-            }else if("tab_layout".equals(str)){
+            } else if ("tab_layout".equals(str)) {
                 mTabLayoutAssist.getTabAt(tab.getPosition()).select();
 
-                if(tab.getPosition() == 0){
+                if (tab.getPosition() == 0) {
                     mAdapter.setData(mCommentData);
                     mAdapter.notifyDataSetChanged();
                     mListView.setSelection(1);
                     mPullToRefreshLayout.setLoadEnable(mLoadCommentEnable);
-                }else if(tab.getPosition() == 1){
+                } else if (tab.getPosition() == 1) {
                     mAdapter.setData(mRepostData);
                     mAdapter.notifyDataSetChanged();
                     mListView.setSelection(1);
@@ -107,10 +108,12 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         }
 
         @Override
-        public void onTabUnselected(TabLayout.Tab tab) {}
+        public void onTabUnselected(TabLayout.Tab tab) {
+        }
 
         @Override
-        public void onTabReselected(TabLayout.Tab tab) {}
+        public void onTabReselected(TabLayout.Tab tab) {
+        }
     };
 
     private PullToRefreshLayout mPullToRefreshLayout;
@@ -129,7 +132,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 
     private BroadcastReceiver mPublishResultBroadcastReceiver;
 
-    private void initHeaderTab(View headerViewAssist){
+    private void initHeaderTab(View headerViewAssist) {
         mTabLayout = (TabLayout) headerViewAssist.findViewById(R.id.tab);
         mTabLayout.addTab((mTabLayout.newTab().setText(R.string.label_topic_comment).setTag("tab_layout")));
         mTabLayout.addTab((mTabLayout.newTab().setText(R.string.label_topic_repost).setTag("tab_layout")));
@@ -138,24 +141,24 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 
     }
 
-    private void initHeaderTopic(View headerView){
+    private void initHeaderTopic(View headerView) {
         View topicLayout = headerView.findViewById(R.id.item_topic);
-        if(mIsRetweet){
+        if (mIsRetweet) {
             mTopicContentLayout = headerView.findViewById(R.id.ll_topic_content);
             mTopicContent = (TextView) headerView.findViewById(R.id.tv_topic_content);
             mTopicContentLayout.setTransitionName(getString(R.string.transition_name_topic));
-        }else{
+        } else {
             topicLayout.setTransitionName(getString(R.string.transition_name_topic));
         }
         final TopicAdapter.TopicDefaultViewHolder topicViewHolder = new TopicAdapter.TopicDefaultViewHolder(topicLayout);
         topicViewHolder.bindData(this, mTopic, 0);
-        topicViewHolder.setOnChildViewItemClickListener(new ViewUtil.OnItemClickListener() {
+        topicViewHolder.setOnChildViewItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 int id = view.getId();
                 if (id == R.id.tv_topic_content || id == R.id.gl_topic_gallery || id == R.id.ll_topic_retweeted_content) {
                     final boolean isRetweeted = (Boolean) view.getTag();
-                    if(!isRetweeted){
+                    if (!isRetweeted) {
                         return;
                     }
                     //为了显示波纹效果再启动
@@ -212,6 +215,34 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         initHeaderTab(headerViewAssist);
 
         mListView = (ListView) findViewById(R.id.list_view);
+
+        AbsListView.OnScrollListener onScrollListener = new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (firstVisibleItem == 0) {
+
+                    View firstVisibleItemView = view.getChildAt(1);
+                    if (firstVisibleItemView == null) {
+                        return;
+                    }
+
+                    if (firstVisibleItemView.getBottom() <= mTabLayoutHeight) {
+                        mTabLayoutAssist.setVisibility(View.VISIBLE);
+                    } else {
+                        mTabLayoutAssist.setVisibility(View.GONE);
+                    }
+                } else {
+                    mTabLayoutAssist.setVisibility(View.VISIBLE);
+                }
+            }
+        };
+
+        FabAnimator.create(mFab).attachToListView(mListView, onScrollListener);
         mListView.setAdapter(mAdapter = new TopicCommentAdapter(this, new ArrayList<TopicComment>()));
         mListView.addHeaderView(headerView);
         mListView.addHeaderView(headerViewAssist);
@@ -230,7 +261,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int actualPosition = position - mListView.getHeaderViewsCount();
                 TopicComment tc = mAdapter.getItem(actualPosition);
-                if(tc == null){
+                if (tc == null) {
                     return;
                 }
                 TopicDraft topicDraft = new TopicDraft();
@@ -243,7 +274,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                 startActivity(TopicPublishActivity.getStartIntent(TopicDetailActivity.this, topicDraft));
             }
         });
-        mAdapter.setOnChildViewItemClickListener(new ViewUtil.OnItemClickListener() {
+        mAdapter.setOnChildViewItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, final int position) {
                 int id = view.getId();
@@ -252,52 +283,26 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 //                    getHandler().postDelayed(new Runnable() {
 //                        @Override
 //                        public void run() {
-                            TopicComment tc = mAdapter.getItem(position);
-                            int childPosition = position - (mListView.getFirstVisiblePosition() - mListView.getHeaderViewsCount());
-                            View startView = null;
-                            View convertView = mListView.getChildAt(childPosition);
-                            if(convertView != null && convertView.getTag() != null){
-                                TopicCommentAdapter.TopicCommentViewHolder tcv = (TopicCommentAdapter.TopicCommentViewHolder)convertView.getTag();
-                                if(tcv != null){
-                                    startView = tcv.mTopicTitle.mAvatar;
-                                }
-                            }
-                            if(startView == null){
-                                PersonalHomepageActivity.start(TopicDetailActivity.this, tc.getUserInfo());
-                            }else{
-                                PersonalHomepageActivity.start(TopicDetailActivity.this, startView, tc.getUserInfo());
-                            }
+                    TopicComment tc = mAdapter.getItem(position);
+                    int childPosition = position - (mListView.getFirstVisiblePosition() - mListView.getHeaderViewsCount());
+                    View startView = null;
+                    View convertView = mListView.getChildAt(childPosition);
+                    if (convertView != null && convertView.getTag() != null) {
+                        TopicCommentAdapter.TopicCommentViewHolder tcv = (TopicCommentAdapter.TopicCommentViewHolder) convertView.getTag();
+                        if (tcv != null) {
+                            startView = tcv.mTopicTitle.mAvatar;
+                        }
+                    }
+                    if (startView == null) {
+                        PersonalHomepageActivity.start(TopicDetailActivity.this, tc.getUserInfo());
+                    } else {
+                        PersonalHomepageActivity.start(TopicDetailActivity.this, startView, tc.getUserInfo());
+                    }
 
 //                        }
 //                    }, 100);
-                }else {
+                } else {
                     mListView.performItemClick(null, position + mListView.getHeaderViewsCount(), mAdapter.getItemId(position));
-                }
-            }
-        });
-
-        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if(firstVisibleItem == 0){
-
-                    View firstVisibleItemView = view.getChildAt(1);
-                    if(firstVisibleItemView == null){
-                        return;
-                    }
-
-                    if(firstVisibleItemView.getBottom() <= mTabLayoutHeight){
-                        mTabLayoutAssist.setVisibility(View.VISIBLE);
-                    }else{
-                        mTabLayoutAssist.setVisibility(View.GONE);
-                    }
-                }else{
-                    mTabLayoutAssist.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -334,35 +339,35 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         mPullToRefreshLayout.getOnRefreshListener().onRefresh();
     }
 
-    private void initBroadcastReceiver(){
+    private void initBroadcastReceiver() {
         mPublishResultBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 boolean isSuccess = intent.getBooleanExtra(TopicPublishService.EXTRA_IS_SUCCESS, false);
                 int type = intent.getIntExtra(TopicPublishService.EXTRA_TYPE, -1);
-                if(isSuccess){
+                if (isSuccess) {
                     TopicComment tc = (TopicComment) intent.getSerializableExtra(TopicPublishService.EXTRA_RESULT);
-                    if(tc == null){
+                    if (tc == null) {
                         return;
                     }
-                    if(type == TopicDraftHelper.REPOST_TOPIC){
+                    if (type == TopicDraftHelper.REPOST_TOPIC) {
                         mTabLayout.getTabAt(1).select();
-                    }else{
+                    } else {
                         mTabLayout.getTabAt(0).select();
                     }
                     mAdapter.addItem(0, tc);
-                }else{
+                } else {
                     final TopicDraft topicDraft = (TopicDraft) intent.getSerializableExtra(TopicPublishService.EXTRA_DRAFT);
-                    if(topicDraft == null){
+                    if (topicDraft == null) {
                         return;
                     }
 
                     int resId;
-                    if(type == TopicDraftHelper.REPOST_TOPIC){
+                    if (type == TopicDraftHelper.REPOST_TOPIC) {
                         resId = R.string.label_topic_publish_repost_fail;
-                    }else if(type == TopicDraftHelper.PUBLISH_COMMENT){
+                    } else if (type == TopicDraftHelper.PUBLISH_COMMENT) {
                         resId = R.string.label_topic_publish_comment_fail;
-                    }else{
+                    } else {
                         resId = R.string.label_topic_reply_comment_fail;
                     }
                     Snackbar sb = ToastUtil.getSnackBar(resId, mFab);
@@ -379,18 +384,18 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         };
     }
 
-    private int getPublishType(){
-        if(mTabLayout != null){
-            if(mTabLayout.getSelectedTabPosition() == 0){
+    private int getPublishType() {
+        if (mTabLayout != null) {
+            if (mTabLayout.getSelectedTabPosition() == 0) {
                 return TopicDraftHelper.PUBLISH_COMMENT;
             }
         }
         return TopicDraftHelper.REPOST_TOPIC;
     }
 
-    private void updateTabLayout(boolean isComment, long totalNumber){
+    private void updateTabLayout(boolean isComment, long totalNumber) {
 
-        if(totalNumber == 0){
+        if (totalNumber == 0) {
             return;
         }
 
@@ -400,7 +405,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         String str = String.format
                 (getString(isComment ? R.string.label_topic_comment_number : R.string.label_topic_repost_number)
                         , DataUtil.getCounter(totalNumber));
-        if(tab != null && tabAssist != null){
+        if (tab != null && tabAssist != null) {
             tab.setText(str);
             tabAssist.setText(str);
         }
@@ -410,7 +415,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if(id == R.id.fab){
+        if (id == R.id.fab) {
             TopicDraft topicDraft = new TopicDraft();
             topicDraft.setType(getPublishType());
             topicDraft.setTargetTopicId(mTopic.getId());
@@ -420,11 +425,11 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         }
     }
 
-    private boolean isSelectedCommentTab(){
+    private boolean isSelectedCommentTab() {
         return mTabLayout.getSelectedTabPosition() == 0;
     }
 
-    private boolean isSelectedRepostTab(){
+    private boolean isSelectedRepostTab() {
         return mTabLayout.getSelectedTabPosition() == 1;
     }
 
@@ -443,42 +448,42 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 
     @Override
     public void stopLoading(boolean isRefresh) {
-        if(isRefresh){
+        if (isRefresh) {
             mPullToRefreshLayout.setRefreshing(false);
-        }else{
+        } else {
             mPullToRefreshLayout.setLoading(false);
         }
     }
 
     @Override
-    public void handleCommentData(boolean isComment, List<TopicComment> data, boolean isRefresh, long totalNumber){
-        if(isRefresh){
+    public void handleCommentData(boolean isComment, List<TopicComment> data, boolean isRefresh, long totalNumber) {
+        if (isRefresh) {
             mPullToRefreshLayout.setRefreshing(false);
-            if(CommonUtil.isEmpty(data)){
+            if (CommonUtil.isEmpty(data)) {
                 return;
             }
             updateTabLayout(isComment, totalNumber);
 
-            if(isComment){
+            if (isComment) {
                 mCommentData = data;
-            }else{
+            } else {
                 mRepostData = data;
             }
 //            if(mHasCommentRequestSuccess && mHasRepostRequestSuccess){
-                List<TopicComment> adapterData = isSelectedCommentTab() ? mCommentData : mRepostData;
-                if (CommonUtil.isEmpty(adapterData)) {
+            List<TopicComment> adapterData = isSelectedCommentTab() ? mCommentData : mRepostData;
+            if (CommonUtil.isEmpty(adapterData)) {
 //                    //内容为空
-                    handleLoadMore(false, isComment);
+                handleLoadMore(false, isComment);
 //                    mPullToRefreshLayout.setLoadEnable(false);
-                }else if (data.size() < WBUtil.getWBTopicRequestCount()) {
-                    //结果小于请求条数
+            } else if (data.size() < WBUtil.getWBTopicRequestCount()) {
+                //结果小于请求条数
 //                    mPullToRefreshLayout.setLoadEnable(false);
-                }else{
-                    handleLoadMore(true, isComment);
-                }
-                mAdapter.refresh(adapterData);
+            } else {
+                handleLoadMore(true, isComment);
+            }
+            mAdapter.refresh(adapterData);
 //            }
-        }else{
+        } else {
             List<TopicComment> targetData = isComment ? mCommentData : mRepostData;
             mPullToRefreshLayout.setLoading(false);
             if (CommonUtil.isEmpty(data)) {
@@ -503,29 +508,29 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                 if (CommonUtil.isEmpty(data)) {
                     handleLoadMore(false, isComment);
                     Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
-                }else{
+                } else {
                     targetData.addAll(data);
                 }
             }
 
-            if(isComment && isSelectedCommentTab()){
+            if (isComment && isSelectedCommentTab()) {
                 mAdapter.notifyDataSetChanged();
-            }else if(!isComment && isSelectedRepostTab()){
+            } else if (!isComment && isSelectedRepostTab()) {
                 mAdapter.notifyDataSetChanged();
             }
         }
 
     }
 
-    public void handleLoadMore(boolean enable, boolean isComment){
-        if(isComment){
+    public void handleLoadMore(boolean enable, boolean isComment) {
+        if (isComment) {
             mLoadCommentEnable = false;
-        }else{
+        } else {
             mLoadReposttEnable = false;
         }
-        if(isSelectedCommentTab() && isComment){
+        if (isSelectedCommentTab() && isComment) {
             mPullToRefreshLayout.setLoadEnable(enable);
-        }else if(isSelectedRepostTab() && !isComment){
+        } else if (isSelectedRepostTab() && !isComment) {
             mPullToRefreshLayout.setLoadEnable(enable);
         }
 

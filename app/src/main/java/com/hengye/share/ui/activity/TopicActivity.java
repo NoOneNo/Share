@@ -2,6 +2,7 @@ package com.hengye.share.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -102,8 +103,21 @@ public class TopicActivity extends BaseActivity
 
         mAppBar = findViewById(R.id.appbar);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        initToolbar();
+        if(getToolbar().getNavigation() != null){
+            int actionBarHeight = ViewUtil.getActionBarHeight();
+            final TypedArray a = getTheme().obtainStyledAttributes(null,
+                    android.support.v7.appcompat.R.styleable.DrawerArrowToggle, android.support.v7.appcompat.R.attr.drawerArrowStyle,
+                    android.support.v7.appcompat.R.style.Base_Widget_AppCompat_DrawerArrowToggle);
+            int size = a.getDimensionPixelSize(android.support.v7.appcompat.R.styleable.DrawerArrowToggle_drawableSize, 0);
+            a.recycle();
+//            int size = getResources().getDimensionPixelSize(R.dimen.icon_size_normal);
+            int padding = (actionBarHeight - size) / 2;
+            getToolbar().getNavigation().setPadding(padding, padding, padding, padding);
+            getToolbar().getNavigation().setScaleType(ImageView.ScaleType.MATRIX);
+        }
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
 
         mTab = (TabLayout) findViewById(R.id.tab);
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
@@ -115,8 +129,9 @@ public class TopicActivity extends BaseActivity
         fab.setOnClickListener(this);
 
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         ActionBarDrawerToggleCustom toggle = new ActionBarDrawerToggleCustom(
-                this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, mDrawer, getToolbar(), R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         toggle.setGravityCompat(GravityCompat.END);
         mDrawer.addDrawerListener(toggle);
         toggle.setDrawerListener(new DrawerLayout.SimpleDrawerListener() {
@@ -170,15 +185,23 @@ public class TopicActivity extends BaseActivity
         mSign.setOnClickListener(this);
     }
 
+    @Override
+    public boolean onToolbarDoubleClick(Toolbar toolbar) {
+        TopicFragment topicFragment = mTopicFragmentAdapter.getItem(mViewPager.getCurrentItem());
+        if(topicFragment != null){
+            topicFragment.scrollToTop();
+            return true;
+        }
+        return false;
+    }
 
     private SearchView mSearchView;
     private String mContent;
 
     private void initSearch() {
         mSearchView = (SearchView) findViewById(R.id.search_view);
-
+//        mSearchView.setVisibility(View.GONE);
         mSearchView.setMode(SearchView.MODE_ANIMATION, this);
-
         mSearchView.setSearchListener(new SearchView.onSearchListener() {
             @Override
             public void onSearch(String content) {

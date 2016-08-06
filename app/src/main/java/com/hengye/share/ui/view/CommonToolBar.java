@@ -1,16 +1,17 @@
 package com.hengye.share.ui.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.hengye.share.R;
-import com.hengye.share.ui.base.BaseActivity;
-import com.hengye.share.util.ViewUtil.OnDoubleClickListener;
+import com.hengye.share.helper.ReflectionHelpers;
+import com.hengye.share.util.ViewUtil;
+import com.hengye.share.ui.view.listener.OnDoubleClickListener;
 
 public class CommonToolBar extends Toolbar {
 
@@ -28,11 +29,28 @@ public class CommonToolBar extends Toolbar {
     public CommonToolBar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
+        if(isInEditMode()){
+            return;
+        }
         init();
     }
 
     public void init() {
-        this.setNavigationIcon(R.drawable.btn_back);
+        this.setNavigationIcon(R.drawable.ic_arrow_back_white_48dp);
+
+        if(getNavigation() != null){
+//            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) getNavigation().getLayoutParams();
+
+            int actionBarHeight = ViewUtil.getActionBarHeight();
+            int size = getResources().getDimensionPixelSize(R.dimen.icon_size_normal);
+//            lp.height = size;
+//            lp.width = size;
+//            lp.setMarginStart(actionBarHeight - size);
+//            getNavigation().requestLayout();
+            int padding = (actionBarHeight - size) / 2;
+            getNavigation().setPadding(0, padding, 0, padding);
+            getNavigation().setScaleType(ImageView.ScaleType.FIT_CENTER);
+        }
 //        this.setNavigationOnClickListener(new OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -66,5 +84,22 @@ public class CommonToolBar extends Toolbar {
 
     public void setOnDoubleClickListener(OnDoubleClickListener onDoubleClickListener) {
         this.mOnDoubleClickListener = onDoubleClickListener;
+    }
+
+    ImageButton mNavigation;
+
+    public ImageButton getNavigation(){
+        if(mNavigation != null){
+            return mNavigation;
+        }
+
+        ReflectionHelpers.callInstanceMethod(Toolbar.class, this, "ensureNavButtonView");
+
+        Object obj = ReflectionHelpers.getField(this, "mNavButtonView");
+        if(obj != null && obj instanceof ImageButton){
+            mNavigation = (ImageButton) obj;
+            return mNavigation;
+        }
+        return null;
     }
 }

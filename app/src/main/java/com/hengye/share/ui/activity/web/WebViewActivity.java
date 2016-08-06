@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.DownloadListener;
 import android.webkit.WebChromeClient;
@@ -14,17 +16,17 @@ import android.widget.ProgressBar;
 
 import com.hengye.share.R;
 import com.hengye.share.ui.base.BaseActivity;
+import com.hengye.share.ui.view.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.dialog.DialogStyleHelper;
 import com.hengye.share.ui.widget.dialog.ListDialog;
 import com.hengye.share.util.ClipboardUtil;
 import com.hengye.share.util.IntentUtil;
 import com.hengye.share.helper.SettingHelper;
 import com.hengye.share.util.ToastUtil;
-import com.hengye.share.util.ViewUtil;
 
 import java.util.ArrayList;
 
-public class WebViewActivity extends BaseActivity implements View.OnClickListener {
+public class WebViewActivity extends BaseActivity{
 
     @Override
     protected void handleBundleExtra(Intent intent) {
@@ -57,7 +59,7 @@ public class WebViewActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     protected boolean setToolBar() {
-        return false;
+        return true;
     }
 
     @Override
@@ -97,9 +99,9 @@ public class WebViewActivity extends BaseActivity implements View.OnClickListene
 
     private ArrayList<ListDialog.KeyValue> getListDialogData() {
         ArrayList<ListDialog.KeyValue> data = new ArrayList<>();
-        data.add(new ListDialog.KeyValue(R.drawable.compose_camerabutton_background_highlighted, "刷新"));
-        data.add(new ListDialog.KeyValue(R.drawable.compose_camerabutton_background_highlighted, "复制链接"));
-        data.add(new ListDialog.KeyValue(R.drawable.compose_camerabutton_background_highlighted, "在浏览器中打开"));
+        data.add(new ListDialog.KeyValue(R.drawable.ic_refresh_white_48dp, "刷新"));
+        data.add(new ListDialog.KeyValue(R.drawable.ic_content_copy_white_48dp, "复制链接"));
+        data.add(new ListDialog.KeyValue(R.drawable.ic_open_in_browser_white_48dp, "在浏览器中打开"));
         return data;
     }
 
@@ -108,7 +110,6 @@ public class WebViewActivity extends BaseActivity implements View.OnClickListene
         setContentView(R.layout.activity_webview);
         mWebView = (WebView) findViewById(R.id.web_view);
         mProgressBar = (ProgressBar) findViewById(R.id.loading);
-        findViewById(R.id.btn_menu).setOnClickListener(this);
 
         initToolbar();
         initListDialog();
@@ -121,7 +122,7 @@ public class WebViewActivity extends BaseActivity implements View.OnClickListene
         mListDialog = new ListDialog(this, getListDialogData());
         DialogStyleHelper.setWebViewListDialogStyle(mListDialog);
 
-        mListDialog.setOnItemListener(new ViewUtil.OnItemClickListener() {
+        mListDialog.setOnItemListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 switch (position) {
@@ -220,14 +221,23 @@ public class WebViewActivity extends BaseActivity implements View.OnClickListene
     }
 
     @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        if (id == R.id.btn_menu) {
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.activity_webview, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_more) {
             if (mListDialog.isShowing()) {
                 mListDialog.dismiss();
             } else {
                 mListDialog.show();
             }
         }
+        return super.onOptionsItemSelected(item);
     }
 }

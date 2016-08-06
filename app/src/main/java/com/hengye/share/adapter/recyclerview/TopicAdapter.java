@@ -32,6 +32,8 @@ import com.hengye.share.ui.activity.TopicDetailActivity;
 import com.hengye.share.ui.activity.TopicPublishActivity;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.ui.support.textspan.TopicUrlOnTouchListener;
+import com.hengye.share.ui.view.listener.OnItemClickListener;
+import com.hengye.share.ui.view.listener.OnItemLongClickListener;
 import com.hengye.share.ui.widget.image.GridGalleryView;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
 import com.hengye.share.ui.widget.util.SelectorLoader;
@@ -46,13 +48,12 @@ import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.UserUtil;
-import com.hengye.share.util.ViewUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicDefaultViewHolder>
-        implements ViewUtil.OnItemClickListener, ViewUtil.OnItemLongClickListener, DialogInterface.OnClickListener {
+        implements OnItemClickListener, OnItemLongClickListener, DialogInterface.OnClickListener {
 
     public static int mGalleryMaxWidth;
     private Dialog mLongClickDialog;
@@ -437,7 +438,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicDefault
                         iv.setImageUrl(urls.get(position), RequestManager.getImageLoader());
                     }
                 });
-                mGallery.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
+                mGallery.setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
                         int id = view.getId();

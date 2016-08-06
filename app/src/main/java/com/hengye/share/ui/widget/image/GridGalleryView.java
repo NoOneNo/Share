@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 
-import com.hengye.share.util.ViewUtil;
+import com.hengye.share.ui.view.listener.OnItemClickListener;
 
 public class GridGalleryView extends GridLayout implements View.OnClickListener {
 
@@ -81,7 +81,7 @@ public class GridGalleryView extends GridLayout implements View.OnClickListener 
     boolean mReset = true;
     int mGridCount;
     int mMargin;
-    ViewUtil.OnItemClickListener mOnItemClickListener;
+    OnItemClickListener mOnItemClickListener;
     HandleData mHandleData;
 
     public void reset() {
@@ -114,11 +114,11 @@ public class GridGalleryView extends GridLayout implements View.OnClickListener 
         this.mMaxWidth = maxWidth;
     }
 
-    public ViewUtil.OnItemClickListener getOnItemClickListener() {
+    public OnItemClickListener getOnItemClickListener() {
         return mOnItemClickListener;
     }
 
-    public GridGalleryView setOnItemClickListener(ViewUtil.OnItemClickListener onItemClickListener) {
+    public GridGalleryView setOnItemClickListener(OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
         return this;
     }

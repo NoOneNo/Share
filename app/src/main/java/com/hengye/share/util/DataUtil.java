@@ -110,6 +110,10 @@ public class DataUtil {
     }
 
     public static SpannableString convertNormalStringToSpannableString(String txt) {
+        return convertNormalStringToSpannableString(txt, true);
+    }
+
+    public static SpannableString convertNormalStringToSpannableString(String txt, boolean isReplaceUrl) {
         //hack to fix android imagespan bug,see http://stackoverflow.com/questions/3253148/imagespan-is-cut-off-incorrectly-aligned
         //if string only contains emotion tags,add a empty char to the end
         String hackTxt;
@@ -125,46 +129,48 @@ public class DataUtil {
         Linkify.addLinks(value, WEB_URL, WEB_SCHEME);
 
         URLSpan[] urlSpans = value.getSpans(0, value.length(), URLSpan.class);
-        if (urlSpans != null && urlSpans.length != 0) {
-            List<SpanPosition> sps = new ArrayList<>();
-            List<URLSpan> temp = Arrays.asList(urlSpans);
-            List<URLSpan> us = new ArrayList<>(temp);
-            int size = us.size();
-            for (int i = 0; i < size; i++) {
-                URLSpan urlSpan = us.get(i);
-                int start = value.getSpanStart(urlSpan);
-                int end = value.getSpanEnd(urlSpan);
-                if (start >= 0 && end >= 0 && value.length() >= end) {
-                    value.removeSpan(urlSpan);
-                    us.remove(i);
-                    i--;
-                    size--;
+        if (isReplaceUrl) {
+            if (urlSpans != null && urlSpans.length != 0) {
+                List<SpanPosition> sps = new ArrayList<>();
+                List<URLSpan> temp = Arrays.asList(urlSpans);
+                List<URLSpan> us = new ArrayList<>(temp);
+                int size = us.size();
+                for (int i = 0; i < size; i++) {
+                    URLSpan urlSpan = us.get(i);
+                    int start = value.getSpanStart(urlSpan);
+                    int end = value.getSpanEnd(urlSpan);
+                    if (start >= 0 && end >= 0 && value.length() >= end) {
+                        value.removeSpan(urlSpan);
+                        us.remove(i);
+                        i--;
+                        size--;
 
-                    SpanPosition sp = new SpanPosition();
-                    sp.start = start;
-                    sp.end = end;
-                    sp.content = urlSpan.getURL();
-                    sps.add(sp);
-                }
-            }
-
-            if (!CommonUtil.isEmpty(sps)) {
-                int totalIndentLength = 0;
-                for (SpanPosition sp : sps) {
-                    sp.start -= totalIndentLength;
-                    sp.end -= totalIndentLength;
-
-                    CharSequence cs1 = value.subSequence(0, sp.start);
-
-                    CharSequence cs2 = value.subSequence(sp.end, value.length());
-
-                    value = SpannableString.valueOf(cs1.toString() + WEB_URL_REPLACE + cs2.toString());
-                    totalIndentLength = totalIndentLength + (sp.end - sp.start) - WEB_URL_REPLACE.length();
-                    sp.end = sp.start + WEB_URL_REPLACE.length();
+                        SpanPosition sp = new SpanPosition();
+                        sp.start = start;
+                        sp.end = end;
+                        sp.content = urlSpan.getURL();
+                        sps.add(sp);
+                    }
                 }
 
-                for (SpanPosition sp : sps) {
-                    value.setSpan(new TopicContentUrlSpan(sp.content), sp.start, sp.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                if (!CommonUtil.isEmpty(sps)) {
+                    int totalIndentLength = 0;
+                    for (SpanPosition sp : sps) {
+                        sp.start -= totalIndentLength;
+                        sp.end -= totalIndentLength;
+
+                        CharSequence cs1 = value.subSequence(0, sp.start);
+
+                        CharSequence cs2 = value.subSequence(sp.end, value.length());
+
+                        value = SpannableString.valueOf(cs1.toString() + WEB_URL_REPLACE + cs2.toString());
+                        totalIndentLength = totalIndentLength + (sp.end - sp.start) - WEB_URL_REPLACE.length();
+                        sp.end = sp.start + WEB_URL_REPLACE.length();
+                    }
+
+                    for (SpanPosition sp : sps) {
+                        value.setSpan(new TopicContentUrlSpan(sp.content), sp.start, sp.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
                 }
             }
         }
@@ -190,27 +196,6 @@ public class DataUtil {
             }
         }
 
-//        for (URLSpan urlSpan : urlSpans) {
-//            int start = value.getSpanStart(urlSpan);
-//            int end = value.getSpanEnd(urlSpan);
-////            value.removeSpan(urlSpan);
-//
-//            if (isHttpUrl(urlSpan.getURL())) {
-////                if (start >= 0 && end >= 0 && value.length() >= end) {
-//////                    CharSequence cs1 = value.subSequence(0, start);
-//////                    CharSequence cs2 = value.subSequence(end, value.length());
-//////                    value = SpannableString.valueOf(cs1.toString() + "网页链接" + cs2.toString());
-////
-//////                    value.setSpan(new TopicHttpUrlSpan(urlSpan.getURL(), context, R.drawable.compose_mentionbutton_background_highlighted),
-//////                            start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//////                    value.setSpan(new TopicHttpUrlSpan(urlSpan.getURL()), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-////                    value.setSpan(new TopicContentUrlSpan(urlSpan.getURL()), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-////                }
-//            }else {
-//                value.removeSpan(urlSpan);
-//                value.setSpan(new TopicContentUrlSpan(urlSpan.getURL()), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//            }
-//        }
         return value;
     }
 
@@ -273,6 +258,27 @@ public class DataUtil {
     }
 }
 
+//        for (URLSpan urlSpan : urlSpans) {
+//            int start = value.getSpanStart(urlSpan);
+//            int end = value.getSpanEnd(urlSpan);
+////            value.removeSpan(urlSpan);
+//
+//            if (isHttpUrl(urlSpan.getURL())) {
+////                if (start >= 0 && end >= 0 && value.length() >= end) {
+//////                    CharSequence cs1 = value.subSequence(0, start);
+//////                    CharSequence cs2 = value.subSequence(end, value.length());
+//////                    value = SpannableString.valueOf(cs1.toString() + "网页链接" + cs2.toString());
+////
+//////                    value.setSpan(new TopicHttpUrlSpan(urlSpan.getURL(), context, R.drawable.compose_mentionbutton_background_highlighted),
+//////                            start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//////                    value.setSpan(new TopicHttpUrlSpan(urlSpan.getURL()), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+////                    value.setSpan(new TopicContentUrlSpan(urlSpan.getURL()), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+////                }
+//            }else {
+//                value.removeSpan(urlSpan);
+//                value.setSpan(new TopicContentUrlSpan(urlSpan.getURL()), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//            }
+//        }
 
 
 

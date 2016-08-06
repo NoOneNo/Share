@@ -11,7 +11,6 @@ import android.view.View;
 
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.TopicAlbumAdapter;
-import com.hengye.share.handler.data.TopicAdapterIdPager;
 import com.hengye.share.handler.data.TopicIdHandler;
 import com.hengye.share.handler.data.TopicIdPager;
 import com.hengye.share.handler.data.base.DataHandler;
@@ -22,9 +21,8 @@ import com.hengye.share.ui.fragment.PersonalHomepageFragment.LoadDataCallBack;
 import com.hengye.share.ui.fragment.encapsulation.paging.RecyclerRefreshFragment;
 import com.hengye.share.ui.mvpview.TopicAlbumMvpView;
 import com.hengye.share.ui.presenter.TopicAlbumPresenter;
+import com.hengye.share.ui.view.listener.OnItemClickListener;
 import com.hengye.share.util.CommonUtil;
-import com.hengye.share.util.ViewUtil;
-import com.hengye.swiperefresh.PullToRefreshLayout;
 import com.hengye.swiperefresh.listener.SwipeListener;
 
 import java.util.ArrayList;
@@ -104,7 +102,7 @@ public class TopicAlbumFragment extends RecyclerRefreshFragment<String> implemen
 
         getPullToRefresh().setRefreshEnable(false);
 
-        mAdapter.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
+        mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 handleStaticData(false);

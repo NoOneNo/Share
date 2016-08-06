@@ -326,7 +326,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     private InputFilter mAtUserInputFilter = new InputFilter() {
         @Override
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            return DataUtil.convertNormalStringToSpannableString(String.valueOf(source));
+            return DataUtil.convertNormalStringToSpannableString(String.valueOf(source), false);
         }
     };
 

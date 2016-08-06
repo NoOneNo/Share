@@ -32,7 +32,7 @@ public class DataType {
                 } else {
                     status = REFRESH_NO_MORE_DATA;
                 }
-            } else if (data.size() <= WBUtil.getWBTopicRequestCount()) {
+            } else if (data.size() < WBUtil.getWBTopicRequestCount()) {
                 //结果小于请求条数
                 status = REFRESH_DATA_SIZE_LESS;
             } else {

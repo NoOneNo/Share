@@ -6,10 +6,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.hengye.share.model.greenrobot.GroupList;
+import com.hengye.share.ui.base.BaseFragment;
 import com.hengye.share.ui.fragment.TopicFragment;
 import com.hengye.share.ui.presenter.TopicPresenter;
 
@@ -24,11 +26,13 @@ public class TopicFragmentPager extends FragmentPagerAdapter {
         mContext = context;
         mTopicGroupGroups = topicGroupGroups;
         mFragmentTags = new HashMap<>();
+        mFragments = new SparseArray<>();
     }
 
     private Context mContext;
     private List<TopicPresenter.TopicGroup> mTopicGroupGroups;
     private Map<Integer, String> mFragmentTags;
+    SparseArray<TopicFragment> mFragments;
 
     @Override
     public CharSequence getPageTitle(int position) {
@@ -47,8 +51,13 @@ public class TopicFragmentPager extends FragmentPagerAdapter {
     }
 
     @Override
-    public Fragment getItem(int position) {
-        return TopicFragment.newInstance(mTopicGroupGroups.get(position));
+    public TopicFragment getItem(int position) {
+        TopicFragment fragment = mFragments.get(position);
+        if (fragment == null) {
+            fragment = TopicFragment.newInstance(mTopicGroupGroups.get(position));
+            mFragments.put(position, fragment);
+        }
+        return fragment;
     }
 
     public void refresh(List<TopicPresenter.TopicGroup> data) {
@@ -57,6 +66,7 @@ public class TopicFragmentPager extends FragmentPagerAdapter {
         } else {
             this.mTopicGroupGroups = data;
         }
+        mFragments.clear();
         notifyDataSetChanged();
     }
 

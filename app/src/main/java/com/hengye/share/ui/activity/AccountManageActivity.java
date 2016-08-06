@@ -17,10 +17,11 @@ import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.ui.mvpview.AccountManageMvpView;
 import com.hengye.share.ui.presenter.AccountManagePresenter;
+import com.hengye.share.ui.view.listener.OnItemClickListener;
+import com.hengye.share.ui.view.listener.OnItemLongClickListener;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
 import com.hengye.share.util.UserUtil;
-import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.thirdparty.ThirdPartyUtils;
 
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class AccountManageActivity extends BaseActivity implements AccountManage
         mRecyclerView.setAdapter(mAdapter = new AccountManageAdapter(this, new ArrayList<User>(), new AccountManageCallBack()));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mAdapter.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
+        mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 if (position == mSelectAccountNowIndex) {
@@ -75,7 +76,7 @@ public class AccountManageActivity extends BaseActivity implements AccountManage
             }
         });
 
-        mAdapter.setOnItemLongClickListener(new ViewUtil.OnItemLongClickListener() {
+        mAdapter.setOnItemLongClickListener(new OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(View view, int position) {
                 mSelectAccountLongClickIndex = position;

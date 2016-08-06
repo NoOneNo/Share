@@ -7,7 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.hengye.share.util.ViewUtil;
+import com.hengye.share.ui.view.listener.OnItemClickListener;
+import com.hengye.share.ui.view.listener.OnItemLongClickListener;
 
 import java.util.List;
 
@@ -15,8 +16,8 @@ public abstract class CommonAdapter<T, V extends ViewHolder<T>> extends BaseAdap
 
     protected Context mContext;
     protected List<T> mData;
-    private ViewUtil.OnItemClickListener mOnChildViewItemClickListener;
-    private ViewUtil.OnItemLongClickListener mOnChildViewItemLongClickListener;
+    private OnItemClickListener mOnChildViewItemClickListener;
+    private OnItemLongClickListener mOnChildViewItemLongClickListener;
 
     public CommonAdapter(Context context, List<T> data) {
         this.mContext = context;
@@ -144,19 +145,19 @@ public abstract class CommonAdapter<T, V extends ViewHolder<T>> extends BaseAdap
         return mContext;
     }
 
-    public ViewUtil.OnItemClickListener getOnChildViewItemClickListener() {
+    public OnItemClickListener getOnChildViewItemClickListener() {
         return mOnChildViewItemClickListener;
     }
 
-    public void setOnChildViewItemClickListener(ViewUtil.OnItemClickListener onChildViewItemClickListener) {
+    public void setOnChildViewItemClickListener(OnItemClickListener onChildViewItemClickListener) {
         this.mOnChildViewItemClickListener = onChildViewItemClickListener;
     }
 
-    public ViewUtil.OnItemLongClickListener getOnChildViewItemLongClickListener() {
+    public OnItemLongClickListener getOnChildViewItemLongClickListener() {
         return mOnChildViewItemLongClickListener;
     }
 
-    public void setmOnChildViewItemLongClickListener(ViewUtil.OnItemLongClickListener onChildViewItemLongClickListener) {
+    public void setmOnChildViewItemLongClickListener(OnItemLongClickListener onChildViewItemLongClickListener) {
         this.mOnChildViewItemLongClickListener = onChildViewItemLongClickListener;
     }
 }

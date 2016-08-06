@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:visibility="visible">
 
-            <android.support.v7.widget.Toolbar
+            <com.hengye.share.ui.view.CommonToolBar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
@@ -52,5 +52,6 @@
     <com.hengye.share.ui.view.SearchView
         android:id="@+id/search_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 </FrameLayout>

@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hengye.share.util.ViewUtil;
+import com.hengye.share.ui.view.listener.OnItemClickListener;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public class SimpleAdapter<T, VH extends SimpleAdapter.ViewHolder> extends Recyc
 
     private Context mContext;
     private List<T> mData;
-    private ViewUtil.OnItemClickListener mOnItemClickListener, mOnChildViewItemClickListener;
+    private OnItemClickListener mOnItemClickListener, mOnChildViewItemClickListener;
 
     public SimpleAdapter(Context context, List<T> data) {
         mContext = context;
@@ -44,7 +44,7 @@ public class SimpleAdapter<T, VH extends SimpleAdapter.ViewHolder> extends Recyc
             super(itemView);
         }
 
-        public ViewHolder(View itemView, ViewUtil.OnItemClickListener onItemClickListener) {
+        public ViewHolder(View itemView, OnItemClickListener onItemClickListener) {
             super(itemView);
             mOnItemClickListener = onItemClickListener;
             itemView.setOnClickListener(mOnClickForItemListener);
@@ -54,7 +54,7 @@ public class SimpleAdapter<T, VH extends SimpleAdapter.ViewHolder> extends Recyc
 
         }
 
-        ViewUtil.OnItemClickListener mOnItemClickListener, mOnChildViewItemClickListener;
+        OnItemClickListener mOnItemClickListener, mOnChildViewItemClickListener;
 
         public void registerChildViewItemClick(View v){
             v.setOnClickListener(mOnClickForChildViewListener);
@@ -84,11 +84,11 @@ public class SimpleAdapter<T, VH extends SimpleAdapter.ViewHolder> extends Recyc
             }
         };
 
-        public ViewUtil.OnItemClickListener getOnItemClickListener() {
+        public OnItemClickListener getOnItemClickListener() {
             return mOnItemClickListener;
         }
 
-        public void setOnItemClickListener(ViewUtil.OnItemClickListener onItemClickListener) {
+        public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
             this.mOnItemClickListener = onItemClickListener;
         }
 
@@ -96,11 +96,11 @@ public class SimpleAdapter<T, VH extends SimpleAdapter.ViewHolder> extends Recyc
             return mOnClickForItemListener;
         }
 
-        public ViewUtil.OnItemClickListener getOnChildViewItemClickListener() {
+        public OnItemClickListener getOnChildViewItemClickListener() {
             return mOnChildViewItemClickListener;
         }
 
-        public void setOnChildViewItemClickListener(ViewUtil.OnItemClickListener onChildViewItemClickListener) {
+        public void setOnChildViewItemClickListener(OnItemClickListener onChildViewItemClickListener) {
             this.mOnChildViewItemClickListener = onChildViewItemClickListener;
         }
     }
@@ -143,19 +143,19 @@ public class SimpleAdapter<T, VH extends SimpleAdapter.ViewHolder> extends Recyc
         notifyDataSetChanged();
     }
 
-    public ViewUtil.OnItemClickListener getOnItemClickListener() {
+    public OnItemClickListener getOnItemClickListener() {
         return mOnItemClickListener;
     }
 
-    public void setOnItemClickListener(ViewUtil.OnItemClickListener onItemClickListener) {
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
     }
 
-    public ViewUtil.OnItemClickListener getOnChildViewItemClickListener() {
+    public OnItemClickListener getOnChildViewItemClickListener() {
         return mOnChildViewItemClickListener;
     }
 
-    public void setOnChildViewItemClickListener(ViewUtil.OnItemClickListener onChildViewItemClickListener) {
+    public void setOnChildViewItemClickListener(OnItemClickListener onChildViewItemClickListener) {
         this.mOnChildViewItemClickListener = onChildViewItemClickListener;
     }
 

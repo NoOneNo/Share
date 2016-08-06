@@ -175,6 +175,10 @@ public class ReflectionHelpers {
         }
     }
 
+    public static <R> R callInstanceMethod(Class<?> cl, final Object instance, final String methodName) {
+        return callInstanceMethod(cl, instance, methodName, (ClassParameter<?>[]) null);
+    }
+
     /**
      * Reflectively call an instance method on an object on a specific class.
      *
@@ -187,10 +191,17 @@ public class ReflectionHelpers {
      */
     public static <R> R callInstanceMethod(Class<?> cl, final Object instance, final String methodName, ClassParameter<?>... classParameters) {
         try {
-            final Class<?>[] classes = ClassParameter.getClasses(classParameters);
-            final Object[] values = ClassParameter.getValues(classParameters);
 
-            Method declaredMethod = cl.getDeclaredMethod(methodName, classes);
+            Method declaredMethod;
+            Object[] values = null;
+            Class<?>[] classes = null;
+            if(classParameters != null){
+                classes = ClassParameter.getClasses(classParameters);
+                values = ClassParameter.getValues(classParameters);
+                declaredMethod = cl.getDeclaredMethod(methodName, classes);
+            }else{
+                declaredMethod = cl.getDeclaredMethod(methodName, classes);
+            }
             declaredMethod.setAccessible(true);
             return (R) declaredMethod.invoke(instance, values);
         } catch (InvocationTargetException e) {

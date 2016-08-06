@@ -18,6 +18,7 @@ import com.hengye.share.adapter.recyclerview.SearchUserAdapter;
 import com.hengye.share.ui.mvpview.SearchMvpView;
 import com.hengye.share.ui.presenter.SearchPresenter;
 import com.hengye.share.ui.view.SearchView;
+import com.hengye.share.ui.view.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.ViewUtil;
@@ -107,7 +108,7 @@ public class SearchActivity extends BaseActivity implements SearchMvpView{
         mTopicRV.setLayoutManager(new LinearLayoutManager(this));
         mTopicRV.setItemAnimator(new DefaultItemAnimator());
 
-        mUserAdapter.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
+        mUserAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 View avatar = view.findViewById(R.id.iv_avatar);

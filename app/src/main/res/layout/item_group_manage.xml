@@ -10,13 +10,14 @@
     android:paddingEnd="@dimen/content_margin_10dp">
 
     <ImageView
-        style="?android:actionButtonStyle"
         android:id="@+id/drag_handle"
-        android:layout_width="@dimen/icon_size_normal"
-        android:layout_height="@dimen/icon_size_normal"
+        android:layout_width="@dimen/icon_size_small"
+        android:layout_height="@dimen/icon_size_small"
         android:layout_centerVertical="true"
         android:contentDescription="@null"
-        android:src="@drawable/compose_mentionbutton_background_highlighted"/>
+        android:src="@drawable/ic_format_list_bulleted_white_48dp"
+        android:tint="?attr/colorPrimaryDark"
+        android:scaleType="fitXY"/>
 
     <TextView
         android:id="@+id/tv_group_name"

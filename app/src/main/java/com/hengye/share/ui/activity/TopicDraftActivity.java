@@ -23,12 +23,13 @@ import com.hengye.share.model.greenrobot.TopicDraft;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.service.TopicPublishService;
 import com.hengye.share.ui.base.BaseActivity;
+import com.hengye.share.ui.view.listener.OnItemClickListener;
+import com.hengye.share.ui.view.listener.OnItemLongClickListener;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.IntentUtil;
 import com.hengye.share.util.UserUtil;
-import com.hengye.share.util.ViewUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,7 +105,7 @@ public class TopicDraftActivity extends BaseActivity implements DialogInterface.
 //                        TopicPublishActivity.getStartIntent(TopicDraftActivity.this, mAdapter.getItem(position)), 1);
 //            }
 //        });
-        mAdapter.setOnChildViewItemClickListener(new ViewUtil.OnItemClickListener() {
+        mAdapter.setOnChildViewItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 int id = view.getId();
@@ -135,7 +136,7 @@ public class TopicDraftActivity extends BaseActivity implements DialogInterface.
             }
         });
 
-        mAdapter.setOnChildViewItemLongClickListener(new ViewUtil.OnItemLongClickListener() {
+        mAdapter.setOnChildViewItemLongClickListener(new OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(View view, int position) {
                 mItemLongClickPosition = position;

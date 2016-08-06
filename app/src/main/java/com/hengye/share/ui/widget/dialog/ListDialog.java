@@ -2,28 +2,22 @@ package com.hengye.share.ui.widget.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.CommonAdapter;
+import com.hengye.share.ui.view.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.util.SelectorLoader;
-import com.hengye.share.util.ToastUtil;
-import com.hengye.share.util.ViewUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ListDialog extends Dialog {
@@ -42,7 +36,7 @@ public class ListDialog extends Dialog {
         mAdapter = listAdapter;
 
         if(mWidth == 0 && maxHeight == 0){
-            initDefaultWidth();
+            initDefaultSize();
         }else{
             mWidth = width;
             mMaxHeight = maxHeight;
@@ -59,7 +53,7 @@ public class ListDialog extends Dialog {
 
     private int mWidth, mMaxHeight;
 
-    private void initDefaultWidth() {
+    private void initDefaultSize() {
         mWidth = getContext().getResources().getDimensionPixelSize(R.dimen.dialog_list_default_width);
         mMaxHeight = getContext().getResources().getDimensionPixelSize(R.dimen.dialog_list_default_max_height);
     }
@@ -76,9 +70,10 @@ public class ListDialog extends Dialog {
         mRecyclerView.setAdapter(mAdapter);
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
 
                 if (mAdapter.getLastItemPosition() == mLayoutManager.findLastCompletelyVisibleItemPosition()) {
                     mShade.setVisibility(View.GONE);
@@ -119,7 +114,7 @@ public class ListDialog extends Dialog {
 //        mRecyclerView.setBackgroundColor(getContext().getResources().getColor(colorResId));
     }
 
-    public void setOnItemListener(ViewUtil.OnItemClickListener onItemListener) {
+    public void setOnItemListener(OnItemClickListener onItemListener) {
         if(mAdapter != null){
             mAdapter.setOnItemClickListener(onItemListener);
         }
@@ -182,6 +177,8 @@ public class ListDialog extends Dialog {
             if(getTextColor() != 0){
                 holder.mText.setTextColor(getTextColor());
             }
+
+            holder.mDivider.setVisibility(position == getLastItemPosition() ? View.INVISIBLE : View.VISIBLE);
         }
 
         public static class MainViewHolder extends CommonAdapter.ItemViewHolder<KeyValue> {
@@ -202,6 +199,7 @@ public class ListDialog extends Dialog {
             public void bindData(Context context, KeyValue keyValue, int position) {
                 mIcon.setImageResource(keyValue.getIconResId());
                 mText.setText(keyValue.getText());
+
             }
         }
     }
