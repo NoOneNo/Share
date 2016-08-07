@@ -42,7 +42,7 @@ public class CommonToolBar extends Toolbar {
 //            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) getNavigation().getLayoutParams();
 
             int actionBarHeight = ViewUtil.getActionBarHeight();
-            int size = getResources().getDimensionPixelSize(R.dimen.icon_size_normal);
+            int size = getResources().getDimensionPixelSize(R.dimen.icon_size_small);
 //            lp.height = size;
 //            lp.width = size;
 //            lp.setMarginStart(actionBarHeight - size);

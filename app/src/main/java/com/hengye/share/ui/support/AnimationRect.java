@@ -363,6 +363,9 @@ public class AnimationRect implements Parcelable {
             deltaTop += deltaInvisibleTop;
         }
 
+//        deltaTop += thumbnailAndOriDeltaBottomSize;
+
+        L.debug("getClipTop : {}", (deltaTop) / (float) oriBitmapScaledHeight);
         return (deltaTop) / (float) oriBitmapScaledHeight;
     }
 
@@ -441,6 +444,8 @@ public class AnimationRect implements Parcelable {
         }
 
         deltaBottom += thumbnailAndOriDeltaBottomSize;
+
+        L.debug("getClipBottom : {}", (deltaBottom) / (float) oriBitmapScaledHeight);
         return (deltaBottom) / (float) oriBitmapScaledHeight;
     }
 

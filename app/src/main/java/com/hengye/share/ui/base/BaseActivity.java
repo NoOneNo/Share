@@ -326,9 +326,9 @@ public class BaseActivity extends AppCompatActivity {
         mToolbar = (CommonToolBar) findViewById(R.id.toolbar);
         if (mToolbar != null) {
             setSupportActionBar(mToolbar);
-            if(mToolbar.getTitle() == null) {
+//            if(mToolbar.getTitle() == null) {
                 mToolbar.setTitle(getToolbarTitle());
-            }
+//            }
             mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -356,7 +356,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void updateToolbarTitle(@StringRes int resId) {
-        mToolbar.setTitle(getString(resId));
+        updateToolbarTitle(getString(resId));
     }
 
     public boolean onToolbarDoubleClick(Toolbar toolbar){

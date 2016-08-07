@@ -367,9 +367,9 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         if (verticalOffset >= -50) {
-            mSwipeRefresh.setEnabled(true);
+            mSwipeRefresh.setRefreshEnable(true);
         } else {
-            mSwipeRefresh.setEnabled(false);
+            mSwipeRefresh.setRefreshEnable(false);
         }
 //        L.debug("vertical offset : {}, height : {}, minimumHeight : {}", verticalOffset, mCollapsingToolbarLayout.getHeight(), ViewCompat.getMinimumHeight(mCollapsingToolbarLayout));
     }
@@ -529,6 +529,8 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                     }
                 });
     }
+}
+
 
 //    private Matrix setCoverMatrix() {
 //
@@ -567,8 +569,6 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 //        drawMatrix.postTranslate(Math.round(dx), Math.round(dy));
 //        return drawMatrix;
 //    }
-}
-
 
 
 
