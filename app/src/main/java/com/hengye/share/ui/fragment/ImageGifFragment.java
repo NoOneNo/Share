@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import com.android.volley.cache.BitmapCache;
 import com.android.volley.toolbox.BitmapUtil;
 import com.hengye.share.R;
+import com.hengye.share.helper.SettingHelper;
 import com.hengye.share.ui.base.BaseFragment;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.ui.widget.image.ClipImageView;
@@ -22,6 +23,7 @@ import java.io.IOException;
 
 import pl.droidsonroids.gif.GifDrawable;
 import uk.co.senab.photoview.PhotoView;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ImageGifFragment extends BaseFragment {
 
@@ -85,6 +87,15 @@ public class ImageGifFragment extends BaseFragment {
             mPhotoView.setImageBitmap(bitmap);
 
             runEnterAnimation();
+        }
+
+        if(SettingHelper.isClickToCloseGallery()) {
+            mGifView.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+                @Override
+                public void onViewTap(View view, float x, float y) {
+                    getActivity().onBackPressed();
+                }
+            });
         }
         return view;
     }

@@ -3,13 +3,14 @@
 	android:id="@+id/select_photo_gallery_layout"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
+
 	<android.support.v4.view.ViewPager
 	    android:id="@+id/view_pager"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    android:layout_gravity="center"
 	    android:flipInterval="30"
-	    android:persistentDrawingCache="animation" 
+	    android:persistentDrawingCache="animation"
 	    android:overScrollMode="never"/>
 	<RelativeLayout 
 	    android:id="@+id/select_photo_gallery_pages_layout"
@@ -35,4 +36,5 @@
 		android:layout_gravity="left|bottom"
 		android:layout_marginStart="@dimen/activity_horizontal_margin"
 		android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
 </FrameLayout>

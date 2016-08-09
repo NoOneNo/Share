@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.ViewConfiguration;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
@@ -61,10 +62,12 @@ public class CommonToolBar extends Toolbar {
 //        });
     }
 
+    private static final int DOUBLE_TAP_TIMEOUT = ViewConfiguration.getDoubleTapTimeout();
+
     public boolean onTouchEvent(MotionEvent ev) {
         boolean handler = super.onTouchEvent(ev);
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-            if (this.mLastClickTime != 0L && System.currentTimeMillis() - this.mLastClickTime <= 500L) {
+            if (this.mLastClickTime != 0L && System.currentTimeMillis() - this.mLastClickTime <= DOUBLE_TAP_TIMEOUT) {
                 performDoubleClick();
             }
             this.mLastClickTime = System.currentTimeMillis();

@@ -87,7 +87,7 @@ public class WebViewActivity extends BaseActivity{
         if(IntentUtil.resolveActivity(intent)){
             startActivity(intent);
         }else{
-            ToastUtil.showToast(R.string.dialog_text_cancel);
+            ToastUtil.showToast(R.string.label_resolve_url_activity_fail);
         }
     }
 

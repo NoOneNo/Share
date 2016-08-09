@@ -58,6 +58,12 @@
         <item name="theme_assist_color">@color/white</item>
     </style>
 
+    <style name="ShareAppTheme.DayNight">
+        <item name="theme_color">@color/theme_night_primary</item>
+        <item name="theme_dark_color">@color/theme_night_primary_dark</item>
+        <item name="theme_accent_color">@color/theme_night_accent</item>
+    </style>
+
     <style name="ShareAppTheme.Blue">
         <item name="theme_color">@color/theme_blue_primary</item>
         <item name="theme_dark_color">@color/theme_blue_primary_dark</item>

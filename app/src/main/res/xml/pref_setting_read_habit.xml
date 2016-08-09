@@ -8,13 +8,13 @@
             android:key="font_zoom"
             android:title="@string/title_setting_font_zoom" />
 
-        <ListPreference
-            android:key="menu_show_style"
-            android:title="@string/title_setting_menu_show_style"
-            android:defaultValue="1"
-            android:entries="@array/menu_show_style_entries"
-            android:entryValues="@array/menu_show_style_values"
-            android:summary="%s"/>
+        <!--<ListPreference-->
+            <!--android:key="menu_show_style"-->
+            <!--android:title="@string/title_setting_menu_show_style"-->
+            <!--android:defaultValue="1"-->
+            <!--android:entries="@array/menu_show_style_entries"-->
+            <!--android:entryValues="@array/menu_show_style_values"-->
+            <!--android:summary="%s"/>-->
 
         <MultiSelectListPreference
             android:key="show_avatar"

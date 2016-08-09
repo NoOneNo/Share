@@ -9,6 +9,7 @@ import com.hengye.share.model.sina.WBTopicComment;
 import com.hengye.share.model.sina.WBTopicComments;
 import com.hengye.share.model.sina.WBTopics;
 import com.hengye.share.util.DataUtil;
+import com.hengye.share.util.DateUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.GsonUtil;
@@ -32,6 +33,7 @@ public class Topic extends ParentInherit implements TopicId, Serializable{
     private UserInfo userInfo;//用户信息
 
     private transient SpannableString urlSpannableString;
+    private transient String formatDate;
 
     public static ArrayList<Topic> getTopics(WBTopics wbTopics){
         if(wbTopics == null || CommonUtil.isEmpty(wbTopics.getStatuses())){
@@ -179,31 +181,6 @@ public class Topic extends ParentInherit implements TopicId, Serializable{
                 '}';
     }
 
-    public SpannableString getUrlSpannableString() {
-        return getUrlSpannableString(false);
-    }
-
-    public SpannableString getUrlSpannableString(boolean isRetweeted) {
-        if (!TextUtils.isEmpty(urlSpannableString)) {
-            return urlSpannableString;
-        } else {
-            DataUtil.addTopicContentHighLightLinks(this, isRetweeted);
-            return urlSpannableString;
-        }
-    }
-
-    public void setUrlSpannableString(SpannableString urlSpannableString) {
-        this.urlSpannableString = urlSpannableString;
-    }
-
-//    public Parent getParent() {
-//        return parent;
-//    }
-
-//    public void setParent(Parent parent) {
-//        this.parent = parent;
-//    }
-
     public UserInfo getUserInfo() {
         return userInfo;
     }
@@ -266,5 +243,29 @@ public class Topic extends ParentInherit implements TopicId, Serializable{
 
     public void setImageLargeUrls(List<String> imageLargeUrls) {
         this.imageLargeUrls = imageLargeUrls;
+    }
+
+    public SpannableString getUrlSpannableString() {
+        return getUrlSpannableString(false);
+    }
+
+    public SpannableString getUrlSpannableString(boolean isRetweeted) {
+        if (!TextUtils.isEmpty(urlSpannableString)) {
+            return urlSpannableString;
+        } else {
+            DataUtil.addTopicContentHighLightLinks(this, isRetweeted);
+            return urlSpannableString;
+        }
+    }
+
+    public void setUrlSpannableString(SpannableString urlSpannableString) {
+        this.urlSpannableString = urlSpannableString;
+    }
+
+    public String getFormatDate() {
+        if(formatDate == null){
+            formatDate = DateUtil.getLatestDateFormat(getDate());
+        }
+        return formatDate;
     }
 }

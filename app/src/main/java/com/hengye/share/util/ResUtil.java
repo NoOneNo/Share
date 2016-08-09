@@ -1,7 +1,10 @@
 package com.hengye.share.util;
 
+import android.content.Context;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.AttrRes;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
@@ -27,6 +30,18 @@ public class ResUtil extends ApplicationUtil {
 
     public static int getColor(@ColorRes int id){
         return getResources().getColor(id);
+    }
+
+    public static int getAttrColor(@AttrRes int attr, int defaultValue){
+        return getAttrColor(getContext(), attr, defaultValue);
+    }
+
+    public static int getAttrColor(Context context, @AttrRes int attr, int defaultValue){
+        int[] attrs = new int[]{attr};
+        TypedArray ta = context.obtainStyledAttributes(attrs);
+        int value = ta.getColor(0, defaultValue);
+        ta.recycle();
+        return value;
     }
 
     public static Drawable getDrawable(@DrawableRes int id){
@@ -60,5 +75,17 @@ public class ResUtil extends ApplicationUtil {
 
     public static int getDimensionPixelSize(@DimenRes int id) throws Resources.NotFoundException {
         return getResources().getDimensionPixelSize(id);
+    }
+
+    public static int getDimensionPixelSize(Context context, @AttrRes int attr, int defaultValue) {
+        return getDimensionPixelSize(context, attr, defaultValue);
+    }
+
+    public static int getDimensionPixelSize(@AttrRes int attr, int defaultValue) {
+        int[] attrs = new int[]{attr};
+        TypedArray ta = getContext().obtainStyledAttributes(attrs);
+        int value = ta.getDimensionPixelSize(0, defaultValue);
+        ta.recycle();
+        return value;
     }
 }

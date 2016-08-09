@@ -2,6 +2,11 @@
 <resources>
 
     <!-- Strings related to theme-->
+
+    <color name="theme_night_primary">#212121</color>
+    <color name="theme_night_primary_dark">#000000</color>
+    <color name="theme_night_accent">#000000</color>
+
     <color name="theme_blue_primary">#485DCE</color>
     <color name="theme_blue_primary_dark">#3F51B5</color>
     <!--<color name="theme_blue_highlight">#3F51B5</color>-->

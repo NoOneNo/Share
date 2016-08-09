@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.support.annotation.DimenRes;
 import android.util.TypedValue;
+import android.view.HapticFeedbackConstants;
+import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -33,12 +35,12 @@ public class ViewUtil extends ResUtil {
 
     public static int dp2px(float dpValue) {
         float reSize = getContext().getResources().getDisplayMetrics().density;
-        return (int)((double)(dpValue * reSize) + 0.5D);
+        return (int) ((double) (dpValue * reSize) + 0.5D);
     }
 
     public static int px2dp(int pxValue) {
         float reSize = getContext().getResources().getDisplayMetrics().density;
-        return (int)((double)((float)pxValue / reSize) + 0.5D);
+        return (int) ((double) ((float) pxValue / reSize) + 0.5D);
     }
 
     public static int sp2px(@DimenRes int spResId) {
@@ -47,7 +49,7 @@ public class ViewUtil extends ResUtil {
 
     public static int sp2px(float spValue) {
         float reSize = getContext().getResources().getDisplayMetrics().scaledDensity;
-        return (int)((double)(spValue * reSize) + 0.5D);
+        return (int) ((double) (spValue * reSize) + 0.5D);
 //        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, spValue, getContext().getResources().getDisplayMetrics());
     }
 
@@ -88,8 +90,9 @@ public class ViewUtil extends ResUtil {
     }
 
     public static int statusBarHeight = 0;
+
     public static int getStatusBarHeight() {
-        if(statusBarHeight != 0){
+        if (statusBarHeight != 0) {
             return statusBarHeight;
         }
 
@@ -102,7 +105,7 @@ public class ViewUtil extends ResUtil {
             obj = c.newInstance();
             field = c.getField("status_bar_height");
             x = Integer.parseInt(field.get(obj).toString());
-            statusBarHeight =  getResources().getDimensionPixelSize(x);
+            statusBarHeight = getDimensionPixelSize(x);
             return statusBarHeight;
         } catch (Exception e) {
             e.printStackTrace();
@@ -116,16 +119,17 @@ public class ViewUtil extends ResUtil {
 //        return localRect.top;
 //    }
     public static int getActionBarHeight() {
-        return getDimensionPixelSize(getContext(), android.R.attr.actionBarSize,
-                getContext().getResources().getDimensionPixelSize(R.dimen.action_bar_default_size));
+        return getDimensionPixelSize(android.R.attr.actionBarSize,
+                getDimensionPixelSize(R.dimen.action_bar_default_size));
     }
 
-    public static int getDimensionPixelSize(Context context, int attr, int defaultValue) {
-        int[] attrs = new int[]{attr};
-        TypedArray ta = context.obtainStyledAttributes(attrs);
-        int value = ta.getDimensionPixelSize(0, defaultValue);
-        ta.recycle();
-        return value;
+    public static void vibrate(View view) {
+//        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+//        vibrator.vibrate(30);
+        view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
     }
 
+    public static void playClickSound(View view) {
+        view.playSoundEffect(SoundEffectConstants.CLICK);
+    }
 }

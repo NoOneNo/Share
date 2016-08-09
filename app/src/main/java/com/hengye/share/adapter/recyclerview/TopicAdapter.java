@@ -44,6 +44,7 @@ import com.hengye.share.util.IntentUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.helper.SettingHelper;
+import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
@@ -345,11 +346,10 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicDefault
         }
 
         public void initTopicTitle(final Context context, Topic topic) {
-            String time = DateUtil.getLatestDateFormat(topic.getDate());
             if (TextUtils.isEmpty(topic.getChannel())) {
-                mDescription.setText(time);
+                mDescription.setText(topic.getFormatDate());
             } else {
-                String str = String.format(context.getString(R.string.label_time_and_from), time, Html.fromHtml(topic.getChannel()));
+                String str = String.format(context.getString(R.string.label_time_and_from), topic.getFormatDate(), Html.fromHtml(topic.getChannel()));
                 mDescription.setText(str);
             }
 

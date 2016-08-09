@@ -6,11 +6,11 @@ import android.content.res.Resources;
 import com.hengye.share.ui.base.BaseApplication;
 
 public class ApplicationUtil {
-    protected static Application getContext(){
+    public static Application getContext(){
         return BaseApplication.getInstance();
     }
 
-    protected static Resources getResources(){
+    public static Resources getResources(){
         return getContext().getResources();
     }
 }

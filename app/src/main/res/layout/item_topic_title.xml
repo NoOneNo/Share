@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         tools:text="我是一只小小小鸡仔"
         android:textSize="@dimen/topic_username"
-        android:textColor="@color/topic_username"
+        android:textColor="@color/theme_pink_primary"
         android:singleLine="true" />
 
     <TextView

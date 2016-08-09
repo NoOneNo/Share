@@ -123,11 +123,13 @@
 
     <!-- 主题设置 -->
     <string-array name="theme_app_entries">
+        <item>夜间模式</item>
         <item>绅士蓝</item>
         <item>小草绿</item>
         <item>少女粉</item>
     </string-array>
     <string-array name="theme_app_values">
+        <item>day_night</item>
         <item>blue</item>
         <item>green</item>
         <item>pink</item>

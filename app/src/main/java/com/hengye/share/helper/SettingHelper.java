@@ -17,6 +17,7 @@ public class SettingHelper {
     //基本设置
     public final static String KEY_BASIC_SWIPE_BACK = "swipe_back";
     public final static String KEY_BASIC_HOME_BACK = "home_back";
+    public final static String KEY_BASIC_CLICK_TO_CLOSE_GALLERY = "click_photo_back";
     public final static String KEY_BASIC_CLEAR_PHOTO_CACHE = "clear_photo_cache";
     public final static String KEY_BASIC_INTERNAL_BROWSER = "internal_browser";
     //基本设置
@@ -67,6 +68,7 @@ public class SettingHelper {
         return PreferenceManager.getDefaultSharedPreferences(BaseApplication.getInstance());
     }
 
+    public final static String THEME_COLOR_DAY_NIGHT = "day_night";
     public final static String THEME_COLOR_BLUE= "blue";
     public final static String THEME_COLOR_GREEN = "green";
     public final static String THEME_COLOR_PINK = "pink";
@@ -89,6 +91,8 @@ public class SettingHelper {
     public static int getAppThemeResId(String color){
         if(TextUtils.isEmpty(color)){
             return THEME_RES_ID_DEFAULT;
+        }else if(color.equals(THEME_COLOR_DAY_NIGHT)){
+            return R.style.ShareAppTheme_DayNight;
         }else if(color.equals(THEME_COLOR_BLUE)){
             return R.style.ShareAppTheme_Blue;
         }else if(color.equals(THEME_COLOR_GREEN)){
@@ -117,6 +121,11 @@ public class SettingHelper {
             return false;
         }
         return true;
+    }
+
+    //是否单击图片返回上一层
+    public static boolean isClickToCloseGallery(){
+        return getBoolean(KEY_BASIC_CLICK_TO_CLOSE_GALLERY, true);
     }
 
     //是否使用内置的浏览器

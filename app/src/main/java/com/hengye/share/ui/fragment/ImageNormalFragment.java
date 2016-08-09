@@ -13,10 +13,12 @@ import android.widget.ImageView;
 import com.android.volley.cache.BitmapCache;
 import com.android.volley.toolbox.BitmapUtil;
 import com.hengye.share.R;
+import com.hengye.share.helper.SettingHelper;
 import com.hengye.share.ui.base.BaseFragment;
 import com.hengye.share.ui.support.AnimationRect;
 
 import uk.co.senab.photoview.PhotoView;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ImageNormalFragment extends BaseFragment {
 
@@ -67,6 +69,15 @@ public class ImageNormalFragment extends BaseFragment {
             }
         }
         mPhotoView.setImageBitmap(bitmap);
+
+        if(SettingHelper.isClickToCloseGallery()) {
+            mPhotoView.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+                @Override
+                public void onViewTap(View view, float x, float y) {
+                    getActivity().onBackPressed();
+                }
+            });
+        }
 
         if (mAnimateIn) {
             mAnimateIn = false;

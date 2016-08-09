@@ -58,7 +58,7 @@ public class DateUtil {
         if (day == 0 && nowHour >= hour) {
             //今天
             if (hour >= 1) {
-                return "今天 " + new SimpleDateFormat("HH:mm", Locale.US).format(date);
+                return "今天 " + new SimpleDateFormat("hh:mm", Locale.US).format(date);
             } else if (minute >= 1) {
                 return minute + "分钟前";
             } else {
@@ -67,7 +67,7 @@ public class DateUtil {
         } else {
             //昨天
             if ((day == 0 && nowHour < hour) || day == 1 && nowHour >= hour) {
-                return "昨天 " + new SimpleDateFormat("HH:mm", Locale.US).format(date);
+                return "昨天 " + new SimpleDateFormat("hh:mm", Locale.US).format(date);
             } else {
                 //大于2天 显示日期
                 String pattern;

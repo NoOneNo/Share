@@ -5,12 +5,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
 import com.hengye.share.R;
+import com.hengye.share.helper.SettingHelper;
 import com.hengye.share.ui.base.BaseFragment;
 import com.hengye.share.util.AnimationUtil;
 
@@ -67,6 +70,9 @@ public class ImageWebViewFragment extends BaseFragment {
         mWebView.setHorizontalScrollBarEnabled(false);
         mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
+        if(SettingHelper.isClickToCloseGallery()) {
+            mWebView.setOnTouchListener(new LargeOnTouchListener(mWebView));
+        }
 
         if (mAnimateIn) {
             showContent(mPath, mWebView);
@@ -124,5 +130,27 @@ public class ImageWebViewFragment extends BaseFragment {
         large.loadDataWithBaseURL("file:///android_asset/", str2, "text/html", "utf-8",
                 null);
         large.setVisibility(View.VISIBLE);
+    }
+
+    private class LargeOnTouchListener implements View.OnTouchListener {
+
+        GestureDetector gestureDetector;
+
+        public LargeOnTouchListener(final View view) {
+            gestureDetector = new GestureDetector(view.getContext(),
+                    new GestureDetector.SimpleOnGestureListener() {
+                        @Override
+                        public boolean onSingleTapUp(MotionEvent e) {
+                            getActivity().onBackPressed();
+                            return true;
+                        }
+                    });
+        }
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            gestureDetector.onTouchEvent(event);
+            return false;
+        }
     }
 }
