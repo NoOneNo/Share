@@ -1,0 +1,92 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion project.ext.compileSdkVersion
+    buildToolsVersion project.ext.buildToolsVersion
+    defaultConfig {
+        applicationId "com.hengye.share"
+        minSdkVersion project.ext.minSdkVersion
+        targetSdkVersion project.ext.targetSdkVersion
+        versionCode project.ext.versionCode
+        versionName project.ext.versionName
+
+        ndk {
+            // 设置支持的SO库架构
+            abiFilters 'armeabi' //, 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
+    }
+
+
+    signingConfigs {
+        release {
+            def propsFile = rootProject.file('keystore.properties')
+            def props = new Properties()
+            props.load(new FileInputStream(propsFile))
+            storeFile = rootProject.file(props['storeFile'])
+            storePassword = props['storePassword']
+            keyAlias = props['keyAlias']
+            keyPassword = props['keyPassword']
+        }
+    }
+
+    buildTypes {
+        release {
+            debuggable true
+            minifyEnabled false
+            zipAlignEnabled true
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            debuggable true
+            signingConfig signingConfigs.release
+        }
+    }
+
+    productFlavors {
+    }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
+}
+
+
+dependencies {
+    final ANDROID_SUPPORT_VERSION = '23.3.0'
+    final OKHTTP_VERSION = '3.0.0-RC1'
+    final RETROFIT_VERSION = '2.0.2'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+    compile "com.android.support:cardview-v7:$ANDROID_SUPPORT_VERSION"
+    compile "com.android.support:design:$ANDROID_SUPPORT_VERSION"
+    compile "com.android.support:recyclerview-v7:$ANDROID_SUPPORT_VERSION"
+    compile 'org.slf4j:slf4j-android:1.7.12'
+    compile 'com.google.code.gson:gson:2.4'
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.10'
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'de.greenrobot:greendao:2.0.0'
+    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'io.reactivex:rxjava:1.1.0'
+    compile 'me.imid.swipebacklayout.lib:library:1.0.0'
+    compile 'org.jsoup:jsoup:1.8.2'
+    compile "com.squareup.okhttp3:okhttp:$OKHTTP_VERSION"
+    compile "com.squareup.okhttp3:logging-interceptor:$OKHTTP_VERSION"
+    //    compile 'com.squareup.okhttp:okhttp-urlconnection:2.7.0'
+    compile "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
+    compile "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
+    compile "com.squareup.retrofit2:adapter-rxjava:$RETROFIT_VERSION"
+    compile files('libs/weibosdkcore.jar')
+    compile files('libs/org.apache.http.legacy.jar')
+    compile(name: 'swiperefresh-release', ext: 'aar')
+    compile(name: 'volleyplus-release', ext: 'aar')
+    compile(name: 'photopicker-release', ext: 'aar')
+    compile(name: 'skinloader-release', ext: 'aar')
+
+    compile 'com.tencent.bugly:crashreport:latest.release'
+    //其中latest.release指代最新版本号，也可以指定明确的版本号，例如1.2.8
+
+    compile project(':draglistview')
+}
