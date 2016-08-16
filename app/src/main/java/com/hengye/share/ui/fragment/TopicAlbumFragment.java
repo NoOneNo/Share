@@ -21,7 +21,7 @@ import com.hengye.share.ui.fragment.PersonalHomepageFragment.LoadDataCallBack;
 import com.hengye.share.ui.fragment.encapsulation.paging.RecyclerRefreshFragment;
 import com.hengye.share.ui.mvpview.TopicAlbumMvpView;
 import com.hengye.share.ui.presenter.TopicAlbumPresenter;
-import com.hengye.share.ui.view.listener.OnItemClickListener;
+import com.hengye.share.ui.widget.listener.OnItemClickListener;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.swiperefresh.listener.SwipeListener;
 

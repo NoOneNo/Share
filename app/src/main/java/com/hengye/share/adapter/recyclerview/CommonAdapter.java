@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hengye.share.handler.data.base.DataAdapter;
-import com.hengye.share.ui.view.listener.OnItemClickListener;
-import com.hengye.share.ui.view.listener.OnItemLongClickListener;
+import com.hengye.share.ui.widget.listener.OnItemClickListener;
+import com.hengye.share.ui.widget.listener.OnItemLongClickListener;
 
 import java.util.List;
 

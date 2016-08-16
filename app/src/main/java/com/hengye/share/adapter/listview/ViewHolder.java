@@ -4,8 +4,8 @@ import android.content.Context;
 import android.support.annotation.IdRes;
 import android.view.View;
 
-import com.hengye.share.ui.view.listener.OnItemClickListener;
-import com.hengye.share.ui.view.listener.OnItemLongClickListener;
+import com.hengye.share.ui.widget.listener.OnItemClickListener;
+import com.hengye.share.ui.widget.listener.OnItemLongClickListener;
 
 public abstract class ViewHolder<T> {
 

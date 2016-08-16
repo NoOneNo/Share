@@ -1,4 +1,4 @@
-package com.hengye.share.ui.view;
+package com.hengye.share.ui.widget;
 
 import android.content.Context;
 import android.os.Handler;

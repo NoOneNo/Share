@@ -118,6 +118,7 @@ public class ActionBarDrawerToggleCustom implements DrawerLayout.DrawerListener 
     private DrawerLayout.DrawerListener mDrawerListener;
 
     private DrawerToggle mSlider;
+    private DrawerArrowDrawable mDrawerArrowDrawableToggle;
     private Drawable mHomeAsUpIndicator;
     private boolean mDrawerIndicatorEnabled = true;
     private boolean mHasCustomUpIndicator;
@@ -136,6 +137,10 @@ public class ActionBarDrawerToggleCustom implements DrawerLayout.DrawerListener 
     }
     public void setGravityCompat(int gravityCompat) {
         this.mGravityCompat = gravityCompat;
+    }
+
+    public DrawerArrowDrawable getDrawerArrowDrawable(){
+        return mDrawerArrowDrawableToggle;
     }
 
     /**
@@ -229,11 +234,16 @@ public class ActionBarDrawerToggleCustom implements DrawerLayout.DrawerListener 
         mOpenDrawerContentDescRes = openDrawerContentDescRes;
         mCloseDrawerContentDescRes = closeDrawerContentDescRes;
         if (slider == null) {
-            mSlider = new DrawerArrowDrawableToggle(activity,
+
+            DrawerArrowDrawableToggle drawerArrowDrawableToggle;
+            drawerArrowDrawableToggle = new DrawerArrowDrawableToggle(activity,
                     mActivityImpl.getActionBarThemedContext());
+            mSlider = drawerArrowDrawableToggle;
+            mDrawerArrowDrawableToggle = drawerArrowDrawableToggle;
         } else {
             mSlider = slider;
         }
+
 
         mHomeAsUpIndicator = getThemeUpIndicator();
     }

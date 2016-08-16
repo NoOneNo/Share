@@ -35,13 +35,14 @@ import com.hengye.share.ui.mvpview.UserMvpView;
 import com.hengye.share.ui.presenter.TopicPresenter;
 import com.hengye.share.ui.presenter.UserPresenter;
 import com.hengye.share.ui.support.actionbar.ActionBarDrawerToggleCustom;
-import com.hengye.share.ui.view.SearchView;
+import com.hengye.share.ui.widget.SearchView;
 import com.hengye.share.ui.widget.util.SelectorLoader;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.NetworkUtil;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.helper.SettingHelper;
+import com.hengye.share.util.ThemeUtil;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
@@ -132,6 +133,10 @@ public class TopicActivity extends BaseActivity
 
         ActionBarDrawerToggleCustom toggle = new ActionBarDrawerToggleCustom(
                 this, mDrawer, getToolbar(), R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        if(toggle.getDrawerArrowDrawable() != null){
+            toggle.getDrawerArrowDrawable().setColor(ThemeUtil.getTintColor());
+        }
+
         toggle.setGravityCompat(GravityCompat.END);
         mDrawer.addDrawerListener(toggle);
         toggle.setDrawerListener(new DrawerLayout.SimpleDrawerListener() {

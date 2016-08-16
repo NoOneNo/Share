@@ -28,8 +28,13 @@ public class SettingActivity extends BaseActivity {
         if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStack();
         }else {
-            SettingHelper.resetCache();
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        SettingHelper.resetCache();
+        super.onDestroy();
     }
 }

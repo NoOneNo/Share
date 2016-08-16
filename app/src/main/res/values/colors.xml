@@ -3,6 +3,10 @@
 
     <!-- Strings related to theme-->
 
+    <color name="theme_tint_color">@color/grey_100</color>
+    <color name="theme_tint_light_color">@color/grey_300</color>
+    <color name="theme_tint_dark_color">@color/white</color>
+
     <color name="theme_night_primary">#212121</color>
     <color name="theme_night_primary_dark">#000000</color>
     <color name="theme_night_accent">#000000</color>

@@ -3,4 +3,9 @@
 
     <attr name="loading_drawable" format="reference"/>
 
+
+    <declare-styleable name="CommonTabLayout">
+        <attr name="autoTintThemeColor" format="boolean"/>
+    </declare-styleable>
+
 </resources>

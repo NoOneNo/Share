@@ -13,7 +13,7 @@
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <include layout="@layout/tool_bar" />
+        <include layout="@layout/widget_tool_bar" />
 
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

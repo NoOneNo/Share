@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent">
 
-        <com.hengye.share.ui.view.CommonToolBar
+        <com.hengye.share.ui.widget.common.CommonToolBar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
@@ -20,10 +20,8 @@
             app:title="@string/title_page_mention"
             app:layout_scrollFlags="scroll|enterAlways" />
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tab"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        <include
+            layout="@layout/widget_tab_layout"/>
 
     </android.support.design.widget.AppBarLayout>
 

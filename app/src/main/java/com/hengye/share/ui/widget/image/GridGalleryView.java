@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 
-import com.hengye.share.ui.view.listener.OnItemClickListener;
+import com.hengye.share.ui.widget.listener.OnItemClickListener;
 
 public class GridGalleryView extends GridLayout implements View.OnClickListener {
 

@@ -6,12 +6,12 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
 
+import com.hengye.share.R;
+import com.hengye.share.helper.SettingHelper;
 import com.hengye.share.ui.activity.TopicPublishActivity;
 import com.hengye.share.ui.base.BaseApplication;
-import com.hengye.share.R;
 import com.hengye.share.ui.fragment.BasePreferenceFragment;
 import com.hengye.share.util.L;
-import com.hengye.share.helper.SettingHelper;
 
 public class SettingFragment extends BasePreferenceFragment {
 
@@ -90,12 +90,27 @@ public class SettingFragment extends BasePreferenceFragment {
         super.onSharedPreferenceChanged(sharedPreferences, key);
 
         if (key.equals(SettingHelper.KEY_THEME_APP)) {
-//            SettingHelper.removeCache(key);
-            getActivity().onBackPressed();
+//            getActivity().onBackPressed();
+            getActivity().recreate();
+//            SettingHelper.removeCache(SettingHelper.KEY_THEME_APP);
+//            SkinManager.getInstance().load(getSkinPath(), null);
         }
     }
 
     private String getFeedBackContent(){
         return "#Share意见反馈# @我是一只小小小鸡仔 ";
     }
+
+
+
+//    private static final String SKIN_NAME = "night_skin.zip";
+//    private static final String SKIN_DIR = Environment
+//            .getExternalStorageDirectory() + File.separator + SKIN_NAME;
+//
+//    public String getSkinPath(){
+//        if(SettingHelper.THEME_COLOR_NIGHT.equals(SettingHelper.getAppThemeColor())){
+//            return SKIN_DIR;
+//        }
+//        return "";
+//    }
 }

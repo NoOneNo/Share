@@ -18,16 +18,17 @@ import android.widget.LinearLayout;
 
 import com.hengye.share.R;
 import com.hengye.share.ui.presenter.BasePresenter;
-import com.hengye.share.ui.view.CommonToolBar;
+import com.hengye.share.ui.widget.common.CommonToolBar;
 import com.hengye.share.util.NetworkUtil;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.helper.SettingHelper;
-import com.hengye.share.ui.view.listener.OnDoubleClickListener;
+import com.hengye.share.ui.widget.listener.OnDoubleClickListener;
+import com.hengye.skinloader.listener.OnSkinUpdateListener;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity implements OnSkinUpdateListener{
 
     protected String getRequestTag() {
         return "BaseActivity";
@@ -90,14 +91,15 @@ public class BaseActivity extends AppCompatActivity {
         mInstance = this;
         mActivityHelper.dispatchActivityCreated(this, savedInstanceState);
         setCustomThemeIfNeeded(savedInstanceState);
+//        SkinManager.getInstance().attach(this);
         super.onCreate(savedInstanceState);
         handleBundleExtra(getIntent());
-        setUpSwipeHelper();
+        setupSwipeHelper();
         if (mSwipeHelper != null) {
             mSwipeHelper.onCreate();
         }
 
-        setUpContentView();
+        setupContentView();
         afterCreate(savedInstanceState);
 
 //        final Bitmap cacheBitmap = ViewUtil.getDrawingCacheBitmap();
@@ -173,10 +175,12 @@ public class BaseActivity extends AppCompatActivity {
         mInstance = null;
         if(mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
+            mHandler = null;
         }
         cancelPendingRequestsIfNeeded();
         detachMvpView();
-        mActivityHelper.clear();
+//        SkinManager.getInstance().detach(this);
+        mActivityHelper.clean();
     }
 
     @Override
@@ -211,7 +215,7 @@ public class BaseActivity extends AppCompatActivity {
 
     protected void afterCreate(Bundle savedInstanceState) {}
 
-    protected void setUpContentView() {
+    protected void setupContentView() {
         if (getLayoutResId() != 0) {
             setContentView(getLayoutResId());
         }
@@ -335,7 +339,7 @@ public class BaseActivity extends AppCompatActivity {
                     onBackPressed();
                 }
             });
-            mToolbar.setOnDoubleClickListener(mOnDoubleClickListener = new OnDoubleClickListener() {
+            mToolbar.setOnDoubleClickListener(new OnDoubleClickListener() {
                 @Override
                 public boolean onDoubleClick(View view) {
                     return onToolbarDoubleClick(mToolbar);
@@ -345,7 +349,6 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     private CommonToolBar mToolbar;
-    private OnDoubleClickListener mOnDoubleClickListener;
 
     public CommonToolBar getToolbar() {
         return mToolbar;
@@ -367,7 +370,7 @@ public class BaseActivity extends AppCompatActivity {
         return getTitle();
     }
 
-    protected void setUpSwipeHelper() {
+    protected void setupSwipeHelper() {
         if (mSwipeHelper == null) {
             if (canSwipeBack() && SettingHelper.isSwipeBack()) {
                 mSwipeHelper = new SwipeBackHelper(this);
@@ -427,4 +430,6 @@ public class BaseActivity extends AppCompatActivity {
         mShowAnimationOnStart = true;
     }
 
+    @Override
+    public void onSkinUpdate() {}
 }

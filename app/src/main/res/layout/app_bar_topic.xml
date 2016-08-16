@@ -16,17 +16,14 @@
             android:layout_height="wrap_content"
             android:visibility="visible">
 
-            <com.hengye.share.ui.view.CommonToolBar
+            <com.hengye.share.ui.widget.common.CommonToolBar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:layout_scrollFlags="scroll|enterAlways"/>
+                app:layout_scrollFlags="scroll|enterAlways" />
 
-            <android.support.design.widget.TabLayout
-                android:id="@+id/tab"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            <include
+                layout="@layout/widget_tab_layout"/>
 
             <include layout="@layout/item_no_network" />
 
@@ -48,9 +45,9 @@
 
     </android.support.design.widget.CoordinatorLayout>
 
-    <com.hengye.share.ui.view.SearchView
+    <com.hengye.share.ui.widget.SearchView
         android:id="@+id/search_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 </FrameLayout>

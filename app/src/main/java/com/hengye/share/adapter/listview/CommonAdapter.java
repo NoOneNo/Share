@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.hengye.share.ui.view.listener.OnItemClickListener;
-import com.hengye.share.ui.view.listener.OnItemLongClickListener;
+import com.hengye.share.ui.widget.listener.OnItemClickListener;
+import com.hengye.share.ui.widget.listener.OnItemLongClickListener;
 
 import java.util.List;
 

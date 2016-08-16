@@ -1,4 +1,4 @@
-package com.hengye.share.ui.view;
+package com.hengye.share.ui.widget.common;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
@@ -11,8 +11,9 @@ import android.widget.ImageView;
 
 import com.hengye.share.R;
 import com.hengye.share.helper.ReflectionHelpers;
+import com.hengye.share.ui.widget.listener.OnDoubleClickListener;
+import com.hengye.share.util.ThemeUtil;
 import com.hengye.share.util.ViewUtil;
-import com.hengye.share.ui.view.listener.OnDoubleClickListener;
 
 public class CommonToolBar extends Toolbar {
 
@@ -30,7 +31,7 @@ public class CommonToolBar extends Toolbar {
     public CommonToolBar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        if(isInEditMode()){
+        if (isInEditMode()) {
             return;
         }
         init();
@@ -38,10 +39,12 @@ public class CommonToolBar extends Toolbar {
 
     public void init() {
         this.setNavigationIcon(R.drawable.ic_arrow_back_white_48dp);
-
-        if(getNavigation() != null){
+        if (getNavigationIcon() != null) {
+            getNavigationIcon().setTint(ThemeUtil.getTintColor());
+        }
+        setTitleTextColor(ThemeUtil.getTextColor());
+        if (getNavigation() != null) {
 //            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) getNavigation().getLayoutParams();
-
             int actionBarHeight = ViewUtil.getActionBarHeight();
             int size = getResources().getDimensionPixelSize(R.dimen.icon_size_small);
 //            lp.height = size;
@@ -91,15 +94,15 @@ public class CommonToolBar extends Toolbar {
 
     ImageButton mNavigation;
 
-    public ImageButton getNavigation(){
-        if(mNavigation != null){
+    public ImageButton getNavigation() {
+        if (mNavigation != null) {
             return mNavigation;
         }
 
         ReflectionHelpers.callInstanceMethod(Toolbar.class, this, "ensureNavButtonView");
 
         Object obj = ReflectionHelpers.getField(this, "mNavButtonView");
-        if(obj != null && obj instanceof ImageButton){
+        if (obj != null && obj instanceof ImageButton) {
             mNavigation = (ImageButton) obj;
             return mNavigation;
         }

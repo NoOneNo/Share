@@ -25,7 +25,7 @@ import com.hengye.share.model.AtUser;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.ui.mvpview.AtUserMvpView;
 import com.hengye.share.ui.presenter.AtUserPresenter;
-import com.hengye.share.ui.view.listener.OnItemClickListener;
+import com.hengye.share.ui.widget.listener.OnItemClickListener;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.ToastUtil;

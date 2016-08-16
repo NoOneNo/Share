@@ -1,4 +1,4 @@
-package com.hengye.share.ui.view.listener;
+package com.hengye.share.ui.widget.listener;
 
 import android.view.View;
 

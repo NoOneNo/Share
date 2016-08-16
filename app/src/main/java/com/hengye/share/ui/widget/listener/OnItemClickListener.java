@@ -1,4 +1,4 @@
-package com.hengye.share.ui.view.listener;
+package com.hengye.share.ui.widget.listener;
 
 import android.view.View;
 
@@ -6,7 +6,7 @@ import android.view.View;
  * Interface definition for a callback to be invoked when an item in this
  * RecyclerView has been clicked.
  */
-public interface OnItemLongClickListener {
+public interface OnItemClickListener {
 
     /**
      * Callback method to be invoked when an item in this RecyclerView has
@@ -19,5 +19,5 @@ public interface OnItemLongClickListener {
      *                 will be a view provided by the adapter)
      * @param position The position of the view in the adapter.
      */
-    boolean onItemLongClick(View view, int position);
+    void onItemClick(View view, int position);
 }

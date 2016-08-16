@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import com.hengye.share.service.ShareService;
 import com.hengye.share.util.RequestManager;
+import com.hengye.skinloader.support.SkinManager;
 import com.tencent.bugly.crashreport.CrashReport;
 
 public class BaseApplication extends Application{
@@ -25,7 +26,8 @@ public class BaseApplication extends Application{
 		startService(new Intent(this, ShareService.class));
 
 		ourInstance = this;
-//		SPUtil.getInstance().init(getApplicationContext());
+
+		SkinManager.setup(this);
 //		CrashHandler.getInstance().init(getApplicationContext());
 		RequestManager.init(this, null, MAX_NETWORK_CACHE_SIZE);
 

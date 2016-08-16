@@ -8,12 +8,12 @@ import java.util.ArrayList;
 
 public class ActivityHelper {
 
-    private ArrayList<ActivityLifecycleListener> mActivityLifecycleListener =
+    private final ArrayList<ActivityLifecycleListener> mActivityLifecycleListener =
             new ArrayList<>();
 
     private ActivityActionInterceptListener mActivityActionInterceptListener;
 
-    public void clear(){
+    public void clean(){
         mActivityLifecycleListener.clear();
         unregisterActivityActionInterceptListener();
     }

@@ -1,4 +1,4 @@
-package com.hengye.share.ui.view;
+package com.hengye.share.ui.widget;
 
 import android.animation.Animator;
 import android.app.Activity;

@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <!--<include-->
-        <!--layout="@layout/item_topic_total"/>-->
 
     <com.hengye.swiperefresh.PullToRefreshLayout
         android:id="@+id/pull_to_refresh"
@@ -25,7 +21,7 @@
             android:headerDividersEnabled="false"/>
     </com.hengye.swiperefresh.PullToRefreshLayout>
 
-    <android.support.design.widget.TabLayout
+    <com.hengye.share.ui.widget.common.CommonTabLayout
         android:id="@+id/tab_layout_assist"
         android:layout_width="match_parent"
         android:layout_height="@dimen/tab_layout_height"

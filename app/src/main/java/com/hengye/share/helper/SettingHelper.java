@@ -68,7 +68,7 @@ public class SettingHelper {
         return PreferenceManager.getDefaultSharedPreferences(BaseApplication.getInstance());
     }
 
-    public final static String THEME_COLOR_DAY_NIGHT = "day_night";
+    public final static String THEME_COLOR_NIGHT = "night";
     public final static String THEME_COLOR_BLUE= "blue";
     public final static String THEME_COLOR_GREEN = "green";
     public final static String THEME_COLOR_PINK = "pink";
@@ -91,7 +91,7 @@ public class SettingHelper {
     public static int getAppThemeResId(String color){
         if(TextUtils.isEmpty(color)){
             return THEME_RES_ID_DEFAULT;
-        }else if(color.equals(THEME_COLOR_DAY_NIGHT)){
+        }else if(color.equals(THEME_COLOR_NIGHT)){
             return R.style.ShareAppTheme_DayNight;
         }else if(color.equals(THEME_COLOR_BLUE)){
             return R.style.ShareAppTheme_Blue;

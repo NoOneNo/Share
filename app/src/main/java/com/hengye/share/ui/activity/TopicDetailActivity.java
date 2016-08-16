@@ -29,7 +29,7 @@ import com.hengye.share.service.TopicPublishService;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.ui.mvpview.TopicDetailMvpView;
 import com.hengye.share.ui.presenter.TopicDetailPresenter;
-import com.hengye.share.ui.view.listener.OnItemClickListener;
+import com.hengye.share.ui.widget.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.fab.FabAnimator;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DataUtil;
