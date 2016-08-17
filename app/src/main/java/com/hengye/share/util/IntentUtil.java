@@ -40,12 +40,4 @@ public class IntentUtil extends ApplicationUtil{
         activity.startActivityForResult(intent, requestCode);
     }
 
-    public static void startActivityIfTokenValid(Context context, Intent intent){
-        if(false){
-            //如果不合法
-            //启动登录activity;
-        }else{
-            context.startActivity(intent);
-        }
-    }
 }

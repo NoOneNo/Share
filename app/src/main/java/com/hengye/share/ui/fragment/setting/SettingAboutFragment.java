@@ -2,22 +2,28 @@ package com.hengye.share.ui.fragment.setting;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
 
 import com.hengye.share.BuildConfig;
 import com.hengye.share.R;
+import com.hengye.share.helper.SettingHelper;
 import com.hengye.share.ui.activity.web.WebViewActivity;
 import com.hengye.share.ui.fragment.BasePreferenceFragment;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
+import com.hengye.share.util.ApplicationUtil;
 import com.hengye.share.util.ClipboardUtil;
-import com.hengye.share.helper.SettingHelper;
+import com.hengye.share.util.IntentUtil;
+import com.hengye.share.util.SystemUtil;
+import com.hengye.share.util.ToastUtil;
 
-public class SettingAboutFragment extends BasePreferenceFragment{
+public class SettingAboutFragment extends BasePreferenceFragment {
 
     @Override
-    public String getTitle(){
+    public String getTitle() {
         return getString(R.string.title_fragment_about);
     }
 
@@ -34,11 +40,11 @@ public class SettingAboutFragment extends BasePreferenceFragment{
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
 
         String title = preference.getTitle().toString();
-        if(title.equals(getString(R.string.title_setting_check_update))) {
+        if (title.equals(getString(R.string.title_setting_check_update))) {
+            startMarket();
+        } else if (title.equals(getString(R.string.title_setting_version_code))) {
 
-        }else if(title.equals(getString(R.string.title_setting_version_code))) {
-
-        }else if(title.equals(getString(R.string.title_setting_donate_to_developer))) {
+        } else if (title.equals(getString(R.string.title_setting_donate_to_developer))) {
             ClipboardUtil.copy("1240001796@qq.com");
             showDialog();
         }
@@ -46,8 +52,9 @@ public class SettingAboutFragment extends BasePreferenceFragment{
     }
 
     private Dialog mDialog;
-    public void showDialog(){
-        if(mDialog == null){
+
+    public void showDialog() {
+        if (mDialog == null) {
             SimpleTwoBtnDialog stbd = new SimpleTwoBtnDialog();
             stbd.setContent("支付宝账号1240001796@qq.com已复制到粘贴板, 进入支付宝可直接粘贴完成捐赠, 感谢您的支持!");
             stbd.setPositiveButtonText("打开支付宝");
@@ -62,5 +69,16 @@ public class SettingAboutFragment extends BasePreferenceFragment{
         }
 
         mDialog.show();
+    }
+
+    public static void startMarket() {
+        Uri uri = Uri.parse(String.format("market://details?id=%s", SystemUtil.getPackageName()));
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (IntentUtil.resolveActivity(intent)) {
+            ApplicationUtil.getContext().startActivity(intent);
+        } else {
+            ToastUtil.showToast(R.string.tip_no_app_store);
+        }
     }
 }

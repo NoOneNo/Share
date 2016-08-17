@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.os.Vibrator;
 import android.support.annotation.DimenRes;
 import android.util.TypedValue;
 import android.view.HapticFeedbackConstants;
@@ -123,9 +124,12 @@ public class ViewUtil extends ResUtil {
                 getDimensionPixelSize(R.dimen.action_bar_default_size));
     }
 
+    public static void vibrate(){
+        Vibrator vibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator.vibrate(300);
+    }
+
     public static void vibrate(View view) {
-//        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-//        vibrator.vibrate(30);
         view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
     }
 

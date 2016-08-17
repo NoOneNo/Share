@@ -12,6 +12,7 @@ import com.hengye.share.ui.activity.TopicPublishActivity;
 import com.hengye.share.ui.base.BaseApplication;
 import com.hengye.share.ui.fragment.BasePreferenceFragment;
 import com.hengye.share.util.L;
+import com.hengye.share.util.ToastUtil;
 
 public class SettingFragment extends BasePreferenceFragment {
 
@@ -48,6 +49,8 @@ public class SettingFragment extends BasePreferenceFragment {
         }else if(title.equals(getString(R.string.title_setting_common_notify))){
             //通知设置
             clazz = SettingNotifyFragment.class;
+            ToastUtil.showToBeAchievedToast();
+            return false;
         }else if(title.equals(getString(R.string.title_setting_show_theme))){
             //主题
         }else if(title.equals(getString(R.string.title_setting_show_reading_habit))){

@@ -247,6 +247,13 @@ public class TopicDraft implements java.io.Serializable {
         return targetTopic;
     }
 
+    public String getDesc(){
+        if(content != null){
+            return content;
+        }else {
+            return "";
+        }
+    }
 
     public Topic generateTopic(){
         return TopicDraftHelper.getTopic(this);

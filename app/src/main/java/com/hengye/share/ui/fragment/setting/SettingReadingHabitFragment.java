@@ -1,10 +1,13 @@
 package com.hengye.share.ui.fragment.setting;
 
 import android.os.Bundle;
+import android.preference.Preference;
 
+import com.hengye.share.helper.SettingHelper;
 import com.hengye.share.ui.base.BaseApplication;
 import com.hengye.share.R;
 import com.hengye.share.ui.fragment.BasePreferenceFragment;
+import com.hengye.share.util.ToastUtil;
 
 public class SettingReadingHabitFragment extends BasePreferenceFragment{
 
@@ -17,6 +20,19 @@ public class SettingReadingHabitFragment extends BasePreferenceFragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref_setting_read_habit);
+
+
+        Preference.OnPreferenceClickListener onClickListener = new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                ToastUtil.showToBeAchievedToast();
+                return true;
+            }
+        };
+
+
+        findPreference(SettingHelper.KEY_HABIT_AUTO_NIGHT).setOnPreferenceClickListener(onClickListener);
+        findPreference(SettingHelper.KEY_HABIT_FONT_ZOOM).setOnPreferenceClickListener(onClickListener);
     }
 
 }

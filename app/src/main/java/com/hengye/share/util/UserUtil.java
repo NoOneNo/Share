@@ -81,7 +81,7 @@ public class UserUtil {
         return getAdToken() == null;
     }
 
-    public static User getDefaultUser() {
+    private static User getDefaultUser() {
         User user = null;
         String uid = SPUtil.getUid();
         if (uid != null) {

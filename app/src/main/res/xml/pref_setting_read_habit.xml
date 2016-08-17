@@ -29,7 +29,7 @@
         <SwitchPreference
             android:key="auto_night_mode"
             android:title="@string/title_setting_auto_night_mode"
-            android:defaultValue="true"/>
+            android:defaultValue="false"/>
 
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_setting_read_order_summary">

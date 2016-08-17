@@ -53,8 +53,11 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
             case GROUP_LIST:
 
                 boolean isNeedLoadId = false;
-                if (isRefresh && isLoadId && !"0".equals(id) && SettingHelper.isOrderReading()) {
+                if (isRefresh && isLoadId && !"0".equals(id)) {
                     isNeedLoadId = true;
+                }
+                if(!SettingHelper.isOrderReading()){
+                    isNeedLoadId = false;
                 }
                 loadWBTopicIds(id, isRefresh, isNeedLoadId);
 
@@ -390,6 +393,13 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
 
         public void setTopicType(TopicType topicType) {
             this.topicType = topicType;
+        }
+
+        public boolean isReadingType(){
+            if(topicType == TopicType.ALL || topicType == TopicType.BILATERAL || topicType == TopicType.GROUP_LIST){
+                return true;
+            }
+            return false;
         }
 
         @Override

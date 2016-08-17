@@ -28,15 +28,21 @@
     <string name="topic_gallery_image_large">原图</string>
     <string name="topic_gallery_image_save">保存</string>
     <string name="topic_gallery_image_save_success">图片已保存至 : %s</string>
-    <string name="tip_exit_on_back_pressed">再按一次退出应用</string>
     <string name="label_no_network">无法连接到服务器，请检查你的网络设置。</string>
+
+
+    <!-- Strings related to Tip-->
+    <string name="tip_load_image_fail">加载图片失败</string>
     <string name="tip_no_network">请检查网络后重试</string>
     <string name="tip_error">出现不可预知的错误</string>
     <string name="tip_loading">加载中</string>
     <string name="tip_need_advanced_authorize">需要高级授权, 是否继续?</string>
     <string name="tip_authorize_success">授权成功</string>
-
     <string name="tip_empty">内容为空</string>
+    <string name="tip_exit_on_back_pressed">再按一次退出应用</string>
+    <string name="tip_no_app_store">找不到可用的应用市场</string>
+    <!-- Strings related to Tip-->
+
 
     <string name="unit_ten_thousand">万</string>
 
@@ -248,7 +254,7 @@
     <string name="title_setting_read_order_summary">「顺序阅读」表示刷新时总是从最新微博开始阅读，「逆序阅读」表示刷新时保留上次的阅读位置，从加载新微博的最后一条向最新阅读</string>
     <string name="title_setting_auto_night_mode">自动进入夜间模式</string>
 
-    <string name="title_setting_check_update">检查更新</string>
+    <string name="title_setting_check_update">检查更新 / 给我评分</string>
     <string name="title_setting_version_code">版本号</string>
     <string name="title_setting_donate_to_developer">捐赠开发者</string>
 
@@ -258,10 +264,6 @@
     <string name="transition_name_topic">transition:topic</string>
     <string name="transition_name_avatar">transition:avatar</string>
     <!-- Strings related to TransitionName-->
-
-    <!-- Strings related to Tip-->
-    <string name="tip_load_image_fail">加载图片失败</string>
-    <!-- Strings related to Tip-->
 
     <string name="fling_behavior" translatable="false">com.hengye.share.ui.support.FlingBehavior</string>
 </resources>

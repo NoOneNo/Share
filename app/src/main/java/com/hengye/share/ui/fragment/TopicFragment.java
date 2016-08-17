@@ -14,6 +14,7 @@ import com.hengye.share.handler.data.TopicAdapterIdPager;
 import com.hengye.share.handler.data.base.DataHandler;
 import com.hengye.share.handler.data.base.DataType;
 import com.hengye.share.handler.data.base.Pager;
+import com.hengye.share.helper.SettingHelper;
 import com.hengye.share.model.Topic;
 import com.hengye.share.ui.fragment.PersonalHomepageFragment.LoadDataCallBack;
 import com.hengye.share.ui.fragment.encapsulation.paging.RecyclerRefreshFragment;
@@ -98,11 +99,6 @@ public class TopicFragment extends RecyclerRefreshFragment<Topic> implements Top
     }
 
     @Override
-    public String getTitle() {
-        return "testTopic";
-    }
-
-    @Override
     public void onRefresh() {
         super.onRefresh();
         if (UserUtil.isUserEmpty()) {
@@ -164,6 +160,9 @@ public class TopicFragment extends RecyclerRefreshFragment<Topic> implements Top
     @Override
     public void handleTopicData(List<Topic> data, boolean isRefresh) {
         int type = handleData(isRefresh, data);
+        if (topicGroup.isReadingType() && !CommonUtil.isEmpty(data) && !SettingHelper.isOrderReading()) {
+            getRecyclerView().scrollToPosition(data.size() - 1);
+        }
         DataType.handleSnackBar(type, getRecyclerView(), data == null ? 0 : data.size());
         if(DataType.hasNewData(type)){
             mPresenter.saveData(mAdapter.getData());

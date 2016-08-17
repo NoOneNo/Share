@@ -58,6 +58,7 @@ public class AdTokenInterceptor extends Interceptor{
                     if (requestCode == 33 && resultCode == Activity.RESULT_OK) {
                         next();
                     }
+                    mActivity.getActivityHelper().unregisterActivityLifecycleListener(this);
                 }
             });
         }

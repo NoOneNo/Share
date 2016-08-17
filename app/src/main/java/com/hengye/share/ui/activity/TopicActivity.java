@@ -28,6 +28,7 @@ import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.ui.activity.setting.SettingActivity;
+import com.hengye.share.ui.base.ActivityHelper;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.ui.fragment.TopicFavoritesFragment;
 import com.hengye.share.ui.fragment.TopicFragment;
@@ -181,6 +182,7 @@ public class TopicActivity extends BaseActivity
         moreAccount.setOnClickListener(this);
 
         mAvatar = (NetworkImageViewPlus) header.findViewById(R.id.iv_avatar);
+        mAvatar.setAutoClipBitmap(false);
         mAvatar.setFadeInImage(false);
         mAvatar.setDefaultImageResId(R.drawable.ic_user_avatar);
         mUsername = (TextView) header.findViewById(R.id.tv_username);
@@ -433,7 +435,7 @@ public class TopicActivity extends BaseActivity
     AdTokenInterceptor mAdTokenInterceptor;
     public AdTokenInterceptor getAdTokenInterceptor(){
         if(mAdTokenInterceptor == null){
-            mAdTokenInterceptor = new AdTokenInterceptor(this, null);
+            mAdTokenInterceptor = new AdTokenInterceptor(this);
             mStartGroup = new Action() {
                 @Override
                 public void run() {
@@ -443,6 +445,13 @@ public class TopicActivity extends BaseActivity
             mStartSearch = new Action() {
                 @Override
                 public void run() {
+                    getActivityHelper().registerActivityLifecycleListener(new ActivityHelper.DefaultActivityLifecycleListener(){
+                        @Override
+                        public void onActivityResumed(Activity activity) {
+                            mSearchView.handleSearch(false);
+                            getActivityHelper().unregisterActivityLifecycleListener(this);
+                        }
+                    });
                     startActivity(SearchActivity.getStartIntent(TopicActivity.this, mContent));
                 }
             };

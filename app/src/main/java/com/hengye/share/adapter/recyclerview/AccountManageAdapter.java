@@ -95,6 +95,7 @@ public class AccountManageAdapter extends CommonAdapter<User, AccountManageAdapt
         @Override
         public void bindData(Context context, User user, int position) {
 
+            mAvatar.setAutoClipBitmap(false);
             mAvatar.setImageUrl(user.getAvatar(), RequestManager.getImageLoader());
 
             mUsername.setText(user.getName());

@@ -13,6 +13,7 @@ public class GuidanceActivity extends BaseActivity {
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
 
+        setContentView(R.layout.activity_guidance);
         createShortcutIfNeed();
         startActivity(TopicActivity.class);
         finish();

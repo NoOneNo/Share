@@ -23,11 +23,11 @@ public class BaseApplication extends Application{
 
 	private void init() {
 
-		startService(new Intent(this, ShareService.class));
+//		startService(new Intent(this, ShareService.class));
 
 		ourInstance = this;
 
-		SkinManager.setup(this);
+//		SkinManager.setup(this);
 //		CrashHandler.getInstance().init(getApplicationContext());
 		RequestManager.init(this, null, MAX_NETWORK_CACHE_SIZE);
 

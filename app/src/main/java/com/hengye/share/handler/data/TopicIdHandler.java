@@ -2,6 +2,7 @@ package com.hengye.share.handler.data;
 
 import com.hengye.share.handler.data.base.DataAdapter;
 import com.hengye.share.handler.data.base.DataHandler;
+import com.hengye.share.helper.SettingHelper;
 
 import java.util.List;
 
@@ -35,7 +36,11 @@ public class TopicIdHandler<T> implements DataHandler<T> {
                 adapter.addAll(0, data);
                 break;
             case REFRESH_DATA_SIZE_EQUAL:
-                adapter.refresh(data);
+                if(SettingHelper.isOrderReading()) {
+                    adapter.refresh(data);
+                }else{
+                    adapter.addAll(0, data);
+                }
                 break;
             case LOAD_NO_MORE_DATA:
             case LOAD_DATA_SIZE_EQUAL:

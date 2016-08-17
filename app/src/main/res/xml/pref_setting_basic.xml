@@ -25,7 +25,7 @@
             android:entryValues="@array/swipe_back_values"
             android:defaultValue="1"/>
 
-        <EditTextPreference
+        <Preference
             android:key="photo_save_path"
             android:title="@string/title_setting_photo_save_path"/>
 

@@ -36,7 +36,8 @@
                     android:clickable="true"
                     android:contentDescription="@null"
                     android:padding="8dp"
-                    android:src="@drawable/btn_back_black" />
+                    android:src="@drawable/ic_arrow_back_white_48dp"
+                    android:tint="@color/grey_600"/>
 
                 <EditText
                     android:id="@+id/et_search_content"

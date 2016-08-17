@@ -30,6 +30,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -119,7 +120,12 @@ public class WeiboWebLoginActivity extends BaseActivity {
                 .create(new Observable.OnSubscribe<String>() {
                     @Override
                     public void call(Subscriber<? super String> subscriber) {
-                        String url = getEncapsulationLoginUrl();
+                        String url = null;
+                        try {
+                            url = getEncapsulationLoginUrl();
+                        }catch (UnknownHostException uhe){
+                            subscriber.onError(uhe);
+                        }
                         if(url == null){
                             subscriber.onError(new Throwable("get encapsulation login url fail"));
                         }else{
@@ -137,7 +143,11 @@ public class WeiboWebLoginActivity extends BaseActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        ToastUtil.showToast(R.string.tip_error);
+                        if(e instanceof UnknownHostException){
+                            ToastUtil.showNetWorkErrorToast();
+                        }else {
+                            ToastUtil.showToast(R.string.tip_error);
+                        }
                     }
 
                     @Override
@@ -297,7 +307,7 @@ public class WeiboWebLoginActivity extends BaseActivity {
         }
     }
 
-    private String getEncapsulationLoginUrl(){
+    private String getEncapsulationLoginUrl() throws UnknownHostException{
         int count = 3;
         while (count-- >= 0) {
             try {
@@ -337,6 +347,9 @@ public class WeiboWebLoginActivity extends BaseActivity {
                 return html;
             } catch (Exception e) {
                 e.printStackTrace();
+                if(e instanceof UnknownHostException){
+                    throw (UnknownHostException)e;
+                }
             }
         }
         return null;

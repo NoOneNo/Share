@@ -34,6 +34,16 @@ public class SettingBasicFragment extends BasePreferenceFragment{
                 return false;
             }
         });
+
+
+        Preference.OnPreferenceClickListener onClickListener = new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                ToastUtil.showToBeAchievedToast();
+                return true;
+            }
+        };
+        findPreference(SettingHelper.KEY_BASIC_PHOTO_SAVE_PATH).setOnPreferenceClickListener(onClickListener);
     }
 
     private Dialog mDialog;

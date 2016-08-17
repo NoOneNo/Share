@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -12,6 +13,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
 import com.hengye.share.R;
+import com.hengye.share.helper.SettingHelper;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.TopicPublish;
@@ -25,6 +27,7 @@ import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.NotificationUtil;
 import com.hengye.share.util.UserUtil;
+import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
 import com.hengye.share.util.retrofit.weibo.WBService;
 
@@ -73,8 +76,8 @@ public class TopicPublishService extends Service {
         context.startService(intent);
     }
 
-    protected LocalBroadcastManager getLocalBroadcastManager(){
-        if(mLocalBroadcastManager == null){
+    protected LocalBroadcastManager getLocalBroadcastManager() {
+        if (mLocalBroadcastManager == null) {
             mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
         }
         return mLocalBroadcastManager;
@@ -138,7 +141,7 @@ public class TopicPublishService extends Service {
         }
     }
 
-    protected void handlePublishStart(TopicPublish tp){
+    protected void handlePublishStart(TopicPublish tp) {
         mPublishQueue.put(tp, false);
         showTopicPublishStartNotification(tp);
         publish(tp);
@@ -149,6 +152,7 @@ public class TopicPublishService extends Service {
         showTopicPublishSuccessNotification(tp);
         stopServiceIfQueueIsAllFinish();
         sendResultBroadcast(tp, true, result);
+        handlePublishFinish();
     }
 
     protected void handlePublishFail(TopicPublish tp) {
@@ -157,9 +161,16 @@ public class TopicPublishService extends Service {
         TopicDraftHelper.saveTopicDraft(tp.getTopicDraft());
         stopServiceIfQueueIsAllFinish();
         sendResultBroadcast(tp, false, null);
+        handlePublishFinish();
     }
 
-    protected void sendResultBroadcast(TopicPublish tp, boolean isSuccess, Serializable result){
+    protected void handlePublishFinish() {
+        if (SettingHelper.isVibrationOn()) {
+            ViewUtil.vibrate();
+        }
+    }
+
+    protected void sendResultBroadcast(TopicPublish tp, boolean isSuccess, Serializable result) {
 
         Bundle bundle = new Bundle();
         bundle.putInt(EXTRA_TYPE, tp.getTopicDraft().getType());
@@ -363,32 +374,27 @@ public class TopicPublishService extends Service {
     }
 
     protected void showTopicPublishStartNotification(TopicPublish tp) {
-        Notification.Builder builder = new Notification.Builder(this)
+        Notification.Builder builder = getNotificationBuilder()
                 .setTicker(getString(R.string.label_topic_publish_start))
                 .setContentTitle(getString(R.string.label_topic_publish_start))
-                .setContentText(getString(R.string.label_topic_publish))
-                .setOnlyAlertOnce(true)
-                .setOngoing(false)
-                .setSmallIcon(R.drawable.notification_icon_upload_white);
+                .setContentText(getString(R.string.label_topic_publish));
 
         int id = tp.getTopicDraft().getNotificationId();
-        if(id == -1){
-          id = new Random().nextInt(Integer.MAX_VALUE);
+        if (id == -1) {
+            id = new Random().nextInt(Integer.MAX_VALUE);
             tp.getTopicDraft().setNotificationId(id);
         }
         NotificationUtil.show(builder.build(), id);
-        
+
         addNotificationId(tp, id);
     }
 
     protected void showTopicPublishSuccessNotification(final TopicPublish tp) {
-        Notification.Builder builder = new Notification.Builder(this)
+        Notification.Builder builder = getNotificationBuilder()
                 .setTicker(getString(R.string.label_topic_publish_success))
                 .setContentTitle(getString(R.string.label_topic_publish_success))
-                .setContentText(getString(R.string.label_topic_publish))
-                .setOnlyAlertOnce(true)
-                .setOngoing(false)
-                .setSmallIcon(R.drawable.notification_icon_upload_white);
+                .setContentText(tp.getTopicDraft().getDesc())
+                .setVibrate(new long[0]);
         NotificationUtil.show(builder.build(), getNotificationId(tp));
 
         mHandler.postDelayed(new Runnable() {
@@ -401,30 +407,43 @@ public class TopicPublishService extends Service {
     }
 
     protected void showTopicPublishFailNotification(TopicPublish tp) {
-        Notification.Builder builder = new Notification.Builder(this)
+        Notification.Builder builder = getNotificationBuilder()
                 .setTicker(getString(R.string.label_topic_publish_fail))
                 .setContentTitle(getString(R.string.label_topic_publish_fail))
-                .setContentText(getString(R.string.label_topic_publish))
-                .setOnlyAlertOnce(true)
-                .setOngoing(false)
-                .setSmallIcon(R.drawable.notification_icon_upload_white);
+                .setContentText(tp.getTopicDraft().getDesc())
+                .setVibrate(new long[0]);
         NotificationUtil.show(builder.build(), getNotificationId(tp));
         removeNotificationId(tp);
     }
 
-    protected int getNotificationId(TopicPublish tp){
+    protected Notification.Builder getNotificationBuilder() {
+        Notification.Builder builder = new Notification.Builder(this)
+                .setOnlyAlertOnce(true)
+                .setOngoing(false)
+                .setPriority(Notification.PRIORITY_HIGH)
+                .setSmallIcon(R.drawable.notification_upload_white_48dp);
+
+        Bitmap bitmap = UserUtil.getCurrentUser().getUserAvatarBitmap();
+        if (bitmap != null) {
+            builder.setLargeIcon(bitmap);
+        }
+        return builder;
+
+    }
+
+    protected int getNotificationId(TopicPublish tp) {
         Integer id = mPublishNotificationQueue.get(tp);
-        if(id == null){
+        if (id == null) {
             return 0;
         }
         return id;
     }
 
-    protected void addNotificationId(TopicPublish tp, int id){
+    protected void addNotificationId(TopicPublish tp, int id) {
         mPublishNotificationQueue.put(tp, id);
     }
 
-    protected void removeNotificationId(TopicPublish tp){
+    protected void removeNotificationId(TopicPublish tp) {
         mPublishNotificationQueue.remove(tp);
     }
 

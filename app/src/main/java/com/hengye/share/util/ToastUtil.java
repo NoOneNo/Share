@@ -50,4 +50,8 @@ public class ToastUtil extends ApplicationUtil{
     public static void showNetWorkErrorToast(){
         showToast(R.string.tip_no_network);
     }
+
+    public static void showToBeAchievedToast(){
+        showToast("该功能暂未实现 >_<");
+    }
 }

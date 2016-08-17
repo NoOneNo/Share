@@ -1,5 +1,12 @@
 package com.hengye.share.model.greenrobot;
 
+import android.graphics.Bitmap;
+import android.widget.ImageView;
+
+import com.android.volley.cache.DiskLruCacheUtil;
+import com.android.volley.cache.ImageDiskLruCache;
+import com.android.volley.toolbox.BitmapUtil;
+import com.android.volley.toolbox.ImageLoader;
 import com.hengye.share.model.greenrobot.DaoSession;
 import de.greenrobot.dao.DaoException;
 
@@ -11,6 +18,7 @@ import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.model.sina.WBUserInfos;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.GsonUtil;
+import com.hengye.share.util.ImageUtil;
 
 import java.util.ArrayList;
 // KEEP INCLUDES END
@@ -278,6 +286,11 @@ public class User implements java.io.Serializable {
 
     public WBUserInfo getWBUserInfoFromParent(){
         return GsonUtil.fromJson(getParentJson(), WBUserInfo.class);
+    }
+
+    public Bitmap getUserAvatarBitmap(){
+        BitmapUtil.CacheKey ck = new BitmapUtil.CacheKey(getAvatar(), 0, 0, ImageView.ScaleType.FIT_CENTER);
+        return ImageLoader.getBitmap(ck);
     }
     // KEEP METHODS END
 
