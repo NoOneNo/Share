@@ -96,7 +96,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicDefault
         switch (which) {
             case DialogBuilder.LONG_CLICK_TOPIC_REPOST:
                 IntentUtil.startActivity(getContext(),
-                        TopicPublishActivity.getStartIntent(getContext(), TopicDraftHelper.getWBTopicDraftByTopicRepost(topic.getId())));
+                        TopicPublishActivity.getStartIntent(getContext(), TopicDraftHelper.getWBTopicDraftByTopicRepost(topic)));
                 break;
             case DialogBuilder.LONG_CLICK_TOPIC_COMMENT:
                 IntentUtil.startActivity(getContext(),

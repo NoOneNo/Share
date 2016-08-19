@@ -31,7 +31,7 @@ public class GroupManagePresenter extends BasePresenter<GroupManageMvpView> {
         if(isReadCache){
             List<GroupList> list = UserUtil.queryGroupList();
             if(!CommonUtil.isEmpty(list)){
-                getMvpView().handleGroupList(list);
+                getMvpView().handleGroupList(true, list);
                 return;
             }
         }
@@ -61,7 +61,7 @@ public class GroupManagePresenter extends BasePresenter<GroupManageMvpView> {
                     public void handleViewOnSuccess(GroupManageMvpView v, List<GroupList> groupLists) {
                         getMvpView().loadSuccess();
                         setIsGroupUpdate(true);
-                        getMvpView().handleGroupList(groupLists);
+                        getMvpView().handleGroupList(false, groupLists);
                     }
 
                     @Override

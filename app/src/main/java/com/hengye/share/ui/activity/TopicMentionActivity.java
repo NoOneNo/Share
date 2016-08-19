@@ -39,13 +39,14 @@ public class TopicMentionActivity extends BaseActivity{
 
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
+    private TopicFragmentPager mAdapter;
 
     private void initView(){
 
         initToolbar();
         mTabLayout = (TabLayout) findViewById(R.id.tab);
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
-        mViewPager.setAdapter(new TopicFragmentPager(getSupportFragmentManager(), this, getTopicGroups()));
+        mViewPager.setAdapter(mAdapter = new TopicFragmentPager(getSupportFragmentManager(), this, getTopicGroups()));
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
@@ -55,5 +56,10 @@ public class TopicMentionActivity extends BaseActivity{
         topicGroupGroups.add(new TopicPresenter.TopicGroup(TopicPresenter.TopicType.TOPIC_AT_ME));
         topicGroupGroups.add(new TopicPresenter.TopicGroup(TopicPresenter.TopicType.COMMENT_AT_ME));
         return topicGroupGroups;
+    }
+
+    @Override
+    public boolean onToolbarDoubleClick(Toolbar toolbar) {
+        return mAdapter.getItem(mViewPager.getCurrentItem()).onToolbarDoubleClick(toolbar);
     }
 }

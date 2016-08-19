@@ -25,12 +25,11 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginEnd="67dp"/>
 
-            <ImageView
+            <com.hengye.share.ui.widget.theme.CustomThemeTintImageButton
                 android:id="@+id/ic_search"
                 android:layout_width="@dimen/icon_size_small"
                 android:layout_height="@dimen/icon_size_small"
                 android:layout_centerVertical="true"
-                style="@style/ThemeColor.TintStyle"
                 android:src="@drawable/ic_search_white_48dp"/>
 
             <View

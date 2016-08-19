@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -82,6 +83,12 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         initView();
         initBroadcastReceiver();
         LocalBroadcastManager.getInstance(this).registerReceiver(mPublishResultBroadcastReceiver, new IntentFilter(TopicPublishService.ACTION_RESULT));
+    }
+
+    @Override
+    public boolean onToolbarDoubleClick(Toolbar toolbar) {
+        mListView.setSelection(0);
+        return true;
     }
 
     TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {
@@ -265,7 +272,12 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                     return;
                 }
                 TopicDraft topicDraft = new TopicDraft();
-                topicDraft.setType(TopicDraftHelper.REPLY_COMMENT);
+                if(isSelectedCommentTab()) {
+                    topicDraft.setType(TopicDraftHelper.REPLY_COMMENT);
+                }else{
+                    topicDraft.setType(TopicDraftHelper.REPOST_TOPIC);
+                    topicDraft.setContent(DataUtil.addRetweetedNamePrefix(tc));
+                }
                 topicDraft.setTargetTopicId(mTopic.getId());
                 topicDraft.setTargetTopicJson(mTopic.toJson());
                 topicDraft.setTargetCommentId(tc.getId());

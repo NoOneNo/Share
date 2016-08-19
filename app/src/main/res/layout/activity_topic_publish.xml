@@ -2,97 +2,125 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ll_root"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/rl_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/et_topic_publish"
+        <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/pick_photo"
-            android:hint="@string/label_topic_publish_hint"
-            android:scrollbars="vertical"
-            android:fadeScrollbars="true"
-            android:scrollbarStyle="outsideOverlay"
-            android:background="@null"
-            android:padding="@dimen/content_margin_10dp"
-            android:gravity="start|top"/>
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-        <com.hengye.photopicker.view.PickPhotoView
-            android:id="@+id/pick_photo"
-            android:layout_above="@+id/ll_topic_publish_tools"
-            android:layout_marginStart="@dimen/content_margin_10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:columnCount="4"
-            app:maxSize="9"
-            android:visibility="visible"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/et_topic_publish"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:gravity="start|top"
+                    android:hint="@string/label_topic_publish_hint"
+                    android:maxLength="140"
+                    android:minLines="5"
+                    android:padding="@dimen/content_margin_10dp"
+                    android:textColor="@color/font_grey" />
+
+                <com.hengye.photopicker.view.PickPhotoView
+                    android:id="@+id/pick_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/content_margin_10dp"
+                    android:visibility="visible"
+                    app:columnCount="4"
+                    app:maxSize="9" />
+            </LinearLayout>
+        </ScrollView>
 
         <LinearLayout
-            android:id="@+id/ll_topic_publish_tools"
-            android:layout_alignParentBottom="true"
+            android:id="@+id/ll_topic_publish_info"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/topic_publish_tool_bar_height"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:background="?attr/theme_color">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <ImageButton
-                style="?android:buttonBarButtonStyle"
-                android:id="@+id/btn_camera"
+
+            <TextView
+                android:id="@+id/tv_content_length"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:contentDescription="@null"
-                android:src="@drawable/compose_camerabutton_background"
-                android:visibility="gone"/>
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:padding="@dimen/spacing_normal"/>
 
-            <ImageButton
-                style="?android:buttonBarButtonStyle"
-                android:id="@+id/btn_mention"
-                android:layout_width="@dimen/icon_size_large"
-                android:layout_height="@dimen/icon_size_large"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_person_add_white_48dp"
-                android:scaleType="fitXY"/>
+            <LinearLayout
+                android:id="@+id/ll_topic_publish_tools"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/topic_publish_tool_bar_height"
+                android:background="?attr/theme_color"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <ImageButton
-                style="?android:buttonBarButtonStyle"
-                android:id="@+id/btn_emoticon"
-                android:layout_width="@dimen/icon_size_large"
-                android:layout_height="@dimen/icon_size_large"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_mood_white_48dp"
-                android:scaleType="fitXY"/>
+                <ImageButton
+                    android:id="@+id/btn_camera"
+                    style="?android:buttonBarButtonStyle"
+                    android:layout_width="@dimen/icon_size_large"
+                    android:layout_height="@dimen/icon_size_large"
+                    android:contentDescription="@null"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_camera_alt_white_48dp"
+                    android:visibility="visible" />
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
+                <ImageButton
+                    android:id="@+id/btn_mention"
+                    style="?android:buttonBarButtonStyle"
+                    android:layout_width="@dimen/icon_size_large"
+                    android:layout_height="@dimen/icon_size_large"
+                    android:contentDescription="@null"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_person_add_white_48dp" />
 
-            <ImageButton
-                style="?android:buttonBarButtonStyle"
-                android:id="@+id/btn_publish"
-                android:layout_width="@dimen/icon_size_large"
-                android:layout_height="@dimen/icon_size_large"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_send_white_48dp"
-                android:scaleType="fitXY"/>
+                <ImageButton
+                    android:id="@+id/btn_emoticon"
+                    style="?android:buttonBarButtonStyle"
+                    android:layout_width="@dimen/icon_size_large"
+                    android:layout_height="@dimen/icon_size_large"
+                    android:contentDescription="@null"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_mood_white_48dp" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <ImageButton
+                    android:id="@+id/btn_publish"
+                    style="?android:buttonBarButtonStyle"
+                    android:layout_width="@dimen/icon_size_large"
+                    android:layout_height="@dimen/icon_size_large"
+                    android:contentDescription="@null"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_send_white_48dp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <com.hengye.share.ui.emoticon.EmoticonPicker
         android:id="@+id/emoticon_picker"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </LinearLayout>

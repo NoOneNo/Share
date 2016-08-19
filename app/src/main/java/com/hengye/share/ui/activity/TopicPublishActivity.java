@@ -13,7 +13,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.hengye.photopicker.model.Photo;
 import com.hengye.photopicker.view.PickPhotoView;
@@ -26,34 +27,23 @@ import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.service.TopicPublishService;
 import com.hengye.share.ui.emoticon.EmoticonPicker;
 import com.hengye.share.ui.emoticon.EmoticonPickerUtil;
+import com.hengye.share.ui.support.listener.DefaultTextWatcher;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.DateUtil;
+import com.hengye.share.util.EncodeUtil;
 import com.hengye.share.util.IntentUtil;
+import com.hengye.share.util.L;
 import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
 
+import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopicPublishActivity extends BaseActivity implements View.OnClickListener {
-
-    @Override
-    protected String getRequestTag() {
-        return super.getRequestTag();
-    }
-
-    @Override
-    protected boolean setCustomTheme() {
-        return super.setCustomTheme();
-    }
-
-    @Override
-    protected boolean setToolBar() {
-        return super.setToolBar();
-    }
+public class TopicPublishActivity extends BaseActivity implements View.OnClickListener{
 
     public static Intent getStartIntent(Context context, TopicDraft topicDraft) {
         Intent intent = new Intent(context, TopicPublishActivity.class);
@@ -98,17 +88,24 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         initData();
     }
 
+    private final int MAX_CHINESE_CONTENT_LENGTH = 140;
+
     private ImageButton mPhotoPickerBtn, mMentionBtn, mEmoticonBtn, mPublishBtn;
     private PickPhotoView mPhotoPicker;
     private EmoticonPicker mEmoticonPicker;
-    private RelativeLayout mContainer;
+    private View mContainer;
+    private TextView mContentLength;
     private EditText mContent;
+    private ScrollView mScrollView;
     private Dialog mSaveToDraftDialog, mSkipToLoginDialog;
+
+    private int mCurrentContentLength;
 
     @SuppressWarnings("ConstantConditions")
     private void initView() {
-        mContainer = (RelativeLayout) findViewById(R.id.rl_container);
+        mContainer = findViewById(R.id.rl_container);
         mContent = (EditText) findViewById(R.id.et_topic_publish);
+        mContentLength = (TextView) findViewById(R.id.tv_content_length);
         mContent.setSelection(0);
         mContent.setOnClickListener(this);
         mPhotoPickerBtn = (ImageButton) findViewById(R.id.btn_camera);
@@ -122,7 +119,36 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         mEmoticonPicker = (EmoticonPicker) findViewById(R.id.emoticon_picker);
         mEmoticonPicker.setEditText(this, ((LinearLayout) findViewById(R.id.ll_root)),
                 mContent);
+        mScrollView = (ScrollView) findViewById(R.id.scrollView);
+        mContent.addTextChangedListener(new DefaultTextWatcher(){
+
+            int lastLineCount = mContent.getLineCount();
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                int currentLineCount = mContent.getLineCount();
+                if(currentLineCount > mContent.getMinLines()){
+                    int differCount =  lastLineCount - currentLineCount;
+                    if(differCount > 0){
+                        mScrollView.scrollBy(0, - mContent.getLineHeight() * differCount);
+                    }
+                }
+                lastLineCount = currentLineCount;
+
+                updateContentLength();
+            }
+        });
+
         mPhotoPicker = (PickPhotoView) findViewById(R.id.pick_photo);
+        mPhotoPicker.setOnDeletePhotoListener(new PickPhotoView.onDeletePhotoListener() {
+            @Override
+            public void onDeletePhoto(View view, Photo photo) {
+                if(mPhotoPicker.getPhotos().isEmpty()){
+                    mPhotoPicker.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
         if (mTopicDraft.getUrls() != null) {
             ArrayList<Photo> photos = new ArrayList<>();
             List<String> urls = CommonUtil.split(mTopicDraft.getUrls(), ",");
@@ -132,6 +158,8 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
                 photos.add(photo);
             }
             mPhotoPicker.setAddPhotos(photos);
+        }else{
+            mPhotoPicker.setVisibility(View.INVISIBLE);
         }
         mContent.setFilters(new InputFilter[]{mAtUserInputFilter, mEmoticonPicker.getEmoticonInputFilter()});
         initSaveToDraftDialog();
@@ -168,8 +196,15 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         if (mTopicDraft == null || TextUtils.isEmpty(mTopicDraft.getContent())) {
             return;
         }
-        mContent.setText(mTopicDraft.getContent());
-        mContent.setSelection(mTopicDraft.getContent().length());
+
+        if(mTopicDraft.getType() == TopicDraftHelper.REPOST_TOPIC){
+            mContent.setText("//" + mTopicDraft.getContent());
+            mContent.setSelection(0);
+        }else {
+            mContent.setText(mTopicDraft.getContent());
+            mContent.setSelection(mTopicDraft.getContent().length());
+        }
+        updateContentLength();
     }
 
     private void changeTitleStyle(int publishType) {
@@ -209,8 +244,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         } else if (id == R.id.btn_publish) {
             publishTopic();
         } else if (id == R.id.btn_camera) {
-            mPhotoPicker.performClick();
-//            PhotoPicker.startPhotoPicker(this);
+            mPhotoPicker.performAddPhotoClick();
         }
     }
 
@@ -271,7 +305,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
 
     private void publishTopic() {
 
-        if (!checkCanPublicTopic()) {
+        if (!checkCanPublishTopic()) {
             return;
         }
 
@@ -285,7 +319,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         ToastUtil.showToast(R.string.label_save_to_draft_success);
     }
 
-    private boolean checkCanPublicTopic() {
+    private boolean checkCanPublishTopic() {
         boolean result = true;
         if (TextUtils.isEmpty(mContent.getText().toString()) && CommonUtil.isEmpty(mPhotoPicker.getPhotos())) {
             result = false;
@@ -316,7 +350,9 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
             }
         }
 
-        mPhotoPicker.handleResult(requestCode, resultCode, data);
+        if(mPhotoPicker.handleResult(requestCode, resultCode, data)){
+            mPhotoPicker.setVisibility(View.VISIBLE);
+        }
 //        List<Photo> photos = PhotoPicker.resolvePhotoPicker(requestCode, resultCode, data);
 //        if(!CommonUtil.isEmpty(photos)){
 //
@@ -364,5 +400,17 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
 
     public void unlockContainerHeight() {
         ((LinearLayout.LayoutParams) mContainer.getLayoutParams()).weight = 1.0F;
+    }
+
+    private void updateContentLength(){
+        mCurrentContentLength = EncodeUtil.getChineseLength(mContent.getText().toString());
+        int differLength = Math.abs(MAX_CHINESE_CONTENT_LENGTH - mCurrentContentLength);
+        if(mCurrentContentLength <= MAX_CHINESE_CONTENT_LENGTH){
+            mContentLength.setTextColor(ResUtil.getColor(R.color.font_grey));
+            mContentLength.setText(ResUtil.getString(R.string.label_topic_publish_content_length_less, differLength));
+        }else{
+            mContentLength.setTextColor(ResUtil.getColor(R.color.font_red_warn));
+            mContentLength.setText(ResUtil.getString(R.string.label_topic_publish_content_length_more, differLength));
+        }
     }
 }

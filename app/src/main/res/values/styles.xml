@@ -39,7 +39,7 @@
 
     <style name="PersonalHomepageTitleAppearance">
         <item name="android:textSize">@dimen/text_normal</item>
-        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="IconStyle">

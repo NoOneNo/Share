@@ -130,10 +130,14 @@ public class GroupManageActivity extends BaseActivity implements GroupManageMvpV
     }
 
     @Override
-    public void handleGroupList(List<GroupList> groupLists) {
+    public void handleGroupList(boolean isCache, List<GroupList> groupLists) {
         if(!CommonUtil.isEmpty(groupLists)){
             if(groupLists.get(0).getVisible() == -1){
                 groupLists.remove(0);
+            }
+
+            if(!isCache){
+                setResult(Activity.RESULT_OK);
             }
         }
         mAdapter.refresh(groupLists);

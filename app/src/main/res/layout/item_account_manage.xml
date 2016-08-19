@@ -27,7 +27,7 @@
         android:textSize="@dimen/text_normal"
         tools:text="username" />
 
-    <ImageButton
+    <com.hengye.share.ui.widget.theme.CustomThemeTintImageButton
         android:id="@+id/btn_check"
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"

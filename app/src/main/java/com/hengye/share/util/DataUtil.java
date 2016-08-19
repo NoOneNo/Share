@@ -1,30 +1,19 @@
 package com.hengye.share.util;
 
-import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.net.Uri;
-import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.BackgroundColorSpan;
 import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
-import android.util.Patterns;
-import android.view.View;
 
 import com.hengye.share.BuildConfig;
 import com.hengye.share.R;
-import com.hengye.share.adapter.recyclerview.CommonAdapter;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
 import com.hengye.share.ui.emoticon.Emoticon;
 import com.hengye.share.ui.support.textspan.TopicContentUrlSpan;
-import com.hengye.share.ui.support.textspan.TopicHttpUrlSpan;
-import com.hengye.share.util.thirdparty.WBUtil;
-import com.hengye.swiperefresh.PullToRefreshLayout;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -230,6 +219,17 @@ public class DataUtil {
     }
 
     public static String addRetweetedNamePrefix(Topic topic) {
+        String str;
+        if (!TextUtils.isEmpty(topic.getUserInfo().getName())) {
+            //如果微博已经被删除，则名字为空
+            str = "@" + topic.getUserInfo().getName() + ":" + topic.getContent();
+        } else {
+            str = topic.getContent();
+        }
+        return str;
+    }
+
+    public static String addRetweetedNamePrefix(TopicComment topic) {
         String str;
         if (!TextUtils.isEmpty(topic.getUserInfo().getName())) {
             //如果微博已经被删除，则名字为空

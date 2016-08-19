@@ -10,6 +10,7 @@ import android.os.Looper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.annotation.StyleRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -19,6 +20,7 @@ import android.widget.LinearLayout;
 import com.hengye.share.R;
 import com.hengye.share.ui.presenter.BasePresenter;
 import com.hengye.share.ui.widget.common.CommonToolBar;
+import com.hengye.share.util.ApplicationUtil;
 import com.hengye.share.util.NetworkUtil;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.helper.SettingHelper;
@@ -291,6 +293,11 @@ public class BaseActivity extends AppCompatActivity implements OnSkinUpdateListe
             }
             setTheme(mThemeResId);
         }
+    }
+
+    @Override
+    public void setTheme(@StyleRes int resid) {
+        super.setTheme(resid);
     }
 
     protected void replaceCustomThemeIfNeeded() {

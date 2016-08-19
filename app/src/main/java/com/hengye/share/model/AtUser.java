@@ -67,7 +67,7 @@ public class AtUser extends Select implements Serializable{
         for (AtUser au : targets) {
             if (au.getUserInfo() != null) {
                 if (!TextUtils.isEmpty(au.getUserInfo().getName())) {
-                    if (au.getUserInfo().getName().contains(str)) {
+                    if (au.getUserInfo().getName().toLowerCase().contains(str.toLowerCase())) {
                         result.add(au);
                     }
                 }

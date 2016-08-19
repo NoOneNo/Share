@@ -44,13 +44,14 @@ public class TopicCommentActivity extends BaseActivity{
 
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
+    private TopicFragmentPager mAdapter;
 
     private void initView(){
 
         initToolbar();
         mTabLayout = (TabLayout) findViewById(R.id.tab);
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
-        mViewPager.setAdapter(new TopicFragmentPager(getSupportFragmentManager(), this, getTopicGroups()));
+        mViewPager.setAdapter(mAdapter = new TopicFragmentPager(getSupportFragmentManager(), this, getTopicGroups()));
 //        mViewPager.setAdapter(new TopicNotifyFragmentPager());
         mTabLayout.setupWithViewPager(mViewPager);
     }
@@ -62,4 +63,8 @@ public class TopicCommentActivity extends BaseActivity{
         return topicGroupGroups;
     }
 
+    @Override
+    public boolean onToolbarDoubleClick(Toolbar toolbar) {
+        return mAdapter.getItem(mViewPager.getCurrentItem()).onToolbarDoubleClick(toolbar);
+    }
 }

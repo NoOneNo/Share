@@ -25,6 +25,10 @@ public class CommonTabLayout extends TabLayout {
     public CommonTabLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
+        if(isInEditMode()){
+            return;
+        }
+
         final TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.CommonTabLayout);
         setAutoTintThemeColor(ta.getBoolean(R.styleable.CommonTabLayout_autoTintThemeColor, false));
         ta.recycle();

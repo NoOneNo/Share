@@ -5,6 +5,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -407,11 +408,17 @@ public class TopicPublishService extends Service {
     }
 
     protected void showTopicPublishFailNotification(TopicPublish tp) {
+        try {
+            Thread.sleep(2000);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         Notification.Builder builder = getNotificationBuilder()
                 .setTicker(getString(R.string.label_topic_publish_fail))
                 .setContentTitle(getString(R.string.label_topic_publish_fail))
                 .setContentText(tp.getTopicDraft().getDesc())
                 .setVibrate(new long[0]);
+
         NotificationUtil.show(builder.build(), getNotificationId(tp));
         removeNotificationId(tp);
     }
@@ -422,6 +429,10 @@ public class TopicPublishService extends Service {
                 .setOngoing(false)
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setSmallIcon(R.drawable.notification_upload_white_48dp);
+
+        if(SettingHelper.isNotifyLightsOn()){
+            builder.setLights(Color.WHITE, 2000, 2000);
+        }
 
         Bitmap bitmap = UserUtil.getCurrentUser().getUserAvatarBitmap();
         if (bitmap != null) {

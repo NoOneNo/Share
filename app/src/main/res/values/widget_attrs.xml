@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <attr name="loading_drawable" format="reference"/>
+    <item type="id" name="toolbar"/>
+
+    <!--<attr name="loading_drawable" format="reference"/>-->
 
 
     <declare-styleable name="CommonTabLayout">

@@ -12,6 +12,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.util.TypedValue;
 
+import com.hengye.share.ui.base.BaseActivity;
+
 /**
  * Created by yuhy on 16/6/14.
  */
@@ -33,7 +35,11 @@ public class ResUtil extends ApplicationUtil {
     }
 
     public static int getAttrColor(@AttrRes int attr, int defaultValue){
-        return getAttrColor(getContext(), attr, defaultValue);
+        Context context = BaseActivity.getCurrentActivity();
+        if(context == null){
+            context = getContext();
+        }
+        return getAttrColor(context, attr, defaultValue);
     }
 
     public static int getAttrColor(Context context, @AttrRes int attr, int defaultValue){

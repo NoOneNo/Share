@@ -3,6 +3,7 @@ package com.hengye.share.ui.base;
 import android.app.Application;
 import android.content.Intent;
 
+import com.hengye.share.helper.SettingHelper;
 import com.hengye.share.service.ShareService;
 import com.hengye.share.util.RequestManager;
 import com.hengye.skinloader.support.SkinManager;

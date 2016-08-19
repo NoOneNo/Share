@@ -68,4 +68,8 @@
     <color name="image_default_bg">#ffe0e0e0</color>
 
     <color name="touch_effect">#9ccc</color>
+
+    <color name="font_grey">#646464</color>
+
+    <color name="font_red_warn">#FFD50000</color>
 </resources>

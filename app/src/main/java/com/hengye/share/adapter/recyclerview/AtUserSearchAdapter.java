@@ -69,7 +69,7 @@ public class AtUserSearchAdapter extends CommonAdapter<AtUser, AtUserSearchAdapt
             if (userInfo != null) {
                 mUsername.setText(userInfo.getName());
                 mAvatar.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());
-            }else{
+            } else {
                 mAvatar.setImageResource(0);
             }
         }

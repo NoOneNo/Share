@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.hengye.share.ui.widget.common.CommonToolBar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/toolbar"
+    android:id="@id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="?attr/colorPrimary"
     app:layout_scrollFlags="scroll|enterAlways"
-    app:title="@string/app_name" />
+    app:title="@string/app_name"
+    app:theme="@style/CommonToolbarTheme"/>

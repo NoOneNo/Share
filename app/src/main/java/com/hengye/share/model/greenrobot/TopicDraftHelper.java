@@ -5,6 +5,7 @@ import com.hengye.share.model.Topic;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
 
@@ -20,7 +21,7 @@ public class TopicDraftHelper {
     public final static int REPLY_COMMENT = 2;
     public final static int REPOST_TOPIC = 3;
 
-    public static Topic getTopic(TopicDraft topicDraft){
+    public static Topic getTopic(TopicDraft topicDraft) {
         Topic topic = new Topic();
         topic.setContent(topicDraft.getContent());
         topic.setDate(topicDraft.getDate().toString());
@@ -30,7 +31,7 @@ public class TopicDraftHelper {
         List<String> imageLargeUrls = new ArrayList<>();
 
         List<String> img = CommonUtil.split(topicDraft.getUrls(), ",");
-        if(!CommonUtil.isEmpty(img)) {
+        if (!CommonUtil.isEmpty(img)) {
             for (String url : img) {
                 imageUrls.add(WBUtil.getWBTopicImgUrl(url));
                 imageLargeUrls.add(WBUtil.getWBTopicLargeImgUrl(url));
@@ -41,7 +42,7 @@ public class TopicDraftHelper {
         return topic;
     }
 
-    public static TopicDraft getWBTopicDraftByTopicPublish(String content){
+    public static TopicDraft getWBTopicDraftByTopicPublish(String content) {
         TopicDraft topicDraft = new TopicDraft();
         topicDraft.setContent(content);
         topicDraft.setType(TopicDraftHelper.PUBLISH_TOPIC);
@@ -49,15 +50,31 @@ public class TopicDraftHelper {
         return topicDraft;
     }
 
-    public static TopicDraft getWBTopicDraftByTopicRepost(String targetTopicId){
+    public static TopicDraft getWBTopicDraftByTopicRepost(Topic topic) {
         TopicDraft topicDraft = new TopicDraft();
-        topicDraft.setTargetTopicId(targetTopicId);
+        Topic targetTopic;
+        if(topic.getRetweetedTopic() != null){
+            topicDraft.setContent(DataUtil.addRetweetedNamePrefix(topic));
+            targetTopic = topic.getRetweetedTopic();
+        }else{
+            targetTopic = topic;
+        }
+        topicDraft.setTargetTopicId(targetTopic.getId());
+        topicDraft.setTargetTopicJson(targetTopic.toJson());
         topicDraft.setType(TopicDraftHelper.REPOST_TOPIC);
         topicDraft.setParentType(Parent.TYPE_WEIBO);
         return topicDraft;
     }
 
-    public static TopicDraft getWBTopicDraftByTopicComment(String targetTopicId){
+//    public static TopicDraft getWBTopicDraftByTopicRepost(String targetTopicId) {
+//        TopicDraft topicDraft = new TopicDraft();
+//        topicDraft.setTargetTopicId(targetTopicId);
+//        topicDraft.setType(TopicDraftHelper.REPOST_TOPIC);
+//        topicDraft.setParentType(Parent.TYPE_WEIBO);
+//        return topicDraft;
+//    }
+
+    public static TopicDraft getWBTopicDraftByTopicComment(String targetTopicId) {
         TopicDraft topicDraft = new TopicDraft();
         topicDraft.setTargetTopicId(targetTopicId);
         topicDraft.setType(TopicDraftHelper.PUBLISH_COMMENT);
@@ -65,28 +82,28 @@ public class TopicDraftHelper {
         return topicDraft;
     }
 
-    public static List<TopicDraft> getTopicDraft(){
+    public static List<TopicDraft> getTopicDraft() {
         QueryBuilder<TopicDraft> qb = GreenDaoManager.getDaoSession().getTopicDraftDao().queryBuilder();
         qb.where(TopicDraftDao.Properties.Uid.eq(UserUtil.getUid()));
         qb.orderDesc(TopicDraftDao.Properties.Date);
 
-        try{
+        try {
             return qb.list();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public static void saveTopicDraft(TopicDraft topicDraft){
+    public static void saveTopicDraft(TopicDraft topicDraft) {
         GreenDaoManager.getDaoSession().getTopicDraftDao().insertOrReplace(topicDraft);
     }
 
-    public static void removeTopicDraft(TopicDraft topicDraft){
+    public static void removeTopicDraft(TopicDraft topicDraft) {
         GreenDaoManager.getDaoSession().getTopicDraftDao().delete(topicDraft);
     }
 
-    public static void removeAllTopicDraft(){
+    public static void removeAllTopicDraft() {
         GreenDaoManager.getDaoSession().getTopicDraftDao().deleteAll();
     }
 }

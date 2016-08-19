@@ -38,7 +38,7 @@ public class AtUserPresenter extends BasePresenter<AtUserMvpView> {
     }
 
     public void loadWBAttention(){
-        RequestManager.addToRequestQueue(getWBAttentionRequest(UserUtil.getToken(), UserUtil.getUid()));
+        RequestManager.addToRequestQueue(getWBAttentionRequest(UserUtil.getPriorToken(), UserUtil.getUid()));
     }
 
     private GsonRequest getWBAttentionRequest(String token, String uid) {

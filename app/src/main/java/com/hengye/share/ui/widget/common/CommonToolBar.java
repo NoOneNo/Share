@@ -42,7 +42,9 @@ public class CommonToolBar extends Toolbar {
         if (getNavigationIcon() != null) {
             getNavigationIcon().setTint(ThemeUtil.getTintColor());
         }
+        setBackgroundColor(ThemeUtil.getColor());
         setTitleTextColor(ThemeUtil.getTextColor());
+        setSubtitleTextColor(ThemeUtil.getTextColor());
         if (getNavigation() != null) {
 //            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) getNavigation().getLayoutParams();
             int actionBarHeight = ViewUtil.getActionBarHeight();

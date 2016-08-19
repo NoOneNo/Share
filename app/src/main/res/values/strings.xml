@@ -133,6 +133,8 @@
     <string name="label_topic_publish_repost_fail">转发微博失败</string>
     <string name="label_topic_publish_field_empty">请填写内容或选择图片</string>
     <string name="label_topic_picture_publish_content_empty">分享图片</string>
+    <string name="label_topic_publish_content_length_less">最多还能输入%s个字</string>
+    <string name="label_topic_publish_content_length_more">你已超了%s个字</string>
     <!-- Strings related to TopicPublish -->
 
     <!-- Strings related to TopicDraft -->

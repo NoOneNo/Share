@@ -10,7 +10,7 @@ public interface GroupManageMvpView extends MvpView {
 
     void loadFail();
 
-    void handleGroupList(List<GroupList> groupLists);
+    void handleGroupList(boolean isCache, List<GroupList> groupLists);
 
     void updateGroupOrderCallBack(boolean isSuccess);
 

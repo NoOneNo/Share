@@ -154,7 +154,8 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         initToolbar();
         updateToolbarTitle(" ");
 //        getToolbar().setNavigationIcon(null);
-        getToolbar().getNavigationIcon().setVisible(false, false);
+        getToolbar().setBackgroundResource(0);
+//        getToolbar().getNavigationIcon().setVisible(false, false);
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        toolbar.
 //        toolbar.setNavigationOnClickListener(new View.OnClickListener() {

@@ -126,11 +126,9 @@
             android:padding="10dp"
             android:src="@drawable/shape_circle_grey" />
 
-        <com.hengye.share.ui.widget.common.CommonToolBar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_collapseMode="pin" />
+        <include
+            layout="@layout/widget_tool_bar"
+            app:layout_collapseMode="pin"/>
 
     </com.hengye.share.ui.widget.PersonalHomePageToolbarLayout>
 
