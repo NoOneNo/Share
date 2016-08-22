@@ -41,4 +41,12 @@ public class NumberPager extends Pager {
     public Integer getPage(boolean isRefresh) {
         return (Integer) super.getPage(isRefresh);
     }
+
+    public void setPageNumber(int pageNumber){
+        this.pageNumber = pageNumber;
+    }
+
+    public Integer getPageNumber(){
+        return this.pageNumber;
+    }
 }

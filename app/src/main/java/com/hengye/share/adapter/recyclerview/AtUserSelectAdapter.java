@@ -5,10 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.R;
 import com.hengye.share.model.AtUser;
 import com.hengye.share.model.UserInfo;
+import com.hengye.share.ui.widget.image.AvatarImageView;
 import com.hengye.share.util.RequestManager;
 
 import java.util.List;
@@ -38,25 +38,25 @@ public class AtUserSelectAdapter extends CommonAdapter<AtUser, AtUserSelectAdapt
     }
 
     public void setItemPrepareDelete(boolean isPrepareDelete, AtUser au, int position) {
-        if(au.isPrepareDelete() != isPrepareDelete) {
+        if (au.isPrepareDelete() != isPrepareDelete) {
             au.setPrepareDelete(isPrepareDelete);
             notifyItemChanged(position);
         }
     }
 
-    public int getSelectSize(){
+    public int getSelectSize() {
         return getBasicItemCount();
     }
 
     public static class MainViewHolder extends CommonAdapter.ItemViewHolder<AtUser> {
 
-        NetworkImageViewPlus mAvatar;
+        AvatarImageView mAvatar;
         View mAvatarMask;
 
         public MainViewHolder(View v) {
             super(v);
 
-            mAvatar = (NetworkImageViewPlus) findViewById(R.id.iv_avatar);
+            mAvatar = (AvatarImageView) findViewById(R.id.iv_avatar);
             mAvatarMask = findViewById(R.id.iv_avatar_mask);
         }
 
@@ -69,7 +69,7 @@ public class AtUserSelectAdapter extends CommonAdapter<AtUser, AtUserSelectAdapt
             }
 
             UserInfo userInfo = atUser.getUserInfo();
-            if(userInfo != null){
+            if (userInfo != null) {
                 mAvatar.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());
             }
         }

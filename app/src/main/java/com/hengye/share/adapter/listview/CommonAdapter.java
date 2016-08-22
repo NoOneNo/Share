@@ -19,7 +19,15 @@ public abstract class CommonAdapter<T, V extends ViewHolder<T>> extends BaseAdap
     private OnItemClickListener mOnChildViewItemClickListener;
     private OnItemLongClickListener mOnChildViewItemLongClickListener;
 
+    public CommonAdapter() {
+
+    }
+
     public CommonAdapter(Context context, List<T> data) {
+        init(context, data);
+    }
+
+    public void init(Context context, List<T> data) {
         this.mContext = context;
         this.mData = data;
     }

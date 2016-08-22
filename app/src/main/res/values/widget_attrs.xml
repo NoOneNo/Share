@@ -10,4 +10,11 @@
         <attr name="autoTintThemeColor" format="boolean"/>
     </declare-styleable>
 
+    <declare-styleable name="SideBar">
+        <attr name="backgroundNormalColor" format="reference"/>
+        <attr name="backgroundPressedColor" format="reference"/>
+        <attr name="letterNormalColor" format="reference"/>
+        <attr name="letterPressedColor" format="reference"/>
+    </declare-styleable>
+
 </resources>

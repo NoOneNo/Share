@@ -34,7 +34,8 @@
     <!-- Strings related to Tip-->
     <string name="tip_load_image_fail">加载图片失败</string>
     <string name="tip_no_network">请检查网络后重试</string>
-    <string name="tip_error">出现不可预知的错误</string>
+    <string name="tip_load_error">加载失败</string>
+    <string name="tip_unpredictable_error">出现不可预知的错误</string>
     <string name="tip_loading">加载中</string>
     <string name="tip_need_advanced_authorize">需要高级授权, 是否继续?</string>
     <string name="tip_authorize_success">授权成功</string>
@@ -68,6 +69,8 @@
     <string name="title_activity_account_manage">账号管理</string>
     <string name="title_activity_topic_theme">相关话题</string>
     <string name="title_activity_web_view">浏览</string>
+    <string name="title_activity_follower_list">粉丝列表</string>
+    <string name="title_activity_attention_list">关注列表</string>
     <!-- Strings related to activity title-->
 
     <!-- Strings related to TopicGroup-->
@@ -135,6 +138,7 @@
     <string name="label_topic_picture_publish_content_empty">分享图片</string>
     <string name="label_topic_publish_content_length_less">最多还能输入%s个字</string>
     <string name="label_topic_publish_content_length_more">你已超了%s个字</string>
+    <string name="tip_topic_publish_content_length_error">发送字数已超出限制</string>
     <!-- Strings related to TopicPublish -->
 
     <!-- Strings related to TopicDraft -->

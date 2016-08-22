@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AtUser extends Select implements Serializable{
+public class AtUser implements Serializable{
 
     private static final long serialVersionUID = -4261232745907154037L;
 
@@ -90,5 +90,15 @@ public class AtUser extends Select implements Serializable{
 
     public void setPrepareDelete(boolean prepareDelete) {
         isPrepareDelete = prepareDelete;
+    }
+
+    private boolean selected;
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }

@@ -59,7 +59,9 @@ public class UrlFactory {
     //发表微博, 可上传多张图片,高级接口
     public static final String WB_PUBLISH_TOPIC_PICTURE = "statuses/upload_url_text.json";
     //获取用户的关注列表
-    public static final String WB_USER_ATTENTION = "friendships/friends.json";
+    public static final String WB_USER_ATTENTIONS = "friendships/friends.json";
+    //获取用户的关注列表
+    public static final String WB_USER_FOLLOWERS = "friendships/followers.json";
     //对微博进行评论
     public static final String WB_COMMENT_TOPIC = "comments/create.json";
     //回复评论
@@ -246,7 +248,7 @@ public class UrlFactory {
 
     //获取用户的关注列表
     public String getWBAttentionUrl() {
-        return getWBUrlPrefix() + WB_USER_ATTENTION;
+        return getWBUrlPrefix() + WB_USER_ATTENTIONS;
     }
 
     //    comment	true	string	评论内容，必须做URLencode，内容不超过140个汉字。

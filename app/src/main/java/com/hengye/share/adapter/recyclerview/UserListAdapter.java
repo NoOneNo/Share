@@ -1,7 +1,6 @@
 package com.hengye.share.adapter.recyclerview;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,40 +8,29 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.hengye.share.R;
-import com.hengye.share.model.AtUser;
+import com.hengye.share.model.Select;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.ui.widget.image.AvatarImageView;
 import com.hengye.share.ui.widget.util.SelectorLoader;
 import com.hengye.share.util.RequestManager;
 
-import java.util.List;
+public class UserListAdapter extends EditModeAdapter<Select<UserInfo>, UserListAdapter.MainViewHolder> {
 
-public class AtUserSearchAdapter extends CommonAdapter<AtUser, AtUserSearchAdapter.MainViewHolder> {
-
-    public AtUserSearchAdapter(Context context, List<AtUser> data) {
-        super(context, data);
+    public UserListAdapter(Context context) {
+        super(context);
     }
 
     @Override
     public MainViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
-        return new MainViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_at_user_search_result, parent, false));
+        return new MainViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_user_list, parent, false));
     }
 
     @Override
     public void onBindBasicItemView(MainViewHolder holder, int position) {
         super.onBindBasicItemView(holder, position);
-
     }
 
-    public void showSearchResult(String str, List<AtUser> totalData) {
-        if (TextUtils.isEmpty(str)) {
-            refresh(totalData);
-        } else {
-            refresh(AtUser.search(totalData, str));
-        }
-    }
-
-    public static class MainViewHolder extends CommonAdapter.ItemViewHolder<AtUser> {
+    public static class MainViewHolder extends EditModeAdapter.EditModeViewHolder<Select<UserInfo>> {
 
         ImageButton mCheckBox;
         TextView mUsername;
@@ -55,17 +43,22 @@ public class AtUserSearchAdapter extends CommonAdapter<AtUser, AtUserSearchAdapt
             mUsername = (TextView) findViewById(R.id.tv_username);
             mAvatar = (AvatarImageView) findViewById(R.id.iv_avatar);
 
+            mAvatar.setAutoClipBitmap(false);
             SelectorLoader
                     .getInstance()
                     .setDefaultRippleWhiteBackground(v);
         }
 
         @Override
-        public void bindData(Context context, AtUser atUser, int position) {
-            mCheckBox.setTag(position);
-            mCheckBox.setImageResource(atUser.isSelected() ? R.drawable.ic_check_select : 0);
+        public void updateEditMode(boolean isEditMode) {
+            mCheckBox.setVisibility(isEditMode ? View.VISIBLE : View.INVISIBLE);
+        }
 
-            UserInfo userInfo = atUser.getUserInfo();
+        @Override
+        public void bindData(Context context, Select<UserInfo> select, int position) {
+            mCheckBox.setImageResource(select.isSelected() ? R.drawable.ic_check_select : 0);
+
+            UserInfo userInfo = select.getTarget();
             if (userInfo != null) {
                 mUsername.setText(userInfo.getName());
                 mAvatar.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());

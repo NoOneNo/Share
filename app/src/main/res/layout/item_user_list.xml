@@ -36,7 +36,8 @@
         android:background="@drawable/ic_check_normal"
         android:contentDescription="@null"
         android:src="@drawable/ic_check_select"
-        android:visibility="visible"/>
+        android:visibility="invisible"
+        tools:visibility="visible"/>
 
     <View
         style="@style/horizontal_line"

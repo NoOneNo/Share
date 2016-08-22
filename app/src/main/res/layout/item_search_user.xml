@@ -6,11 +6,10 @@
     android:layout_height="match_parent"
     android:layout_marginEnd="@dimen/content_margin_10dp">
 
-    <com.android.volley.view.NetworkImageViewPlus
+    <com.hengye.share.ui.widget.image.AvatarImageView
         android:id="@+id/iv_avatar"
         android:layout_width="@dimen/search_user_avatar"
-        android:layout_height="@dimen/search_user_avatar"
-        android:src="@drawable/ic_user_avatar"/>
+        android:layout_height="@dimen/search_user_avatar"/>
 
     <TextView
         android:id="@+id/tv_username"

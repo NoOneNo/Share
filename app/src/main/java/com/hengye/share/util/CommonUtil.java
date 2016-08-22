@@ -99,6 +99,14 @@ public class CommonUtil {
         return list.get(list.size() - 1);
     }
 
+    public static int size(Collection collection){
+        if(isEmpty(collection)){
+            return 0;
+        }
+        return collection.size();
+    }
+
+
     public interface ToSplit {
         String toSplit();
     }

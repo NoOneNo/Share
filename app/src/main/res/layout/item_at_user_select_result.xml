@@ -6,12 +6,10 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/content_margin_3dp">
 
-    <com.android.volley.view.NetworkImageViewPlus
+    <com.hengye.share.ui.widget.image.AvatarImageView
         android:id="@+id/iv_avatar"
         android:layout_width="@dimen/at_user_avatar"
-        android:layout_height="@dimen/at_user_avatar"
-        android:src="@drawable/ic_user_avatar"
-        android:contentDescription="@null"/>
+        android:layout_height="@dimen/at_user_avatar"/>
 
     <View
         android:id="@+id/iv_avatar_mask"

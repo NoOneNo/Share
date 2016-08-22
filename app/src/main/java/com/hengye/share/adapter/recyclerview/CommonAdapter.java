@@ -11,6 +11,7 @@ import com.hengye.share.handler.data.base.DataAdapter;
 import com.hengye.share.ui.widget.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.listener.OnItemLongClickListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends HeaderAdapter<VH> implements DataAdapter<T> {
@@ -20,9 +21,19 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
     private OnItemClickListener mOnItemClickListener, mOnChildViewItemClickListener;
     private OnItemLongClickListener mOnItemLongClickListener, mOnChildViewItemLongClickListener;
 
+    public CommonAdapter(){}
+
+    public CommonAdapter(Context context) {
+        this(context, new ArrayList<T>());
+    }
+
     public CommonAdapter(Context context, List<T> data) {
-        mContext = context;
-        mData = data;
+        init(context, data);
+    }
+
+    public void init(Context context, List<T> data) {
+        this.mContext = context;
+        this.mData = data;
     }
 
     @Override

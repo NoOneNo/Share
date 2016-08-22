@@ -9,14 +9,11 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     tools:showIn="@layout/item_topic_total">
 
-    <com.android.volley.view.NetworkImageViewPlus
+    <com.hengye.share.ui.widget.image.AvatarImageView
         android:id="@+id/iv_topic_avatar"
         android:layout_width="@dimen/topic_avatar"
         android:layout_height="@dimen/topic_avatar"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:scaleType="centerCrop"
-        android:background="@drawable/ic_user_avatar"
-        android:contentDescription="@null"/>
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"/>
 
     <TextView
         android:id="@+id/tv_topic_username"

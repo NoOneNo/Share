@@ -15,7 +15,6 @@ public class ToastUtil extends ApplicationUtil{
         toast.setText(text);
         toast.setDuration(Toast.LENGTH_SHORT);
         toast.show();
-//        Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
     }
 
     public static void showToast(@StringRes int resId){
@@ -45,6 +44,10 @@ public class ToastUtil extends ApplicationUtil{
             mToast = Toast.makeText(getContext(), "", Toast.LENGTH_SHORT);
         }
         return mToast;
+    }
+
+    public static void showLoadErrorToast(){
+        showToast(R.string.tip_load_error);
     }
 
     public static void showNetWorkErrorToast(){

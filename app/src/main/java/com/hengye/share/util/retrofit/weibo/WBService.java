@@ -17,18 +17,13 @@ import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
-import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 import rx.Observable;
 
@@ -161,4 +156,11 @@ public interface WBService {
     Observable<WBUserInfo> followDestroy(
             @Field("access_token") String token,
             @Field("uid") String count);
+
+
+    @GET(UrlFactory.WB_USER_ATTENTIONS)
+    Observable<WBUserInfos> listAttentions(@QueryMap Map<String, String> options);
+
+    @GET(UrlFactory.WB_USER_FOLLOWERS)
+    Observable<WBUserInfos> listFollowers(@QueryMap Map<String, String> options);
 }

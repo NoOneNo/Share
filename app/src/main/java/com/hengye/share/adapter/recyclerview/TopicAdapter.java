@@ -19,8 +19,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
-import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.R;
+import com.hengye.share.helper.SettingHelper;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.UserInfo;
@@ -32,10 +32,12 @@ import com.hengye.share.ui.activity.TopicDetailActivity;
 import com.hengye.share.ui.activity.TopicPublishActivity;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.ui.support.textspan.TopicUrlOnTouchListener;
+import com.hengye.share.ui.widget.dialog.DialogBuilder;
+import com.hengye.share.ui.widget.image.AvatarImageView;
+import com.hengye.share.ui.widget.image.GridGalleryView;
+import com.hengye.share.ui.widget.image.SuperImageView;
 import com.hengye.share.ui.widget.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.listener.OnItemLongClickListener;
-import com.hengye.share.ui.widget.image.GridGalleryView;
-import com.hengye.share.ui.widget.dialog.DialogBuilder;
 import com.hengye.share.ui.widget.util.SelectorLoader;
 import com.hengye.share.util.ClipboardUtil;
 import com.hengye.share.util.CommonUtil;
@@ -43,7 +45,6 @@ import com.hengye.share.util.DateUtil;
 import com.hengye.share.util.IntentUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
-import com.hengye.share.helper.SettingHelper;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
@@ -327,7 +328,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicDefault
 
     public static class TopicTitleViewHolder {
 
-        public NetworkImageViewPlus mAvatar;
+        public AvatarImageView mAvatar;
         public TextView mUsername, mDescription;
         public View mTitle;
 
@@ -336,8 +337,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicDefault
 
         public TopicTitleViewHolder(View v) {
             mTitle = v.findViewById(R.id.rl_topic_title);
-            mAvatar = (NetworkImageViewPlus) v.findViewById(R.id.iv_topic_avatar);
-            mAvatar.setAutoClipBitmap(false);
+            mAvatar = (AvatarImageView) v.findViewById(R.id.iv_topic_avatar);
             mUsername = (TextView) v.findViewById(R.id.tv_topic_username);
             mDescription = (TextView) v.findViewById(R.id.tv_topic_description);
 
@@ -421,8 +421,8 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicDefault
                 mGallery.setGridCount(urls.size());
                 mGallery.setHandleData(new GridGalleryView.HandleData() {
                     @Override
-                    public NetworkImageViewPlus getImageView() {
-                        NetworkImageViewPlus iv = new NetworkImageViewPlus(context);
+                    public SuperImageView getImageView() {
+                        SuperImageView iv = new SuperImageView(context);
 //                                iv.setFadeInImage(mIsFadeInImage);
                         iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
                         iv.setBackgroundColor(context.getResources().getColor(R.color.image_default_bg));
@@ -433,7 +433,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicDefault
 
                     @Override
                     public void handleChildItem(ImageView imageView, int position) {
-                        NetworkImageViewPlus iv = (NetworkImageViewPlus) imageView;
+                        SuperImageView iv = (SuperImageView) imageView;
                         iv.setImageUrl(urls.get(position), RequestManager.getImageLoader());
                     }
                 });

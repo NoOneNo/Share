@@ -5,7 +5,6 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,21 +12,15 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.MotionEventCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.R;
 import com.hengye.share.helper.TransitionHelper;
 import com.hengye.share.model.Parent;
@@ -36,19 +29,20 @@ import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.ui.fragment.PersonalHomepageFragment;
-import com.hengye.share.ui.fragment.TopicFragment;
+import com.hengye.share.ui.fragment.UserAttentionsFragment;
+import com.hengye.share.ui.fragment.UserFollowersFragment;
 import com.hengye.share.ui.mvpview.UserMvpView;
 import com.hengye.share.ui.presenter.UserPresenter;
 import com.hengye.share.ui.widget.PersonalHomePageToolbarLayout;
 import com.hengye.share.ui.widget.fab.CheckableFab;
+import com.hengye.share.ui.widget.image.AvatarImageView;
+import com.hengye.share.ui.widget.image.SuperImageView;
 import com.hengye.share.util.DataUtil;
-import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
-import com.hengye.swiperefresh.PullToRefreshLayout;
 import com.hengye.swiperefresh.SwipeRefreshLayout;
 
 import rx.Observable;
@@ -59,8 +53,12 @@ import rx.schedulers.Schedulers;
 public class PersonalHomepageActivity extends BaseActivity implements View.OnClickListener, AppBarLayout.OnOffsetChangedListener, UserMvpView {
 
     public static void start(Context context, View startView, UserInfo userInfo) {
-        Intent intent = getStartIntent(context, userInfo);
-        TransitionHelper.startTransitionActivity(context, intent, startView, R.string.transition_name_avatar);
+        if(startView == null){
+            start(context, userInfo);
+        }else {
+            Intent intent = getStartIntent(context, userInfo);
+            TransitionHelper.startTransitionActivity(context, intent, startView, R.string.transition_name_avatar);
+        }
     }
 
     public static void start(Context context, UserInfo userInfo) {
@@ -126,7 +124,8 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     }
 
     private TextView mDivision, mAttention, mFans, mSign;
-    private NetworkImageViewPlus mCover, mAvatar;
+    private SuperImageView mCover;
+    private AvatarImageView mAvatar;
     private PersonalHomePageToolbarLayout mCollapsingToolbarLayout;
     private SwipeRefreshLayout mSwipeRefresh;
     private AppBarLayout mAppBarLayout;
@@ -173,9 +172,9 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                 (PersonalHomePageToolbarLayout) findViewById(R.id.collapsing_toolbar);
         mCollapsingToolbarLayout.setTitle(" ");
         mUserDescription = findViewById(R.id.ll_user_desc);
-//        mCollapsingToolbarLayout.setexpan
-        mCover = (NetworkImageViewPlus) findViewById(R.id.iv_cover);
+        mCover = (SuperImageView) findViewById(R.id.iv_cover);
         mCover.setFadeInImage(false);
+        mCover.setAutoClipBitmap(false);
 
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.main_content);
         mAppBarLayout = (AppBarLayout) findViewById(R.id.appbar);
@@ -190,7 +189,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                 return true;
             }
         });
-        mAvatar = (NetworkImageViewPlus) findViewById(R.id.iv_avatar);
+        mAvatar = (AvatarImageView) findViewById(R.id.iv_avatar);
         mAvatar.setTransitionName(getString(R.string.transition_name_avatar));
         mAvatar.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -204,6 +203,9 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         mAttention = (TextView) findViewById(R.id.tv_attention);
         mFans = (TextView) findViewById(R.id.tv_fans);
         mSign = (TextView) findViewById(R.id.tv_sign);
+
+        mAttention.setOnClickListener(this);
+        mFans.setOnClickListener(this);
 
         mTab = (TabLayout) findViewById(R.id.tab);
 
@@ -407,10 +409,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         mWBUserInfo = wbUserInfo;
         mCollapsingToolbarLayout.setTitle(" " + wbUserInfo.getName());
 //        mCover.setImageResource(R.drawable.bg_test);
-        mCover.setAutoClipBitmap(false);
         mCover.setImageUrl(wbUserInfo.getCover_image_phone(), RequestManager.getImageLoader());
-        mAvatar.setAutoClipBitmap(false);
-        mAvatar.setDefaultImageResId(R.drawable.ic_user_avatar);
         mAvatar.setImageUrl(wbUserInfo.getAvatar_large(), RequestManager.getImageLoader());
         mDivision.setVisibility(View.VISIBLE);
         mAttention.setText(String.format(getString(R.string.label_attention), DataUtil.getCounter(wbUserInfo.getFriends_count())));
@@ -465,6 +464,14 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         if (id == R.id.fab) {
             if (mWBUserInfo != null) {
                 follow(!mWBUserInfo.isFollowing(), mWBUserInfo.getIdstr());
+            }
+        }else if(id == R.id.tv_attention){
+            if(mUserInfo.getUid() != null){
+                UserAttentionsFragment.start(this, mUserInfo.getUid());
+            }
+        }else if(id == R.id.tv_fans){
+            if(mUserInfo.getUid() != null){
+                UserFollowersFragment.start(this, mUserInfo.getUid());
             }
         }
     }

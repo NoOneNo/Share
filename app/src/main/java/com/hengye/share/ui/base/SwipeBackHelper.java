@@ -91,7 +91,7 @@ public class SwipeBackHelper implements SwipeBackActivityBase {
                 break;
             case 3:
             default:
-                getSwipeBackLayout().setEdgeTrackingEnabled(SwipeBackLayout.EDGE_ALL);
+                getSwipeBackLayout().setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT | SwipeBackLayout.EDGE_RIGHT);
                 break;
         }
     }

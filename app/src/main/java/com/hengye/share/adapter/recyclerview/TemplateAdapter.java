@@ -9,8 +9,8 @@ import java.util.List;
 
 public class TemplateAdapter extends CommonAdapter<String, TemplateAdapter.MainViewHolder> {
 
-    public TemplateAdapter(Context context, List<String> data) {
-        super(context, data);
+    public TemplateAdapter(Context context) {
+        super(context);
     }
 
     @Override

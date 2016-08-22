@@ -35,9 +35,14 @@ public abstract class PagingFragment<T> extends ContentFragment{
     PagingConfig mPagingConfig;
 
     public int handleData(boolean isRefresh, List<T> data){
-        getPager().handlePage(isRefresh);
-        int type = getDataHandler().handleData(isRefresh, data);
-        handleDataType(type);
+        if(getPager() != null) {
+            getPager().handlePage(isRefresh);
+        }
+        int type = -1;
+        if(getDataHandler() != null) {
+            type = getDataHandler().handleData(isRefresh, data);
+            handleDataType(type);
+        }
         updatePagingConfig();
         return type;
     }

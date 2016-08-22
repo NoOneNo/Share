@@ -6,12 +6,11 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <com.android.volley.view.NetworkImageViewPlus
+    <com.hengye.share.ui.widget.image.AvatarImageView
         android:id="@+id/iv_avatar"
         android:layout_width="@dimen/user_avatar"
         android:layout_height="@dimen/user_avatar"
-        android:layout_margin="@dimen/content_margin_default"
-        android:src="@drawable/ic_user_avatar" />
+        android:layout_margin="@dimen/content_margin_default" />
 
     <TextView
         android:id="@+id/tv_username"

@@ -16,24 +16,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.AtUserSearchAdapter;
 import com.hengye.share.adapter.recyclerview.AtUserSelectAdapter;
-import com.hengye.share.adapter.recyclerview.AtUserSortAdapter;
-import com.hengye.share.adapter.recyclerview.AtUserSortAdapter.Letter;
 import com.hengye.share.model.AtUser;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.ui.mvpview.UserListMvpView;
 import com.hengye.share.ui.presenter.UserListPresenter;
-import com.hengye.share.ui.widget.lettersort.SideBar;
 import com.hengye.share.ui.widget.listener.OnItemClickListener;
 import com.hengye.share.util.CommonUtil;
-import com.hengye.share.util.L;
 import com.hengye.share.util.SPUtil;
-import com.hengye.share.util.ThemeUtil;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
@@ -41,11 +35,9 @@ import com.hengye.swiperefresh.PullToRefreshLayout;
 import com.hengye.swiperefresh.listener.SwipeListener;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
-public class AtUserActivity extends BaseActivity implements UserListMvpView {
+public class AtUserActivityBackup extends BaseActivity implements UserListMvpView {
 
     @Override
     protected String getRequestTag() {
@@ -80,26 +72,18 @@ public class AtUserActivity extends BaseActivity implements UserListMvpView {
     private PullToRefreshLayout mPullToRefreshLayout;
     private RecyclerView mRVSelectResult, mRVSearchResult;
     private EditText mSearch;
-    private SideBar mSideBar;
-    private View mSearchIcon, mLetter;
-    private TextView mLetterTV;
+    private View mSearchIcon;
 
     private AtUserSelectAdapter mAtUserSelectAdapter;
 
-    private AtUserSortAdapter mAtUserSearchAdapter;
+    private AtUserSearchAdapter mAtUserSearchAdapter;
     private ArrayList<AtUser> mSelectResultData, mSearchResultData;
-    private List<Object> mSearchResultTotalData;
-    private LinearLayoutManager mSelectResultLayoutManager, mSearchResultLayoutManager;
+    private LinearLayoutManager mSelectResultLayoutManager;
 
     private UserListPresenter mPresenter;
 
     private void initView() {
 
-        mSideBar = (SideBar) findViewById(R.id.side_bar);
-        mLetterTV = (TextView) findViewById(R.id.tv_letter);
-        mLetterTV.setTextColor(ThemeUtil.getTextColor());
-        mLetter = findViewById(R.id.fl_letter);
-        mLetter.setBackgroundColor(ThemeUtil.getColor());
         mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.pull_to_refresh);
 
         mRVSelectResult = (RecyclerView) findViewById(R.id.recycler_view_select_result);
@@ -110,12 +94,10 @@ public class AtUserActivity extends BaseActivity implements UserListMvpView {
         mRVSelectResult.setItemAnimator(new DefaultItemAnimator());
 
         mRVSearchResult = (RecyclerView) findViewById(R.id.recycler_view_search_result);
-        mRVSearchResult.setLayoutManager(mSearchResultLayoutManager = new LinearLayoutManager(this));
-//        mRVSearchResult.setAdapter(mAtUserSearchAdapter = new AtUserSortAdapter(this, mSearchResultData = mPresenter.getSearchResultData()));
-        mRVSearchResult.setAdapter(mAtUserSearchAdapter = new AtUserSortAdapter(this));
-        mSearchResultData = mPresenter.getSearchResultData();
-        mAtUserSearchAdapter.refresh(convertUserList(mSearchResultData));
+        mRVSearchResult.setLayoutManager(new LinearLayoutManager(this));
+        mRVSearchResult.setAdapter(mAtUserSearchAdapter = new AtUserSearchAdapter(this, mSearchResultData = mPresenter.getSearchResultData()));
         mSearch = (EditText) findViewById(R.id.et_username);
+
         mSearchIcon = findViewById(R.id.ic_search);
 
         if (UserUtil.isUserEmpty()) {
@@ -168,13 +150,10 @@ public class AtUserActivity extends BaseActivity implements UserListMvpView {
         mAtUserSearchAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-//                AtUser select = mAtUserSearchAdapter.getItem(position);
-                Object obj = mAtUserSearchAdapter.getItem(position);
-                if(!(obj instanceof AtUser)){
+                AtUser select = mAtUserSearchAdapter.getItem(position);
+                if (select == null) {
                     return;
                 }
-
-                AtUser select = (AtUser) obj;
                 updateSelectItems(select);
 
                 mRVSelectResult.post(mRVSelectResultScrollToEnd);
@@ -213,7 +192,7 @@ public class AtUserActivity extends BaseActivity implements UserListMvpView {
             @Override
             public void afterTextChanged(Editable s) {
                 mAtUserSelectAdapter.setLastItemPrepareDelete(false);
-                mAtUserSearchAdapter.showSearchResult(mSearch.getText().toString(), mSearchResultTotalData, mSearchResultData);
+                mAtUserSearchAdapter.showSearchResult(mSearch.getText().toString(), mSearchResultData);
             }
         });
 
@@ -265,24 +244,6 @@ public class AtUserActivity extends BaseActivity implements UserListMvpView {
         if (CommonUtil.isEmpty(mSearchResultData)) {
             mPullToRefreshLayout.setRefreshing(true);
         }
-
-        mSideBar.setOnTouchLetterListener(new SideBar.OnTouchLetterListener() {
-            @Override
-            public void onTouchLetter(String s) {
-                mLetter.setVisibility(View.VISIBLE);
-                mLetterTV.setText(s);
-                int selection = mAtUserSearchAdapter.getKeyIndex(new Letter(s));
-                if (selection != -1) {
-                    mSearchResultLayoutManager.scrollToPositionWithOffset(selection, 0);
-                }
-                L.debug("s : {}, index : {}", s, selection);
-            }
-
-            @Override
-            public void onTouchOutside() {
-                mLetter.setVisibility(View.GONE);
-            }
-        });
     }
 
     private void notifySelectResultFirstItem() {
@@ -403,7 +364,7 @@ public class AtUserActivity extends BaseActivity implements UserListMvpView {
         mSearchResultData = AtUser.getAtUser(data);
 
         SPUtil.setModule(mSearchResultData, AtUser.class.getSimpleName() + UserUtil.getUid());
-        mAtUserSearchAdapter.refresh(convertUserList(mSearchResultData));
+        mAtUserSearchAdapter.refresh(mSearchResultData);
     }
 
     @Override
@@ -421,48 +382,22 @@ public class AtUserActivity extends BaseActivity implements UserListMvpView {
         mPullToRefreshLayout.setLoadEnable(loadEnable);
     }
 
-    public List<Object> convertUserList(List<AtUser> userInfos) {
-
-        Map<Letter, List<AtUser>> sortUsers = new LinkedHashMap<>();
-        try {
-
-            List<String> data = mSideBar.getData().subList(1, mSideBar.getData().size());
-
-            for (AtUser atUser : userInfos) {
-                Letter letter = new Letter();
-                String key = "#";
-                UserInfo userInfo = atUser.getUserInfo();
-                if (!TextUtils.isEmpty(userInfo.getSpell()) && data.contains(userInfo.getSpell())) {
-                    key = userInfo.getSpell();
-                }
-                letter.setLetter(key);
-
-                List<AtUser> temp = sortUsers.get(letter);
-                if (temp == null) {
-                    temp = new ArrayList<>();
-                    sortUsers.put(letter, temp);
-                }
-                temp.add(atUser);
-            }
-
-            if(!sortUsers.isEmpty()){
-                Map<Letter, List<AtUser>> result = new LinkedHashMap<>();
-                Letter letter;
-                for(String str : data){
-                    letter = new Letter(str);
-                    if(sortUsers.containsKey(letter)){
-                        result.put(letter, sortUsers.get(letter));
-                    }
-                }
-                sortUsers.clear();
-                sortUsers = result;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return mSearchResultTotalData = mAtUserSearchAdapter.convertMapToList(sortUsers);
-    }
+//    public Map<Letter, UserInfo> showUserListSuccess(List<UserInfo> data) {
+//        if (!data.isEmpty()) {
+//            Map<Letter, List<UserInfo>> result = new LinkedHashMap<>();
+//            Letter letter;
+//            for (String str : data) {
+//                letter = new Letter(str);
+//                if (sortUsers.containsKey(letter)) {
+//                    result.put(letter, data.get(letter));
+//                }
+//            }
+//            sortUsers.clear();
+//            sortUsers = result;
+//            return result;
+//        }
+//        return null;
+//    }
 }
 
 

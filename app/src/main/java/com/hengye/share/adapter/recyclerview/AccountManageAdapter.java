@@ -8,12 +8,13 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.R;
 import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.ui.activity.AccountManageActivity;
 import com.hengye.share.ui.activity.ThirdPartyLoginActivity;
 import com.hengye.share.ui.base.BaseActivity;
+import com.hengye.share.ui.widget.image.AvatarImageView;
+import com.hengye.share.ui.widget.image.SuperImageView;
 import com.hengye.share.ui.widget.util.SelectorLoader;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.thirdparty.ThirdPartyUtils;
@@ -48,7 +49,7 @@ public class AccountManageAdapter extends CommonAdapter<User, AccountManageAdapt
         public FooterViewHolder(final Context context, View v) {
             super(v);
 
-            NetworkImageViewPlus avatar = (NetworkImageViewPlus) v.findViewById(R.id.iv_avatar);
+            SuperImageView avatar = (SuperImageView) v.findViewById(R.id.iv_avatar);
             TextView username = (TextView) v.findViewById(R.id.tv_username);
 
             SelectorLoader.getInstance().setImageSelector(context, avatar, R.drawable.compose_more_account_add, R.drawable.compose_more_account_add_highlighted);
@@ -76,14 +77,14 @@ public class AccountManageAdapter extends CommonAdapter<User, AccountManageAdapt
 
         AccountManageActivity.AccountManageCallBack mCallBack;
 
-        NetworkImageViewPlus mAvatar;
+        AvatarImageView mAvatar;
         TextView mUsername;
         ImageButton mSelectBtn;
 
         public MainViewHolder(AccountManageActivity.AccountManageCallBack callBack, View v) {
             super(v);
             mCallBack = callBack;
-            mAvatar = (NetworkImageViewPlus) findViewById(R.id.iv_avatar);
+            mAvatar = (AvatarImageView) findViewById(R.id.iv_avatar);
             mUsername = (TextView) findViewById(R.id.tv_username);
             mSelectBtn = (ImageButton) findViewById(R.id.btn_check);
 

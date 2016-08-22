@@ -6,12 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.R;
 import com.hengye.share.model.UserInfo;
+import com.hengye.share.ui.widget.image.AvatarImageView;
 import com.hengye.share.util.RequestManager;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -28,13 +26,13 @@ public class SearchUserAdapter extends CommonAdapter<UserInfo, SearchUserAdapter
 
     public static class MainViewHolder extends CommonAdapter.ItemViewHolder<UserInfo> {
 
-        NetworkImageViewPlus avatar;
+        AvatarImageView avatar;
         TextView username;
 
         public MainViewHolder(View v) {
             super(v);
 
-            avatar = (NetworkImageViewPlus) findViewById(R.id.iv_avatar);
+            avatar = (AvatarImageView) findViewById(R.id.iv_avatar);
             username = (TextView) findViewById(R.id.tv_username);
         }
 

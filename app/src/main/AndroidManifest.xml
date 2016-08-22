@@ -145,7 +145,8 @@
             android:name="com.hengye.share.ui.activity.TopicCommentActivity"/>
 
         <activity
-            android:name="com.hengye.share.ui.activity.AtUserActivity"
+            android:name=".ui.activity.AtUserActivity"
+            android:windowSoftInputMode="adjustPan"
             android:label="@string/title_activity_at_user"/>
 
         <activity

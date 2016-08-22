@@ -21,9 +21,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.view.NetworkImageViewPlus;
 import com.hengye.share.R;
 import com.hengye.share.adapter.viewpager.TopicFragmentPager;
+import com.hengye.share.helper.SettingHelper;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.model.sina.WBUserInfo;
@@ -37,12 +37,12 @@ import com.hengye.share.ui.presenter.TopicPresenter;
 import com.hengye.share.ui.presenter.UserPresenter;
 import com.hengye.share.ui.support.actionbar.ActionBarDrawerToggleCustom;
 import com.hengye.share.ui.widget.SearchView;
+import com.hengye.share.ui.widget.image.AvatarImageView;
 import com.hengye.share.ui.widget.util.SelectorLoader;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.NetworkUtil;
 import com.hengye.share.util.RequestManager;
-import com.hengye.share.helper.SettingHelper;
 import com.hengye.share.util.ThemeUtil;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
@@ -89,7 +89,7 @@ public class TopicActivity extends BaseActivity
 
     private ViewPager mViewPager;
     private TabLayout mTab;
-    private NetworkImageViewPlus mAvatar;
+    private AvatarImageView mAvatar;
     private TextView mUsername, mSign;
     private View mNoNetwork, mAppBar;
     private DrawerLayout mDrawer;
@@ -181,7 +181,7 @@ public class TopicActivity extends BaseActivity
         SelectorLoader.getInstance().setImageSelector(this, moreAccount, R.drawable.compose_more_account_add, R.drawable.compose_more_account_add_highlighted);
         moreAccount.setOnClickListener(this);
 
-        mAvatar = (NetworkImageViewPlus) header.findViewById(R.id.iv_avatar);
+        mAvatar = (AvatarImageView) header.findViewById(R.id.iv_avatar);
         mAvatar.setAutoClipBitmap(false);
         mAvatar.setFadeInImage(false);
         mAvatar.setDefaultImageResId(R.drawable.ic_user_avatar);

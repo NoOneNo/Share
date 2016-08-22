@@ -23,7 +23,7 @@
         app:title=""
         app:toolbarId="@id/toolbar">
 
-        <com.android.volley.view.NetworkImageViewPlus
+        <com.hengye.share.ui.widget.image.SuperImageView
             android:id="@+id/iv_cover"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -56,7 +56,6 @@
                 android:orientation="vertical"
                 android:paddingBottom="@dimen/spacing_normal"
                 android:paddingEnd="@dimen/spacing_double"
-                android:paddingStart="@dimen/spacing_double"
                 android:paddingTop="@dimen/spacing_normal"
                 android:visibility="invisible"
                 tools:visibility="visible">
@@ -66,22 +65,23 @@
                     android:id="@+id/ll_user_info_summary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_normal"
                     android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/tv_attention"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:padding="@dimen/spacing_normal"
                         android:textColor="@color/white"
                         android:textSize="14sp"
+                        android:background="@drawable/selector_shadow"
                         tools:text="关注 1" />
 
                     <TextView
                         android:id="@+id/tv_division"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingEnd="@dimen/content_margin_10dp"
-                        android:paddingStart="@dimen/content_margin_10dp"
                         android:text="@string/label_division"
                         android:textColor="@color/white"
                         android:textSize="14sp"
@@ -91,8 +91,10 @@
                         android:id="@+id/tv_fans"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:padding="@dimen/spacing_normal"
                         android:textColor="@color/white"
                         android:textSize="14sp"
+                        android:background="@drawable/selector_shadow"
                         tools:text="粉丝 1" />
                 </LinearLayout>
 
@@ -100,6 +102,7 @@
                     android:id="@+id/tv_sign"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_double"
                     android:layout_marginTop="@dimen/spacing_normal"
                     android:ellipsize="end"
                     android:maxLines="3"
@@ -110,13 +113,12 @@
             </LinearLayout>
         </FrameLayout>
 
-        <com.android.volley.view.NetworkImageViewPlus
+        <com.hengye.share.ui.widget.image.AvatarImageView
             android:id="@+id/iv_avatar"
             android:layout_width="@dimen/header_personal_expanded_avatar"
             android:layout_height="@dimen/header_personal_expanded_avatar"
             android:layout_gravity="bottom"
-            android:layout_marginStart="@dimen/content_margin_default"
-            android:scaleType="centerCrop" />
+            android:layout_marginStart="@dimen/content_margin_default" />
         <!--</FrameLayout>-->
 
         <ImageView

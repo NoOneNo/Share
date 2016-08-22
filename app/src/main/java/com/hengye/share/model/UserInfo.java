@@ -22,6 +22,7 @@ public class UserInfo extends ParentInherit implements Serializable{
     private String gender;//性别
     private String sign;//签名
     private String cover;//封面地址
+    private String spell;//用户名拼音
 
     public static ArrayList<UserInfo> getUserInfos(WBUserInfos wbUserInfos){
         if(wbUserInfos == null || CommonUtil.isEmpty(wbUserInfos.getUsers())){
@@ -114,6 +115,14 @@ public class UserInfo extends ParentInherit implements Serializable{
 
     public void setCover(String cover) {
         this.cover = cover;
+    }
+
+    public String getSpell() {
+        return spell;
+    }
+
+    public void setSpell(String spell) {
+        this.spell = spell;
     }
 }
 //        返回字段说明

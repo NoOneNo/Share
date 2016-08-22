@@ -39,11 +39,10 @@ import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
 
-import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopicPublishActivity extends BaseActivity implements View.OnClickListener{
+public class TopicPublishActivity extends BaseActivity implements View.OnClickListener {
 
     public static Intent getStartIntent(Context context, TopicDraft topicDraft) {
         Intent intent = new Intent(context, TopicPublishActivity.class);
@@ -120,7 +119,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         mEmoticonPicker.setEditText(this, ((LinearLayout) findViewById(R.id.ll_root)),
                 mContent);
         mScrollView = (ScrollView) findViewById(R.id.scrollView);
-        mContent.addTextChangedListener(new DefaultTextWatcher(){
+        mContent.addTextChangedListener(new DefaultTextWatcher() {
 
             int lastLineCount = mContent.getLineCount();
 
@@ -128,15 +127,34 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 int currentLineCount = mContent.getLineCount();
-                if(currentLineCount > mContent.getMinLines()){
-                    int differCount =  lastLineCount - currentLineCount;
-                    if(differCount > 0){
-                        mScrollView.scrollBy(0, - mContent.getLineHeight() * differCount);
+                if (currentLineCount > mContent.getMinLines()) {
+                    int differCount = lastLineCount - currentLineCount;
+                    if (differCount > 0) {
+                        mScrollView.scrollBy(0, -mContent.getLineHeight() * differCount);
                     }
                 }
                 lastLineCount = currentLineCount;
 
                 updateContentLength();
+
+                boolean findAt = false;
+                if (count == 1) {
+                    String str = s.toString();
+                    String end = str.substring(str.length() - 1);
+                    if ("@".equals(end)) {
+                        if (start == 0) {
+                            findAt = true;
+                        } else if (str.length() > 1) {
+                            String lastChar = str.substring(str.length() - 2, str.length() - 1);
+                            if (" ".equals(lastChar) || "\n".equals(lastChar)) {
+                                findAt = true;
+                            }
+                        }
+                    }
+                }
+                if(findAt){
+                    L.debug("find at action");
+                }
             }
         });
 
@@ -144,7 +162,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         mPhotoPicker.setOnDeletePhotoListener(new PickPhotoView.onDeletePhotoListener() {
             @Override
             public void onDeletePhoto(View view, Photo photo) {
-                if(mPhotoPicker.getPhotos().isEmpty()){
+                if (mPhotoPicker.getPhotos().isEmpty()) {
                     mPhotoPicker.setVisibility(View.INVISIBLE);
                 }
             }
@@ -158,7 +176,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
                 photos.add(photo);
             }
             mPhotoPicker.setAddPhotos(photos);
-        }else{
+        } else {
             mPhotoPicker.setVisibility(View.INVISIBLE);
         }
         mContent.setFilters(new InputFilter[]{mAtUserInputFilter, mEmoticonPicker.getEmoticonInputFilter()});
@@ -197,10 +215,10 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
             return;
         }
 
-        if(mTopicDraft.getType() == TopicDraftHelper.REPOST_TOPIC){
+        if (mTopicDraft.getType() == TopicDraftHelper.REPOST_TOPIC) {
             mContent.setText("//" + mTopicDraft.getContent());
             mContent.setSelection(0);
-        }else {
+        } else {
             mContent.setText(mTopicDraft.getContent());
             mContent.setSelection(mTopicDraft.getContent().length());
         }
@@ -267,7 +285,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
 
     private String getPhotoPickerUrls() {
         List<Photo> photos = mPhotoPicker.getPhotos();
-        if(photos == null){
+        if (photos == null) {
             return null;
         }
         List<String> urls = new ArrayList<>();
@@ -324,6 +342,9 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         if (TextUtils.isEmpty(mContent.getText().toString()) && CommonUtil.isEmpty(mPhotoPicker.getPhotos())) {
             result = false;
             ToastUtil.showToast(R.string.label_topic_publish_field_empty);
+        } else if (mCurrentContentLength > MAX_CHINESE_CONTENT_LENGTH) {
+            result = false;
+            ToastUtil.showToast(R.string.tip_topic_publish_content_length_error);
         } else if (TextUtils.isEmpty(UserUtil.getToken())) {
             result = false;
             showSkipToLoginDialog();
@@ -348,15 +369,9 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
                 ArrayList<String> result = (ArrayList<String>) data.getSerializableExtra("atUser");
                 EmoticonPickerUtil.addContentToEditTextEnd(mContent, AtUser.getFormatAtUserName(result));
             }
-        }
-
-        if(mPhotoPicker.handleResult(requestCode, resultCode, data)){
+        } else if (mPhotoPicker.handleResult(requestCode, resultCode, data)) {
             mPhotoPicker.setVisibility(View.VISIBLE);
         }
-//        List<Photo> photos = PhotoPicker.resolvePhotoPicker(requestCode, resultCode, data);
-//        if(!CommonUtil.isEmpty(photos)){
-//
-//        }
     }
 
     private InputFilter mAtUserInputFilter = new InputFilter() {
@@ -402,13 +417,13 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         ((LinearLayout.LayoutParams) mContainer.getLayoutParams()).weight = 1.0F;
     }
 
-    private void updateContentLength(){
+    private void updateContentLength() {
         mCurrentContentLength = EncodeUtil.getChineseLength(mContent.getText().toString());
         int differLength = Math.abs(MAX_CHINESE_CONTENT_LENGTH - mCurrentContentLength);
-        if(mCurrentContentLength <= MAX_CHINESE_CONTENT_LENGTH){
+        if (mCurrentContentLength <= MAX_CHINESE_CONTENT_LENGTH) {
             mContentLength.setTextColor(ResUtil.getColor(R.color.font_grey));
             mContentLength.setText(ResUtil.getString(R.string.label_topic_publish_content_length_less, differLength));
-        }else{
+        } else {
             mContentLength.setTextColor(ResUtil.getColor(R.color.font_red_warn));
             mContentLength.setText(ResUtil.getString(R.string.label_topic_publish_content_length_more, differLength));
         }
