@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -53,13 +54,36 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-
-            <TextView
-                android:id="@+id/tv_content_length"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:padding="@dimen/spacing_normal"/>
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/checkbox_publish"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="@dimen/text_normal"
+                    android:textColor="@color/font_grey"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    tools:text="@string/label_publish_comment_and_repost_to_me"/>
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tv_content_length"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="@dimen/text_normal"
+                    android:padding="@dimen/spacing_normal"
+                    tools:text="还可以输入5个字"/>
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/ll_topic_publish_tools"

@@ -96,6 +96,8 @@ public class AtUserActivity extends BaseActivity implements UserListMvpView {
     private void initView() {
 
         mSideBar = (SideBar) findViewById(R.id.side_bar);
+        mSideBar.setLetterNormalColor(ThemeUtil.getDarkColor());
+        mSideBar.setLetterPressedColor(ThemeUtil.getColor());
         mLetterTV = (TextView) findViewById(R.id.tv_letter);
         mLetterTV.setTextColor(ThemeUtil.getTextColor());
         mLetter = findViewById(R.id.fl_letter);

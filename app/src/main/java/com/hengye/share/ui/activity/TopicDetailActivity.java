@@ -34,6 +34,7 @@ import com.hengye.share.ui.widget.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.fab.FabAnimator;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DataUtil;
+import com.hengye.share.util.IntentUtil;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
@@ -428,12 +429,19 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.fab) {
-            TopicDraft topicDraft = new TopicDraft();
-            topicDraft.setType(getPublishType());
-            topicDraft.setTargetTopicId(mTopic.getId());
-            topicDraft.setTargetTopicJson(mTopic.toJson());
-            topicDraft.setIsCommentOrigin(false);
-            startActivity(TopicPublishActivity.getStartIntent(this, topicDraft));
+            if(getPublishType() == TopicDraftHelper.REPOST_TOPIC) {
+                IntentUtil.startActivity(this,
+                        TopicPublishActivity.getStartIntent(this, TopicDraftHelper.getWBTopicDraftByTopicRepost(mTopic)));
+            }else{
+                IntentUtil.startActivity(this,
+                        TopicPublishActivity.getStartIntent(this, TopicDraftHelper.getWBTopicDraftByTopicComment(mTopic.getId())));
+            }
+//            TopicDraft topicDraft = new TopicDraft();
+//            topicDraft.setType(getPublishType());
+//            topicDraft.setTargetTopicId(mTopic.getId());
+//            topicDraft.setTargetTopicJson(mTopic.toJson());
+//            topicDraft.setIsCommentOrigin(false);
+//            startActivity(TopicPublishActivity.getStartIntent(this, topicDraft));
         }
     }
 

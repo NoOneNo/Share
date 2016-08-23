@@ -10,6 +10,7 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -96,6 +97,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     private TextView mContentLength;
     private EditText mContent;
     private ScrollView mScrollView;
+    private CheckBox mPublishCB;
     private Dialog mSaveToDraftDialog, mSkipToLoginDialog;
 
     private int mCurrentContentLength;
@@ -119,6 +121,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         mEmoticonPicker.setEditText(this, ((LinearLayout) findViewById(R.id.ll_root)),
                 mContent);
         mScrollView = (ScrollView) findViewById(R.id.scrollView);
+        mPublishCB = (CheckBox) findViewById(R.id.checkbox_publish);
         mContent.addTextChangedListener(new DefaultTextWatcher() {
 
             int lastLineCount = mContent.getLineCount();
@@ -152,7 +155,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
                         }
                     }
                 }
-                if(findAt){
+                if (findAt) {
                     L.debug("find at action");
                 }
             }
@@ -181,6 +184,33 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         }
         mContent.setFilters(new InputFilter[]{mAtUserInputFilter, mEmoticonPicker.getEmoticonInputFilter()});
         initSaveToDraftDialog();
+
+        initViewByType();
+    }
+
+    private void initViewByType() {
+        switch (mTopicDraft.getType()) {
+            case TopicDraftHelper.PUBLISH_COMMENT:
+            case TopicDraftHelper.REPLY_COMMENT:
+                mPublishCB.setVisibility(View.VISIBLE);
+                mPublishCB.setText(R.string.label_publish_comment_and_repost_to_me);
+                mPublishCB.setChecked(mTopicDraft.isCommentOrRepostConcurrently());
+
+                mPhotoPickerBtn.setVisibility(View.GONE);
+                break;
+            case TopicDraftHelper.REPOST_TOPIC:
+                mPublishCB.setVisibility(View.VISIBLE);
+                mPublishCB.setText(R.string.label_repost_topic_and_commend_to_author);
+                mPublishCB.setChecked(mTopicDraft.isCommentOrRepostConcurrently());
+
+                mPhotoPickerBtn.setVisibility(View.GONE);
+                break;
+            case TopicDraftHelper.PUBLISH_TOPIC:
+                mPublishCB.setVisibility(View.GONE);
+                mPhotoPickerBtn.setVisibility(View.VISIBLE);
+            default:
+                break;
+        }
     }
 
     public void initSaveToDraftDialog() {
@@ -215,8 +245,9 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
             return;
         }
 
-        if (mTopicDraft.getType() == TopicDraftHelper.REPOST_TOPIC) {
-            mContent.setText("//" + mTopicDraft.getContent());
+        if (mTopicDraft.getId() == null && mTopicDraft.getType() == TopicDraftHelper.REPOST_TOPIC) {
+            mTopicDraftContent = "//" + mTopicDraft.getContent();
+            mContent.setText(mTopicDraftContent);
             mContent.setSelection(0);
         } else {
             mContent.setText(mTopicDraft.getContent());
@@ -308,6 +339,9 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
             td.setTargetTopicId(mTopicDraft.getTargetTopicId());
             td.setTargetTopicJson(mTopicDraft.getTargetTopicJson());
             td.setTargetCommentId(mTopicDraft.getTargetCommentId());
+        }
+        if(mPublishCB.isChecked()){
+            td.setIsCommentOrRepostConcurrently(true);
         }
         if (!CommonUtil.isEmpty(mPhotoPicker.getPhotos())) {
 

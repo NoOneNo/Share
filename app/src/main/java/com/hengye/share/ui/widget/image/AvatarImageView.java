@@ -27,7 +27,7 @@ public class AvatarImageView extends SuperImageView{
     private void init(){
         setScaleType(ScaleType.CENTER_CROP);
         setAutoClipBitmap(false);
-        setImageResource(R.drawable.ic_user_avatar);
+//        setImageResource(R.drawable.ic_user_avatar);
         setDefaultImageResId(R.drawable.ic_user_avatar);
     }
 

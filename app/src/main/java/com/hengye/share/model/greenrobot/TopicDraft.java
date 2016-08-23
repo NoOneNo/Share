@@ -231,6 +231,17 @@ public class TopicDraft implements java.io.Serializable {
         setIsMention(isMention ? 0 : 1);
     }
 
+    public boolean isCommentOrRepostConcurrently(){
+        if(getIsCommentOrigin() != null && getIsCommentOrigin() == 1){
+            return true;
+        }
+        return false;
+    }
+
+    public void setIsCommentOrRepostConcurrently(boolean flag){
+        setIsCommentOrigin(flag);
+    }
+
     private transient Topic topic, targetTopic;
 
     public Topic getTopic(){

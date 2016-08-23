@@ -119,18 +119,8 @@ public class SideBar extends View {
         final int position = (int) (y / getHeight() * getData().size());// 点击y坐标所占总高度的比例*b数组的长度就等于点击b中的个数.
 
         switch (action) {
-            case MotionEvent.ACTION_UP:
-                setBackgroundColor(getBackgroundNormalColor());
-                mPosition = -1;//
-                invalidate();
-
-                if (getOnTouchLetterListener() != null) {
-                    getOnTouchLetterListener().onTouchOutside();
-                }
-
-                break;
-
-            default:
+            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_MOVE:
                 setBackgroundColor(getBackgroundPressedColor());
                 if (lastPosition != position) {
                     if (position >= 0 && position < getData().size()) {
@@ -140,6 +130,17 @@ public class SideBar extends View {
                         mPosition = position;
                         invalidate();
                     }
+                }
+
+                break;
+
+            default:
+                setBackgroundColor(getBackgroundNormalColor());
+                mPosition = -1;//
+                invalidate();
+
+                if (getOnTouchLetterListener() != null) {
+                    getOnTouchLetterListener().onTouchOutside();
                 }
 
                 break;

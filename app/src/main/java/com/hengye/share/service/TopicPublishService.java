@@ -282,6 +282,10 @@ public class TopicPublishService extends Service {
     }
 
     protected void publishWBComment(final TopicPublish tp) {
+        if(tp.getTopicDraft().isCommentOrRepostConcurrently()){
+            repostWBTopic(tp);
+            return;
+        }
         RetrofitManager
                 .getWBService()
                 .publishComment(tp.getToken(), tp.getTopicDraft().getContent(), tp.getTopicDraft().getTargetTopicId(), tp.getTopicDraft().getIsCommentOrigin())

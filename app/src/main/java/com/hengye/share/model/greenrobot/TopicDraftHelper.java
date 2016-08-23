@@ -50,16 +50,25 @@ public class TopicDraftHelper {
         return topicDraft;
     }
 
+    /**
+     * 转发微博时,只会转发该微博的原始微博, 比如微博A是一条转发微博B的, 就算传微博A的ID也是转发微博B;
+     * 此处本来可以直接保存微博B的ID,但是为了实现转发微博B的同时评论给微博A,所以保存微博A的ID;
+     * @param topic
+     * @return
+     */
     public static TopicDraft getWBTopicDraftByTopicRepost(Topic topic) {
         TopicDraft topicDraft = new TopicDraft();
         Topic targetTopic;
         if(topic.getRetweetedTopic() != null){
+            //添加转发微博时微博A的内容;
             topicDraft.setContent(DataUtil.addRetweetedNamePrefix(topic));
+        }
+        if(topic.getRetweetedTopic() != null){
             targetTopic = topic.getRetweetedTopic();
         }else{
             targetTopic = topic;
         }
-        topicDraft.setTargetTopicId(targetTopic.getId());
+        topicDraft.setTargetTopicId(topic.getId());
         topicDraft.setTargetTopicJson(targetTopic.toJson());
         topicDraft.setType(TopicDraftHelper.REPOST_TOPIC);
         topicDraft.setParentType(Parent.TYPE_WEIBO);

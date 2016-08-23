@@ -138,6 +138,8 @@
     <string name="label_topic_picture_publish_content_empty">分享图片</string>
     <string name="label_topic_publish_content_length_less">最多还能输入%s个字</string>
     <string name="label_topic_publish_content_length_more">你已超了%s个字</string>
+    <string name="label_publish_comment_and_repost_to_me">同时转发到我的微博</string>
+    <string name="label_repost_topic_and_commend_to_author">同时评论给作者</string>
     <string name="tip_topic_publish_content_length_error">发送字数已超出限制</string>
     <!-- Strings related to TopicPublish -->
 

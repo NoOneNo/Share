@@ -53,9 +53,9 @@ import rx.schedulers.Schedulers;
 public class PersonalHomepageActivity extends BaseActivity implements View.OnClickListener, AppBarLayout.OnOffsetChangedListener, UserMvpView {
 
     public static void start(Context context, View startView, UserInfo userInfo) {
-        if(startView == null){
+        if (startView == null) {
             start(context, userInfo);
-        }else {
+        } else {
             Intent intent = getStartIntent(context, userInfo);
             TransitionHelper.startTransitionActivity(context, intent, startView, R.string.transition_name_avatar);
         }
@@ -461,19 +461,20 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     public void onClick(View v) {
         int id = v.getId();
 
-        if (id == R.id.fab) {
-            if (mWBUserInfo != null) {
+        if (mWBUserInfo != null) {
+            if (id == R.id.fab) {
                 follow(!mWBUserInfo.isFollowing(), mWBUserInfo.getIdstr());
-            }
-        }else if(id == R.id.tv_attention){
-            if(mUserInfo.getUid() != null){
-                UserAttentionsFragment.start(this, mUserInfo.getUid());
-            }
-        }else if(id == R.id.tv_fans){
-            if(mUserInfo.getUid() != null){
-                UserFollowersFragment.start(this, mUserInfo.getUid());
+            } else if (id == R.id.tv_attention) {
+                if (mWBUserInfo.getIdstr() != null) {
+                    UserAttentionsFragment.start(this, mWBUserInfo.getIdstr());
+                }
+            } else if (id == R.id.tv_fans) {
+                if (mWBUserInfo.getIdstr() != null) {
+                    UserFollowersFragment.start(this, mWBUserInfo.getIdstr());
+                }
             }
         }
+
     }
 
     @Override
