@@ -1,7 +1,9 @@
 package com.hengye.share.ui.activity;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -24,18 +26,18 @@ import com.hengye.share.adapter.recyclerview.TopicAdapter;
 import com.hengye.share.helper.TransitionHelper;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
-import com.hengye.share.model.greenrobot.TopicDraft;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.service.TopicPublishService;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.ui.mvpview.TopicDetailMvpView;
 import com.hengye.share.ui.presenter.TopicDetailPresenter;
+import com.hengye.share.ui.widget.dialog.DialogBuilder;
 import com.hengye.share.ui.widget.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.fab.FabAnimator;
+import com.hengye.share.util.ClipboardUtil;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.IntentUtil;
-import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
@@ -44,7 +46,7 @@ import com.hengye.swiperefresh.listener.SwipeListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpView, View.OnClickListener {
+public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpView, View.OnClickListener, DialogInterface.OnClickListener {
 
     public static void start(Context context, View startView, Topic topic, boolean isRetweet) {
         Intent intent = getStartIntent(context, topic, isRetweet);
@@ -80,6 +82,10 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
+        if (mTopic == null) {
+            finish();
+            return;
+        }
         addPresenter(mPresenter = new TopicDetailPresenter(this));
         initView();
         initBroadcastReceiver();
@@ -135,9 +141,9 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     private View mTopicContentLayout;
     private TextView mTopicContent;
     private FloatingActionButton mFab;
+    private Dialog mTopicCommentDialog, mTopicRepostDialog;
 
     private TopicDetailPresenter mPresenter;
-
     private BroadcastReceiver mPublishResultBroadcastReceiver;
 
     private void initHeaderTab(View headerViewAssist) {
@@ -201,10 +207,6 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     }
 
     private void initView() {
-        if (mTopic == null) {
-            return;
-        }
-
         mFab = (FloatingActionButton) findViewById(R.id.fab);
         mFab.setOnClickListener(this);
 
@@ -223,7 +225,8 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         initHeaderTab(headerViewAssist);
 
         mListView = (ListView) findViewById(R.id.list_view);
-
+        mTopicCommentDialog = DialogBuilder.getTopicCommentDialog(this, this);
+        mTopicRepostDialog = DialogBuilder.getTopicRepostDialog(this, this);
         AbsListView.OnScrollListener onScrollListener = new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -267,24 +270,13 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int actualPosition = position - mListView.getHeaderViewsCount();
-                TopicComment tc = mAdapter.getItem(actualPosition);
-                if (tc == null) {
-                    return;
-                }
-                TopicDraft topicDraft = new TopicDraft();
+                mCurrentPosition = position - mListView.getHeaderViewsCount();
+
                 if(isSelectedCommentTab()) {
-                    topicDraft.setType(TopicDraftHelper.REPLY_COMMENT);
+                    mTopicCommentDialog.show();
                 }else{
-                    topicDraft.setType(TopicDraftHelper.REPOST_TOPIC);
-                    topicDraft.setContent(DataUtil.addRetweetedNamePrefix(tc));
+                    mTopicRepostDialog.show();
                 }
-                topicDraft.setTargetTopicId(mTopic.getId());
-                topicDraft.setTargetTopicJson(mTopic.toJson());
-                topicDraft.setTargetCommentId(tc.getId());
-                topicDraft.setTargetCommentUserName(tc.getUserInfo().getName());
-                topicDraft.setIsCommentOrigin(false);
-                startActivity(TopicPublishActivity.getStartIntent(TopicDetailActivity.this, topicDraft));
             }
         });
         mAdapter.setOnChildViewItemClickListener(new OnItemClickListener() {
@@ -356,43 +348,43 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         mPublishResultBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                boolean isSuccess = intent.getBooleanExtra(TopicPublishService.EXTRA_IS_SUCCESS, false);
-                int type = intent.getIntExtra(TopicPublishService.EXTRA_TYPE, -1);
-                if (isSuccess) {
-                    TopicComment tc = (TopicComment) intent.getSerializableExtra(TopicPublishService.EXTRA_RESULT);
-                    if (tc == null) {
-                        return;
-                    }
-                    if (type == TopicDraftHelper.REPOST_TOPIC) {
-                        mTabLayout.getTabAt(1).select();
-                    } else {
-                        mTabLayout.getTabAt(0).select();
-                    }
-                    mAdapter.addItem(0, tc);
-                } else {
-                    final TopicDraft topicDraft = (TopicDraft) intent.getSerializableExtra(TopicPublishService.EXTRA_DRAFT);
-                    if (topicDraft == null) {
-                        return;
-                    }
-
-                    int resId;
-                    if (type == TopicDraftHelper.REPOST_TOPIC) {
-                        resId = R.string.label_topic_publish_repost_fail;
-                    } else if (type == TopicDraftHelper.PUBLISH_COMMENT) {
-                        resId = R.string.label_topic_publish_comment_fail;
-                    } else {
-                        resId = R.string.label_topic_reply_comment_fail;
-                    }
-                    Snackbar sb = ToastUtil.getSnackBar(resId, mFab);
-                    sb.setDuration(Snackbar.LENGTH_LONG);
-                    sb.setAction(R.string.label_topic_publish_retry, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            TopicPublishService.publish(TopicDetailActivity.this, topicDraft);
-                        }
-                    });
-                    sb.show();
-                }
+//                boolean isSuccess = intent.getBooleanExtra(TopicPublishService.EXTRA_IS_SUCCESS, false);
+//                int type = intent.getIntExtra(TopicPublishService.EXTRA_TYPE, -1);
+//                if (isSuccess) {
+//                    TopicComment tc = (TopicComment) intent.getSerializableExtra(TopicPublishService.EXTRA_RESULT);
+//                    if (tc == null) {
+//                        return;
+//                    }
+//                    if (type == TopicDraftHelper.REPOST_TOPIC) {
+//                        mTabLayout.getTabAt(1).select();
+//                    } else {
+//                        mTabLayout.getTabAt(0).select();
+//                    }
+//                    mAdapter.addItem(0, tc);
+//                } else {
+//                    final TopicDraft topicDraft = (TopicDraft) intent.getSerializableExtra(TopicPublishService.EXTRA_DRAFT);
+//                    if (topicDraft == null) {
+//                        return;
+//                    }
+//
+//                    int resId;
+//                    if (type == TopicDraftHelper.REPOST_TOPIC) {
+//                        resId = R.string.label_topic_publish_repost_fail;
+//                    } else if (type == TopicDraftHelper.PUBLISH_COMMENT) {
+//                        resId = R.string.label_topic_publish_comment_fail;
+//                    } else {
+//                        resId = R.string.label_topic_reply_comment_fail;
+//                    }
+//                    Snackbar sb = ToastUtil.getSnackBar(resId, mFab);
+//                    sb.setDuration(Snackbar.LENGTH_LONG);
+//                    sb.setAction(R.string.label_topic_publish_retry, new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            TopicPublishService.publish(TopicDetailActivity.this, topicDraft);
+//                        }
+//                    });
+//                    sb.show();
+//                }
             }
         };
     }
@@ -431,10 +423,10 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         if (id == R.id.fab) {
             if(getPublishType() == TopicDraftHelper.REPOST_TOPIC) {
                 IntentUtil.startActivity(this,
-                        TopicPublishActivity.getStartIntent(this, TopicDraftHelper.getWBTopicDraftByTopicRepost(mTopic)));
+                        TopicPublishActivity.getStartIntent(this, TopicDraftHelper.getWBTopicDraftByRepostRepost(mTopic)));
             }else{
                 IntentUtil.startActivity(this,
-                        TopicPublishActivity.getStartIntent(this, TopicDraftHelper.getWBTopicDraftByTopicComment(mTopic.getId())));
+                        TopicPublishActivity.getStartIntent(this, TopicDraftHelper.getWBTopicDraftByRepostComment(mTopic)));
             }
 //            TopicDraft topicDraft = new TopicDraft();
 //            topicDraft.setType(getPublishType());
@@ -443,6 +435,55 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 //            topicDraft.setIsCommentOrigin(false);
 //            startActivity(TopicPublishActivity.getStartIntent(this, topicDraft));
         }
+    }
+
+    int mCurrentPosition;
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        TopicComment topicComment = mAdapter.getItem(mCurrentPosition);
+        if(topicComment == null){
+            return;
+        }
+        if(isSelectedCommentTab()){
+            switch (which){
+                case DialogBuilder.COMMENT_COPY:
+                    ClipboardUtil.copyAndToast(topicComment.getContent());
+                    break;
+                case DialogBuilder.COMMENT_REPLY:
+                    startActivity(TopicPublishActivity.getStartIntent(this, TopicDraftHelper.getWBTopicDraftByCommentReply(mTopic, topicComment)));
+                    break;
+                case DialogBuilder.COMMENT_REPOST:
+                    startActivity(TopicPublishActivity.getStartIntent(this, TopicDraftHelper.getWBTopicDraftByCommentRepost(mTopic, topicComment)));
+                    break;
+            }
+
+        }else{
+            switch (which){
+                case DialogBuilder.REPOST_COPY:
+                    ClipboardUtil.copyAndToast(topicComment.getContent());
+                    break;
+                case DialogBuilder.REPOST_DETAIL:
+                    startActivity(TopicDetailActivity.getStartIntent(this, topicComment.toTopic(), true));
+                    break;
+                case DialogBuilder.REPOST_REPOST:
+                    startActivity(TopicPublishActivity.getStartIntent(this, TopicDraftHelper.getWBTopicDraftByRepostRepost(topicComment)));
+                    break;
+                case DialogBuilder.REPOST_COMMENT:
+                    startActivity(TopicPublishActivity.getStartIntent(this, TopicDraftHelper.getWBTopicDraftByRepostComment(topicComment)));
+                    break;
+            }
+
+        }
+
+//            TopicComment tc = mAdapter.getItem(actualPosition);
+//            if (tc == null) {
+//                return;
+//            }
+//            if(isSelectedCommentTab()) {
+//                startActivity(TopicPublishActivity.getStartIntent(TopicDetailActivity.this, TopicDraftHelper.getWBTopicDraftByCommentReply(mTopic, tc)));
+//            }else{
+//                startActivity(TopicPublishActivity.getStartIntent(TopicDetailActivity.this, TopicDraftHelper.getWBTopicDraftByRepostRepost(mTopic)));
+//            }
     }
 
     private boolean isSelectedCommentTab() {

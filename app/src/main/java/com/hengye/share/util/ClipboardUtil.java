@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 
+import com.hengye.share.R;
 import com.hengye.share.ui.base.BaseApplication;
 
 public class ClipboardUtil extends ApplicationUtil{
@@ -35,4 +36,8 @@ public class ClipboardUtil extends ApplicationUtil{
         return null;
     }
 
+    public static void copyAndToast(String content){
+        copy(content);
+        ToastUtil.showToast(R.string.label_topic_copy_to_clipboard_success);
+    }
 }

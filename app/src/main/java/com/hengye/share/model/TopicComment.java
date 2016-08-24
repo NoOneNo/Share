@@ -1,6 +1,5 @@
 package com.hengye.share.model;
 
-import android.content.Context;
 import android.text.SpannableString;
 import android.text.TextUtils;
 
@@ -26,8 +25,8 @@ public class TopicComment implements Serializable{
     private String date;//创建日期
     private String channel;//渠道，通过什么发表
     private String content;//内容
-    private String id;//评论的唯一id
-    private Topic topic;//评论的主题
+    private String id;//评论或转发的唯一id
+    private Topic topic;//评论或转发的主题
     private List<String> imageUrls;//缩略图
     private List<String> imageLargeUrls;//原图
 
@@ -109,6 +108,22 @@ public class TopicComment implements Serializable{
                 ", imageUrls=" + imageUrls +
                 ", imageLargeUrls=" + imageLargeUrls +
                 '}';
+    }
+
+    public Topic toTopic(){
+        WBTopic wbTopic = GsonUtil.fromJson(getParent().getJson(), WBTopic.class);
+        if(wbTopic != null){
+            return Topic.getTopic(wbTopic);
+        }
+        return null;
+    }
+
+    public String toTopicJson(){
+        Topic topic = toTopic();
+        if(topic != null){
+            return topic.toJson();
+        }
+        return null;
     }
 
     public SpannableString getUrlSpannableString() {

@@ -1,12 +1,5 @@
 package com.hengye.share.model.greenrobot;
 
-import android.graphics.Bitmap;
-import android.widget.ImageView;
-
-import com.android.volley.cache.DiskLruCacheUtil;
-import com.android.volley.cache.ImageDiskLruCache;
-import com.android.volley.toolbox.BitmapUtil;
-import com.android.volley.toolbox.ImageLoader;
 import com.hengye.share.model.greenrobot.DaoSession;
 import de.greenrobot.dao.DaoException;
 
@@ -20,6 +13,11 @@ import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.GsonUtil;
 import com.hengye.share.util.ImageUtil;
 
+import android.graphics.Bitmap;
+import android.widget.ImageView;
+
+import com.android.volley.toolbox.BitmapUtil;
+import com.android.volley.toolbox.ImageLoader;
 import java.util.ArrayList;
 // KEEP INCLUDES END
 /**

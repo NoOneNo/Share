@@ -2,6 +2,7 @@ package com.hengye.share.model.greenrobot;
 
 import com.hengye.share.model.Parent;
 import com.hengye.share.model.Topic;
+import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.util.CommonUtil;
@@ -53,19 +54,20 @@ public class TopicDraftHelper {
     /**
      * 转发微博时,只会转发该微博的原始微博, 比如微博A是一条转发微博B的, 就算传微博A的ID也是转发微博B;
      * 此处本来可以直接保存微博B的ID,但是为了实现转发微博B的同时评论给微博A,所以保存微博A的ID;
+     *
      * @param topic
      * @return
      */
-    public static TopicDraft getWBTopicDraftByTopicRepost(Topic topic) {
+    public static TopicDraft getWBTopicDraftByRepostRepost(Topic topic) {
         TopicDraft topicDraft = new TopicDraft();
         Topic targetTopic;
-        if(topic.getRetweetedTopic() != null){
+        if (topic.getRetweetedTopic() != null) {
             //添加转发微博时微博A的内容;
             topicDraft.setContent(DataUtil.addRetweetedNamePrefix(topic));
         }
-        if(topic.getRetweetedTopic() != null){
+        if (topic.getRetweetedTopic() != null) {
             targetTopic = topic.getRetweetedTopic();
-        }else{
+        } else {
             targetTopic = topic;
         }
         topicDraft.setTargetTopicId(topic.getId());
@@ -75,18 +77,82 @@ public class TopicDraftHelper {
         return topicDraft;
     }
 
-//    public static TopicDraft getWBTopicDraftByTopicRepost(String targetTopicId) {
-//        TopicDraft topicDraft = new TopicDraft();
-//        topicDraft.setTargetTopicId(targetTopicId);
-//        topicDraft.setType(TopicDraftHelper.REPOST_TOPIC);
-//        topicDraft.setParentType(Parent.TYPE_WEIBO);
-//        return topicDraft;
-//    }
-
-    public static TopicDraft getWBTopicDraftByTopicComment(String targetTopicId) {
+    public static TopicDraft getWBTopicDraftByRepostComment(Topic topic) {
         TopicDraft topicDraft = new TopicDraft();
-        topicDraft.setTargetTopicId(targetTopicId);
+        topicDraft.setTargetTopicId(topic.getId());
+        topicDraft.setTargetTopicJson(topic.toJson());
         topicDraft.setType(TopicDraftHelper.PUBLISH_COMMENT);
+        topicDraft.setParentType(Parent.TYPE_WEIBO);
+        return topicDraft;
+    }
+
+    /**
+     * 在转发列表发表评论
+     *
+     * @param topicComment
+     * @return
+     */
+    public static TopicDraft getWBTopicDraftByRepostComment(TopicComment topicComment) {
+        TopicDraft topicDraft = new TopicDraft();
+        topicDraft.setTargetTopicId(topicComment.getId());
+        topicDraft.setTargetTopicJson(topicComment.toTopicJson());
+        topicDraft.setTargetCommentId(topicComment.getId());
+        topicDraft.setTargetCommentUserName(topicComment.getUserInfo().getName());
+        topicDraft.setTargetCommentContent(topicComment.getContent());
+        topicDraft.setType(TopicDraftHelper.PUBLISH_COMMENT);
+        topicDraft.setParentType(Parent.TYPE_WEIBO);
+        return topicDraft;
+    }
+
+    /**
+     * 在转发列表里转发微博
+     *
+     * @param topicComment
+     * @return
+     */
+    public static TopicDraft getWBTopicDraftByRepostRepost(TopicComment topicComment) {
+        TopicDraft topicDraft = new TopicDraft();
+        //添加转发微博时微博A的内容;
+        topicDraft.setContent(DataUtil.addRetweetedNamePrefix(topicComment));
+        topicDraft.setTargetTopicId(topicComment.getId());
+        topicDraft.setTargetTopicJson(topicComment.toTopicJson());
+        topicDraft.setType(TopicDraftHelper.REPOST_TOPIC);
+        topicDraft.setParentType(Parent.TYPE_WEIBO);
+        return topicDraft;
+    }
+
+    /**
+     * 在评论列表里回复评论
+     * @param topic
+     * @param topicComment
+     * @return
+     */
+    public static TopicDraft getWBTopicDraftByCommentReply(Topic topic, TopicComment topicComment) {
+        TopicDraft topicDraft = new TopicDraft();
+        topicDraft.setTargetTopicId(topic.getId());
+        topicDraft.setTargetTopicJson(topic.toJson());
+        topicDraft.setTargetCommentId(topicComment.getId());
+        topicDraft.setTargetCommentUserName(topicComment.getUserInfo().getName());
+        topicDraft.setTargetCommentContent(topicComment.getContent());
+        topicDraft.setIsCommentOrigin(false);
+        topicDraft.setType(TopicDraftHelper.REPLY_COMMENT);
+        topicDraft.setParentType(Parent.TYPE_WEIBO);
+        return topicDraft;
+    }
+
+    /**
+     * 在评论列表里转发微博
+     *
+     * @param topicComment
+     * @return
+     */
+    public static TopicDraft getWBTopicDraftByCommentRepost(Topic topic, TopicComment topicComment) {
+        TopicDraft topicDraft = new TopicDraft();
+        //添加转发微博时微博A的内容;
+        topicDraft.setContent(DataUtil.addRetweetedNamePrefix(topicComment));
+        topicDraft.setTargetTopicId(topic.getId());
+        topicDraft.setTargetTopicJson(topic.toJson());
+        topicDraft.setType(TopicDraftHelper.REPOST_TOPIC);
         topicDraft.setParentType(Parent.TYPE_WEIBO);
         return topicDraft;
     }

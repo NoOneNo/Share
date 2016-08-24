@@ -339,6 +339,8 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
             td.setTargetTopicId(mTopicDraft.getTargetTopicId());
             td.setTargetTopicJson(mTopicDraft.getTargetTopicJson());
             td.setTargetCommentId(mTopicDraft.getTargetCommentId());
+            td.setTargetCommentUserName(mTopicDraft.getTargetCommentUserName());
+            td.setTargetCommentContent(mTopicDraft.getTargetCommentContent());
         }
         if(mPublishCB.isChecked()){
             td.setIsCommentOrRepostConcurrently(true);

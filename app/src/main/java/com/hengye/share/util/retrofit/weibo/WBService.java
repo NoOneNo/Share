@@ -111,6 +111,9 @@ public interface WBService {
     @GET(UrlFactory.WB_BILATERAL_TOPIC_IDS)
     Observable<WBTopicIds> listBilateralTopicIds(@QueryMap Map<String, String> options);
 
+    @GET(UrlFactory.WB_FAVORITES_TOPIC)
+    Observable<WBTopics> listFavoritesTopic(@QueryMap Map<String, String> options);
+
     @GET(UrlFactory.WB_GROUP_TOPIC)
     Observable<WBTopics> listGroupTopic(@QueryMap Map<String, String> options);
 

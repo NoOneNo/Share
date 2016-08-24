@@ -7,7 +7,7 @@ import de.greenrobot.daogenerator.Schema;
 public class MyDaoGenerator {
 
     public static void main(String[] args) throws Exception {
-        Schema schema = new Schema(1005, "com.hengye.share.model.greenrobot");
+        Schema schema = new Schema(1006, "com.hengye.share.model.greenrobot");
 
         schema.enableKeepSectionsByDefault();
         schema.enableActiveEntitiesByDefault();
@@ -51,6 +51,7 @@ public class MyDaoGenerator {
         entity.addStringProperty("targetTopicId");
         entity.addStringProperty("targetCommentId");
         entity.addStringProperty("targetCommentUserName");
+        entity.addStringProperty("targetCommentContent");
         entity.addIntProperty("isCommentOrigin");
         entity.addIntProperty("isMention");
         entity.addIntProperty("type");

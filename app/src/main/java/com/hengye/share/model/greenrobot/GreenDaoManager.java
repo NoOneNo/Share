@@ -47,7 +47,7 @@ public class GreenDaoManager {
 
     public static class UpgradeHelper extends DaoMaster.OpenHelper {
 
-        private final static String DB_MIGRATOR_PACKAGE_NAME = AbstractMigratorHelper.class.getPackage().getName();
+        private final static String DB_MIGRATOR_PACKAGE_NAME = AbstractMigratorHelper.class.getPackage().getName() + ".DBMigrationHelper";
 
         public UpgradeHelper(Context context, String name, SQLiteDatabase.CursorFactory factory) {
             super(context, name, factory);
@@ -67,7 +67,7 @@ public class GreenDaoManager {
 
                     if (migratorHelper != null) {
 
-                        Log.e("GreenDao", "Migrate from schema from schema: " + i + " to " + i++);
+                        Log.e("GreenDao", "Migrate from schema from schema: " + i + " to " + ++i);
 
                     /* Upgrade de db */
                         migratorHelper.onUpgrade(db);
@@ -75,7 +75,7 @@ public class GreenDaoManager {
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Log.e("GreenDao", "Could not migrate from schema from schema: " + i + " to " + i++);
+                    Log.e("GreenDao", "Could not migrate from schema from schema: " + i + " to " + ++i);
                 /* If something fail prevent the DB to be updated to future version if the previous version has not been upgraded successfully */
                     break;
                 }

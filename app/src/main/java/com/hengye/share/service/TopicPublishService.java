@@ -23,7 +23,11 @@ import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.model.sina.WBTopicComment;
+import com.hengye.share.model.sina.WBTopicComments;
+import com.hengye.share.model.sina.WBTopicReposts;
 import com.hengye.share.model.sina.WBUploadPicture;
+import com.hengye.share.ui.mvpview.TopicDetailMvpView;
+import com.hengye.share.ui.presenter.BasePresenter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.NotificationUtil;
@@ -31,6 +35,7 @@ import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
 import com.hengye.share.util.retrofit.weibo.WBService;
+import com.hengye.share.util.rxjava.ObjectConverter;
 
 import java.io.File;
 import java.io.Serializable;
@@ -283,15 +288,24 @@ public class TopicPublishService extends Service {
 
     protected void publishWBComment(final TopicPublish tp) {
         if(tp.getTopicDraft().isCommentOrRepostConcurrently()){
-            repostWBTopic(tp);
-            return;
+            WBService service = RetrofitManager.getWBService();
+
+            Observable.zip(
+                    service.publishComment(tp.getToken(), tp.getTopicDraft().getContent(), tp.getTopicDraft().getTargetTopicId(), 0),
+                    service.repostTopic(tp.getToken(), tp.getTopicDraft().getRepostContent(), tp.getTopicDraft().getTargetTopicId(), 0),
+                    ObjectConverter.getObjectConverter2())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new PublishCommentAndRepostSubscriber(tp));
+
+        }else{
+            RetrofitManager
+                    .getWBService()
+                    .publishComment(tp.getToken(), tp.getTopicDraft().getContent(), tp.getTopicDraft().getTargetTopicId(), tp.getTopicDraft().getIsCommentOrigin())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new PublishCommentSubscriber(tp));
         }
-        RetrofitManager
-                .getWBService()
-                .publishComment(tp.getToken(), tp.getTopicDraft().getContent(), tp.getTopicDraft().getTargetTopicId(), tp.getTopicDraft().getIsCommentOrigin())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new PublishCommentSubscriber(tp));
     }
 
     protected void repostWBTopic(final TopicPublish tp) {
@@ -304,12 +318,23 @@ public class TopicPublishService extends Service {
     }
 
     protected void replyWBComment(final TopicPublish tp) {
-        RetrofitManager
-                .getWBService()
-                .replyComment(tp.getToken(), tp.getTopicDraft().getContent(), tp.getTopicDraft().getTargetTopicId(), tp.getTopicDraft().getTargetCommentId(), tp.getTopicDraft().getIsCommentOrigin())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new PublishCommentSubscriber(tp));
+        if(tp.getTopicDraft().isCommentOrRepostConcurrently()){
+            WBService service = RetrofitManager.getWBService();
+            Observable.zip(
+                    service.replyComment(tp.getToken(), tp.getTopicDraft().getContent(), tp.getTopicDraft().getTargetTopicId(), tp.getTopicDraft().getTargetCommentId(), 0),
+                    service.repostTopic(tp.getToken(), tp.getTopicDraft().getRepostContent(), tp.getTopicDraft().getTargetTopicId(), 0),
+                    ObjectConverter.getObjectConverter2())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new PublishCommentAndRepostSubscriber(tp));
+        }else {
+            RetrofitManager
+                    .getWBService()
+                    .replyComment(tp.getToken(), tp.getTopicDraft().getContent(), tp.getTopicDraft().getTargetTopicId(), tp.getTopicDraft().getTargetCommentId(), tp.getTopicDraft().getIsCommentOrigin())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new PublishCommentSubscriber(tp));
+        }
     }
 
 
@@ -374,6 +399,33 @@ public class TopicPublishService extends Service {
             L.debug("request success , data : {}", wbTopicComment);
             if (wbTopicComment != null) {
                 handlePublishSuccess(tp, TopicComment.getComment(wbTopicComment));
+            }
+        }
+    }
+
+    public class PublishCommentAndRepostSubscriber extends PublishSubscriber<Object[]> {
+
+        public PublishCommentAndRepostSubscriber(TopicPublish tp) {
+            super(tp);
+        }
+
+        @Override
+        public void onNext(Object[] objects) {
+            WBTopicComment wbTopicComment = null;
+            WBTopic wbTopic = null;
+            if(objects[0] instanceof WBTopicComment){
+                wbTopicComment = (WBTopicComment)objects[0];
+            }
+
+            if(objects[1] instanceof WBTopic){
+                wbTopic = (WBTopic)objects[1];
+            }
+
+            if(wbTopicComment != null && wbTopic != null){
+                handlePublishSuccess(tp, TopicComment.getComment(wbTopicComment));
+            }else{
+                L.debug("request fail , wbTopicComment : {}, wbTopic : {}", wbTopicComment, wbTopic);
+                throw new IllegalStateException("publish error");
             }
         }
     }

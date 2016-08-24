@@ -9,6 +9,8 @@ import de.greenrobot.dao.DaoException;
 import de.greenrobot.dao.AbstractDao;
 
 import com.hengye.share.model.Topic;
+import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.DataUtil;
 // KEEP INCLUDES END
 /**
  * Entity mapped to table "TOPIC_DRAFT".
@@ -26,6 +28,7 @@ public class TopicDraft implements java.io.Serializable {
     private String targetTopicId;
     private String targetCommentId;
     private String targetCommentUserName;
+    private String targetCommentContent;
     private Integer isCommentOrigin;
     private Integer isMention;
     private Integer type;
@@ -51,7 +54,7 @@ public class TopicDraft implements java.io.Serializable {
         this.id = id;
     }
 
-    public TopicDraft(Long id, String content, java.util.Date date, String urls, String uid, String targetTopicJson, String targetTopicId, String targetCommentId, String targetCommentUserName, Integer isCommentOrigin, Integer isMention, Integer type, Integer parentType) {
+    public TopicDraft(Long id, String content, java.util.Date date, String urls, String uid, String targetTopicJson, String targetTopicId, String targetCommentId, String targetCommentUserName, String targetCommentContent, Integer isCommentOrigin, Integer isMention, Integer type, Integer parentType) {
         this.id = id;
         this.content = content;
         this.date = date;
@@ -61,6 +64,7 @@ public class TopicDraft implements java.io.Serializable {
         this.targetTopicId = targetTopicId;
         this.targetCommentId = targetCommentId;
         this.targetCommentUserName = targetCommentUserName;
+        this.targetCommentContent = targetCommentContent;
         this.isCommentOrigin = isCommentOrigin;
         this.isMention = isMention;
         this.type = type;
@@ -147,6 +151,14 @@ public class TopicDraft implements java.io.Serializable {
 
     public void setTargetCommentUserName(String targetCommentUserName) {
         this.targetCommentUserName = targetCommentUserName;
+    }
+
+    public String getTargetCommentContent() {
+        return targetCommentContent;
+    }
+
+    public void setTargetCommentContent(String targetCommentContent) {
+        this.targetCommentContent = targetCommentContent;
     }
 
     public Integer getIsCommentOrigin() {
@@ -264,6 +276,26 @@ public class TopicDraft implements java.io.Serializable {
         }else {
             return "";
         }
+    }
+
+    public String getRepostContent(){
+        switch (getType()){
+            case TopicDraftHelper.PUBLISH_COMMENT:
+                if(CommonUtil.noEmpty(getTargetCommentUserName(), getTargetCommentContent())){
+                    return getContent() + "//" + "@" + getTargetCommentUserName() + ":" + getTargetCommentContent();
+                }
+                break;
+            case TopicDraftHelper.REPLY_COMMENT:
+                if(CommonUtil.noEmpty(getTargetCommentUserName(), getTargetCommentContent())){
+                    return "回复" + "@" + getTargetCommentUserName() + ":" + getContent()
+                            + "//" + "@" + getTargetCommentUserName() + ":" + getTargetCommentContent()
+                            + "//" + "@" + getTargetTopic().getUserInfo().getName() + ":" + getTargetTopic().getContent();
+                }
+                break;
+            default:
+                break;
+        }
+        return getContent();
     }
 
     public Topic generateTopic(){

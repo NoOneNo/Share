@@ -130,8 +130,7 @@ public class WebViewActivity extends BaseActivity{
                         mWebView.reload();
                         break;
                     case 1:
-                        ClipboardUtil.copy(mWebView.getUrl());
-                        ToastUtil.showToast(R.string.label_copy_url_to_clipboard_success);
+                        ClipboardUtil.copyAndToast(mWebView.getUrl());
                         break;
                     case 2:
                         openExternalBrowser(mWebView.getUrl());

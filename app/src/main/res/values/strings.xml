@@ -82,6 +82,7 @@
     <string name="title_page_topic">微博</string>
     <string name="title_page_mention">提及</string>
     <string name="title_page_theme">相关话题</string>
+    <string name="title_page_favorites">我收藏的微博</string>
     <!-- Strings related to TopicGroup-->
 
     <!-- Strings related to GroupManager-->
@@ -97,6 +98,8 @@
     <string name="label_topic_collect">收藏</string>
     <string name="label_topic_repost_origin">转发原微博</string>
     <string name="label_topic_copy">复制</string>
+    <string name="label_comment_reply">回复</string>
+    <string name="label_repost_detail">查看该微博</string>
     <string name="label_topic_copy_to_clipboard_success">成功复制微博内容到剪切板</string>
     <!-- Strings related to Topic-->
 

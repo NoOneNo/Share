@@ -32,10 +32,11 @@ public class TopicDraftDao extends AbstractDao<TopicDraft, Long> {
         public final static Property TargetTopicId = new Property(6, String.class, "targetTopicId", false, "TARGET_TOPIC_ID");
         public final static Property TargetCommentId = new Property(7, String.class, "targetCommentId", false, "TARGET_COMMENT_ID");
         public final static Property TargetCommentUserName = new Property(8, String.class, "targetCommentUserName", false, "TARGET_COMMENT_USER_NAME");
-        public final static Property IsCommentOrigin = new Property(9, Integer.class, "isCommentOrigin", false, "IS_COMMENT_ORIGIN");
-        public final static Property IsMention = new Property(10, Integer.class, "isMention", false, "IS_MENTION");
-        public final static Property Type = new Property(11, Integer.class, "type", false, "TYPE");
-        public final static Property ParentType = new Property(12, Integer.class, "parentType", false, "PARENT_TYPE");
+        public final static Property TargetCommentContent = new Property(9, String.class, "targetCommentContent", false, "TARGET_COMMENT_CONTENT");
+        public final static Property IsCommentOrigin = new Property(10, Integer.class, "isCommentOrigin", false, "IS_COMMENT_ORIGIN");
+        public final static Property IsMention = new Property(11, Integer.class, "isMention", false, "IS_MENTION");
+        public final static Property Type = new Property(12, Integer.class, "type", false, "TYPE");
+        public final static Property ParentType = new Property(13, Integer.class, "parentType", false, "PARENT_TYPE");
     };
 
     private DaoSession daoSession;
@@ -63,10 +64,11 @@ public class TopicDraftDao extends AbstractDao<TopicDraft, Long> {
                 "\"TARGET_TOPIC_ID\" TEXT," + // 6: targetTopicId
                 "\"TARGET_COMMENT_ID\" TEXT," + // 7: targetCommentId
                 "\"TARGET_COMMENT_USER_NAME\" TEXT," + // 8: targetCommentUserName
-                "\"IS_COMMENT_ORIGIN\" INTEGER," + // 9: isCommentOrigin
-                "\"IS_MENTION\" INTEGER," + // 10: isMention
-                "\"TYPE\" INTEGER," + // 11: type
-                "\"PARENT_TYPE\" INTEGER);"); // 12: parentType
+                "\"TARGET_COMMENT_CONTENT\" TEXT," + // 9: targetCommentContent
+                "\"IS_COMMENT_ORIGIN\" INTEGER," + // 10: isCommentOrigin
+                "\"IS_MENTION\" INTEGER," + // 11: isMention
+                "\"TYPE\" INTEGER," + // 12: type
+                "\"PARENT_TYPE\" INTEGER);"); // 13: parentType
     }
 
     /** Drops the underlying database table. */
@@ -117,24 +119,29 @@ public class TopicDraftDao extends AbstractDao<TopicDraft, Long> {
             stmt.bindString(9, targetCommentUserName);
         }
  
+        String targetCommentContent = entity.getTargetCommentContent();
+        if (targetCommentContent != null) {
+            stmt.bindString(10, targetCommentContent);
+        }
+ 
         Integer isCommentOrigin = entity.getIsCommentOrigin();
         if (isCommentOrigin != null) {
-            stmt.bindLong(10, isCommentOrigin);
+            stmt.bindLong(11, isCommentOrigin);
         }
  
         Integer isMention = entity.getIsMention();
         if (isMention != null) {
-            stmt.bindLong(11, isMention);
+            stmt.bindLong(12, isMention);
         }
  
         Integer type = entity.getType();
         if (type != null) {
-            stmt.bindLong(12, type);
+            stmt.bindLong(13, type);
         }
  
         Integer parentType = entity.getParentType();
         if (parentType != null) {
-            stmt.bindLong(13, parentType);
+            stmt.bindLong(14, parentType);
         }
     }
 
@@ -163,10 +170,11 @@ public class TopicDraftDao extends AbstractDao<TopicDraft, Long> {
             cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // targetTopicId
             cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // targetCommentId
             cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // targetCommentUserName
-            cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9), // isCommentOrigin
-            cursor.isNull(offset + 10) ? null : cursor.getInt(offset + 10), // isMention
-            cursor.isNull(offset + 11) ? null : cursor.getInt(offset + 11), // type
-            cursor.isNull(offset + 12) ? null : cursor.getInt(offset + 12) // parentType
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // targetCommentContent
+            cursor.isNull(offset + 10) ? null : cursor.getInt(offset + 10), // isCommentOrigin
+            cursor.isNull(offset + 11) ? null : cursor.getInt(offset + 11), // isMention
+            cursor.isNull(offset + 12) ? null : cursor.getInt(offset + 12), // type
+            cursor.isNull(offset + 13) ? null : cursor.getInt(offset + 13) // parentType
         );
         return entity;
     }
@@ -183,10 +191,11 @@ public class TopicDraftDao extends AbstractDao<TopicDraft, Long> {
         entity.setTargetTopicId(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
         entity.setTargetCommentId(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
         entity.setTargetCommentUserName(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
-        entity.setIsCommentOrigin(cursor.isNull(offset + 9) ? null : cursor.getInt(offset + 9));
-        entity.setIsMention(cursor.isNull(offset + 10) ? null : cursor.getInt(offset + 10));
-        entity.setType(cursor.isNull(offset + 11) ? null : cursor.getInt(offset + 11));
-        entity.setParentType(cursor.isNull(offset + 12) ? null : cursor.getInt(offset + 12));
+        entity.setTargetCommentContent(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
+        entity.setIsCommentOrigin(cursor.isNull(offset + 10) ? null : cursor.getInt(offset + 10));
+        entity.setIsMention(cursor.isNull(offset + 11) ? null : cursor.getInt(offset + 11));
+        entity.setType(cursor.isNull(offset + 12) ? null : cursor.getInt(offset + 12));
+        entity.setParentType(cursor.isNull(offset + 13) ? null : cursor.getInt(offset + 13));
      }
     
     /** @inheritdoc */

@@ -12,6 +12,7 @@ import com.hengye.share.model.greenrobot.GreenDaoManager;
 import com.hengye.share.model.greenrobot.GroupList;
 import com.hengye.share.model.greenrobot.ShareJson;
 import com.hengye.share.model.sina.WBTopicComments;
+import com.hengye.share.model.sina.WBTopicFavorites;
 import com.hengye.share.model.sina.WBTopicIds;
 import com.hengye.share.model.sina.WBTopics;
 import com.hengye.share.ui.mvpview.TopicMvpView;
@@ -52,6 +53,9 @@ public class TopicPagePresenter extends BasePresenter<TopicPageMvpView> {
             case THEME:
                 loadWBThemeTopic(isRefresh);
                 break;
+            case FAVORITES:
+                loadWBFavoritesTopic(isRefresh);
+                break;
             default:
                 break;
         }
@@ -62,6 +66,15 @@ public class TopicPagePresenter extends BasePresenter<TopicPageMvpView> {
         RetrofitManager
                 .getWBService()
                 .searchTopic(getWBAllTopicParameter(mPager.getPage(isRefresh)))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(getWBTopicsSubscriber(isRefresh));
+    }
+
+    public void loadWBFavoritesTopic(boolean isRefresh) {
+        RetrofitManager
+                .getWBService()
+                .listFavoritesTopic(getWBAllTopicParameter(mPager.getPage(isRefresh)))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(getWBTopicsSubscriber(isRefresh));
@@ -103,8 +116,23 @@ public class TopicPagePresenter extends BasePresenter<TopicPageMvpView> {
         };
     }
 
+//    public Subscriber<WBTopicFavorites> getWBFavoritesTopicsSubscriber(final boolean isRefresh) {
+//        return new BaseSubscriber<WBTopicFavorites>() {
+//            @Override
+//            public void handleViewOnFail(TopicPageMvpView v, Throwable e) {
+//                v.stopLoading(isRefresh);
+//            }
+//
+//            @Override
+//            public void handleViewOnSuccess(TopicPageMvpView v, WBTopicFavorites wbTopics) {
+//                v.stopLoading(isRefresh);
+//                v.handleTopicData(Topic.get(wbTopics), isRefresh);
+//            }
+//        };
+//    }
+
     public enum TopicType {
-        THEME
+        THEME, FAVORITES;
     }
 
     public static class TopicGroup implements Serializable {
@@ -134,6 +162,8 @@ public class TopicPagePresenter extends BasePresenter<TopicPageMvpView> {
             switch (topicGroup.topicType) {
                 case THEME:
                     return resources.getString(R.string.title_page_theme);
+                case FAVORITES:
+                    return resources.getString(R.string.title_page_favorites);
                 default:
                     return null;
             }

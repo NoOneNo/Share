@@ -97,11 +97,11 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicDefault
         switch (which) {
             case DialogBuilder.LONG_CLICK_TOPIC_REPOST:
                 IntentUtil.startActivity(getContext(),
-                        TopicPublishActivity.getStartIntent(getContext(), TopicDraftHelper.getWBTopicDraftByTopicRepost(topic)));
+                        TopicPublishActivity.getStartIntent(getContext(), TopicDraftHelper.getWBTopicDraftByRepostRepost(topic)));
                 break;
             case DialogBuilder.LONG_CLICK_TOPIC_COMMENT:
                 IntentUtil.startActivity(getContext(),
-                        TopicPublishActivity.getStartIntent(getContext(), TopicDraftHelper.getWBTopicDraftByTopicComment(topic.getId())));
+                        TopicPublishActivity.getStartIntent(getContext(), TopicDraftHelper.getWBTopicDraftByRepostComment(topic)));
                 break;
             case DialogBuilder.LONG_CLICK_TOPIC_COLLECT:
                 WBTopic wbTopic = Topic.getWBTopic(topic);
@@ -110,8 +110,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicDefault
                 }
                 break;
             case DialogBuilder.LONG_CLICK_TOPIC_COPY:
-                ClipboardUtil.copy(topic.getContent());
-                ToastUtil.showToast(R.string.label_topic_copy_to_clipboard_success);
+                ClipboardUtil.copyAndToast(topic.getContent());
                 break;
             default:
                 break;
