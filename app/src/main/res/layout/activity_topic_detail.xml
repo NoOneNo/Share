@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <com.hengye.swiperefresh.PullToRefreshLayout
         android:id="@+id/pull_to_refresh"
@@ -14,11 +15,11 @@
             android:id="@+id/list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="vertical"
-            android:listSelector="@android:color/transparent"
-            android:divider="@drawable/list_divider_margin"
             android:cacheColorHint="@color/transparent"
-            android:headerDividersEnabled="false"/>
+            android:divider="@drawable/list_divider_margin"
+            android:headerDividersEnabled="false"
+            android:listSelector="@android:color/transparent"
+            android:scrollbars="vertical" />
     </com.hengye.swiperefresh.PullToRefreshLayout>
 
     <com.hengye.share.ui.widget.common.CommonTabLayout
@@ -27,15 +28,72 @@
         android:layout_height="@dimen/tab_layout_height"
         android:background="@android:color/white"
         android:theme="@style/Platform.V14.AppCompat.Light"
+        android:visibility="gone" />
+
+
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom|end"-->
+        <!--android:layout_margin="@dimen/fab_margin"-->
+        <!--android:src="@drawable/ic_mode_edit_white_48dp" />-->
+
+    <com.hengye.share.ui.widget.OverLayView
+        android:id="@+id/over_lay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:visibility="gone"/>
 
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/action_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_mode_edit_white_48dp" />
+        android:minHeight="30dip"
+        app:layout_anchor="@id/pull_to_refresh"
+        app:layout_anchorGravity="bottom|right"
+        fab:fab_addButtonColorNormal="?attr/colorPrimary"
+        fab:fab_addButtonColorPressed="?attr/colorPrimaryDark">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!--<TextView-->
+                <!--android:id="@+id/tv_favorite"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="收藏"/>-->
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/action_favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_colorNormal="?attr/colorPrimary"
+                fab:fab_colorPressed="?attr/colorPrimaryDark"
+                fab:fab_icon="@drawable/ic_favorite_black_48dp" />
+
+        </LinearLayout>
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="?attr/colorPrimary"
+            fab:fab_colorPressed="?attr/colorPrimaryDark"
+            fab:fab_icon="@drawable/ic_send_white_48dp" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_repost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="?attr/colorPrimary"
+            fab:fab_colorPressed="?attr/colorPrimaryDark"
+            fab:fab_icon="@drawable/ic_content_copy_white_48dp" />
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.LocalBroadcastManager;
@@ -20,6 +19,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.hengye.share.R;
 import com.hengye.share.adapter.listview.TopicCommentAdapter;
 import com.hengye.share.adapter.recyclerview.TopicAdapter;
@@ -31,6 +32,7 @@ import com.hengye.share.service.TopicPublishService;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.ui.mvpview.TopicDetailMvpView;
 import com.hengye.share.ui.presenter.TopicDetailPresenter;
+import com.hengye.share.ui.widget.OverLayView;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
 import com.hengye.share.ui.widget.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.fab.FabAnimator;
@@ -130,21 +132,24 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         }
     };
 
-    private PullToRefreshLayout mPullToRefreshLayout;
-    private ListView mListView;
-    private TopicCommentAdapter mAdapter;
-    private TabLayout mTabLayout, mTabLayoutAssist;
-    private int mTabLayoutHeight;
-    private boolean mLoadCommentEnable = true;
-    private boolean mLoadReposttEnable = true;
+    PullToRefreshLayout mPullToRefreshLayout;
+    ListView mListView;
+    TopicCommentAdapter mAdapter;
+    TabLayout mTabLayout, mTabLayoutAssist;
+    int mTabLayoutHeight;
+    boolean mLoadCommentEnable = true;
+    boolean mLoadReposttEnable = true;
 
-    private View mTopicContentLayout;
-    private TextView mTopicContent;
-    private FloatingActionButton mFab;
-    private Dialog mTopicCommentDialog, mTopicRepostDialog;
+    View mTopicContentLayout;
+    TextView mTopicContent;
+//    FloatingActionButton mFab;
+    FloatingActionsMenu mActionsMenu;
+    FloatingActionButton mFavoriteBtn, mCommentBtn, mRepostBtn;
+    OverLayView mOverLay;
+    Dialog mTopicCommentDialog, mTopicRepostDialog;
 
-    private TopicDetailPresenter mPresenter;
-    private BroadcastReceiver mPublishResultBroadcastReceiver;
+    TopicDetailPresenter mPresenter;
+    BroadcastReceiver mPublishResultBroadcastReceiver;
 
     private void initHeaderTab(View headerViewAssist) {
         mTabLayout = (TabLayout) headerViewAssist.findViewById(R.id.tab);
@@ -194,22 +199,34 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     @Override
     public void onBackPressed() {
         finish();
-//        if(mTabLayoutAssist != null && mTabLayoutAssist.getVisibility() == View.GONE){
-//            if(mTopicContentLayout != null && mTopicContent != null && mIsRetweet){
-//
-////                mTopicContent.setText(DataUtil.addRetweetedNamePrefix(mTopic));
-//                mTopicContentLayout.setBackgroundColor(getResources().getColor(R.color.grey_50));
-//            }
-//            finishAfterTransition();
-//        }else{
-//            finish();
-//        }
     }
 
     private void initView() {
-        mFab = (FloatingActionButton) findViewById(R.id.fab);
-        mFab.setOnClickListener(this);
+//        mFab = (FloatingActionButton) findViewById(R.id.fab);
+//        mFab.setOnClickListener(this);
 
+        mOverLay = (OverLayView) findViewById(R.id.over_lay);
+        mActionsMenu = (FloatingActionsMenu) findViewById(R.id.action_menu);
+        mFavoriteBtn = (FloatingActionButton) findViewById(R.id.action_favorite);
+        mCommentBtn = (FloatingActionButton) findViewById(R.id.action_comment);
+        mRepostBtn = (FloatingActionButton) findViewById(R.id.action_repost);
+        mOverLay.setOnClickListener(this);
+        mActionsMenu.setOnClickListener(this);
+        mFavoriteBtn.setOnClickListener(this);
+        mCommentBtn.setOnClickListener(this);
+        mRepostBtn.setOnClickListener(this);
+        mActionsMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
+            @Override
+            public void onMenuExpanded() {
+                mOverLay.show();
+            }
+
+            @Override
+            public void onMenuCollapsed() {
+                mOverLay.dismiss();
+            }
+        });
+        
         mTabLayoutHeight = getResources().getDimensionPixelSize(R.dimen.tab_layout_height);
         mTabLayoutAssist = (TabLayout) findViewById(R.id.tab_layout_assist);
         mTabLayoutAssist.addTab((mTabLayoutAssist.newTab().setText(R.string.label_topic_comment).setTag("tab_layout_assist")));
@@ -253,7 +270,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             }
         };
 
-        FabAnimator.create(mFab).attachToListView(mListView, onScrollListener);
+        FabAnimator.create(mActionsMenu).attachToListView(mListView, onScrollListener);
         mListView.setAdapter(mAdapter = new TopicCommentAdapter(this, new ArrayList<TopicComment>()));
         mListView.addHeaderView(headerView);
         mListView.addHeaderView(headerViewAssist);
@@ -420,6 +437,17 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     @Override
     public void onClick(View v) {
         int id = v.getId();
+        if(id == R.id.over_lay){
+            mActionsMenu.collapse();
+        }else if(id == R.id.action_favorite){
+
+        }else if(id == R.id.action_comment){
+
+        }else if(id == R.id.action_repost){
+
+        }
+
+
         if (id == R.id.fab) {
             if(getPublishType() == TopicDraftHelper.REPOST_TOPIC) {
                 IntentUtil.startActivity(this,

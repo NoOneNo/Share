@@ -8,4 +8,6 @@
     <color name="side_transparent_dark_center">#22666666</color>
 
     <color name="side_transparent_dark_end">#ee222222</color>
+
+    <color name="over_lay_background">#88000000</color>
 </resources>
