@@ -46,6 +46,7 @@ public class RequestManager {
 		mDiskBasedCache = getVolleyDiskCache(context, cacheDirectoryName, maxCacheSizeInBytes);
 		mRequestQueue = Volley.newRequestQueue(context, null, mDiskBasedCache, ImageDiskLruCache.getInstance());
 		mImageLoader = new ImageLoader(mRequestQueue, BitmapCache.getInstance());
+		VolleyLog.setIsLog(false);
 	}
 
 	public static void init(Context context) {

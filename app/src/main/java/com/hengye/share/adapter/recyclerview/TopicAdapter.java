@@ -420,7 +420,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicDefault
                 mGallery.setGridCount(urls.size());
                 mGallery.setHandleData(new GridGalleryView.HandleData() {
                     @Override
-                    public SuperImageView getImageView() {
+                    public ImageView getImageView() {
                         SuperImageView iv = new SuperImageView(context);
 //                                iv.setFadeInImage(mIsFadeInImage);
                         iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -433,7 +433,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicDefault
                     @Override
                     public void handleChildItem(ImageView imageView, int position) {
                         SuperImageView iv = (SuperImageView) imageView;
-                        iv.setImageUrl(urls.get(position), RequestManager.getImageLoader());
+                        iv.setImageUrl(urls.get(position));
                     }
                 });
                 mGallery.setOnItemClickListener(new OnItemClickListener() {

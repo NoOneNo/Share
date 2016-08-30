@@ -49,10 +49,21 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
     @Override
     public void onViewCreated(View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getViewPager().setCurrentItem(1);
+
+        getViewPager().setOffscreenPageLimit(3);
         if(mSwipeRefresh != null) {
             initSwipeRefresh();
         }
+    }
+
+    @Override
+    protected int getOffscreenPageLimit() {
+        return 3;
+    }
+
+    @Override
+    protected int getDefaultSelectPosition() {
+        return 1;
     }
 
     WBUserInfo mWbUserInfo;

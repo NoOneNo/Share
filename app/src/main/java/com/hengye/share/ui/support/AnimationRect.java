@@ -323,7 +323,7 @@ public class AnimationRect implements Parcelable {
         }
 
         deltaLeft += thumbnailAndOriDeltaRightSize / 2;
-        L.debug("getClipLeft : {}", (deltaLeft) / (float) oriBitmapScaledWidth);
+//        L.debug("getClipLeft : {}", (deltaLeft) / (float) oriBitmapScaledWidth);
         return (deltaLeft) / (float) oriBitmapScaledWidth;
     }
 
@@ -365,7 +365,7 @@ public class AnimationRect implements Parcelable {
 
 //        deltaTop += thumbnailAndOriDeltaBottomSize;
 
-        L.debug("getClipTop : {}", (deltaTop) / (float) oriBitmapScaledHeight);
+//        L.debug("getClipTop : {}", (deltaTop) / (float) oriBitmapScaledHeight);
         return (deltaTop) / (float) oriBitmapScaledHeight;
     }
 
@@ -404,7 +404,7 @@ public class AnimationRect implements Parcelable {
 
         deltaRight += thumbnailAndOriDeltaRightSize / 2;
 
-        L.debug("getClipRight : {}", (deltaRight) / (float) oriBitmapScaledWidth);
+//        L.debug("getClipRight : {}", (deltaRight) / (float) oriBitmapScaledWidth);
         return (deltaRight) / (float) oriBitmapScaledWidth;
     }
 
@@ -445,7 +445,7 @@ public class AnimationRect implements Parcelable {
 
         deltaBottom += thumbnailAndOriDeltaBottomSize;
 
-        L.debug("getClipBottom : {}", (deltaBottom) / (float) oriBitmapScaledHeight);
+//        L.debug("getClipBottom : {}", (deltaBottom) / (float) oriBitmapScaledHeight);
         return (deltaBottom) / (float) oriBitmapScaledHeight;
     }
 

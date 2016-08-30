@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.getbase.floatingactionbutton.AddFloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.hengye.share.R;
@@ -142,9 +143,9 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 
     View mTopicContentLayout;
     TextView mTopicContent;
-//    FloatingActionButton mFab;
+    //    FloatingActionButton mFab;
     FloatingActionsMenu mActionsMenu;
-    FloatingActionButton mFavoriteBtn, mCommentBtn, mRepostBtn;
+    FloatingActionButton mCopyBtn, mCommentBtn, mRepostBtn;
     OverLayView mOverLay;
     Dialog mTopicCommentDialog, mTopicRepostDialog;
 
@@ -207,14 +208,14 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 
         mOverLay = (OverLayView) findViewById(R.id.over_lay);
         mActionsMenu = (FloatingActionsMenu) findViewById(R.id.action_menu);
-        mFavoriteBtn = (FloatingActionButton) findViewById(R.id.action_favorite);
-        mCommentBtn = (FloatingActionButton) findViewById(R.id.action_comment);
+        mCopyBtn = (FloatingActionButton) findViewById(R.id.action_copy);
         mRepostBtn = (FloatingActionButton) findViewById(R.id.action_repost);
+        mCommentBtn = (FloatingActionButton) findViewById(R.id.action_comment);
         mOverLay.setOnClickListener(this);
         mActionsMenu.setOnClickListener(this);
-        mFavoriteBtn.setOnClickListener(this);
-        mCommentBtn.setOnClickListener(this);
+        mCopyBtn.setOnClickListener(this);
         mRepostBtn.setOnClickListener(this);
+        mCommentBtn.setOnClickListener(this);
         mActionsMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
             @Override
             public void onMenuExpanded() {
@@ -226,7 +227,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                 mOverLay.dismiss();
             }
         });
-        
+
         mTabLayoutHeight = getResources().getDimensionPixelSize(R.dimen.tab_layout_height);
         mTabLayoutAssist = (TabLayout) findViewById(R.id.tab_layout_assist);
         mTabLayoutAssist.addTab((mTabLayoutAssist.newTab().setText(R.string.label_topic_comment).setTag("tab_layout_assist")));
@@ -289,9 +290,9 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mCurrentPosition = position - mListView.getHeaderViewsCount();
 
-                if(isSelectedCommentTab()) {
+                if (isSelectedCommentTab()) {
                     mTopicCommentDialog.show();
-                }else{
+                } else {
                     mTopicRepostDialog.show();
                 }
             }
@@ -437,22 +438,26 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if(id == R.id.over_lay){
+        if (id == R.id.over_lay) {
             mActionsMenu.collapse();
-        }else if(id == R.id.action_favorite){
-
-        }else if(id == R.id.action_comment){
-
-        }else if(id == R.id.action_repost){
-
+        } else if (id == R.id.action_copy) {
+            ClipboardUtil.copyAndToast(mTopic.getContent());
+            mActionsMenu.collapseImmediately();
+        } else if (id == R.id.action_repost) {
+            mActionsMenu.collapseImmediately();
+            IntentUtil.startActivity(this,
+                    TopicPublishActivity.getStartIntent(this, TopicDraftHelper.getWBTopicDraftByRepostRepost(mTopic)));
+        } else if (id == R.id.action_comment) {
+            mActionsMenu.collapseImmediately();
+            IntentUtil.startActivity(this,
+                    TopicPublishActivity.getStartIntent(this, TopicDraftHelper.getWBTopicDraftByRepostComment(mTopic)));
         }
 
-
         if (id == R.id.fab) {
-            if(getPublishType() == TopicDraftHelper.REPOST_TOPIC) {
+            if (getPublishType() == TopicDraftHelper.REPOST_TOPIC) {
                 IntentUtil.startActivity(this,
                         TopicPublishActivity.getStartIntent(this, TopicDraftHelper.getWBTopicDraftByRepostRepost(mTopic)));
-            }else{
+            } else {
                 IntentUtil.startActivity(this,
                         TopicPublishActivity.getStartIntent(this, TopicDraftHelper.getWBTopicDraftByRepostComment(mTopic)));
             }
@@ -466,14 +471,15 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     }
 
     int mCurrentPosition;
+
     @Override
     public void onClick(DialogInterface dialog, int which) {
         TopicComment topicComment = mAdapter.getItem(mCurrentPosition);
-        if(topicComment == null){
+        if (topicComment == null) {
             return;
         }
-        if(isSelectedCommentTab()){
-            switch (which){
+        if (isSelectedCommentTab()) {
+            switch (which) {
                 case DialogBuilder.COMMENT_COPY:
                     ClipboardUtil.copyAndToast(topicComment.getContent());
                     break;
@@ -485,8 +491,8 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                     break;
             }
 
-        }else{
-            switch (which){
+        } else {
+            switch (which) {
                 case DialogBuilder.REPOST_COPY:
                     ClipboardUtil.copyAndToast(topicComment.getContent());
                     break;

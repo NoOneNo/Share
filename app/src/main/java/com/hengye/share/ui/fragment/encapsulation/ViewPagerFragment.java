@@ -70,9 +70,9 @@ public abstract class ViewPagerFragment extends ContentFragment implements ViewP
     protected void setUpViewPager(Bundle savedInstanceState) {
 
         mViewPager = findViewPager();
-        mCurrentPosition = savedInstanceState == null ? 0 : savedInstanceState.getInt("position");
+        mCurrentPosition = savedInstanceState == null ? getDefaultSelectPosition() : savedInstanceState.getInt("position");
 
-        mViewPager.setOffscreenPageLimit(0);
+        mViewPager.setOffscreenPageLimit(getOffscreenPageLimit());
 
         if(getAdapter() != null && mCurrentPosition >= getAdapter().getCount()){
             mCurrentPosition = 0;
@@ -81,6 +81,13 @@ public abstract class ViewPagerFragment extends ContentFragment implements ViewP
         mViewPager.addOnPageChangeListener(this);
     }
 
+    protected int getOffscreenPageLimit(){
+        return 0;
+    }
+
+    protected int getDefaultSelectPosition(){
+        return 0;
+    }
 
     public void setAdapter(PagerAdapter adapter) {
         mViewPager.setAdapter(adapter);

@@ -247,14 +247,13 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
                     getMvpView().handleNoMoreTopics();
                     L.debug("no topic update");
                 } else {
-                    if (wbTopicIds.getStatuses().size() >= WBUtil.getWBTopicRequestCount() * 2) {
+                    if (wbTopicIds.getStatuses().size() >= WBUtil.getWBTopicRequestCount()) {
                         //还有更新的微博，重新请求刷新
 //                                RequestManager.addToRequestQueue(getWBTopicRequest(token, 0 + "", true), getRequestTag());
                         L.debug("exist newer topic, request refresh again");
                         loadWBTopic("0", true, false);
                     } else {
-                        //新的微博条数没有超过请求条数的2倍，显示更新多少条微博，根据请求的since_id获取微博
-//                                RequestManager.addToRequestQueue(getWBTopicRequest(token, since_id, true), getRequestTag());
+                        //新的微博条数没有超过请求条数，显示更新多少条微博，根据请求的since_id获取微博
                         L.debug("new topic is less than MAX_COUNT_REQUEST, request refresh by since_id");
                         loadWBTopic(since_id, true, false);
                     }

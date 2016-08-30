@@ -1,10 +1,8 @@
 package com.hengye.share.util.retrofit.weibo;
 
-import com.hengye.share.ui.activity.TopicPublishActivity;
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.util.HandlerUtil;
 import com.hengye.share.util.ToastUtil;
-import com.hengye.share.util.intercept.Action;
 import com.hengye.share.util.intercept.AdTokenInterceptor;
 
 import java.lang.reflect.InvocationHandler;

@@ -3,30 +3,38 @@ package com.hengye.share.ui.fragment.encapsulation;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.IdRes;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.hengye.share.R;
 import com.hengye.share.ui.base.BaseFragment;
+import com.hengye.share.util.L;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by yuhy on 16/7/18.
  */
-public abstract class TabsFragment extends ViewPagerFragment{
+public abstract class TabsFragment extends ViewPagerFragment {
 
     @Override
     public void onViewCreated(View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        L.debug("onViewCreated invoke()");
         if (delayTabInit() == 0) {
             setUpTabs(savedInstanceState);
         } else {
@@ -39,7 +47,7 @@ public abstract class TabsFragment extends ViewPagerFragment{
     }
 
     @Override
-    public FragmentPagerAdapter getAdapter(){
+    public FragmentPagerAdapter getAdapter() {
         return mAdapter;
     }
 
@@ -49,13 +57,32 @@ public abstract class TabsFragment extends ViewPagerFragment{
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("items", mItems);
+
+        L.debug("onSaveInstanceState invoke()");
     }
 
     protected void setUpTabs(Bundle savedInstanceState) {
 
+        L.debug("setUpTabs invoke()");
+
         mItems = savedInstanceState == null ? generateTabs() : (ArrayList<TabItem>) savedInstanceState.getSerializable("items");
 
+        // 初始化的时候，移除一下Fragment
+        if (savedInstanceState != null) {
+            List<Fragment> fragmentList = getFragmentManager().getFragments();
+            if(fragmentList != null){
+                for(Fragment fragment : fragmentList){
+                    if (fragment != null) {
+                        getFragmentManager().beginTransaction()
+                                .remove(fragment).commit();
+                    }
+                }
+            }
+        }
         getViewPager().setAdapter(mAdapter = new TabsAdapter(getFragmentManager()));
+        int currentPosition = savedInstanceState == null ? getDefaultSelectPosition() : savedInstanceState.getInt("position");
+        L.debug("currentPosition : {}, savedInstanceState == null is : {}", currentPosition, savedInstanceState == null);
+        getViewPager().setCurrentItem(currentPosition);
     }
 
     protected void updateViewPager() {
@@ -63,31 +90,9 @@ public abstract class TabsFragment extends ViewPagerFragment{
         mAdapter.notifyDataSetChanged();
     }
 
+
     protected void destroyFragments() {
-        if (getActivity() != null) {
-            if (getActivity().isDestroyed()) {
-                return;
-            }
-
-            try {
-//                FragmentTransaction e1 = getFragmentManager().beginTransaction();
-//                Set keySet = mFragments.keySet();
-//                Iterator i$ = keySet.iterator();
-//
-//                while (i$.hasNext()) {
-//                    String key = (String) i$.next();
-//                    if (mFragments.get(key) != null) {
-//                        e1.remove(mFragments.get(key));
-//                        L.debug("AFragment-Tabs", "remove fragment , key = " + key);
-//                    }
-//                }
-//
-//                e1.commit();
-            } catch (Throwable e) {
-                e.printStackTrace();
-            }
-        }
-
+        L.debug("destroyFragments invoke()");
     }
 
     protected abstract ArrayList<TabItem> generateTabs();
@@ -98,13 +103,18 @@ public abstract class TabsFragment extends ViewPagerFragment{
         return 0;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
+    @Override
     public void onDestroy() {
         try {
             destroyFragments();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         super.onDestroy();
     }
 
@@ -115,6 +125,7 @@ public abstract class TabsFragment extends ViewPagerFragment{
     public Fragment getFragment(int position) {
         return mAdapter.getItem(position);
     }
+
 
     class TabsAdapter extends FragmentPagerAdapter {
 
@@ -131,7 +142,9 @@ public abstract class TabsFragment extends ViewPagerFragment{
             if (fragment == null) {
                 fragment = newFragment(mItems.get(position));
                 mFragments.put(this.makeFragmentName(position), fragment);
+                L.debug("position is null :{}", position);
             }
+            L.debug("position is not null : {}", position);
 
             return fragment;
         }
@@ -158,6 +171,10 @@ public abstract class TabsFragment extends ViewPagerFragment{
             return mFragments;
         }
 
+        public void clear() {
+            mFragments.clear();
+        }
+
         public BaseFragment getFragment(String tabTitle) {
             if (mFragments != null && !TextUtils.isEmpty(tabTitle)) {
                 for (int i = 0; i < mItems.size(); ++i) {
@@ -165,7 +182,6 @@ public abstract class TabsFragment extends ViewPagerFragment{
                         return mFragments.get(makeFragmentName(i));
                     }
                 }
-
                 return null;
             } else {
                 return null;

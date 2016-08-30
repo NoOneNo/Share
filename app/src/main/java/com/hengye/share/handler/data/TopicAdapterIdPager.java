@@ -2,6 +2,7 @@ package com.hengye.share.handler.data;
 
 import com.hengye.share.handler.data.base.DataAdapter;
 import com.hengye.share.handler.data.base.Pager;
+import com.hengye.share.helper.SettingHelper;
 import com.hengye.share.model.TopicId;
 import com.hengye.share.util.CommonUtil;
 

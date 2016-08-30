@@ -8,6 +8,7 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 
 import com.hengye.share.ui.widget.listener.OnItemClickListener;
+import com.hengye.share.util.L;
 
 public class GridGalleryView extends GridLayout implements View.OnClickListener {
 
@@ -21,10 +22,10 @@ public class GridGalleryView extends GridLayout implements View.OnClickListener 
 
     public GridGalleryView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init(context);
+        init();
     }
 
-    protected void init(Context context) {
+    protected void init() {
     }
 
     @Override
@@ -63,7 +64,7 @@ public class GridGalleryView extends GridLayout implements View.OnClickListener 
         for (int i = 0; i < mGridCount; i++) {
             ImageView imageView = mHandleData.getImageView();
             imageView.setTag(View.NO_ID, i);
-            ImageSize.handleImageView(imageView, mMaxWidth, mMargin, mGridCount);
+            ImageSize.handleImageView(imageView, mMaxWidth, mMargin, mGridCount, i);
             imageView.setOnClickListener(this);
             addView(imageView);
             mHandleData.handleChildItem(imageView, i);
@@ -183,14 +184,23 @@ public class GridGalleryView extends GridLayout implements View.OnClickListener 
             }
         }
 
-        public static void handleImageView(ImageView imageView, int maxWidth, int margin, int count) {
+        public static void handleImageView(ImageView imageView, int maxWidth, int margin, int count, int position) {
             ImageSize is = getImageSize(maxWidth, margin, count);
 
             GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
 
             lp.width = is.width;
             lp.height = is.height;
-            lp.rightMargin = margin;
+
+            if(count % 3 == 0) {
+                int actualPosition = position % 3;
+                if (actualPosition == 0 || actualPosition == 1){
+                    lp.rightMargin = margin;
+                }
+            }else{
+                lp.rightMargin = margin;
+            }
+
             lp.bottomMargin = margin;
             if (count == 1) {
 //                imageView.setMinimumWidth(is.minWidth);

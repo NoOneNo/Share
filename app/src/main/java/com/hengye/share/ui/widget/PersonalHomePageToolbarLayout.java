@@ -189,7 +189,7 @@ public class PersonalHomePageToolbarLayout extends CollapsingToolbarLayout {
             // offset移动的比例
             float factor = -verticalOffset * 1.0f / maxVerticalOffset;
 
-            if(userInfoBgLayout.getBackground() != null) {
+            if (userInfoBgLayout.getBackground() != null) {
                 float bgAlpha = (float) (0.8 + 0.2 * factor);
 //                userInfoBgLayout.getBackground().setAlpha((int) (255 * bgAlpha));
             }
@@ -197,6 +197,7 @@ public class PersonalHomePageToolbarLayout extends CollapsingToolbarLayout {
             float descAlpha = 1 - factor;
             userInfoLayout.setAlpha(descAlpha);
 
+            userInfoLayout.setVisibility(descAlpha == 0 ? INVISIBLE : VISIBLE);
 
             if (avatarMatrix != null) {
                 // 从avatarSize变化到finalAvatarSize，是根据这个factor逐渐变化的，计算它的dsize变化值
