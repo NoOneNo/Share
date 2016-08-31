@@ -11,8 +11,6 @@ import android.widget.AbsListView;
 
 import com.hengye.share.R;
 import com.hengye.share.util.ResUtil;
-import com.nineoldandroids.view.ViewHelper;
-import com.nineoldandroids.view.ViewPropertyAnimator;
 
 /**
  * Created by wangdan on 16/2/2.
@@ -46,25 +44,30 @@ public class FabAnimator {
 
     private View fabBtn;
     private boolean mVisible = true;
+    private CustomAnimator mCustomAnimator;
 
     public void attachToListView(AbsListView listView) {
         attachToListView(listView, null);
     }
 
-    public void attachToListView(AbsListView listView, AbsListView.OnScrollListener onScrollListener) {
+    public FabAnimator attachToListView(AbsListView listView, AbsListView.OnScrollListener onScrollListener) {
         AbsListViewScrollDetectorImpl scrollDetector = new AbsListViewScrollDetectorImpl();
         scrollDetector.setListView(listView);
         scrollDetector.setScrollThreshold(scrollThreshold);
-        if(onScrollListener != null){
+        if (onScrollListener != null) {
             scrollDetector.setOnScrollListener(onScrollListener);
         }
         listView.setOnScrollListener(scrollDetector);
+
+        return this;
     }
 
-    public void attachToRecyclerView(RecyclerView recyclerView) {
+    public FabAnimator attachToRecyclerView(RecyclerView recyclerView) {
         RecyclerViewScrollDetectorImpl scrollDetector = new RecyclerViewScrollDetectorImpl();
         scrollDetector.setScrollThreshold(scrollThreshold);
         recyclerView.addOnScrollListener(scrollDetector);
+
+        return this;
     }
 
     private abstract class AbsListViewScrollDetector implements AbsListView.OnScrollListener {
@@ -148,7 +151,7 @@ public class FabAnimator {
         public void onScrollStateChanged(AbsListView view, int scrollState) {
             super.onScrollStateChanged(view, scrollState);
 
-            if(onScrollListener != null){
+            if (onScrollListener != null) {
                 onScrollListener.onScrollStateChanged(view, scrollState);
             }
         }
@@ -157,7 +160,7 @@ public class FabAnimator {
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
             super.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
 
-            if(onScrollListener != null){
+            if (onScrollListener != null) {
                 onScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
             }
         }
@@ -182,7 +185,7 @@ public class FabAnimator {
     private void toggle(final boolean visible, final boolean animate, boolean force) {
         if (mVisible != visible || force) {
             mVisible = visible;
-            int height = fabBtn.getHeight();
+            int height = mCustomAnimator != null ? mCustomAnimator.getViewHeight() : fabBtn.getHeight();
             if (height == 0 && !force) {
                 ViewTreeObserver vto = fabBtn.getViewTreeObserver();
                 if (vto.isAlive()) {
@@ -202,11 +205,15 @@ public class FabAnimator {
             }
             int translationY = visible ? 0 : height + getMarginBottom();
             if (animate) {
-                ViewPropertyAnimator.animate(fabBtn).setInterpolator(mInterpolator)
+                fabBtn.animate().setInterpolator(mInterpolator)
                         .setDuration(TRANSLATE_DURATION_MILLIS)
                         .translationY(translationY);
+//                ViewPropertyAnimator.animate(fabBtn).setInterpolator(mInterpolator)
+//                        .setDuration(TRANSLATE_DURATION_MILLIS)
+//                        .translationY(translationY);
             } else {
-                ViewHelper.setTranslationY(fabBtn, translationY);
+                fabBtn.setTranslationY(translationY);
+//                ViewHelper.setTranslationY(fabBtn, translationY);
             }
 
             // On pre-Honeycomb a translated view is still clickable, so we need to disable clicks manually
@@ -227,6 +234,15 @@ public class FabAnimator {
 
     private boolean hasHoneycombApi() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
+    }
+
+    public CustomAnimator getCustomAnimator() {
+        return mCustomAnimator;
+    }
+
+    public FabAnimator setCustomAnimator(CustomAnimator customAnimator) {
+        this.mCustomAnimator = customAnimator;
+        return this;
     }
 
     abstract class RecyclerViewScrollDetector extends RecyclerView.OnScrollListener {
@@ -266,4 +282,7 @@ public class FabAnimator {
         }
     }
 
+    public interface CustomAnimator{
+        int getViewHeight();
+    }
 }

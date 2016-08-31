@@ -10,7 +10,6 @@
         android:id="@+id/pull_to_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <ListView
             android:id="@+id/list_view"
             android:layout_width="match_parent"
@@ -20,6 +19,7 @@
             android:headerDividersEnabled="false"
             android:listSelector="@android:color/transparent"
             android:scrollbars="vertical" />
+
     </com.hengye.swiperefresh.PullToRefreshLayout>
 
     <com.hengye.share.ui.widget.common.CommonTabLayout
@@ -45,21 +45,20 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
-    <com.getbase.floatingactionbutton.FloatingActionsMenu
+    <com.hengye.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/action_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:minHeight="30dip"
         app:layout_anchor="@id/pull_to_refresh"
-        app:layout_anchorGravity="bottom|right"
+        app:layout_anchorGravity="bottom|end"
         fab:fab_addButtonColorNormal="?attr/theme_color"
         fab:fab_addButtonColorPressed="?attr/theme_dark_color"
         fab:fab_labelStyle="@style/menu_labels_style">
 
 
-        <com.getbase.floatingactionbutton.FloatingActionButton
+        <com.hengye.floatingactionbutton.FloatingActionButton
             android:id="@+id/action_copy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -69,7 +68,7 @@
             fab:fab_title="@string/label_topic_copy" />
 
 
-        <com.getbase.floatingactionbutton.FloatingActionButton
+        <com.hengye.floatingactionbutton.FloatingActionButton
             android:id="@+id/action_repost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -78,7 +77,7 @@
             fab:fab_icon="@drawable/ic_repost_white_48dp"
             fab:fab_title="@string/label_topic_repost"/>
 
-        <com.getbase.floatingactionbutton.FloatingActionButton
+        <com.hengye.floatingactionbutton.FloatingActionButton
             android:id="@+id/action_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -87,6 +86,6 @@
             fab:fab_icon="@drawable/ic_comment_white_48dp"
             fab:fab_title="@string/label_topic_comment" />
 
-    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+    </com.hengye.floatingactionbutton.FloatingActionsMenu>
 
 </android.support.design.widget.CoordinatorLayout>

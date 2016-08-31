@@ -12,6 +12,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
@@ -19,9 +20,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.getbase.floatingactionbutton.AddFloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.hengye.floatingactionbutton.FloatingActionButton;
+import com.hengye.floatingactionbutton.FloatingActionsMenu;
 import com.hengye.share.R;
 import com.hengye.share.adapter.listview.TopicCommentAdapter;
 import com.hengye.share.adapter.recyclerview.TopicAdapter;
@@ -41,6 +41,8 @@ import com.hengye.share.util.ClipboardUtil;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.IntentUtil;
+import com.hengye.share.util.L;
+import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
@@ -212,10 +214,10 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         mRepostBtn = (FloatingActionButton) findViewById(R.id.action_repost);
         mCommentBtn = (FloatingActionButton) findViewById(R.id.action_comment);
         mOverLay.setOnClickListener(this);
-        mActionsMenu.setOnClickListener(this);
         mCopyBtn.setOnClickListener(this);
         mRepostBtn.setOnClickListener(this);
         mCommentBtn.setOnClickListener(this);
+
         mActionsMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
             @Override
             public void onMenuExpanded() {
@@ -271,7 +273,15 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             }
         };
 
-        FabAnimator.create(mActionsMenu).attachToListView(mListView, onScrollListener);
+        FabAnimator
+                .create(mActionsMenu)
+                .attachToListView(mListView, onScrollListener)
+                .setCustomAnimator(new FabAnimator.CustomAnimator() {
+                    @Override
+                    public int getViewHeight() {
+                        return mActionsMenu.getAddButtion().getHeight();
+                    }
+                });
         mListView.setAdapter(mAdapter = new TopicCommentAdapter(this, new ArrayList<TopicComment>()));
         mListView.addHeaderView(headerView);
         mListView.addHeaderView(headerViewAssist);
@@ -360,6 +370,17 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             return;
         }
         mPullToRefreshLayout.getOnRefreshListener().onRefresh();
+
+//        mActionsMenu.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                if (!mActionsMenu.isExpanded()) {
+//                    mPullToRefreshLayout.onTouchEvent(event);
+//                }
+//                L.debug("onTouch invoke ");
+//                return false;
+//            }
+//        });
     }
 
     private void initBroadcastReceiver() {
