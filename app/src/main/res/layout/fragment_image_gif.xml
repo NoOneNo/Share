@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:id="@+id/cover"
-        android:visibility="gone"/>
+        android:visibility="invisible"/>
 
     <uk.co.senab.photoview.PhotoView
         android:layout_gravity="center"

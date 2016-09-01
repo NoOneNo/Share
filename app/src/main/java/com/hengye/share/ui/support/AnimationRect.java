@@ -509,7 +509,7 @@ public class AnimationRect implements Parcelable {
                                 @Override
                                 public void run() {
                                     target.setVisibility(View.VISIBLE);
-                                    photoView.setVisibility(View.GONE);
+                                    photoView.setVisibility(View.INVISIBLE);
                                 }
                             });
                         }

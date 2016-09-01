@@ -56,6 +56,7 @@ public class ImageGifFragment extends BaseFragment {
 
     private PhotoView mGifView;
     private ClipImageView mPhotoView;
+    private int mScreenWidth;
 
     @Nullable
     @Override
@@ -64,7 +65,7 @@ public class ImageGifFragment extends BaseFragment {
 
         mGifView = (PhotoView) view.findViewById(R.id.iv_normal);
         mPhotoView = (ClipImageView) view.findViewById(R.id.cover);
-        int screenWidth = getResources().getDisplayMetrics().widthPixels;
+        mScreenWidth = getResources().getDisplayMetrics().widthPixels;
 
         File gifFile = new File(mPath);
         try {
@@ -74,17 +75,12 @@ public class ImageGifFragment extends BaseFragment {
             e.printStackTrace();
         }
 
+
+        setBitmapToPhotoView();
         if (mAnimateIn) {
             mAnimateIn = false;
 
-            Bitmap bitmap = BitmapCache.getInstance().getBitmap(mPath);
-            if(bitmap == null){
-                bitmap = BitmapUtil.getSuitableBitmap(mPath, screenWidth, 0, BitmapUtil.DEFAULT_CONFIG, ImageView.ScaleType.FIT_XY);
-                if(bitmap != null){
-                    BitmapCache.getInstance().putBitmap(mPath, bitmap);
-                }
-            }
-            mPhotoView.setImageBitmap(bitmap);
+//            setBitmapToPhotoView();
 
             runEnterAnimation();
         }
@@ -100,6 +96,17 @@ public class ImageGifFragment extends BaseFragment {
         return view;
     }
 
+    private void setBitmapToPhotoView(){
+        Bitmap bitmap = BitmapCache.getInstance().getBitmap(mPath);
+        if(bitmap == null){
+            bitmap = BitmapUtil.getSuitableBitmap(mPath, mScreenWidth, 0, BitmapUtil.DEFAULT_CONFIG, ImageView.ScaleType.FIT_XY);
+            if(bitmap != null){
+                BitmapCache.getInstance().putBitmap(mPath, bitmap);
+            }
+        }
+        mPhotoView.setImageBitmap(bitmap);
+    }
+
     private void runEnterAnimation() {
 
         mPhotoView.setVisibility(View.VISIBLE);
@@ -111,9 +118,10 @@ public class ImageGifFragment extends BaseFragment {
 
         mGifView.setVisibility(View.GONE);
         mPhotoView.setVisibility(View.VISIBLE);
-        AnimationRect rect = getArguments().getParcelable("rect");
+//        setBitmapToPhotoView();
+//        AnimationRect rect = getArguments().getParcelable("rect");
 
-        AnimationRect.runExitAnimation(mPhotoView, rect, backgroundAnimator);
+        AnimationRect.runExitAnimation(mPhotoView, mRect, backgroundAnimator);
     }
 
 }
