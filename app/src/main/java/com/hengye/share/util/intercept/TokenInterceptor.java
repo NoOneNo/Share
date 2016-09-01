@@ -15,21 +15,21 @@ import com.hengye.share.util.UserUtil;
 /**
  * Created by yuhy on 16/7/22.
  */
-public class AdTokenInterceptor extends Interceptor{
+public class TokenInterceptor extends Interceptor{
 
     Dialog mLoginDialog;
     BaseActivity mActivity;
 
-    public AdTokenInterceptor(BaseActivity activity) {
+    public TokenInterceptor(BaseActivity activity) {
         this(activity, null);
     }
 
-    public AdTokenInterceptor(BaseActivity activity, Action action) {
+    public TokenInterceptor(BaseActivity activity, Action action) {
         this.mActivity = activity;
         Interception interception = new Interception() {
             @Override
             public boolean isIntercept() {
-                if (UserUtil.isAdTokenEmpty()) {
+                if (UserUtil.isTokenEmpty()) {
                     getDialog().show();
                     return true;
                 }
@@ -43,7 +43,7 @@ public class AdTokenInterceptor extends Interceptor{
     public Dialog getDialog() {
         if (mLoginDialog == null) {
             SimpleTwoBtnDialog build = new SimpleTwoBtnDialog();
-            build.setContent(R.string.tip_need_advanced_authorize);
+            build.setContent(R.string.label_to_login);
             build.setPositiveButtonClickListener(new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -56,7 +56,7 @@ public class AdTokenInterceptor extends Interceptor{
                             mActivity.getActivityHelper().unregisterActivityLifecycleListener(this);
                         }
                     });
-                    mActivity.startActivityForResult(ThirdPartyLoginActivity.getAdTokenStartIntent(mActivity), 33);
+                    mActivity.startActivityForResult(ThirdPartyLoginActivity.getStartIntent(mActivity, false), 33);
                 }
             });
             mLoginDialog = build.create(mActivity);
@@ -70,7 +70,7 @@ public class AdTokenInterceptor extends Interceptor{
             mActivity.getHandler().post(new Runnable() {
                 @Override
                 public void run() {
-                    AdTokenInterceptor.super.runAction();
+                    TokenInterceptor.super.runAction();
                 }
             });
         }else{

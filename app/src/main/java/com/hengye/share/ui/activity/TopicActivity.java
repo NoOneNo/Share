@@ -49,6 +49,7 @@ import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.intercept.Action;
 import com.hengye.share.util.intercept.AdTokenInterceptor;
+import com.hengye.share.util.intercept.TokenInterceptor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -215,7 +216,7 @@ public class TopicActivity extends BaseActivity
                 mContent = content;
                 if (!TextUtils.isEmpty(mContent.trim())) {
                     setHideAnimationOnStart();
-                    getAdTokenInterceptor().setAction(mStartSearch).start();
+                    getTokenInterceptor().setAction(mStartSearch).start();
 //                    startActivity(SearchActivity.getStartIntent(TopicActivity.this, mContent));
 //                        overridePendingTransition(R.anim.fade_in, 0);
                 }
@@ -319,7 +320,7 @@ public class TopicActivity extends BaseActivity
 //            mDrawer.closeDrawer(GravityCompat.END);
             startActivity(SettingActivity.class);
         } else if (id == R.id.nav_group_manage) {
-            getAdTokenInterceptor().setAction(mStartGroup).start();
+            getTokenInterceptor().setAction(mStartGroup).start();
 //            startActivityForResult(GroupManageActivity.class, GroupManageActivity.GROUP_UPDATE);
         } else if (id == R.id.nav_draft) {
             startActivity(TopicDraftActivity.class);
@@ -433,9 +434,12 @@ public class TopicActivity extends BaseActivity
 
     Action mStartGroup, mStartSearch;
     AdTokenInterceptor mAdTokenInterceptor;
-    public AdTokenInterceptor getAdTokenInterceptor(){
-        if(mAdTokenInterceptor == null){
+    TokenInterceptor mTokenInterceptor;
+    public TokenInterceptor getTokenInterceptor(){
+        if(mTokenInterceptor == null){
             mAdTokenInterceptor = new AdTokenInterceptor(this);
+            mTokenInterceptor = new TokenInterceptor(this);
+            mTokenInterceptor.with(mAdTokenInterceptor);
             mStartGroup = new Action() {
                 @Override
                 public void run() {
@@ -456,7 +460,7 @@ public class TopicActivity extends BaseActivity
                 }
             };
         }
-        return mAdTokenInterceptor;
+        return mTokenInterceptor;
     }
 
 }

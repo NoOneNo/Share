@@ -269,7 +269,7 @@ public class SettingHelper {
     }
 
     public static boolean isOrderReading(){
-        String value =  getString(KEY_HABIT_READ_ORDER);
+        String value = getString(KEY_HABIT_READ_ORDER, "1");
         if("1".equals(value)){
             return true;
         }

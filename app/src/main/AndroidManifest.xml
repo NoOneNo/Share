@@ -37,15 +37,28 @@
         <service android:name="com.hengye.share.service.ShareService" />
         <service android:name="com.hengye.share.service.TopicPublishService" />
 
+
         <activity
             android:name="com.hengye.share.ui.activity.GuidanceActivity"
             android:label="@string/app_name">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        </activity>
+
+        <!-- use an alias in case we want to change the launch activity later without breaking
+             homescreen shortcuts.  Note must be defined after the targetActivity -->
+        <activity-alias
+            android:name=".Launcher"
+            android:label="@string/app_name"
+            android:targetActivity="com.hengye.share.ui.activity.GuidanceActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activity-alias>
 
         <activity
             android:name="com.hengye.share.ui.activity.TopicActivity"

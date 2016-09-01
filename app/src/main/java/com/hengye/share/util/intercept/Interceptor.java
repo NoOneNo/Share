@@ -43,6 +43,7 @@ public class Interceptor {
     Action action;
     int index = 0;
     boolean isIntercept = false;
+    Interceptor proxyInterceptor;
 
     public List<Interception> getInterceptions(){
         return interceptions;
@@ -53,12 +54,23 @@ public class Interceptor {
     }
 
     public Interceptor add(Interception interception) {
-        interceptions.add(interception);
+        this.interceptions.add(interception);
+        return this;
+    }
+
+    public Interceptor addAll(List<Interception> interceptions) {
+        this.interceptions.addAll(interceptions);
         return this;
     }
 
     public Interceptor addAll(Interception... interceptions) {
         this.interceptions.addAll(Arrays.asList(interceptions));
+        return this;
+    }
+
+    public Interceptor with(Interceptor interceptor) {
+        this.interceptions.addAll(interceptor.getInterceptions());
+        interceptor.setProxy(this);
         return this;
     }
 
@@ -99,8 +111,12 @@ public class Interceptor {
      * 表示当前拦截已经通过,可以进行下一个拦截的操作
      */
     public void next() {
-        index++;
-        resume();
+        if(proxyInterceptor != null){
+            proxyInterceptor.next();
+        }else {
+            index++;
+            resume();
+        }
     }
 
     /**
@@ -125,6 +141,14 @@ public class Interceptor {
         if(!interceptions.isEmpty()){
             interceptions.remove(index);
         }
+    }
+
+    public void setProxy(Interceptor interceptor){
+        this.proxyInterceptor = interceptor;
+    }
+
+    public Interceptor getProxy(){
+        return this.proxyInterceptor;
     }
 
 }
