@@ -8,4 +8,6 @@
 
     <string name="dialog_text_tip">温馨提示</string>
 
+    <string name="dialog_text_error_tip">错误提示</string>
+
 </resources>

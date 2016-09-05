@@ -2,6 +2,7 @@ package com.hengye.share.util.retrofit.weibo;
 
 import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.util.HandlerUtil;
+import com.hengye.share.util.L;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.intercept.AdTokenInterceptor;
 
@@ -9,6 +10,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import retrofit2.Response;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import rx.functions.Func1;
@@ -50,21 +52,8 @@ public class WBServiceProxyHandler implements InvocationHandler {
                                                          public Observable<?> call(Throwable throwable) {
 //                                                             Observable<?> x = checkApiError(throwable);
 //                                                             if (x != null) return x;
-                                                             if (throwable instanceof HttpException) {
-                                                                 HttpException httpException = (HttpException) throwable;
-                                                                 if (httpException.code() == 403) {
-                                                                     HandlerUtil.getInstance().post(new Runnable() {
-                                                                         @Override
-                                                                         public void run() {
-                                                                             ToastUtil.showToast("权限不足");
+                                                             WBServiceErrorHandler.getInstance().checkError(throwable);
 
-                                                                             if(BaseActivity.getCurrentActivity() != null) {
-                                                                                 new AdTokenInterceptor(BaseActivity.getCurrentActivity()).start();
-                                                                             }
-                                                                         }
-                                                                     });
-                                                                 }
-                                                             }
                                                              return Observable.error(throwable);
                                                          }
                                                      }
