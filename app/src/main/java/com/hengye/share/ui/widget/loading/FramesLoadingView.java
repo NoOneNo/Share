@@ -4,10 +4,11 @@ import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.hengye.share.R;
 
-public class FramesLoadingView extends View {
+public class FramesLoadingView extends ImageView {
 
     public FramesLoadingView(Context context) {
         super(context);
@@ -29,7 +30,7 @@ public class FramesLoadingView extends View {
     protected void init(Context context){
 
         mLoadingDrawable = (AnimationDrawable) context.getDrawable(R.drawable.loading_share);
-        setBackground(mLoadingDrawable);
+        setImageDrawable(mLoadingDrawable);
         start();
     }
 

@@ -163,7 +163,7 @@ public class TopicFragment extends RecyclerRefreshFragment<Topic> implements Top
         if (topicGroup.isReadingType() && !CommonUtil.isEmpty(data) && !SettingHelper.isOrderReading()) {
             getRecyclerView().scrollToPosition(data.size() - 1);
         }
-        DataType.handleSnackBar(type, getRecyclerView(), data == null ? 0 : data.size());
+//        DataType.handleSnackBar(type, getRecyclerView(), data == null ? 0 : data.size());
         if(DataType.hasNewData(type)){
             mPresenter.saveData(mAdapter.getData());
         }

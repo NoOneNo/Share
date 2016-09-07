@@ -39,6 +39,7 @@ import com.hengye.share.ui.widget.image.AvatarImageView;
 import com.hengye.share.ui.widget.image.SuperImageView;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.RequestManager;
+import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
@@ -214,6 +215,8 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         mSwipeRefresh.setColorSchemeResources(android.R.color.holo_blue_dark,
                 android.R.color.holo_green_light, android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+
+        mToolBarHeight = ResUtil.getDimensionPixelSize(R.dimen.header_personal_homepage_height);
         mSwipeRefresh.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -248,8 +251,6 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                                 mAnimateToCorrectHeight.pause();
                             }
                             mInitialDownY = event.getRawY();
-                            mToolBarHeight = mCollapsingToolbarLayout.getLayoutParams().height;
-
                             break;
                         }
 

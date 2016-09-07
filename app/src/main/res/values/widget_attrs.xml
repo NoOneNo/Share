@@ -17,4 +17,11 @@
         <attr name="letterPressedColor" format="reference"/>
     </declare-styleable>
 
+    <declare-styleable name="StretchLoadingView">
+        <attr name="stretch_target" format="reference"/>
+        <attr name="stretch_targetCount" format="integer"/>
+        <attr name="stretch_gravity" format="string"/>
+    </declare-styleable>
+
+
 </resources>

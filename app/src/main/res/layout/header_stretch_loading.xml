@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:stretch="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/content_margin_default">
+
+    <!-- bug -->
+    <!--  解决listview加入的header(viewGroup),如果不在可见区域,需要滑动才能看到时,当前header的onDraw不会执行-->
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+    <!-- bug -->
+    <com.hengye.share.ui.widget.loading.StretchLoadingView
+        android:id="@+id/stretch_loading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        stretch:stretch_target="@drawable/ic_back_top"
+        stretch:stretch_targetCount="5" />
+</FrameLayout>

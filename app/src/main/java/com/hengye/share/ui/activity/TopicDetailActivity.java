@@ -12,7 +12,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
@@ -35,14 +34,13 @@ import com.hengye.share.ui.mvpview.TopicDetailMvpView;
 import com.hengye.share.ui.presenter.TopicDetailPresenter;
 import com.hengye.share.ui.widget.OverLayView;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
-import com.hengye.share.ui.widget.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.fab.FabAnimator;
+import com.hengye.share.ui.widget.listener.OnItemClickListener;
+import com.hengye.share.ui.widget.loading.StretchLoadingView;
 import com.hengye.share.util.ClipboardUtil;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.IntentUtil;
-import com.hengye.share.util.L;
-import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
@@ -121,7 +119,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                     mAdapter.setData(mRepostData);
                     mAdapter.notifyDataSetChanged();
                     mListView.setSelection(1);
-                    mPullToRefreshLayout.setLoadEnable(mLoadReposttEnable);
+                    mPullToRefreshLayout.setLoadEnable(mLoadRepostEnable);
                 }
             }
         }
@@ -136,12 +134,14 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     };
 
     PullToRefreshLayout mPullToRefreshLayout;
+    View mLoadingView;
+    StretchLoadingView mStretchLoadingView;
     ListView mListView;
     TopicCommentAdapter mAdapter;
     TabLayout mTabLayout, mTabLayoutAssist;
     int mTabLayoutHeight;
     boolean mLoadCommentEnable = true;
-    boolean mLoadReposttEnable = true;
+    boolean mLoadRepostEnable = true;
 
     View mTopicContentLayout;
     TextView mTopicContent;
@@ -341,7 +341,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         });
 
         mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.pull_to_refresh);
-        mPullToRefreshLayout.setLoadEnable(true);
+//        mPullToRefreshLayout.setLoadEnable(true);
         mPullToRefreshLayout.setOnRefreshListener(new SwipeListener.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -369,18 +369,12 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             mPullToRefreshLayout.setRefreshing(false);
             return;
         }
-        mPullToRefreshLayout.getOnRefreshListener().onRefresh();
 
-//        mActionsMenu.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                if (!mActionsMenu.isExpanded()) {
-//                    mPullToRefreshLayout.onTouchEvent(event);
-//                }
-//                L.debug("onTouch invoke ");
-//                return false;
-//            }
-//        });
+
+        mLoadingView = View.inflate(this, R.layout.header_stretch_loading, null);
+        mStretchLoadingView = (StretchLoadingView) mLoadingView.findViewById(R.id.stretch_loading);
+        mListView.addHeaderView(mLoadingView);
+        mPullToRefreshLayout.getOnRefreshListener().onRefresh();
     }
 
     private void initBroadcastReceiver() {
@@ -428,15 +422,6 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         };
     }
 
-    private int getPublishType() {
-        if (mTabLayout != null) {
-            if (mTabLayout.getSelectedTabPosition() == 0) {
-                return TopicDraftHelper.PUBLISH_COMMENT;
-            }
-        }
-        return TopicDraftHelper.REPOST_TOPIC;
-    }
-
     private void updateTabLayout(boolean isComment, long totalNumber) {
 
         if (totalNumber == 0) {
@@ -472,22 +457,6 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             mActionsMenu.collapseImmediately();
             IntentUtil.startActivity(this,
                     TopicPublishActivity.getStartIntent(this, TopicDraftHelper.getWBTopicDraftByRepostComment(mTopic)));
-        }
-
-        if (id == R.id.fab) {
-            if (getPublishType() == TopicDraftHelper.REPOST_TOPIC) {
-                IntentUtil.startActivity(this,
-                        TopicPublishActivity.getStartIntent(this, TopicDraftHelper.getWBTopicDraftByRepostRepost(mTopic)));
-            } else {
-                IntentUtil.startActivity(this,
-                        TopicPublishActivity.getStartIntent(this, TopicDraftHelper.getWBTopicDraftByRepostComment(mTopic)));
-            }
-//            TopicDraft topicDraft = new TopicDraft();
-//            topicDraft.setType(getPublishType());
-//            topicDraft.setTargetTopicId(mTopic.getId());
-//            topicDraft.setTargetTopicJson(mTopic.toJson());
-//            topicDraft.setIsCommentOrigin(false);
-//            startActivity(TopicPublishActivity.getStartIntent(this, topicDraft));
         }
     }
 
@@ -530,15 +499,6 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 
         }
 
-//            TopicComment tc = mAdapter.getItem(actualPosition);
-//            if (tc == null) {
-//                return;
-//            }
-//            if(isSelectedCommentTab()) {
-//                startActivity(TopicPublishActivity.getStartIntent(TopicDetailActivity.this, TopicDraftHelper.getWBTopicDraftByCommentReply(mTopic, tc)));
-//            }else{
-//                startActivity(TopicPublishActivity.getStartIntent(TopicDetailActivity.this, TopicDraftHelper.getWBTopicDraftByRepostRepost(mTopic)));
-//            }
     }
 
     private boolean isSelectedCommentTab() {
@@ -552,6 +512,10 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     List<TopicComment> mCommentData = new ArrayList<TopicComment>();
     List<TopicComment> mRepostData = new ArrayList<TopicComment>();
 
+    private void startloading(){
+        mListView.addHeaderView(mLoadingView);
+    }
+
     @Override
     public void loadSuccess(boolean isRefresh) {
         stopLoading(isRefresh);
@@ -562,9 +526,9 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         stopLoading(isRefresh);
     }
 
-    @Override
     public void stopLoading(boolean isRefresh) {
         if (isRefresh) {
+            mListView.removeHeaderView(mLoadingView);
             mPullToRefreshLayout.setRefreshing(false);
         } else {
             mPullToRefreshLayout.setLoading(false);
@@ -642,7 +606,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         if (isComment) {
             mLoadCommentEnable = false;
         } else {
-            mLoadReposttEnable = false;
+            mLoadRepostEnable = false;
         }
         if (isSelectedCommentTab() && isComment) {
             mPullToRefreshLayout.setLoadEnable(enable);

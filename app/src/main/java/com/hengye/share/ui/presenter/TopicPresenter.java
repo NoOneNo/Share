@@ -59,6 +59,11 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
                 if(!SettingHelper.isOrderReading()){
                     isNeedLoadId = false;
                 }
+
+                isNeedLoadId = false;
+                if(isRefresh){
+                    id = "0";
+                }
                 loadWBTopicIds(id, isRefresh, isNeedLoadId);
 
                 break;

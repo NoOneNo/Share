@@ -10,7 +10,5 @@ public interface TopicDetailMvpView extends MvpView {
 
     void loadFail(boolean isRefresh);
 
-    void stopLoading(boolean isRefresh);
-
     void handleCommentData(boolean isComment, List<TopicComment> data, boolean isRefresh, long totalNumber);
 }
