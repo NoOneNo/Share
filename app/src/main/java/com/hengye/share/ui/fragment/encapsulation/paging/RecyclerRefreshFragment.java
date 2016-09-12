@@ -39,23 +39,33 @@ public abstract class RecyclerRefreshFragment<T> extends RecyclerFragment<T>{
     }
 
     public void onTaskComplete() {
-        mPullToRefresh.onTaskComplete();
+        if(mPullToRefresh != null) {
+            mPullToRefresh.onTaskComplete();
+        }
     }
 
     public void setRefreshEnable(boolean enable) {
-        mPullToRefresh.setRefreshEnable(enable);
+        if(mPullToRefresh != null) {
+            mPullToRefresh.setRefreshEnable(enable);
+        }
     }
 
     public void setLoadEnable(boolean enable) {
-        mPullToRefresh.setLoadEnable(enable);
+        if(mPullToRefresh != null) {
+            mPullToRefresh.setLoadEnable(enable);
+        }
     }
 
     public void setRefreshing(boolean refreshing) {
-        mPullToRefresh.setRefreshing(refreshing);
+        if(mPullToRefresh != null) {
+            mPullToRefresh.setRefreshing(refreshing);
+        }
     }
 
     public void setLoading(boolean loading) {
-        mPullToRefresh.setLoading(loading);
+        if(mPullToRefresh != null) {
+            mPullToRefresh.setLoading(loading);
+        }
     }
 
     @Override

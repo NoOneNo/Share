@@ -65,7 +65,8 @@
                 class="com.hengye.share.ui.fragment.GroupListFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:class="com.hengye.share.ui.fragment.GroupListFragment"/>
+                tools:class="com.hengye.share.ui.fragment.GroupListFragment"
+                tools:layout="@layout/fragment_recycler_refresh_vertical" />
         </android.support.v7.widget.CardView>
 
     </android.support.design.widget.CoordinatorLayout>

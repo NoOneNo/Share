@@ -90,6 +90,7 @@ public class BaseActivity extends AppCompatActivity implements OnSkinUpdateListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mInstance = this;
         mActivityHelper.dispatchActivityCreated(this, savedInstanceState);
         setCustomThemeIfNeeded(savedInstanceState);
 //        SkinManager.getInstance().attach(this);

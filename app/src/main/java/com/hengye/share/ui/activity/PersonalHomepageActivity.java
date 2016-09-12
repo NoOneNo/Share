@@ -153,19 +153,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 
         initToolbar();
         updateToolbarTitle(" ");
-//        getToolbar().setNavigationIcon(null);
         getToolbar().setBackgroundResource(0);
-//        getToolbar().getNavigationIcon().setVisible(false, false);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        toolbar.
-//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                finish();
-//            }
-//        });
-
-//        toolbar.setBackgroundResource(R.drawable.gradient_toolbar_grey);
 
         mFollowButton = (CheckableFab) findViewById(R.id.fab);
         mFollowButton.setOnClickListener(this);

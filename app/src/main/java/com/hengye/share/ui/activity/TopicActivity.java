@@ -55,6 +55,7 @@ import com.hengye.share.util.intercept.TokenInterceptor;
 
 public class TopicActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
+        AppBarLayout.OnOffsetChangedListener,
         UserMvpView, View.OnClickListener, GroupListFragment.OnGroupSelectedCallback {
 
     @Override
@@ -92,6 +93,18 @@ public class TopicActivity extends BaseActivity
         } else {
             loadSuccess(UserUtil.getCurrentUser());
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mAppBar.addOnOffsetChangedListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mAppBar.removeOnOffsetChangedListener(this);
     }
 
     AvatarImageView mAvatar;
@@ -304,6 +317,18 @@ public class TopicActivity extends BaseActivity
             } else {
                 moveTaskToBack(false);
             }
+        }
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+        if(mCurrentTopicFragment == null){
+            return;
+        }
+        if (verticalOffset >= 0) {
+            mCurrentTopicFragment.setRefreshEnable(true);
+        } else {
+            mCurrentTopicFragment.setRefreshEnable(false);
         }
     }
 
