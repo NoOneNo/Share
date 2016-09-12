@@ -32,7 +32,11 @@ public class GuidanceActivity extends BaseActivity {
         shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, getString(R.string.app_name));
         shortcut.putExtra("duplicate", false); //不允许重复创建
 
-        shortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT, new Intent(this, GuidanceActivity.class));
+//        com.hengye.share.Launcher
+        Intent intent = new Intent();
+//        new Intent(this, GuidanceActivity.class)
+        intent.setClassName(this, "com.hengye.share.Launcher");
+        shortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT, intent);
         //快捷方式的图标
         Intent.ShortcutIconResource iconRes = Intent.ShortcutIconResource.fromContext(this, R.mipmap.ic_launcher);
         shortcut.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconRes);

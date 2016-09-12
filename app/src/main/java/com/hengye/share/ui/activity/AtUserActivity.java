@@ -13,6 +13,7 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.EditText;
@@ -93,11 +94,25 @@ public class AtUserActivity extends BaseActivity implements UserListMvpView {
 
     private UserListPresenter mPresenter;
 
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return false;
+    }
+
     private void initView() {
 
         mSideBar = (SideBar) findViewById(R.id.side_bar);
         mSideBar.setLetterNormalColor(ThemeUtil.getDarkColor());
         mSideBar.setLetterPressedColor(ThemeUtil.getColor());
+        mSideBar.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                L.debug("sidebar onTouch invoke()!");
+                return false;
+            }
+        });
+
         mLetterTV = (TextView) findViewById(R.id.tv_letter);
         mLetterTV.setTextColor(ThemeUtil.getTextColor());
         mLetter = findViewById(R.id.fl_letter);
@@ -277,7 +292,7 @@ public class AtUserActivity extends BaseActivity implements UserListMvpView {
                 if (selection != -1) {
                     mSearchResultLayoutManager.scrollToPositionWithOffset(selection, 0);
                 }
-                L.debug("s : {}, index : {}", s, selection);
+//                L.debug("s : {}, index : {}", s, selection);
             }
 
             @Override

@@ -4,7 +4,7 @@
     tools:context=".MainActivity">
 
     <item android:id="@+id/action_update"
-        android:title="@string/label_update"
+        android:title="@string/label_update_group"
         android:orderInCategory="180"
         app:showAsAction="ifRoom"/>
 </menu>

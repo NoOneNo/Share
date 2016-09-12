@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -134,8 +135,8 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     };
 
     PullToRefreshLayout mPullToRefreshLayout;
-    View mLoadingView;
-    StretchLoadingView mStretchLoadingView;
+    View mLoadingView, mEmptyView;
+    boolean mHasAddEmpty = false;
     ListView mListView;
     TopicCommentAdapter mAdapter;
     TabLayout mTabLayout, mTabLayoutAssist;
@@ -372,9 +373,26 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 
 
         mLoadingView = View.inflate(this, R.layout.header_stretch_loading, null);
-        mStretchLoadingView = (StretchLoadingView) mLoadingView.findViewById(R.id.stretch_loading);
+        mEmptyView = View.inflate(this, R.layout.header_empty, null);
         mListView.addHeaderView(mLoadingView);
         mPullToRefreshLayout.getOnRefreshListener().onRefresh();
+        mAdapter.registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                if (mAdapter.isEmpty()) {
+                    if (!mHasAddEmpty) {
+                        mHasAddEmpty = true;
+                        mListView.addHeaderView(mEmptyView);
+                    }
+                } else {
+                    if (mHasAddEmpty) {
+                        mHasAddEmpty = false;
+                        mListView.removeHeaderView(mEmptyView);
+                    }
+                }
+            }
+        });
     }
 
     private void initBroadcastReceiver() {
@@ -512,7 +530,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     List<TopicComment> mCommentData = new ArrayList<TopicComment>();
     List<TopicComment> mRepostData = new ArrayList<TopicComment>();
 
-    private void startloading(){
+    private void startloading() {
         mListView.addHeaderView(mLoadingView);
     }
 
@@ -529,6 +547,12 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     public void stopLoading(boolean isRefresh) {
         if (isRefresh) {
             mListView.removeHeaderView(mLoadingView);
+            if (mAdapter.isEmpty()) {
+                if (!mHasAddEmpty) {
+                    mHasAddEmpty = true;
+                    mListView.addHeaderView(mEmptyView);
+                }
+            }
             mPullToRefreshLayout.setRefreshing(false);
         } else {
             mPullToRefreshLayout.setLoading(false);

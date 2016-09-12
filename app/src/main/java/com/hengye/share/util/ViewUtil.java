@@ -7,11 +7,13 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.Vibrator;
 import android.support.annotation.DimenRes;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.HapticFeedbackConstants;
 import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
@@ -135,5 +137,35 @@ public class ViewUtil extends ResUtil {
 
     public static void playClickSound(View view) {
         view.playSoundEffect(SoundEffectConstants.CLICK);
+    }
+
+
+    private static int screenWidth;
+
+    private static int screenHeight;
+
+    private static float density;
+
+    private static void setScreenInfo(Context context) {
+        DisplayMetrics dm = new DisplayMetrics();
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        windowManager.getDefaultDisplay().getMetrics(dm);
+        screenWidth = dm.widthPixels;
+        screenHeight = dm.heightPixels;
+        density = dm.density;
+    }
+
+    public static int getScreenWidth(Context context) {
+        if (screenWidth == 0) {
+            setScreenInfo(context);
+        }
+        return screenWidth;
+    }
+
+    public static int getScreenHeight(Context context) {
+        if (screenHeight == 0) {
+            setScreenInfo(context);
+        }
+        return screenHeight;
     }
 }

@@ -37,7 +37,7 @@ public class TopicFragmentPager extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         TopicPresenter.TopicGroup topicGroup = mTopicGroupGroups.get(position);
-        return TopicPresenter.TopicGroup.getName(topicGroup, mContext.getResources());
+        return topicGroup.getName();
     }
 
     @Override

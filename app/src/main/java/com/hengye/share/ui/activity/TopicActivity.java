@@ -1,15 +1,14 @@
 package com.hengye.share.ui.activity;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -22,7 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hengye.share.R;
-import com.hengye.share.adapter.viewpager.TopicFragmentPager;
 import com.hengye.share.helper.SettingHelper;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.greenrobot.User;
@@ -30,6 +28,7 @@ import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.ui.activity.setting.SettingActivity;
 import com.hengye.share.ui.base.ActivityHelper;
 import com.hengye.share.ui.base.BaseActivity;
+import com.hengye.share.ui.fragment.GroupListFragment;
 import com.hengye.share.ui.fragment.TopicFavoritesFragment;
 import com.hengye.share.ui.fragment.TopicFragment;
 import com.hengye.share.ui.mvpview.UserMvpView;
@@ -37,12 +36,15 @@ import com.hengye.share.ui.presenter.TopicPresenter;
 import com.hengye.share.ui.presenter.UserPresenter;
 import com.hengye.share.ui.support.actionbar.ActionBarDrawerToggleCustom;
 import com.hengye.share.ui.widget.SearchView;
+import com.hengye.share.ui.widget.fab.AnimatedFloatingActionButton;
 import com.hengye.share.ui.widget.image.AvatarImageView;
+import com.hengye.share.ui.widget.sheetfab.MaterialSheetFab;
+import com.hengye.share.ui.widget.sheetfab.MaterialSheetFabEventListener;
 import com.hengye.share.ui.widget.util.SelectorLoader;
-import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.NetworkUtil;
 import com.hengye.share.util.RequestManager;
+import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.ThemeUtil;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
@@ -51,11 +53,9 @@ import com.hengye.share.util.intercept.Action;
 import com.hengye.share.util.intercept.AdTokenInterceptor;
 import com.hengye.share.util.intercept.TokenInterceptor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class TopicActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener, UserMvpView, View.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        UserMvpView, View.OnClickListener, GroupListFragment.OnGroupSelectedCallback {
 
     @Override
     protected boolean setToolBar() {
@@ -86,28 +86,54 @@ public class TopicActivity extends BaseActivity
     protected void afterCreate(Bundle savedInstanceState) {
         addPresenter(mPresenter = new UserPresenter(this));
         initView();
+
+        if (UserUtil.isUserNameEmpty()) {
+            mPresenter.loadWBUserInfo();
+        } else {
+            loadSuccess(UserUtil.getCurrentUser());
+        }
     }
 
-    private ViewPager mViewPager;
-    private TabLayout mTab;
-    private AvatarImageView mAvatar;
-    private TextView mUsername, mSign;
-    private View mNoNetwork, mAppBar;
-    private DrawerLayout mDrawer;
+    AvatarImageView mAvatar;
+    AppBarLayout mAppBar;
+    CoordinatorLayout mCoordinatorLayout;
+    TextView mUsername, mSign;
+    View mNoNetwork;
+    DrawerLayout mDrawer;
+    AnimatedFloatingActionButton mFab;
 
-    private TopicFragmentPager mTopicFragmentAdapter;
+    GroupListFragment mGroupsFragment;
+    MaterialSheetFab mMaterialSheetFab;
 
-    private UserPresenter mPresenter;
+    TopicFragment mCurrentTopicFragment;
+
+    SearchView mSearchView;
+    String mContent;
+
+    UserPresenter mPresenter;
+
+    int testClickCount = 0;
+    long mBackPressedTime = 0;
 
 
     private void initView() {
         mNoNetwork = findViewById(R.id.rl_no_network);
         mNoNetwork.setOnClickListener(this);
 
-        mAppBar = findViewById(R.id.appbar);
+        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
+        mAppBar = (AppBarLayout) findViewById(R.id.appbar);
+        mFab = (AnimatedFloatingActionButton) findViewById(R.id.fab);
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         initToolbar();
-        if(getToolbar().getNavigation() != null){
+        initToolBarButton();
+        initNavigationView();
+        initSearch();
+        initFab();
+    }
+
+    private void initToolBarButton() {
+        if (getToolbar().getNavigation() != null) {
             int actionBarHeight = ViewUtil.getActionBarHeight();
             final TypedArray a = getTheme().obtainStyledAttributes(null,
                     android.support.v7.appcompat.R.styleable.DrawerArrowToggle, android.support.v7.appcompat.R.attr.drawerArrowStyle,
@@ -119,23 +145,10 @@ public class TopicActivity extends BaseActivity
             getToolbar().getNavigation().setPadding(padding, padding, padding, padding);
             getToolbar().getNavigation().setScaleType(ImageView.ScaleType.MATRIX);
         }
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-
-        mTab = (TabLayout) findViewById(R.id.tab);
-        mViewPager = (ViewPager) findViewById(R.id.view_pager);
-
-        mViewPager.setAdapter(mTopicFragmentAdapter = new TopicFragmentPager(getSupportFragmentManager(), this, getTopicGroups()));
-        adjustTabLayout();
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(this);
-
-        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         ActionBarDrawerToggleCustom toggle = new ActionBarDrawerToggleCustom(
                 this, mDrawer, getToolbar(), R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        if(toggle.getDrawerArrowDrawable() != null){
+        if (toggle.getDrawerArrowDrawable() != null) {
             toggle.getDrawerArrowDrawable().setColor(ThemeUtil.getTintColor());
         }
 
@@ -150,16 +163,6 @@ public class TopicActivity extends BaseActivity
         });
 
         toggle.syncState();
-
-        initNavigationView();
-        initSearch();
-
-        if (UserUtil.isUserNameEmpty()) {
-            mPresenter.loadWBUserInfo();
-        } else {
-            loadSuccess(UserUtil.getCurrentUser());
-        }
-
     }
 
     private void initNavigationView() {
@@ -193,22 +196,62 @@ public class TopicActivity extends BaseActivity
         mSign.setOnClickListener(this);
     }
 
+    private void initFab() {
+        View sheetView = findViewById(R.id.fab_sheet);
+        View overlay = findViewById(R.id.overlay);
+        mMaterialSheetFab = new MaterialSheetFab(mFab, sheetView, overlay, ResUtil.getColor(R.color.white), ThemeUtil.getColor());
+        mMaterialSheetFab.setEventListener(new MaterialSheetFabEventListener() {
+            @Override
+            public void onShowSheet() {
+                super.onShowSheet();
+                mGroupsFragment.scrollToSelectPosition();
+            }
+
+        });
+
+        mMaterialSheetFab.showFab();
+        mGroupsFragment = (GroupListFragment) getSupportFragmentManager().findFragmentById(R.id.group_list_fragment);
+        mGroupsFragment.refresh();
+    }
+
+    public void onGroupSelected(int position, TopicPresenter.TopicGroup topicGroup) {
+
+        if (topicGroup.getTopicType() == TopicPresenter.TopicType.NONE) {
+            getTokenInterceptor().setAction(mStartGroup).start();
+        } else {
+            setFragment(TopicFragment.newInstance(topicGroup), topicGroup.getName());
+        }
+        if (mMaterialSheetFab.isSheetVisible()) {
+            mMaterialSheetFab.hideSheet();
+        }
+    }
+
+    private void setFragment(final TopicFragment fragment, String title) {
+        if (fragment == null) {
+            return;
+        }
+        mCurrentTopicFragment = fragment;
+        updateToolbarTitle(title);
+        View view = findViewById(R.id.content_fragment);
+        view.setAlpha(0.0f);
+        ObjectAnimator anim = ObjectAnimator.ofFloat(view, "alpha", view.getAlpha(), 1.0f);
+        anim.setDuration(600);
+        anim.start();
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_fragment, fragment, "MainFragment").commit();
+    }
+
     @Override
     public boolean onToolbarDoubleClick(Toolbar toolbar) {
-        TopicFragment topicFragment = mTopicFragmentAdapter.getItem(mViewPager.getCurrentItem());
-        if(topicFragment != null){
+        TopicFragment topicFragment = mCurrentTopicFragment;
+        if (topicFragment != null) {
             topicFragment.scrollToTop();
             return true;
         }
         return false;
     }
 
-    private SearchView mSearchView;
-    private String mContent;
-
     private void initSearch() {
         mSearchView = (SearchView) findViewById(R.id.search_view);
-//        mSearchView.setVisibility(View.GONE);
         mSearchView.setMode(SearchView.MODE_ANIMATION, this);
         mSearchView.setSearchListener(new SearchView.onSearchListener() {
             @Override
@@ -217,8 +260,6 @@ public class TopicActivity extends BaseActivity
                 if (!TextUtils.isEmpty(mContent.trim())) {
                     setHideAnimationOnStart();
                     getTokenInterceptor().setAction(mStartSearch).start();
-//                    startActivity(SearchActivity.getStartIntent(TopicActivity.this, mContent));
-//                        overridePendingTransition(R.anim.fade_in, 0);
                 }
             }
         });
@@ -245,13 +286,6 @@ public class TopicActivity extends BaseActivity
         }
     }
 
-    private int testClickCount = 0;
-
-    private void adjustTabLayout() {
-        mTab.setTabMode(mViewPager.getAdapter().getCount() > 3 ? TabLayout.MODE_SCROLLABLE : TabLayout.MODE_FIXED);
-        mTab.setupWithViewPager(mViewPager);
-    }
-
     @Override
     public void onBackPressed() {
         if (mDrawer.isDrawerOpen(GravityCompat.END)) {
@@ -273,8 +307,6 @@ public class TopicActivity extends BaseActivity
         }
     }
 
-    private long mBackPressedTime = 0;
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -292,6 +324,8 @@ public class TopicActivity extends BaseActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
             mSearchView.handleSearch();
+        } else if (id == R.id.action_publish) {
+            startActivity(TopicPublishActivity.class);
         }
 
         return super.onOptionsItemSelected(item);
@@ -349,18 +383,6 @@ public class TopicActivity extends BaseActivity
         }
     }
 
-    private List<TopicPresenter.TopicGroup> getTopicGroups() {
-        ArrayList<TopicPresenter.TopicGroup> topicGroupGroups = new ArrayList<>();
-        topicGroupGroups.add(new TopicPresenter.TopicGroup(TopicPresenter.TopicType.ALL));
-        topicGroupGroups.add(new TopicPresenter.TopicGroup(TopicPresenter.TopicType.BILATERAL));
-        List<TopicPresenter.TopicGroup> temp = TopicPresenter.TopicGroup.getTopicGroup();
-        if (!CommonUtil.isEmpty(temp)) {
-            topicGroupGroups.addAll(temp);
-        }
-
-        return topicGroupGroups;
-    }
-
     @Override
     public void loadSuccess(User user) {
         if (user != null) {
@@ -391,40 +413,20 @@ public class TopicActivity extends BaseActivity
         if (requestCode == AccountManageActivity.ACCOUNT_CHANGE && resultCode == Activity.RESULT_OK) {
             updateView();
         } else if (requestCode == GroupManageActivity.GROUP_UPDATE && resultCode == Activity.RESULT_OK) {
-            updateViewPager();
+            mGroupsFragment.refresh();
         }
     }
 
     private void updateView() {
         loadSuccess(UserUtil.getCurrentUser());
-        if (mViewPager != null) {
-            mTopicFragmentAdapter.refresh(getTopicGroups());
 
-            //全部微博
-            String str1 = mTopicFragmentAdapter.getFragmentTags().get(0);
-            //互相关注
-            String str2 = mTopicFragmentAdapter.getFragmentTags().get(1);
-
-            refreshTopicFragment(getSupportFragmentManager().findFragmentByTag(str1));
-            refreshTopicFragment(getSupportFragmentManager().findFragmentByTag(str2));
-//                mViewPager.setAdapter(mTopicFragmentAdapter = new TopicFragmentPager(getSupportFragmentManager(), this, getTopicGroups()));
-            adjustTabLayout();
+        if (mCurrentTopicFragment != null) {
+            mCurrentTopicFragment.refresh();
         }
+
+        mGroupsFragment.refresh();
     }
 
-    private void refreshTopicFragment(Fragment fragment) {
-        if (fragment != null && fragment instanceof TopicFragment) {
-            TopicFragment topicFragment = (TopicFragment) fragment;
-            topicFragment.refresh();
-        }
-    }
-
-    private void updateViewPager() {
-        if (mViewPager != null) {
-            mTopicFragmentAdapter.refresh(getTopicGroups());
-            adjustTabLayout();
-        }
-    }
 
     @Override
     protected void onNetworkChange(boolean isConnected) {
@@ -435,8 +437,9 @@ public class TopicActivity extends BaseActivity
     Action mStartGroup, mStartSearch;
     AdTokenInterceptor mAdTokenInterceptor;
     TokenInterceptor mTokenInterceptor;
-    public TokenInterceptor getTokenInterceptor(){
-        if(mTokenInterceptor == null){
+
+    public TokenInterceptor getTokenInterceptor() {
+        if (mTokenInterceptor == null) {
             mAdTokenInterceptor = new AdTokenInterceptor(this);
             mTokenInterceptor = new TokenInterceptor(this);
             mTokenInterceptor.with(mAdTokenInterceptor);
@@ -449,7 +452,7 @@ public class TopicActivity extends BaseActivity
             mStartSearch = new Action() {
                 @Override
                 public void run() {
-                    getActivityHelper().registerActivityLifecycleListener(new ActivityHelper.DefaultActivityLifecycleListener(){
+                    getActivityHelper().registerActivityLifecycleListener(new ActivityHelper.DefaultActivityLifecycleListener() {
                         @Override
                         public void onActivityResumed(Activity activity) {
                             mSearchView.handleSearch(false);

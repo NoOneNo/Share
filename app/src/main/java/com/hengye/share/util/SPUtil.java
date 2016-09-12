@@ -35,6 +35,10 @@ public class SPUtil extends ApplicationUtil{
         return getSharedPreferences().getString(key, defValue);
     }
 
+    public static int getInt(String key, int defValue){
+        return getSharedPreferences().getInt(key, defValue);
+    }
+
     public static void putBoolean(String key, boolean value){
         SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putBoolean(key, value);
@@ -44,6 +48,12 @@ public class SPUtil extends ApplicationUtil{
     public static void putString(String key, String value){
         SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putString(key, value);
+        editor.apply();
+    }
+
+    public static void putInt(String key, int value){
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.putInt(key, value);
         editor.apply();
     }
 

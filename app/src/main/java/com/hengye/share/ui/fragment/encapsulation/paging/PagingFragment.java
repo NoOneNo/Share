@@ -15,9 +15,13 @@ import java.util.List;
  */
 public abstract class PagingFragment<T> extends ContentFragment{
 
-    abstract public Pager getPager();
+    public Pager getPager(){
+        return null;
+    }
 
-    abstract public DataHandler<T> getDataHandler();
+    public DataHandler<T> getDataHandler(){
+        return null;
+    }
 
     abstract public void updatePagingConfig(PagingConfig pagingConfig);
 

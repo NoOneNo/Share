@@ -112,7 +112,8 @@ public class SideBar extends View {
     }
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
+    public boolean onTouchEvent(MotionEvent event) {
+        super.onTouchEvent(event);
         final int action = event.getAction();
         final float y = event.getY();// 点击y坐标
         final int lastPosition = mPosition;

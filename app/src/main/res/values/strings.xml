@@ -39,7 +39,7 @@
     <string name="tip_loading">加载中</string>
     <string name="tip_need_advanced_authorize">需要高级授权, 是否继续?</string>
     <string name="tip_authorize_success">授权成功</string>
-    <string name="tip_empty">内容为空</string>
+    <string name="tip_empty">当前内容为空</string>
     <string name="tip_exit_on_back_pressed">再按一次退出应用</string>
     <string name="tip_no_app_store">找不到可用的应用市场</string>
     <!-- Strings related to Tip-->
@@ -87,7 +87,7 @@
 
     <!-- Strings related to GroupManager-->
     <string name="label_update_group_order">是否更新分组顺序？</string>
-    <string name="label_update">更新</string>
+    <string name="label_update_group">从服务器同步</string>
     <string name="label_group_count">%s人</string>
     <!-- Strings related to GroupManager-->
 
@@ -196,6 +196,10 @@
     <string name="label_copy_url_to_clipboard_success">成功复制链接到剪切板</string>
     <string name="label_title_tool_bar">工具栏</string>
     <!-- Strings related to WebView-->
+
+    <!-- Strings related to ServiceError-->
+    <string name="tip_error_service_unavailable">服务暂停，请稍后尝试</string>
+    <!-- Strings related to ServiceError-->
 
     <!-- Strings related to setting -->
     <string name="title_setting_common">常规设置</string>

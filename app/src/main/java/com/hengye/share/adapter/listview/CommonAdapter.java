@@ -76,7 +76,6 @@ public abstract class CommonAdapter<T, V extends ViewHolder<T>> extends BaseAdap
         return mData.size() == 0;
     }
 
-
     public int getItemPosition(T item) {
         return mData.indexOf(item);
     }

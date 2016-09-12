@@ -17,6 +17,7 @@ import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.GsonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.helper.SettingHelper;
+import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
@@ -363,7 +364,7 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
     }
 
     public enum TopicType {
-        ALL, BILATERAL, COMMENT_AT_ME, TOPIC_AT_ME, COMMENT_TO_ME, COMMENT_BY_ME, HOMEPAGE, GROUP_LIST
+        ALL, BILATERAL, COMMENT_AT_ME, TOPIC_AT_ME, COMMENT_TO_ME, COMMENT_BY_ME, HOMEPAGE, GROUP_LIST, NONE
     }
 
     public static class TopicGroup implements Serializable {
@@ -417,11 +418,27 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
                     + groupList.getGid();
         }
 
-        public static List<TopicGroup> getTopicGroup() {
-            return getTopicGroup(UserUtil.queryGroupList());
+        public String getName(){
+            return getName(this, ResUtil.getResources());
         }
 
-        public static List<TopicGroup> getTopicGroup(List<GroupList> groupLists) {
+        public static List<TopicGroup> getAllTopicGroups() {
+            ArrayList<TopicGroup> topicGroupGroups = new ArrayList<>();
+            topicGroupGroups.add(new TopicGroup(TopicType.ALL));
+            topicGroupGroups.add(new TopicGroup(TopicType.BILATERAL));
+            List<TopicGroup> temp = TopicGroup.getTopicGroups();
+            if (!CommonUtil.isEmpty(temp)) {
+                topicGroupGroups.addAll(temp);
+            }
+
+            return topicGroupGroups;
+        }
+
+        public static List<TopicGroup> getTopicGroups() {
+            return getTopicGroups(UserUtil.queryGroupList());
+        }
+
+        public static List<TopicGroup> getTopicGroups(List<GroupList> groupLists) {
             if (CommonUtil.isEmpty(groupLists)) {
                 return null;
             }
@@ -432,7 +449,7 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
             return result;
         }
 
-        public static String getName(TopicGroup topicGroup, Resources resources) {
+        private static String getName(TopicGroup topicGroup, Resources resources) {
             switch (topicGroup.topicType) {
                 case ALL:
                     return resources.getString(R.string.title_page_all);
@@ -452,6 +469,8 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
                     } else {
                         return topicGroup.groupList.getName();
                     }
+                case NONE:
+                    return resources.getString(R.string.title_activity_group_manage);
                 default:
                     return null;
             }

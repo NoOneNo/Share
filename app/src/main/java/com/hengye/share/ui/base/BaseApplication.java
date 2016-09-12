@@ -5,7 +5,9 @@ import android.content.Intent;
 
 import com.hengye.share.helper.SettingHelper;
 import com.hengye.share.service.ShareService;
+import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
+import com.hengye.share.util.SystemUtil;
 import com.hengye.skinloader.support.SkinManager;
 import com.tencent.bugly.crashreport.CrashReport;
 
@@ -18,8 +20,12 @@ public class BaseApplication extends Application{
 	@Override
 	public void onCreate(){
 		super.onCreate();
-		
+
+		long start = System.currentTimeMillis();
 		init();
+		long end = System.currentTimeMillis();
+
+		L.debug("application onCreate consume : {}", end - start);
 	}
 
 	private void init() {

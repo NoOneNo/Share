@@ -6,14 +6,17 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.CommonAdapter;
+import com.hengye.share.ui.widget.listener.OnItemClickListener;
+import com.hengye.share.ui.widget.listener.OnItemLongClickListener;
 
 /**
  * Created by yuhy on 16/7/27.
  */
-public abstract class RecyclerFragment<T> extends PagingFragment<T> {
+public abstract class RecyclerFragment<T> extends PagingFragment<T> implements OnItemClickListener, OnItemLongClickListener{
 
     @Override
     public int getContentResId() {
@@ -43,18 +46,34 @@ public abstract class RecyclerFragment<T> extends PagingFragment<T> {
         recyclerView.setLayoutManager(getLayoutManager());
         recyclerView.setItemAnimator(getItemAnimator());
 
-        RecyclerView.Adapter adapter = createAdapter();
-        if(adapter != null) {
-            recyclerView.setAdapter(createAdapter());
-        }
+//        RecyclerView.Adapter adapter = createAdapter();
+//        if(adapter != null) {
+//            recyclerView.setAdapter(createAdapter());
+//        }
     }
 
-    public RecyclerView.Adapter createAdapter(){
-        return null;
-    }
+//    public RecyclerView.Adapter createAdapter(){
+//        return null;
+//    }
 
-    public void setAdapter(RecyclerView.Adapter adapter){
+    public void setAdapter(CommonAdapter adapter){
         mRecyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(this);
+        adapter.setOnItemLongClickListener(this);
+    }
+
+    public RecyclerView.Adapter getAdapter(){
+        return mRecyclerView.getAdapter();
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+
+    }
+
+    @Override
+    public boolean onItemLongClick(View view, int position) {
+        return false;
     }
 
     /**

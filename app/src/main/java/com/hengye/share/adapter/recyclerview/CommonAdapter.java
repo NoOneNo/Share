@@ -18,10 +18,12 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
 
     private Context mContext;
     private List<T> mData;
+    private int mSelectPosition = -1;
     private OnItemClickListener mOnItemClickListener, mOnChildViewItemClickListener;
     private OnItemLongClickListener mOnItemLongClickListener, mOnChildViewItemLongClickListener;
 
-    public CommonAdapter(){}
+    public CommonAdapter() {
+    }
 
     public CommonAdapter(Context context) {
         this(context, new ArrayList<T>());
@@ -60,7 +62,7 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
         return 0;
     }
 
-    public static class ItemViewHolder<T> extends RecyclerView.ViewHolder{
+    public static class ItemViewHolder<T> extends RecyclerView.ViewHolder {
 
         public ItemViewHolder(View itemView) {
             this(itemView, null);
@@ -82,25 +84,25 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
             mIsAddHeaderView = isAddHeaderView;
         }
 
-        public View findViewById(@IdRes int id){
+        public View findViewById(@IdRes int id) {
             return itemView.findViewById(id);
         }
 
-        public void bindData(Context context, T t, int position){
+        public void bindData(Context context, T t, int position) {
 
         }
 
-        public void registerChildViewItemClick(View v){
+        public void registerChildViewItemClick(View v) {
             v.setOnClickListener(mOnClickForChildViewListener);
         }
 
-        public void registerChildViewItemLongClick(View v){
+        public void registerChildViewItemLongClick(View v) {
             v.setOnLongClickListener(mOnLongClickForChildViewListener);
         }
 
         boolean mIsAddHeaderView;
 
-        public int getItemVirtualPosition(){
+        public int getItemVirtualPosition() {
             return HeaderAdapter.getBasicItemVirtualPosition(getAdapterPosition(), mIsAddHeaderView);
         }
 
@@ -196,25 +198,25 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
         return mData.isEmpty();
     }
 
-    public T getItem(int position){
-        if(0 <= position && position < mData.size()){
+    public T getItem(int position) {
+        if (0 <= position && position < mData.size()) {
             return mData.get(position);
         }
         return null;
     }
 
-    public int getItemPosition(T item){
+    public int getItemPosition(T item) {
         return mData.indexOf(item);
     }
 
-    public T getLastItem(){
-        if(mData.isEmpty()){
+    public T getLastItem() {
+        if (mData.isEmpty()) {
             return null;
         }
         return mData.get(mData.size() - 1);
     }
 
-    public int getLastItemPosition(){
+    public int getLastItemPosition() {
         return mData.size() - 1;
     }
 
@@ -228,7 +230,7 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
         notifyItemInserted(getBasicItemVirtualPosition(mData.size() - 1));
     }
 
-    public void updateItem(int position, T item){
+    public void updateItem(int position, T item) {
         mData.set(position, item);
         notifyItemChanged(getBasicItemVirtualPosition(position));
     }
@@ -241,14 +243,14 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
 
     public T removeItem(T item) {
         int index = mData.indexOf(item);
-        if(index != -1){
+        if (index != -1) {
             return removeItem(index);
         }
         return null;
     }
 
     public void addAll(List<T> data) {
-        if(data == null){
+        if (data == null) {
             return;
         }
         mData.addAll(data);
@@ -256,7 +258,7 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
     }
 
     public void addAll(int position, List<T> data) {
-        if(data == null){
+        if (data == null) {
             return;
         }
         mData.addAll(position, data);
@@ -318,5 +320,27 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
 
     public void setContext(Context context) {
         this.mContext = context;
+    }
+
+    public int getSelectPosition() {
+        return mSelectPosition;
+    }
+
+    public boolean isSelectPosition(int position){
+        return mSelectPosition == position;
+    }
+
+    /**
+     * @param selectPosition
+     * @return if selectPosition equals to mSelectPosition, return false;
+     */
+    public boolean setSelectPosition(int selectPosition) {
+        if (this.mSelectPosition == selectPosition) {
+            return false;
+        }
+        notifyItemChanged(mSelectPosition);
+        this.mSelectPosition = selectPosition;
+        notifyItemChanged(mSelectPosition);
+        return true;
     }
 }

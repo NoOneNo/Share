@@ -23,7 +23,7 @@
             android:id="@+id/tv_logout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/ripple_default"
+            android:background="@drawable/ripple_white"
             android:text="@string/label_account_now_logout"
             android:textSize="@dimen/text_normal"
             android:textColor="@color/grey_600"

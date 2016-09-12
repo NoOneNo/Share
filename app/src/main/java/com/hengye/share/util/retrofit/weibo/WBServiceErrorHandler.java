@@ -9,6 +9,7 @@ import com.hengye.share.ui.base.BaseActivity;
 import com.hengye.share.util.GsonUtil;
 import com.hengye.share.util.HandlerUtil;
 import com.hengye.share.util.L;
+import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.intercept.AdTokenInterceptor;
 
@@ -52,6 +53,12 @@ public class WBServiceErrorHandler {
         }
 
         if(wbServiceError == null){
+            if(response.code() == 503){
+                wbServiceError = WBServiceError.get503ServiceError();
+            }
+        }
+
+        if(wbServiceError == null){
             return;
         }
 
@@ -77,11 +84,12 @@ public class WBServiceErrorHandler {
         return false;
     }
 
+    private boolean mIsDialogShowing = false;
     public void showErrorDialog(WBServiceError wbServiceError){
 
         Activity activity = BaseActivity.getCurrentActivity();
 
-        if(activity == null){
+        if(activity == null || mIsDialogShowing){
             return;
         }
 
@@ -94,8 +102,15 @@ public class WBServiceErrorHandler {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
+                })
+                .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        mIsDialogShowing = false;
+                    }
                 });
 
+        mIsDialogShowing = true;
         HandlerUtil.getInstance().post(new Runnable() {
             @Override
             public void run() {
@@ -110,6 +125,15 @@ public class WBServiceErrorHandler {
     }
 
     private static class WBServiceError{
+
+        protected static WBServiceError get503ServiceError(){
+            WBServiceError wbServiceError = new WBServiceError();
+            wbServiceError.setError(ResUtil.getString(R.string.tip_error_service_unavailable));
+            wbServiceError.setError_code("503");
+            wbServiceError.setRequest("");
+            return wbServiceError;
+        }
+
 
         /**
          * request : /statuses/home_timeline.json

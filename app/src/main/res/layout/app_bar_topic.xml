@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.activity.TopicActivity">
@@ -16,29 +17,56 @@
             android:layout_height="wrap_content"
             android:visibility="visible">
 
-            <include
-                layout="@layout/widget_tool_bar"/>
+            <include layout="@layout/widget_tool_bar" />
 
-            <include
-                layout="@layout/widget_tab_layout"/>
+            <!--<include layout="@layout/widget_tab_layout" />-->
 
             <include layout="@layout/item_no_network" />
 
         </android.support.design.widget.AppBarLayout>
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/view_pager"
+        <!--<android.support.v4.view.ViewPager-->
+            <!--android:id="@+id/view_pager"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+            <!--android:visibility="gone"/>-->
+
+        <FrameLayout
+            android:id="@+id/content_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-        <android.support.design.widget.FloatingActionButton
+        <com.hengye.share.ui.widget.fab.AnimatedFloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
-            android:src="@drawable/ic_mode_edit_white_48dp" />
+            android:src="@drawable/ic_format_list_bulleted_white_48dp" />
+
+        <com.hengye.share.ui.widget.OverLayView
+            android:id="@+id/overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible" />
+
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/fab_sheet"
+            style="@style/Widget.MaterialSheetFab.Sheet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end" >
+
+            <fragment
+                android:id="@+id/group_list_fragment"
+                class="com.hengye.share.ui.fragment.GroupListFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:class="com.hengye.share.ui.fragment.GroupListFragment"/>
+        </android.support.v7.widget.CardView>
 
     </android.support.design.widget.CoordinatorLayout>
 
