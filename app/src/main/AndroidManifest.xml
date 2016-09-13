@@ -82,12 +82,6 @@
         <activity
             android:name="com.hengye.share.ui.activity.WeiboWebLoginActivity"/>
 
-        <activity
-            android:name="com.hengye.share.ui.activity.TopicGalleryActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:launchMode="singleTop"
-            android:parentActivityName="com.hengye.share.ui.activity.TopicActivity"
-            android:theme="@style/FullScreenTheme"/>
 
         <activity
             android:name="com.hengye.share.ui.activity.GalleryActivity"

@@ -51,6 +51,7 @@ public class TopicGalleryFragment extends GalleryFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        //父类更新内容会调用updatePage(), 需要先findViewById().
         mTopicContent = (TextView) findViewById(R.id.tv_text);
         super.onViewCreated(view, savedInstanceState);
         mTopicContent.setOnClickListener(new View.OnClickListener() {
