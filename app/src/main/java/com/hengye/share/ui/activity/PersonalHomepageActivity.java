@@ -12,6 +12,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.MotionEventCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.support.v7.widget.Toolbar;
 import android.view.MotionEvent;
@@ -38,6 +39,7 @@ import com.hengye.share.ui.widget.fab.CheckableFab;
 import com.hengye.share.ui.widget.image.AvatarImageView;
 import com.hengye.share.ui.widget.image.SuperImageView;
 import com.hengye.share.util.DataUtil;
+import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.ToastUtil;
@@ -363,7 +365,26 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         } else {
             mSwipeRefresh.setRefreshEnable(false);
         }
-//        L.debug("vertical offset : {}, height : {}, minimumHeight : {}", verticalOffset, mCollapsingToolbarLayout.getHeight(), ViewCompat.getMinimumHeight(mCollapsingToolbarLayout));
+
+        if(mFragment != null && mFragment.getViewPager() != null) {
+
+            boolean isEnabled = true;
+
+            //当收缩时
+            if(verticalOffset < -50){
+                //如果刚好收缩到底部
+                if(Math.abs(verticalOffset) == mCollapsingToolbarLayout.getMaxVerticalOffset()){
+                    isEnabled = true;
+                }else{
+                    isEnabled = false;
+                }
+            }
+
+            mFragment.getViewPager().setEnabled(isEnabled);
+            L.debug("viewpager set enbaled : {}", isEnabled);
+        }
+        L.debug("maxVerticalOffset : {}", mCollapsingToolbarLayout.getMaxVerticalOffset());
+        L.debug("vertical offset : {}, height : {}, minimumHeight : {}", verticalOffset, mCollapsingToolbarLayout.getHeight(), ViewCompat.getMinimumHeight(mCollapsingToolbarLayout));
     }
 
     @Override

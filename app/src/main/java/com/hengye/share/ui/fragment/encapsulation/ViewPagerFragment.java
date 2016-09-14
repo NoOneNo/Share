@@ -13,6 +13,7 @@ import android.view.View;
 
 import com.hengye.share.R;
 import com.hengye.share.ui.base.BaseFragment;
+import com.hengye.share.ui.widget.common.CommonViewPager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -41,15 +42,15 @@ public abstract class ViewPagerFragment extends ContentFragment implements ViewP
         return R.id.view_pager;
     }
 
-    protected ViewPager findViewPager() {
-        ViewPager viewPager = (ViewPager) findViewById(getViewPagerId());
+    protected CommonViewPager findViewPager() {
+        CommonViewPager viewPager = (CommonViewPager) findViewById(getViewPagerId());
         if (viewPager == null) {
-            viewPager = (ViewPager) getActivity().findViewById(getViewPagerId());
+            viewPager = (CommonViewPager) getActivity().findViewById(getViewPagerId());
         }
         return viewPager;
     }
 
-    public ViewPager getViewPager() {
+    public CommonViewPager getViewPager() {
         return mViewPager;
     }
 
@@ -57,7 +58,7 @@ public abstract class ViewPagerFragment extends ContentFragment implements ViewP
         return mViewPager.getAdapter();
     }
 
-    private ViewPager mViewPager;
+    private CommonViewPager mViewPager;
 
     private int mCurrentPosition = 0;
 

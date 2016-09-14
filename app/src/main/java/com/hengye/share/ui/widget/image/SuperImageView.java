@@ -1,6 +1,7 @@
 package com.hengye.share.ui.widget.image;
 
 import android.content.Context;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 
 import com.android.volley.view.NetworkImageViewPlus;
@@ -38,6 +39,7 @@ public class SuperImageView extends NetworkImageViewPlus {
      */
     public void setDefaultImageResId(int defaultImage) {
         super.setDefaultImageResId(defaultImage);
+        ViewCompat.postInvalidateOnAnimation(this);
     }
 
 

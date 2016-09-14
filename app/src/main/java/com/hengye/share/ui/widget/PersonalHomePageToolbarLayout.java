@@ -272,4 +272,7 @@ public class PersonalHomePageToolbarLayout extends CollapsingToolbarLayout {
         }
     }
 
+    public int getMaxVerticalOffset(){
+        return maxVerticalOffset;
+    }
 }

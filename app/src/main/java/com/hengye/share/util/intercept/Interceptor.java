@@ -93,7 +93,7 @@ public class Interceptor {
     /**
      * 开启拦截
      */
-    public void resume() {
+    protected void resume() {
         while (!interceptions.isEmpty() && index < interceptions.size()) {
             Interception interception = interceptions.get(index);
 
@@ -143,7 +143,7 @@ public class Interceptor {
         }
     }
 
-    public void setProxy(Interceptor interceptor){
+    protected void setProxy(Interceptor interceptor){
         this.proxyInterceptor = interceptor;
     }
 

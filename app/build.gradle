@@ -74,7 +74,6 @@ dependencies {
     compile 'de.greenrobot:greendao:2.0.0'
     compile 'io.reactivex:rxandroid:1.1.0'
     compile 'io.reactivex:rxjava:1.1.0'
-    compile 'me.imid.swipebacklayout.lib:library:1.0.0'
     compile 'org.jsoup:jsoup:1.8.2'
     compile files('libs/weibosdkcore.jar')
     compile files('libs/org.apache.http.legacy.jar')
@@ -86,9 +85,11 @@ dependencies {
     compile 'com.tencent.bugly:crashreport:latest.release'
     //其中latest.release指代最新版本号，也可以指定明确的版本号，例如1.2.8
 
+//        compile 'me.imid.swipebacklayout.lib:library:1.0.0'
 //    compile 'com.getbase:floatingactionbutton:1.10.1'
     compile 'com.nineoldandroids:library:2.4.0'
 
     compile project(':draglistview')
     compile project(':floatingactionbutton')
+    compile project(':swipebacklayout')
 }

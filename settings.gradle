@@ -1,1 +1,1 @@
-include ':app', ':greendaogenerator', ':draglistview', ':floatingactionbutton'
+include ':app', ':greendaogenerator', ':draglistview', ':floatingactionbutton', ':swipebacklayout'

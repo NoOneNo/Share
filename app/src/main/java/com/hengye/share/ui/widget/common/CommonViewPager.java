@@ -17,6 +17,9 @@ public class CommonViewPager extends ViewPager {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
+        if(!isEnabled()){
+            return false;
+        }
         try {
             return super.onTouchEvent(ev);
         } catch (IllegalArgumentException ex) {
@@ -27,6 +30,9 @@ public class CommonViewPager extends ViewPager {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if(!isEnabled()){
+            return false;
+        }
         try {
             return super.onInterceptTouchEvent(ev);
         } catch (IllegalArgumentException ex) {
