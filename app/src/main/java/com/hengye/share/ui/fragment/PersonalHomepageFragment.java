@@ -10,6 +10,7 @@ import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.ui.base.BaseFragment;
 import com.hengye.share.ui.fragment.encapsulation.TabLayoutFragment;
 import com.hengye.share.ui.presenter.TopicPresenter;
+import com.hengye.share.ui.widget.ScrollChildSwipeRefreshLayout;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.ResUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
@@ -85,7 +86,7 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
     TopicFragment mTopicFragment;
     TopicAlbumFragment mTopicAlbumFragment;
 
-    SwipeRefreshLayout mSwipeRefresh;
+    ScrollChildSwipeRefreshLayout mSwipeRefresh;
 
     @Override
     protected BaseFragment newFragment(TabItem tabItem) {
@@ -111,7 +112,7 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
         return fragment;
     }
 
-    public void setSwipeRefresh(SwipeRefreshLayout swipeRefresh) {
+    public void setSwipeRefresh(ScrollChildSwipeRefreshLayout swipeRefresh) {
         mSwipeRefresh = swipeRefresh;
     }
 
@@ -132,7 +133,11 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
 
             @Override
             public void onPageSelected(int position) {
-
+                if(position == 1 && mTopicFragment != null) {
+                    mSwipeRefresh.setScrollUpChild(mTopicFragment.getRecyclerView());
+                }else{
+                    mSwipeRefresh.setScrollUpChild(null);
+                }
             }
 
             @Override

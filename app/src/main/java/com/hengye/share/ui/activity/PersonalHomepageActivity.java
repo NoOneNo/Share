@@ -35,6 +35,7 @@ import com.hengye.share.ui.fragment.UserFollowersFragment;
 import com.hengye.share.ui.mvpview.UserMvpView;
 import com.hengye.share.ui.presenter.UserPresenter;
 import com.hengye.share.ui.widget.PersonalHomePageToolbarLayout;
+import com.hengye.share.ui.widget.ScrollChildSwipeRefreshLayout;
 import com.hengye.share.ui.widget.fab.CheckableFab;
 import com.hengye.share.ui.widget.image.AvatarImageView;
 import com.hengye.share.ui.widget.image.SuperImageView;
@@ -130,7 +131,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     private SuperImageView mCover;
     private AvatarImageView mAvatar;
     private PersonalHomePageToolbarLayout mCollapsingToolbarLayout;
-    private SwipeRefreshLayout mSwipeRefresh;
+    private ScrollChildSwipeRefreshLayout mSwipeRefresh;
     private AppBarLayout mAppBarLayout;
     private CoordinatorLayout mCoordinatorLayout;
     private View mUserInfoLayout;
@@ -200,7 +201,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 
         mTab = (TabLayout) findViewById(R.id.tab);
 
-        mSwipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+        mSwipeRefresh = (ScrollChildSwipeRefreshLayout) findViewById(R.id.swipe_refresh);
 
         mSwipeRefresh.setColorSchemeResources(android.R.color.holo_blue_dark,
                 android.R.color.holo_green_light, android.R.color.holo_orange_light,

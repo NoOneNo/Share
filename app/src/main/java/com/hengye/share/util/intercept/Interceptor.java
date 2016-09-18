@@ -80,6 +80,9 @@ public class Interceptor {
     }
 
     public void destroy(){
+        if(proxyInterceptor != null){
+            proxyInterceptor.destroy();
+        }
         interceptions.clear();
         action = null;
     }
@@ -124,6 +127,9 @@ public class Interceptor {
      * @return
      */
     public boolean isIntercept(){
+        if(proxyInterceptor != null){
+            return proxyInterceptor.isIntercept() || isIntercept;
+        }
         return isIntercept;
     }
 

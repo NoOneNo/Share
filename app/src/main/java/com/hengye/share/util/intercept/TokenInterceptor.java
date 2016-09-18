@@ -36,8 +36,8 @@ public class TokenInterceptor extends Interceptor{
                 return false;
             }
         };
-        setAction(action);
         add(interception);
+        setAction(action);
     }
 
     public Dialog getDialog() {
