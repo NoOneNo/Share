@@ -15,10 +15,9 @@ import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 
-import com.hengye.share.ui.base.BaseApplication;
+import com.hengye.share.module.base.BaseApplication;
 import com.hengye.share.ui.widget.image.ClipImageView;
 import com.hengye.share.util.AnimationUtil;
-import com.hengye.share.util.L;
 
 /**
  * User: qii

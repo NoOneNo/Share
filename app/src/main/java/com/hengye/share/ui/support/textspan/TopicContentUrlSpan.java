@@ -5,20 +5,15 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Parcel;
 import android.provider.Browser;
-import android.support.v4.app.FragmentActivity;
 import android.text.ParcelableSpan;
 import android.text.TextPaint;
-import android.text.TextUtils;
 import android.text.style.CharacterStyle;
-import android.text.style.ClickableSpan;
 import android.view.View;
 
-import com.hengye.share.R;
-import com.hengye.share.ui.activity.PersonalHomepageActivity;
+import com.hengye.share.module.profile.PersonalHomepageActivity;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.thirdparty.WBUtil;
-import com.sina.weibo.sdk.utils.Utility;
 
 public class TopicContentUrlSpan extends CharacterStyle implements ParcelableSpan, SimpleClickableSpan {
 

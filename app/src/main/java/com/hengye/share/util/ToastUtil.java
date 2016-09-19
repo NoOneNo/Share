@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.hengye.share.R;
-import com.hengye.share.ui.base.BaseApplication;
+import com.hengye.share.module.base.BaseApplication;
 
 public class ToastUtil extends ApplicationUtil{
 

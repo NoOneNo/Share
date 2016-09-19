@@ -27,7 +27,7 @@
     <!-- -->
 
     <application
-        android:name="com.hengye.share.ui.base.BaseApplication"
+        android:name=".module.base.BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -39,7 +39,7 @@
 
 
         <activity
-            android:name="com.hengye.share.ui.activity.GuidanceActivity"
+            android:name=".module.other.GuidanceActivity"
             android:label="@string/app_name">
             <!--<intent-filter>-->
                 <!--<action android:name="android.intent.action.MAIN" />-->
@@ -53,7 +53,7 @@
         <activity-alias
             android:name="com.hengye.share.Launcher"
             android:label="@string/app_name"
-            android:targetActivity="com.hengye.share.ui.activity.GuidanceActivity">
+            android:targetActivity=".module.other.GuidanceActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -61,38 +61,38 @@
         </activity-alias>
 
         <activity
-            android:name="com.hengye.share.ui.activity.TopicActivity"
+            android:name=".module.topic.TopicActivity"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.Main"/>
 
         <activity
-            android:name="com.hengye.share.ui.activity.LoginActivity"
+            android:name=".module.sso.LoginActivity"
             android:label="@string/title_activity_login"
-            android:parentActivityName="com.hengye.share.ui.activity.TopicActivity"
+            android:parentActivityName=".module.topic.TopicActivity"
             android:windowSoftInputMode="adjustResize|stateVisible">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.hengye.share.ui.activity.TopicActivity" />
+                android:value=".module.topic.TopicActivity" />
         </activity>
 
         <activity
-            android:name="com.hengye.share.ui.activity.ThirdPartyLoginActivity"
+            android:name=".module.sso.ThirdPartyLoginActivity"
             android:theme="@style/FullScreenTheme.HasStatusBar"/>
 
         <activity
-            android:name="com.hengye.share.ui.activity.WeiboWebLoginActivity"/>
+            android:name=".module.sso.WeiboWebLoginActivity"/>
 
 
         <activity
-            android:name="com.hengye.share.ui.activity.GalleryActivity"
+            android:name=".module.util.image.GalleryActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:theme="@style/FullScreenTheme"/>
 
         <activity
-            android:name=".ui.activity.FragmentActivity"/>
+            android:name=".module.util.FragmentActivity"/>
 
         <activity
-            android:name="com.hengye.share.ui.activity.setting.SettingActivity"
+            android:name=".module.setting.SettingActivity"
             android:label="@string/title_activity_setting">
             <intent-filter>
                 <action android:name="android.intent.action.MANAGE_NETWORK_USAGE" />
@@ -101,7 +101,7 @@
         </activity>
 
         <activity
-            android:name="com.hengye.share.ui.activity.PersonalHomepageActivity">
+            android:name=".module.profile.PersonalHomepageActivity">
 
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
@@ -112,7 +112,7 @@
         </activity>
 
         <activity
-            android:name="com.hengye.share.ui.activity.TopicThemeActivity"
+            android:name=".module.topic.TopicThemeActivity"
             android:label="@string/title_activity_topic_theme">
 
             <intent-filter>
@@ -124,7 +124,7 @@
         </activity>
 
         <activity
-            android:name="com.hengye.share.ui.activity.web.WebViewActivity"
+            android:name=".module.util.WebViewActivity"
             android:label="@string/title_activity_web_view">
 
             <intent-filter>
@@ -136,41 +136,41 @@
         </activity>
 
         <activity
-            android:name="com.hengye.share.ui.activity.TopicPublishActivity"/>
+            android:name=".module.publish.TopicPublishActivity"/>
 
         <activity
-            android:name="com.hengye.share.ui.activity.TopicDraftActivity"
+            android:name=".module.draft.TopicDraftActivity"
             android:label="@string/title_activity_topic_draft"/>
 
         <activity
-            android:name=".ui.activity.TopicDetailActivity"/>
+            android:name=".module.topic.TopicDetailActivity"/>
 
         <activity
-            android:name="com.hengye.share.ui.activity.TopicMentionActivity"/>
+            android:name=".module.topic.TopicMentionActivity"/>
 
         <activity
-            android:name="com.hengye.share.ui.activity.TopicCommentActivity"/>
+            android:name=".module.topic.TopicCommentActivity"/>
 
         <activity
-            android:name=".ui.activity.AtUserActivity"
+            android:name=".module.publish.AtUserActivity"
             android:windowSoftInputMode="adjustPan"
             android:label="@string/title_activity_at_user"/>
 
         <activity
-            android:name="com.hengye.share.ui.activity.SearchActivity"/>
+            android:name=".module.search.SearchActivity"/>
 
         <activity
-            android:name="com.hengye.share.ui.activity.SetTokenActivity"/>
+            android:name=".module.test.SetTokenActivity"/>
 
         <activity
-            android:name="com.hengye.share.ui.activity.GroupManageActivity"
+            android:name="com.hengye.share.module.groupmanage.GroupManageActivity"
             android:label="@string/title_activity_group_manage"/>
 
         <activity
-            android:name="com.hengye.share.ui.activity.AccountManageActivity"
+            android:name=".module.accountmanage.AccountManageActivity"
             android:label="@string/title_activity_account_manage"/>
 
-        <activity android:name="com.hengye.share.ui.activity.TestActivity" />
+        <activity android:name=".module.test.TestActivity" />
     </application>
 
 </manifest>

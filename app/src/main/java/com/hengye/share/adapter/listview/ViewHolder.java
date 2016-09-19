@@ -24,7 +24,7 @@ public abstract class ViewHolder<T> {
         return v.findViewById(id);
     }
 
-    abstract void bindData(Context context, T t, int position);
+    public abstract void bindData(Context context, T t, int position);
 
     public void bindItemPosition(int position){
         v.setTag(View.NO_ID, position);

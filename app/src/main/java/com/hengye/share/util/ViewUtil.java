@@ -2,13 +2,9 @@ package com.hengye.share.util;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.os.Vibrator;
 import android.support.annotation.DimenRes;
 import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.HapticFeedbackConstants;
 import android.view.SoundEffectConstants;
 import android.view.View;
@@ -18,7 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
 import com.hengye.share.R;
-import com.hengye.share.ui.base.BaseApplication;
+import com.hengye.share.module.base.BaseApplication;
 
 import java.lang.reflect.Field;
 

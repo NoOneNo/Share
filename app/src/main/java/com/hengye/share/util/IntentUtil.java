@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
-import com.hengye.share.ui.base.BaseApplication;
+import com.hengye.share.module.base.BaseApplication;
 
 public class IntentUtil extends ApplicationUtil{
 

@@ -15,7 +15,7 @@ public class CommonUtil {
      * @param strings
      * @return 是否都没有空的值, 没有则返回true;
      */
-    public static boolean noEmpty(String... strings) {
+    public static boolean noEmpty(CharSequence... strings) {
         return !hasEmpty(strings);
     }
 
@@ -23,8 +23,8 @@ public class CommonUtil {
      * @param strings
      * @return 是否有空的值, 有则返回true;
      */
-    public static boolean hasEmpty(String... strings) {
-        for (String str : strings) {
+    public static boolean hasEmpty(CharSequence... strings) {
+        for (CharSequence str : strings) {
             if (isEmpty(str)) {
                 return true;
             }
@@ -37,7 +37,7 @@ public class CommonUtil {
      * @param str the string to be examined
      * @return true if str is null or zero length
      */
-    public static boolean isEmpty(String str) {
+    public static boolean isEmpty(CharSequence str) {
         return TextUtils.isEmpty(str);
     }
 
@@ -45,8 +45,8 @@ public class CommonUtil {
      * @param strings
      * @return 是否都是空的值, 是则返回true
      */
-    public static boolean isEmpty(String... strings) {
-        for (String str : strings) {
+    public static boolean isEmpty(CharSequence... strings) {
+        for (CharSequence str : strings) {
             if (!isEmpty(str)) {
                 return false;
             }
@@ -56,6 +56,13 @@ public class CommonUtil {
 
     public static boolean isEmpty(Collection collection) {
         if (collection == null || collection.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isEmpty(Iterable iterable) {
+        if (iterable == null || iterable.iterator() == null || !iterable.iterator().hasNext()) {
             return true;
         }
         return false;
@@ -111,49 +118,46 @@ public class CommonUtil {
         String toSplit();
     }
 
-    public static <T extends ToSplit> String toSplitAppointed(List<T> list, String separator) {
-        if (isEmpty(list) || isEmpty(separator)) {
+    public static <T extends ToSplit> String toSplitAppointed(List<T> list, CharSequence delimiter) {
+        if (isEmpty(list) || isEmpty(delimiter)) {
             return null;
         }
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < list.size(); i++) {
-            T t = list.get(i);
-            String toSplit = t.toSplit();
-            if (isEmpty(toSplit)) {
-                continue;
+        boolean firstTime = true;
+        for (T token: list) {
+            if (firstTime) {
+                firstTime = false;
+            } else {
+                sb.append(delimiter);
             }
-            sb.append(toSplit);
-            if (i != list.size() - 1) {
-                sb.append(separator);
-            }
+            sb.append(token.toSplit());
         }
         return sb.toString();
     }
 
-    public static String toSplit(List list, String separator) {
-        if (isEmpty(list) || isEmpty(separator)) {
+    public static String toSplit(Iterable tokens, CharSequence delimiter) {
+        if (isEmpty(tokens) || isEmpty(delimiter)) {
             return null;
         }
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < list.size(); i++) {
-            String toSplit = list.get(i).toString();
-            if (isEmpty(toSplit)) {
-                continue;
+        boolean firstTime = true;
+        for (Object token: tokens) {
+            if (firstTime) {
+                firstTime = false;
+            } else {
+                sb.append(delimiter);
             }
-            sb.append(toSplit);
-            if (i != list.size() - 1) {
-                sb.append(separator);
-            }
+            sb.append(token);
         }
         return sb.toString();
     }
 
-    public static List<String> split(String str, String separator) {
+    public static List<String> split(String str, String delimiter) {
         if (isEmpty(str)) {
             return null;
         }
         try {
-            return Arrays.asList(str.split(separator));
+            return Arrays.asList(str.split(delimiter));
         } catch (Exception e) {
             e.printStackTrace();
         }

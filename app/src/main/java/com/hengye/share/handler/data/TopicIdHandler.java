@@ -2,7 +2,7 @@ package com.hengye.share.handler.data;
 
 import com.hengye.share.handler.data.base.DataAdapter;
 import com.hengye.share.handler.data.base.DataHandler;
-import com.hengye.share.helper.SettingHelper;
+import com.hengye.share.module.setting.SettingHelper;
 
 import java.util.List;
 

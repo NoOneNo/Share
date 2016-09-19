@@ -2,7 +2,7 @@
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.hengye.share.ui.activity.setting.SettingActivity">
+    tools:context=".module.setting.SettingActivity">
     <SwitchPreference
         android:key="notify_open"
         android:title="@string/title_setting_notify_open"

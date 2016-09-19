@@ -5,7 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 
 import com.hengye.share.R;
-import com.hengye.share.ui.base.BaseActivity;
+import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.util.GsonUtil;
 import com.hengye.share.util.HandlerUtil;
 import com.hengye.share.util.L;

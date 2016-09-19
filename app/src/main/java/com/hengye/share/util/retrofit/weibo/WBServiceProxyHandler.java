@@ -1,17 +1,11 @@
 package com.hengye.share.util.retrofit.weibo;
 
-import com.hengye.share.ui.base.BaseActivity;
-import com.hengye.share.util.HandlerUtil;
-import com.hengye.share.util.L;
-import com.hengye.share.util.ToastUtil;
-import com.hengye.share.util.intercept.AdTokenInterceptor;
+import com.hengye.share.module.base.BaseActivity;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import retrofit2.Response;
-import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;

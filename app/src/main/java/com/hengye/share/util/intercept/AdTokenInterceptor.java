@@ -6,9 +6,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 
 import com.hengye.share.R;
-import com.hengye.share.ui.activity.ThirdPartyLoginActivity;
-import com.hengye.share.ui.base.BaseActivity;
-import com.hengye.share.ui.base.BaseActivityHelper;
+import com.hengye.share.module.sso.ThirdPartyLoginActivity;
+import com.hengye.share.module.base.BaseActivity;
+import com.hengye.share.module.base.BaseActivityHelper;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
 import com.hengye.share.util.UserUtil;
 

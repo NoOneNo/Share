@@ -5,7 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 
 import com.hengye.share.R;
-import com.hengye.share.ui.base.BaseApplication;
+import com.hengye.share.module.base.BaseApplication;
 
 public class ClipboardUtil extends ApplicationUtil{
 

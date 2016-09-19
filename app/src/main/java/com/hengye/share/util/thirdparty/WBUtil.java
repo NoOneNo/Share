@@ -2,7 +2,7 @@ package com.hengye.share.util.thirdparty;
 
 import android.text.TextUtils;
 
-import com.hengye.share.helper.SettingHelper;
+import com.hengye.share.module.setting.SettingHelper;
 
 import java.util.HashMap;
 import java.util.Map;

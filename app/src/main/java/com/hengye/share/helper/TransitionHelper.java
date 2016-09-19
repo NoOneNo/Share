@@ -26,8 +26,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.view.View;
 
-import com.hengye.share.R;
-import com.hengye.share.ui.base.BaseActivity;
+import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.util.IntentUtil;
 
 import java.util.ArrayList;

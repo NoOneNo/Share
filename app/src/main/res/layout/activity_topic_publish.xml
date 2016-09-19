@@ -141,7 +141,7 @@
 
     </LinearLayout>
 
-    <com.hengye.share.ui.emoticon.EmoticonPicker
+    <com.hengye.share.ui.widget.emoticon.EmoticonPicker
         android:id="@+id/emoticon_picker"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

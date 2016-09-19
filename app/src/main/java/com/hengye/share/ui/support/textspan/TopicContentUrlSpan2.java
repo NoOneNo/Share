@@ -10,7 +10,7 @@ import android.text.TextPaint;
 import android.text.style.CharacterStyle;
 import android.view.View;
 
-import com.hengye.share.ui.activity.PersonalHomepageActivity;
+import com.hengye.share.module.profile.PersonalHomepageActivity;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.thirdparty.WBUtil;

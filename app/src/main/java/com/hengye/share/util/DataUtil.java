@@ -12,7 +12,7 @@ import com.hengye.share.BuildConfig;
 import com.hengye.share.R;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
-import com.hengye.share.ui.emoticon.Emoticon;
+import com.hengye.share.ui.widget.emoticon.Emoticon;
 import com.hengye.share.ui.support.textspan.TopicContentUrlSpan;
 
 import java.text.DecimalFormat;

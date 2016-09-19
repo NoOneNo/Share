@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.hengye.share.model.greenrobot.migrator.AbstractMigratorHelper;
-import com.hengye.share.ui.base.BaseApplication;
+import com.hengye.share.module.base.BaseApplication;
 
 public class GreenDaoManager {
 

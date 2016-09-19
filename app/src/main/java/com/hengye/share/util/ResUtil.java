@@ -12,7 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.util.TypedValue;
 
-import com.hengye.share.ui.base.BaseActivity;
+import com.hengye.share.module.base.BaseActivity;
 
 /**
  * Created by yuhy on 16/6/14.

@@ -1,14 +1,13 @@
 package com.hengye.share.ui.widget.dialog;
 
 import android.app.Dialog;
-import android.content.res.TypedArray;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.hengye.share.R;
-import com.hengye.share.ui.base.BaseApplication;
+import com.hengye.share.module.base.BaseApplication;
 
 public class DialogStyleHelper {
 
