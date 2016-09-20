@@ -9,6 +9,7 @@ import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.rxjava.ObjectConverter;
 import com.hengye.share.util.retrofit.RetrofitManager;
 import com.hengye.share.util.retrofit.weibo.WBService;
+import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 import com.hengye.share.util.thirdparty.WBUtil;
 
 import java.util.Map;
@@ -46,16 +47,16 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailMvpView> {
                 service.listComment(params),
                 service.listRepost(repostParams),
                 ObjectConverter.getObjectConverter2())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
                 .subscribe(new BaseSubscriber<Object[]>() {
                     @Override
-                    public void handleViewOnFail(TopicDetailMvpView v, Throwable e) {
+                    public void onError(TopicDetailMvpView v, Throwable e) {
                         v.loadFail(isRefresh);
                     }
 
                     @Override
-                    public void handleViewOnSuccess(TopicDetailMvpView v, Object[] objects) {
+                    public void onNext(TopicDetailMvpView v, Object[] objects) {
                         WBTopicComments obj1 = (WBTopicComments) objects[0];
                         WBTopicReposts obj2 = (WBTopicReposts) objects[1];
                         v.handleCommentData(true, TopicComment.getComments(obj1), isRefresh, obj1.getTotal_number());
@@ -73,17 +74,17 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailMvpView> {
         Observable observable = isComment ? service.listComment(params) : service.listRepost(params);
 
         observable
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
                 .subscribe(new BaseSubscriber<Object>() {
 
                     @Override
-                    public void handleViewOnFail(TopicDetailMvpView v, Throwable e) {
+                    public void onError(TopicDetailMvpView v, Throwable e) {
                         v.loadFail(isRefresh);
                     }
 
                     @Override
-                    public void handleViewOnSuccess(TopicDetailMvpView v, Object o) {
+                    public void onNext(TopicDetailMvpView v, Object o) {
                         if (isComment) {
                             v.handleCommentData(isComment, TopicComment.getComments((WBTopicComments) o), isRefresh, 0);
                         } else {

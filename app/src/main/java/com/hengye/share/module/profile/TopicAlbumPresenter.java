@@ -14,6 +14,7 @@ import com.hengye.share.util.GsonUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
+import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 import com.hengye.share.util.thirdparty.WBUtil;
 
 import java.util.ArrayList;
@@ -37,17 +38,17 @@ public class TopicAlbumPresenter extends BasePresenter<TopicAlbumMvpView> {
         RetrofitManager
                 .getWBService()
                 .listUserTopic(getParameter(id, isRefresh))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
                 .subscribe(new BaseSubscriber<WBTopics>() {
                     @Override
-                    public void handleViewOnFail(TopicAlbumMvpView v, Throwable e) {
-                        super.handleViewOnFail(v, e);
+                    public void onError(TopicAlbumMvpView v, Throwable e) {
+                        super.onError(v, e);
                         v.stopLoading(isRefresh);
                     }
 
                     @Override
-                    public void handleViewOnSuccess(TopicAlbumMvpView v, WBTopics wbTopics) {
+                    public void onNext(TopicAlbumMvpView v, WBTopics wbTopics) {
 
                         ArrayList<Topic> topics = Topic.getTopics(wbTopics);
 
@@ -110,11 +111,11 @@ public class TopicAlbumPresenter extends BasePresenter<TopicAlbumMvpView> {
                         subscriber.onNext(findData());
                     }
                 })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new BaseAction1<ArrayList<Topic>>() {
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
+                .subscribe(new BaseSubscriber<ArrayList<Topic>>() {
                     @Override
-                    public void handleView(TopicAlbumMvpView v, ArrayList<Topic> topics) {
+                    public void onNext(TopicAlbumMvpView v, ArrayList<Topic> topics) {
                         KeyValue<ArrayList<Topic>, ArrayList<String>> kv = getImageUrls(topics);
                         v.handleCache(kv.getKey(), kv.getValue());
                     }

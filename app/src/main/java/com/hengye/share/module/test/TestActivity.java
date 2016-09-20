@@ -20,6 +20,7 @@ import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
 import com.hengye.share.ui.widget.loading.FramesLoadingView;
 import com.hengye.share.util.intercept.Action;
 import com.hengye.share.util.intercept.AdTokenInterceptor;
+import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -120,7 +121,7 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
 //                // Run on a background thread
                 .subscribeOn(HandlerScheduler.from(backgroundHandler))
                 // Be notified on the main thread
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(SchedulerProvider.ui())
                 .subscribe(new Subscriber<Float>() {
                     @Override
                     public void onCompleted() {
@@ -144,7 +145,7 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
 //                // Run on a background thread
 //                .subscribeOn(Schedulers.computation())
 //                // Be notified on the main thread
-//                .observeOn(AndroidSchedulers.mainThread())
+//                .observeOn(SchedulerProvider.ui())
 //                .subscribe(new Subscriber<String>() {
 //                    @Override
 //                    public void onCompleted() {

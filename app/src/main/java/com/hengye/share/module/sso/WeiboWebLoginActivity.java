@@ -23,6 +23,7 @@ import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.Utility;
 import com.hengye.share.util.retrofit.RetrofitManager;
+import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 import com.hengye.share.util.thirdparty.ThirdPartyUtils;
 import com.hengye.share.util.thirdparty.ThirdPartyUtils.WeiboApp;
 
@@ -133,8 +134,8 @@ public class WeiboWebLoginActivity extends BaseActivity {
                         }
                     }
                 })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
                 .subscribe(new Subscriber<String>() {
                     @Override
                     public void onCompleted() {
@@ -243,8 +244,8 @@ public class WeiboWebLoginActivity extends BaseActivity {
             RetrofitManager
                     .getWBService()
                     .oauthToken(ub.getParameters())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(SchedulerProvider.io())
+                    .observeOn(SchedulerProvider.ui())
                     .subscribe(new Subscriber<HashMap<String, String>>() {
                         @Override
                         public void onCompleted() {

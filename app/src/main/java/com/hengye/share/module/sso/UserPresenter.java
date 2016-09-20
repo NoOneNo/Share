@@ -9,6 +9,7 @@ import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
+import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
 import java.util.Map;
 
@@ -33,16 +34,16 @@ public class UserPresenter extends BasePresenter<UserMvpView> {
         RetrofitManager
                 .getWBService()
                 .listUserInfo(getWBUserInfoParameter(uid, name))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
                 .subscribe(new BaseSubscriber<WBUserInfo>() {
                     @Override
-                    public void handleViewOnFail(UserMvpView v, Throwable e) {
+                    public void onError(UserMvpView v, Throwable e) {
                         v.loadFail();
                     }
 
                     @Override
-                    public void handleViewOnSuccess(UserMvpView v, WBUserInfo wbUserInfo) {
+                    public void onNext(UserMvpView v, WBUserInfo wbUserInfo) {
                         v.handleUserInfo(wbUserInfo);
                         v.loadSuccess(User.getUser(wbUserInfo));
                     }

@@ -1,7 +1,5 @@
 package com.hengye.share.util.retrofit.weibo;
 
-import com.hengye.share.module.base.BaseActivity;
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -53,8 +51,6 @@ public class WBServiceProxyHandler implements InvocationHandler {
                                                      }
                                              );
                                  }
-                             }
-
-                        , Schedulers.trampoline());
+                             });
     }
 }

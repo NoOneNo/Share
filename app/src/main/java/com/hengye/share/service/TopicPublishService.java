@@ -31,6 +31,7 @@ import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
 import com.hengye.share.util.retrofit.weibo.WBService;
 import com.hengye.share.util.rxjava.ObjectConverter;
+import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
 import java.io.File;
 import java.io.Serializable;
@@ -201,8 +202,8 @@ public class TopicPublishService extends Service {
         RetrofitManager
                 .getWBService()
                 .publishTopic(tp.getToken(), tp.getTopicDraft().getContent())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
                 .subscribe(new PublishTopicSubscriber(tp));
     }
 
@@ -231,8 +232,8 @@ public class TopicPublishService extends Service {
                         RequestBody.create(MediaType.parse("multipart/form-data"),
                                 tp.getTopicDraft().getContent()),
                         body)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
                 .subscribe(new PublishTopicSubscriber(tp));
     }
 
@@ -275,8 +276,8 @@ public class TopicPublishService extends Service {
 
                     }
                 })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
                 .subscribe(new PublishTopicSubscriber(tp));
 
     }
@@ -289,16 +290,16 @@ public class TopicPublishService extends Service {
                     service.publishComment(tp.getToken(), tp.getTopicDraft().getContent(), tp.getTopicDraft().getTargetTopicId(), 0),
                     service.repostTopic(tp.getToken(), tp.getTopicDraft().getRepostContent(), tp.getTopicDraft().getTargetTopicId(), 0),
                     ObjectConverter.getObjectConverter2())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(SchedulerProvider.io())
+                    .observeOn(SchedulerProvider.ui())
                     .subscribe(new PublishCommentAndRepostSubscriber(tp));
 
         }else{
             RetrofitManager
                     .getWBService()
                     .publishComment(tp.getToken(), tp.getTopicDraft().getContent(), tp.getTopicDraft().getTargetTopicId(), tp.getTopicDraft().getIsCommentOrigin())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(SchedulerProvider.io())
+                    .observeOn(SchedulerProvider.ui())
                     .subscribe(new PublishCommentSubscriber(tp));
         }
     }
@@ -307,8 +308,8 @@ public class TopicPublishService extends Service {
         RetrofitManager
                 .getWBService()
                 .repostTopic(tp.getToken(), tp.getTopicDraft().getContent(), tp.getTopicDraft().getTargetTopicId(), tp.getTopicDraft().getIsCommentOrigin())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
                 .subscribe(new PublishRepostSubscriber(tp));
     }
 
@@ -319,15 +320,15 @@ public class TopicPublishService extends Service {
                     service.replyComment(tp.getToken(), tp.getTopicDraft().getContent(), tp.getTopicDraft().getTargetTopicId(), tp.getTopicDraft().getTargetCommentId(), 0),
                     service.repostTopic(tp.getToken(), tp.getTopicDraft().getRepostContent(), tp.getTopicDraft().getTargetTopicId(), 0),
                     ObjectConverter.getObjectConverter2())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(SchedulerProvider.io())
+                    .observeOn(SchedulerProvider.ui())
                     .subscribe(new PublishCommentAndRepostSubscriber(tp));
         }else {
             RetrofitManager
                     .getWBService()
                     .replyComment(tp.getToken(), tp.getTopicDraft().getContent(), tp.getTopicDraft().getTargetTopicId(), tp.getTopicDraft().getTargetCommentId(), tp.getTopicDraft().getIsCommentOrigin())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(SchedulerProvider.io())
+                    .observeOn(SchedulerProvider.ui())
                     .subscribe(new PublishCommentSubscriber(tp));
         }
     }

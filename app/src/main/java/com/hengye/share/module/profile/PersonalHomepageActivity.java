@@ -44,6 +44,7 @@ import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
+import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -515,8 +516,8 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                         .getWBService()
                         .followDestroy(UserUtil.getPriorToken(), uid);
 
-        observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+        observable.subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
                 .subscribe(new Subscriber<WBUserInfo>() {
                     @Override
                     public void onCompleted() {

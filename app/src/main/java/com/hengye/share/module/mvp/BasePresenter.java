@@ -1,7 +1,8 @@
 package com.hengye.share.module.mvp;
 
 import rx.Subscriber;
-import rx.functions.Action1;
+import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Base class that implements the Presenter interface and provides a base implementation for
@@ -11,6 +12,8 @@ import rx.functions.Action1;
 public class BasePresenter<T extends MvpView> implements Presenter<T> {
 
     private T mMvpView;
+
+    private CompositeSubscription mSubscriptions;
 
     public BasePresenter(T mvpView){
         attachView(mvpView);
@@ -24,6 +27,9 @@ public class BasePresenter<T extends MvpView> implements Presenter<T> {
     @Override
     public void detachView() {
         mMvpView = null;
+        if(mSubscriptions != null){
+            mSubscriptions.clear();
+        }
     }
 
     public boolean isViewAttached() {
@@ -32,6 +38,13 @@ public class BasePresenter<T extends MvpView> implements Presenter<T> {
 
     public T getMvpView() {
         return mMvpView;
+    }
+
+    public void addSubscription(Subscription subscription){
+        if(mSubscriptions == null){
+            mSubscriptions = new CompositeSubscription();
+        }
+        mSubscriptions.add(subscription);
     }
 
     public void checkViewAttached() {
@@ -48,40 +61,38 @@ public class BasePresenter<T extends MvpView> implements Presenter<T> {
     public abstract class BaseSubscriber<D> extends Subscriber<D> {
         @Override
         public void onCompleted() {
-
+            if(isViewAttached()){
+                onFinish(getMvpView(), false);
+            }
         }
 
         @Override
         public void onError(Throwable e) {
-            if(getMvpView() != null){
-                handleViewOnFail(getMvpView(), e);
+            if(isViewAttached()){
+                onError(getMvpView(), e);
+                onFinish(getMvpView(), true);
             }
         }
 
         @Override
         public void onNext(D d) {
-            if(getMvpView() != null){
-                handleViewOnSuccess(getMvpView(), d);
+            if(isViewAttached()){
+                onNext(getMvpView(), d);
             }
         }
 
-        abstract public void handleViewOnSuccess(T v, D d);
-
-        public void handleViewOnFail(T v, Throwable e){
+        public void onError(T v, Throwable e){
             e.printStackTrace();
         }
-    }
 
-    public abstract class BaseAction1<A> implements Action1<A>{
-        @Override
-        public void call(A a) {
-            if(getMvpView() != null){
-                handleView(getMvpView(), a);
-            }
+        /**
+         * This method will be invoked after onCompleted or OnError.
+         */
+        public void onFinish(T v, boolean hasError){
+
         }
 
-        abstract public void handleView(T v, A a);
-
+        abstract public void onNext(T v, D d);
     }
 }
 

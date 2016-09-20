@@ -17,6 +17,7 @@ import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
+import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 import com.hengye.share.util.text.ChineseToPinyin;
 import com.hengye.share.util.thirdparty.WBUtil;
 
@@ -101,8 +102,8 @@ public class UserListPresenter extends BasePresenter<UserListMvpView> {
         RetrofitManager
                 .getWBService()
                 .listAttentions(getWBUserListParameter(isRefresh))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
                 .subscribe(getWBUserListSubscriber(isRefresh));
     }
 
@@ -110,8 +111,8 @@ public class UserListPresenter extends BasePresenter<UserListMvpView> {
         RetrofitManager
                 .getWBService()
                 .listFollowers(getWBUserListParameter(isRefresh))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
                 .subscribe(getWBUserListSubscriber(isRefresh));
     }
 
@@ -130,13 +131,13 @@ public class UserListPresenter extends BasePresenter<UserListMvpView> {
     private Subscriber<WBUserInfos> getWBUserListSubscriber(final boolean isRefresh) {
         return new BaseSubscriber<WBUserInfos>() {
             @Override
-            public void handleViewOnFail(UserListMvpView v, Throwable e) {
+            public void onError(UserListMvpView v, Throwable e) {
                 v.stopLoading(isRefresh);
                 v.loadFail(isRefresh);
             }
 
             @Override
-            public void handleViewOnSuccess(UserListMvpView v, WBUserInfos wbUserInfos) {
+            public void onNext(UserListMvpView v, WBUserInfos wbUserInfos) {
                 v.stopLoading(isRefresh);
                 v.showUserListSuccess(UserInfo.getUserInfos(wbUserInfos), isRefresh);
                 mPager.setPageNumber(mPager.getPageNumber() + WBUtil.getWBTopicRequestCount());

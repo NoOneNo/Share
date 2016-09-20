@@ -21,6 +21,7 @@ import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
+import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 import com.hengye.share.util.thirdparty.WBUtil;
 
 import java.io.Serializable;
@@ -118,8 +119,8 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
         RetrofitManager
                 .getWBService()
                 .listTopicIds(getWBAllTopicParameter(since_id, true))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
                 .subscribe(getWBTopicIdsSubscriber(since_id));
 
     }
@@ -128,8 +129,8 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
         RetrofitManager
                 .getWBService()
                 .listTopic(getWBAllTopicParameter(id, isRefresh))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
                 .subscribe(getWBTopicsSubscriber(isRefresh));
     }
 
@@ -137,8 +138,8 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
         RetrofitManager
                 .getWBService()
                 .listBilateralTopicIds(getWBAllTopicParameter(since_id, true))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
                 .subscribe(getWBTopicIdsSubscriber(since_id));
 
     }
@@ -147,8 +148,8 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
         RetrofitManager
                 .getWBService()
                 .listBilateralTopic(getWBAllTopicParameter(id, isRefresh))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
                 .subscribe(getWBTopicsSubscriber(isRefresh));
     }
 
@@ -156,8 +157,8 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
         RetrofitManager
                 .getWBService()
                 .listCommentAtMeTopic(getWBAllTopicParameter(id, isRefresh))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
                 .subscribe(getWBCommentsSubscriber(isRefresh));
     }
 
@@ -165,8 +166,8 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
         RetrofitManager
                 .getWBService()
                 .listTopicAtMeTopic(getWBAllTopicParameter(id, isRefresh))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
                 .subscribe(getWBTopicsSubscriber(isRefresh));
     }
 
@@ -174,8 +175,8 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
         RetrofitManager
                 .getWBService()
                 .listCommentToMeTopic(getWBAllTopicParameter(id, isRefresh))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
                 .subscribe(getWBCommentsSubscriber(isRefresh));
     }
 
@@ -183,8 +184,8 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
         RetrofitManager
                 .getWBService()
                 .listCommentByMeTopic(getWBAllTopicParameter(id, isRefresh))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
                 .subscribe(getWBCommentsSubscriber(isRefresh));
     }
 
@@ -194,8 +195,8 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
         RetrofitManager
                 .getWBService()
                 .listUserTopic(params)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
                 .subscribe(getWBTopicsSubscriber(isRefresh));
     }
 
@@ -203,8 +204,8 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
         RetrofitManager
                 .getWBService()
                 .listGroupTopicIds(getWBAllTopicParameter(since_id, true))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
                 .subscribe(getWBTopicIdsSubscriber(since_id));
     }
 
@@ -212,8 +213,8 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
         RetrofitManager
                 .getWBService()
                 .listGroupTopic(getWBAllTopicParameter(id, isRefresh))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
                 .subscribe(getWBTopicsSubscriber(isRefresh));
     }
 
@@ -241,12 +242,12 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
     public Subscriber<WBTopicIds> getWBTopicIdsSubscriber(final String since_id) {
         return new BaseSubscriber<WBTopicIds>() {
             @Override
-            public void handleViewOnFail(TopicMvpView v, Throwable e) {
+            public void onError(TopicMvpView v, Throwable e) {
                 v.stopLoading(true);
             }
 
             @Override
-            public void handleViewOnSuccess(TopicMvpView v, WBTopicIds wbTopicIds) {
+            public void onNext(TopicMvpView v, WBTopicIds wbTopicIds) {
                 if (wbTopicIds == null || CommonUtil.isEmpty(wbTopicIds.getStatuses())) {
                     //没有新的微博
                     getMvpView().stopLoading(true);
@@ -272,12 +273,12 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
     public Subscriber<WBTopics> getWBTopicsSubscriber(final boolean isRefresh) {
         return new BaseSubscriber<WBTopics>() {
             @Override
-            public void handleViewOnFail(TopicMvpView v, Throwable e) {
+            public void onError(TopicMvpView v, Throwable e) {
                 v.stopLoading(isRefresh);
             }
 
             @Override
-            public void handleViewOnSuccess(TopicMvpView v, WBTopics wbTopics) {
+            public void onNext(TopicMvpView v, WBTopics wbTopics) {
                 v.stopLoading(isRefresh);
                 v.handleTopicData(Topic.getTopics(wbTopics), isRefresh);
             }
@@ -287,12 +288,12 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
     public Subscriber<WBTopicComments> getWBCommentsSubscriber(final boolean isRefresh) {
         return new BaseSubscriber<WBTopicComments>() {
             @Override
-            public void handleViewOnFail(TopicMvpView v, Throwable e) {
+            public void onError(TopicMvpView v, Throwable e) {
                 v.stopLoading(isRefresh);
             }
 
             @Override
-            public void handleViewOnSuccess(TopicMvpView v, WBTopicComments wbTopicComments) {
+            public void onNext(TopicMvpView v, WBTopicComments wbTopicComments) {
                 v.stopLoading(isRefresh);
                 v.handleTopicData(Topic.getTopics(wbTopicComments), isRefresh);
             }
@@ -308,11 +309,11 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
                         subscriber.onNext(findData());
                     }
                 })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new BaseAction1<ArrayList<Topic>>() {
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
+                .subscribe(new BaseSubscriber<ArrayList<Topic>>() {
                     @Override
-                    public void handleView(TopicMvpView v, ArrayList<Topic> topics) {
+                    public void onNext(TopicMvpView v, ArrayList<Topic> topics) {
                         v.handleCache(topics);
                     }
                 });

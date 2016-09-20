@@ -11,6 +11,7 @@ import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.rxjava.ObjectConverter;
 import com.hengye.share.util.retrofit.RetrofitManager;
 import com.hengye.share.util.retrofit.weibo.WBService;
+import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -33,17 +34,17 @@ public class SearchPresenter extends BasePresenter<SearchMvpView> {
                 service.searchUser(ub.getParameters()),
                 service.searchPublic(ub.getParameters()),
                 ObjectConverter.getObjectConverter2())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
                 .subscribe(new BaseSubscriber<Object[]>() {
                     @Override
-                    public void handleViewOnFail(SearchMvpView v, Throwable e) {
-                        super.handleViewOnFail(v, e);
+                    public void onError(SearchMvpView v, Throwable e) {
+                        super.onError(v, e);
                         v.loadFail();
                     }
 
                     @Override
-                    public void handleViewOnSuccess(SearchMvpView v, Object[] objects) {
+                    public void onNext(SearchMvpView v, Object[] objects) {
                         v.handleSearchUserData(UserInfo.getUserInfos((WBUserInfos) objects[0]));
                         v.handleSearchPublicData(Topic.getTopics((WBTopics) objects[1]));
                         v.loadSuccess();

@@ -11,6 +11,7 @@ import com.hengye.share.module.mvp.BasePresenter;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
+import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 import com.hengye.share.util.thirdparty.WBUtil;
 
 import java.io.Serializable;
@@ -51,8 +52,8 @@ public class TopicPagePresenter extends BasePresenter<TopicPageMvpView> {
         RetrofitManager
                 .getWBService()
                 .searchTopic(getWBAllTopicParameter(mPager.getPage(isRefresh)))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
                 .subscribe(getWBTopicsSubscriber(isRefresh));
     }
 
@@ -60,8 +61,8 @@ public class TopicPagePresenter extends BasePresenter<TopicPageMvpView> {
         RetrofitManager
                 .getWBService()
                 .listFavoritesTopic(getWBAllTopicParameter(mPager.getPage(isRefresh)))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
                 .subscribe(getWBTopicsSubscriber(isRefresh));
     }
 
@@ -89,12 +90,12 @@ public class TopicPagePresenter extends BasePresenter<TopicPageMvpView> {
     public Subscriber<WBTopics> getWBTopicsSubscriber(final boolean isRefresh) {
         return new BaseSubscriber<WBTopics>() {
             @Override
-            public void handleViewOnFail(TopicPageMvpView v, Throwable e) {
+            public void onError(TopicPageMvpView v, Throwable e) {
                 v.stopLoading(isRefresh);
             }
 
             @Override
-            public void handleViewOnSuccess(TopicPageMvpView v, WBTopics wbTopics) {
+            public void onNext(TopicPageMvpView v, WBTopics wbTopics) {
                 v.stopLoading(isRefresh);
                 v.handleTopicData(Topic.getTopics(wbTopics), isRefresh);
             }
@@ -104,12 +105,12 @@ public class TopicPagePresenter extends BasePresenter<TopicPageMvpView> {
 //    public Subscriber<WBTopicFavorites> getWBFavoritesTopicsSubscriber(final boolean isRefresh) {
 //        return new BaseSubscriber<WBTopicFavorites>() {
 //            @Override
-//            public void handleViewOnFail(TopicPageMvpView v, Throwable e) {
+//            public void onError(TopicPageMvpView v, Throwable e) {
 //                v.stopLoading(isRefresh);
 //            }
 //
 //            @Override
-//            public void handleViewOnSuccess(TopicPageMvpView v, WBTopicFavorites wbTopics) {
+//            public void onNext(TopicPageMvpView v, WBTopicFavorites wbTopics) {
 //                v.stopLoading(isRefresh);
 //                v.handleTopicData(Topic.get(wbTopics), isRefresh);
 //            }
