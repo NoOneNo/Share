@@ -91,12 +91,6 @@ public class AtUserActivity extends BaseActivity implements UserListMvpView {
 
     private UserListPresenter mPresenter;
 
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        return false;
-    }
-
     private void initView() {
 
         mSideBar = (SideBar) findViewById(R.id.side_bar);

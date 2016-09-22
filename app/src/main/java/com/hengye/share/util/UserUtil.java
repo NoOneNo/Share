@@ -11,7 +11,7 @@ import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 
 import java.util.List;
 
-import de.greenrobot.dao.query.QueryBuilder;
+import org.greenrobot.greendao.query.QueryBuilder;
 
 public class UserUtil {
 

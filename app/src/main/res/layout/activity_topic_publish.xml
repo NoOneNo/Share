@@ -70,6 +70,17 @@
                     tools:visibility="visible"
                     tools:text="@string/label_publish_comment_and_repost_to_me"/>
 
+                <TextView
+                    android:id="@+id/tv_group_visible"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="@dimen/text_normal"
+                    android:padding="@dimen/spacing_normal"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    tools:text="所有人可见"/>
+
                 <Space
                     android:layout_width="0dp"
                     android:layout_weight="1"

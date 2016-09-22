@@ -24,7 +24,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_LOGS" />
-    <!-- -->
+    <!-- Tencent Bugly -->
 
     <application
         android:name=".module.base.BaseApplication"
@@ -67,7 +67,6 @@
 
         <activity
             android:name=".module.sso.LoginActivity"
-            android:label="@string/title_activity_login"
             android:parentActivityName=".module.topic.TopicActivity"
             android:windowSoftInputMode="adjustResize|stateVisible">
             <meta-data

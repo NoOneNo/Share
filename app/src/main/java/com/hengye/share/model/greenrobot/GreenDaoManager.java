@@ -7,6 +7,8 @@ import android.util.Log;
 import com.hengye.share.model.greenrobot.migrator.AbstractMigratorHelper;
 import com.hengye.share.module.base.BaseApplication;
 
+import org.greenrobot.greendao.database.Database;
+
 public class GreenDaoManager {
 
     public final static String DB_NAME = "ShareDao";
@@ -57,7 +59,7 @@ public class GreenDaoManager {
          * Here is where the calls to upgrade are executed
          */
         @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        public void onUpgrade(Database db, int oldVersion, int newVersion) {
 
         /* i represent the version where the user is now and the class named with this number implies that is upgrading from i to i++ schema */
             for (int i = oldVersion; i < newVersion; i++) {

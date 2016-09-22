@@ -57,4 +57,5 @@
     <style name="Black.TintStyle" parent="IconStyle" >
         <item name="android:tint">@color/black</item>
     </style>
+
 </resources>

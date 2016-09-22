@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/topic_publish"
+        android:title="@string/tip_topic_publish_setting"
+        android:icon="@drawable/ic_more_vert_white_48dp"
+        app:showAsAction="never|ifRoom" >
+    <!--<group>-->
+        <menu>
+            <item
+                android:id="@+id/all_groups_visible"
+                android:orderInCategory="1"
+                android:title="@string/label_all_groups_visible"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/assign_group_visible"
+                android:orderInCategory="2"
+                android:title="@string/label_assign_group_visible"
+                app:showAsAction="never">
+                <menu />
+            </item>
+            <item
+                android:id="@+id/publish_timing"
+                android:orderInCategory="3"
+                android:title="@string/label_publish_on_time"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/publish_timing_cancel"
+                android:orderInCategory="4"
+                android:title="@string/label_publish_on_time_cancel"
+                app:showAsAction="never" />
+        </menu>
+    <!--</group>-->
+    </item>
+
+</menu>

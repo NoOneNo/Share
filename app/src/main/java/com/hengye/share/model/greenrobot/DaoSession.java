@@ -1,13 +1,12 @@
 package com.hengye.share.model.greenrobot;
 
-import android.database.sqlite.SQLiteDatabase;
-
 import java.util.Map;
 
-import de.greenrobot.dao.AbstractDao;
-import de.greenrobot.dao.AbstractDaoSession;
-import de.greenrobot.dao.identityscope.IdentityScopeType;
-import de.greenrobot.dao.internal.DaoConfig;
+import org.greenrobot.greendao.AbstractDao;
+import org.greenrobot.greendao.AbstractDaoSession;
+import org.greenrobot.greendao.database.Database;
+import org.greenrobot.greendao.identityscope.IdentityScopeType;
+import org.greenrobot.greendao.internal.DaoConfig;
 
 import com.hengye.share.model.greenrobot.TopicDraft;
 import com.hengye.share.model.greenrobot.User;
@@ -28,7 +27,7 @@ import com.hengye.share.model.greenrobot.ShareJsonDao;
 /**
  * {@inheritDoc}
  * 
- * @see de.greenrobot.dao.AbstractDaoSession
+ * @see org.greenrobot.greendao.AbstractDaoSession
  */
 public class DaoSession extends AbstractDaoSession {
 
@@ -46,7 +45,7 @@ public class DaoSession extends AbstractDaoSession {
     private final FollowerDao followerDao;
     private final ShareJsonDao shareJsonDao;
 
-    public DaoSession(SQLiteDatabase db, IdentityScopeType type, Map<Class<? extends AbstractDao<?, ?>>, DaoConfig>
+    public DaoSession(Database db, IdentityScopeType type, Map<Class<? extends AbstractDao<?, ?>>, DaoConfig>
             daoConfigMap) {
         super(db);
 
@@ -84,12 +83,12 @@ public class DaoSession extends AbstractDaoSession {
     }
     
     public void clear() {
-        topicDraftDaoConfig.getIdentityScope().clear();
-        userDaoConfig.getIdentityScope().clear();
-        groupListDaoConfig.getIdentityScope().clear();
-        groupMemberDaoConfig.getIdentityScope().clear();
-        followerDaoConfig.getIdentityScope().clear();
-        shareJsonDaoConfig.getIdentityScope().clear();
+        topicDraftDaoConfig.clearIdentityScope();
+        userDaoConfig.clearIdentityScope();
+        groupListDaoConfig.clearIdentityScope();
+        groupMemberDaoConfig.clearIdentityScope();
+        followerDaoConfig.clearIdentityScope();
+        shareJsonDaoConfig.clearIdentityScope();
     }
 
     public TopicDraftDao getTopicDraftDao() {

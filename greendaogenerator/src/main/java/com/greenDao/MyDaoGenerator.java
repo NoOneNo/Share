@@ -1,13 +1,17 @@
 package com.greenDao;
 
-import de.greenrobot.daogenerator.DaoGenerator;
-import de.greenrobot.daogenerator.Entity;
-import de.greenrobot.daogenerator.Schema;
 
+import org.greenrobot.greendao.generator.DaoGenerator;
+import org.greenrobot.greendao.generator.Entity;
+import org.greenrobot.greendao.generator.Schema;
+
+/**
+ * greenDao生成器用不了的时候改成2.1.3(com.android.tools.build:gradle)
+ */
 public class MyDaoGenerator {
 
     public static void main(String[] args) throws Exception {
-        Schema schema = new Schema(1006, "com.hengye.share.model.greenrobot");
+        Schema schema = new Schema(1008, "com.hengye.share.model.greenrobot");
 
         schema.enableKeepSectionsByDefault();
         schema.enableActiveEntitiesByDefault();
@@ -52,7 +56,10 @@ public class MyDaoGenerator {
         entity.addStringProperty("targetCommentId");
         entity.addStringProperty("targetCommentUserName");
         entity.addStringProperty("targetCommentContent");
+        entity.addStringProperty("assignGroupIdStr");
+        entity.addLongProperty("publishTiming");
         entity.addIntProperty("isCommentOrigin");
+        entity.addIntProperty("status").notNull();
         entity.addIntProperty("isMention");
         entity.addIntProperty("type");
         entity.addIntProperty("parentType");

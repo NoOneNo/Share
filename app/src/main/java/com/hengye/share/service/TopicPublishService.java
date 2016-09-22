@@ -26,6 +26,7 @@ import com.hengye.share.model.sina.WBUploadPicture;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.NotificationUtil;
+import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
@@ -47,10 +48,8 @@ import okhttp3.RequestBody;
 
 import rx.Observable;
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.functions.FuncN;
-import rx.schedulers.Schedulers;
 
 public class TopicPublishService extends Service {
 
@@ -152,6 +151,7 @@ public class TopicPublishService extends Service {
     protected void handlePublishSuccess(TopicPublish tp, Serializable result) {
         mPublishQueue.put(tp, true);
         showTopicPublishSuccessNotification(tp);
+        TopicDraftHelper.removeTopicDraft(tp.getTopicDraft());
         stopServiceIfQueueIsAllFinish();
         sendResultBroadcast(tp, true, result);
         handlePublishFinish();
@@ -160,7 +160,7 @@ public class TopicPublishService extends Service {
     protected void handlePublishFail(TopicPublish tp) {
         mPublishQueue.remove(tp);
         showTopicPublishFailNotification(tp);
-        TopicDraftHelper.saveTopicDraft(tp.getTopicDraft());
+        TopicDraftHelper.saveTopicDraft(tp.getTopicDraft(), false);
         stopServiceIfQueueIsAllFinish();
         sendResultBroadcast(tp, false, null);
         handlePublishFinish();
@@ -201,7 +201,7 @@ public class TopicPublishService extends Service {
 
         RetrofitManager
                 .getWBService()
-                .publishTopic(tp.getToken(), tp.getTopicDraft().getContent())
+                .publishTopic(UrlFactory.getPublishTopicParams(tp))
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
                 .subscribe(new PublishTopicSubscriber(tp));
@@ -223,19 +223,34 @@ public class TopicPublishService extends Service {
     protected void publishWBTopicWithSinglePhoto(final TopicPublish tp) {
         RequestBody requestFile = RequestBody.create(MediaType.parse("application/otcet-stream"),
                 new File(tp.getTopicDraft().getUrls()));
+
         MultipartBody.Part body = MultipartBody.Part.createFormData("pic", "share.png", requestFile);
         RetrofitManager
                 .getWBService()
                 .publishTopicWithSinglePhoto(
-                        RequestBody.create(MediaType.parse("multipart/form-data"),
-                                tp.getToken()),
-                        RequestBody.create(MediaType.parse("multipart/form-data"),
-                                tp.getTopicDraft().getContent()),
+                        UrlFactory.getPublishTopicParamsWrapToMultiPart(tp),
                         body)
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
                 .subscribe(new PublishTopicSubscriber(tp));
     }
+
+//    protected void publishWBTopicWithSinglePhoto(final TopicPublish tp) {
+//        RequestBody requestFile = RequestBody.create(MediaType.parse("application/otcet-stream"),
+//                new File(tp.getTopicDraft().getUrls()));
+//        MultipartBody.Part body = MultipartBody.Part.createFormData("pic", "share.png", requestFile);
+//        RetrofitManager
+//                .getWBService()
+//                .publishTopicWithSinglePhoto(
+//                        RequestBody.create(MediaType.parse("multipart/form-data"),
+//                                tp.getToken()),
+//                        RequestBody.create(MediaType.parse("multipart/form-data"),
+//                                tp.getTopicDraft().getContent()),
+//                        body)
+//                .subscribeOn(SchedulerProvider.io())
+//                .observeOn(SchedulerProvider.ui())
+//                .subscribe(new PublishTopicSubscriber(tp));
+//    }
 
     protected void publishWBTopicWithMultiplePhoto(final TopicPublish tp, List<String> urls) throws Exception {
 
@@ -270,9 +285,14 @@ public class TopicPublishService extends Service {
                 .flatMap(new Func1<List<String>, Observable<WBTopic>>() {
                     @Override
                     public Observable<WBTopic> call(List<String> urls) {
+
+                        tp.setToken(UserUtil.getPriorToken());
                         return RetrofitManager
                                 .getWBService()
-                                .publishTopicWithMultiplePhoto(UserUtil.getPriorToken(), tp.getTopicDraft().getContent(), CommonUtil.toSplit(urls, ","));
+                                .publishTopicWithMultiplePhoto(UrlFactory.getPublishTopicParams(tp, CommonUtil.toSplit(urls, ",")));
+//                        return RetrofitManager
+//                                .getWBService()
+//                                .publishTopicWithMultiplePhoto(UserUtil.getPriorToken(), tp.getTopicDraft().getContent(), CommonUtil.toSplit(urls, ","));
 
                     }
                 })

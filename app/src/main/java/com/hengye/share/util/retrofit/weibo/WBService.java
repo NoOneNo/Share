@@ -24,10 +24,14 @@ import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.PartMap;
 import retrofit2.http.QueryMap;
 import rx.Observable;
 
 public interface WBService {
+
+    //    @Headers({"Content-Type: application/x-www-form-urlencoded"})
+    //    @Headers({"Content-Type: multipart/form-data"})
 
     @FormUrlEncoded
     @POST(UrlFactory.WB_OAUTH_TOKEN)
@@ -39,25 +43,41 @@ public interface WBService {
     @GET(UrlFactory.WB_REPOST_SHOW)
     Observable<WBTopicReposts> listRepost(@QueryMap Map<String, String> options);
 
-    //    @Headers({"Content-Type: application/x-www-form-urlencoded"})
     @FormUrlEncoded
     @POST(UrlFactory.WB_PUBLISH_TOPIC)
     Observable<WBTopic> publishTopic
-    (@Field("access_token") String token, @Field("status") String status);
+    (@Field("access_token") String token,
+     @Field("status") String status);
 
-    //    @Headers({"Content-Type: multipart/form-data"})
+
+    @FormUrlEncoded
+    @POST(UrlFactory.WB_PUBLISH_TOPIC)
+    Observable<WBTopic> publishTopic
+            (@FieldMap Map<String, Object> fieldMap);
+
+//    @Multipart
+//    @POST(UrlFactory.WB_PUBLISH_TOPIC_UPLOAD)
+//    Observable<WBTopic> publishTopicWithSinglePhoto
+//    (@Part("access_token") RequestBody token,
+//     @Part("status") RequestBody status,
+//     @Part MultipartBody.Part file);
+
     @Multipart
     @POST(UrlFactory.WB_PUBLISH_TOPIC_UPLOAD)
     Observable<WBTopic> publishTopicWithSinglePhoto
-    (@Part("access_token") RequestBody token,
-     @Part("status") RequestBody status,
-     @Part MultipartBody.Part file);
+            (@PartMap Map<String, RequestBody> partyMap,
+             @Part MultipartBody.Part file);
 
+
+//    @FormUrlEncoded
+//    @POST(UrlFactory.WB_PUBLISH_TOPIC_PICTURE)
+//    Observable<WBTopic> publishTopicWithMultiplePhoto
+//            (@Field("access_token") String token, @Field("status") String status, @Field("pic_id") String pic_id);
 
     @FormUrlEncoded
     @POST(UrlFactory.WB_PUBLISH_TOPIC_PICTURE)
     Observable<WBTopic> publishTopicWithMultiplePhoto
-            (@Field("access_token") String token, @Field("status") String status, @Field("pic_id") String pic_id);
+            (@FieldMap Map<String, Object> fieldMap);
 
     @Multipart
     @POST(UrlFactory.WB_UPLOAD_PICTURE)

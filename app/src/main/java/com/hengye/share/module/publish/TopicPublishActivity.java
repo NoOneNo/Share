@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -26,6 +29,7 @@ import com.hengye.share.model.AtUser;
 import com.hengye.share.model.Parent;
 import com.hengye.share.model.greenrobot.TopicDraft;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
+import com.hengye.share.module.topic.TopicPresenter;
 import com.hengye.share.service.TopicPublishService;
 import com.hengye.share.ui.widget.emoticon.EmoticonPicker;
 import com.hengye.share.ui.widget.emoticon.EmoticonPickerUtil;
@@ -62,6 +66,9 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         return getStartIntent(context, "@" + name + " ");
     }
 
+    /**
+     * 从草稿箱传过来的草稿, 如果没有则生成一条
+     */
     private TopicDraft mTopicDraft;
     private String mTopicDraftContent, mTopicDraftImages;
     private final static int DEFAULT_TYPE = TopicDraftHelper.PUBLISH_TOPIC;
@@ -95,7 +102,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     private PickPhotoView mPhotoPicker;
     private EmoticonPicker mEmoticonPicker;
     private View mContainer;
-    private TextView mContentLength;
+    private TextView mContentLength, mGroupVisibleStatus;
     private EditText mContent;
     private ScrollView mScrollView;
     private CheckBox mPublishCB;
@@ -110,6 +117,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         mContentLength = (TextView) findViewById(R.id.tv_content_length);
         mContent.setSelection(0);
         mContent.setOnClickListener(this);
+        mGroupVisibleStatus = (TextView) findViewById(R.id.tv_group_visible);
         mPhotoPickerBtn = (ImageButton) findViewById(R.id.btn_camera);
         mPhotoPickerBtn.setOnClickListener(this);
         mMentionBtn = (ImageButton) findViewById(R.id.btn_mention);
@@ -197,6 +205,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
                 mPublishCB.setText(R.string.label_publish_comment_and_repost_to_me);
                 mPublishCB.setChecked(mTopicDraft.isCommentOrRepostConcurrently());
 
+                mGroupVisibleStatus.setVisibility(View.GONE);
                 mPhotoPickerBtn.setVisibility(View.GONE);
                 break;
             case TopicDraftHelper.REPOST_TOPIC:
@@ -204,10 +213,14 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
                 mPublishCB.setText(R.string.label_repost_topic_and_commend_to_author);
                 mPublishCB.setChecked(mTopicDraft.isCommentOrRepostConcurrently());
 
+                mGroupVisibleStatus.setVisibility(View.GONE);
                 mPhotoPickerBtn.setVisibility(View.GONE);
                 break;
             case TopicDraftHelper.PUBLISH_TOPIC:
                 mPublishCB.setVisibility(View.GONE);
+
+                mGroupVisibleStatus.setVisibility(View.VISIBLE);
+                updateGroupVisibleStatus();
                 mPhotoPickerBtn.setVisibility(View.VISIBLE);
             default:
                 break;
@@ -246,7 +259,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
             return;
         }
 
-        if (mTopicDraft.getId() == null && mTopicDraft.getType() == TopicDraftHelper.REPOST_TOPIC) {
+        if (!mTopicDraft.isSaved() && mTopicDraft.getType() == TopicDraftHelper.REPOST_TOPIC) {
             mTopicDraftContent = "//" + mTopicDraft.getContent();
             mContent.setText(mTopicDraftContent);
             mContent.setSelection(0);
@@ -335,15 +348,17 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         td.setDate(hasChangeContent() ? DateUtil.getChinaGMTDate() : mTopicDraft.getDate());
         td.setType(mTopicDraft.getType());
         td.setParentType(Parent.TYPE_WEIBO);
-        if (mTopicDraft != null) {
-            td.setId(mTopicDraft.getId());
-            td.setTargetTopicId(mTopicDraft.getTargetTopicId());
-            td.setTargetTopicJson(mTopicDraft.getTargetTopicJson());
-            td.setTargetCommentId(mTopicDraft.getTargetCommentId());
-            td.setTargetCommentUserName(mTopicDraft.getTargetCommentUserName());
-            td.setTargetCommentContent(mTopicDraft.getTargetCommentContent());
-        }
-        if(mPublishCB.isChecked()){
+
+        td.setTargetTopicId(mTopicDraft.getTargetTopicId());
+        td.setTargetTopicJson(mTopicDraft.getTargetTopicJson());
+        td.setTargetCommentId(mTopicDraft.getTargetCommentId());
+        td.setTargetCommentUserName(mTopicDraft.getTargetCommentUserName());
+        td.setTargetCommentContent(mTopicDraft.getTargetCommentContent());
+        td.setAssignGroupIdStr(mTopicDraft.getAssignGroupIdStr());
+        td.setPublishTiming(mTopicDraft.getPublishTiming());
+
+
+        if (mPublishCB.isChecked()) {
             td.setIsCommentOrRepostConcurrently(true);
         }
         if (!CommonUtil.isEmpty(mPhotoPicker.getPhotos())) {
@@ -355,6 +370,14 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
             td.setUrls(getPhotoPickerUrls());
 //            td.setUrls(mPhotoPicker.getPhotos().get(0).getDataPath());
         }
+
+        if (mTopicDraft.isSaved()) {
+            //草稿已存在,保存ID
+            td.setId(mTopicDraft.getId());
+        }
+
+        //插入或更新一条草稿, 标记为不可见
+        TopicDraftHelper.saveTopicDraft(td, true);
         return td;
     }
 
@@ -365,11 +388,16 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         }
 
         TopicPublishService.publish(this, generateTopicDraft(), UserUtil.getToken());
+
+        if (mTopicDraft.isSaved()) {
+            //让草稿箱知道有草稿被发送了, 刷新界面
+            setResult(Activity.RESULT_OK);
+        }
         finish();
     }
 
     private void saveToDraft() {
-        TopicDraftHelper.saveTopicDraft(generateTopicDraft());
+        TopicDraftHelper.saveTopicDraft(generateTopicDraft(), false);
         setResult(Activity.RESULT_OK);
         ToastUtil.showToast(R.string.label_save_to_draft_success);
     }
@@ -464,5 +492,77 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
             mContentLength.setTextColor(ResUtil.getColor(R.color.font_red_warn));
             mContentLength.setText(ResUtil.getString(R.string.label_topic_publish_content_length_more, differLength));
         }
+    }
+
+    private void updateGroupVisibleStatus() {
+        mGroupVisibleStatus.setText(mTopicDraft.getGroupName());
+    }
+
+    MenuItem mAllGroupsVisible, mAssignGroupVisible, mPublishTiming, mCancelPublishTiming;
+    List<TopicPresenter.TopicGroup> mTopicGroups;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        if (mTopicDraft.getType() != TopicDraftHelper.PUBLISH_TOPIC) {
+            return false;
+        }
+
+        getMenuInflater().inflate(R.menu.activity_publish, menu);
+
+        mAllGroupsVisible = menu.findItem(R.id.all_groups_visible);
+        mAssignGroupVisible = menu.findItem(R.id.assign_group_visible);
+        mPublishTiming = menu.findItem(R.id.publish_timing);
+        mCancelPublishTiming = menu.findItem(R.id.publish_timing_cancel);
+
+
+        mTopicGroups = TopicPresenter.TopicGroup.getTopicGroups();
+
+        if (!CommonUtil.isEmpty(mTopicGroups)) {
+            SubMenu subMenu = mAssignGroupVisible.getSubMenu();
+//            SubMenu subMenu = menu.addSubMenu(R.id.topic_publish, 1, mAssignGroupVisible.getOrder(), ResUtil.getString(R.string.label_assign_group_visible));
+            if (subMenu != null) {
+                for (int i = 0; i < mTopicGroups.size(); i++) {
+                    TopicPresenter.TopicGroup tg = mTopicGroups.get(i);
+                    subMenu.add(1, i, i, tg.getName());
+                }
+            }
+        } else {
+            mAllGroupsVisible.setVisible(false);
+            mAssignGroupVisible.setVisible(false);
+        }
+
+        return true;
+    }
+
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.all_groups_visible) {
+            //所有人可见
+            mTopicDraft.setAssignGroupVisible(false, null);
+            updateGroupVisibleStatus();
+        } else if (id == R.id.publish_timing) {
+            //定时发布
+        } else if (id == R.id.publish_timing_cancel) {
+            //取消定时发布
+
+        } else {
+            //指定分组可见
+            int groupIndex = item.getItemId();
+            if (mTopicGroups != null && groupIndex < mTopicGroups.size()) {
+                TopicPresenter.TopicGroup tp = mTopicGroups.get(groupIndex);
+
+                mTopicDraft.setAssignGroupIdStr(tp.getGroupList().getGid());
+                updateGroupVisibleStatus();
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

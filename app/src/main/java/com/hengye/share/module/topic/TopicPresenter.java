@@ -401,6 +401,9 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
             this.topicType = topicType;
         }
 
+        /**
+         * @return 如果是首页的列表内容, 则返回true;
+         */
         public boolean isReadingType(){
             if(topicType == TopicType.ALL || topicType == TopicType.BILATERAL || topicType == TopicType.GROUP_LIST){
                 return true;
@@ -448,6 +451,22 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
                 result.add(new TopicGroup(TopicType.GROUP_LIST, gl));
             }
             return result;
+        }
+
+        /**
+         * @param groupIdStr
+         * @return 返回与@param groupIdStr 对应的分组名字
+         */
+        public static String getTopicGroupName(String groupIdStr){
+            List<TopicPresenter.TopicGroup> topicGroups = TopicPresenter.TopicGroup.getTopicGroups();
+            if(!CommonUtil.isEmpty(groupIdStr) && !CommonUtil.isEmpty(topicGroups)){
+                for(TopicPresenter.TopicGroup tg : topicGroups){
+                    if(groupIdStr.equals(tg.getGroupList().getGid())){
+                        return tg.getName();
+                    }
+                }
+            }
+            return null;
         }
 
         private static String getName(TopicGroup topicGroup, Resources resources) {

@@ -111,7 +111,7 @@ public class TopicDraftActivity extends BaseActivity implements DialogInterface.
                 int id = view.getId();
                 if (id == R.id.btn_topic_send_again) {
                     TopicDraft topicDraft = mAdapter.getItem(position);
-                    TopicDraftHelper.removeTopicDraft(topicDraft);
+                    TopicDraftHelper.saveTopicDraft(topicDraft, true);
                     mAdapter.removeItem(position);
                     TopicPublishService.publish(TopicDraftActivity.this, topicDraft, UserUtil.getToken());
                 } else if (id == R.id.tv_topic_content || id == R.id.gl_topic_gallery || id == R.id.rl_topic_title || id == R.id.ll_topic_content || id == R.id.ll_topic_retweeted_content) {

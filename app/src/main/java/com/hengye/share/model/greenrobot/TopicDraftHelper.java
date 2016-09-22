@@ -10,10 +10,11 @@ import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
 
+import org.greenrobot.greendao.query.QueryBuilder;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import de.greenrobot.dao.query.QueryBuilder;
 
 public class TopicDraftHelper {
 
@@ -123,6 +124,7 @@ public class TopicDraftHelper {
 
     /**
      * 在评论列表里回复评论
+     *
      * @param topic
      * @param topicComment
      * @return
@@ -157,9 +159,35 @@ public class TopicDraftHelper {
         return topicDraft;
     }
 
+    /**
+     * @return 返回当前用户可见状态的草稿
+     */
     public static List<TopicDraft> getTopicDraft() {
+        return getTopicDraftByStatus(TopicDraft.VISIBLE);
+    }
+
+    public static List<TopicDraft> getInvisibleTopicDraft() {
+        return getTopicDraftByStatus(TopicDraft.INVISIBLE);
+    }
+
+    public static List<TopicDraft> getAllTopicDraft() {
+        return getTopicDraftByStatus(-1);
+    }
+
+    /**
+     * {@link TopicDraft#VISIBLE}->获得可见的草稿(不在发送中的)
+     * {@link TopicDraft#INVISIBLE}->获得不可见的草稿(在发送中的)
+     * -1 ->获得所有草稿
+     *
+     * @param status
+     * @return 返回当前用户的草稿
+     */
+    public static List<TopicDraft> getTopicDraftByStatus(int status) {
         QueryBuilder<TopicDraft> qb = GreenDaoManager.getDaoSession().getTopicDraftDao().queryBuilder();
         qb.where(TopicDraftDao.Properties.Uid.eq(UserUtil.getUid()));
+        if (status != -1) {
+            qb.where(TopicDraftDao.Properties.Status.eq(status));
+        }
         qb.orderDesc(TopicDraftDao.Properties.Date);
 
         try {
@@ -170,7 +198,13 @@ public class TopicDraftHelper {
         return null;
     }
 
-    public static void saveTopicDraft(TopicDraft topicDraft) {
+    /**
+     * 如果isNeedToSend为true, 则标记草稿为不可见
+     * @param topicDraft
+     * @param isNeedToSend
+     */
+    public static void saveTopicDraft(TopicDraft topicDraft, boolean isNeedToSend) {
+        topicDraft.mark(isNeedToSend);
         GreenDaoManager.getDaoSession().getTopicDraftDao().insertOrReplace(topicDraft);
     }
 

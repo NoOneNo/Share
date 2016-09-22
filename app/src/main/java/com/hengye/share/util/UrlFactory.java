@@ -1,5 +1,14 @@
 package com.hengye.share.util;
 
+import com.hengye.share.model.TopicPublish;
+import com.hengye.share.model.greenrobot.TopicDraft;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+
 public class UrlFactory {
     private static class UrlFactoryHolder {
         private final static UrlFactory INSTANCE = new UrlFactory();
@@ -71,13 +80,13 @@ public class UrlFactory {
     public static final String WB_REPOST_TOPIC = "statuses/repost.json";
     //搜索用户
     public static final String WB_SEARCH_USER = "search/users.json";
-//    https://api.weibo.com/2/search/users.json?q=uu&user_id=2207519004&count=20&page=1&filter_ori=0&filter_pic=0&access_token=2.00OXW56C06XASOc5a146b1b0pVluLB
+    //    https://api.weibo.com/2/search/users.json?q=uu&user_id=2207519004&count=20&page=1&filter_ori=0&filter_pic=0&access_token=2.00OXW56C06XASOc5a146b1b0pVluLB
     //联想用户
     public static final String WB_SEARCH_USER_SUGGESTION = "http://s.weibo.com/ajax/suggestion";
-//    http://s.weibo.com/ajax/suggestion?where=gs_weibo&type=gs_weibo&key=uue&access_token=2.00OXW56C06XASOc5a146b1b0pVluLB
+    //    http://s.weibo.com/ajax/suggestion?where=gs_weibo&type=gs_weibo&key=uue&access_token=2.00OXW56C06XASOc5a146b1b0pVluLB
     //搜索微博
     public static final String WB_SEARCH_PUBLIC = "search/public.json";
-//    https://api.weibo.com/2/search/public.json?q=uu&sid=o_weico&sort=social&source=211160679&user_id=2207519004&count=20&page=1&access_token=2.00OXW56C06XASOc5a146b1b0pVluLB
+    //    https://api.weibo.com/2/search/public.json?q=uu&sid=o_weico&sort=social&source=211160679&user_id=2207519004&count=20&page=1&access_token=2.00OXW56C06XASOc5a146b1b0pVluLB
     //搜索话题
     public static final String WB_SEARCH_TOPIC = "search/topics.json";
     //添加收藏微博
@@ -87,7 +96,7 @@ public class UrlFactory {
 
     //--- 以下都没写方法
     public static final String WB_OAUTH_TOKEN = "https://api.weibo.com/oauth2/access_token";
-//    获取好友的相册列表
+    //    获取好友的相册列表
 //    public static final String WB_USER_ALBUM = "friendships/groups.json";
     //获取好友的分组信息
     public static final String WB_GROUP = "friendships/groups.json";
@@ -109,13 +118,55 @@ public class UrlFactory {
     public static final String WB_FOLLOW_CREATE = "friendships/create.json";
     //取消关注某用户
     public static final String WB_FOLLOW_DESTROY = "friendships/destroy.json";
+
     /**
      * 微博接口
      */
 
-    public static String getWBUrlPrefix(){
+    public static String getWBUrlPrefix() {
         return URL_PREFIX_WEIBO;
     }
+
+
+    public static Map<String, Object> getPublishTopicParams(TopicPublish tp) {
+        return getPublishTopicParams(tp, null);
+    }
+
+    public static Map<String, Object> getPublishTopicParams(TopicPublish tp, String picUrls) {
+        Map<String, Object> map = new HashMap<>();
+        TopicDraft td = tp.getTopicDraft();
+        map.put("access_token", tp.getToken());
+        map.put("status", td.getContent());
+        if (td.isAssignGroupVisible()) {
+            map.put("visible", "3");
+            map.put("list_id", td.getAssignGroupIdStr());
+        }
+        if(picUrls != null){
+            map.put("pic_id", picUrls);
+        }
+        return map;
+    }
+
+    public static Map<String, RequestBody> getPublishTopicParamsWrapToMultiPart(TopicPublish tp) {
+        return getPublishTopicParamsWrapToMultiPart(tp, null);
+    }
+
+    public static Map<String, RequestBody> getPublishTopicParamsWrapToMultiPart(TopicPublish tp, String picUrls) {
+        return convertMultiPartFormDataFromMap(getPublishTopicParams(tp, picUrls));
+    }
+
+    public static Map<String, RequestBody> convertMultiPartFormDataFromMap(Map<String, ? extends Object> map){
+        Map<String, RequestBody> convert = new HashMap<>();
+        for(Map.Entry<String, ? extends Object> entry : map.entrySet()){
+            convert.put(entry.getKey(), convertMultiPartFormData(entry.getValue()));
+        }
+        return convert;
+    }
+    
+    public static RequestBody convertMultiPartFormData(Object value) {
+        return RequestBody.create(MediaType.parse("multipart/form-data"), value.toString());
+    }
+
 
     public String getWBUserTopicUrl() {
         return getWBUrlPrefix() + WB_USER_TOPIC;

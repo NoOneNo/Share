@@ -49,6 +49,8 @@ public class TopicContentUrlSpan extends CharacterStyle implements ParcelableSpa
     public void onClick(View widget) {
         Uri uri = Uri.parse(getURL());
         Context context = widget.getContext();
+        // TODO: 16/9/20 需要优化
+        //如果是网页已经替换成DataUtil.WEB_SCHEME
         if (DataUtil.isHttpUrl(uri.getScheme())) {
             String url = uri.toString();
             if (WBUtil.isWBAccountIdLink(url)) {

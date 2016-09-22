@@ -378,13 +378,13 @@ public class WBTopic implements Serializable{
         private static final long serialVersionUID = -5270600301367680541L;
 
         private int type;
-        private int list_id;
+        private String list_id;
 
         public void setType(int type) {
             this.type = type;
         }
 
-        public void setList_id(int list_id) {
+        public void setList_id(String list_id) {
             this.list_id = list_id;
         }
 
@@ -392,7 +392,7 @@ public class WBTopic implements Serializable{
             return type;
         }
 
-        public int getList_id() {
+        public String getList_id() {
             return list_id;
         }
     }
