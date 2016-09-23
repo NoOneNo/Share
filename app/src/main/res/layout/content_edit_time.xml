@@ -13,7 +13,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/txtDate"
+            android:id="@+id/tv_date"
             android:layout_width="100dp"
             android:layout_height="50dp"
             android:background="@drawable/selector_spinner"
@@ -30,7 +30,7 @@
             android:textSize="@dimen/text_large" />
 
         <TextView
-            android:id="@+id/txtTime"
+            android:id="@+id/tv_time"
             android:layout_width="100dp"
             android:layout_height="50dp"
             android:background="@drawable/selector_spinner"

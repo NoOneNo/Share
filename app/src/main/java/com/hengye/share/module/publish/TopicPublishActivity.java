@@ -1,7 +1,10 @@
 package com.hengye.share.module.publish;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,11 +17,13 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.hengye.photopicker.model.Photo;
 import com.hengye.photopicker.view.PickPhotoView;
@@ -31,6 +36,7 @@ import com.hengye.share.model.greenrobot.TopicDraft;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.module.topic.TopicPresenter;
 import com.hengye.share.service.TopicPublishService;
+import com.hengye.share.ui.widget.dialog.DateAndTimePickerDialog;
 import com.hengye.share.ui.widget.emoticon.EmoticonPicker;
 import com.hengye.share.ui.widget.emoticon.EmoticonPickerUtil;
 import com.hengye.share.ui.support.listener.DefaultTextWatcher;
@@ -46,6 +52,8 @@ import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class TopicPublishActivity extends BaseActivity implements View.OnClickListener {
@@ -550,6 +558,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
             updateGroupVisibleStatus();
         } else if (id == R.id.publish_timing) {
             //定时发布
+            getPublishTimingDialog().show();
         } else if (id == R.id.publish_timing_cancel) {
             //取消定时发布
 
@@ -565,4 +574,16 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         }
         return super.onOptionsItemSelected(item);
     }
+
+    DateAndTimePickerDialog mPublishTimingDialog;
+
+    private DateAndTimePickerDialog getPublishTimingDialog(){
+        if(mPublishTimingDialog == null){
+            long timeInMillis = mTopicDraft.isPublishTiming() ? mTopicDraft.getPublishTiming() : System.currentTimeMillis();
+            mPublishTimingDialog = new DateAndTimePickerDialog(this, timeInMillis);
+        }
+        return mPublishTimingDialog;
+    }
+
+
 }
