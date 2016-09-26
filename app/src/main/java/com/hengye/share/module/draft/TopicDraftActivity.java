@@ -69,20 +69,26 @@ public class TopicDraftActivity extends BaseActivity implements DialogInterface.
             @Override
             public void onReceive(Context context, Intent intent) {
                 TopicDraft topicDraft = (TopicDraft) intent.getSerializableExtra(TopicPublishService.EXTRA_DRAFT);
-                boolean isSuccess = intent.getBooleanExtra(TopicPublishService.EXTRA_IS_SUCCESS, false);
-                if (topicDraft != null && !isSuccess) {
+                int status = intent.getIntExtra(TopicPublishService.EXTRA_STATUS, TopicPublishService.STATUS_FAIL);
+                if (topicDraft != null) {
                     int index = mAdapter.getData().indexOf(topicDraft);
-                    if (index != -1) {
-                        mAdapter.updateItem(index, topicDraft);
-                    } else {
-                        mAdapter.addItem(0, topicDraft);
-                        mRecyclerView.getLayoutManager().scrollToPosition(0);
+                    if (status == TopicPublishService.STATUS_FAIL) {
+                        //显示发送失败的草稿;
+                        if (index != -1) {
+                            mAdapter.updateItem(index, topicDraft);
+                        } else {
+                            mAdapter.addItem(0, topicDraft);
+                            mRecyclerView.getLayoutManager().scrollToPosition(0);
+                        }
+                    }else if(index != -1){
+                        //移除已显示的草稿当草稿状态为发送中等状态;
+                        mAdapter.removeItem(index);
                     }
 
                 }
             }
         };
-        LocalBroadcastManager.getInstance(this).registerReceiver(mPublishResultBroadcastReceiver, new IntentFilter(TopicPublishService.ACTION_RESULT));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mPublishResultBroadcastReceiver, new IntentFilter(TopicPublishService.ACTION_PUBLISH));
     }
 
     private RecyclerView mRecyclerView;
@@ -90,7 +96,7 @@ public class TopicDraftActivity extends BaseActivity implements DialogInterface.
     private List<TopicDraft> mTopicDraft;
     private BroadcastReceiver mPublishResultBroadcastReceiver;
     private Dialog mItemLongClickDialog, mConfirmToDeleteDialog;
-    private int mItemLongClickPosition;
+    private int mItemClickPosition;
 
     private void initView() {
 
@@ -98,27 +104,19 @@ public class TopicDraftActivity extends BaseActivity implements DialogInterface.
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter = new TopicDraftAdapter(this, getTopicDraftData()));
 
-//        mAdapter.setOnItemClickListener(new ViewUtil.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(View view, int position) {
-//                IntentUtil.startActivityForResult(TopicDraftActivity.this,
-//                        TopicPublishActivity.getStartIntent(TopicDraftActivity.this, mAdapter.getItem(position)), 1);
-//            }
-//        });
         mAdapter.setOnChildViewItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 int id = view.getId();
                 if (id == R.id.btn_topic_send_again) {
                     TopicDraft topicDraft = mAdapter.getItem(position);
-                    TopicDraftHelper.saveTopicDraft(topicDraft, true);
+//                    TopicDraftHelper.saveTopicDraft(topicDraft, TopicDraft.SENDING);
                     mAdapter.removeItem(position);
                     TopicPublishService.publish(TopicDraftActivity.this, topicDraft, UserUtil.getToken());
                 } else if (id == R.id.tv_topic_content || id == R.id.gl_topic_gallery || id == R.id.rl_topic_title || id == R.id.ll_topic_content || id == R.id.ll_topic_retweeted_content) {
                     final boolean isRetweeted = (Boolean) view.getTag();
-                    if(!isRetweeted){
-                        IntentUtil.startActivityForResult(TopicDraftActivity.this,
-                                TopicPublishActivity.getStartIntent(TopicDraftActivity.this, mAdapter.getItem(position)), 1);
+                    if (!isRetweeted) {
+                        startTopicPublish(position);
                     }
                     //为了显示波纹效果再启动
                     final Topic topic = mAdapter.getItem(position).getTargetTopic();
@@ -130,8 +128,7 @@ public class TopicDraftActivity extends BaseActivity implements DialogInterface.
                         }
                     }, 200);
                 } else {
-                    IntentUtil.startActivityForResult(TopicDraftActivity.this,
-                            TopicPublishActivity.getStartIntent(TopicDraftActivity.this, mAdapter.getItem(position)), 1);
+                    startTopicPublish(position);
                 }
             }
         });
@@ -139,7 +136,7 @@ public class TopicDraftActivity extends BaseActivity implements DialogInterface.
         mAdapter.setOnChildViewItemLongClickListener(new OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(View view, int position) {
-                mItemLongClickPosition = position;
+                mItemClickPosition = position;
                 getItemLongClickDialog().show();
                 return false;
             }
@@ -147,15 +144,21 @@ public class TopicDraftActivity extends BaseActivity implements DialogInterface.
 
     }
 
-    private Dialog getItemLongClickDialog(){
-        if(mItemLongClickDialog == null){
+    private void startTopicPublish(int position){
+        mItemClickPosition = position;
+        IntentUtil.startActivityForResult(TopicDraftActivity.this,
+                TopicPublishActivity.getStartIntent(TopicDraftActivity.this, mAdapter.getItem(position)), 1);
+    }
+
+    private Dialog getItemLongClickDialog() {
+        if (mItemLongClickDialog == null) {
             mItemLongClickDialog = DialogBuilder.getItemDialog(this, this, getString(R.string.label_delete_draft));
         }
         return mItemLongClickDialog;
     }
 
-    private Dialog getConfirmToDeleteDialog(){
-        if(mConfirmToDeleteDialog == null){
+    private Dialog getConfirmToDeleteDialog() {
+        if (mConfirmToDeleteDialog == null) {
             SimpleTwoBtnDialog stbd = new SimpleTwoBtnDialog();
             stbd.setContent(R.string.label_delete_all_drafts);
             stbd.setPositiveButtonClickListener(new DialogInterface.OnClickListener() {
@@ -179,9 +182,9 @@ public class TopicDraftActivity extends BaseActivity implements DialogInterface.
         switch (which) {
             case 0:
             default:
-                TopicDraft topicDraft = mAdapter.getItem(mItemLongClickPosition);
+                TopicDraft topicDraft = mAdapter.getItem(mItemClickPosition);
                 TopicDraftHelper.removeTopicDraft(topicDraft);
-                mAdapter.removeItem(mItemLongClickPosition);
+                mAdapter.removeItem(mItemClickPosition);
                 break;
         }
     }
@@ -216,7 +219,12 @@ public class TopicDraftActivity extends BaseActivity implements DialogInterface.
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
-            mAdapter.refresh(getTopicDraftData());
+            TopicDraft draft = mAdapter.getItem(mItemClickPosition);
+            if(draft != null){
+                TopicDraft newDraft = TopicDraftHelper.loadTopicDraft(draft.getId());
+                mAdapter.updateItem(mItemClickPosition, newDraft);
+            }
+//            mAdapter.refresh(getTopicDraftData());
         }
     }
 }

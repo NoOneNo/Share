@@ -208,7 +208,7 @@ public class DateAndTimePickerDialog extends AlertDialog {
         this.mOnSetListener = onSetListener;
     }
 
-    interface OnSetListener {
+    public interface OnSetListener {
         public void onSet(Calendar calendar, long timeInMillis);
     }
 }

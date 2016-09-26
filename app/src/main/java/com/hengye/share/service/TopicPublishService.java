@@ -1,6 +1,8 @@
 package com.hengye.share.service;
 
+import android.app.AlarmManager;
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +25,7 @@ import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.model.sina.WBTopicComment;
 import com.hengye.share.model.sina.WBUploadPicture;
+import com.hengye.share.util.ApplicationUtil;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.NotificationUtil;
@@ -54,11 +57,16 @@ import rx.functions.FuncN;
 public class TopicPublishService extends Service {
 
     public static final int MAX_PUBLISH_SIZE = 10;
-    public static final String ACTION_RESULT = "PUBLISH_RESULT";
-    public static final String EXTRA_IS_SUCCESS = "PUBLISH_IS_SUCCESS";
-    public static final String EXTRA_RESULT = "PUBLISH_RESULT";
+    public static final String ACTION_PUBLISH = "PUBLISH_ACTION";
+    public static final String EXTRA_DATA = "PUBLISH_DATA";
     public static final String EXTRA_DRAFT = "TOPIC_DRAFT";
     public static final String EXTRA_TYPE = "TOPIC_TYPE";
+    public static final String EXTRA_STATUS = "PUBLISH_STATUS";
+
+    public static final int STATUS_SENDING = 1;
+    public static final int STATUS_SUCCESS = 2;
+    public static final int STATUS_FAIL = 3;
+    public static final int STATUS_TIMING = 4;
 
     private HashMap<TopicPublish, Boolean> mPublishQueue = new HashMap<>();
     private HashMap<TopicPublish, Integer> mPublishNotificationQueue = new HashMap<>();
@@ -143,8 +151,16 @@ public class TopicPublishService extends Service {
     }
 
     protected void handlePublishStart(TopicPublish tp) {
+        TopicDraft td = tp.getTopicDraft();
+        if (td.isPublishTiming()) {
+            //如果是定时发送
+            publishTimingTopic(tp);
+            return;
+        }
         mPublishQueue.put(tp, false);
         showTopicPublishStartNotification(tp);
+        TopicDraftHelper.saveTopicDraft(tp.getTopicDraft(), TopicDraft.SENDING);
+        sendBroadcast(tp, STATUS_SENDING, null);
         publish(tp);
     }
 
@@ -153,16 +169,16 @@ public class TopicPublishService extends Service {
         showTopicPublishSuccessNotification(tp);
         TopicDraftHelper.removeTopicDraft(tp.getTopicDraft());
         stopServiceIfQueueIsAllFinish();
-        sendResultBroadcast(tp, true, result);
+        sendBroadcast(tp, STATUS_SUCCESS, result);
         handlePublishFinish();
     }
 
     protected void handlePublishFail(TopicPublish tp) {
         mPublishQueue.remove(tp);
         showTopicPublishFailNotification(tp);
-        TopicDraftHelper.saveTopicDraft(tp.getTopicDraft(), false);
+        TopicDraftHelper.saveTopicDraft(tp.getTopicDraft(), TopicDraft.ERROR);
         stopServiceIfQueueIsAllFinish();
-        sendResultBroadcast(tp, false, null);
+        sendBroadcast(tp, STATUS_FAIL, null);
         handlePublishFinish();
     }
 
@@ -172,21 +188,39 @@ public class TopicPublishService extends Service {
         }
     }
 
-    protected void sendResultBroadcast(TopicPublish tp, boolean isSuccess, Serializable result) {
-
+    protected void sendBroadcast(TopicPublish tp, int status, Serializable data){
         Bundle bundle = new Bundle();
         bundle.putInt(EXTRA_TYPE, tp.getTopicDraft().getType());
-        bundle.putBoolean(EXTRA_IS_SUCCESS, isSuccess);
+        bundle.putInt(EXTRA_STATUS, status);
         bundle.putSerializable(EXTRA_DRAFT, tp.getTopicDraft());
-        bundle.putSerializable(EXTRA_RESULT, result);
+        bundle.putSerializable(EXTRA_DATA, data);
 
-        Intent intent = new Intent(ACTION_RESULT);
+        Intent intent = new Intent(ACTION_PUBLISH);
         intent.putExtras(bundle);
         getLocalBroadcastManager().sendBroadcast(intent);
 
-        Intent intentWithType = new Intent(ACTION_RESULT + tp.getTopicDraft().getType());
+        Intent intentWithType = new Intent(ACTION_PUBLISH + tp.getTopicDraft().getType());
         intentWithType.putExtras(bundle);
         getLocalBroadcastManager().sendBroadcast(intentWithType);
+    }
+
+    protected void publishTimingTopic(final TopicPublish tp) {
+
+        TopicDraftHelper.saveTopicDraft(tp.getTopicDraft(), TopicDraft.TIMING);
+        sendBroadcast(tp, STATUS_TIMING, null);
+        List<TopicDraft> drafts = TopicDraftHelper.getTimingTopicDraft();
+        AlarmManager am = (AlarmManager) ApplicationUtil.getContext().getSystemService(ALARM_SERVICE);
+        for (TopicDraft draft : drafts) {
+            if(draft.getTiming() > System.currentTimeMillis()){
+                TopicPublishTimingIntent intent = new TopicPublishTimingIntent(draft.getTiming());
+                int requestCode = (int)draft.getTiming();
+                PendingIntent sender = PendingIntent.getBroadcast(ApplicationUtil.getContext(), requestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                am.set(AlarmManager.RTC_WAKEUP, draft.getTiming(), sender);
+            }else{
+                //定时任务已过期
+                L.debug("TimingTask is expired");
+            }
+        }
     }
 
     protected void publishWBTopic(final TopicPublish tp) throws Exception {
@@ -198,7 +232,6 @@ public class TopicPublishService extends Service {
     }
 
     protected void publishWBTopicContentOnly(final TopicPublish tp) {
-
         RetrofitManager
                 .getWBService()
                 .publishTopic(UrlFactory.getPublishTopicParams(tp))
@@ -303,7 +336,7 @@ public class TopicPublishService extends Service {
     }
 
     protected void publishWBComment(final TopicPublish tp) {
-        if(tp.getTopicDraft().isCommentOrRepostConcurrently()){
+        if (tp.getTopicDraft().isCommentOrRepostConcurrently()) {
             WBService service = RetrofitManager.getWBService();
 
             Observable.zip(
@@ -314,7 +347,7 @@ public class TopicPublishService extends Service {
                     .observeOn(SchedulerProvider.ui())
                     .subscribe(new PublishCommentAndRepostSubscriber(tp));
 
-        }else{
+        } else {
             RetrofitManager
                     .getWBService()
                     .publishComment(tp.getToken(), tp.getTopicDraft().getContent(), tp.getTopicDraft().getTargetTopicId(), tp.getTopicDraft().getIsCommentOrigin())
@@ -334,7 +367,7 @@ public class TopicPublishService extends Service {
     }
 
     protected void replyWBComment(final TopicPublish tp) {
-        if(tp.getTopicDraft().isCommentOrRepostConcurrently()){
+        if (tp.getTopicDraft().isCommentOrRepostConcurrently()) {
             WBService service = RetrofitManager.getWBService();
             Observable.zip(
                     service.replyComment(tp.getToken(), tp.getTopicDraft().getContent(), tp.getTopicDraft().getTargetTopicId(), tp.getTopicDraft().getTargetCommentId(), 0),
@@ -343,7 +376,7 @@ public class TopicPublishService extends Service {
                     .subscribeOn(SchedulerProvider.io())
                     .observeOn(SchedulerProvider.ui())
                     .subscribe(new PublishCommentAndRepostSubscriber(tp));
-        }else {
+        } else {
             RetrofitManager
                     .getWBService()
                     .replyComment(tp.getToken(), tp.getTopicDraft().getContent(), tp.getTopicDraft().getTargetTopicId(), tp.getTopicDraft().getTargetCommentId(), tp.getTopicDraft().getIsCommentOrigin())
@@ -429,17 +462,17 @@ public class TopicPublishService extends Service {
         public void onNext(Object[] objects) {
             WBTopicComment wbTopicComment = null;
             WBTopic wbTopic = null;
-            if(objects[0] instanceof WBTopicComment){
-                wbTopicComment = (WBTopicComment)objects[0];
+            if (objects[0] instanceof WBTopicComment) {
+                wbTopicComment = (WBTopicComment) objects[0];
             }
 
-            if(objects[1] instanceof WBTopic){
-                wbTopic = (WBTopic)objects[1];
+            if (objects[1] instanceof WBTopic) {
+                wbTopic = (WBTopic) objects[1];
             }
 
-            if(wbTopicComment != null && wbTopic != null){
+            if (wbTopicComment != null && wbTopic != null) {
                 handlePublishSuccess(tp, TopicComment.getComment(wbTopicComment));
-            }else{
+            } else {
                 L.debug("request fail , wbTopicComment : {}, wbTopic : {}", wbTopicComment, wbTopic);
                 throw new IllegalStateException("publish error");
             }
@@ -480,11 +513,11 @@ public class TopicPublishService extends Service {
     }
 
     protected void showTopicPublishFailNotification(TopicPublish tp) {
-        try {
-            Thread.sleep(2000);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(2000);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         Notification.Builder builder = getNotificationBuilder()
                 .setTicker(getString(R.string.label_topic_publish_fail))
                 .setContentTitle(getString(R.string.label_topic_publish_fail))
@@ -502,7 +535,7 @@ public class TopicPublishService extends Service {
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setSmallIcon(R.drawable.notification_upload_white_48dp);
 
-        if(SettingHelper.isNotifyLightsOn()){
+        if (SettingHelper.isNotifyLightsOn()) {
             builder.setLights(Color.WHITE, 2000, 2000);
         }
 
