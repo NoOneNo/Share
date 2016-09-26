@@ -4,15 +4,17 @@ import com.hengye.share.model.Parent;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.UserInfo;
-import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
 
 import org.greenrobot.greendao.query.QueryBuilder;
+import org.greenrobot.greendao.query.WhereCondition;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -166,28 +168,29 @@ public class TopicDraftHelper {
         return getTopicDraftByStatus(TopicDraft.VISIBLE);
     }
 
-    public static List<TopicDraft> getInvisibleTopicDraft() {
-        return getTopicDraftByStatus(TopicDraft.INVISIBLE);
+    public static List<TopicDraft> getTimingTopicDraft() {
+        return getTopicDraftByStatus(TopicDraft.TIMING);
     }
 
     public static List<TopicDraft> getAllTopicDraft() {
-        return getTopicDraftByStatus(-1);
+        return getTopicDraftByStatus((Integer[]) null);
     }
 
     /**
-     * {@link TopicDraft#VISIBLE}->获得可见的草稿(不在发送中的)
-     * {@link TopicDraft#INVISIBLE}->获得不可见的草稿(在发送中的)
-     * -1 ->获得所有草稿
+     * {@link TopicDraft#NORMAL}->获得正常状态的草稿
+     * 传null ->获得所有草稿
      *
-     * @param status
+     * @param statusArrays
      * @return 返回当前用户的草稿
      */
-    public static List<TopicDraft> getTopicDraftByStatus(int status) {
+    public static List<TopicDraft> getTopicDraftByStatus(Integer... statusArrays) {
         QueryBuilder<TopicDraft> qb = GreenDaoManager.getDaoSession().getTopicDraftDao().queryBuilder();
         qb.where(TopicDraftDao.Properties.Uid.eq(UserUtil.getUid()));
-        if (status != -1) {
-            qb.where(TopicDraftDao.Properties.Status.eq(status));
+
+        if (statusArrays != null) {
+            qb.where(TopicDraftDao.Properties.Status.in((Object[])statusArrays));
         }
+
         qb.orderDesc(TopicDraftDao.Properties.Date);
 
         try {
@@ -200,12 +203,17 @@ public class TopicDraftHelper {
 
     /**
      * 如果isNeedToSend为true, 则标记草稿为不可见
+     *
      * @param topicDraft
-     * @param isNeedToSend
+     * @param status     topicDraft的status, see as {@link TopicDraft#NORMAL}
      */
-    public static void saveTopicDraft(TopicDraft topicDraft, boolean isNeedToSend) {
-        topicDraft.mark(isNeedToSend);
-        GreenDaoManager.getDaoSession().getTopicDraftDao().insertOrReplace(topicDraft);
+    public static void saveTopicDraft(TopicDraft topicDraft, int status) {
+        topicDraft.mark(status);
+        updateTopicDraft(topicDraft);
+    }
+
+    public static void updateTopicDraft(TopicDraft topicDraft) {
+        GreenDaoManager.getDaoSession().getTopicDraftDao().save(topicDraft);
     }
 
     public static void removeTopicDraft(TopicDraft topicDraft) {
@@ -214,5 +222,9 @@ public class TopicDraftHelper {
 
     public static void removeAllTopicDraft() {
         GreenDaoManager.getDaoSession().getTopicDraftDao().deleteAll();
+    }
+
+    public static TopicDraft loadTopicDraft(Long id){
+        return GreenDaoManager.getDaoSession().getTopicDraftDao().load(id);
     }
 }

@@ -29,6 +29,7 @@
     <!-- Strings related to unit-->
 
     <!-- Strings related to time-->
+    <string name="time_unknown">未知</string>
     <string name="time_now">刚刚</string>
     <string name="time_today">今天</string>
     <string name="time_yesterday">昨天</string>
@@ -167,9 +168,10 @@
     <string name="label_all_groups_visible">所有人可见</string>
     <string name="label_assign_group_visible">指定分组可见</string>
     <string name="label_assign_group_inexistent">指定分组不存在</string>
-    <string name="label_publish_on_time">定时发布</string>
+    <string name="label_publish_on_time">定时发送</string>
     <string name="label_publish_on_time_cancel">取消定时</string>
     <string name="tip_topic_publish_setting">发送选项</string>
+    <string name="tip_publish_on_time_options_invalid">发送时间不能早于当前时间</string>
     <!-- Strings related to TopicPublish -->
 
     <!-- Strings related to TopicDraft -->
@@ -180,6 +182,8 @@
     <string name="label_title_delete_all_drafts">清空草稿箱</string>
     <string name="label_delete_draft">删除</string>
     <string name="label_edit_when">编辑于 %s</string>
+    <string name="label_publish_when">将于%s发送</string>
+    <string name="label_timing_expire">定时发送已过期</string>
     <!-- Strings related to TopicDraft -->
 
     <!-- Strings related to AtUser -->

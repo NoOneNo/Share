@@ -363,7 +363,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicDefault
         }
 
         public void initTopicTitle(final Context context, TopicComment topicComment) {
-            String time = DateUtil.getLatestDateFormat(topicComment.getDate());
+            String time = DateUtil.getEarlyDateFormat(topicComment.getDate());
             if (TextUtils.isEmpty(topicComment.getChannel())) {
                 mDescription.setText(time);
             } else {

@@ -12,6 +12,7 @@ import com.hengye.share.model.Topic;
 import com.hengye.share.model.greenrobot.TopicDraft;
 import com.hengye.share.module.topic.TopicAdapter;
 import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.DateUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.ResUtil;
 
@@ -52,9 +53,25 @@ public class TopicDraftAdapter extends CommonAdapter<TopicDraft, TopicDraftAdapt
             if (topic != null) {
                 mTopicTitle.initTopicTitle(context, topic);
                 String time = mTopicTitle.mDescription.getText().toString();
+                StringBuilder sb = new StringBuilder();
                 if (!CommonUtil.isEmpty(time)) {
-                    mTopicTitle.mDescription.setText(ResUtil.getString(R.string.label_edit_when, time));
+                    sb.append(ResUtil.getString(R.string.label_edit_when, time));
                 }
+                if(topicDraft.isPublishTiming()){
+                    String prefix = mTopicTitle.mDescription.getText().toString();
+                    if(sb.length() != 0){
+                        //增加间隙
+                        sb.append("  ");
+                    }
+
+                    String dateFormat = DateUtil.getLaterDateFormat(topicDraft.getPublishTiming(), false);
+                    if(DateUtil.TIME_UNKOWN.equals(dateFormat)){
+                        sb.append(ResUtil.getString(R.string.label_timing_expire));
+                    }else {
+                        sb.append(ResUtil.getString(R.string.label_publish_when, dateFormat));
+                    }
+                }
+                mTopicTitle.mDescription.setText(sb.toString());
                 mTopic.initTopicContent(context, topic, false);
             }
 

@@ -37,6 +37,14 @@
         <service android:name="com.hengye.share.service.ShareService" />
         <service android:name="com.hengye.share.service.TopicPublishService" />
 
+        <!-- 定时发布广播 -->
+        <receiver android:name="com.hengye.share.service.TopicPublishTimingBroadcastReceiver">
+            <intent-filter>
+                <action android:name="com.hengye.share.ACTION_TIMING_PUBLISH"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name=".module.other.GuidanceActivity"

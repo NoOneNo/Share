@@ -1,6 +1,5 @@
 package com.hengye.share.model;
 
-import android.content.Context;
 import android.text.SpannableString;
 import android.text.TextUtils;
 
@@ -264,7 +263,7 @@ public class Topic extends ParentInherit implements TopicId, Serializable{
 
     public String getFormatDate() {
         if(formatDate == null){
-            formatDate = DateUtil.getLatestDateFormat(getDate());
+            formatDate = DateUtil.getEarlyDateFormat(getDate());
         }
         return formatDate;
     }

@@ -421,30 +421,56 @@ public class TopicDraft implements java.io.Serializable {
         return publishTiming != null && publishTiming != 0L;
     }
 
-    public void mark(boolean isNeedToSend){
-        if(isNeedToSend){
-            markAsInvisible();
-        }else{
-            markAsVisible();
+    public long getTiming(){
+        return publishTiming == null ? 0 : publishTiming;
+    }
+
+    public void cancelTiming(){
+        setPublishTiming(null);
+    }
+
+    /**
+     * @return 定时发布的时间是否已经过期
+     */
+    public boolean isTimingExpired(){
+        if(publishTiming == null){
+            return true;
         }
+        long duration = getPublishTiming() - System.currentTimeMillis();
+
+        if(duration < 60 * 1000){
+            //小于1分钟则判断为失效;
+            return true;
+        }
+        return false;
     }
 
-    public static final int VISIBLE = 0;
-    public static final int INVISIBLE = 1;
+    public void mark(int status){
+        setStatus(status);
+    }
 
     /**
-     * 标记草稿为可见, 一般是新建草稿或者发送失败时调用;
+     *  新建的草稿
      */
-    public void markAsVisible(){
-        setStatus(VISIBLE);
-    }
+    public static final int NORMAL = 0;
 
     /**
-     * 标记草稿为不可见, 一般是草稿发送时;
+     *  发送中的草稿
      */
-    public void markAsInvisible(){
-        setStatus(INVISIBLE);
-    }
+    public static final int SENDING = 1;
+
+
+    /**
+     *  发送失败的草稿
+     */
+    public static final int ERROR = 2;
+
+    /**
+     *  定时发布的草稿
+     */
+    public static final int TIMING = 3;
+
+    public static final Integer[] VISIBLE = new Integer[]{NORMAL, ERROR, TIMING};
 
     /**
      * @return 如果已保存到数据库, 则返回true;

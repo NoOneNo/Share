@@ -324,6 +324,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         if (hasChangeContent()) {
             mSaveToDraftDialog.show();
         } else {
+            updateDraftIfNeed();
             super.onBackPressed();
         }
     }
@@ -384,8 +385,8 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
             td.setId(mTopicDraft.getId());
         }
 
-        //插入或更新一条草稿, 标记为不可见
-        TopicDraftHelper.saveTopicDraft(td, true);
+        //插入或更新一条草稿, 标记为发送中
+        TopicDraftHelper.saveTopicDraft(td, TopicDraft.NORMAL);
         return td;
     }
 
@@ -405,9 +406,16 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void saveToDraft() {
-        TopicDraftHelper.saveTopicDraft(generateTopicDraft(), false);
+        generateTopicDraft();
         setResult(Activity.RESULT_OK);
         ToastUtil.showToast(R.string.label_save_to_draft_success);
+    }
+
+    private void updateDraftIfNeed(){
+        if(mTopicDraft.isSaved()) {
+            TopicDraftHelper.updateTopicDraft(mTopicDraft);
+            setResult(Activity.RESULT_OK);
+        }
     }
 
     private boolean checkCanPublishTopic() {
@@ -523,7 +531,6 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         mPublishTiming = menu.findItem(R.id.publish_timing);
         mCancelPublishTiming = menu.findItem(R.id.publish_timing_cancel);
 
-
         mTopicGroups = TopicPresenter.TopicGroup.getTopicGroups();
 
         if (!CommonUtil.isEmpty(mTopicGroups)) {
@@ -561,7 +568,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
             getPublishTimingDialog().show();
         } else if (id == R.id.publish_timing_cancel) {
             //取消定时发布
-
+            mTopicDraft.cancelTiming();
         } else {
             //指定分组可见
             int groupIndex = item.getItemId();
@@ -581,9 +588,26 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         if(mPublishTimingDialog == null){
             long timeInMillis = mTopicDraft.isPublishTiming() ? mTopicDraft.getPublishTiming() : System.currentTimeMillis();
             mPublishTimingDialog = new DateAndTimePickerDialog(this, timeInMillis);
+            mPublishTimingDialog.setOnSetListener(new DateAndTimePickerDialog.OnSetListener() {
+                @Override
+                public void onSet(Calendar calendar, long timeInMillis) {
+                    mTopicDraft.setPublishTiming(timeInMillis);
+                }
+            });
+            mPublishTimingDialog.setOnTimeUpdateListener(new DateAndTimePickerDialog.onTimeUpdateListener() {
+                @Override
+                public boolean onTimeUpdate(boolean isSelectDate, long timeInMillis) {
+                    long duration = timeInMillis - System.currentTimeMillis();
+                    if(duration < 0){
+                        ToastUtil.showToast(R.string.tip_publish_on_time_options_invalid);
+                        return false;
+                    }
+
+                    return true;
+                }
+            });
         }
         return mPublishTimingDialog;
     }
-
 
 }

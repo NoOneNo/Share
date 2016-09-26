@@ -90,7 +90,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         addPresenter(mPresenter = new TopicDetailPresenter(this));
         initView();
         initBroadcastReceiver();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mPublishResultBroadcastReceiver, new IntentFilter(TopicPublishService.ACTION_RESULT));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mPublishResultBroadcastReceiver, new IntentFilter(TopicPublishService.ACTION_PUBLISH));
     }
 
     @Override
@@ -399,7 +399,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 //                boolean isSuccess = intent.getBooleanExtra(TopicPublishService.EXTRA_IS_SUCCESS, false);
 //                int type = intent.getIntExtra(TopicPublishService.EXTRA_TYPE, -1);
 //                if (isSuccess) {
-//                    TopicComment tc = (TopicComment) intent.getSerializableExtra(TopicPublishService.EXTRA_RESULT);
+//                    TopicComment tc = (TopicComment) intent.getSerializableExtra(TopicPublishService.EXTRA_DATA);
 //                    if (tc == null) {
 //                        return;
 //                    }

@@ -7,9 +7,7 @@ import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
-import android.view.ContextThemeWrapper;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.TextView;
 
 import com.fourmob.datetimepicker.date.DatePickerDialog;
@@ -50,6 +48,7 @@ public class DateAndTimePickerDialog extends AlertDialog {
     DatePickerDialog mDatePickerDialog;
     TimePickerDialog mTimePickerDialog;
     OnSetListener mOnSetListener;
+    onTimeUpdateListener mOnTimeUpdateListener;
     TextView mDate, mTime;
     Calendar mCalendar;
 
@@ -129,6 +128,16 @@ public class DateAndTimePickerDialog extends AlertDialog {
 
                 @Override
                 public void onDateSet(DatePickerDialog datePickerDialog, int year, int monthOfYear, int dayOfMonth) {
+
+                    if(mOnTimeUpdateListener != null){
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTimeInMillis(mCalendar.getTimeInMillis());
+                        calendar.set(year, monthOfYear, dayOfMonth);
+                        if(!mOnTimeUpdateListener.onTimeUpdate(true, calendar.getTimeInMillis())){
+                            return;
+                        }
+                    }
+
                     mCalendar.set(year, monthOfYear, dayOfMonth);
                     updateDate();
                     if (mTimePickerDialog == null) {
@@ -164,6 +173,17 @@ public class DateAndTimePickerDialog extends AlertDialog {
             mTimePickerDialog = TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
+
+                    if(mOnTimeUpdateListener != null){
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTimeInMillis(mCalendar.getTimeInMillis());
+                        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        calendar.set(Calendar.MINUTE, minute);
+                        if(!mOnTimeUpdateListener.onTimeUpdate(false, calendar.getTimeInMillis())){
+                            return;
+                        }
+                    }
+
                     mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                     mCalendar.set(Calendar.MINUTE, minute);
                     updateTime();
@@ -204,11 +224,37 @@ public class DateAndTimePickerDialog extends AlertDialog {
         return mOnSetListener;
     }
 
+    /**
+     * 当确定时间后会调用;
+     * @param onSetListener
+     */
     public void setOnSetListener(OnSetListener onSetListener) {
         this.mOnSetListener = onSetListener;
     }
 
-    interface OnSetListener {
+    public DateAndTimePickerDialog.onTimeUpdateListener getOnTimeUpdateListener() {
+        return mOnTimeUpdateListener;
+    }
+
+    /**
+     * 设置当日期和时间改变的时候, 设置选择拦截的监听器;
+     * @param onTimeUpdateListener
+     */
+    public void setOnTimeUpdateListener(DateAndTimePickerDialog.onTimeUpdateListener onTimeUpdateListener) {
+        this.mOnTimeUpdateListener = onTimeUpdateListener;
+    }
+
+    public interface OnSetListener {
         public void onSet(Calendar calendar, long timeInMillis);
+    }
+
+    public interface onTimeUpdateListener{
+        /**
+         * 如果返回true,则不拦截所选择的时间
+         * @param timeInMillis 选择的时间
+         * @param isSelectDate 是否是选择日期
+         * @return
+         */
+        public boolean onTimeUpdate(boolean isSelectDate, long timeInMillis);
     }
 }
