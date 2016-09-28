@@ -152,12 +152,12 @@ public class CommonUtil {
         return sb.toString();
     }
 
-    public static List<String> split(String str, String delimiter) {
+    public static ArrayList<String> split(String str, String delimiter) {
         if (isEmpty(str)) {
             return null;
         }
         try {
-            return Arrays.asList(str.split(delimiter));
+            return new ArrayList<>(Arrays.asList(str.split(delimiter)));
         } catch (Exception e) {
             e.printStackTrace();
         }

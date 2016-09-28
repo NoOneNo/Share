@@ -26,8 +26,6 @@ import java.util.List;
 import java.util.Map;
 
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class UserListPresenter extends BasePresenter<UserListMvpView> {
 

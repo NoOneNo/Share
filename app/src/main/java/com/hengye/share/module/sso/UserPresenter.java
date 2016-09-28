@@ -13,9 +13,6 @@ import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
 import java.util.Map;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-
 public class UserPresenter extends BasePresenter<UserMvpView> {
 
     public UserPresenter(UserMvpView mvpView){

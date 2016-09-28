@@ -15,8 +15,6 @@ import com.hengye.share.util.thirdparty.WBUtil;
 import java.util.Map;
 
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class TopicDetailPresenter extends BasePresenter<TopicDetailMvpView> {
 

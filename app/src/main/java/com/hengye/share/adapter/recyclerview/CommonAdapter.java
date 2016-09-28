@@ -10,11 +10,13 @@ import android.view.ViewGroup;
 import com.hengye.share.handler.data.base.DataAdapter;
 import com.hengye.share.ui.widget.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.listener.OnItemLongClickListener;
+import com.hengye.share.ui.widget.recyclerview.ItemTouchHelperAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends HeaderAdapter<VH> implements DataAdapter<T> {
+public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends HeaderAdapter<VH> implements DataAdapter<T>, ItemTouchHelperAdapter {
 
     private Context mContext;
     private List<T> mData;
@@ -39,7 +41,7 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
     }
 
     @Override
-    public VH onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
+    public CommonAdapter.ItemViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
         return null;
     }
 
@@ -247,6 +249,21 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
             return removeItem(index);
         }
         return null;
+    }
+
+    /**
+     * @param from
+     * @param to
+     * @return 如果可以移动, 返回true;
+     */
+    public boolean moveItem(int from, int to) {
+        final int size = mData.size();
+        if (to < 0 || from >= size || to < 0 || to >= size || from == to) {
+            return false;
+        }
+        Collections.swap(mData, from, to);
+        notifyItemMoved(from, to);
+        return true;
     }
 
     public void addAll(List<T> data) {

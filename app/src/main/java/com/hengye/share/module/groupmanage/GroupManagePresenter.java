@@ -12,9 +12,7 @@ import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 import java.util.List;
 
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 public class GroupManagePresenter extends BasePresenter<GroupManageMvpView> {
 

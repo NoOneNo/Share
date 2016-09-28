@@ -14,15 +14,16 @@ buildscript {
 }
 
 android {
-    compileSdkVersion project.ext.compileSdkVersion
-    buildToolsVersion project.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
     defaultConfig {
         applicationId "com.hengye.share"
-        minSdkVersion project.ext.minSdkVersion
-        targetSdkVersion project.ext.targetSdkVersion
-        versionCode project.ext.versionCode
-        versionName project.ext.versionName
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
 
+        multiDexEnabled true
         ndk {
             // 设置支持的SO库架构
             abiFilters 'armeabi' //, 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
@@ -72,16 +73,17 @@ dependencies {
 //    compile "com.android.support:cardview-v7:$ANDROID_SUPPORT_VERSION"
 //    compile "com.android.support:design:$ANDROID_SUPPORT_VERSION"
 //    compile "com.android.support:recyclerview-v7:$ANDROID_SUPPORT_VERSION"
-    final OKHTTP_VERSION = '3.0.0-RC1'
-    final RETROFIT_VERSION = '2.0.2'
+//    final OKHTTP_VERSION = '3.0.0-RC1'
+    final OKHTTP_VERSION = '3.4.1'
+    final RETROFIT_VERSION = '2.1.0'
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    testCompile dep.junit
     compile dep.design
     compile dep.cardview
     compile dep.recyclerview
     compile dep.nineoldandroids
     compile dep.gson
 
+    compile 'com.android.support:multidex:1.0.1'
     compile "com.squareup.okhttp3:okhttp:$OKHTTP_VERSION"
     compile "com.squareup.okhttp3:logging-interceptor:$OKHTTP_VERSION"
     compile "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
@@ -100,15 +102,25 @@ dependencies {
 //    compile 'me.imid.swipebacklayout.lib:library:1.0.0'
 //    compile 'com.getbase:floatingactionbutton:1.10.1'
 
-    compile files('libs/weibosdkcore.jar')
-    compile files('libs/org.apache.http.legacy.jar')
+//    compile files('libs/weibosdkcore.jar')
+//    compile files('libs/org.apache.http.legacy.jar')
     compile(name: 'swiperefresh-release', ext: 'aar')
     compile(name: 'volleyplus-release', ext: 'aar')
-    compile(name: 'photopicker-release', ext: 'aar')
     compile(name: 'skinloader-release', ext: 'aar')
+//    compile(name: 'photopicker-release', ext: 'aar')
 
     compile project(':datetimerpicker')
     compile project(':draglistview')
     compile project(':floatingactionbutton')
     compile project(':swipebacklayout')
+    compile project(':photopicker')
+
+
+
+    // Dependencies for local unit tests
+    testCompile dep.junit
+//    testCompile "junit:junit:$rootProject.ext.junitVersion"
+//    testCompile "org.mockito:mockito-all:$rootProject.ext.mockitoVersion"
+//    testCompile "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestVersion"
+
 }

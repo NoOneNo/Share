@@ -242,7 +242,7 @@ public class TopicPublishService extends Service {
     }
 
     protected void publishWBTopicWithPhoto(final TopicPublish tp) throws Exception {
-        List<String> urls = CommonUtil.split(tp.getTopicDraft().getUrls(), ",");
+        List<String> urls = tp.getTopicDraft().getUrlList();
 
         if (urls == null) {
             throw new Exception("photo url is invalid!");
@@ -323,7 +323,7 @@ public class TopicPublishService extends Service {
                         tp.setToken(UserUtil.getPriorToken());
                         return RetrofitManager
                                 .getWBService()
-                                .publishTopicWithMultiplePhoto(UrlFactory.getPublishTopicParams(tp, CommonUtil.toSplit(urls, ",")));
+                                .publishTopicWithMultiplePhoto(UrlFactory.getPublishTopicParams(tp, CommonUtil.toSplit(urls, TopicDraft.DELIMITER_URL)));
 //                        return RetrofitManager
 //                                .getWBService()
 //                                .publishTopicWithMultiplePhoto(UserUtil.getPriorToken(), tp.getTopicDraft().getContent(), CommonUtil.toSplit(urls, ","));

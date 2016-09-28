@@ -1,0 +1,50 @@
+<RelativeLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.hengye.photopicker.activity.PhotoPickerActivity" >
+    
+	<GridView
+		android:id="@+id/activity_photo_gridview"
+	    android:layout_below="@+id/titlebar_photo_pick"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:gravity="center"
+		android:horizontalSpacing="3dp"
+		android:listSelector="@null"
+		android:numColumns="3"
+		android:stretchMode="columnWidth"
+		android:background="@android:color/white"/>
+	    
+	<include layout="@layout/toolbar_photo_pick" />
+
+	<View
+	    android:id="@+id/activity_select_photo_shadow_layout"
+	    android:layout_below="@+id/popupwindow_select_photo_album_listview"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:background="@color/select_photo_shadow_layout"
+	    android:visibility="gone">
+	</View>
+
+    <ListView
+        android:id="@id/popupwindow_select_photo_album_listview"
+        android:layout_below="@id/titlebar_photo_pick"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@null"
+        android:background="@color/select_photo_album_listview_layout"
+        android:listSelector="@drawable/selector_listview_photo_album"
+        android:focusable="true"
+        android:visibility="gone">
+    </ListView>
+
+    <include
+        android:id="@id/titlebar_photo_pick"
+        layout="@layout/titlebar_photo_pick" />
+</RelativeLayout>
+
+
+
+

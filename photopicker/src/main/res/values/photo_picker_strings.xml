@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">PhotoPicker</string>
+    <string name="select_photo_cancel">取消</string>
+    <string name="select_photo_preview">预览</string>
+    <string name="select_photo_primitive">原图(%s)</string>
+    <string name="select_photo_primitive_null">原图</string>
+    <string name="select_photo_next">下一步(%s)</string>
+    <string name="select_photo_next_null">下一步</string>
+    <string name="select_photo_image_count_limit">最多只能选择%1$d张图片</string>
+    <string name="select_photo_video_count_limit">最多只能选择%1$d个视频</string>
+    <string name="select_photo_inexistent">图片已删除</string>
+    <string name="select_photo_all_photo">图片和视频</string>
+    <string name="select_photo_all_image">所有图片</string>
+    <string name="select_photo_all_video">所有视频</string>
+    <string name="select_photo_video_size">视频大小: %s</string>
+</resources>

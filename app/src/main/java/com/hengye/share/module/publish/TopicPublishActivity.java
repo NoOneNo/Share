@@ -1,10 +1,7 @@
 package com.hengye.share.module.publish;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,16 +14,12 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
-import com.hengye.photopicker.model.Photo;
-import com.hengye.photopicker.view.PickPhotoView;
 import com.hengye.share.module.accountmanage.AccountManageActivity;
 import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.R;
@@ -41,6 +34,7 @@ import com.hengye.share.ui.widget.emoticon.EmoticonPicker;
 import com.hengye.share.ui.widget.emoticon.EmoticonPickerUtil;
 import com.hengye.share.ui.support.listener.DefaultTextWatcher;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
+import com.hengye.share.ui.widget.image.GridGalleryEditorView;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.DateUtil;
@@ -53,7 +47,6 @@ import com.hengye.share.util.UserUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class TopicPublishActivity extends BaseActivity implements View.OnClickListener {
@@ -107,7 +100,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     private final int MAX_CHINESE_CONTENT_LENGTH = 140;
 
     private ImageButton mPhotoPickerBtn, mMentionBtn, mEmoticonBtn, mPublishBtn;
-    private PickPhotoView mPhotoPicker;
+    private GridGalleryEditorView mGalleryEditor;
     private EmoticonPicker mEmoticonPicker;
     private View mContainer;
     private TextView mContentLength, mGroupVisibleStatus;
@@ -178,26 +171,9 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
             }
         });
 
-        mPhotoPicker = (PickPhotoView) findViewById(R.id.pick_photo);
-        mPhotoPicker.setOnDeletePhotoListener(new PickPhotoView.onDeletePhotoListener() {
-            @Override
-            public void onDeletePhoto(View view, Photo photo) {
-                if (mPhotoPicker.getPhotos().isEmpty()) {
-                    mPhotoPicker.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
+        mGalleryEditor = (GridGalleryEditorView) findViewById(R.id.gallery_edit);
         if (mTopicDraft.getUrls() != null) {
-            ArrayList<Photo> photos = new ArrayList<>();
-            List<String> urls = CommonUtil.split(mTopicDraft.getUrls(), ",");
-            for (String url : urls) {
-                Photo photo = new Photo();
-                photo.setDataPath(url);
-                photos.add(photo);
-            }
-            mPhotoPicker.setAddPhotos(photos);
-        } else {
-            mPhotoPicker.setVisibility(View.INVISIBLE);
+            mGalleryEditor.setPaths(mTopicDraft.getUrlList());
         }
         mContent.setFilters(new InputFilter[]{mAtUserInputFilter, mEmoticonPicker.getEmoticonInputFilter()});
         initSaveToDraftDialog();
@@ -315,7 +291,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         } else if (id == R.id.btn_publish) {
             publishTopic();
         } else if (id == R.id.btn_camera) {
-            mPhotoPicker.performAddPhotoClick();
+            mGalleryEditor.startPhotoPicker();
         }
     }
 
@@ -338,15 +314,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     }
 
     private String getPhotoPickerUrls() {
-        List<Photo> photos = mPhotoPicker.getPhotos();
-        if (photos == null) {
-            return null;
-        }
-        List<String> urls = new ArrayList<>();
-        for (Photo photo : photos) {
-            urls.add(photo.getDataPath());
-        }
-        return CommonUtil.toSplit(urls, ",");
+        return CommonUtil.toSplit(mGalleryEditor.getPaths(), TopicDraft.DELIMITER_URL);
     }
 
     private TopicDraft generateTopicDraft() {
@@ -370,14 +338,11 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         if (mPublishCB.isChecked()) {
             td.setIsCommentOrRepostConcurrently(true);
         }
-        if (!CommonUtil.isEmpty(mPhotoPicker.getPhotos())) {
-
+        if (!CommonUtil.isEmpty(mGalleryEditor.getPaths())) {
             if (CommonUtil.isEmpty(td.getContent())) {
                 td.setContent(ResUtil.getString(R.string.label_topic_picture_publish_content_empty));
             }
-
             td.setUrls(getPhotoPickerUrls());
-//            td.setUrls(mPhotoPicker.getPhotos().get(0).getDataPath());
         }
 
         if (mTopicDraft.isSaved()) {
@@ -420,7 +385,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
 
     private boolean checkCanPublishTopic() {
         boolean result = true;
-        if (TextUtils.isEmpty(mContent.getText().toString()) && CommonUtil.isEmpty(mPhotoPicker.getPhotos())) {
+        if (TextUtils.isEmpty(mContent.getText().toString()) && CommonUtil.isEmpty(mGalleryEditor.getPaths())) {
             result = false;
             ToastUtil.showToast(R.string.label_topic_publish_field_empty);
         } else if (mCurrentContentLength > MAX_CHINESE_CONTENT_LENGTH) {
@@ -450,8 +415,6 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
                 ArrayList<String> result = (ArrayList<String>) data.getSerializableExtra("atUser");
                 EmoticonPickerUtil.addContentToEditTextEnd(mContent, AtUser.getFormatAtUserName(result));
             }
-        } else if (mPhotoPicker.handleResult(requestCode, resultCode, data)) {
-            mPhotoPicker.setVisibility(View.VISIBLE);
         }
     }
 

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="select_photo_album_listview_layout">#ccffffff</color>
+    <color name="select_photo_title_bar">#ffeeeeee</color>
+    <color name="select_photo_layout">#ccffffff</color>
+    <color name="select_photo_parting_line">#66666666</color>
+    <color name="select_photo_image_bg">#66666666</color>
+    <color name="select_photo_text_able_bg_white">#666666</color>    
+    <color name="select_photo_text_unable_bg_white">#cccccc</color>
+    <color name="select_photo_text_able_bg_orange">#ffffff</color>
+    <color name="select_photo_shadow_delete_layout">#99999999</color>
+    <color name="select_photo_shadow_layout">#60000000</color>
+    <color name="select_photo_orange">#ff8606</color>
+    <color name="select_photo_listview_photo_album_item_select">#aaff8200</color>    
+    <color name="select_photo_listview_photo_album_item_select_2">#55ff8200</color>
+
+    <color name="pp_theme_green_title_bg">#04C0B9</color>
+    <color name="pp_theme_green_title_font">#eeeeee</color>
+    <color name="pp_theme_green_album_listview_selector">#aa04C0B9</color>
+    <color name="pp_theme_green_album_list_selected">#5504C0B9</color>
+</resources>

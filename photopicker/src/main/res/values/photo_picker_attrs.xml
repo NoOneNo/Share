@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<declare-styleable name="RoundedCornerLayout"> 
+		<attr name="radius" format="float"/> 
+	</declare-styleable>
+
+	<!--<declare-styleable name="CustomTheme">-->
+		<!--<attr name="titleBackground" format="color"/>-->
+	<!--</declare-styleable>-->
+	<declare-styleable name="PickPhotoView">
+		<attr name="maxSize" format="integer"/>
+		<attr name="columnCount" format="integer"/>
+		<attr name="fixedHeight" format="dimension"/>
+		<attr name="addPhotoBtnSrc" format="reference"/>
+	</declare-styleable>
+
+	<item type="id" name="btn_add_photo"/>
+
+</resources>

@@ -37,8 +37,6 @@ import java.util.Map;
 
 import rx.Observable;
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by yuhy on 16/7/11.

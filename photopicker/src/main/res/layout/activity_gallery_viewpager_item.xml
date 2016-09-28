@@ -1,0 +1,35 @@
+<RelativeLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"  
+    android:id="@+id/select_photo_gallery_fragment_layout"
+    android:layout_width="match_parent"  
+    android:layout_height="match_parent"
+    android:background="#000000">
+     	  
+	<com.hengye.photopicker.view.TouchImageView
+	    android:id="@+id/select_photo_gallery_fragment_iv"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:contentDescription="@null"
+	    android:scaleType="matrix"/>
+
+    <View
+        android:id="@+id/btn_video_play"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:background="@drawable/btn_video_play"/>
+
+    <TextView
+        android:id="@+id/tv_video_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="90dp"
+        android:padding="10dp"
+        android:text="视频大小 : "
+        android:textColor="@android:color/white"
+        android:background="@color/select_photo_text_able_bg_white"
+        android:visibility="gone"/>
+</RelativeLayout>  

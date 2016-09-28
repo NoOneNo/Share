@@ -12,6 +12,9 @@ import com.hengye.share.module.topic.TopicPresenter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.ResUtil;
 import com.hengye.share.R;
+
+import java.util.ArrayList;
+import java.util.List;
 // KEEP INCLUDES END
 /**
  * Entity mapped to table "TOPIC_DRAFT".
@@ -450,6 +453,20 @@ public class TopicDraft implements java.io.Serializable {
     }
 
     /**
+     * @return 如果已保存到数据库, 则返回true;
+     */
+    public boolean isSaved(){
+        if(getId() != null && getId() != 0){
+            return true;
+        }
+        return false;
+    }
+
+    public ArrayList<String> getUrlList(){
+        return CommonUtil.split(getUrls(), DELIMITER_URL);
+    }
+
+    /**
      *  新建的草稿
      */
     public static final int NORMAL = 0;
@@ -458,7 +475,6 @@ public class TopicDraft implements java.io.Serializable {
      *  发送中的草稿
      */
     public static final int SENDING = 1;
-
 
     /**
      *  发送失败的草稿
@@ -472,15 +488,7 @@ public class TopicDraft implements java.io.Serializable {
 
     public static final Integer[] VISIBLE = new Integer[]{NORMAL, ERROR, TIMING};
 
-    /**
-     * @return 如果已保存到数据库, 则返回true;
-     */
-    public boolean isSaved(){
-        if(getId() != null && getId() != 0){
-            return true;
-        }
-        return false;
-    }
+    public static final String DELIMITER_URL = ",";
     // KEEP METHODS END
 
 }

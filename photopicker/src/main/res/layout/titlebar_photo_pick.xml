@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="45dp"
+    android:background="@color/select_photo_title_bar"
+    tools:showIn="@layout/activity_select_photo">
+
+    <TextView
+        android:id="@+id/title_left_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:text="@string/select_photo_cancel"
+        android:textSize="14sp" />
+
+    <RelativeLayout
+        android:id="@+id/activity_select_photo_album_layout_click"
+        android:layout_centerHorizontal="true"
+        android:layout_width="150dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
+
+        <TextView
+            android:id="@+id/activity_select_photo_album"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:singleLine="true"
+            android:drawableRight="@drawable/navigationbar_arrow_down"
+            android:drawablePadding="5dp" />
+    </RelativeLayout>
+    <!-- lines -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/select_photo_parting_line" />
+</RelativeLayout>

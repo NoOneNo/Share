@@ -18,8 +18,6 @@ import java.io.Serializable;
 import java.util.Map;
 
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class TopicPagePresenter extends BasePresenter<TopicPageMvpView> {
 

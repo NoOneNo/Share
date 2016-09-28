@@ -1,0 +1,69 @@
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:rcl="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/adapter_listview_photo_album_item_layout"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:background="@color/select_photo_album_listview_layout"
+    android:orientation="horizontal">
+
+    <RelativeLayout 
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+	    android:layout_marginLeft="10dp"
+	    android:layout_marginTop="5dp"
+	    android:layout_marginBottom="5dp">
+		<com.hengye.photopicker.view.RoundedCornerLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    rcl:radius="3.0">
+			<ImageView 
+			    android:id="@+id/adapter_listview_photo_album_item_img"
+			    android:layout_width="match_parent"
+				android:layout_height="match_parent"
+			    android:contentDescription="@null"
+			    android:scaleType="centerCrop"/>
+
+		</com.hengye.photopicker.view.RoundedCornerLayout>
+		<View 
+		    android:id="@+id/adapter_listview_photo_album_item_point"
+		    android:layout_alignParentRight="true"
+		    android:layout_alignParentTop="true"
+		    android:layout_marginTop="2dp"
+		    android:layout_marginRight="2dp"
+		    android:layout_width="12dp"
+		    android:layout_height="12dp"
+		    android:background="@drawable/shape_point"
+		    android:visibility="gone"/>
+    </RelativeLayout>
+
+	<RelativeLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent">
+	<TextView 
+	    android:id="@+id/adapter_listview_photo_album_item_name"
+	    android:layout_width="wrap_content"
+	    android:layout_height="match_parent"
+	    android:maxWidth="200dp"
+	    android:singleLine="true"
+	    android:textSize="20sp"
+	    android:textColor="#000000"
+	    android:gravity="center"
+	    android:layout_marginLeft="10dp"
+	    android:layout_marginRight="10dp"/>
+	<TextView
+	    android:id="@+id/adapter_listview_photo_album_item_num"
+	    android:layout_toRightOf="@id/adapter_listview_photo_album_item_name" 
+	    android:layout_alignBottom="@id/adapter_listview_photo_album_item_name"
+	    android:layout_width="wrap_content"
+	    android:layout_height="match_parent"
+	    android:singleLine="true"
+	    android:textSize="12sp"
+	    android:textColor="#000000"
+	    android:gravity="center"/>		
+	</RelativeLayout>	
+
+</LinearLayout>
+
+

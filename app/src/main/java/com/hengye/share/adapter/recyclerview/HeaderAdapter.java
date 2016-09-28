@@ -45,8 +45,12 @@ public abstract class HeaderAdapter<VH extends RecyclerView.ViewHolder> extends 
         } else if (position == getItemCount() - 1&& holder.getItemViewType() == TYPE_FOOTER) {
             onBindFooterView(holder, position);
         } else {
-            onBindBasicItemView((VH)holder, getBasicItemVirtualPosition(position));
+            onBindBasicItemViewByType(holder, position);
         }
+    }
+
+    protected void onBindBasicItemViewByType(RecyclerView.ViewHolder holder, int position){
+        onBindBasicItemView((VH)holder, getBasicItemVirtualPosition(position));
     }
 
 
@@ -115,7 +119,7 @@ public abstract class HeaderAdapter<VH extends RecyclerView.ViewHolder> extends 
 
     public void onBindFooterView(RecyclerView.ViewHolder holder, int position){}
 
-    public abstract VH onCreateBasicItemViewHolder(ViewGroup parent, int viewType);
+    public abstract RecyclerView.ViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType);
 
     public abstract void onBindBasicItemView(VH holder, int position);
 

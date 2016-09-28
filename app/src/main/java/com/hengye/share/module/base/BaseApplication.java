@@ -1,6 +1,8 @@
 package com.hengye.share.module.base;
 
 import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
@@ -11,6 +13,10 @@ public class BaseApplication extends Application{
 	private static BaseApplication ourInstance;
 
 	public final static int MAX_NETWORK_CACHE_SIZE = 200 * 1024 * 1024;
+
+	public static BaseApplication getInstance(){
+		return ourInstance;
+	}
 
 	@Override
 	public void onCreate(){
@@ -30,13 +36,14 @@ public class BaseApplication extends Application{
 		ourInstance = this;
 
 //		SkinManager.setup(this);
-//		CrashHandler.getInstance().init(getApplicationContext());
 		RequestManager.init(this, null, MAX_NETWORK_CACHE_SIZE);
 
 		CrashReport.initCrashReport(getApplicationContext(), "900019432", false);
 	}
 
-	public static BaseApplication getInstance(){
-		return ourInstance;
+	@Override
+	protected void attachBaseContext(Context base) {
+		super.attachBaseContext(base);
+		MultiDex.install(this);
 	}
 }

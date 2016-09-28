@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/adapter_gridview_photo_item_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/adapter_gridview_photo_item_img"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:background="@color/select_photo_image_bg"
+        android:contentDescription="@null"
+        android:scaleType="centerCrop"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"/>
+
+
+    <View
+        android:id="@+id/adapter_gridview_photo_item_shadow_click"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@color/select_photo_shadow_delete_layout"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/adapter_gridview_photo_item_select_scope"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="20dp"
+        android:visibility="gone"/>
+
+    <ImageButton
+        android:id="@+id/adapter_gridview_photo_item_select_delete"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/compose_photo_delete"
+        android:scaleType="fitXY"
+        android:background="#ccdcdddd"
+        android:contentDescription="@null"
+        android:layout_alignRight="@id/adapter_gridview_photo_item_img"
+        android:layout_alignTop="@id/adapter_gridview_photo_item_img"/>
+
+    <RelativeLayout
+        android:id="@+id/adapter_gridview_video_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/select_photo_layout"
+        android:paddingBottom="2dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="2dp"
+        android:visibility="gone">
+
+        <View
+            android:layout_width="25dp"
+            android:layout_height="20dp"
+            android:background="@drawable/camera_video_button" />
+
+        <TextView
+            android:id="@+id/adapter_gridview_video_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+</RelativeLayout>

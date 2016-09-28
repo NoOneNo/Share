@@ -37,8 +37,8 @@
                     android:padding="@dimen/content_margin_10dp"
                     android:textColor="@color/font_grey" />
 
-                <com.hengye.photopicker.view.PickPhotoView
-                    android:id="@+id/pick_photo"
+                <com.hengye.share.ui.widget.image.GridGalleryEditorView
+                    android:id="@+id/gallery_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/content_margin_10dp"

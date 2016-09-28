@@ -14,8 +14,6 @@ import com.hengye.share.util.retrofit.weibo.WBService;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class SearchPresenter extends BasePresenter<SearchMvpView> {
 

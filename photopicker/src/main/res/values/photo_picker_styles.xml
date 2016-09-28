@@ -1,0 +1,29 @@
+<resources
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+     
+    <style name="PhotoPickerBaseTheme" parent="@android:style/Theme.Light.NoTitleBar">
+    
+       <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+	
+    <!-- Application theme. -->
+    <style name="PhotoPickerTheme" parent="PhotoPickerBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <!--<item name="android:colorBackground">#04C0B9</item>-->
+        <!--<item name="android:shadowColor">#aa04C0B9</item>-->
+        <!--<item name="app:">#04C0B9</item>-->
+
+    </style>
+    
+    
+
+</resources>

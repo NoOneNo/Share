@@ -31,8 +31,6 @@ import java.util.Map;
 
 import rx.Observable;
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class TopicPresenter extends BasePresenter<TopicMvpView> {
 
