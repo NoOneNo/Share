@@ -36,6 +36,7 @@ public class AdTokenInterceptor extends Interceptor{
                 return false;
             }
         };
+        with(new TokenInterceptor(activity));
         add(interception);
         setAction(action);
     }

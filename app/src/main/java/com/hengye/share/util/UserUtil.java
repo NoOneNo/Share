@@ -66,7 +66,11 @@ public class UserUtil {
     }
 
     public static boolean isUserEmpty() {
-        return isTokenEmpty();
+        return isTokenEmpty() || isUidEmpty();
+    }
+
+    public static boolean isUidEmpty() {
+        return getUid() == null;
     }
 
     public static boolean isUserNameEmpty() {

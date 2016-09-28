@@ -61,7 +61,7 @@ public class TopicDraftDao extends AbstractDao<TopicDraft, Long> {
                 "\"CONTENT\" TEXT NOT NULL ," + // 1: content
                 "\"DATE\" INTEGER," + // 2: date
                 "\"URLS\" TEXT," + // 3: urls
-                "\"UID\" TEXT NOT NULL ," + // 4: uid
+                "\"UID\" TEXT," + // 4: uid
                 "\"TARGET_TOPIC_JSON\" TEXT," + // 5: targetTopicJson
                 "\"TARGET_TOPIC_ID\" TEXT," + // 6: targetTopicId
                 "\"TARGET_COMMENT_ID\" TEXT," + // 7: targetCommentId
@@ -101,7 +101,11 @@ public class TopicDraftDao extends AbstractDao<TopicDraft, Long> {
         if (urls != null) {
             stmt.bindString(4, urls);
         }
-        stmt.bindString(5, entity.getUid());
+ 
+        String uid = entity.getUid();
+        if (uid != null) {
+            stmt.bindString(5, uid);
+        }
  
         String targetTopicJson = entity.getTargetTopicJson();
         if (targetTopicJson != null) {
@@ -179,7 +183,11 @@ public class TopicDraftDao extends AbstractDao<TopicDraft, Long> {
         if (urls != null) {
             stmt.bindString(4, urls);
         }
-        stmt.bindString(5, entity.getUid());
+ 
+        String uid = entity.getUid();
+        if (uid != null) {
+            stmt.bindString(5, uid);
+        }
  
         String targetTopicJson = entity.getTargetTopicJson();
         if (targetTopicJson != null) {
@@ -256,7 +264,7 @@ public class TopicDraftDao extends AbstractDao<TopicDraft, Long> {
             cursor.getString(offset + 1), // content
             cursor.isNull(offset + 2) ? null : new java.util.Date(cursor.getLong(offset + 2)), // date
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // urls
-            cursor.getString(offset + 4), // uid
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // uid
             cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // targetTopicJson
             cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // targetTopicId
             cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // targetCommentId
@@ -279,7 +287,7 @@ public class TopicDraftDao extends AbstractDao<TopicDraft, Long> {
         entity.setContent(cursor.getString(offset + 1));
         entity.setDate(cursor.isNull(offset + 2) ? null : new java.util.Date(cursor.getLong(offset + 2)));
         entity.setUrls(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setUid(cursor.getString(offset + 4));
+        entity.setUid(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
         entity.setTargetTopicJson(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
         entity.setTargetTopicId(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
         entity.setTargetCommentId(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));

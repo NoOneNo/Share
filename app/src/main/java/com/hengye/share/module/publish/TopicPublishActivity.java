@@ -297,12 +297,19 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onBackPressed() {
-        if (hasChangeContent()) {
+        if (shouldSaveToDraft()) {
             mSaveToDraftDialog.show();
         } else {
             updateDraftIfNeed();
             super.onBackPressed();
         }
+    }
+
+    private boolean shouldSaveToDraft(){
+        if(UserUtil.isUserEmpty()){
+            return false;
+        }
+        return hasChangeContent();
     }
 
     private boolean hasChangeContent() {

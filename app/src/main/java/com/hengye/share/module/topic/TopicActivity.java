@@ -148,6 +148,8 @@ public class TopicActivity extends BaseActivity
         initNavigationView();
         initSearch();
         initFab();
+
+        getTokenInterceptor().start();
     }
 
     private void initToolBarButton() {
@@ -235,7 +237,7 @@ public class TopicActivity extends BaseActivity
     public void onGroupSelected(int position, TopicPresenter.TopicGroup topicGroup) {
 
         if (topicGroup.getTopicType() == TopicPresenter.TopicType.NONE) {
-            getTokenInterceptor().setAction(mStartGroup).start();
+            getAdTokenInterceptor().setAction(mStartGroup).start();
         } else {
             setFragment(TopicFragment.newInstance(topicGroup), topicGroup.getName());
         }
@@ -277,7 +279,7 @@ public class TopicActivity extends BaseActivity
                 mContent = content;
                 if (!TextUtils.isEmpty(mContent.trim())) {
                     setHideAnimationOnStart();
-                    getTokenInterceptor().setAction(mStartSearch).start();
+                    getAdTokenInterceptor().setAction(mStartSearch).start();
                 }
             }
         });
@@ -384,7 +386,7 @@ public class TopicActivity extends BaseActivity
 //            mDrawer.closeDrawer(GravityCompat.END);
             startActivity(SettingActivity.class);
         } else if (id == R.id.nav_group_manage) {
-            getTokenInterceptor().setAction(mStartGroup).start();
+            getAdTokenInterceptor().setAction(mStartGroup).start();
 //            startActivityForResult(GroupManageActivity.class, GroupManageActivity.GROUP_UPDATE);
         } else if (id == R.id.nav_draft) {
             startActivity(TopicDraftActivity.class);
@@ -468,11 +470,9 @@ public class TopicActivity extends BaseActivity
     AdTokenInterceptor mAdTokenInterceptor;
     TokenInterceptor mTokenInterceptor;
 
-    public TokenInterceptor getTokenInterceptor() {
-        if (mTokenInterceptor == null) {
+    public AdTokenInterceptor getAdTokenInterceptor() {
+        if (mAdTokenInterceptor == null) {
             mAdTokenInterceptor = new AdTokenInterceptor(this);
-            mTokenInterceptor = new TokenInterceptor(this);
-            mTokenInterceptor.with(mAdTokenInterceptor);
             mStartGroup = new Action() {
                 @Override
                 public void run() {
@@ -492,6 +492,13 @@ public class TopicActivity extends BaseActivity
                     startActivity(SearchActivity.getStartIntent(TopicActivity.this, mContent));
                 }
             };
+        }
+        return mAdTokenInterceptor;
+    }
+
+    public TokenInterceptor getTokenInterceptor(){
+        if(mTokenInterceptor == null){
+            mTokenInterceptor = new TokenInterceptor(this);
         }
         return mTokenInterceptor;
     }
