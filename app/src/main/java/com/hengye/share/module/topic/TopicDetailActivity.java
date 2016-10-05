@@ -625,16 +625,12 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 
     public void handleLoadMore(boolean enable, boolean isComment) {
         if (isComment) {
-            mLoadCommentEnable = false;
+            mLoadCommentEnable = enable;
         } else {
-            mLoadRepostEnable = false;
-        }
-        if (isSelectedCommentTab() && isComment) {
-            mPullToRefreshLayout.setLoadEnable(enable);
-        } else if (isSelectedRepostTab() && !isComment) {
-            mPullToRefreshLayout.setLoadEnable(enable);
+            mLoadRepostEnable = enable;
         }
 
+        mPullToRefreshLayout.setLoadEnable(isSelectedCommentTab() ? mLoadCommentEnable : mLoadRepostEnable);
     }
 
 }
