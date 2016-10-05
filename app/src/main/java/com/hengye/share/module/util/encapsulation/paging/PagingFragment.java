@@ -23,7 +23,7 @@ public abstract class PagingFragment<T> extends ContentFragment{
         return null;
     }
 
-    abstract public void updatePagingConfig(PagingConfig pagingConfig);
+    public void updatePagingConfig(PagingConfig pagingConfig){}
 
     void adjustPagingConfig(PagingConfig pagingConfig){}
 
@@ -51,7 +51,7 @@ public abstract class PagingFragment<T> extends ContentFragment{
         return type;
     }
 
-    abstract public void handleDataType(int type);
+    public void handleDataType(int type){}
 
     public PagingConfig getPagingConfig(){
         return mPagingConfig;

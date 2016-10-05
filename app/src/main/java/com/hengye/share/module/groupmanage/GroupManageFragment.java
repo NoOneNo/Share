@@ -9,14 +9,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.hengye.draglistview.DragSortListView;
 import com.hengye.share.R;
 import com.hengye.share.model.greenrobot.GroupList;
-import com.hengye.share.module.base.BaseFragment;
 import com.hengye.share.module.groupmanage.data.GroupManageRepository;
+import com.hengye.share.module.util.encapsulation.paging.RecyclerFragment;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
-import com.hengye.share.ui.widget.listview.DragSortListViewBuilder;
+import com.hengye.share.ui.widget.recyclerview.ItemTouchUtil;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
@@ -27,12 +26,7 @@ import java.util.List;
 /**
  * Created by yuhy on 16/9/19.
  */
-public class GroupManageFragment extends BaseFragment implements GroupManageMvpView {
-
-    @Override
-    public int getLayoutResId() {
-        return R.layout.activity_group_manage;
-    }
+public class GroupManageFragment extends RecyclerFragment implements GroupManageMvpView {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -44,7 +38,6 @@ public class GroupManageFragment extends BaseFragment implements GroupManageMvpV
         mPresenter.loadGroupList();
     }
 
-    private DragSortListView mDragSortListView;
     private GroupManageAdapter mAdapter;
 
     private Dialog mConfirmDialog, mLoadingDialog;
@@ -53,9 +46,9 @@ public class GroupManageFragment extends BaseFragment implements GroupManageMvpV
 
     private void initView(){
         setHasOptionsMenu(true);
-        mDragSortListView = (DragSortListView) findViewById(R.id.drag_sort_list_view);
-        mDragSortListView.setAdapter(mAdapter = new GroupManageAdapter(getContext(), new ArrayList<GroupList>()));
-        DragSortListViewBuilder.build(mDragSortListView);
+        setAdapter(mAdapter = new GroupManageAdapter(getContext(), new ArrayList<GroupList>()));
+
+        ItemTouchUtil.attachByDrag(getRecyclerView(), mAdapter);
 
         initUpdateGroupOrderDialog();
     }

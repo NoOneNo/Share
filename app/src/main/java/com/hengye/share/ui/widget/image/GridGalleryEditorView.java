@@ -25,6 +25,7 @@ import com.hengye.share.adapter.recyclerview.CommonAdapter;
 import com.hengye.share.module.base.ActivityHelper;
 import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.ui.widget.listener.OnItemClickListener;
+import com.hengye.share.ui.widget.recyclerview.ItemTouchUtil;
 import com.hengye.share.ui.widget.recyclerview.SimpleItemTouchHelperCallback;
 import com.hengye.share.util.ViewUtil;
 
@@ -66,10 +67,7 @@ public class GridGalleryEditorView extends RecyclerView implements OnItemClickLi
         mAdapter.setOnChildViewItemClickListener(this);
         setColumnCount(DEFAULT_COLUMN_COUNT);
 
-        SimpleItemTouchHelperCallback callback = new SimpleItemTouchHelperCallback(mAdapter);
-        callback.setDragFlags(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.START | ItemTouchHelper.END);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
-        itemTouchHelper.attachToRecyclerView(this);
+        ItemTouchUtil.attachByDrag(this, mAdapter);
         updateAfterEdit();
 
         if (getContext() instanceof BaseActivity) {
