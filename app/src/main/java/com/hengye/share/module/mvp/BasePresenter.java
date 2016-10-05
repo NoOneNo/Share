@@ -68,6 +68,7 @@ public class BasePresenter<T extends MvpView> implements Presenter<T> {
 
         @Override
         public void onError(Throwable e) {
+            e.printStackTrace();
             if(isViewAttached()){
                 onError(getMvpView(), e);
                 onFinish(getMvpView(), true);
@@ -81,9 +82,7 @@ public class BasePresenter<T extends MvpView> implements Presenter<T> {
             }
         }
 
-        public void onError(T v, Throwable e){
-            e.printStackTrace();
-        }
+        public void onError(T v, Throwable e){}
 
         /**
          * This method will be invoked after onCompleted or OnError.

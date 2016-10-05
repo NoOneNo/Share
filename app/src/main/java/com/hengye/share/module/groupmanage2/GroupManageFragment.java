@@ -1,4 +1,4 @@
-package com.hengye.share.module.groupmanage;
+package com.hengye.share.module.groupmanage2;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -13,13 +13,11 @@ import com.hengye.draglistview.DragSortListView;
 import com.hengye.share.R;
 import com.hengye.share.model.greenrobot.GroupList;
 import com.hengye.share.module.base.BaseFragment;
-import com.hengye.share.module.groupmanage.data.GroupManageRepository;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
 import com.hengye.share.ui.widget.listview.DragSortListViewBuilder;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.ToastUtil;
-import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +35,7 @@ public class GroupManageFragment extends BaseFragment implements GroupManageMvpV
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        addPresenter(mPresenter = new GroupManagePresenter(this, new GroupManageRepository(), SchedulerProvider.getInstance()));
+        addPresenter(mPresenter = new GroupManagePresenter(this));
 
         initView();
 
@@ -102,7 +100,7 @@ public class GroupManageFragment extends BaseFragment implements GroupManageMvpV
         int id = item.getItemId();
 
         if (id == R.id.action_update) {
-            mPresenter.refreshGroupList();
+            mPresenter.loadGroupList(false);
         }
         return super.onOptionsItemSelected(item);
     }

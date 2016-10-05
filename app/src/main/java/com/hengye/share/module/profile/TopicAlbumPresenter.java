@@ -41,7 +41,6 @@ public class TopicAlbumPresenter extends BasePresenter<TopicAlbumMvpView> {
                 .subscribe(new BaseSubscriber<WBTopics>() {
                     @Override
                     public void onError(TopicAlbumMvpView v, Throwable e) {
-                        super.onError(v, e);
                         v.stopLoading(isRefresh);
                     }
 
@@ -116,6 +115,11 @@ public class TopicAlbumPresenter extends BasePresenter<TopicAlbumMvpView> {
                     public void onNext(TopicAlbumMvpView v, ArrayList<Topic> topics) {
                         KeyValue<ArrayList<Topic>, ArrayList<String>> kv = getImageUrls(topics);
                         v.handleCache(kv.getKey(), kv.getValue());
+                    }
+
+                    @Override
+                    public void onError(TopicAlbumMvpView v, Throwable e) {
+
                     }
                 });
     }

@@ -46,13 +46,14 @@ android {
     buildTypes {
         release {
             debuggable true
-            minifyEnabled false
+            minifyEnabled true
             zipAlignEnabled true
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
             debuggable true
+            minifyEnabled false
             signingConfig signingConfigs.release
         }
     }
@@ -89,6 +90,11 @@ dependencies {
     compile "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
     compile "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
     compile "com.squareup.retrofit2:adapter-rxjava:$RETROFIT_VERSION"
+
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+
     compile 'org.slf4j:slf4j-android:1.7.12'
     compile 'org.greenrobot:greendao:3.1.1'
     compile 'org.jsoup:jsoup:1.8.2'

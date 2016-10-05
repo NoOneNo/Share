@@ -1,4 +1,4 @@
-package com.hengye.share.module.groupmanage;
+package com.hengye.share.module.groupmanage2;
 
 import android.content.Context;
 import android.os.Bundle;

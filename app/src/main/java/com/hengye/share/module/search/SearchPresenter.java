@@ -37,7 +37,6 @@ public class SearchPresenter extends BasePresenter<SearchMvpView> {
                 .subscribe(new BaseSubscriber<Object[]>() {
                     @Override
                     public void onError(SearchMvpView v, Throwable e) {
-                        super.onError(v, e);
                         v.loadFail();
                     }
 
