@@ -20,7 +20,7 @@ public class GroupManageLocalDataSource implements GroupManageDataSource {
     }
 
     @Override
-    public Observable<Boolean> updateGroupOrder(List<GroupList> groupLists) {
+    public Observable<Boolean> updateGroupList(List<GroupList> groupLists) {
         return Observable
                 .just(groupLists)
                 .flatMap(new Func1<List<GroupList>, Observable<Boolean>>() {

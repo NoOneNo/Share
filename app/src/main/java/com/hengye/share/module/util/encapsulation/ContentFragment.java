@@ -86,15 +86,9 @@ public abstract class ContentFragment extends BaseFragment {
 
     private SparseArray<View> mViews = new SparseArray<>();
     private int[] mViewTypes = new int[]{TYPE_LOADING, TYPE_EMPTY, TYPE_NO_NETWORK, TYPE_CONTENT};
-//    private ImageView mLoadingIV;
-//    private AnimationDrawable mLoadingDrawable;
     private View mLoading, mEmpty, mNoNetwork, mContent;
 
-    protected void initLoading(){
-
-//        mLoadingIV = (ImageView) getLoading().findViewById(R.id.loading);
-//        mLoadingDrawable = (AnimationDrawable) mLoadingIV.getDrawable();
-    }
+    protected void initLoading(){}
 
     protected void initEmpty(){}
 
@@ -125,10 +119,6 @@ public abstract class ContentFragment extends BaseFragment {
 
     public void showLoading() {
         showView(TYPE_LOADING);
-//        if(mLoadingDrawable == null){
-//            mLoadingDrawable = (AnimationDrawable) mLoadingIV.getDrawable();
-//        }
-//        mLoadingDrawable.start();
     }
 
     public void showNoNetwork() {
@@ -143,12 +133,18 @@ public abstract class ContentFragment extends BaseFragment {
         showView(TYPE_CONTENT);
     }
 
+    public void showOrHideView(View view, boolean isShow, int type){
+        view.setVisibility(isShow ? View.VISIBLE : View.GONE);
+    }
+
     public void showView(int type) {
         View view = mViews.get(type);
 
         if (view == null) {
             return;
         }
+
+        showOrHideView(view, true, type);
 
         for (int t : mViewTypes) {
             if (t == type) {
@@ -161,12 +157,7 @@ public abstract class ContentFragment extends BaseFragment {
                 continue;
             }
 
-            if (t == TYPE_LOADING) {
-                hideLoading();
-            }else{
-                v.setVisibility(View.GONE);
-            }
+            showOrHideView(v, false, t);
         }
-        view.setVisibility(View.VISIBLE);
     }
 }

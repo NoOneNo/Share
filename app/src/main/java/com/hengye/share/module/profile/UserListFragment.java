@@ -54,11 +54,6 @@ public class UserListFragment extends RecyclerRefreshFragment<Select<UserInfo>> 
     }
 
     @Override
-    public Pager getPager() {
-        return null;
-    }
-
-    @Override
     public DataHandler<Select<UserInfo>> getDataHandler() {
         return mDataHandler;
     }

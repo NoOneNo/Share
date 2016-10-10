@@ -75,7 +75,7 @@ public class GroupManagePresenter extends BasePresenter<GroupManageMvpView> {
     public void updateGroupOrder(final List<GroupList> data) {
         addSubscription(
                 mGroupManageRepository
-                        .updateGroupOrder(data)
+                        .updateGroupList(data)
                         .subscribeOn(SchedulerProvider.io())
                         .observeOn(SchedulerProvider.ui())
                         .subscribe(new BaseSubscriber<Boolean>() {

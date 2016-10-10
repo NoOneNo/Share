@@ -85,11 +85,6 @@ public class BaseFragment extends Fragment implements ActivityHelper.ActivityAct
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initView(savedInstanceState);
-    }
-
-    public void initView(Bundle savedInstanceState){
-
     }
 
     @Override

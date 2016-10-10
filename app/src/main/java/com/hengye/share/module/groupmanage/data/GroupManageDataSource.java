@@ -16,7 +16,7 @@ public interface GroupManageDataSource {
 
     Observable<List<GroupList>> refreshGroupList();
 
-    Observable<Boolean> updateGroupOrder(List<GroupList> groupLists);
+    Observable<Boolean> updateGroupList(List<GroupList> groupLists);
 //    List<GroupList>
 
 

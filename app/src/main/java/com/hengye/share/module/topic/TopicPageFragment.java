@@ -12,6 +12,7 @@ import com.hengye.share.handler.data.base.DataHandler;
 import com.hengye.share.handler.data.base.DataType;
 import com.hengye.share.handler.data.base.Pager;
 import com.hengye.share.model.Topic;
+import com.hengye.share.module.util.encapsulation.paging.PagingConfig;
 import com.hengye.share.module.util.encapsulation.paging.RecyclerRefreshFragment;
 import com.hengye.share.util.UserUtil;
 
@@ -105,4 +106,13 @@ public class TopicPageFragment extends RecyclerRefreshFragment<Topic> implements
         DataType.handleSnackBar(type, getParent(), data == null ? 0 : data.size());
     }
 
+    @Override
+    public void handleDataType(int type) {
+        super.handleDataType(type);
+        if(type == DataType.LOAD_NO_DATA || type == DataType.REFRESH_DATA_SIZE_LESS){
+            setLoadEnable(false);
+        }else{
+            setLoadEnable(true);
+        }
+    }
 }

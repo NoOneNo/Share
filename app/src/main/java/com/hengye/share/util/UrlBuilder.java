@@ -32,14 +32,21 @@ public class UrlBuilder {
     public String getRequestUrl(){
         StringBuilder result = new StringBuilder();
         result.append(getUrl());
-        result.append('?');
+        if(getParameters().isEmpty()){
+            return result.toString();
+        }
+        boolean firstTime = true;
         for (Map.Entry<String, String> entry : getParameters().entrySet()) {
+            if(firstTime){
+                firstTime = false;
+                result.append('?');
+            }else{
+                result.append('&');
+            }
             result.append(entry.getKey());
             result.append('=');
             result.append(entry.getValue());
-            result.append('&');
         }
-        result.deleteCharAt(result.length() - 1);
         return result.toString();
     }
 

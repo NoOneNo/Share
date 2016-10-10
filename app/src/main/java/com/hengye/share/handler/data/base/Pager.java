@@ -6,8 +6,6 @@ package com.hengye.share.handler.data.base;
  */
 public abstract class Pager {
 
-//    abstract public DataAdapter<T> getPagingAdapter();
-
     abstract public Object getFirstPage();
 
     abstract public Object getNextPage();
@@ -21,20 +19,5 @@ public abstract class Pager {
             return getNextPage();
         }
     }
-
-
-//    abstract public void handleData(boolean isFirstPage, List<T> data);
-//
-//    abstract public boolean isCanLoadMore(boolean isFirstPage, List<T> data);
-//    /**
-//     * @param data
-//     * @return 是否可以加载更多
-//     */
-//    public boolean handleData(boolean isFirstPage, List data){
-//        if(data == null || data.isEmpty()){
-//            return false;
-//        }
-//        return true;
-//    }
 
 }

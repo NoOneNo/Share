@@ -10,29 +10,18 @@ import com.hengye.share.module.util.encapsulation.ContentFragment;
 
 import java.util.List;
 
+import static com.hengye.share.handler.data.base.DataType.LOAD_NO_DATA;
+
 /**
  * Created by yuhy on 16/7/27.
  */
 public abstract class PagingFragment<T> extends ContentFragment{
-
-    public Pager getPager(){
-        return null;
-    }
-
-    public DataHandler<T> getDataHandler(){
-        return null;
-    }
-
-    public void updatePagingConfig(PagingConfig pagingConfig){}
-
-    void adjustPagingConfig(PagingConfig pagingConfig){}
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         mPagingConfig = new PagingConfig();
-        adjustPagingConfig(mPagingConfig);
         updatePagingConfig();
     }
 
@@ -51,7 +40,19 @@ public abstract class PagingFragment<T> extends ContentFragment{
         return type;
     }
 
-    public void handleDataType(int type){}
+    public void handleDataType(int type){
+        getPagingConfig().setLoadEnable(type != LOAD_NO_DATA);
+    }
+
+    public Pager getPager(){
+        return null;
+    }
+
+    public DataHandler<T> getDataHandler(){
+        return null;
+    }
+
+    public void updatePagingConfig(PagingConfig pagingConfig){}
 
     public PagingConfig getPagingConfig(){
         return mPagingConfig;

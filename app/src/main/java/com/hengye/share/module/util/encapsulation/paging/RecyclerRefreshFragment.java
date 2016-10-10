@@ -20,9 +20,7 @@ public abstract class RecyclerRefreshFragment<T> extends RecyclerFragment<T>{
         return R.layout.fragment_recycler_refresh;
     }
 
-    public
-    @IdRes
-    int getPullToRefreshId() {
+    public @IdRes int getPullToRefreshId() {
         return R.id.pull_to_refresh;
     }
 
@@ -96,7 +94,7 @@ public abstract class RecyclerRefreshFragment<T> extends RecyclerFragment<T>{
 
     @Override
     public void handleDataType(int type) {
-        getPagingConfig().setLoadEnable(type != LOAD_NO_DATA);
+        super.handleDataType(type);
 //        switch (type) {
 //            case REFRESH_DATA_SIZE_EQUAL:
 //                pullToRefreshLayout.setLoadEnable(true);

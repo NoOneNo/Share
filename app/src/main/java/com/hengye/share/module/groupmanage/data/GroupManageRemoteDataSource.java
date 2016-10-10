@@ -43,7 +43,7 @@ public class GroupManageRemoteDataSource implements GroupManageDataSource {
     }
 
     @Override
-    public Observable<Boolean> updateGroupOrder(final List<GroupList> groupLists) {
+    public Observable<Boolean> updateGroupList(final List<GroupList> groupLists) {
         return RetrofitManager
                 .getWBService()
                 .updateGroupOrder(UserUtil.getPriorToken(), groupLists.size() + "", GroupList.getGroupIds(groupLists))

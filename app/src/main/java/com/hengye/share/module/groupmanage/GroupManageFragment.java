@@ -146,11 +146,11 @@ public class GroupManageFragment extends RecyclerFragment implements GroupManage
     public void updateGroupOrderCallBack(boolean isSuccess) {
         mLoadingDialog.dismiss();
         if(isSuccess){
-            ToastUtil.showToast("更新成功");
+            ToastUtil.showToast(R.string.label_update_group_success);
             setResult(Activity.RESULT_OK);
             finish();
         }else{
-            ToastUtil.showToast("更新失败");
+            ToastUtil.showToast(R.string.label_update_group_fail);
         }
     }
 }

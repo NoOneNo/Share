@@ -45,21 +45,21 @@ public abstract class RecyclerFragment<T> extends PagingFragment<T> implements O
     protected void setUpRecycler(RecyclerView recyclerView){
         recyclerView.setLayoutManager(getLayoutManager());
         recyclerView.setItemAnimator(getItemAnimator());
-
-//        RecyclerView.Adapter adapter = createAdapter();
-//        if(adapter != null) {
-//            recyclerView.setAdapter(createAdapter());
-//        }
     }
 
-//    public RecyclerView.Adapter createAdapter(){
-//        return null;
-//    }
-
     public void setAdapter(CommonAdapter adapter){
+        setAdapter(adapter, false);
+    }
+
+    public void setAdapter(CommonAdapter adapter, boolean isBindClick){
         mRecyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(this);
-        adapter.setOnItemLongClickListener(this);
+
+        if(isBindClick) {
+            adapter.setOnItemClickListener(this);
+            adapter.setOnChildViewItemClickListener(this);
+            adapter.setOnItemLongClickListener(this);
+            adapter.setOnChildViewItemLongClickListener(this);
+        }
     }
 
     public RecyclerView.Adapter getAdapter(){
