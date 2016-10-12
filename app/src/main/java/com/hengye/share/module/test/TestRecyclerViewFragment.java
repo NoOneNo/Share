@@ -13,9 +13,9 @@ import android.widget.TextView;
 
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.CommonAdapter;
+import com.hengye.share.adapter.recyclerview.ItemViewHolder;
 import com.hengye.share.module.util.encapsulation.paging.PagingConfig;
 import com.hengye.share.module.util.encapsulation.paging.RecyclerFragment;
-import com.hengye.share.ui.widget.recyclerview.ItemTouchHelperAdapter;
 import com.hengye.share.ui.widget.recyclerview.SimpleItemTouchHelperCallback;
 
 import java.util.ArrayList;
@@ -27,44 +27,79 @@ import java.util.List;
 
 public class TestRecyclerViewFragment extends RecyclerFragment<String>{
 
+    @Override
+    public int getContentResId() {
+        return R.layout.fragment_test_recyclerview;
+    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        List<String> data = new ArrayList<>();
-        data.add("a");
-        data.add("b");
-        data.add("c");
-        data.add("d");
-        data.add("e");
-        data.add("f");
-        data.add("h");
-        data.add("i");
-        data.add("j");
-        data.add("k");
-        data.add("l");
-        data.add("a");
-        data.add("b");
-        data.add("c");
-        data.add("d");
-        data.add("e");
-        data.add("f");
-        data.add("h");
-        data.add("i");
-        data.add("j");
-        data.add("k");
-        data.add("l");
+        List<Object> data = new ArrayList<>();
+        for(int i = 0; i < 20; i++){
+            if(i % 2 == 0){
+                data.add("" + i);
+            }else{
+                data.add(i);
+            }
+        }
+
+//        data.add("a");
+//        data.add("b");
+//        data.add("c");
+//        data.add("d");
+//        data.add("e");
+//        data.add("f");
+//        data.add("h");
+//        data.add("i");
+//        data.add("j");
+//        data.add("k");
+//        data.add("l");
+//        data.add("a");
+//        data.add("b");
+//        data.add("c");
+//        data.add("d");
+//        data.add("e");
+//        data.add("f");
+//        data.add("h");
+//        data.add("i");
+//        data.add("j");
+//        data.add("k");
+//        data.add("l");
 
 
         getRecyclerView().setAdapter(mAdapter = new TestAdapter(getContext(), data));
 
-        mLayoutManager.setSpanCount(2);
+        mLayoutManager.setSpanCount(1);
 
         SimpleItemTouchHelperCallback callback = new SimpleItemTouchHelperCallback(mAdapter);
         callback.setDragFlags(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.START | ItemTouchHelper.END);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(getRecyclerView());
+
+        findViewById(R.id.btn_add_header).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                View header = LayoutInflater.from(getContext()).inflate(R.layout.header_empty, null);
+
+                mAdapter.addHeaderView(header);
+                mLayoutManager.scrollToPosition(0);
+
+            }
+        });
+        findViewById(R.id.btn_add_footer).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mAdapter.addItem(2, "haha");
+
+//                View header = LayoutInflater.from(getContext()).inflate(R.layout.header_empty, null);
+//
+//                mAdapter.addFooterView(header);
+
+            }
+        });
     }
 
     @Override
@@ -85,18 +120,31 @@ public class TestRecyclerViewFragment extends RecyclerFragment<String>{
 
     }
 
-    public static class TestAdapter extends CommonAdapter<String, TestAdapter.TestHolder>{
+    public static class TestAdapter extends CommonAdapter<Object> {
 
-        public TestAdapter(Context context, List<String> data){
+        public TestAdapter(Context context, List<Object> data){
             super(context, data);
         }
 
         @Override
-        public TestHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
-            return new TestHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_text_key_value_h, parent, false));
+        public int getBasicItemType(int position) {
+            if(getItem(position) instanceof String){
+                return 1;
+            }else{
+                return 2;
+            }
         }
 
-        public static class TestHolder extends CommonAdapter.ItemViewHolder<String>{
+        @Override
+        public ItemViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
+            if(viewType == 1) {
+                return new TestHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_text_key_value_h, parent, false));
+            }else{
+                return new Test2Holder(LayoutInflater.from(getContext()).inflate(R.layout.item_text_key_value_v, parent, false));
+            }
+        }
+
+        public static class TestHolder extends ItemViewHolder<String> {
 
             TextView key, value;
             public TestHolder(View v){
@@ -107,8 +155,24 @@ public class TestRecyclerViewFragment extends RecyclerFragment<String>{
 
             @Override
             public void bindData(Context context, String str, int position) {
-                key.setText(str);
+                key.setText("string");
                 value.setText(str);
+            }
+        }
+
+        public static class Test2Holder extends ItemViewHolder<Integer> {
+
+            TextView key, value;
+            public Test2Holder(View v){
+                super(v);
+                key = (TextView) findViewById(R.id.tv_key);
+                value = (TextView) findViewById(R.id.tv_value);
+            }
+
+            @Override
+            public void bindData(Context context, Integer integer, int position) {
+                key.setText("int");
+                value.setText("" + integer);
             }
         }
     }

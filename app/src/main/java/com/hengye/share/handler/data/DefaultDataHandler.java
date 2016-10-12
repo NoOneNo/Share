@@ -25,7 +25,6 @@ public class DefaultDataHandler<T> implements DataHandler<T> {
     @Override
     public int handleData(boolean isRefresh, List<T> data) {
         int type = getType(isRefresh, data, mAdapter.getData());
-
         handleAdapter(type, data, mAdapter);
         return type;
     }

@@ -56,9 +56,7 @@ public abstract class RecyclerFragment<T> extends PagingFragment<T> implements O
 
         if(isBindClick) {
             adapter.setOnItemClickListener(this);
-            adapter.setOnChildViewItemClickListener(this);
             adapter.setOnItemLongClickListener(this);
-            adapter.setOnChildViewItemLongClickListener(this);
         }
     }
 

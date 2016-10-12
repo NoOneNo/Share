@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +21,11 @@ import com.hengye.photopicker.util.theme.BaseTheme;
 import com.hengye.photopicker.util.theme.GreenTheme;
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.CommonAdapter;
+import com.hengye.share.adapter.recyclerview.ItemViewHolder;
 import com.hengye.share.module.base.ActivityHelper;
 import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.ui.widget.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.recyclerview.ItemTouchUtil;
-import com.hengye.share.ui.widget.recyclerview.SimpleItemTouchHelperCallback;
 import com.hengye.share.util.ViewUtil;
 
 import java.util.ArrayList;
@@ -64,7 +63,7 @@ public class GridGalleryEditorView extends RecyclerView implements OnItemClickLi
         setOverScrollMode(View.OVER_SCROLL_NEVER);
 
         setAdapter(mAdapter = new GridGalleryEditAdapter(getContext(), new ArrayList<String>()));
-        mAdapter.setOnChildViewItemClickListener(this);
+        mAdapter.setOnItemClickListener(this);
         setColumnCount(DEFAULT_COLUMN_COUNT);
 
         ItemTouchUtil.attachByDrag(this, mAdapter);
@@ -241,37 +240,47 @@ public class GridGalleryEditorView extends RecyclerView implements OnItemClickLi
         mItemSize = ViewUtil.getScreenWidth(getContext()) / mColumnCount;
     }
 
-    private class GridGalleryEditAdapter extends CommonAdapter<String, GridGalleryEditAdapter.EditItemHolder> {
+    private class GridGalleryEditAdapter extends CommonAdapter<String> {
 
         public GridGalleryEditAdapter(Context context, List<String> data) {
             super(context, data);
         }
 
         @Override
-        public CommonAdapter.ItemViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
+        public ItemViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
             return new EditItemHolder(LayoutInflater.from(getContext()).inflate(R.layout.widget_item_pick_photo, parent, false));
         }
 
-        @Override
-        public ViewHolder onCreateFooterViewHolder(ViewGroup parent, int viewType) {
-            return new AddItemHolder(LayoutInflater.from(getContext()).inflate(R.layout.widget_item_add_photo, parent, false));
+        boolean isShowAddBtn = false;
+        View addPhotoBtn;
+
+        private View getAddPhotoBtn(){
+            if(addPhotoBtn == null){
+                addPhotoBtn = inflate(R.layout.widget_item_add_photo);
+                addPhotoBtn.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startPhotoPicker();
+                    }
+                });
+            }
+            return addPhotoBtn;
         }
 
-        boolean isShowAddBtn = true;
-
-        @Override
-        public boolean isAddFooterView() {
-            return isShowAddBtn;
-        }
 
         public void setShowAddBtn(boolean showAddBtn) {
-            if (showAddBtn != isShowAddBtn) {
+
+            if(isShowAddBtn != showAddBtn) {
                 isShowAddBtn = showAddBtn;
-                notifyDataSetChanged();
+                if (showAddBtn) {
+                    addFooterView(getAddPhotoBtn());
+                } else {
+                    removeFooterView(getAddPhotoBtn());
+                }
             }
         }
 
-        public class EditItemHolder extends CommonAdapter.ItemViewHolder<String> {
+        public class EditItemHolder extends ItemViewHolder<String> {
 
             ImageView mImage;
             View mDeleteBtn;
@@ -281,8 +290,8 @@ public class GridGalleryEditorView extends RecyclerView implements OnItemClickLi
                 mImage = (ImageView) findViewById(R.id.adapter_gridview_photo_item_img);
                 mDeleteBtn = findViewById(R.id.adapter_gridview_photo_item_select_delete);
 
-                registerChildViewItemClick(mImage);
-                registerChildViewItemClick(mDeleteBtn);
+                registerOnClickListener(mImage);
+                registerOnClickListener(mDeleteBtn);
             }
 
             @Override
@@ -300,17 +309,6 @@ public class GridGalleryEditorView extends RecyclerView implements OnItemClickLi
             }
         }
 
-        public class AddItemHolder extends CommonAdapter.ItemViewHolder<Object> {
-            public AddItemHolder(View v) {
-                super(v);
-                v.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startPhotoPicker();
-                    }
-                });
-            }
-        }
     }
 }
 

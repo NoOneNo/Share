@@ -49,11 +49,6 @@ public class TopicFragment extends RecyclerRefreshFragment<Topic> implements Top
     TopicPresenter.TopicGroup topicGroup;
     String uid, name;
 
-//    @Override
-//    public int getLayoutResId() {
-//        return R.layout.fragment_topic;
-//    }
-
     @Override
     protected void handleBundleExtra(Bundle bundle) {
         topicGroup = (TopicPresenter.TopicGroup) bundle.getSerializable("topicGroup");

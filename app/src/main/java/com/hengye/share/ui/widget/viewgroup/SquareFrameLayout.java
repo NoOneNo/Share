@@ -36,7 +36,9 @@ public class SquareFrameLayout extends FrameLayout{
     @Override
     public ViewGroup.LayoutParams getLayoutParams() {
         ViewGroup.LayoutParams lp = super.getLayoutParams();
-        lp.height = lp.width;
+        if(lp != null) {
+            lp.height = lp.width;
+        }
         return lp;
     }
 

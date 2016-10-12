@@ -21,6 +21,7 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.CommonAdapter;
+import com.hengye.share.adapter.recyclerview.ItemViewHolder;
 import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
@@ -53,7 +54,7 @@ import com.hengye.share.util.UserUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicDefaultViewHolder>
+public class TopicAdapter extends CommonAdapter<Topic>
         implements OnItemClickListener, OnItemLongClickListener, DialogInterface.OnClickListener {
 
     public static int mGalleryMaxWidth;
@@ -70,9 +71,8 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicDefault
         mGalleryMaxWidth = context.getResources().getDisplayMetrics().widthPixels - 2 * galleryMargin;
 
         mLongClickDialog = DialogBuilder.getOnLongClickTopicDialog(getContext(), this);
-        setOnChildViewItemClickListener(this);
+        setOnItemClickListener(this);
         setOnItemLongClickListener(this);
-        setOnChildViewItemLongClickListener(this);
     }
 
     @Override
@@ -200,7 +200,7 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicDefault
         }
     }
 
-    public static class TopicViewHolder<T> extends CommonAdapter.ItemViewHolder<T> {
+    public static class TopicViewHolder<T> extends ItemViewHolder<T> {
 
         public TopicTitleViewHolder mTopicTitle;
         public TopicContentViewHolder mTopic, mRetweetTopic;
@@ -230,30 +230,30 @@ public class TopicAdapter extends CommonAdapter<Topic, TopicAdapter.TopicDefault
 //            mRetweetTopic.mTopicLayout = findViewById(R.id.ll_topic_retweeted_content);
 
 
-            registerChildViewItemClick(mTopicTitle.mAvatar);
-            registerChildViewItemClick(mTopicTitle.mUsername);
-            registerChildViewItemClick(mTopicTitle.mDescription);
+            registerOnClickListener(mTopicTitle.mAvatar);
+            registerOnClickListener(mTopicTitle.mUsername);
+            registerOnClickListener(mTopicTitle.mDescription);
 
-            registerChildViewItemClick(mTopicTitle.mTitle);
-            registerChildViewItemClick(mTopic.mContent);
-            registerChildViewItemClick(mTopic.mGallery);
-            registerChildViewItemClick(mTopic.mTopicLayout);
+            registerOnClickListener(mTopicTitle.mTitle);
+            registerOnClickListener(mTopic.mContent);
+            registerOnClickListener(mTopic.mGallery);
+            registerOnClickListener(mTopic.mTopicLayout);
 
-            registerChildViewItemLongClick(mTopicTitle.mTitle);
-            registerChildViewItemLongClick(mTopic.mContent);
-            registerChildViewItemLongClick(mTopic.mGallery);
-            registerChildViewItemLongClick(mTopic.mTopicLayout);
+            registerOnLongClickListener(mTopicTitle.mTitle);
+            registerOnLongClickListener(mTopic.mContent);
+            registerOnLongClickListener(mTopic.mGallery);
+            registerOnLongClickListener(mTopic.mTopicLayout);
 
-            registerChildViewItemClick(mRetweetTopic.mContent);
-            registerChildViewItemClick(mRetweetTopic.mGallery);
-            registerChildViewItemClick(mRetweetTopic.mTopicLayout);
+            registerOnClickListener(mRetweetTopic.mContent);
+            registerOnClickListener(mRetweetTopic.mGallery);
+            registerOnClickListener(mRetweetTopic.mTopicLayout);
 
-            registerChildViewItemLongClick(mRetweetTopic.mContent);
-            registerChildViewItemLongClick(mRetweetTopic.mGallery);
-            registerChildViewItemLongClick(mRetweetTopic.mTopicLayout);
+            registerOnLongClickListener(mRetweetTopic.mContent);
+            registerOnLongClickListener(mRetweetTopic.mGallery);
+            registerOnLongClickListener(mRetweetTopic.mTopicLayout);
 
 
-            registerChildViewItemLongClick(mTopicItem);
+            registerOnLongClickListener(mTopicItem);
 
             SelectorLoader.getInstance().setDefaultRippleBackground(mTopicItem);
             SelectorLoader.getInstance().setDefaultRippleWhiteBackground(mRetweetTopic.mTopicLayout);

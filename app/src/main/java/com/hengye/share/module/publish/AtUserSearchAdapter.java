@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.CommonAdapter;
+import com.hengye.share.adapter.recyclerview.ItemViewHolder;
 import com.hengye.share.model.AtUser;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.ui.widget.image.AvatarImageView;
@@ -18,7 +19,7 @@ import com.hengye.share.util.RequestManager;
 
 import java.util.List;
 
-public class AtUserSearchAdapter extends CommonAdapter<AtUser, AtUserSearchAdapter.MainViewHolder> {
+public class AtUserSearchAdapter extends CommonAdapter<AtUser> {
 
     public AtUserSearchAdapter(Context context, List<AtUser> data) {
         super(context, data);
@@ -29,12 +30,6 @@ public class AtUserSearchAdapter extends CommonAdapter<AtUser, AtUserSearchAdapt
         return new MainViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_at_user_search_result, parent, false));
     }
 
-    @Override
-    public void onBindBasicItemView(MainViewHolder holder, int position) {
-        super.onBindBasicItemView(holder, position);
-
-    }
-
     public void showSearchResult(String str, List<AtUser> totalData) {
         if (TextUtils.isEmpty(str)) {
             refresh(totalData);
@@ -43,7 +38,7 @@ public class AtUserSearchAdapter extends CommonAdapter<AtUser, AtUserSearchAdapt
         }
     }
 
-    public static class MainViewHolder extends CommonAdapter.ItemViewHolder<AtUser> {
+    public static class MainViewHolder extends ItemViewHolder<AtUser> {
 
         ImageButton mCheckBox;
         TextView mUsername;

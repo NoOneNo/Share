@@ -47,8 +47,8 @@
 //            //不设置的话会被名字内容的点击事件覆盖，无法触发ItemView的onClick
 //            mTopic.mContent.setTag(v);
 //            mTopic.mGallery.setTag(v);
-////            registerChildViewItemClick(mTopic.mContent);
-////            registerChildViewItemClick(mTopic.mGallery);
+////            registerOnClickListener(mTopic.mContent);
+////            registerOnClickListener(mTopic.mGallery);
 //
 //            SelectorLoader.getInstance().setDefaultRippleBackground(mTopicItem, R.color.white);
 //

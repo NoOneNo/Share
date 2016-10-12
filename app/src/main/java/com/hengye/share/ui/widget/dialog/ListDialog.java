@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.CommonAdapter;
+import com.hengye.share.adapter.recyclerview.ItemViewHolder;
 import com.hengye.share.ui.widget.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.util.SelectorLoader;
 
@@ -140,7 +141,7 @@ public class ListDialog extends Dialog {
         this.mMaxHeight = maxHeight;
     }
 
-    public static class SimpleListAdapter extends ListAdapter<KeyValue, SimpleListAdapter.MainViewHolder> {
+    public static class SimpleListAdapter extends ListAdapter<KeyValue> {
 
         public SimpleListAdapter(Context context, List<KeyValue> data) {
             super(context, data);
@@ -171,17 +172,18 @@ public class ListDialog extends Dialog {
         }
 
         @Override
-        public void onBindBasicItemView(MainViewHolder holder, int position) {
+        public void onBindBasicItemView(ItemViewHolder holder, int position) {
             super.onBindBasicItemView(holder, position);
 
+            MainViewHolder mainViewHolder = (MainViewHolder) holder;
             if(getTextColor() != 0){
-                holder.mText.setTextColor(getTextColor());
+                mainViewHolder.mText.setTextColor(getTextColor());
             }
 
-            holder.mDivider.setVisibility(position == getLastItemPosition() ? View.INVISIBLE : View.VISIBLE);
+            mainViewHolder.mDivider.setVisibility(position == getLastItemPosition() ? View.INVISIBLE : View.VISIBLE);
         }
 
-        public static class MainViewHolder extends CommonAdapter.ItemViewHolder<KeyValue> {
+        public static class MainViewHolder extends ItemViewHolder<KeyValue> {
 
             ImageView mIcon;
             TextView mText;
@@ -232,7 +234,7 @@ public class ListDialog extends Dialog {
         }
     }
 
-    public static abstract class ListAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends CommonAdapter<T, VH> {
+    public static abstract class ListAdapter<T> extends CommonAdapter<T> {
 
         public ListAdapter(Context context, List<T> data) {
             super(context, data);

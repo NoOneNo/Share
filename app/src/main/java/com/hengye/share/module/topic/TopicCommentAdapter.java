@@ -56,7 +56,7 @@ public class TopicCommentAdapter extends CommonAdapter<TopicComment, TopicCommen
             registerChildViewItemClick(mTopicTitle.mUsername);
             registerChildViewItemClick(mTopicTitle.mDescription);
 
-//            registerChildViewItemClick(mTopic.mGallery);
+//            registerOnClickListener(mTopic.mGallery);
 
             SelectorLoader.getInstance().setDefaultRippleBackground(mTopicItem);
 

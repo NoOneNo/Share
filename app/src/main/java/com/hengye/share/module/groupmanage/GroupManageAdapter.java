@@ -3,21 +3,19 @@ package com.hengye.share.module.groupmanage;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hengye.share.R;
-import com.hengye.share.adapter.listview.DropAdapter;
-import com.hengye.share.adapter.listview.ViewHolder;
 import com.hengye.share.adapter.recyclerview.CommonAdapter;
+import com.hengye.share.adapter.recyclerview.ItemViewHolder;
 import com.hengye.share.model.greenrobot.GroupList;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
 
 import java.util.List;
 
-public class GroupManageAdapter extends CommonAdapter<GroupList, GroupManageAdapter.GroupManageViewHolder>
+public class GroupManageAdapter extends CommonAdapter<GroupList>
         implements DialogInterface.OnClickListener {
 
     private Dialog mDeleteDialog;
@@ -40,10 +38,10 @@ public class GroupManageAdapter extends CommonAdapter<GroupList, GroupManageAdap
 
     @Override
     public ItemViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
-        return new GroupManageViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_group_manage, parent, false));
+        return new GroupManageViewHolder(inflate(R.layout.item_group_manage, parent));
     }
 
-    public static class GroupManageViewHolder extends CommonAdapter.ItemViewHolder<GroupList> {
+    public static class GroupManageViewHolder extends ItemViewHolder<GroupList> {
 
         TextView mGroupName, mGroupCount;
 

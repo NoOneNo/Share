@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.CommonAdapter;
+import com.hengye.share.adapter.recyclerview.ItemViewHolder;
 import com.hengye.share.module.topic.TopicPresenter.TopicGroup;
 import com.hengye.share.module.topic.TopicPresenter.TopicType;
 import com.hengye.share.module.util.encapsulation.paging.RecyclerRefreshFragment;
@@ -114,7 +115,7 @@ public class GroupListFragment extends RecyclerRefreshFragment<TopicGroup>{
 
     }
 
-    public static class GroupListAdapter extends CommonAdapter<TopicGroup, GroupListAdapter.GroupListViewHolder> {
+    public static class GroupListAdapter extends CommonAdapter<TopicGroup> {
 
         public GroupListAdapter(Context context, List<TopicGroup> data) {
             super(context, data);
@@ -126,12 +127,12 @@ public class GroupListFragment extends RecyclerRefreshFragment<TopicGroup>{
         }
 
         @Override
-        public void onBindBasicItemView(GroupListViewHolder holder, int position) {
+        public void onBindBasicItemView(ItemViewHolder holder, int position) {
             super.onBindBasicItemView(holder, position);
             holder.itemView.setBackgroundResource(isSelectPosition(position) ? R.drawable.ripple_grey : R.drawable.ripple_white);
         }
 
-        public static class GroupListViewHolder extends CommonAdapter.ItemViewHolder<TopicGroup> {
+        public static class GroupListViewHolder extends ItemViewHolder<TopicGroup> {
 
             TextView text;
 

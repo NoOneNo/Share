@@ -2,8 +2,7 @@ package com.hengye.share.adapter.recyclerview;
 
 import android.content.Context;
 import android.view.View;
-
-import com.hengye.share.model.AtUser;
+import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +10,7 @@ import java.util.List;
 /**
  * Created by yuhy on 16/8/22.
  */
-public abstract class EditModeAdapter<T, VH extends EditModeAdapter.EditModeViewHolder> extends CommonAdapter<T, VH> {
+public abstract class EditModeAdapter<T> extends CommonAdapter<T> {
 
     public EditModeAdapter(Context context) {
         this(context, new ArrayList<T>());
@@ -33,15 +32,21 @@ public abstract class EditModeAdapter<T, VH extends EditModeAdapter.EditModeView
     }
 
     @Override
-    public void onBindBasicItemView(VH holder, int position) {
+    public abstract EditModeViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType);
+
+    @Override
+    public void onBindBasicItemView(ItemViewHolder holder, int position) {
         super.onBindBasicItemView(holder, position);
-        holder.updateEditMode(isEditMode());
+        if(holder instanceof EditModeViewHolder) {
+            ((EditModeViewHolder)holder).updateEditMode(isEditMode());
+        }
     }
 
-    public static abstract class EditModeViewHolder<T> extends CommonAdapter.ItemViewHolder<T> {
+    public static abstract class EditModeViewHolder<T> extends ItemViewHolder<T> {
         public EditModeViewHolder(View v) {
             super(v);
         }
+
         public abstract void updateEditMode(boolean isEditMode);
     }
 }

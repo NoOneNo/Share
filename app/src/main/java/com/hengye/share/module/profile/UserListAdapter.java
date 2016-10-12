@@ -8,6 +8,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.hengye.share.R;
+import com.hengye.share.adapter.recyclerview.CommonAdapter;
 import com.hengye.share.adapter.recyclerview.EditModeAdapter;
 import com.hengye.share.model.Select;
 import com.hengye.share.model.UserInfo;
@@ -15,7 +16,7 @@ import com.hengye.share.ui.widget.image.AvatarImageView;
 import com.hengye.share.ui.widget.util.SelectorLoader;
 import com.hengye.share.util.RequestManager;
 
-public class UserListAdapter extends EditModeAdapter<Select<UserInfo>, UserListAdapter.MainViewHolder> {
+public class UserListAdapter extends EditModeAdapter<Select<UserInfo>> {
 
     public UserListAdapter(Context context) {
         super(context);
@@ -24,11 +25,6 @@ public class UserListAdapter extends EditModeAdapter<Select<UserInfo>, UserListA
     @Override
     public MainViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
         return new MainViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_user_list, parent, false));
-    }
-
-    @Override
-    public void onBindBasicItemView(MainViewHolder holder, int position) {
-        super.onBindBasicItemView(holder, position);
     }
 
     public static class MainViewHolder extends EditModeAdapter.EditModeViewHolder<Select<UserInfo>> {
@@ -57,6 +53,8 @@ public class UserListAdapter extends EditModeAdapter<Select<UserInfo>, UserListA
 
         @Override
         public void bindData(Context context, Select<UserInfo> select, int position) {
+            super.bindData(context, select, position);
+
             mCheckBox.setImageResource(select.isSelected() ? R.drawable.ic_check_select : 0);
 
             UserInfo userInfo = select.getTarget();

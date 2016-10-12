@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.CommonAdapter;
+import com.hengye.share.adapter.recyclerview.ItemViewHolder;
 import com.hengye.share.model.AtUser;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.ui.widget.image.AvatarImageView;
@@ -14,7 +15,7 @@ import com.hengye.share.util.RequestManager;
 
 import java.util.List;
 
-public class AtUserSelectAdapter extends CommonAdapter<AtUser, AtUserSelectAdapter.MainViewHolder> {
+public class AtUserSelectAdapter extends CommonAdapter<AtUser> {
 
     public AtUserSelectAdapter(Context context, List<AtUser> data) {
         super(context, data);
@@ -23,12 +24,6 @@ public class AtUserSelectAdapter extends CommonAdapter<AtUser, AtUserSelectAdapt
     @Override
     public MainViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
         return new MainViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_at_user_select_result, parent, false));
-    }
-
-    @Override
-    public void onBindBasicItemView(MainViewHolder holder, int position) {
-        super.onBindBasicItemView(holder, position);
-
     }
 
     public void setLastItemPrepareDelete(boolean isPrepareDelete) {
@@ -49,7 +44,7 @@ public class AtUserSelectAdapter extends CommonAdapter<AtUser, AtUserSelectAdapt
         return getBasicItemCount();
     }
 
-    public static class MainViewHolder extends CommonAdapter.ItemViewHolder<AtUser> {
+    public static class MainViewHolder extends ItemViewHolder<AtUser> {
 
         AvatarImageView mAvatar;
         View mAvatarMask;

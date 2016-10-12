@@ -104,7 +104,7 @@ public class TopicDraftActivity extends BaseActivity implements DialogInterface.
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter = new TopicDraftAdapter(this, getTopicDraftData()));
 
-        mAdapter.setOnChildViewItemClickListener(new OnItemClickListener() {
+        mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 int id = view.getId();
@@ -133,7 +133,7 @@ public class TopicDraftActivity extends BaseActivity implements DialogInterface.
             }
         });
 
-        mAdapter.setOnChildViewItemLongClickListener(new OnItemLongClickListener() {
+        mAdapter.setOnItemLongClickListener(new OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(View view, int position) {
                 mItemClickPosition = position;

@@ -8,13 +8,14 @@ import android.widget.TextView;
 
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.CommonAdapter;
+import com.hengye.share.adapter.recyclerview.ItemViewHolder;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.ui.widget.image.AvatarImageView;
 import com.hengye.share.util.RequestManager;
 
 import java.util.List;
 
-public class SearchUserAdapter extends CommonAdapter<UserInfo, SearchUserAdapter.MainViewHolder> {
+public class SearchUserAdapter extends CommonAdapter<UserInfo> {
 
     public SearchUserAdapter(Context context, List<UserInfo> data) {
         super(context, data);
@@ -25,7 +26,7 @@ public class SearchUserAdapter extends CommonAdapter<UserInfo, SearchUserAdapter
         return new MainViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_search_user, parent, false));
     }
 
-    public static class MainViewHolder extends CommonAdapter.ItemViewHolder<UserInfo> {
+    public static class MainViewHolder extends ItemViewHolder<UserInfo> {
 
         AvatarImageView avatar;
         TextView username;

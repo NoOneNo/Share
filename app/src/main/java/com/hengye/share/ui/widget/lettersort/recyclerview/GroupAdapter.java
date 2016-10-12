@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.ViewGroup;
 
 import com.hengye.share.adapter.recyclerview.CommonAdapter;
+import com.hengye.share.adapter.recyclerview.ItemViewHolder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +16,7 @@ import java.util.Map;
 /**
  * Created by yuhy on 16/8/22.
  */
-public abstract class GroupAdapter<K extends GroupAdapter.SortKey, V> extends CommonAdapter<Object, CommonAdapter.ItemViewHolder> {
+public abstract class GroupAdapter<K extends GroupAdapter.SortKey, V> extends CommonAdapter<Object> {
 
 
     public final static int VIEW_TYPE_GROUP = 0;

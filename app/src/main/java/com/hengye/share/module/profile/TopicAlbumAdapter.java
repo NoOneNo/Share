@@ -7,11 +7,12 @@ import android.view.ViewGroup;
 
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.CommonAdapter;
+import com.hengye.share.adapter.recyclerview.ItemViewHolder;
 import com.hengye.share.ui.widget.image.SuperImageView;
 
 import java.util.List;
 
-public class TopicAlbumAdapter extends CommonAdapter<String, TopicAlbumAdapter.TopicAlbumViewHolder> {
+public class TopicAlbumAdapter extends CommonAdapter<String> {
 
     public TopicAlbumAdapter(Context context, List<String> data) {
         super(context, data);
@@ -22,7 +23,7 @@ public class TopicAlbumAdapter extends CommonAdapter<String, TopicAlbumAdapter.T
         return new TopicAlbumViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_topic_album, parent, false));
     }
 
-    public static class TopicAlbumViewHolder extends CommonAdapter.ItemViewHolder<String> {
+    public static class TopicAlbumViewHolder extends ItemViewHolder<String> {
 
         SuperImageView superImageView;
 

@@ -18,4 +18,22 @@ public interface ItemTouchHelperAdapter {
      * @return 如果返回的object不等于空,则可以移除
      */
     Object removeItem(int position);
+
+    /**
+     * @param position
+     * @return 该位置的item是否支持滑动删除
+     */
+    boolean isItemSwipeEnabled(int position);
+
+    /**
+     * @param position
+     * @return 该位置的item是否支持长按拖曳
+     */
+    boolean isItemDragEnabled(int position);
+
+    /**
+     * @param actualPosition 在RecyclerView实际中的position
+     * @return 得到item的虚拟位置，此位置的索引不包含header, footer
+     */
+    int getBasicItemPosition(int actualPosition);
 }

@@ -6,8 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hengye.share.adapter.recyclerview.CommonAdapter;
+import com.hengye.share.adapter.recyclerview.ItemViewHolder;
 
-public class TemplateAdapter extends CommonAdapter<String, TemplateAdapter.MainViewHolder> {
+public class TemplateAdapter extends CommonAdapter<String> {
 
     public TemplateAdapter(Context context) {
         super(context);
@@ -18,7 +19,7 @@ public class TemplateAdapter extends CommonAdapter<String, TemplateAdapter.MainV
         return new MainViewHolder(LayoutInflater.from(getContext()).inflate(null, parent, false));
     }
 
-    public static class MainViewHolder extends CommonAdapter.ItemViewHolder<String> {
+    public static class MainViewHolder extends ItemViewHolder<String> {
         public MainViewHolder(View v) {
             super(v);
         }

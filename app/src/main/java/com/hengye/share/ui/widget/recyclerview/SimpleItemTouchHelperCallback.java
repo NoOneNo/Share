@@ -17,24 +17,16 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public boolean isLongPressDragEnabled() {
-        return true;
-    }
-
-    @Override
-    public boolean isItemViewSwipeEnabled() {
-        return false;
-    }
-
-    @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        return makeMovementFlags(mDragFlags, mSwipeFlags);
+        int dragFlags = mAdapter.isItemDragEnabled(getBasicItemPosition(viewHolder)) ? mDragFlags : ItemTouchHelper.ACTION_STATE_IDLE;
+        int swipeFlags = mAdapter.isItemSwipeEnabled(getBasicItemPosition(viewHolder)) ? mSwipeFlags : ItemTouchHelper.ACTION_STATE_IDLE;
+        return makeMovementFlags(dragFlags, swipeFlags);
     }
 
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
                           RecyclerView.ViewHolder target) {
-        mAdapter.moveItem(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+        mAdapter.moveItem(getBasicItemPosition(viewHolder), getBasicItemPosition(target));
         return true;
     }
 
@@ -43,12 +35,17 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
         mAdapter.removeItem(viewHolder.getAdapterPosition());
     }
 
+    public int getBasicItemPosition(RecyclerView.ViewHolder viewHolder){
+        return mAdapter.getBasicItemPosition(viewHolder.getAdapterPosition());
+    }
+
     public int getSwipeFlags() {
         return mSwipeFlags;
     }
 
     /**
      * ItemTouchHelper.START | ItemTouchHelper.END
+     *
      * @param swipeFlags
      */
     public void setSwipeFlags(int swipeFlags) {
@@ -61,9 +58,14 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     /**
      * ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.START | ItemTouchHelper.END
+     *
      * @param dragFlags
      */
     public void setDragFlags(int dragFlags) {
         this.mDragFlags = dragFlags;
+    }
+
+    public ItemTouchHelperAdapter getItemTouchHelperAdapter() {
+        return mAdapter;
     }
 }

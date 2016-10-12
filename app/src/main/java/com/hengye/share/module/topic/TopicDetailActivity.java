@@ -172,12 +172,12 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         }
         final TopicAdapter.TopicDefaultViewHolder topicViewHolder = new TopicAdapter.TopicDefaultViewHolder(topicLayout);
         topicViewHolder.bindData(this, mTopic, 0);
-        topicViewHolder.setOnChildViewItemClickListener(new OnItemClickListener() {
+        topicViewHolder.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
-                int id = view.getId();
+            public void onClick(View v) {
+                int id = v.getId();
                 if (id == R.id.tv_topic_content || id == R.id.gl_topic_gallery || id == R.id.ll_topic_retweeted_content) {
-                    final boolean isRetweeted = (Boolean) view.getTag();
+                    final boolean isRetweeted = (Boolean) v.getTag();
                     if (!isRetweeted) {
                         return;
                     }
@@ -579,6 +579,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             } else if (data.size() < WBUtil.getWBTopicRequestCount()) {
                 //结果小于请求条数
 //                    mPullToRefreshLayout.setLoadEnable(false);
+                handleLoadMore(true, isComment);
             } else {
                 handleLoadMore(true, isComment);
             }

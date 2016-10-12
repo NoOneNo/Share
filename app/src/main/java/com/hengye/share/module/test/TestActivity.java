@@ -99,7 +99,7 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
 //            testInterceptor();
 
 //            TestTopicFragment.newInstance(new TopicPresenter.TopicGroup(TopicPresenter.TopicType.ALL));
-            startActivity(FragmentActivity.getStartIntent(this, TestPhotoPickerFragment.class));
+            startActivity(FragmentActivity.getStartIntent(this, TestRecyclerViewFragment.class));
 //            startActivity(WebViewActivity.getStartIntent(this, "http://www.baidu.com"));
         } else if (v.getId() == R.id.btn_test7) {
             startActivity(SetTokenActivity.class);

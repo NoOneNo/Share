@@ -2,8 +2,8 @@ package com.hengye.share.adapter.recyclerview;
 
 
 import android.content.Context;
-import android.support.annotation.IdRes;
-import android.support.v7.widget.RecyclerView;
+import android.support.annotation.LayoutRes;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -16,13 +16,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends HeaderAdapter<VH> implements DataAdapter<T>, ItemTouchHelperAdapter {
+public abstract class CommonAdapter<T> extends HeaderAdapter<ItemViewHolder> implements DataAdapter<T>, ItemTouchHelperAdapter {
 
     private Context mContext;
     private List<T> mData;
     private int mSelectPosition = -1;
-    private OnItemClickListener mOnItemClickListener, mOnChildViewItemClickListener;
-    private OnItemLongClickListener mOnItemLongClickListener, mOnChildViewItemLongClickListener;
+    private OnItemClickListener mOnItemClickListener;
+    private OnItemLongClickListener mOnItemLongClickListener;
 
     public CommonAdapter() {
     }
@@ -40,17 +40,40 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
         this.mData = data;
     }
 
-    @Override
-    public CommonAdapter.ItemViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
-        return null;
+    public View inflate(@LayoutRes int layoutResId){
+        return inflate(layoutResId, null);
+    }
+
+    public View inflate(@LayoutRes int layoutResId, ViewGroup parent){
+        return LayoutInflater.from(getContext()).inflate(layoutResId, parent, false);
     }
 
     @Override
-    public void onBindBasicItemView(VH holder, int position) {
-        holder.setOnItemClickListener(getOnItemClickListener());
-        holder.setOnChildViewItemClickListener(getOnChildViewItemClickListener());
-        holder.setOnItemLongClickListener(getOnItemLongClickListener());
-        holder.setOnChildViewItemLongClickListener(getOnChildViewItemLongClickListener());
+    public void onBasicItemViewHolderCreate(final ItemViewHolder holder, int viewType) {
+
+        holder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(getOnItemClickListener() != null){
+                    getOnItemClickListener().onItemClick(v, getBasicItemPosition(holder));
+                }
+            }
+        });
+
+        holder.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if(getOnItemLongClickListener() != null){
+                    return getOnItemLongClickListener().onItemLongClick(v, getBasicItemPosition(holder));
+                }
+                return false;
+            }
+        });
+
+    }
+
+    @Override
+    public void onBindBasicItemView(ItemViewHolder holder, int position) {
         holder.bindData(getContext(), getItem(position), position);
     }
 
@@ -64,144 +87,12 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
         return 0;
     }
 
-    public static class ItemViewHolder<T> extends RecyclerView.ViewHolder {
-
-        public ItemViewHolder(View itemView) {
-            this(itemView, null);
-        }
-
-        public ItemViewHolder(View itemView, OnItemClickListener onItemClickListener) {
-            this(itemView, onItemClickListener, false);
-        }
-
-        public ItemViewHolder(View itemView, boolean isAddHeaderView) {
-            this(itemView, null, isAddHeaderView);
-        }
-
-        public ItemViewHolder(View itemView, OnItemClickListener onItemClickListener, boolean isAddHeaderView) {
-            super(itemView);
-            mOnItemClickListener = onItemClickListener;
-            itemView.setOnClickListener(mOnClickForItemListener);
-            itemView.setOnLongClickListener(mOnLongClickForItemListener);
-            mIsAddHeaderView = isAddHeaderView;
-        }
-
-        public View findViewById(@IdRes int id) {
-            return itemView.findViewById(id);
-        }
-
-        public void bindData(Context context, T t, int position) {
-
-        }
-
-        public void registerChildViewItemClick(View v) {
-            v.setOnClickListener(mOnClickForChildViewListener);
-        }
-
-        public void registerChildViewItemLongClick(View v) {
-            v.setOnLongClickListener(mOnLongClickForChildViewListener);
-        }
-
-        boolean mIsAddHeaderView;
-
-        public int getItemVirtualPosition() {
-            return HeaderAdapter.getBasicItemVirtualPosition(getAdapterPosition(), mIsAddHeaderView);
-        }
-
-        /**
-         * 用于提供给外部调用的ChildViewClick;
-         */
-        View.OnClickListener mOnClickForChildViewListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mOnChildViewItemClickListener != null) {
-                    mOnChildViewItemClickListener.onItemClick(v, getItemVirtualPosition());
-                }
-            }
-        };
-        /**
-         * 用于提供给内部调用的ItemClick;
-         */
-        View.OnClickListener mOnClickForItemListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onItemClick(v, getItemVirtualPosition());
-                }
-            }
-        };
-
-        /**
-         * 用于提供给外部调用的ChildViewClick;
-         */
-        View.OnLongClickListener mOnLongClickForChildViewListener = new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (mOnChildViewItemLongClickListener != null) {
-                    return mOnChildViewItemLongClickListener.onItemLongClick(v, getItemVirtualPosition());
-                }
-                return false;
-            }
-        };
-        /**
-         * 用于提供给内部调用的ItemClick;
-         */
-        View.OnLongClickListener mOnLongClickForItemListener = new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (mOnItemLongClickListener != null) {
-                    return mOnItemLongClickListener.onItemLongClick(v, getItemVirtualPosition());
-                }
-                return false;
-            }
-        };
-
-        OnItemClickListener mOnItemClickListener, mOnChildViewItemClickListener;
-        OnItemLongClickListener mOnItemLongClickListener, mOnChildViewItemLongClickListener;
-
-        public OnItemClickListener getOnItemClickListener() {
-            return mOnItemClickListener;
-        }
-
-        public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-            this.mOnItemClickListener = onItemClickListener;
-        }
-
-        public OnItemClickListener getOnChildViewItemClickListener() {
-            return mOnChildViewItemClickListener;
-        }
-
-        public void setOnChildViewItemClickListener(OnItemClickListener onChildViewItemClickListener) {
-            this.mOnChildViewItemClickListener = onChildViewItemClickListener;
-        }
-
-        public OnItemLongClickListener getOnItemLongClickListener() {
-            return mOnItemLongClickListener;
-        }
-
-        public void setOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {
-            this.mOnItemLongClickListener = onItemLongClickListener;
-        }
-
-        public OnItemLongClickListener getOnChildViewItemLongClickListener() {
-            return mOnChildViewItemLongClickListener;
-        }
-
-        public void setOnChildViewItemLongClickListener(OnItemLongClickListener onChildViewItemLongClickListener) {
-            this.mOnChildViewItemLongClickListener = onChildViewItemLongClickListener;
-        }
-
-        //        public View.OnClickListener getOnClickForItemListener() {
-//            return mOnClickForItemListener;
-//        }
-    }
-
     public boolean isEmpty() {
         return mData.isEmpty();
     }
 
     public T getItem(int position) {
-        if (0 <= position && position < mData.size()) {
+        if (!isIndexOutOfBounds(position)) {
             return mData.get(position);
         }
         return null;
@@ -209,6 +100,20 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
 
     public int getItemPosition(T item) {
         return mData.indexOf(item);
+    }
+
+    @Override
+    public int getBasicItemPosition(int actualPosition) {
+        return super.getBasicItemPosition(actualPosition);
+    }
+
+    /**
+     *
+     * @param basicItemPosition 在{@link #mData}中的位置
+     * @return 返回在RecyclerView实际中的position
+     */
+    public int getActualItemPosition(int basicItemPosition){
+        return basicItemPosition + (isAddHeaderView() ? 1 : 0);
     }
 
     public T getLastItem() {
@@ -224,22 +129,22 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
 
     public void addItem(int position, T item) {
         mData.add(position, item);
-        notifyItemInserted(getBasicItemVirtualPosition(position));
+        notifyItemInserted(getActualItemPosition(position));
     }
 
     public void addItem(T item) {
         mData.add(item);
-        notifyItemInserted(getBasicItemVirtualPosition(mData.size() - 1));
+        notifyItemInserted(getActualItemPosition(mData.size() - 1));
     }
 
     public void updateItem(int position, T item) {
         mData.set(position, item);
-        notifyItemChanged(getBasicItemVirtualPosition(position));
+        notifyItemChanged(getActualItemPosition(position));
     }
 
     public T removeItem(int position) {
         T t = mData.remove(position);
-        notifyItemRemoved(getBasicItemVirtualPosition(position));
+        notifyItemRemoved(getActualItemPosition(position));
         return t;
     }
 
@@ -291,28 +196,26 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
         notifyDataSetChanged();
     }
 
+    @Override
+    public boolean isItemSwipeEnabled(int position){
+        return !isIndexOutOfBounds(position);
+    }
+
+    @Override
+    public boolean isItemDragEnabled(int position){
+        return !isIndexOutOfBounds(position);
+    }
+
+    public boolean isIndexOutOfBounds(int position){
+        return 0 > position || position >= mData.size();
+    }
+
     public OnItemClickListener getOnItemClickListener() {
         return mOnItemClickListener;
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
-    }
-
-    public OnItemClickListener getOnChildViewItemClickListener() {
-        return mOnChildViewItemClickListener;
-    }
-
-    public void setOnChildViewItemClickListener(OnItemClickListener onChildViewItemClickListener) {
-        this.mOnChildViewItemClickListener = onChildViewItemClickListener;
-    }
-
-    public OnItemLongClickListener getOnChildViewItemLongClickListener() {
-        return mOnChildViewItemLongClickListener;
-    }
-
-    public void setOnChildViewItemLongClickListener(OnItemLongClickListener onChildViewItemLongClickListener) {
-        this.mOnChildViewItemLongClickListener = onChildViewItemLongClickListener;
     }
 
     public OnItemLongClickListener getOnItemLongClickListener() {
@@ -331,6 +234,7 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
         mData = data;
     }
 
+    @Override
     public Context getContext() {
         return mContext;
     }
@@ -355,9 +259,10 @@ public class CommonAdapter<T, VH extends CommonAdapter.ItemViewHolder> extends H
         if (this.mSelectPosition == selectPosition) {
             return false;
         }
-        notifyItemChanged(mSelectPosition);
+        int lastSelectPosition = mSelectPosition;
         this.mSelectPosition = selectPosition;
-        notifyItemChanged(mSelectPosition);
+        notifyItemChanged(lastSelectPosition);
+        notifyItemChanged(selectPosition);
         return true;
     }
 }

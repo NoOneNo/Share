@@ -18,7 +18,7 @@ import com.hengye.share.util.ResUtil;
 
 import java.util.List;
 
-public class TopicDraftAdapter extends CommonAdapter<TopicDraft, TopicDraftAdapter.TopicDraftViewHolder> {
+public class TopicDraftAdapter extends CommonAdapter<TopicDraft> {
 
     public TopicDraftAdapter(Context context, List<TopicDraft> data) {
         super(context, data);
@@ -27,11 +27,6 @@ public class TopicDraftAdapter extends CommonAdapter<TopicDraft, TopicDraftAdapt
     @Override
     public TopicDraftViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
         return new TopicDraftViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_topic_total, parent, false));
-    }
-
-    @Override
-    public void onBindBasicItemView(TopicDraftViewHolder holder, int position) {
-        super.onBindBasicItemView(holder, position);
     }
 
     public static class TopicDraftViewHolder extends TopicAdapter.TopicViewHolder<TopicDraft> {
@@ -48,7 +43,7 @@ public class TopicDraftAdapter extends CommonAdapter<TopicDraft, TopicDraftAdapt
         @Override
         public void bindData(Context context, TopicDraft topicDraft, int position) {
             L.debug("topicDraft id : {}", topicDraft.getId());
-            registerChildViewItemClick(mSendAgain);
+            registerOnClickListener(mSendAgain);
             Topic topic = topicDraft.getTopic();
             if (topic != null) {
                 mTopicTitle.initTopicTitle(context, topic);
@@ -114,7 +109,7 @@ public class TopicDraftAdapter extends CommonAdapter<TopicDraft, TopicDraftAdapt
 //        @Override
 //        public void bindData(Context context, TopicDraft topicDraft, int position) {
 //            L.debug("topicDraft id : {}", topicDraft.getId());
-//            registerChildViewItemClick(mSendAgain);
+//            registerOnClickListener(mSendAgain);
 //            Topic topic = topicDraft.getTopic();
 //            if (topic != null) {
 //                mTopicTitle.initTopicTitle(context, topic);
