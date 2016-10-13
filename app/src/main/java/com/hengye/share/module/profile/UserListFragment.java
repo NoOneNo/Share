@@ -64,13 +64,11 @@ public class UserListFragment extends RecyclerRefreshFragment<Select<UserInfo>> 
     }
 
     @Override
-    public void loadFail(boolean isRefresh) {
-        ToastUtil.showLoadErrorToast();
-    }
-
-    @Override
-    public void stopLoading(boolean isRefresh) {
-        onTaskComplete();
+    public void onTaskComplete(boolean isRefresh, boolean isSuccess) {
+        if(!isSuccess){
+            ToastUtil.showLoadErrorToast();
+        }
+        onTaskComplete(isSuccess);
     }
 
     @Override

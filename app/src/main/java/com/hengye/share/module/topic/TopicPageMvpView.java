@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface TopicPageMvpView extends MvpView {
 
-    void stopLoading(boolean isRefresh);
+    void onTaskComplete(boolean isRefresh, boolean isSuccess);
 
     void handleTopicData(List<Topic> data, boolean isRefresh);
 

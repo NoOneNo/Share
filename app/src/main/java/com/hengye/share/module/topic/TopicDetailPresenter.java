@@ -50,7 +50,7 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailMvpView> {
                 .subscribe(new BaseSubscriber<Object[]>() {
                     @Override
                     public void onError(TopicDetailMvpView v, Throwable e) {
-                        v.loadFail(isRefresh);
+                        v.onTaskComplete(isRefresh, false);
                     }
 
                     @Override
@@ -59,7 +59,7 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailMvpView> {
                         WBTopicReposts obj2 = (WBTopicReposts) objects[1];
                         v.handleCommentData(true, TopicComment.getComments(obj1), isRefresh, obj1.getTotal_number());
                         v.handleCommentData(false, TopicComment.getComments(obj2), isRefresh, obj2.getTotal_number());
-                        v.loadSuccess(isRefresh);
+                        v.onTaskComplete(isRefresh, true);
                     }
                 });
     }
@@ -78,7 +78,7 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailMvpView> {
 
                     @Override
                     public void onError(TopicDetailMvpView v, Throwable e) {
-                        v.loadFail(isRefresh);
+                        v.onTaskComplete(isRefresh, false);
                     }
 
                     @Override
@@ -88,7 +88,7 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailMvpView> {
                         } else {
                             v.handleCommentData(isComment, TopicComment.getComments((WBTopicReposts) o), isRefresh, 0);
                         }
-                       v.loadSuccess(isRefresh);
+                        v.onTaskComplete(isRefresh, true);
                     }
 
                 });

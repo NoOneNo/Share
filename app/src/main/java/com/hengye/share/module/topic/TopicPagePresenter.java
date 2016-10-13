@@ -89,12 +89,12 @@ public class TopicPagePresenter extends BasePresenter<TopicPageMvpView> {
         return new BaseSubscriber<WBTopics>() {
             @Override
             public void onError(TopicPageMvpView v, Throwable e) {
-                v.stopLoading(isRefresh);
+                v.onTaskComplete(isRefresh, false);
             }
 
             @Override
             public void onNext(TopicPageMvpView v, WBTopics wbTopics) {
-                v.stopLoading(isRefresh);
+                v.onTaskComplete(isRefresh, true);
                 v.handleTopicData(Topic.getTopics(wbTopics), isRefresh);
             }
         };
@@ -104,12 +104,12 @@ public class TopicPagePresenter extends BasePresenter<TopicPageMvpView> {
 //        return new BaseSubscriber<WBTopicFavorites>() {
 //            @Override
 //            public void onError(TopicPageMvpView v, Throwable e) {
-//                v.stopLoading(isRefresh);
+//                v.onTaskComplete(isRefresh);
 //            }
 //
 //            @Override
 //            public void onNext(TopicPageMvpView v, WBTopicFavorites wbTopics) {
-//                v.stopLoading(isRefresh);
+//                v.onTaskComplete(isRefresh);
 //                v.handleTopicData(Topic.get(wbTopics), isRefresh);
 //            }
 //        };

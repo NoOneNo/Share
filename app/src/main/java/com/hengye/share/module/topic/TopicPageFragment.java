@@ -96,8 +96,8 @@ public class TopicPageFragment extends RecyclerRefreshFragment<Topic> implements
     }
 
     @Override
-    public void stopLoading(boolean isRefresh) {
-        onTaskComplete();
+    public void onTaskComplete(boolean isRefresh, boolean isSuccess) {
+        onTaskComplete(isSuccess);
     }
 
     @Override

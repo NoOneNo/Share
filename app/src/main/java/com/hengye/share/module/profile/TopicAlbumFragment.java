@@ -149,11 +149,11 @@ public class TopicAlbumFragment extends RecyclerRefreshFragment<String> implemen
     }
 
     @Override
-    public void stopLoading(boolean isRefresh) {
+    public void onTaskComplete(boolean isRefresh, boolean isSuccess) {
         if (isRefresh) {
             getLoadDataCallBack().refresh(false);
         } else {
-            getPullToRefresh().setLoading(false);
+            getPullToRefresh().stopLoading(isSuccess);
         }
     }
 

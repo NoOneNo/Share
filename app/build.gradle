@@ -110,7 +110,7 @@ dependencies {
 
 //    compile files('libs/weibosdkcore.jar')
 //    compile files('libs/org.apache.http.legacy.jar')
-    compile(name: 'swiperefresh-release', ext: 'aar')
+//    compile(name: 'swiperefresh-release', ext: 'aar')
     compile(name: 'volleyplus-release', ext: 'aar')
     compile(name: 'skinloader-release', ext: 'aar')
 //    compile(name: 'photopicker-release', ext: 'aar')
@@ -120,6 +120,7 @@ dependencies {
     compile project(':floatingactionbutton')
     compile project(':swipebacklayout')
     compile project(':photopicker')
+    compile project(':swiperefresh')
 
 
 

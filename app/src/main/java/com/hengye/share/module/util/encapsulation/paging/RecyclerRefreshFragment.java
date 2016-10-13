@@ -5,7 +5,7 @@ import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 
 import com.hengye.share.R;
-import com.hengye.swiperefresh.PullToRefreshLayout;
+import com.hengye.share.ui.widget.pulltorefresh.PullToRefreshLayout;
 import com.hengye.swiperefresh.listener.SwipeListener;
 
 import static com.hengye.share.handler.data.base.DataType.LOAD_NO_DATA;
@@ -36,9 +36,9 @@ public abstract class RecyclerRefreshFragment<T> extends RecyclerFragment<T>{
 
     }
 
-    public void onTaskComplete() {
+    public void onTaskComplete(boolean isSuccess) {
         if(mPullToRefresh != null) {
-            mPullToRefresh.onTaskComplete();
+            mPullToRefresh.onTaskComplete(isSuccess);
         }
     }
 
@@ -60,9 +60,15 @@ public abstract class RecyclerRefreshFragment<T> extends RecyclerFragment<T>{
         }
     }
 
-    public void setLoading(boolean loading) {
-        if(mPullToRefresh != null) {
-            mPullToRefresh.setLoading(loading);
+    public void startLoading(){
+        if(mPullToRefresh != null){
+            mPullToRefresh.startLoading();
+        }
+    }
+
+    public void stopLoading(boolean isSuccess){
+        if(mPullToRefresh != null){
+            mPullToRefresh.stopLoading(isSuccess);
         }
     }
 

@@ -111,12 +111,14 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                 if (tab.getPosition() == 0) {
                     mAdapter.setData(mCommentData);
                     mAdapter.notifyDataSetChanged();
-                    mListView.setSelection(1);
+//                    mListView.setSelection(1);
+                    mListView.setSelectionAfterHeaderView();
                     mPullToRefreshLayout.setLoadEnable(mLoadCommentEnable);
                 } else if (tab.getPosition() == 1) {
                     mAdapter.setData(mRepostData);
                     mAdapter.notifyDataSetChanged();
-                    mListView.setSelection(1);
+//                    mListView.setSelection(1);
+                    mListView.setSelectionAfterHeaderView();
                     mPullToRefreshLayout.setLoadEnable(mLoadRepostEnable);
                 }
             }
@@ -174,10 +176,10 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         topicViewHolder.bindData(this, mTopic, 0);
         topicViewHolder.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                int id = v.getId();
+            public void onClick(View view) {
+                int id = view.getId();
                 if (id == R.id.tv_topic_content || id == R.id.gl_topic_gallery || id == R.id.ll_topic_retweeted_content) {
-                    final boolean isRetweeted = (Boolean) v.getTag();
+                    final boolean isRetweeted = (Boolean) view.getTag();
                     if (!isRetweeted) {
                         return;
                     }
@@ -357,7 +359,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                     String id = CommonUtil.getLastItem(mAdapter.getData()).getId();
                     mPresenter.loadWBCommentOrRepost(mTopic.getId(), id, false, isSelectedCommentTab());
                 } else {
-                    mPullToRefreshLayout.setLoading(false);
+                    mPullToRefreshLayout.stopLoading(true);
                     mPullToRefreshLayout.setLoadEnable(false);
                 }
             }
@@ -532,16 +534,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     }
 
     @Override
-    public void loadSuccess(boolean isRefresh) {
-        stopLoading(isRefresh);
-    }
-
-    @Override
-    public void loadFail(boolean isRefresh) {
-        stopLoading(isRefresh);
-    }
-
-    public void stopLoading(boolean isRefresh) {
+    public void onTaskComplete(boolean isRefresh, boolean isSuccess) {
         if (isRefresh) {
             mListView.removeHeaderView(mLoadingView);
             if (mAdapter.isEmpty()) {
@@ -550,10 +543,8 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                     mListView.addHeaderView(mEmptyView);
                 }
             }
-            mPullToRefreshLayout.setRefreshing(false);
-        } else {
-            mPullToRefreshLayout.setLoading(false);
         }
+        mPullToRefreshLayout.onTaskComplete(isSuccess);
     }
 
     @Override
@@ -579,7 +570,6 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             } else if (data.size() < WBUtil.getWBTopicRequestCount()) {
                 //结果小于请求条数
 //                    mPullToRefreshLayout.setLoadEnable(false);
-                handleLoadMore(true, isComment);
             } else {
                 handleLoadMore(true, isComment);
             }
@@ -587,7 +577,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 //            }
         } else {
             List<TopicComment> targetData = isComment ? mCommentData : mRepostData;
-            mPullToRefreshLayout.setLoading(false);
+            mPullToRefreshLayout.stopLoading(true);
             if (CommonUtil.isEmpty(data)) {
                 //没有数据可供加载
                 handleLoadMore(false, isComment);

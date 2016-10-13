@@ -273,9 +273,9 @@ public class GridGalleryEditorView extends RecyclerView implements OnItemClickLi
             if(isShowAddBtn != showAddBtn) {
                 isShowAddBtn = showAddBtn;
                 if (showAddBtn) {
-                    addFooterView(getAddPhotoBtn());
+                    setFooter(getAddPhotoBtn());
                 } else {
-                    removeFooterView(getAddPhotoBtn());
+                    removeFooter();
                 }
             }
         }

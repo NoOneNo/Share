@@ -41,7 +41,7 @@ public class TopicAlbumPresenter extends BasePresenter<TopicAlbumMvpView> {
                 .subscribe(new BaseSubscriber<WBTopics>() {
                     @Override
                     public void onError(TopicAlbumMvpView v, Throwable e) {
-                        v.stopLoading(isRefresh);
+                        v.onTaskComplete(isRefresh, false);
                     }
 
                     @Override
@@ -49,7 +49,7 @@ public class TopicAlbumPresenter extends BasePresenter<TopicAlbumMvpView> {
 
                         ArrayList<Topic> topics = Topic.getTopics(wbTopics);
 
-                        v.stopLoading(isRefresh);
+                        v.onTaskComplete(isRefresh, true);
 
                         if(isRefresh){
                             saveData(topics);

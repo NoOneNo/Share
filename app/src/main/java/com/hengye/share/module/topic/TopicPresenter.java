@@ -241,15 +241,15 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
         return new BaseSubscriber<WBTopicIds>() {
             @Override
             public void onError(TopicMvpView v, Throwable e) {
-                v.stopLoading(true);
+                v.onTaskComplete(true, false);
             }
 
             @Override
             public void onNext(TopicMvpView v, WBTopicIds wbTopicIds) {
                 if (wbTopicIds == null || CommonUtil.isEmpty(wbTopicIds.getStatuses())) {
                     //没有新的微博
-                    getMvpView().stopLoading(true);
-                    getMvpView().handleNoMoreTopics();
+                    v.onTaskComplete(true, true);
+                    v.handleNoMoreTopics();
                     L.debug("no topic update");
                 } else {
                     if (wbTopicIds.getStatuses().size() >= WBUtil.getWBTopicRequestCount()) {
@@ -272,12 +272,12 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
         return new BaseSubscriber<WBTopics>() {
             @Override
             public void onError(TopicMvpView v, Throwable e) {
-                v.stopLoading(isRefresh);
+                v.onTaskComplete(isRefresh, false);
             }
 
             @Override
             public void onNext(TopicMvpView v, WBTopics wbTopics) {
-                v.stopLoading(isRefresh);
+                v.onTaskComplete(isRefresh, true);
                 v.handleTopicData(Topic.getTopics(wbTopics), isRefresh);
             }
         };
@@ -287,12 +287,12 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
         return new BaseSubscriber<WBTopicComments>() {
             @Override
             public void onError(TopicMvpView v, Throwable e) {
-                v.stopLoading(isRefresh);
+                v.onTaskComplete(isRefresh, false);
             }
 
             @Override
             public void onNext(TopicMvpView v, WBTopicComments wbTopicComments) {
-                v.stopLoading(isRefresh);
+                v.onTaskComplete(isRefresh, true);
                 v.handleTopicData(Topic.getTopics(wbTopicComments), isRefresh);
             }
 

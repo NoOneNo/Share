@@ -10,6 +10,7 @@ import android.view.animation.Interpolator;
 import android.widget.AbsListView;
 
 import com.hengye.share.R;
+import com.hengye.share.ui.widget.listview.CommonListView;
 import com.hengye.share.util.ResUtil;
 
 /**

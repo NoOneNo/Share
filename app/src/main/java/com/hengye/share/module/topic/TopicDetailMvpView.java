@@ -7,9 +7,7 @@ import java.util.List;
 
 public interface TopicDetailMvpView extends MvpView {
 
-    void loadSuccess(boolean isRefresh);
-
-    void loadFail(boolean isRefresh);
+    void onTaskComplete(boolean isRefresh, boolean isSuccess);
 
     void handleCommentData(boolean isComment, List<TopicComment> data, boolean isRefresh, long totalNumber);
 }

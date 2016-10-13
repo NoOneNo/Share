@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<declare-styleable name="SwipeRefreshLayout"> 
+	    
+	    <!-- Drawable to use as the loading view -->	
+		<attr name="src" format="reference"/> 
+	</declare-styleable>   
+	
+	<declare-styleable name="PullToRefreshLayout"> 
+
+	    <!-- Drawable to use as the arrow -->	    
+		<attr name="loadingArrowSrc" format="reference"/> 
+		
+		<!-- Drawable to use as the loading view -->
+		<attr name="loadingProgressSrc" format="reference"/>
+		
+		<!-- Wheather the loading view uses ProgressBar style or RotationAnimation style -->
+		<attr name="isAnimatedRotate" format="boolean"/> 	 		
+		
+        <!-- A drawable to use as the background of the refresh layout -->
+        <attr name="layoutBackground" format="reference|color" />
+
+        <!-- Text Color of the refresh description TextView -->
+        <attr name="refreshDescriptionTextColor" format="reference|color" />
+
+        <!-- Text Color of the refresh time TextView -->
+        <attr name="refreshTimeTextColor" format="reference|color" />
+        	
+        <!-- Text Size of the refresh description TextView -->
+        <attr name="refreshDescriptionTextAppearance" format="reference" />
+
+        <!-- Text Size of the refresh time TextView -->
+        <attr name="refreshTimeTextAppearance" format="reference" />
+        
+        <!-- Width Size of the arrow -->
+        <attr name="arrowWidth" format="dimension" /> 
+        
+        <!-- Height Size of the arrow -->
+        <attr name="arrowHeight" format="dimension" />    
+        
+        <!-- Width Size of the loading -->
+        <attr name="loadingWidth" format="dimension" /> 
+        
+        <!-- Height Size of the loading -->
+        <attr name="loadingHeight" format="dimension" />         
+        
+        <!-- Height Size of the refresh layout -->
+        <attr name="layoutHeight" format="dimension" />             
+	</declare-styleable>   	
+</resources>

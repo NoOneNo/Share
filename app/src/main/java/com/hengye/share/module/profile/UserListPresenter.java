@@ -71,7 +71,7 @@ public class UserListPresenter extends BasePresenter<UserListMvpView> {
                     public void onResponse(WBUserInfos response) {
                         L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
                         if (getMvpView() != null) {
-                            getMvpView().stopLoading(true);
+                            getMvpView().onTaskComplete(true, true);
 
                             List<UserInfo> userInfos = UserInfo.getUserInfos(response);
                             if(!CommonUtil.isEmpty(userInfos)){
@@ -88,8 +88,7 @@ public class UserListPresenter extends BasePresenter<UserListMvpView> {
             public void onErrorResponse(VolleyError error) {
                 L.debug("request fail , url : {}, error : {}", ub.getRequestUrl(), error);
                 if (getMvpView() != null) {
-                    getMvpView().stopLoading(true);
-                    getMvpView().loadFail(true);
+                    getMvpView().onTaskComplete(true, true);
                 }
             }
 
@@ -130,13 +129,12 @@ public class UserListPresenter extends BasePresenter<UserListMvpView> {
         return new BaseSubscriber<WBUserInfos>() {
             @Override
             public void onError(UserListMvpView v, Throwable e) {
-                v.stopLoading(isRefresh);
-                v.loadFail(isRefresh);
+                v.onTaskComplete(isRefresh, false);
             }
 
             @Override
             public void onNext(UserListMvpView v, WBUserInfos wbUserInfos) {
-                v.stopLoading(isRefresh);
+                v.onTaskComplete(isRefresh, true);
                 v.showUserListSuccess(UserInfo.getUserInfos(wbUserInfos), isRefresh);
                 mPager.setPageNumber(mPager.getPageNumber() + WBUtil.getWBTopicRequestCount());
 

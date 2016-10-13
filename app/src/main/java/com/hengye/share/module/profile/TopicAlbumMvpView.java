@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public interface TopicAlbumMvpView extends MvpView {
 
-    void stopLoading(boolean isRefresh);
+    void onTaskComplete(boolean isRefresh, boolean isSuccess);
 
     void handleAlbumData(ArrayList<Topic> topics, ArrayList<String> urls, boolean isRefresh);
 

@@ -167,7 +167,7 @@ public abstract class CommonAdapter<T> extends HeaderAdapter<ItemViewHolder> imp
             return false;
         }
         Collections.swap(mData, from, to);
-        notifyItemMoved(from, to);
+        notifyItemMoved(getActualItemPosition(from), getActualItemPosition(to));
         return true;
     }
 
@@ -175,8 +175,11 @@ public abstract class CommonAdapter<T> extends HeaderAdapter<ItemViewHolder> imp
         if (data == null) {
             return;
         }
+        int sizeBeforeAdd = mData.size();
         mData.addAll(data);
-        notifyDataSetChanged();
+//        notifyDataSetChanged();
+        notifyItemChanged(getActualItemPosition(sizeBeforeAdd));
+//        notifyItemRangeInserted(getActualItemPosition(sizeBeforeAdd), data.size() - 1);
     }
 
     public void addAll(int position, List<T> data) {

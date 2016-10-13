@@ -18,17 +18,12 @@ public class GroupManagePresenter extends BasePresenter<GroupManageMvpView> {
     @NonNull
     private final GroupManageDataSource mGroupManageRepository;
 
-    @NonNull
-    private final SchedulerProvider mSchedulerProvider;
-
     public GroupManagePresenter(
             @NonNull GroupManageMvpView mvpView,
-            @NonNull GroupManageDataSource groupManageRepository,
-            @NonNull SchedulerProvider schedulerProvider) {
+            @NonNull GroupManageDataSource groupManageRepository) {
         super(mvpView);
 
         mGroupManageRepository = groupManageRepository;
-        mSchedulerProvider = schedulerProvider;
     }
 
     public void loadGroupList() {

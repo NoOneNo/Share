@@ -5,11 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.hengye.share.util.L;
-
-import java.util.ArrayList;
 
 /**
  * Created by yuhy on 2016/10/10.
@@ -21,84 +18,85 @@ public abstract class HeaderAdapter<VH extends RecyclerView.ViewHolder> extends 
     private static final int TYPE_FOOTER = Integer.MIN_VALUE + 1;
     private static final int TYPE_OFFSET_MIN = TYPE_FOOTER;
 
-    private ArrayList<View> mHeaderViews = new ArrayList<>();
-    private ArrayList<View> mFooterViews = new ArrayList<>();
-    private LinearLayout mHeaderContainer, mFooterContainer;
+    private View mHeader, mFooter;
+    private RecyclerView mRecyclerView;
 
-    private LinearLayout getContainer() {
-        LinearLayout container = new LinearLayout(getContext());
-        container.setOrientation(LinearLayout.VERTICAL);
-        return container;
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        mRecyclerView = recyclerView;
     }
 
-    private void ensureHeader() {
-        if (mHeaderContainer == null) {
-            mHeaderContainer = getContainer();
-            if (isAddHeaderView()) {
-                notifyItemInserted(0);
+    public void setHeader(View header){
+        if(mHeader == header){
+            return;
+        }
+
+        int firstPosition = getHeaderPosition();
+        View headerBefore = mHeader;
+        mHeader = header;
+
+        if(headerBefore == null){
+            //footer属于新增
+            notifyItemInserted(firstPosition);
+        }else{
+            if(header != null){
+                //footer变了
+                notifyItemChanged(firstPosition);
+            }else {
+                //移除footer，移除后item总数少1，
+                notifyItemRemoved(firstPosition);
+            }
+
+            if(mRecyclerView != null){
+                mRecyclerView.removeView(headerBefore);
             }
         }
     }
 
-    private void ensureFooter() {
-        if (mFooterContainer == null) {
-            mFooterContainer = getContainer();
-            if (isAddFooterView()) {
-                notifyItemInserted(getItemCount() - 1);
+    public void setFooter(View footer){
+        if(mFooter == footer){
+            return;
+        }
+
+        int lastPosition = getFooterPosition();
+        View footerBefore = mFooter;
+        mFooter = footer;
+
+        if(footerBefore == null){
+            //footer属于新增
+            notifyItemInserted(lastPosition + 1);
+        }else{
+            if(footer != null){
+                //footer变了
+                notifyItemChanged(lastPosition);
+            }else {
+                //移除footer，移除后item总数少1，
+                notifyItemRemoved(lastPosition);
+            }
+
+            if(mRecyclerView != null){
+                mRecyclerView.removeView(footerBefore);
             }
         }
+
+
+//        if(isAddFooterView()){
+//            notifyItemChanged(getItemCount() - 1);
+//            if(mRecyclerView != null && beforView != null){
+//                mRecyclerView.removeView(beforView);
+//            }
+//        }else{
+//            notifyItemRemoved(getItemCount() - 1);
+//        }
     }
 
-    public void addHeaderView(View view) {
-        addHeaderView(view, -1);
+    public void removeHeader(){
+        setHeader(null);
     }
 
-    public void addHeaderView(View view, int index) {
-        if (index < 0) {
-            index = mHeaderViews.size();
-        }
-
-        mHeaderViews.add(view);
-        ensureHeader();
-        mHeaderContainer.addView(view, index);
-    }
-
-    public void addFooterView(View view) {
-        addFooterView(view, -1);
-    }
-
-    public void addFooterView(View view, int index) {
-        if (index < 0) {
-            index = mFooterViews.size();
-        }
-
-        mFooterViews.add(view);
-        ensureFooter();
-        mFooterContainer.addView(view, index);
-    }
-
-    public void removeHeaderView(View view) {
-        if (mHeaderContainer != null && removeViewInfo(view, mHeaderViews)) {
-            mHeaderContainer.removeView(view);
-        }
-    }
-
-    public void removeFooterView(View view) {
-        if (mFooterContainer != null && removeViewInfo(view, mFooterViews)) {
-            mFooterContainer.removeView(view);
-        }
-    }
-
-    private boolean removeViewInfo(View v, ArrayList<View> where) {
-        int len = where.size();
-        for (int i = 0; i < len; ++i) {
-            View view = where.get(i);
-            if (view == v) {
-                where.remove(i);
-                return true;
-            }
-        }
-        return false;
+    public void removeFooter(){
+        setFooter(null);
     }
 
     public void onBindHeaderView(ContainerViewHolder holder, int position) {
@@ -111,9 +109,9 @@ public abstract class HeaderAdapter<VH extends RecyclerView.ViewHolder> extends 
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == TYPE_HEADER) {
+        if (isAddHeaderView() && viewType == TYPE_HEADER) {
             return onCreateHeaderViewHolder();
-        } else if (viewType == TYPE_FOOTER) {
+        } else if (isAddFooterView() && viewType == TYPE_FOOTER) {
             return onCreateFooterViewHolder();
         }
 
@@ -126,11 +124,11 @@ public abstract class HeaderAdapter<VH extends RecyclerView.ViewHolder> extends 
     public abstract void onBasicItemViewHolderCreate(VH vh, int viewType);
 
     public RecyclerView.ViewHolder onCreateHeaderViewHolder() {
-        return new ContainerViewHolder(mHeaderContainer);
+        return new ContainerViewHolder(mHeader);
     }
 
     public RecyclerView.ViewHolder onCreateFooterViewHolder() {
-        return new ContainerViewHolder(mFooterContainer);
+        return new ContainerViewHolder(mFooter);
     }
 
     public abstract VH onCreateBasicItemViewHolder(ViewGroup parent, int viewType);
@@ -210,28 +208,21 @@ public abstract class HeaderAdapter<VH extends RecyclerView.ViewHolder> extends 
         return type;
     }
 
+    public int getHeaderPosition(){
+        return 0;
+    }
+
+    public int getFooterPosition(){
+        return getItemCount() - 1;
+    }
+
     public boolean isAddHeaderView() {
-        return !mHeaderViews.isEmpty();
+//        return mHeaderContainer != null;
+        return mHeader != null;
     }
 
     public boolean isAddFooterView() {
-        return !mFooterViews.isEmpty();
-    }
-
-    public int getHeaderViewsCount() {
-        return mHeaderViews.size();
-    }
-
-    public int getFooterViewsCount() {
-        return mFooterViews.size();
-    }
-
-    public LinearLayout getHeaderContainer() {
-        return mHeaderContainer;
-    }
-
-    public LinearLayout getFooterContainer() {
-        return mFooterContainer;
+        return mFooter != null;
     }
 
     /**
@@ -248,11 +239,12 @@ public abstract class HeaderAdapter<VH extends RecyclerView.ViewHolder> extends 
 
     public static class ContainerViewHolder extends RecyclerView.ViewHolder {
 
-        public LinearLayout container;
+        public View container;
 
-        public ContainerViewHolder(LinearLayout container) {
+        public ContainerViewHolder(View container) {
             super(container);
             this.container = container;
+//            setIsRecyclable(false);
         }
     }
 }

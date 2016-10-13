@@ -58,7 +58,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.hengye.swiperefresh.PullToRefreshLayout
+        <com.hengye.share.ui.widget.pulltorefresh.PullToRefreshLayout
             android:id="@+id/pull_to_refresh"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -67,9 +67,8 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view_search_result"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-        </com.hengye.swiperefresh.PullToRefreshLayout>
+                android:layout_height="match_parent"/>
+        </com.hengye.share.ui.widget.pulltorefresh.PullToRefreshLayout>
 
         <com.hengye.share.ui.widget.lettersort.SideBar
             android:id="@id/side_bar"

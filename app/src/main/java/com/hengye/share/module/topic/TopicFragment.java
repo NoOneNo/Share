@@ -135,12 +135,12 @@ public class TopicFragment extends RecyclerRefreshFragment<Topic> implements Top
     }
 
     @Override
-    public void stopLoading(boolean isRefresh) {
+    public void onTaskComplete(boolean isRefresh, boolean isSuccess) {
         if (isRefresh) {
             getLoadDataCallBack().refresh(false);
 //            getPullToRefresh().setRefreshing(false);
         } else {
-            setLoading(false);
+            stopLoading(isSuccess);
         }
     }
 

@@ -6,7 +6,7 @@
     android:background="@color/grey_100"
     android:orientation="vertical">
 
-    <com.hengye.swiperefresh.PullToRefreshLayout
+    <com.hengye.share.ui.widget.pulltorefresh.PullToRefreshLayout
         android:id="@+id/pull_to_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -15,8 +15,7 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_marginStart="-3dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
-    </com.hengye.swiperefresh.PullToRefreshLayout>
+            android:layout_height="match_parent"/>
+    </com.hengye.share.ui.widget.pulltorefresh.PullToRefreshLayout>
 
 </LinearLayout>

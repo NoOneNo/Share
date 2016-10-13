@@ -30,7 +30,7 @@ public class AccountManageAdapter extends CommonAdapter<User> {
         super(context, data);
         mCallBack = callBack;
 
-        addFooterView(inflate(R.layout.item_account_manage));
+        setFooter(inflate(R.layout.item_account_manage));
     }
 
 //    @Override

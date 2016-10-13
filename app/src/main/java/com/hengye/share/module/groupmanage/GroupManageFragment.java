@@ -31,7 +31,7 @@ public class GroupManageFragment extends RecyclerFragment implements GroupManage
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        addPresenter(mPresenter = new GroupManagePresenter(this, new GroupManageRepository(), SchedulerProvider.getInstance()));
+        addPresenter(mPresenter = new GroupManagePresenter(this, new GroupManageRepository()));
 
         initView();
 

@@ -140,7 +140,7 @@ public class AtUserActivity extends BaseActivity implements UserListMvpView {
         if (count == 0) {
             menuItem.setTitle(getResources().getString(R.string.label_confirm));
         } else {
-            menuItem.setTitle(String.format(getResources().getString(R.string.label_confirm_count), count));
+            menuItem.setTitle(getResources().getString(R.string.label_confirm_count, count + ""));
         }
         return true;
     }
@@ -405,9 +405,6 @@ public class AtUserActivity extends BaseActivity implements UserListMvpView {
 
     @Override
     public void showUserListSuccess(List<UserInfo> data, boolean isRefresh) {
-        mPullToRefreshLayout.setRefreshing(false);
-        mPullToRefreshLayout.setLoading(false);
-
         mSearchResultData = AtUser.getAtUser(data);
 
         SPUtil.setModule(mSearchResultData, AtUser.class.getSimpleName() + UserUtil.getUid());
@@ -415,13 +412,8 @@ public class AtUserActivity extends BaseActivity implements UserListMvpView {
     }
 
     @Override
-    public void loadFail(boolean isRefresh) {
-    }
-
-    @Override
-    public void stopLoading(boolean isRefresh) {
-        mPullToRefreshLayout.setRefreshing(false);
-        mPullToRefreshLayout.setLoading(false);
+    public void onTaskComplete(boolean isRefresh, boolean isSuccess) {
+        mPullToRefreshLayout.onTaskComplete(isSuccess);
     }
 
     @Override

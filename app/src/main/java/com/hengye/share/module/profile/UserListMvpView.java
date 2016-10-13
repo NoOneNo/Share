@@ -9,9 +9,7 @@ public interface UserListMvpView extends MvpView {
 
     void showUserListSuccess(List<UserInfo> data, boolean isRefresh);
 
-    void loadFail(boolean isRefresh);
-
-    void stopLoading(boolean isRefresh);
+    void onTaskComplete(boolean isRefresh, boolean isSuccess);
 
     void canLoadMore(boolean loadEnable);
 }

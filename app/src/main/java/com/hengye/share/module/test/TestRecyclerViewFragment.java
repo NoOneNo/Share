@@ -81,22 +81,24 @@ public class TestRecyclerViewFragment extends RecyclerFragment<String>{
         findViewById(R.id.btn_add_header).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                View header = LayoutInflater.from(getContext()).inflate(R.layout.header_empty, null);
+//                View header = LayoutInflater.from(getContext()).inflate(R.layout.header_empty, null);
+//                mAdapter.addHeaderView(header);
+//                mLayoutManager.scrollToPosition(0);
 
-                mAdapter.addHeaderView(header);
-                mLayoutManager.scrollToPosition(0);
 
+                mAdapter.removeHeader();
             }
         });
         findViewById(R.id.btn_add_footer).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                mAdapter.addItem(2, "haha");
-
-//                View header = LayoutInflater.from(getContext()).inflate(R.layout.header_empty, null);
+//                mAdapter.addItem(2, "haha");
 //
-//                mAdapter.addFooterView(header);
+                View header = LayoutInflater.from(getContext()).inflate(R.layout.footer_load_more, null);
+
+                mAdapter.setHeader(header);
+//                mLayoutManager.scrollToPosition(mLayoutManager.getItemCount() - 1);
 
             }
         });
