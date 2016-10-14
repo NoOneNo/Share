@@ -29,7 +29,7 @@ public class TestContentFragment extends ContentFragment {
     @Override
     public void initContent(@Nullable Bundle savedInstanceState) {
 //        showContent();
-//        showLoading();
+//        onShowLoading();
         showEmpty();
     }
 }

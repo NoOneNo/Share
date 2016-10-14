@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 
 import com.hengye.share.R;
 import com.hengye.share.adapter.recyclerview.CommonAdapter;
+import com.hengye.share.adapter.recyclerview.ItemViewHolder;
 import com.hengye.share.model.TopicFavorites;
 import com.hengye.share.module.topic.TopicAdapter;
 
@@ -22,4 +23,10 @@ public class TopicFavoritesAdapter extends CommonAdapter<TopicFavorites.TopicFav
         return new TopicAdapter.TopicDefaultViewHolder(inflate(R.layout.item_topic_total, parent));
     }
 
+    @Override
+    public void onBindBasicItemView(ItemViewHolder holder, int position) {
+        TopicAdapter.TopicDefaultViewHolder topicHolder = (TopicAdapter.TopicDefaultViewHolder) holder;
+        topicHolder.bindData(getContext(), getItem(position).getTopic(), position);
+
+    }
 }

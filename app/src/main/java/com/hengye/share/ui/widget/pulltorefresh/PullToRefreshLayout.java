@@ -16,7 +16,8 @@ import com.hengye.share.ui.widget.listview.CommonListView;
  * Created by yuhy on 2016/10/12.
  */
 
-public class PullToRefreshLayout extends com.hengye.swiperefresh.PullToRefreshLayout {
+public class PullToRefreshLayout extends com.hengye.swiperefresh.PullToRefreshLayout
+        implements com.hengye.swiperefresh.PullToRefreshLayout.AutoLoadingListener, com.hengye.swiperefresh.PullToRefreshLayout.OnLoadMoreCallBack {
 
 
     public PullToRefreshLayout(Context context) {
@@ -25,66 +26,17 @@ public class PullToRefreshLayout extends com.hengye.swiperefresh.PullToRefreshLa
 
     public PullToRefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        setOnLoadMoreCallBack(this);
+        setAutoLoadingListener(this);
     }
 
     private HeaderAdapter mHeaderAdapter;
     private RecyclerView mRecyclerView;
     private CommonListView mListView;
-    private View mLoading, mEnding, mLoadFail;
-    private int mLastScrollPosition;
+    private View mLoading, mLoadEnd, mLoadFail;
 
-    @Override
-    public void ensureTarget() {
-        boolean isEmpty = getTarget() == null;
-        super.ensureTarget();
-        if (isEmpty && getTarget() != null) {
-            if (getTarget() instanceof RecyclerView) {
-                mRecyclerView = (RecyclerView) getTarget();
-                mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-
-                    boolean hasLoading = false;
-
-                    @Override
-                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                        super.onScrolled(recyclerView, dx, dy);
-
-                        boolean canScrollDown = ViewCompat.canScrollVertically(mRecyclerView, 1);
-
-                        if (!hasLoading && !isLoadFail() && !isLoading() && !canScrollDown && isLoadEnable() && dy > 0) {
-                            hasLoading = true;
-                            startLoading();
-                        } else {
-                            hasLoading = false;
-                        }
-                    }
-                });
-            } else if (getTarget() instanceof CommonListView) {
-                mListView = (CommonListView) getTarget();
-                mListView.addOnScrollListener(new AbsListView.OnScrollListener() {
-                    @Override
-                    public void onScrollStateChanged(AbsListView view, int scrollState) {
-                        // 当不滚动时
-                        if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
-                            // 判断是否滚动到底部
-                            if (view.getLastVisiblePosition() == view.getCount() - 1) {
-
-                                if (!isLoadFail() && !isLoading() && isLoadEnable()) {
-                                    startLoading();
-                                }
-
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                    }
-                });
-            }
-        }
-    }
-
-    private boolean canCustomHeader() {
+    private boolean canCustomFooter() {
         if (mRecyclerView != null) {
             if (mHeaderAdapter != null) {
                 return true;
@@ -94,7 +46,7 @@ public class PullToRefreshLayout extends com.hengye.swiperefresh.PullToRefreshLa
             } else {
                 return false;
             }
-        } else if (mListView != null) {
+        }else if(mListView != null){
             return true;
         } else {
             return false;
@@ -102,99 +54,134 @@ public class PullToRefreshLayout extends com.hengye.swiperefresh.PullToRefreshLa
     }
 
     @Override
-    public void showLoadingView() {
-//        if (!canCustomHeader()) {
-            super.showLoadingView();
-//        } else {
-//            if (mRecyclerView != null) {
-//                mHeaderAdapter.setFooter(getLoading());
-//            } else if (mListView != null) {
-//                mListView.addFooterView(getLoading());
-//
-//                if (mEnding != null) {
-//                    mListView.removeFooterView(getEnding());
-//                }
-//            }
-//        }
-    }
+    public boolean setAutoLoading(View target) {
+        if (target instanceof RecyclerView) {
+            mRecyclerView = (RecyclerView) target;
+            mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                boolean hasLoading = false;
 
-    @Override
-    public void hideLoadingView() {
-//        if (!canCustomHeader()) {
-            super.hideLoadingView();
-//        } else {
-//            if (mRecyclerView != null) {
-//                mHeaderAdapter.removeFooter();
-//            } else if (mListView != null) {
-//
-//                if (mLoading != null) {
-//                    mListView.removeFooterView(getLoading());
-//                }
-//
-//                if (mEnding != null) {
-//                    mListView.removeFooterView(getEnding());
-//                }
-//            }
-//        }
-    }
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
 
-    boolean mLoadEnable = true;
+                    boolean canScrollDown = ViewCompat.canScrollVertically(recyclerView, 1);
 
-    @Override
-    public void setLoadEnable(boolean loadEnable) {
-        super.setLoadEnable(loadEnable);
+                    if (!hasLoading && !isLoadFail() && !isLoading() && !canScrollDown && isLoadEnable() && dy > 0) {
+                        hasLoading = true;
+                        startLoading();
+                    } else {
+                        hasLoading = false;
+                    }
+                }
+            });
+            return true;
+        } else if (getTarget() instanceof CommonListView) {
+            mListView = (CommonListView) target;
+            mListView.addOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+                    // 当不滚动时
+                    if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+                        // 判断是否滚动到底部
+                        if (view.getLastVisiblePosition() == view.getCount() - 1) {
+                            if (!isLoadFail() && !isLoading() && isLoadEnable()) {
+                                startLoading();
+                            }
+                        }
+                    }
+                }
 
-        if (mLoadEnable == loadEnable) {
-            return;
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                }
+            });
+            return true;
         }
+        return false;
+    }
 
-        mLoadEnable = loadEnable;
-        if (canCustomHeader() && !loadEnable) {
-            if (mRecyclerView != null) {
-                if (mLoading != null) {
-                    mHeaderAdapter.setFooter(getEnding());
-                } else {
+    @Override
+    public void showLoading() {
+        if(canCustomFooter()) {
+            if (mHeaderAdapter != null) {
+                mHeaderAdapter.setFooter(getLoading());
+            }else if(mListView != null){
+                removeListViewFooters();
+                mListView.addFooterView(getLoading(), null, false);
+            }
+        }
+    }
+
+    @Override
+    public void showLoadFail() {
+        if(canCustomFooter()) {
+            if (mHeaderAdapter != null) {
+                mHeaderAdapter.setFooter(getLoadFail());
+            }else if(mListView != null){
+                removeListViewFooters();
+                mListView.addFooterView(getLoadFail(), null, false);
+            }
+        }
+    }
+
+    @Override
+    public void showEnd() {
+        if(canCustomFooter()) {
+            if (mHeaderAdapter != null) {
+                if(mHeaderAdapter.getBasicItemCount() != 0) {
+                    mHeaderAdapter.setFooter(getLoadEnd());
+                }else{
                     mHeaderAdapter.removeFooter();
                 }
-            } else if (mListView != null) {
-
-                if (mLoading != null) {
-                    mListView.addFooterView(getEnding());
-                    mListView.removeFooterView(getLoading());
+            }else if(mListView != null){
+                removeListViewFooters();
+                int actualChildCount = mListView.getCount() - mListView.getHeaderViewsCount() - mListView.getFooterViewsCount();
+                if(actualChildCount > 0){
+                    mListView.addFooterView(getLoadEnd(), null, false);
                 }
             }
         }
     }
 
+    private void removeListViewFooters(){
+        mListView.removeFooterView(getLoading());
+        mListView.removeFooterView(getLoadFail());
+        mListView.removeFooterView(getLoadEnd());
+    }
+
     private View getLoading() {
         if (mLoading == null) {
             mLoading = View.inflate(getContext(), R.layout.footer_load_more, null);
-            mLoading.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
         return mLoading;
     }
 
-    private View getEnding() {
-        if (mEnding == null) {
-            mEnding = View.inflate(getContext(), R.layout.footer_ending, null);
-            mEnding.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+    private View getLoadEnd() {
+        if (mLoadEnd == null) {
+            mLoadEnd = View.inflate(getContext(), R.layout.footer_ending, null);
         }
-        return mEnding;
+        return mLoadEnd;
     }
 
-//    private View getLoadFail() {
-//        if (mLoadFail == null) {
-//            mLoadFail = View.inflate(getContext(), R.layout.footer_load_fail, null);
-//            mLoadFail.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//            mLoadFail.setOnClickListener(new OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    startLoading();
-//                }
-//            });
-//        }
-//        return mLoadFail;
-//    }
+    private View getLoadFail() {
+        if (mLoadFail == null) {
+            mLoadFail = View.inflate(getContext(), R.layout.footer_load_fail, null);
+            mLoadFail.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onShowLoading();
+                    postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            startLoading();
+                        }
+                    }, 1000);
+
+                }
+            });
+        }
+        return mLoadFail;
+    }
 
 }
 

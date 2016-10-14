@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="50dp"
+    android:gravity="center"
     android:padding="10dp">
 
         <ProgressBar
-            android:id="@+id/pull_to_refresh_foot_progress_bar"
-            style="@android:style/Widget.Holo.ProgressBar.Small"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
+            android:id="@+id/progress_bar"
+            style="@android:style/Widget.Material.Light.ProgressBar.Small"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:visibility="visible" />
 
-</FrameLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="正在加载... (๑•̀ㅂ•́)و✧"
+            android:textSize="14sp"/>
+</LinearLayout>

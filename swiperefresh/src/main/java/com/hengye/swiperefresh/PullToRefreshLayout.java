@@ -15,9 +15,7 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Transformation;
 import android.widget.AbsListView;
-import android.widget.HeaderViewListAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.hengye.swiperefresh.listener.SwipeListener.OnLoadListener;
 import com.hengye.swiperefresh.listener.SwipeListener.OnRefreshListener;
@@ -52,10 +50,12 @@ public class PullToRefreshLayout extends LinearLayout {
     protected int mActionDownOffsetTop;
     private int mCurrentTargetOffsetTop;
     private PullToRefreshHeader mPullToRefreshHeaderView;
-    private PullToRefreshLoading mPullToRefreshLoadingView;
-    private View mLoadingFailView;
     private View mTarget; // the target of the gesture
 
+    private boolean mIsAutoLoading = false;
+    private boolean mIsSetAutoLoading = false;
+    private AutoLoadingListener mAutoLoadingListener;
+    private OnLoadMoreCallBack mOnLoadMoreCallBack;
     // Target is returning to its start offset because it was cancelled or a
     // refresh was triggered.
     private boolean mRefreshing = false;
@@ -108,16 +108,6 @@ public class PullToRefreshLayout extends LinearLayout {
         a.recycle();
         final TypedArray b = context.obtainStyledAttributes(attrs, R.styleable.PullToRefreshLayout);
         mPullToRefreshHeaderView = new PullToRefreshHeader(context, b);
-        mPullToRefreshLoadingView = new PullToRefreshLoading(context, null);
-        mLoadingFailView = inflate(getContext(), R.layout.pull_to_refresh_load_fail, null);
-        mLoadingFailView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideLoadingFailView();
-                startLoading();
-            }
-        });
-
 
         b.recycle();
 
@@ -158,23 +148,16 @@ public class PullToRefreshLayout extends LinearLayout {
             return;
         }
 
-
         if (!mOriginalOffsetCalculated) {
             mOriginalOffsetCalculated = true;
             mPullToRefreshHeaderLayoutParams = (MarginLayoutParams) mPullToRefreshHeaderView.getLayoutParams();
             mCurrentTargetOffsetTop = mOriginalOffsetTop = mPullToRefreshHeaderLayoutParams.topMargin = -mPullToRefreshHeaderView.getHeight();
             mTotalDragTopDistance = mPullToRefreshHeaderView.getHeight();
-
-//            mPullToRefreshFooterLayoutParams = (MarginLayoutParams) mPullToRefreshLoadingView.getLayoutParams();
-//            mPullToRefreshFooterLayoutParams.topMargin = mTarget.getHeight();
-            //待完善
-//            mCurrentTargetOffsetTop = mOriginalOffsetTop = mPullToRefreshFooterLayoutParams.topMargin = - mPullToRefreshLoadingView.getHeight();
-//            mTotalDragTopDistance = mPullToRefreshHeaderView.getHeight();
         }
 
     }
 
-    public View getTarget(){
+    public View getTarget() {
         return mTarget;
     }
 
@@ -186,63 +169,24 @@ public class PullToRefreshLayout extends LinearLayout {
                 View child = getChildAt(i);
                 if (!child.equals(mPullToRefreshHeaderView)) {
 
-                    if(child.getTag() instanceof Boolean){
+                    if (child.getTag() instanceof Boolean) {
                         boolean isHeader = (Boolean) child.getTag();
-                        if(isHeader){
+                        if (isHeader) {
                             continue;
                         }
                     }
                     mTarget = child;
 
-
-//                    if (!(mTarget instanceof ListView)) {
-//                        addView(mPullToRefreshLoadingView);
-//                    }
+                    if (mAutoLoadingListener != null && !mIsSetAutoLoading) {
+                        mIsAutoLoading = mAutoLoadingListener.setAutoLoading(mTarget);
+                        mIsSetAutoLoading = true;
+                    }
                     break;
                 }
             }
-        }
-    }
-
-    public void showLoadingView() {
-        if (mTarget instanceof ListView) {
-            ListView lv = (ListView) mTarget;
-            lv.addFooterView(mPullToRefreshLoadingView, null, false);
-        } else {
-            addView(mPullToRefreshLoadingView);
-//            mPullToRefreshLoadingView.setVisibility(View.VISIBLE);
-        }
-    }
-
-    public void hideLoadingView() {
-        if (mTarget instanceof ListView) {
-            ListView lv = (ListView) mTarget;
-            if (lv.getAdapter() instanceof HeaderViewListAdapter) {
-                lv.removeFooterView(mPullToRefreshLoadingView);
-            }
-        } else {
-            removeView(mPullToRefreshLoadingView);
-        }
-    }
-
-    public void showLoadingFailView(){
-        if (mTarget instanceof ListView) {
-            ListView lv = (ListView) mTarget;
-            lv.addFooterView(mLoadingFailView, null, false);
-        } else {
-            addView(mLoadingFailView);
-        }
-
-    }
-
-    public void hideLoadingFailView(){
-        if (mTarget instanceof ListView) {
-            ListView lv = (ListView) mTarget;
-            if (lv.getAdapter() instanceof HeaderViewListAdapter) {
-                lv.removeFooterView(mLoadingFailView);
-            }
-        } else {
-            removeView(mLoadingFailView);
+        } else if (mAutoLoadingListener != null && !mIsSetAutoLoading) {
+            mIsAutoLoading = mAutoLoadingListener.setAutoLoading(mTarget);
+            mIsSetAutoLoading = true;
         }
     }
 
@@ -343,7 +287,7 @@ public class PullToRefreshLayout extends LinearLayout {
                 break;
         }
 
-        if (!isLoadFail() && mLoadEnable && isScrollUp && !mRefreshing && !mLoading && !canChildScrollDown()) {
+        if (!mIsAutoLoading && !isLoadFail() && mLoadEnable && isScrollUp && !mRefreshing && !mLoading && !canChildScrollDown()) {
             startLoading();
             return false;
         }
@@ -580,7 +524,7 @@ public class PullToRefreshLayout extends LinearLayout {
                 animateOffsetToCorrectPosition(mCurrentTargetOffsetTop, mRefreshAnimationListener);
             } else {
                 mPullToRefreshHeaderView.onRefreshComplete();
-                if(mIsAttachedToWindow) {
+                if (mIsAttachedToWindow) {
                     animateOffsetToStartPosition(mCurrentTargetOffsetTop, mResetAnimationListener);
                 }
             }
@@ -605,12 +549,12 @@ public class PullToRefreshLayout extends LinearLayout {
         }
     }
 
-    public void update(){
-        if(mRefreshing){
+    public void update() {
+        if (mRefreshing) {
             mPullToRefreshHeaderView.onRefreshStart();
             setTargetOffsetTopAndBottom(0, true);
 //            animateOffsetToCorrectPosition(mCurrentTargetOffsetTop, null);
-        }else{
+        } else {
             setTargetOffsetTopAndBottom(mOriginalOffsetTop, true);
             mResetting = false;
 //            animateOffsetToStartPosition(mCurrentTargetOffsetTop, null);
@@ -618,6 +562,7 @@ public class PullToRefreshLayout extends LinearLayout {
     }
 
     boolean mIsAttachedToWindow;
+
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
@@ -631,32 +576,63 @@ public class PullToRefreshLayout extends LinearLayout {
         mIsAttachedToWindow = false;
     }
 
-    public void startLoading(){
+    public void startLoading() {
         setLoading(true, false);
     }
 
-    public void stopLoading(boolean isSuccess){
+    public void stopLoading(boolean isSuccess) {
         setLoading(false, isSuccess);
     }
 
     private void setLoading(boolean loading, boolean isSuccess) {
-        if (mLoading == loading || (loading &&!mLoadEnable)) {
+        if (mLoading == loading || (loading && !mLoadEnable)) {
             return;
         }
         mLoading = loading;
-        mLoadFail = !isSuccess;
         if (loading && !mRefreshing) {
-            showLoadingView();
+            mLoadFail = false;
             onLoad();
         } else {
-            hideLoadingView();
-            if(!isSuccess) {
-                showLoadingFailView();
+            mLoadFail = !isSuccess;
+            if (mLoadFail) {
+                onShowLoadFail();
             }
         }
     }
 
-    public void setLoadFail(){
+    public void setLoadEnable(boolean loadEnable) {
+        mLoadEnable = loadEnable;
+        if (loadEnable) {
+            if(mLoadFail){
+                onShowLoadFail();
+            }else {
+                onShowLoading();
+            }
+        } else {
+            onShowEnd();
+        }
+    }
+
+
+    public void onShowLoading() {
+        if(mOnLoadMoreCallBack != null){
+            mOnLoadMoreCallBack.showLoading();
+        }
+    }
+
+    public void onShowLoadFail() {
+        if(mOnLoadMoreCallBack != null){
+            mOnLoadMoreCallBack.showLoadFail();
+        }
+    }
+
+    public void onShowEnd(){
+        if(mOnLoadMoreCallBack != null){
+            mOnLoadMoreCallBack.showEnd();
+        }
+    }
+
+    public void setLoadFail() {
         mLoadFail = true;
     }
 
@@ -666,32 +642,28 @@ public class PullToRefreshLayout extends LinearLayout {
         }
     }
 
-    public void onTaskComplete(boolean isSuccess){
-        if(isRefreshing()){
+    public void onTaskComplete(boolean isSuccess) {
+        if (isRefreshing()) {
             setRefreshing(false);
-        }else if(isLoading()){
+        } else if (isLoading()) {
             setLoading(false, isSuccess);
         }
     }
 
-    public boolean isRefreshing(){
+    public boolean isRefreshing() {
         return mRefreshing;
     }
 
-    public boolean isLoading(){
+    public boolean isLoading() {
         return mLoading;
     }
 
-    public boolean isLoadFail(){
+    public boolean isLoadFail() {
         return mLoadFail;
     }
 
     public boolean isLoadEnable() {
         return mLoadEnable;
-    }
-
-    public void setLoadEnable(boolean loadEnable) {
-        this.mLoadEnable = loadEnable;
     }
 
     public boolean isRefreshEnable() {
@@ -730,7 +702,29 @@ public class PullToRefreshLayout extends LinearLayout {
         return mPullToRefreshHeaderView;
     }
 
-    public PullToRefreshLoading getPullToRefreshFooterView() {
-        return mPullToRefreshLoadingView;
+    public void setAutoLoadingListener(AutoLoadingListener autoLoadingListener) {
+        this.mAutoLoadingListener = autoLoadingListener;
+    }
+
+    public OnLoadMoreCallBack getOnLoadMoreCallBack() {
+        return mOnLoadMoreCallBack;
+    }
+
+    public void setOnLoadMoreCallBack(OnLoadMoreCallBack onLoadMoreCallBack) {
+        this.mOnLoadMoreCallBack = onLoadMoreCallBack;
+    }
+
+    public interface AutoLoadingListener {
+
+        boolean setAutoLoading(View target);
+    }
+
+    public interface OnLoadMoreCallBack{
+
+        void showLoading();
+
+        void showLoadFail();
+
+        void showEnd();
     }
 }

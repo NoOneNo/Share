@@ -2,6 +2,7 @@ package com.hengye.share.module.test;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +17,9 @@ import com.hengye.share.adapter.recyclerview.CommonAdapter;
 import com.hengye.share.adapter.recyclerview.ItemViewHolder;
 import com.hengye.share.module.util.encapsulation.paging.PagingConfig;
 import com.hengye.share.module.util.encapsulation.paging.RecyclerFragment;
+import com.hengye.share.ui.widget.pulltorefresh.PullToRefreshLayout;
 import com.hengye.share.ui.widget.recyclerview.SimpleItemTouchHelperCallback;
+import com.hengye.swiperefresh.listener.SwipeListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,12 +84,11 @@ public class TestRecyclerViewFragment extends RecyclerFragment<String>{
         findViewById(R.id.btn_add_header).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                View header = LayoutInflater.from(getContext()).inflate(R.layout.header_empty, null);
-//                mAdapter.addHeaderView(header);
+                View header = LayoutInflater.from(getContext()).inflate(R.layout.footer_load_more, null);
+                mAdapter.setHeader(header);
 //                mLayoutManager.scrollToPosition(0);
 
-
-                mAdapter.removeHeader();
+//                mAdapter.removeHeader();
             }
         });
         findViewById(R.id.btn_add_footer).setOnClickListener(new View.OnClickListener() {
@@ -97,11 +99,36 @@ public class TestRecyclerViewFragment extends RecyclerFragment<String>{
 //
                 View header = LayoutInflater.from(getContext()).inflate(R.layout.footer_load_more, null);
 
-                mAdapter.setHeader(header);
+//                mAdapter.setFooter(header);
+
+                mAdapter.removeHeader();
 //                mLayoutManager.scrollToPosition(mLayoutManager.getItemCount() - 1);
 
             }
         });
+
+        final PullToRefreshLayout pullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.pull_to_refresh);
+
+//        pullToRefreshLayout.setLoadEnable(true);
+        pullToRefreshLayout.setOnLoadListener(new SwipeListener.OnLoadListener() {
+            @Override
+            public void onLoad() {
+
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        List<Object> data = new ArrayList<>();
+                        data.add(1);
+                        data.add(2);
+                        data.add(3);
+                        mAdapter.addAll(data);
+                        pullToRefreshLayout.stopLoading(true);
+                    }
+                },1000);
+            }
+        });
+
+
     }
 
     @Override
@@ -109,6 +136,7 @@ public class TestRecyclerViewFragment extends RecyclerFragment<String>{
         return mLayoutManager = new GridLayoutManager(getContext(), 3);
     }
 
+    Handler mHandler = new Handler();
     GridLayoutManager mLayoutManager;
     TestAdapter mAdapter;
 

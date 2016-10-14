@@ -140,8 +140,8 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     TopicCommentAdapter mAdapter;
     TabLayout mTabLayout, mTabLayoutAssist;
     int mTabLayoutHeight;
-    boolean mLoadCommentEnable = true;
-    boolean mLoadRepostEnable = true;
+    boolean mLoadCommentEnable = false;
+    boolean mLoadRepostEnable = false;
 
     View mTopicContentLayout;
     TextView mTopicContent;
@@ -382,7 +382,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                 if (mAdapter.isEmpty()) {
                     if (!mHasAddEmpty) {
                         mHasAddEmpty = true;
-                        mListView.addHeaderView(mEmptyView);
+                        mListView.addHeaderView(mEmptyView, null , false);
                     }
                 } else {
                     if (mHasAddEmpty) {
@@ -540,7 +540,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             if (mAdapter.isEmpty()) {
                 if (!mHasAddEmpty) {
                     mHasAddEmpty = true;
-                    mListView.addHeaderView(mEmptyView);
+                    mListView.addHeaderView(mEmptyView, null, false);
                 }
             }
         }
@@ -566,10 +566,9 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             if (CommonUtil.isEmpty(adapterData)) {
 //                    //内容为空
                 handleLoadMore(false, isComment);
-//                    mPullToRefreshLayout.setLoadEnable(false);
             } else if (data.size() < WBUtil.getWBTopicRequestCount()) {
                 //结果小于请求条数
-//                    mPullToRefreshLayout.setLoadEnable(false);
+                handleLoadMore(true, isComment);
             } else {
                 handleLoadMore(true, isComment);
             }
@@ -587,8 +586,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                 if (data.size() < WBUtil.getWBTopicRequestCount()) {
                     //没有更多的数据可供加载
                     //不可靠，有可能继续加载还有数据
-//                    mPullToRefreshLayout.setLoadEnable(false);
-//                    Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
+                    handleLoadMore(true, isComment);
                 }
                 //因为请求的数据是小于或等于max_id，需要做是否重复判断处理
                 if (data.get(0).getId() != null && data.get(0).getId().

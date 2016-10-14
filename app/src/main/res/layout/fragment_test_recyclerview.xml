@@ -8,17 +8,23 @@
         android:id="@+id/btn_add_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="add Header"/>
+        android:text="add Header" />
 
     <Button
         android:id="@+id/btn_add_footer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="add Footer"/>
+        android:text="add Footer" />
 
-    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/recycler_view"
+    <com.hengye.share.ui.widget.pulltorefresh.PullToRefreshLayout
+        android:id="@+id/pull_to_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
 
+        <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </com.hengye.share.ui.widget.pulltorefresh.PullToRefreshLayout>
 </LinearLayout>
