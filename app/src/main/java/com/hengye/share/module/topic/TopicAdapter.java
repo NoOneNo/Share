@@ -73,6 +73,7 @@ public class TopicAdapter extends CommonAdapter<Topic>
         mLongClickDialog = DialogBuilder.getOnLongClickTopicDialog(getContext(), this);
         setOnItemClickListener(this);
         setOnItemLongClickListener(this);
+        setCheckDiffMode(true);
     }
 
     @Override

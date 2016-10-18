@@ -103,7 +103,6 @@ public class TopicPageFragment extends RecyclerRefreshFragment<Topic> implements
     @Override
     public void handleTopicData(List<Topic> data, boolean isRefresh) {
         int type = handleData(isRefresh, data);
-        DataType.handleSnackBar(type, getParent(), data == null ? 0 : data.size());
     }
 
     @Override

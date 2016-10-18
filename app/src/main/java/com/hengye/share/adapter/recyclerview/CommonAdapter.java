@@ -11,18 +11,24 @@ import com.hengye.share.handler.data.base.DataAdapter;
 import com.hengye.share.ui.widget.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.listener.OnItemLongClickListener;
 import com.hengye.share.ui.widget.recyclerview.ItemTouchHelperAdapter;
+import com.hengye.share.util.DiffUtil;
+import com.hengye.share.util.L;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class CommonAdapter<T> extends HeaderAdapter<ItemViewHolder> implements DataAdapter<T>, ItemTouchHelperAdapter {
+import static com.hengye.share.util.DiffUtil.checkEquals;
+
+public abstract class CommonAdapter<T> extends HeaderAdapter<ItemViewHolder>
+        implements DataAdapter<T>, ItemTouchHelperAdapter {
 
     private Context mContext;
     private List<T> mData;
     private int mSelectPosition = -1;
     private OnItemClickListener mOnItemClickListener;
     private OnItemLongClickListener mOnItemLongClickListener;
+    private boolean mIsCheckDiffMode = false;
 
     public CommonAdapter() {
     }
@@ -40,12 +46,17 @@ public abstract class CommonAdapter<T> extends HeaderAdapter<ItemViewHolder> imp
         this.mData = data;
     }
 
-    public View inflate(@LayoutRes int layoutResId){
+    public View inflate(@LayoutRes int layoutResId) {
         return inflate(layoutResId, null);
     }
 
-    public View inflate(@LayoutRes int layoutResId, ViewGroup parent){
+    public View inflate(@LayoutRes int layoutResId, ViewGroup parent) {
         return LayoutInflater.from(getContext()).inflate(layoutResId, parent, false);
+    }
+
+    @Override
+    public ItemViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
+        return null;
     }
 
     @Override
@@ -54,7 +65,7 @@ public abstract class CommonAdapter<T> extends HeaderAdapter<ItemViewHolder> imp
         holder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(getOnItemClickListener() != null){
+                if (getOnItemClickListener() != null) {
                     getOnItemClickListener().onItemClick(v, getBasicItemPosition(holder));
                 }
             }
@@ -63,7 +74,7 @@ public abstract class CommonAdapter<T> extends HeaderAdapter<ItemViewHolder> imp
         holder.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if(getOnItemLongClickListener() != null){
+                if (getOnItemLongClickListener() != null) {
                     return getOnItemLongClickListener().onItemLongClick(v, getBasicItemPosition(holder));
                 }
                 return false;
@@ -72,6 +83,7 @@ public abstract class CommonAdapter<T> extends HeaderAdapter<ItemViewHolder> imp
 
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onBindBasicItemView(ItemViewHolder holder, int position) {
         holder.bindData(getContext(), getItem(position), position);
@@ -92,6 +104,7 @@ public abstract class CommonAdapter<T> extends HeaderAdapter<ItemViewHolder> imp
     }
 
     public T getItem(int position) {
+        position = getActualItemPosition(position);
         if (!isIndexOutOfBounds(position)) {
             return mData.get(position);
         }
@@ -108,11 +121,10 @@ public abstract class CommonAdapter<T> extends HeaderAdapter<ItemViewHolder> imp
     }
 
     /**
-     *
      * @param basicItemPosition 在{@link #mData}中的位置
      * @return 返回在RecyclerView实际中的position
      */
-    public int getActualItemPosition(int basicItemPosition){
+    public int getActualItemPosition(int basicItemPosition) {
         return basicItemPosition + (isAddHeaderView() ? 1 : 0);
     }
 
@@ -191,25 +203,51 @@ public abstract class CommonAdapter<T> extends HeaderAdapter<ItemViewHolder> imp
     }
 
     public void refresh(List<T> data) {
-        if (data == null) {
-            mData.clear();
+        if (!mIsCheckDiffMode) {
+            if (data == null) {
+                mData.clear();
+            } else {
+                mData = data;
+            }
+            notifyDataSetChanged();
         } else {
-            mData = data;
+            if (data == null && !mData.isEmpty()) {
+                mData.clear();
+                notifyDataSetChanged();
+            } else if (data != null && mData.isEmpty()) {
+                mData.clear();
+                mData = data;
+                notifyDataSetChanged();
+            } else if(data != null && !mData.isEmpty()){
+                int position = DiffUtil.checkEquals(data, mData);
+                if(position == -1){
+                    mData.clear();
+                    mData = data;
+                    notifyDataSetChanged();
+                    L.debug("not find equals");
+                }else if(position > 0){
+                    mData.addAll(0, data.subList(0, position - 1));
+                    notifyItemRangeInserted(getActualItemPosition(0), position);
+                    scrollToPosition(getActualItemPosition(0));
+                    L.debug("notifyItemRangeInserted from : {} to : {}", 0, position);
+                }else{
+                    L.debug("find equals at 0 not change");
+                }
+            }
         }
-        notifyDataSetChanged();
     }
 
     @Override
-    public boolean isItemSwipeEnabled(int position){
+    public boolean isItemSwipeEnabled(int position) {
         return !isIndexOutOfBounds(position);
     }
 
     @Override
-    public boolean isItemDragEnabled(int position){
+    public boolean isItemDragEnabled(int position) {
         return !isIndexOutOfBounds(position);
     }
 
-    public boolean isIndexOutOfBounds(int position){
+    public boolean isIndexOutOfBounds(int position) {
         return 0 > position || position >= mData.size();
     }
 
@@ -250,8 +288,16 @@ public abstract class CommonAdapter<T> extends HeaderAdapter<ItemViewHolder> imp
         return mSelectPosition;
     }
 
-    public boolean isSelectPosition(int position){
+    public boolean isSelectPosition(int position) {
         return mSelectPosition == position;
+    }
+
+    public boolean isCheckDiffMode() {
+        return mIsCheckDiffMode;
+    }
+
+    public void setCheckDiffMode(boolean checkDiffMode) {
+        mIsCheckDiffMode = checkDiffMode;
     }
 
     /**

@@ -14,5 +14,6 @@ android {
 
 dependencies {
     compile dep.appcompat
+    testCompile dep.junit
 }
 

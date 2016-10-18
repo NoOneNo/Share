@@ -11,6 +11,7 @@ import com.hengye.share.module.util.encapsulation.ContentFragment;
 import java.util.List;
 
 import static com.hengye.share.handler.data.base.DataType.LOAD_NO_DATA;
+import static com.hengye.share.handler.data.base.DataType.REFRESH_NO_DATA;
 
 /**
  * Created by yuhy on 16/7/27.
@@ -41,7 +42,7 @@ public abstract class PagingFragment<T> extends ContentFragment{
     }
 
     public void handleDataType(int type){
-        getPagingConfig().setLoadEnable(type != LOAD_NO_DATA);
+        getPagingConfig().setLoadEnable(type != LOAD_NO_DATA && type != REFRESH_NO_DATA);
     }
 
     public Pager getPager(){

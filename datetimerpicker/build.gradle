@@ -15,4 +15,5 @@ android {
 dependencies {
     provided dep.nineoldandroids
     compile dep.appcompat
+    testCompile dep.junit
 }

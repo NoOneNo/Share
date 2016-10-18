@@ -57,6 +57,7 @@ public class WBServiceErrorMsgUtil {
             {"21324", "安全方面考虑，开发人员重置了应用秘钥，当前应用被视为盗版，请重新从应用市场下载!"},
             {"21327", "授权过期，请重新授权"},
             {"21332", "授权过期，请重新授权"},
+            {"21335", "需要高级授权"},
             {"21602", "含有敏感词"},
             {"21923", "没有找到相关位置信息"},
             {"23201", "服务器请求超时"}
@@ -91,13 +92,13 @@ public class WBServiceErrorMsgUtil {
 //			try {
 //				jsonMsg = new JSONObject(response);
 //				if (jsonMsg.has("error")) {
-//					if (jsonMsg.has("error_code")) {
+//					if (jsonMsg.has("errorCode")) {
 //						msg = jsonMsg.getString("error");
 //						if ("invalid_access_token".equals(msg)) {
 //							code = "21327";
 //						}
 //						else {
-//							code = jsonMsg.getString("error_code");
+//							code = jsonMsg.getString("errorCode");
 //						}
 //						if (errorMap.containsKey(code))
 //							msg = errorMap.get(code);

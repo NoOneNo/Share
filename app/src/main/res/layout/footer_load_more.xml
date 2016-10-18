@@ -10,7 +10,8 @@
             style="@android:style/Widget.Material.Light.ProgressBar.Small"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:visibility="visible" />
+            android:visibility="visible"
+            android:indeterminate="true"/>
 
         <TextView
             android:layout_width="wrap_content"

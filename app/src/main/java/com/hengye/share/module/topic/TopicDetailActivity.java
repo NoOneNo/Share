@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.DataSetObserver;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
@@ -23,14 +22,14 @@ import android.widget.TextView;
 import com.hengye.floatingactionbutton.FloatingActionButton;
 import com.hengye.floatingactionbutton.FloatingActionsMenu;
 import com.hengye.share.R;
-import com.hengye.share.module.profile.PersonalHomepageActivity;
-import com.hengye.share.module.publish.TopicPublishActivity;
 import com.hengye.share.helper.TransitionHelper;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
-import com.hengye.share.service.TopicPublishService;
 import com.hengye.share.module.base.BaseActivity;
+import com.hengye.share.module.profile.PersonalHomepageActivity;
+import com.hengye.share.module.publish.TopicPublishActivity;
+import com.hengye.share.service.TopicPublishService;
 import com.hengye.share.ui.widget.OverLayView;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
 import com.hengye.share.ui.widget.fab.FabAnimator;
@@ -580,7 +579,6 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             if (CommonUtil.isEmpty(data)) {
                 //没有数据可供加载
                 handleLoadMore(false, isComment);
-                Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
             } else {
                 //成功加载更多
                 if (data.size() < WBUtil.getWBTopicRequestCount()) {
@@ -597,7 +595,6 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                 //当只有1条数据并且重复，data会空
                 if (CommonUtil.isEmpty(data)) {
                     handleLoadMore(false, isComment);
-                    Snackbar.make(mPullToRefreshLayout, "已经是最后内容", Snackbar.LENGTH_SHORT).show();
                 } else {
                     targetData.addAll(data);
                 }

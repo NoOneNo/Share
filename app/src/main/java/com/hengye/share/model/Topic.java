@@ -157,7 +157,7 @@ public class Topic extends ParentInherit implements TopicId, Serializable{
 
         Topic topic = (Topic) o;
 
-        return date.equals(topic.date);
+        return date.equals(topic.date) && id.equals(topic.id);
 
     }
 

@@ -27,7 +27,6 @@ import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.android.schedulers.HandlerScheduler;
 import rx.exceptions.OnErrorThrowable;
 import rx.functions.Func0;
@@ -118,6 +117,7 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
                 return Observable.just(1.0f, 2.0f, 3.0f);
             }
         })
+
 //                // Run on a background thread
                 .subscribeOn(HandlerScheduler.from(backgroundHandler))
                 // Be notified on the main thread

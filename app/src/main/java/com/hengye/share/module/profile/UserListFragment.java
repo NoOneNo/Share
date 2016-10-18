@@ -31,6 +31,11 @@ public class UserListFragment extends RecyclerRefreshFragment<Select<UserInfo>> 
     UserListAdapter mAdapter;
 
     @Override
+    public int getContentResId() {
+        return R.layout.fragment_recycler_refresh_vertical;
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 

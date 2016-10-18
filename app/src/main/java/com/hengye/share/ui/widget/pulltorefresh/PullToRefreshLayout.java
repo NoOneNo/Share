@@ -42,6 +42,7 @@ public class PullToRefreshLayout extends com.hengye.swiperefresh.PullToRefreshLa
                 return true;
             } else if (mRecyclerView.getAdapter() != null && mRecyclerView.getAdapter() instanceof HeaderAdapter) {
                 mHeaderAdapter = (HeaderAdapter) mRecyclerView.getAdapter();
+                mHeaderAdapter.setFooterFullSpan(true);
                 return true;
             } else {
                 return false;
@@ -58,19 +59,14 @@ public class PullToRefreshLayout extends com.hengye.swiperefresh.PullToRefreshLa
         if (target instanceof RecyclerView) {
             mRecyclerView = (RecyclerView) target;
             mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                boolean hasLoading = false;
-
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     super.onScrolled(recyclerView, dx, dy);
 
                     boolean canScrollDown = ViewCompat.canScrollVertically(recyclerView, 1);
 
-                    if (!hasLoading && !isLoadFail() && !isLoading() && !canScrollDown && isLoadEnable() && dy > 0) {
-                        hasLoading = true;
+                    if (canLoadMore() && !canScrollDown && dy > 0) {
                         startLoading();
-                    } else {
-                        hasLoading = false;
                     }
                 }
             });

@@ -9,7 +9,6 @@ import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.util.GsonUtil;
 import com.hengye.share.util.HandlerUtil;
 import com.hengye.share.util.L;
-import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.intercept.AdTokenInterceptor;
 
@@ -31,44 +30,54 @@ public class WBServiceErrorHandler {
 
 
     public void checkError(Throwable throwable) {
+        WBApiException apiException = null;
         if (throwable instanceof HttpException) {
             HttpException httpException = (HttpException) throwable;
-            checkErrorFromResponse(httpException.response());
+            apiException = checkErrorFromResponse(httpException.response());
+        }else if(throwable instanceof WBApiException){
+            apiException = (WBApiException) throwable;
         }
+
+        handleApiException(apiException);
     }
 
-    public void checkErrorFromResponse(Response response) {
+    private WBApiException checkErrorFromResponse(Response response) {
         if (response == null || response.errorBody() == null) {
-            return;
+            return null;
         }
 
-        WBServiceError wbServiceError = null;
+        WBApiException wbApiException = null;
         try {
             String error = response.errorBody().string();
 
-            wbServiceError = GsonUtil.fromJson(error, WBServiceError.class);
+            wbApiException = GsonUtil.fromJson(error, WBApiException.class);
             L.debug("checkErrorFromResponse : {}", error);
         } catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            response.errorBody().close();
         }
 
-        if(wbServiceError == null){
+        if(wbApiException == null){
             if(response.code() == 503){
-                wbServiceError = WBServiceError.get503ServiceError();
+                wbApiException = WBApiException.get503ServiceError();
             }
         }
+        return wbApiException;
+    }
 
-        if(wbServiceError == null){
+    private void handleApiException(WBApiException wbApiException){
+        if(wbApiException == null){
             return;
         }
 
-        if(!handleError(wbServiceError)){
-            showErrorDialog(wbServiceError);
+        if(!handleCustomApiException(wbApiException)){
+            showErrorDialog(wbApiException);
         }
     }
 
-    public boolean handleError(WBServiceError wbServiceError){
-        if(wbServiceError.error_code.equals("10014")){
+    private boolean handleCustomApiException(WBApiException wbApiException){
+        if(wbApiException.isNeedAdPermission()){
             HandlerUtil.getInstance().post(new Runnable() {
                 @Override
                 public void run() {
@@ -85,7 +94,7 @@ public class WBServiceErrorHandler {
     }
 
     private boolean mIsDialogShowing = false;
-    public void showErrorDialog(WBServiceError wbServiceError){
+    private void showErrorDialog(WBApiException wbApiException){
 
         Activity activity = BaseActivity.getCurrentActivity();
 
@@ -96,7 +105,7 @@ public class WBServiceErrorHandler {
         final AlertDialog.Builder builder = new AlertDialog.Builder(activity)
                 .setCancelable(true)
                 .setTitle(activity.getString(R.string.dialog_text_error_tip))
-                .setMessage("(" +  wbServiceError.error_code + ")" + getWBServiceErrorMsg(wbServiceError))
+                .setMessage("(" +  wbApiException.errorCode + ")" + getWBServiceErrorMsg(wbApiException))
                 .setPositiveButton(activity.getString(R.string.dialog_text_confirm), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -119,55 +128,9 @@ public class WBServiceErrorHandler {
         });
     }
 
-    public String getWBServiceErrorMsg(WBServiceError wbServiceError){
-        String msg = WBServiceErrorMsgUtil.getErrorMsg(wbServiceError.error_code);
-        return msg == null ? wbServiceError.error : msg;
-    }
-
-    private static class WBServiceError{
-
-        protected static WBServiceError get503ServiceError(){
-            WBServiceError wbServiceError = new WBServiceError();
-            wbServiceError.setError(ResUtil.getString(R.string.tip_error_service_unavailable));
-            wbServiceError.setError_code("503");
-            wbServiceError.setRequest("");
-            return wbServiceError;
-        }
-
-
-        /**
-         * request : /statuses/home_timeline.json
-         * error_code : 20502
-         * error : Need you follow uid.
-         */
-
-        private String request;
-        private String error_code;
-        private String error;
-
-        public String getRequest() {
-            return request;
-        }
-
-        public void setRequest(String request) {
-            this.request = request;
-        }
-
-        public String getError_code() {
-            return error_code;
-        }
-
-        public void setError_code(String error_code) {
-            this.error_code = error_code;
-        }
-
-        public String getError() {
-            return error;
-        }
-
-        public void setError(String error) {
-            this.error = error;
-        }
+    private String getWBServiceErrorMsg(WBApiException wbApiException){
+        String msg = WBServiceErrorMsgUtil.getErrorMsg(wbApiException.getErrorcodeStr());
+        return msg == null ? wbApiException.error : msg;
     }
 }
 

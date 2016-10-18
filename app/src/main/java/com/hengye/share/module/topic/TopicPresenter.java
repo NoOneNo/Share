@@ -21,6 +21,7 @@ import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
+import com.hengye.share.util.rxjava.RxUtil;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 import com.hengye.share.util.thirdparty.WBUtil;
 
@@ -31,6 +32,7 @@ import java.util.Map;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Func1;
 
 public class TopicPresenter extends BasePresenter<TopicMvpView> {
 
@@ -60,9 +62,13 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
                     isNeedLoadId = false;
                 }
 
-                isNeedLoadId = false;
+//                isNeedLoadId = false;
                 if(isRefresh){
-                    id = "0";
+                    if(mTopicGroup.topicType != TopicType.GROUP_LIST) {
+                        id = "0";
+                    }else{
+                        id = "1";
+                    }
                 }
                 loadWBTopicIds(id, isRefresh, isNeedLoadId);
 
@@ -120,7 +126,6 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
                 .subscribe(getWBTopicIdsSubscriber(since_id));
-
     }
 
     public void loadWBAllTopic(String id, final boolean isRefresh) {

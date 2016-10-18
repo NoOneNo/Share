@@ -77,6 +77,7 @@ public class PullToRefreshLayout extends LinearLayout {
     private float mInitialDownY;
     private boolean mIsBeingDragged;
     private int mActivePointerId = INVALID_POINTER;
+    private long mRefreshCompleteDelay = 1500;
 
 
     /**
@@ -287,7 +288,7 @@ public class PullToRefreshLayout extends LinearLayout {
                 break;
         }
 
-        if (!mIsAutoLoading && !isLoadFail() && mLoadEnable && isScrollUp && !mRefreshing && !mLoading && !canChildScrollDown()) {
+        if (!mIsAutoLoading && canLoadMore() && isScrollUp && !canChildScrollDown()) {
             startLoading();
             return false;
         }
@@ -301,6 +302,13 @@ public class PullToRefreshLayout extends LinearLayout {
             return mIsBeingDragged;
 //            return mIsBeingDragged || (isScrollUp && mRefreshing);
         }
+    }
+
+    public boolean canLoadMore(){
+        if(!isLoadFail() && isLoadEnable() && !isRefreshing() && !isLoading()){
+            return true;
+        }
+        return false;
     }
 
     private float getMotionEventY(MotionEvent ev, int activePointerId) {
@@ -523,14 +531,23 @@ public class PullToRefreshLayout extends LinearLayout {
                 mPullToRefreshHeaderView.onRefreshStart();
                 animateOffsetToCorrectPosition(mCurrentTargetOffsetTop, mRefreshAnimationListener);
             } else {
-                mPullToRefreshHeaderView.onRefreshComplete();
-                if (mIsAttachedToWindow) {
-                    animateOffsetToStartPosition(mCurrentTargetOffsetTop, mResetAnimationListener);
-                }
+
+                postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshComplete();
+                    }
+                }, mRefreshCompleteDelay);
             }
         }
     }
 
+    private void refreshComplete(){
+        mPullToRefreshHeaderView.onRefreshComplete();
+        if (mIsAttachedToWindow) {
+            animateOffsetToStartPosition(mCurrentTargetOffsetTop, mResetAnimationListener);
+        }
+    }
 
     /**
      * Notify the widget that refresh state has changed. Do not call this when
@@ -712,6 +729,14 @@ public class PullToRefreshLayout extends LinearLayout {
 
     public void setOnLoadMoreCallBack(OnLoadMoreCallBack onLoadMoreCallBack) {
         this.mOnLoadMoreCallBack = onLoadMoreCallBack;
+    }
+
+    public long getRefreshCompleteDelay() {
+        return mRefreshCompleteDelay;
+    }
+
+    public void setRefreshCompleteDelay(long refreshCompleteDelay) {
+        this.mRefreshCompleteDelay = refreshCompleteDelay;
     }
 
     public interface AutoLoadingListener {

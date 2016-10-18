@@ -13,14 +13,16 @@ import static com.hengye.share.handler.data.base.DataType.LOAD_NO_DATA;
 /**
  * Created by yuhy on 16/7/27.
  */
-public abstract class RecyclerRefreshFragment<T> extends RecyclerFragment<T>{
+public abstract class RecyclerRefreshFragment<T> extends RecyclerFragment<T> {
 
     @Override
     public int getContentResId() {
         return R.layout.fragment_recycler_refresh;
     }
 
-    public @IdRes int getPullToRefreshId() {
+    public
+    @IdRes
+    int getPullToRefreshId() {
         return R.id.pull_to_refresh;
     }
 
@@ -37,37 +39,38 @@ public abstract class RecyclerRefreshFragment<T> extends RecyclerFragment<T>{
     }
 
     public void onTaskComplete(boolean isSuccess) {
-        if(mPullToRefresh != null) {
+        if (mPullToRefresh != null) {
             mPullToRefresh.onTaskComplete(isSuccess);
         }
     }
 
     public void setRefreshEnable(boolean enable) {
-        if(mPullToRefresh != null) {
+        if (mPullToRefresh != null) {
             mPullToRefresh.setRefreshEnable(enable);
         }
     }
 
     public void setLoadEnable(boolean enable) {
-        if(mPullToRefresh != null) {
+        if (mPullToRefresh != null) {
             mPullToRefresh.setLoadEnable(enable);
         }
     }
 
-    public void setRefreshing(boolean refreshing) {
-        if(mPullToRefresh != null) {
+
+    public void setRefreshing(final boolean refreshing) {
+        if (mPullToRefresh != null) {
             mPullToRefresh.setRefreshing(refreshing);
         }
     }
 
-    public void startLoading(){
-        if(mPullToRefresh != null){
+    public void startLoading() {
+        if (mPullToRefresh != null) {
             mPullToRefresh.startLoading();
         }
     }
 
-    public void stopLoading(boolean isSuccess){
-        if(mPullToRefresh != null){
+    public void stopLoading(boolean isSuccess) {
+        if (mPullToRefresh != null) {
             mPullToRefresh.stopLoading(isSuccess);
         }
     }

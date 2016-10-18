@@ -61,27 +61,26 @@ public class PullToRefreshHeader extends FrameLayout implements PullToRefreshCal
 		mRefreshTime = (TextView) findViewById(R.id.pull_to_refresh_last_updated_time);
 		mProgressBar = (ProgressBar) findViewById(R.id.pull_to_refresh_progress_bar);
 		mLoading = findViewById(R.id.pull_to_refresh_loading);
-		mProgress = mProgressBar;
+
+		// dispose loading
+		mIsAnimatedRotate = attrs.getBoolean(R.styleable.PullToRefreshLayout_isAnimatedRotate, true);
+		if (mIsAnimatedRotate) {
+			mProgress = mProgressBar;
+		}else{
+			mProgress = mLoading;
+		}
 
 		initContentDescription();
 		hideProgress();
 
-		if(attrs == null){
-			return;
-		}
+
 		// dispose arrow
 		if (attrs.hasValue(R.styleable.PullToRefreshLayout_loadingArrowSrc)) {
 			Drawable drawable = attrs.getDrawable(R.styleable.PullToRefreshLayout_loadingArrowSrc);
 			mArrow.setImageDrawable(drawable);
 		}
 		
-		// dispose loading
-		mIsAnimatedRotate = attrs.getBoolean(R.styleable.PullToRefreshLayout_isAnimatedRotate, false);
-		if (mIsAnimatedRotate) {
-			mProgress = mProgressBar;
-		}else{
-			mProgress = mLoading;
-		}
+
 
 		if (attrs.hasValue(R.styleable.PullToRefreshLayout_loadingProgressSrc)) {
 			Drawable drawable = attrs.getDrawable(R.styleable.PullToRefreshLayout_loadingProgressSrc);
