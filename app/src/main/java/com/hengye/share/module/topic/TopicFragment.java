@@ -4,6 +4,7 @@ package com.hengye.share.module.topic;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
@@ -20,19 +21,24 @@ import com.hengye.share.module.util.encapsulation.paging.RecyclerRefreshFragment
 import com.hengye.share.ui.widget.fab.FabAnimator;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.UserUtil;
+import com.hengye.share.util.thirdparty.WBUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TopicFragment extends RecyclerRefreshFragment<Topic> implements TopicMvpView {
 
-    public static TopicFragment newInstance(TopicPresenter.TopicGroup topicGroup, String uid, String name) {
-        TopicFragment fragment = new TopicFragment();
+    public static Bundle getBundle(TopicPresenter.TopicGroup topicGroup, String uid, String name){
         Bundle bundle = new Bundle();
         bundle.putSerializable("topicGroup", topicGroup);
         bundle.putSerializable("uid", uid);
         bundle.putSerializable("name", name);
-        fragment.setArguments(bundle);
+        return bundle;
+    }
+
+    public static TopicFragment newInstance(TopicPresenter.TopicGroup topicGroup, String uid, String name) {
+        TopicFragment fragment = new TopicFragment();
+        fragment.setArguments(getBundle(topicGroup, uid, name));
         return fragment;
     }
 
@@ -48,6 +54,7 @@ public class TopicFragment extends RecyclerRefreshFragment<Topic> implements Top
     TopicPresenter mPresenter;
     TopicPresenter.TopicGroup topicGroup;
     String uid, name;
+    LinearLayoutManager mLinearLayoutManager;
 
     @Override
     protected void handleBundleExtra(Bundle bundle) {
@@ -66,6 +73,7 @@ public class TopicFragment extends RecyclerRefreshFragment<Topic> implements Top
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
         super.onViewCreated(view, savedInstanceState);
+        mLinearLayoutManager = (LinearLayoutManager)getRecyclerView().getLayoutManager();
         setAdapter(mAdapter = new TopicAdapter(getContext(), new ArrayList<Topic>(), getRecyclerView()));
         mTopicPager = new TopicAdapterIdPager(mAdapter);
         mHandler = new TopicIdHandler<>(mAdapter);
@@ -126,38 +134,54 @@ public class TopicFragment extends RecyclerRefreshFragment<Topic> implements Top
     @Override
     public void handleCache(List<Topic> data) {
         if (CommonUtil.isEmpty(data)) {
+            showLoading();
             getLoadDataCallBack().refresh(true);
-//            getPullToRefresh().setRefreshing(true);
         } else {
-            mAdapter.refresh(data);
-            setLoadEnable(true);
+            handleData(true, data);
+//            mAdapter.refresh(data);
+//            setLoadEnable(true);
         }
     }
 
-    @Override
-    public void onTaskComplete(boolean isRefresh, boolean isSuccess) {
-        if (isRefresh) {
-            getLoadDataCallBack().refresh(false);
-//            getPullToRefresh().setRefreshing(false);
-        } else {
-            stopLoading(isSuccess);
-        }
-    }
-
-    @Override
     public void handleNoMoreTopics() {
         Snackbar.make(getParent(), "没有新的微博", Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
-    public void handleTopicData(List<Topic> data, boolean isRefresh) {
-        int type = handleData(isRefresh, data);
-        if (topicGroup.isReadingType() && !CommonUtil.isEmpty(data) && !SettingHelper.isOrderReading()) {
-            getRecyclerView().scrollToPosition(data.size() - 1);
+    public void onTaskComplete(boolean isRefresh, int taskState) {
+        super.onTaskComplete(isRefresh, taskState);
+        if(isRefresh){
+            getLoadDataCallBack().refresh(false);
         }
-//        DataType.handleSnackBar(type, getRecyclerView(), data == null ? 0 : data.size());
+    }
+
+    @Override
+    public void onLoadListData(boolean isRefresh, List<Topic> data) {
+//        if (isRefresh
+//                && topicGroup.isReadingType()
+//                && !CommonUtil.isEmpty(data)
+//                && !SettingHelper.isOrderReading()
+//                && mLinearLayoutManager.findFirstVisibleItemPosition() == mAdapter.getHeaderPosition()) {
+//            getRecyclerView().scrollToPosition(data.size() - 1);
+//        }
+        super.onLoadListData(isRefresh, data);
+
+    }
+
+    @Override
+    public void handleDataType(int type) {
+        super.handleDataType(type);
         if(DataType.hasNewData(type)){
             mPresenter.saveData(mAdapter.getData());
+        }
+    }
+
+    @Override
+    public boolean canLoadMore(List<Topic> data, int type) {
+        if(data != null && data.size() < WBUtil.getWBTopicRequestCount() / 2){
+            return false;
+        }else {
+            return super.canLoadMore(data, type);
         }
     }
 
@@ -182,7 +206,11 @@ public class TopicFragment extends RecyclerRefreshFragment<Topic> implements Top
 
         @Override
         public void refresh(boolean isRefreshing) {
-            setRefreshing(isRefreshing);
+            if(isRefreshing){
+                onRefresh();
+            }else{
+                setRefreshing(false);
+            }
         }
     }
 }

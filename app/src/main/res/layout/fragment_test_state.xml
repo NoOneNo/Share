@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btn_show_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="showContent"
+        android:text="show content" />
+
+    <Button
+        android:id="@+id/btn_show_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="showEmpty"
+        android:text="show empty" />
+
+    <Button
+        android:id="@+id/btn_show_no_network"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="showNoNetwork"
+        android:text="show no network" />
+
+    <Button
+        android:id="@+id/btn_show_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="showLoading"
+        android:text="show loading" />
+
+    <FrameLayout
+        android:id="@+id/content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>

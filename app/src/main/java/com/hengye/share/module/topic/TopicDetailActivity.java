@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.DataSetObserver;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
@@ -25,6 +26,7 @@ import com.hengye.share.R;
 import com.hengye.share.helper.TransitionHelper;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
+import com.hengye.share.model.greenrobot.TopicDraft;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.module.profile.PersonalHomepageActivity;
@@ -38,6 +40,7 @@ import com.hengye.share.util.ClipboardUtil;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.IntentUtil;
+import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.swiperefresh.PullToRefreshLayout;
@@ -89,7 +92,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         addPresenter(mPresenter = new TopicDetailPresenter(this));
         initView();
         initBroadcastReceiver();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mPublishResultBroadcastReceiver, new IntentFilter(TopicPublishService.ACTION_PUBLISH));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mPublishResultBroadcastReceiver, new IntentFilter(TopicPublishService.ACTION_PUBLISH + CommonUtil.UNDERLINE + mTopic.getId()));
     }
 
     @Override
@@ -177,7 +180,15 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             @Override
             public void onClick(View view) {
                 int id = view.getId();
-                if (id == R.id.tv_topic_content || id == R.id.gl_topic_gallery || id == R.id.ll_topic_retweeted_content) {
+                if (id == R.id.iv_topic_avatar || id == R.id.tv_topic_username || id == R.id.tv_topic_description) {
+                    //为了显示波纹效果再启动
+                    getHandler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            PersonalHomepageActivity.start(TopicDetailActivity.this, topicViewHolder.mTopicTitle.mAvatar, mTopic.getUserInfo());
+                        }
+                    }, 100);
+                } else if (id == R.id.tv_topic_content || id == R.id.gl_topic_gallery || id == R.id.ll_topic_retweeted_content) {
                     final boolean isRetweeted = (Boolean) view.getTag();
                     if (!isRetweeted) {
                         return;
@@ -192,7 +203,6 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                                     true);
                         }
                     }, 200);
-//            startTopicDetail(isRetweeted, position);
                 }
             }
         });
@@ -381,7 +391,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                 if (mAdapter.isEmpty()) {
                     if (!mHasAddEmpty) {
                         mHasAddEmpty = true;
-                        mListView.addHeaderView(mEmptyView, null , false);
+                        mListView.addHeaderView(mEmptyView, null, false);
                     }
                 } else {
                     if (mHasAddEmpty) {
@@ -397,43 +407,43 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         mPublishResultBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-//                boolean isSuccess = intent.getBooleanExtra(TopicPublishService.EXTRA_IS_SUCCESS, false);
-//                int type = intent.getIntExtra(TopicPublishService.EXTRA_TYPE, -1);
-//                if (isSuccess) {
-//                    TopicComment tc = (TopicComment) intent.getSerializableExtra(TopicPublishService.EXTRA_DATA);
-//                    if (tc == null) {
-//                        return;
-//                    }
-//                    if (type == TopicDraftHelper.REPOST_TOPIC) {
-//                        mTabLayout.getTabAt(1).select();
-//                    } else {
-//                        mTabLayout.getTabAt(0).select();
-//                    }
-//                    mAdapter.addItem(0, tc);
-//                } else {
-//                    final TopicDraft topicDraft = (TopicDraft) intent.getSerializableExtra(TopicPublishService.EXTRA_DRAFT);
-//                    if (topicDraft == null) {
-//                        return;
-//                    }
-//
-//                    int resId;
-//                    if (type == TopicDraftHelper.REPOST_TOPIC) {
-//                        resId = R.string.label_topic_publish_repost_fail;
-//                    } else if (type == TopicDraftHelper.PUBLISH_COMMENT) {
-//                        resId = R.string.label_topic_publish_comment_fail;
-//                    } else {
-//                        resId = R.string.label_topic_reply_comment_fail;
-//                    }
-//                    Snackbar sb = ToastUtil.getSnackBar(resId, mFab);
-//                    sb.setDuration(Snackbar.LENGTH_LONG);
-//                    sb.setAction(R.string.label_topic_publish_retry, new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            TopicPublishService.publish(TopicDetailActivity.this, topicDraft);
-//                        }
-//                    });
-//                    sb.show();
-//                }
+                int status = intent.getIntExtra(TopicPublishService.EXTRA_STATUS, TopicPublishService.STATUS_FAIL);
+                int type = intent.getIntExtra(TopicPublishService.EXTRA_TYPE, -1);
+                if (status == TopicPublishService.STATUS_SUCCESS) {
+                    TopicComment tc = (TopicComment) intent.getSerializableExtra(TopicPublishService.EXTRA_DATA);
+                    if (tc == null) {
+                        return;
+                    }
+                    if (type == TopicDraftHelper.REPOST_TOPIC) {
+                        mTabLayout.getTabAt(1).select();
+                    } else {
+                        mTabLayout.getTabAt(0).select();
+                    }
+                    mAdapter.addItem(0, tc);
+                } else if(status == TopicPublishService.STATUS_FAIL){
+                    final TopicDraft topicDraft = (TopicDraft) intent.getSerializableExtra(TopicPublishService.EXTRA_DRAFT);
+                    if (topicDraft == null) {
+                        return;
+                    }
+
+                    int resId;
+                    if (type == TopicDraftHelper.REPOST_TOPIC) {
+                        resId = R.string.label_topic_publish_repost_fail;
+                    } else if (type == TopicDraftHelper.PUBLISH_COMMENT) {
+                        resId = R.string.label_topic_publish_comment_fail;
+                    } else {
+                        resId = R.string.label_topic_reply_comment_fail;
+                    }
+                    Snackbar sb = ToastUtil.getSnackBar(resId, mActionsMenu);
+                    sb.setDuration(Snackbar.LENGTH_LONG);
+                    sb.setAction(R.string.label_topic_publish_retry, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            TopicPublishService.publish(TopicDetailActivity.this, topicDraft);
+                        }
+                    });
+                    sb.show();
+                }
             }
         };
     }
@@ -563,11 +573,11 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 //            if(mHasCommentRequestSuccess && mHasRepostRequestSuccess){
             List<TopicComment> adapterData = isSelectedCommentTab() ? mCommentData : mRepostData;
             if (CommonUtil.isEmpty(adapterData)) {
-//                    //内容为空
+                 //内容为空
                 handleLoadMore(false, isComment);
             } else if (data.size() < WBUtil.getWBTopicRequestCount()) {
                 //结果小于请求条数
-                handleLoadMore(true, isComment);
+                handleLoadMore(data.size() > 8, isComment);
             } else {
                 handleLoadMore(true, isComment);
             }
@@ -584,7 +594,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                 if (data.size() < WBUtil.getWBTopicRequestCount()) {
                     //没有更多的数据可供加载
                     //不可靠，有可能继续加载还有数据
-                    handleLoadMore(true, isComment);
+                    handleLoadMore(data.size() > 8, isComment);
                 }
                 //因为请求的数据是小于或等于max_id，需要做是否重复判断处理
                 if (data.get(0).getId() != null && data.get(0).getId().

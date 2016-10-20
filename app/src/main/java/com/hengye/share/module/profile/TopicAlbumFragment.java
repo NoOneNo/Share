@@ -20,9 +20,11 @@ import com.hengye.share.module.profile.PersonalHomepageFragment.LoadDataCallBack
 import com.hengye.share.module.util.encapsulation.paging.RecyclerRefreshFragment;
 import com.hengye.share.ui.widget.listener.OnItemClickListener;
 import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.swiperefresh.listener.SwipeListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TopicAlbumFragment extends RecyclerRefreshFragment<String> implements TopicAlbumMvpView, SwipeListener.OnRefreshListener {
 
@@ -45,6 +47,23 @@ public class TopicAlbumFragment extends RecyclerRefreshFragment<String> implemen
 
     TopicIdPager mTopicPager;
     TopicIdHandler<String> mHandler;
+
+    @Override
+    public int getLayoutResId() {
+        return R.layout.fragment_content;
+    }
+
+    public int getLoadingResId(){
+        return R.layout.widget_loading_top;
+    }
+
+    public int getEmptyResId(){
+        return R.layout.widget_empty_top;
+    }
+
+    public int getNoNetworkResId(){
+        return R.layout.widget_no_network_top;
+    }
 
     @Override
     public int getContentResId() {
@@ -107,7 +126,7 @@ public class TopicAlbumFragment extends RecyclerRefreshFragment<String> implemen
             }
         });
         mPresenter.loadCacheData();
-//        onRefresh();
+
     }
 
     @Override
@@ -117,13 +136,11 @@ public class TopicAlbumFragment extends RecyclerRefreshFragment<String> implemen
 
     @Override
     public void onRefresh() {
-        super.onLoad();
         mPresenter.loadTopicAlbum(mTopicPager.getFirstPage(), true);
     }
 
     @Override
     public void onLoad() {
-        super.onLoad();
         mPresenter.loadTopicAlbum(mTopicPager.getNextPage(), false);
     }
 
@@ -140,27 +157,31 @@ public class TopicAlbumFragment extends RecyclerRefreshFragment<String> implemen
     @Override
     public void handleCache(ArrayList<Topic> topics, ArrayList<String> urls) {
         if(CommonUtil.isEmpty(urls)){
+            showLoading();
             onRefresh();
         }else{
-            handleTopics(topics, true);
-            mAdapter.refresh(urls);
-            getPullToRefresh().setLoadEnable(true);
+            handleAlbumData(topics, urls, true);
         }
     }
 
     @Override
-    public void onTaskComplete(boolean isRefresh, boolean isSuccess) {
-        if (isRefresh) {
+    public void onTaskComplete(boolean isRefresh, int taskState) {
+        super.onTaskComplete(isRefresh, taskState);
+        if(isRefresh){
             getLoadDataCallBack().refresh(false);
-        } else {
-            getPullToRefresh().stopLoading(isSuccess);
         }
     }
 
     @Override
     public void handleAlbumData(ArrayList<Topic> topics, ArrayList<String> urls, boolean isRefresh) {
-        handleData(isRefresh, urls);
+
+        onLoadListData(isRefresh, urls);
+
         handleTopics(topics, isRefresh);
+
+        if(topics != null && topics.size() < WBUtil.getWBTopicRequestCount()){
+            setLoadEnable(false);
+        }
     }
 
     public void handleTopics(ArrayList<Topic> topics, boolean isRefresh){

@@ -618,6 +618,10 @@ public class PullToRefreshLayout extends LinearLayout {
     }
 
     public void setLoadEnable(boolean loadEnable) {
+        if(mLoadEnable == loadEnable){
+            return;
+        }
+
         mLoadEnable = loadEnable;
         if (loadEnable) {
             if(mLoadFail){

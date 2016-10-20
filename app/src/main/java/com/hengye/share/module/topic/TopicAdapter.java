@@ -273,17 +273,6 @@ public class TopicAdapter extends CommonAdapter<Topic>
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
-//                int id = v.getId();
-//                if(id == R.id.tv_topic_content) {
-//                    if(!TopicUrlOnTouchListener.getInstance().onTouch(v, event)) {
-//                        return mTopicItem.onTouchEvent(event);
-//                    }else{
-//                        return true;
-//                    }
-//
-//                }else{
-//                    return mTopicItem.onTouchEvent(event);
-//                }
                 int id = v.getId();
                 if(id == R.id.tv_topic_content) {
                     if(!TopicUrlOnTouchListener.getInstance().onTouch(v, event)) {

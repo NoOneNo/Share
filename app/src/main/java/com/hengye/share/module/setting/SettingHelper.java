@@ -269,11 +269,14 @@ public class SettingHelper {
     }
 
     public static boolean isOrderReading(){
-        String value = getString(KEY_HABIT_READ_ORDER, "1");
-        if("1".equals(value)){
-            return true;
-        }
-        return false;
+        return true;
+        // TODO: 2016/10/20  
+        //逆序阅读实现有问题，先不做
+//        String value = getString(KEY_HABIT_READ_ORDER, "1");
+//        if("1".equals(value)){
+//            return true;
+//        }
+//        return false;
     }
 
 

@@ -32,17 +32,18 @@
             android:defaultValue="false"/>
 
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/title_setting_read_order_summary">
 
-    </PreferenceCategory>
+    <!--<PreferenceCategory android:title="@string/title_setting_read_order_summary">-->
 
-    <ListPreference
-        android:key="read_order"
-        android:title="@string/title_setting_read_order"
-        android:defaultValue="1"
-        android:entries="@array/reader_order_entries"
-        android:entryValues="@array/reader_order_values"
-        android:summary="%s" />
+    <!--</PreferenceCategory>-->
+
+    <!--<ListPreference-->
+        <!--android:key="read_order"-->
+        <!--android:title="@string/title_setting_read_order"-->
+        <!--android:defaultValue="1"-->
+        <!--android:entries="@array/reader_order_entries"-->
+        <!--android:entryValues="@array/reader_order_values"-->
+        <!--android:summary="%s" />-->
 
     <SwitchPreference
         android:key="preread"

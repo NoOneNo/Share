@@ -45,4 +45,14 @@ public class FramesLoadingView extends ImageView {
     public boolean isRunning(){
         return mLoadingDrawable.isRunning();
     }
+
+    @Override
+    public void setVisibility(int visibility) {
+        super.setVisibility(visibility);
+        if(visibility == VISIBLE){
+            start();
+        }else{
+            stop();
+        }
+    }
 }

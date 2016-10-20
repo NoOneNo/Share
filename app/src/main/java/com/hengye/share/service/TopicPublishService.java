@@ -189,19 +189,27 @@ public class TopicPublishService extends Service {
     }
 
     protected void sendBroadcast(TopicPublish tp, int status, Serializable data){
+        TopicDraft draft = tp.getTopicDraft();
+
         Bundle bundle = new Bundle();
-        bundle.putInt(EXTRA_TYPE, tp.getTopicDraft().getType());
+        bundle.putInt(EXTRA_TYPE, draft.getType());
         bundle.putInt(EXTRA_STATUS, status);
-        bundle.putSerializable(EXTRA_DRAFT, tp.getTopicDraft());
+        bundle.putSerializable(EXTRA_DRAFT, draft);
         bundle.putSerializable(EXTRA_DATA, data);
 
         Intent intent = new Intent(ACTION_PUBLISH);
         intent.putExtras(bundle);
-        getLocalBroadcastManager().sendBroadcast(intent);
+        sendLocalBroadcast(intent);
 
-        Intent intentWithType = new Intent(ACTION_PUBLISH + tp.getTopicDraft().getType());
-        intentWithType.putExtras(bundle);
-        getLocalBroadcastManager().sendBroadcast(intentWithType);
+        if(!CommonUtil.isEmpty(draft.getTargetTopicId())){
+            Intent intentWithType = new Intent(ACTION_PUBLISH + CommonUtil.UNDERLINE + draft.getTargetTopicId());
+            intentWithType.putExtras(bundle);
+            sendLocalBroadcast(intentWithType);
+        }
+    }
+
+    protected void sendLocalBroadcast(Intent intent){
+        getLocalBroadcastManager().sendBroadcast(intent);
     }
 
     protected void publishTimingTopic(final TopicPublish tp) {

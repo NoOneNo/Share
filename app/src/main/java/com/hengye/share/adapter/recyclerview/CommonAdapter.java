@@ -115,9 +115,12 @@ public abstract class CommonAdapter<T> extends HeaderAdapter<ItemViewHolder>
         return mData.indexOf(item);
     }
 
-    @Override
-    public int getBasicItemPosition(int actualPosition) {
-        return super.getBasicItemPosition(actualPosition);
+    public int getFirstPosition(){
+        return getActualItemPosition(0);
+    }
+
+    public int getLastPosition(){
+        return mData.size() - 1;
     }
 
     /**
@@ -199,6 +202,7 @@ public abstract class CommonAdapter<T> extends HeaderAdapter<ItemViewHolder>
             return;
         }
         mData.addAll(position, data);
+//        notifyItemRangeInserted(position, data.size());
         notifyDataSetChanged();
     }
 
@@ -228,7 +232,7 @@ public abstract class CommonAdapter<T> extends HeaderAdapter<ItemViewHolder>
                 }else if(position > 0){
                     mData.addAll(0, data.subList(0, position - 1));
                     notifyItemRangeInserted(getActualItemPosition(0), position);
-                    scrollToPosition(getActualItemPosition(0));
+//                    scrollToPosition(getActualItemPosition(0));
                     L.debug("notifyItemRangeInserted from : {} to : {}", 0, position);
                 }else{
                     L.debug("find equals at 0 not change");

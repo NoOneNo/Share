@@ -116,7 +116,6 @@ dependencies {
 //    compile(name: 'photopicker-release', ext: 'aar')
 
     compile project(':datetimerpicker')
-    compile project(':draglistview')
     compile project(':floatingactionbutton')
     compile project(':swipebacklayout')
     compile project(':photopicker')

@@ -9,6 +9,7 @@ import com.hengye.share.model.greenrobot.GreenDaoManager;
 import com.hengye.share.model.greenrobot.ShareJson;
 import com.hengye.share.model.sina.WBTopics;
 import com.hengye.share.module.mvp.BasePresenter;
+import com.hengye.share.module.mvp.TaskPresenter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.GsonUtil;
 import com.hengye.share.util.UrlBuilder;
@@ -24,7 +25,7 @@ import java.util.Map;
 import rx.Observable;
 import rx.Subscriber;
 
-public class TopicAlbumPresenter extends BasePresenter<TopicAlbumMvpView> {
+public class TopicAlbumPresenter extends TaskPresenter<TopicAlbumMvpView> {
 
     private String uid, name;
 
@@ -38,18 +39,11 @@ public class TopicAlbumPresenter extends BasePresenter<TopicAlbumMvpView> {
                 .listUserTopic(getParameter(id, isRefresh))
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(new BaseSubscriber<WBTopics>() {
-                    @Override
-                    public void onError(TopicAlbumMvpView v, Throwable e) {
-                        v.onTaskComplete(isRefresh, false);
-                    }
-
+                .subscribe(new TaskSubscriber<WBTopics>(isRefresh) {
                     @Override
                     public void onNext(TopicAlbumMvpView v, WBTopics wbTopics) {
 
                         ArrayList<Topic> topics = Topic.getTopics(wbTopics);
-
-                        v.onTaskComplete(isRefresh, true);
 
                         if(isRefresh){
                             saveData(topics);

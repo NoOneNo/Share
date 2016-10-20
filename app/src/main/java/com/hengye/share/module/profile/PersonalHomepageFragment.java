@@ -98,7 +98,7 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
                 fragment = mPersonalHomepageAboutFragment;
                 break;
             case 1:
-                mTopicFragment = TopicFragment.newInstance(TopicPresenter.TopicType.HOMEPAGE, mWbUserInfo.getIdstr(), mWbUserInfo.getName());
+                mTopicFragment = PersonalTopicFragment.newInstance(TopicPresenter.TopicType.HOMEPAGE, mWbUserInfo.getIdstr(), mWbUserInfo.getName());
                 mTopicFragment.setLoadDataCallBack(getLoadDataCallBack(mTopicFragment));
                 fragment = mTopicFragment;
                 break;
@@ -190,7 +190,7 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
             @Override
             public void refresh(boolean isRefreshing) {
                 if (isRefreshing) {
-                    mSwipeRefresh.setRefreshing(true, false);
+//                    mSwipeRefresh.setRefreshing(true, false);
                     if(baseFragment instanceof SwipeListener.OnRefreshListener){
                         ((SwipeListener.OnRefreshListener) baseFragment).onRefresh();
                     }else if(baseFragment instanceof TopicFragment){

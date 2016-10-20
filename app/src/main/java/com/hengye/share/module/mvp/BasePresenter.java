@@ -9,18 +9,18 @@ import rx.subscriptions.CompositeSubscription;
  * attachView() and detachView(). It also handles keeping a reference to the mvpView that
  * can be accessed from the children classes by calling getMvpView().
  */
-public class BasePresenter<T extends MvpView> implements Presenter<T> {
+public class BasePresenter<V extends MvpView> implements Presenter<V> {
 
-    private T mMvpView;
+    private V mMvpView;
 
     private CompositeSubscription mSubscriptions;
 
-    public BasePresenter(T mvpView){
+    public BasePresenter(V mvpView){
         attachView(mvpView);
     }
 
     @Override
-    public void attachView(T mvpView) {
+    public void attachView(V mvpView) {
         mMvpView = mvpView;
     }
 
@@ -36,7 +36,7 @@ public class BasePresenter<T extends MvpView> implements Presenter<T> {
         return mMvpView != null;
     }
 
-    public T getMvpView() {
+    public V getMvpView() {
         return mMvpView;
     }
 
@@ -62,7 +62,7 @@ public class BasePresenter<T extends MvpView> implements Presenter<T> {
         @Override
         public void onCompleted() {
             if(isViewAttached()){
-                onFinish(getMvpView(), false);
+                onComplete(getMvpView());
             }
         }
 
@@ -71,7 +71,6 @@ public class BasePresenter<T extends MvpView> implements Presenter<T> {
             e.printStackTrace();
             if(isViewAttached()){
                 onError(getMvpView(), e);
-                onFinish(getMvpView(), true);
             }
         }
 
@@ -82,16 +81,11 @@ public class BasePresenter<T extends MvpView> implements Presenter<T> {
             }
         }
 
-        public void onError(T v, Throwable e){}
+        public void onError(V v, Throwable e){}
 
-        /**
-         * This method will be invoked after onCompleted or OnError.
-         */
-        public void onFinish(T v, boolean hasError){
+        public void onComplete(V v){}
 
-        }
-
-        abstract public void onNext(T v, D d);
+        abstract public void onNext(V v, D d);
     }
 }
 

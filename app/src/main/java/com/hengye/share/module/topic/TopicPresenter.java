@@ -12,7 +12,7 @@ import com.hengye.share.model.greenrobot.ShareJson;
 import com.hengye.share.model.sina.WBTopicComments;
 import com.hengye.share.model.sina.WBTopicIds;
 import com.hengye.share.model.sina.WBTopics;
-import com.hengye.share.module.mvp.BasePresenter;
+import com.hengye.share.module.mvp.ListDataPresenter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.GsonUtil;
 import com.hengye.share.util.L;
@@ -21,7 +21,6 @@ import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
-import com.hengye.share.util.rxjava.RxUtil;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 import com.hengye.share.util.thirdparty.WBUtil;
 
@@ -34,7 +33,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Func1;
 
-public class TopicPresenter extends BasePresenter<TopicMvpView> {
+public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
 
     private TopicGroup mTopicGroup;
     private String uid, name;
@@ -49,6 +48,53 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
     }
 
     public void loadWBTopic(String id, final boolean isRefresh, boolean isLoadId) {
+        getTopics(id, isRefresh, isLoadId)
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
+                .subscribe(getWBTopicsSubscriber(true));
+    }
+
+    public Observable<WBTopicIds> getWBTopicIds(String id) {
+        switch (mTopicGroup.topicType) {
+            case ALL:
+                return RetrofitManager
+                                .getWBService()
+                                .listTopicIds(getWBAllTopicParameter(id, true));
+            case BILATERAL:
+                return RetrofitManager
+                        .getWBService()
+                        .listBilateralTopicIds(getWBAllTopicParameter(id, true));
+            case GROUP_LIST:
+                return RetrofitManager
+                        .getWBService()
+                        .listGroupTopicIds(getWBAllTopicParameter(id, true));
+            default:
+                return null;
+
+        }
+    }
+
+    public Observable<WBTopics> getWBTopics(String id, final boolean isRefresh) {
+        switch (mTopicGroup.topicType) {
+            case ALL:
+                return RetrofitManager
+                        .getWBService()
+                        .listTopic(getWBAllTopicParameter(id, isRefresh));
+            case BILATERAL:
+                return RetrofitManager
+                        .getWBService()
+                        .listBilateralTopic(getWBAllTopicParameter(id, isRefresh));
+            case GROUP_LIST:
+                return RetrofitManager
+                        .getWBService()
+                        .listGroupTopic(getWBAllTopicParameter(id, isRefresh));
+            default:
+                return null;
+
+        }
+    }
+
+    public Observable<ArrayList<Topic>> getTopics(String id, final boolean isRefresh, boolean isLoadId) {
         switch (mTopicGroup.topicType) {
             case ALL:
             case BILATERAL:
@@ -58,167 +104,55 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
                 if (isRefresh && isLoadId && !"0".equals(id)) {
                     isNeedLoadId = true;
                 }
-                if(!SettingHelper.isOrderReading()){
-                    isNeedLoadId = false;
-                }
-
-//                isNeedLoadId = false;
-                if(isRefresh){
-                    if(mTopicGroup.topicType != TopicType.GROUP_LIST) {
-                        id = "0";
-                    }else{
+//                if (!SettingHelper.isOrderReading()) {
+//                    isNeedLoadId = false;
+//                }
+                if (isRefresh && !isNeedLoadId) {
+                    if (mTopicGroup.topicType == TopicType.GROUP_LIST) {
                         id = "1";
+                    } else {
+                        id = "0";
                     }
                 }
-                loadWBTopicIds(id, isRefresh, isNeedLoadId);
 
-                break;
+                if (isNeedLoadId) {
+                    return getWBTopicIds(id)
+                            .flatMap(flatWBTopicId(id))
+                            .flatMap(flatWBTopics());
+                }else{
+                    return getWBTopics(id, isRefresh)
+                            .flatMap(flatWBTopics());
+                }
             case TOPIC_AT_ME:
-                loadWBTopicAtMeTopic(id, isRefresh);
-                break;
+                return RetrofitManager
+                        .getWBService()
+                        .listTopicAtMeTopic(getWBAllTopicParameter(id, isRefresh))
+                        .flatMap(flatWBTopics());
             case COMMENT_AT_ME:
-                loadWBCommentAtMeTopic(id, isRefresh);
-                break;
+                return RetrofitManager
+                        .getWBService()
+                        .listCommentAtMeTopic(getWBAllTopicParameter(id, isRefresh))
+                        .flatMap(flatWBTopicComments());
             case COMMENT_TO_ME:
-                loadWBCommentToMeTopic(id, isRefresh);
-                break;
+                return RetrofitManager
+                        .getWBService()
+                        .listCommentToMeTopic(getWBAllTopicParameter(id, isRefresh))
+                        .flatMap(flatWBTopicComments());
             case COMMENT_BY_ME:
-                loadWBCommentByMeTopic(id, isRefresh);
-                break;
+                return RetrofitManager
+                        .getWBService()
+                        .listCommentByMeTopic(getWBAllTopicParameter(id, isRefresh))
+                        .flatMap(flatWBTopicComments());
             case HOMEPAGE:
-                loadWBHomepageTopic(id, isRefresh);
-                break;
+                Map<String, String> params = getWBAllTopicParameter(id, isRefresh);
+                params.put("access_token", UserUtil.getPriorToken());
+                return RetrofitManager
+                        .getWBService()
+                        .listUserTopic(params)
+                        .flatMap(flatWBTopics());
             default:
-                break;
+                return null;
         }
-    }
-
-    public void loadWBTopicIds(String id, boolean isRefresh, boolean isNeedLoadId){
-        switch (mTopicGroup.topicType){
-            case ALL:
-                if(isNeedLoadId){
-                    loadWBAllTopicIds(id);
-                }else{
-                    loadWBAllTopic(id, isRefresh);
-                }
-                break;
-            case BILATERAL:
-                if(isNeedLoadId){
-                    loadWBBilateralTopicIds(id);
-                }else{
-                    loadWBBilateralTopic(id, isRefresh);
-                }
-                break;
-            case GROUP_LIST:
-                if(isNeedLoadId){
-                    loadWBGroupListTopicIds(id);
-                }else{
-                    loadWBGroupListTopic(id, isRefresh);
-                }
-                break;
-        }
-    }
-
-    public void loadWBAllTopicIds(final String since_id) {
-        RetrofitManager
-                .getWBService()
-                .listTopicIds(getWBAllTopicParameter(since_id, true))
-                .subscribeOn(SchedulerProvider.io())
-                .observeOn(SchedulerProvider.ui())
-                .subscribe(getWBTopicIdsSubscriber(since_id));
-    }
-
-    public void loadWBAllTopic(String id, final boolean isRefresh) {
-        RetrofitManager
-                .getWBService()
-                .listTopic(getWBAllTopicParameter(id, isRefresh))
-                .subscribeOn(SchedulerProvider.io())
-                .observeOn(SchedulerProvider.ui())
-                .subscribe(getWBTopicsSubscriber(isRefresh));
-    }
-
-    public void loadWBBilateralTopicIds(final String since_id) {
-        RetrofitManager
-                .getWBService()
-                .listBilateralTopicIds(getWBAllTopicParameter(since_id, true))
-                .subscribeOn(SchedulerProvider.io())
-                .observeOn(SchedulerProvider.ui())
-                .subscribe(getWBTopicIdsSubscriber(since_id));
-
-    }
-
-    public void loadWBBilateralTopic(String id, final boolean isRefresh) {
-        RetrofitManager
-                .getWBService()
-                .listBilateralTopic(getWBAllTopicParameter(id, isRefresh))
-                .subscribeOn(SchedulerProvider.io())
-                .observeOn(SchedulerProvider.ui())
-                .subscribe(getWBTopicsSubscriber(isRefresh));
-    }
-
-    public void loadWBCommentAtMeTopic(String id, final boolean isRefresh) {
-        RetrofitManager
-                .getWBService()
-                .listCommentAtMeTopic(getWBAllTopicParameter(id, isRefresh))
-                .subscribeOn(SchedulerProvider.io())
-                .observeOn(SchedulerProvider.ui())
-                .subscribe(getWBCommentsSubscriber(isRefresh));
-    }
-
-    public void loadWBTopicAtMeTopic(String id, final boolean isRefresh) {
-        RetrofitManager
-                .getWBService()
-                .listTopicAtMeTopic(getWBAllTopicParameter(id, isRefresh))
-                .subscribeOn(SchedulerProvider.io())
-                .observeOn(SchedulerProvider.ui())
-                .subscribe(getWBTopicsSubscriber(isRefresh));
-    }
-
-    public void loadWBCommentToMeTopic(String id, final boolean isRefresh) {
-        RetrofitManager
-                .getWBService()
-                .listCommentToMeTopic(getWBAllTopicParameter(id, isRefresh))
-                .subscribeOn(SchedulerProvider.io())
-                .observeOn(SchedulerProvider.ui())
-                .subscribe(getWBCommentsSubscriber(isRefresh));
-    }
-
-    public void loadWBCommentByMeTopic(String id, final boolean isRefresh) {
-        RetrofitManager
-                .getWBService()
-                .listCommentByMeTopic(getWBAllTopicParameter(id, isRefresh))
-                .subscribeOn(SchedulerProvider.io())
-                .observeOn(SchedulerProvider.ui())
-                .subscribe(getWBCommentsSubscriber(isRefresh));
-    }
-
-    public void loadWBHomepageTopic(String id, final boolean isRefresh) {
-        Map<String, String> params = getWBAllTopicParameter(id, isRefresh);
-        params.put("access_token", UserUtil.getPriorToken());
-        RetrofitManager
-                .getWBService()
-                .listUserTopic(params)
-                .subscribeOn(SchedulerProvider.io())
-                .observeOn(SchedulerProvider.ui())
-                .subscribe(getWBTopicsSubscriber(isRefresh));
-    }
-
-    public void loadWBGroupListTopicIds(final String since_id) {
-        RetrofitManager
-                .getWBService()
-                .listGroupTopicIds(getWBAllTopicParameter(since_id, true))
-                .subscribeOn(SchedulerProvider.io())
-                .observeOn(SchedulerProvider.ui())
-                .subscribe(getWBTopicIdsSubscriber(since_id));
-    }
-
-    public void loadWBGroupListTopic(String id, final boolean isRefresh) {
-        RetrofitManager
-                .getWBService()
-                .listGroupTopic(getWBAllTopicParameter(id, isRefresh))
-                .subscribeOn(SchedulerProvider.io())
-                .observeOn(SchedulerProvider.ui())
-                .subscribe(getWBTopicsSubscriber(isRefresh));
     }
 
     public Map<String, String> getWBAllTopicParameter(String id, final boolean isRefresh) {
@@ -242,69 +176,67 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
         return ub.getParameters();
     }
 
-    public Subscriber<WBTopicIds> getWBTopicIdsSubscriber(final String since_id) {
-        return new BaseSubscriber<WBTopicIds>() {
-            @Override
-            public void onError(TopicMvpView v, Throwable e) {
-                v.onTaskComplete(true, false);
-            }
+    private Subscriber<List<Topic>> getWBTopicsSubscriber(final boolean isRefresh) {
+        return new ListDataSubscriber(isRefresh);
+    }
 
+    Func1<WBTopics, Observable<ArrayList<Topic>>> mFlatWBTopics;
+
+    private Func1<WBTopics, Observable<ArrayList<Topic>>> flatWBTopics() {
+        if (mFlatWBTopics == null) {
+            mFlatWBTopics = new Func1<WBTopics, Observable<ArrayList<Topic>>>() {
+                @Override
+                public Observable<ArrayList<Topic>> call(WBTopics wbTopics) {
+                    return Observable.just(Topic.getTopics(wbTopics));
+                }
+            };
+        }
+        return mFlatWBTopics;
+    }
+
+    Func1<WBTopicComments, Observable<ArrayList<Topic>>> mFlatWBTopicComments;
+
+    private Func1<WBTopicComments, Observable<ArrayList<Topic>>> flatWBTopicComments() {
+        if (mFlatWBTopicComments == null) {
+            mFlatWBTopicComments = new Func1<WBTopicComments, Observable<ArrayList<Topic>>>() {
+                @Override
+                public Observable<ArrayList<Topic>> call(WBTopicComments wbComments) {
+                    return Observable.just(Topic.getTopics(wbComments));
+                }
+            };
+        }
+        return mFlatWBTopicComments;
+    }
+
+    private Func1<WBTopicIds, Observable<WBTopics>> flatWBTopicId(final String since_id) {
+        return new Func1<WBTopicIds, Observable<WBTopics>>() {
             @Override
-            public void onNext(TopicMvpView v, WBTopicIds wbTopicIds) {
+            public Observable<WBTopics> call(WBTopicIds wbTopicIds) {
+
+                Observable<WBTopics> observable;
                 if (wbTopicIds == null || CommonUtil.isEmpty(wbTopicIds.getStatuses())) {
                     //没有新的微博
-                    v.onTaskComplete(true, true);
-                    v.handleNoMoreTopics();
                     L.debug("no topic update");
+                    observable = Observable.empty();
                 } else {
                     if (wbTopicIds.getStatuses().size() >= WBUtil.getWBTopicRequestCount()) {
                         //还有更新的微博，重新请求刷新
 //                                RequestManager.addToRequestQueue(getWBTopicRequest(token, 0 + "", true), getRequestTag());
                         L.debug("exist newer topic, request refresh again");
-                        loadWBTopic("0", true, false);
+                        observable = getWBTopics("0", true);
                     } else {
                         //新的微博条数没有超过请求条数，显示更新多少条微博，根据请求的since_id获取微博
                         L.debug("new topic is less than MAX_COUNT_REQUEST, request refresh by since_id");
-                        loadWBTopic(since_id, true, false);
+                        observable = getWBTopics(since_id, true);
                     }
                 }
+
+                return observable;
             }
         };
     }
 
-
-    public Subscriber<WBTopics> getWBTopicsSubscriber(final boolean isRefresh) {
-        return new BaseSubscriber<WBTopics>() {
-            @Override
-            public void onError(TopicMvpView v, Throwable e) {
-                v.onTaskComplete(isRefresh, false);
-            }
-
-            @Override
-            public void onNext(TopicMvpView v, WBTopics wbTopics) {
-                v.onTaskComplete(isRefresh, true);
-                v.handleTopicData(Topic.getTopics(wbTopics), isRefresh);
-            }
-        };
-    }
-
-    public Subscriber<WBTopicComments> getWBCommentsSubscriber(final boolean isRefresh) {
-        return new BaseSubscriber<WBTopicComments>() {
-            @Override
-            public void onError(TopicMvpView v, Throwable e) {
-                v.onTaskComplete(isRefresh, false);
-            }
-
-            @Override
-            public void onNext(TopicMvpView v, WBTopicComments wbTopicComments) {
-                v.onTaskComplete(isRefresh, true);
-                v.handleTopicData(Topic.getTopics(wbTopicComments), isRefresh);
-            }
-
-        };
-    }
-
-    public void loadCacheData(){
+    public void loadCacheData() {
         Observable
                 .create(new Observable.OnSubscribe<ArrayList<Topic>>() {
                     @Override
@@ -326,9 +258,9 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
 
         ShareJson shareJson = null;
 
-        try{
+        try {
             shareJson = GreenDaoManager.getDaoSession().getShareJsonDao().load(getModuleName());
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -337,7 +269,8 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
         }
 
         ArrayList<Topic> data = GsonUtil.fromJson(shareJson.getJson()
-                , new TypeToken<ArrayList<Topic>>(){}.getType());
+                , new TypeToken<ArrayList<Topic>>() {
+                }.getType());
 
         return data == null ? new ArrayList<Topic>() : data;
     }
@@ -407,8 +340,8 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
         /**
          * @return 如果是首页的列表内容, 则返回true;
          */
-        public boolean isReadingType(){
-            if(topicType == TopicType.ALL || topicType == TopicType.BILATERAL || topicType == TopicType.GROUP_LIST){
+        public boolean isReadingType() {
+            if (topicType == TopicType.ALL || topicType == TopicType.BILATERAL || topicType == TopicType.GROUP_LIST) {
                 return true;
             }
             return false;
@@ -425,7 +358,7 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
                     + groupList.getGid();
         }
 
-        public String getName(){
+        public String getName() {
             return getName(this, ResUtil.getResources());
         }
 
@@ -460,11 +393,11 @@ public class TopicPresenter extends BasePresenter<TopicMvpView> {
          * @param groupIdStr
          * @return 返回与@param groupIdStr 对应的分组名字
          */
-        public static String getTopicGroupName(String groupIdStr){
+        public static String getTopicGroupName(String groupIdStr) {
             List<TopicPresenter.TopicGroup> topicGroups = TopicPresenter.TopicGroup.getTopicGroups();
-            if(!CommonUtil.isEmpty(groupIdStr) && !CommonUtil.isEmpty(topicGroups)){
-                for(TopicPresenter.TopicGroup tg : topicGroups){
-                    if(groupIdStr.equals(tg.getGroupList().getGid())){
+            if (!CommonUtil.isEmpty(groupIdStr) && !CommonUtil.isEmpty(topicGroups)) {
+                for (TopicPresenter.TopicGroup tg : topicGroups) {
+                    if (groupIdStr.equals(tg.getGroupList().getGid())) {
                         return tg.getName();
                     }
                 }

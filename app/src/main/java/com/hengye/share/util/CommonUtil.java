@@ -11,6 +11,8 @@ import java.util.Map;
 
 public class CommonUtil {
 
+    public static final String UNDERLINE = "_";
+
     /**
      * @param strings
      * @return 是否都没有空的值, 没有则返回true;

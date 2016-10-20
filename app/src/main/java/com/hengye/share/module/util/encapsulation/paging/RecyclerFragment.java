@@ -64,6 +64,13 @@ public abstract class RecyclerFragment<T> extends PagingFragment<T> implements O
         return mRecyclerView.getAdapter();
     }
 
+    public boolean isEmpty(){
+        if(getAdapter() != null){
+            return getAdapter().getItemCount() == 0;
+        }
+        return true;
+    }
+
     @Override
     public void onItemClick(View view, int position) {
 

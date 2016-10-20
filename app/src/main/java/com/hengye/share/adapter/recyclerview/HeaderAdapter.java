@@ -103,24 +103,10 @@ public abstract class HeaderAdapter<VH extends RecyclerView.ViewHolder> extends 
         return view;
     }
 
-    private ViewGroup getHeaderContainer() {
-        if (mHeaderContainer == null) {
-            mHeaderContainer = getContainer();
-        }
-        return mHeaderContainer;
-    }
-
-    private ViewGroup getFooterContainer() {
-        if (mHeaderContainer == null) {
-            mFooterContainer = getContainer();
-        }
-        return mFooterContainer;
-    }
-
     private void onBindContainer(ContainerViewHolder holder, View target) {
         if (holder.container.getChildCount() != 0) {
             View child = holder.container.getChildAt(0);
-            if (child != mHeader) {
+            if (child != target) {
                 holder.container.removeView(child);
                 holder.container.addView(target);
             }
@@ -216,7 +202,7 @@ public abstract class HeaderAdapter<VH extends RecyclerView.ViewHolder> extends 
     }
 
     /**
-     * 如果要获取的数量不包括头和尾的，使用{@link Header3Adapter#getBasicItemCount()}
+     * 如果要获取的数量不包括头和尾的，使用{@link HeaderAdapter#getBasicItemCount()}
      *
      * @return
      */

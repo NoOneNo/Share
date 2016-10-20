@@ -1,8 +1,6 @@
-package com.hengye.share.ui.widget.listview;
+package com.hengye.draglistview;
 
-import com.hengye.draglistview.DragSortController;
-import com.hengye.draglistview.DragSortListView;
-import com.hengye.share.R;
+import android.graphics.Color;
 
 public class DragSortListViewBuilder {
 
@@ -19,8 +17,8 @@ public class DragSortListViewBuilder {
         controller.setRemoveEnabled(false);
         controller.setDragInitMode(DragSortController.ON_DOWN);
         controller.setRemoveMode(DragSortController.FLING_REMOVE);
-//        controller.setBackgroundColor(Color.parseColor("#50ffffff"));
-        controller.setBackgroundColor(dslv.getResources().getColor(R.color.background_default));
+        controller.setBackgroundColor(Color.parseColor("#50ffffff"));
+//        controller.setBackgroundColor(dslv.getResources().getColor(R.color.background_default));
         return controller;
     }
 }

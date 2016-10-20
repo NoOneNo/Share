@@ -19,6 +19,7 @@ public class WBUtil {
     public static String IMAGE_TYPE_LARGE = "large";//原图
 
     public static int getWBTopicRequestCount() {
+//        return 2;
         return SettingHelper.getLoadCount();
     }
 

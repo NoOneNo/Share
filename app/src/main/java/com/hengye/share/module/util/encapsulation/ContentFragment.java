@@ -2,18 +2,18 @@ package com.hengye.share.module.util.encapsulation;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.SparseArray;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.hengye.share.R;
 import com.hengye.share.module.base.BaseFragment;
 
+import static com.hengye.share.module.util.encapsulation.StateLayoutManager.*;
+
 /**
  * Created by yuhy on 16/7/18.
  */
-public abstract class ContentFragment extends BaseFragment {
+public abstract class ContentFragment extends BaseFragment implements StateLayoutManager.OnFindStateViewListener{
 
     @Override
     public int getLayoutResId() {
@@ -23,15 +23,15 @@ public abstract class ContentFragment extends BaseFragment {
     abstract public int getContentResId();
 
     public int getLoadingResId(){
-        return R.layout.widget_loading;
+        return R.layout.widget_loading_center;
     }
 
     public int getEmptyResId(){
-        return R.layout.widget_empty;
+        return R.layout.widget_empty_center;
     }
 
     public int getNoNetworkResId(){
-        return R.layout.widget_no_network;
+        return R.layout.widget_no_network_center;
     }
 
     /**
@@ -46,118 +46,79 @@ public abstract class ContentFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if(isLayoutInflateMode()){
-            LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-            ViewGroup vg = (ViewGroup) view;
-            layoutInflater.inflate(getLoadingResId(), vg);
-            layoutInflater.inflate(getEmptyResId(), vg);
-            layoutInflater.inflate(getNoNetworkResId(), vg);
-            layoutInflater.inflate(getContentResId(), vg);
-
-            mLoading = vg.getChildAt(0);
-            mEmpty = vg.getChildAt(1);
-            mNoNetwork = vg.getChildAt(2);
-            mContent = vg.getChildAt(3);
+        ViewGroup viewGroup;
+        View content = view.findViewById(R.id.content);
+        if(content != null && content instanceof ViewGroup) {
+            viewGroup = (ViewGroup) content;
+        }else if(view instanceof ViewGroup){
+            viewGroup = (ViewGroup)view;
         }else{
-            mLoading = findViewById(getLoadingResId());
-            mEmpty = findViewById(getEmptyResId());
-            mNoNetwork = findViewById(getNoNetworkResId());
-            mContent = findViewById(getContentResId());
+            viewGroup = (ViewGroup) view.getParent();
         }
-
-
-        mViews.append(TYPE_LOADING, mLoading);
-        mViews.append(TYPE_EMPTY, mEmpty);
-        mViews.append(TYPE_NO_NETWORK, mNoNetwork);
-        mViews.append(TYPE_CONTENT, mContent);
-
-        initLoading();
-        initEmpty();
-        initNoNetwork();
-        initContent(savedInstanceState);
-
+        initStateLayoutManager(viewGroup);
         showContent();
+        initContent(savedInstanceState);
     }
 
-    private static final int TYPE_LOADING = 1;
-    private static final int TYPE_EMPTY = 2;
-    private static final int TYPE_NO_NETWORK = 3;
-    private static final int TYPE_CONTENT = 4;
+    StateLayoutManager mStateLayoutManager;
 
-    private SparseArray<View> mViews = new SparseArray<>();
-    private int[] mViewTypes = new int[]{TYPE_LOADING, TYPE_EMPTY, TYPE_NO_NETWORK, TYPE_CONTENT};
-    private View mLoading, mEmpty, mNoNetwork, mContent;
+    private void initStateLayoutManager(ViewGroup viewGroup){
+        mStateLayoutManager = new StateLayoutManager(getContext(), viewGroup, isLayoutInflateMode());
+        mStateLayoutManager.setViewResourceId(STATE_EMPTY, getEmptyResId());
+        mStateLayoutManager.setViewResourceId(STATE_CONTENT, getContentResId());
+        mStateLayoutManager.setViewResourceId(STATE_LOADING, getLoadingResId());
+        mStateLayoutManager.setViewResourceId(STATE_NO_NETWORK, getNoNetworkResId());
+        mStateLayoutManager.setOnFindStateViewListener(this);
+    }
 
-    protected void initLoading(){}
+    @Override
+    public void onFindStateView(View stateView, int state) {
+        if(state == STATE_EMPTY || state == STATE_NO_NETWORK){
+            final View retry = stateView.findViewById(R.id.btn_retry);
+            if(retry != null){
+                retry.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onRetry();
+                    }
+                });
+            }
+        }
+    }
 
-    protected void initEmpty(){}
-
-    protected void initNoNetwork(){}
+    public void onRetry(){}
 
     protected void initContent(@Nullable Bundle savedInstanceState){}
 
-    public void hideLoading(){
-        mLoading.setVisibility(View.GONE);
-//        mLoadingDrawable.stop();
-    }
-
     public View getLoading() {
-        return mLoading;
+        return mStateLayoutManager.getStateView(STATE_LOADING);
     }
 
     public View getNoNetwork() {
-        return mNoNetwork;
+        return mStateLayoutManager.getStateView(STATE_NO_NETWORK);
     }
 
     public View getEmpty() {
-        return mEmpty;
+        return mStateLayoutManager.getStateView(STATE_EMPTY);
     }
 
     public View getContent() {
-        return mContent;
+        return mStateLayoutManager.getStateView(STATE_CONTENT);
     }
 
     public void showLoading() {
-        showView(TYPE_LOADING);
+        mStateLayoutManager.showState(STATE_LOADING);
     }
 
     public void showNoNetwork() {
-        showView(TYPE_NO_NETWORK);
+        mStateLayoutManager.showState(STATE_NO_NETWORK);
     }
 
     public void showEmpty() {
-        showView(TYPE_EMPTY);
+        mStateLayoutManager.showState(STATE_EMPTY);
     }
 
     public void showContent() {
-        showView(TYPE_CONTENT);
-    }
-
-    public void showOrHideView(View view, boolean isShow, int type){
-        view.setVisibility(isShow ? View.VISIBLE : View.GONE);
-    }
-
-    public void showView(int type) {
-        View view = mViews.get(type);
-
-        if (view == null) {
-            return;
-        }
-
-        showOrHideView(view, true, type);
-
-        for (int t : mViewTypes) {
-            if (t == type) {
-                continue;
-            }
-
-            View v = mViews.get(t);
-
-            if (v == null) {
-                continue;
-            }
-
-            showOrHideView(v, false, t);
-        }
+        mStateLayoutManager.showState(STATE_CONTENT);
     }
 }
