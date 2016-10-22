@@ -44,11 +44,6 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
     }
 
     @Override
-    public boolean isLayoutInflateMode() {
-        return false;
-    }
-
-    @Override
     public void onViewCreated(View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 

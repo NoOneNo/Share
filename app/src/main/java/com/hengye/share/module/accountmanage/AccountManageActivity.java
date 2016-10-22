@@ -47,7 +47,7 @@ public class AccountManageActivity extends BaseActivity implements AccountManage
     private User mSelectAccountOriginal;
     private boolean mHasSelectOriginalAccount;
     private int mSelectAccountNowIndex, mSelectAccountLongClickIndex;
-    private View mSelectAccountBtn;
+    private View mSelectAccountBtn, mLogoutButton;
 
     private void initView() {
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -82,8 +82,10 @@ public class AccountManageActivity extends BaseActivity implements AccountManage
             }
         });
 
-        View logout = findViewById(R.id.tv_logout);
-        logout.setOnClickListener(new View.OnClickListener() {
+
+        mLogoutButton = findViewById(R.id.btn_logout);
+        updateLogoutBtn();
+        mLogoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 logout(mAdapter.getItem(mSelectAccountNowIndex));
@@ -92,6 +94,10 @@ public class AccountManageActivity extends BaseActivity implements AccountManage
 
         mLogoutDialog = DialogBuilder.getItemDialog(this, this, getString(R.string.label_account_logout));
         mPresenter.loadUsers();
+    }
+
+    private void updateLogoutBtn(){
+        mLogoutButton.setVisibility(UserUtil.isUserEmpty() ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -167,6 +173,7 @@ public class AccountManageActivity extends BaseActivity implements AccountManage
         if (requestCode == ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO && resultCode == Activity.RESULT_OK) {
             mPresenter.loadUsers();
         }
+        updateLogoutBtn();
     }
 
     public class AccountManageCallBack {

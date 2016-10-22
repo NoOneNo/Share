@@ -5,13 +5,13 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.hengye.share.R;
-import com.hengye.share.module.util.encapsulation.ContentFragment;
+import com.hengye.share.module.util.encapsulation.StateFragment;
 import com.hengye.share.ui.widget.image.GridGalleryEditorView;
 
 /**
  * Created by yuhy on 16/7/18.
  */
-public class TestPhotoPickerFragment extends ContentFragment {
+public class TestPhotoPickerFragment extends StateFragment {
 
     @Override
     public String getTitle() {

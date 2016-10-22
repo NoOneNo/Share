@@ -93,7 +93,9 @@ public class TopicActivity extends BaseActivity
         addPresenter(mPresenter = new UserPresenter(this));
         initView();
 
-        if (UserUtil.isUserNameEmpty()) {
+        if(UserUtil.isUserEmpty()) {
+            startActivity(AccountManageActivity.class);
+        }else if (UserUtil.isUserNameEmpty()) {
             mPresenter.loadWBUserInfo();
         } else {
             loadSuccess(UserUtil.getCurrentUser());
@@ -149,7 +151,7 @@ public class TopicActivity extends BaseActivity
         initSearch();
         initFab();
 
-        getTokenInterceptor().start();
+//        getTokenInterceptor().start();
     }
 
     private void initToolBarButton() {

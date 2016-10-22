@@ -193,8 +193,7 @@ public abstract class CommonAdapter<T> extends HeaderAdapter<ItemViewHolder>
         int sizeBeforeAdd = mData.size();
         mData.addAll(data);
 //        notifyDataSetChanged();
-        notifyItemChanged(getActualItemPosition(sizeBeforeAdd));
-//        notifyItemRangeInserted(getActualItemPosition(sizeBeforeAdd), data.size() - 1);
+        notifyItemRangeInserted(getActualItemPosition(sizeBeforeAdd), data.size() - 1);
     }
 
     public void addAll(int position, List<T> data) {

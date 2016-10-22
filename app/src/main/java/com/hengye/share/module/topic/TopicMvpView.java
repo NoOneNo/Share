@@ -9,10 +9,5 @@ import java.util.List;
 
 public interface TopicMvpView extends ListDataMvpView<Topic> {
 
-//    void onTaskComplete(boolean isRefresh, boolean isSuccess);
-
-    void handleCache(List<Topic> data);
-
-//    void handleTopicData(List<Topic> data, boolean isRefresh);
 
 }

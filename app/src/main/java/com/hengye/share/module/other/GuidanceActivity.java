@@ -2,22 +2,43 @@ package com.hengye.share.module.other;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.hengye.share.R;
 import com.hengye.share.module.topic.TopicActivity;
 import com.hengye.share.module.base.BaseActivity;
+import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.SPUtil;
+import com.hengye.share.util.UserUtil;
 
 public class GuidanceActivity extends BaseActivity {
+
+    @Override
+    protected boolean setToolBar() {
+        return false;
+    }
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
 
         setContentView(R.layout.activity_guidance);
+
+        TextView welcomeTV = (TextView) findViewById(R.id.tv_welcome);
+        String name = UserUtil.getName();
+        if(CommonUtil.isEmpty(name)){
+            name = "world";
+        }
+        welcomeTV.setText(getString(R.string.tip_welcome, name));
         createShortcutIfNeed();
-        startActivity(TopicActivity.class);
-        finish();
+        getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(TopicActivity.class);
+                finish();
+            }
+        }, 1000);
+
     }
 
     private void createShortcutIfNeed() {

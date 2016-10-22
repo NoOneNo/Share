@@ -80,11 +80,6 @@ public class GalleryFragment extends ViewPagerFragment {
     }
 
     @Override
-    public boolean isLayoutInflateMode() {
-        return false;
-    }
-
-    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setAdapter(mAdapter = new PhotoPagerAdapter(getFragmentManager()));

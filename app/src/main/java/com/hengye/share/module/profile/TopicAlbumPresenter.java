@@ -5,13 +5,10 @@ import android.text.TextUtils;
 import com.google.gson.reflect.TypeToken;
 import com.hengye.share.model.KeyValue;
 import com.hengye.share.model.Topic;
-import com.hengye.share.model.greenrobot.GreenDaoManager;
 import com.hengye.share.model.greenrobot.ShareJson;
 import com.hengye.share.model.sina.WBTopics;
-import com.hengye.share.module.mvp.BasePresenter;
 import com.hengye.share.module.mvp.TaskPresenter;
 import com.hengye.share.util.CommonUtil;
-import com.hengye.share.util.GsonUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
@@ -119,33 +116,16 @@ public class TopicAlbumPresenter extends TaskPresenter<TopicAlbumMvpView> {
     }
 
     public ArrayList<Topic> findData() {
-
-        ShareJson shareJson = null;
-        ArrayList<Topic> data = null;
-        try{
-            shareJson = GreenDaoManager.getDaoSession().getShareJsonDao().load(getModuleName());
-            if (shareJson == null) {
-                return new ArrayList<>();
-            }
-            data = GsonUtil.fromJson(shareJson.getJson()
-                    , new TypeToken<ArrayList<Topic>>(){}.getType());
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        return data == null ? new ArrayList<Topic>() : data;
+        return ShareJson.findData(getModelName(), new TypeToken<ArrayList<Topic>>(){}.getType());
     }
 
     public void saveData(List<Topic> data) {
-        GreenDaoManager
-                .getDaoSession()
-                .getShareJsonDao()
-                .insertOrReplace(new ShareJson(getModuleName(), GsonUtil.toJson(data)));
+        ShareJson.saveListData(getModelName(), data);
     }
 
     private String mModuleName;
 
-    public String getModuleName() {
+    public String getModelName() {
         if (mModuleName == null) {
             mModuleName = TopicAlbumPresenter.class.getSimpleName()
                     + uid

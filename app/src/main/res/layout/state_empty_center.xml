@@ -5,6 +5,6 @@
     android:gravity="center">
 
     <include
-        layout="@layout/widget_loading"/>
+        layout="@layout/state_empty"/>
 
 </RelativeLayout>

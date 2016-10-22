@@ -14,6 +14,7 @@ import com.hengye.share.handler.data.base.DataHandler;
 import com.hengye.share.handler.data.base.DataType;
 import com.hengye.share.handler.data.base.Pager;
 import com.hengye.share.model.TopicFavorites;
+import com.hengye.share.model.greenrobot.ShareJson;
 import com.hengye.share.model.sina.WBTopicFavorites;
 import com.hengye.share.module.util.encapsulation.paging.RecyclerRefreshFragment;
 import com.hengye.share.util.CommonUtil;
@@ -54,8 +55,9 @@ public class TopicFavoritesFragment extends RecyclerRefreshFragment<TopicFavorit
     }
 
     private ArrayList<TopicFavorites.TopicFavorite> getData() {
-        ArrayList<TopicFavorites.TopicFavorite> data = SPUtil.getModule(new TypeToken<ArrayList<TopicFavorites.TopicFavorite>>() {
-        }.getType(), TopicFavorites.TopicFavorite.class.getSimpleName() + UserUtil.getUid());
+        ArrayList<TopicFavorites.TopicFavorite> data = ShareJson.findData(TopicFavorites.TopicFavorite.class.getSimpleName() + UserUtil.getUid(),
+                new TypeToken<ArrayList<TopicFavorites.TopicFavorite>>() {
+        }.getType());
         if (data == null) {
             data = new ArrayList<>();
         }
@@ -95,7 +97,7 @@ public class TopicFavoritesFragment extends RecyclerRefreshFragment<TopicFavorit
         int type = handleData(isRefresh, data);
 
         if(DataType.hasNewData(type)){
-            SPUtil.setModule(mAdapter.getData(), TopicFavorites.TopicFavorite.class.getSimpleName() + UserUtil.getUid());
+            ShareJson.saveListData(TopicFavorites.TopicFavorite.class.getSimpleName() + UserUtil.getUid(), mAdapter.getData());
         }
     }
 

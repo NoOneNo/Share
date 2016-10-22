@@ -27,6 +27,14 @@ public class BasePresenter<V extends MvpView> implements Presenter<V> {
     @Override
     public void detachView() {
         mMvpView = null;
+        unsubscribe();
+    }
+
+//    public void subscribe(){
+//
+//    }
+
+    public void unsubscribe(){
         if(mSubscriptions != null){
             mSubscriptions.clear();
         }

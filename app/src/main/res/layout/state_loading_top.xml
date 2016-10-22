@@ -5,6 +5,6 @@
     android:paddingTop="@dimen/content_margin_50dp">
 
     <include
-        layout="@layout/widget_loading"/>
+        layout="@layout/state_loading"/>
 
 </android.support.v4.widget.NestedScrollView>

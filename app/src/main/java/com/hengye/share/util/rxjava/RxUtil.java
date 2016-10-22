@@ -5,10 +5,12 @@ import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 import java.util.List;
 
 import rx.Observable;
+import rx.Subscriber;
 import rx.Subscription;
 import rx.functions.Action1;
 import rx.functions.Actions;
 import rx.functions.Func1;
+import rx.internal.util.ActionSubscriber;
 
 /**
  * Created by yuhy on 2016/10/4.
@@ -50,6 +52,8 @@ public class RxUtil {
      * Igonre an Exception when called.
      */
     public static final Action1<Throwable> ERROR_NOT_THROW = new ErrorNotThrowAction();
+
+    public static Subscriber EMPTY_SUBSCRIBER = new ActionSubscriber(Actions.empty(), ERROR_NOT_THROW, Actions.empty());
 
     private static final class ErrorNotThrowAction implements Action1<Throwable> {
         @Override

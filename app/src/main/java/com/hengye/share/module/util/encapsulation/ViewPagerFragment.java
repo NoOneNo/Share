@@ -7,15 +7,16 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import com.hengye.share.R;
+import com.hengye.share.module.base.BaseFragment;
 import com.hengye.share.ui.widget.common.CommonViewPager;
 
 /**
  * Created by yuhy on 16/7/18.
  */
-public abstract class ViewPagerFragment extends ContentFragment implements ViewPager.OnPageChangeListener {
+public abstract class ViewPagerFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
 
     @Override
-    public int getContentResId() {
+    public int getLayoutResId() {
         return R.layout.fragment_viewpager;
     }
 

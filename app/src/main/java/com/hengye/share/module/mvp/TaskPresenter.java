@@ -3,6 +3,9 @@ package com.hengye.share.module.mvp;
 import com.hengye.share.module.util.encapsulation.paging.TaskCallBack;
 import com.hengye.share.module.util.encapsulation.paging.TaskState;
 
+import java.net.UnknownHostException;
+import java.net.UnknownServiceException;
+
 /**
  * Created by yuhy on 2016/10/20.
  */
@@ -25,7 +28,8 @@ public class TaskPresenter<V extends MvpView & TaskCallBack> extends BasePresent
         public void onError(V v, Throwable e) {
             super.onError(v, e);
             //根据e来判断是网络异常还是服务器异常;
-            v.onTaskComplete(isRefresh, TaskState.STATE_FAIL_BY_NETWORK);
+            int errorType = e instanceof UnknownHostException ? TaskState.STATE_FAIL_BY_NETWORK : TaskState.STATE_FAIL_BY_SERVER;
+            v.onTaskComplete(isRefresh, errorType);
         }
 
         @Override

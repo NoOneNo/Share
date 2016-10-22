@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.hengye.share.R;
+import com.hengye.share.model.greenrobot.ShareJson;
 import com.hengye.share.module.publish.AtUserSortAdapter.Letter;
 import com.hengye.share.model.AtUser;
 import com.hengye.share.model.UserInfo;
@@ -407,7 +408,7 @@ public class AtUserActivity extends BaseActivity implements UserListMvpView {
     public void showUserListSuccess(List<UserInfo> data, boolean isRefresh) {
         mSearchResultData = AtUser.getAtUser(data);
 
-        SPUtil.setModule(mSearchResultData, AtUser.class.getSimpleName() + UserUtil.getUid());
+        ShareJson.saveListData(AtUser.class.getSimpleName() + UserUtil.getUid(), mSearchResultData);
         mAtUserSearchAdapter.refresh(convertUserList(mSearchResultData));
     }
 

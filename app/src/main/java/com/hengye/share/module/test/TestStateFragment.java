@@ -27,9 +27,9 @@ public class TestStateFragment extends BaseFragment implements View.OnClickListe
         mStateLayoutManager = new StateLayoutManager(getContext(), (ViewGroup)findViewById(R.id.content_layout));
 
         mStateLayoutManager.setViewResourceId(StateLayoutManager.STATE_CONTENT, R.layout.footer_load_fail);
-        mStateLayoutManager.setViewResourceId(StateLayoutManager.STATE_EMPTY, R.layout.widget_empty);
-        mStateLayoutManager.setViewResourceId(StateLayoutManager.STATE_LOADING, R.layout.widget_loading);
-        mStateLayoutManager.setViewResourceId(StateLayoutManager.STATE_NO_NETWORK, R.layout.widget_no_network);
+        mStateLayoutManager.setViewResourceId(StateLayoutManager.STATE_EMPTY, R.layout.state_empty);
+        mStateLayoutManager.setViewResourceId(StateLayoutManager.STATE_LOADING, R.layout.state_loading);
+        mStateLayoutManager.setViewResourceId(StateLayoutManager.STATE_NO_NETWORK, R.layout.state_no_network);
 
         findViewById(R.id.btn_show_content).setOnClickListener(this);
         findViewById(R.id.btn_show_empty).setOnClickListener(this);

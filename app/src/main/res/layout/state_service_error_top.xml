@@ -5,6 +5,6 @@
     android:paddingTop="@dimen/content_margin_50dp">
 
     <include
-        layout="@layout/widget_no_network"/>
+        layout="@layout/state_service_error"/>
 
 </android.support.v4.widget.NestedScrollView>

@@ -49,6 +49,10 @@ public class UserUtil {
         return getCurrentUser().getUid();
     }
 
+    public static String getName() {
+        return getCurrentUser().getName();
+    }
+
     public static String getToken() {
         return getCurrentUser().getToken();
     }

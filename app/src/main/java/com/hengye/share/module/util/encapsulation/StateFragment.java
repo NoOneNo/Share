@@ -7,13 +7,18 @@ import android.view.ViewGroup;
 
 import com.hengye.share.R;
 import com.hengye.share.module.base.BaseFragment;
+import com.hengye.share.module.util.encapsulation.paging.TaskCallBack;
+import com.hengye.share.util.L;
 
 import static com.hengye.share.module.util.encapsulation.StateLayoutManager.*;
+import static com.hengye.share.module.util.encapsulation.paging.TaskState.isFailByNetwork;
+import static com.hengye.share.module.util.encapsulation.paging.TaskState.isFailByServer;
 
 /**
  * Created by yuhy on 16/7/18.
  */
-public abstract class ContentFragment extends BaseFragment implements StateLayoutManager.OnFindStateViewListener{
+public abstract class StateFragment extends BaseFragment
+        implements StateLayoutManager.OnFindStateViewListener, TaskCallBack{
 
     @Override
     public int getLayoutResId() {
@@ -23,15 +28,19 @@ public abstract class ContentFragment extends BaseFragment implements StateLayou
     abstract public int getContentResId();
 
     public int getLoadingResId(){
-        return R.layout.widget_loading_center;
+        return R.layout.state_loading_center;
     }
 
     public int getEmptyResId(){
-        return R.layout.widget_empty_center;
+        return R.layout.state_empty_center;
     }
 
     public int getNoNetworkResId(){
-        return R.layout.widget_no_network_center;
+        return R.layout.state_no_network_center;
+    }
+
+    public int getServiceErrorResId(){
+        return R.layout.state_service_error_center;
     }
 
     /**
@@ -68,22 +77,55 @@ public abstract class ContentFragment extends BaseFragment implements StateLayou
         mStateLayoutManager.setViewResourceId(STATE_CONTENT, getContentResId());
         mStateLayoutManager.setViewResourceId(STATE_LOADING, getLoadingResId());
         mStateLayoutManager.setViewResourceId(STATE_NO_NETWORK, getNoNetworkResId());
+        mStateLayoutManager.setViewResourceId(STATE_SERVICE_ERROR, getServiceErrorResId());
         mStateLayoutManager.setOnFindStateViewListener(this);
     }
 
     @Override
     public void onFindStateView(View stateView, int state) {
-        if(state == STATE_EMPTY || state == STATE_NO_NETWORK){
+        if(state == STATE_EMPTY
+                || state == STATE_NO_NETWORK
+                || state == STATE_SERVICE_ERROR){
             final View retry = stateView.findViewById(R.id.btn_retry);
             if(retry != null){
-                retry.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onRetry();
-                    }
-                });
+                retry.setOnClickListener(getOnClickRetryListener());
             }
         }
+    }
+
+    View.OnClickListener mOnClickRetryListener;
+    private View.OnClickListener getOnClickRetryListener(){
+        if(mOnClickRetryListener == null){
+            mOnClickRetryListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onRetry();
+                }
+            };
+        }
+        return mOnClickRetryListener;
+    }
+
+    @Override
+    public void onTaskStart() {
+        showLoading();
+    }
+
+    @Override
+    public void onTaskComplete(boolean isRefresh, int taskState) {
+        if(isRefresh && isEmpty()){
+            if(isFailByNetwork(taskState)) {
+                showNoNetwork();
+            }else if(isFailByServer(taskState)){
+                showServiceError();
+            }else{
+                showEmpty();
+            }
+        }
+    }
+
+    public boolean isEmpty(){
+        return true;
     }
 
     public void onRetry(){}
@@ -96,6 +138,10 @@ public abstract class ContentFragment extends BaseFragment implements StateLayou
 
     public View getNoNetwork() {
         return mStateLayoutManager.getStateView(STATE_NO_NETWORK);
+    }
+
+    public View getServiceError() {
+        return mStateLayoutManager.getStateView(STATE_SERVICE_ERROR);
     }
 
     public View getEmpty() {
@@ -112,6 +158,10 @@ public abstract class ContentFragment extends BaseFragment implements StateLayou
 
     public void showNoNetwork() {
         mStateLayoutManager.showState(STATE_NO_NETWORK);
+    }
+
+    public void showServiceError() {
+        mStateLayoutManager.showState(STATE_SERVICE_ERROR);
     }
 
     public void showEmpty() {

@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import com.google.gson.reflect.TypeToken;
 import com.hengye.share.R;
 import com.hengye.share.model.Topic;
-import com.hengye.share.model.greenrobot.GreenDaoManager;
 import com.hengye.share.model.greenrobot.GroupList;
 import com.hengye.share.model.greenrobot.ShareJson;
 import com.hengye.share.model.sina.WBTopicComments;
@@ -14,9 +13,7 @@ import com.hengye.share.model.sina.WBTopicIds;
 import com.hengye.share.model.sina.WBTopics;
 import com.hengye.share.module.mvp.ListDataPresenter;
 import com.hengye.share.util.CommonUtil;
-import com.hengye.share.util.GsonUtil;
 import com.hengye.share.util.L;
-import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
@@ -28,6 +25,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -51,7 +49,7 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
         getTopics(id, isRefresh, isLoadId)
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(getWBTopicsSubscriber(true));
+                .subscribe(getTopicsSubscriber(isRefresh));
     }
 
     public Observable<WBTopicIds> getWBTopicIds(String id) {
@@ -176,7 +174,7 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
         return ub.getParameters();
     }
 
-    private Subscriber<List<Topic>> getWBTopicsSubscriber(final boolean isRefresh) {
+    private Subscriber<List<Topic>> getTopicsSubscriber(final boolean isRefresh) {
         return new ListDataSubscriber(isRefresh);
     }
 
@@ -236,56 +234,49 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
         };
     }
 
-    public void loadCacheData() {
+    /**
+     * 先检测有没有缓存，没有再请求服务器
+     */
+    public void loadWBTopic(final String firstPage) {
+        getMvpView().onTaskStart();
         Observable
                 .create(new Observable.OnSubscribe<ArrayList<Topic>>() {
                     @Override
                     public void call(Subscriber<? super ArrayList<Topic>> subscriber) {
                         subscriber.onNext(findData());
+                        subscriber.onCompleted();
+                    }
+                })
+                .flatMap(new Func1<ArrayList<Topic>, Observable<ArrayList<Topic>>>() {
+                    @Override
+                    public Observable<ArrayList<Topic>> call(ArrayList<Topic> topics) {
+                        if(CommonUtil.isEmpty(topics)){
+                            return getTopics(firstPage, true, false);
+                        }else{
+                            return Observable
+                                    .just(topics)
+                                    .delay(400, TimeUnit.MILLISECONDS);
+                        }
                     }
                 })
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(new BaseSubscriber<ArrayList<Topic>>() {
-                    @Override
-                    public void onNext(TopicMvpView v, ArrayList<Topic> topics) {
-                        v.handleCache(topics);
-                    }
-                });
+                .subscribe(getTopicsSubscriber(true));
     }
 
     public ArrayList<Topic> findData() {
-
-        ShareJson shareJson = null;
-
-        try {
-            shareJson = GreenDaoManager.getDaoSession().getShareJsonDao().load(getModuleName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        if (shareJson == null) {
-            return new ArrayList<>();
-        }
-
-        ArrayList<Topic> data = GsonUtil.fromJson(shareJson.getJson()
-                , new TypeToken<ArrayList<Topic>>() {
-                }.getType());
-
-        return data == null ? new ArrayList<Topic>() : data;
+        return ShareJson.findData(getModelName(), new TypeToken<ArrayList<Topic>>() {
+        }.getType());
     }
 
     public void saveData(List<Topic> data) {
-        GreenDaoManager
-                .getDaoSession()
-                .getShareJsonDao()
-                .insertOrReplace(new ShareJson(getModuleName(), GsonUtil.toJson(data)));
+        ShareJson.saveListData(getModelName(), data);
     }
 
     private String mModuleName;
     private String mModuleUid;
 
-    public String getModuleName() {
+    public String getModelName() {
         if (mModuleName == null || mModuleUid == null || !mModuleUid.equals(UserUtil.getUid())) {
             mModuleUid = UserUtil.getUid();
             mModuleName = Topic.class.getSimpleName()

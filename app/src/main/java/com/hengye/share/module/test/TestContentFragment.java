@@ -4,12 +4,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.hengye.share.R;
-import com.hengye.share.module.util.encapsulation.ContentFragment;
+import com.hengye.share.module.util.encapsulation.StateFragment;
 
 /**
  * Created by yuhy on 16/7/18.
  */
-public class TestContentFragment extends ContentFragment {
+public class TestContentFragment extends StateFragment {
 
     @Override
     public String getTitle() {
@@ -31,5 +31,10 @@ public class TestContentFragment extends ContentFragment {
 //        showContent();
 //        onShowLoading();
         showEmpty();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return true;
     }
 }

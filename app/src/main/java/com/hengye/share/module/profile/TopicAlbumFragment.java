@@ -24,7 +24,6 @@ import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.swiperefresh.listener.SwipeListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class TopicAlbumFragment extends RecyclerRefreshFragment<String> implements TopicAlbumMvpView, SwipeListener.OnRefreshListener {
 
@@ -53,16 +52,24 @@ public class TopicAlbumFragment extends RecyclerRefreshFragment<String> implemen
         return R.layout.fragment_content;
     }
 
+    @Override
     public int getLoadingResId(){
-        return R.layout.widget_loading_top;
+        return R.layout.state_loading_top;
     }
 
+    @Override
     public int getEmptyResId(){
-        return R.layout.widget_empty_top;
+        return R.layout.state_empty_top;
     }
 
+    @Override
     public int getNoNetworkResId(){
-        return R.layout.widget_no_network_top;
+        return R.layout.state_no_network_top;
+    }
+
+    @Override
+    public int getServiceErrorResId() {
+        return R.layout.state_service_error_top;
     }
 
     @Override

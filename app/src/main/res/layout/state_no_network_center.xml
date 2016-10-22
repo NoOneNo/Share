@@ -5,6 +5,6 @@
     android:gravity="center">
 
     <include
-        layout="@layout/widget_empty"/>
+        layout="@layout/state_no_network"/>
 
 </RelativeLayout>

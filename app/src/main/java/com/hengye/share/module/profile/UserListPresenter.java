@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import com.hengye.share.handler.data.NumberPager;
 import com.hengye.share.model.AtUser;
 import com.hengye.share.model.UserInfo;
+import com.hengye.share.model.greenrobot.ShareJson;
 import com.hengye.share.model.sina.WBUserInfos;
 import com.hengye.share.module.mvp.BasePresenter;
 import com.hengye.share.util.CommonUtil;
@@ -44,8 +45,8 @@ public class UserListPresenter extends BasePresenter<UserListMvpView> {
     }
 
     public ArrayList<AtUser> getSearchResultData() {
-        ArrayList<AtUser> searchResultData = SPUtil.getModule(new TypeToken<ArrayList<AtUser>>() {
-        }.getType(), AtUser.class.getSimpleName() + UserUtil.getUid());
+        ArrayList<AtUser> searchResultData = ShareJson.findData(AtUser.class.getSimpleName() + UserUtil.getUid(), new TypeToken<ArrayList<AtUser>>() {
+        }.getType());
 
         if (searchResultData == null) {
             searchResultData = new ArrayList<>();

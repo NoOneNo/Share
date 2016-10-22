@@ -14,12 +14,10 @@ import com.hengye.share.handler.data.TopicAdapterIdPager;
 import com.hengye.share.handler.data.base.DataHandler;
 import com.hengye.share.handler.data.base.DataType;
 import com.hengye.share.handler.data.base.Pager;
-import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.model.Topic;
 import com.hengye.share.module.profile.PersonalHomepageFragment.LoadDataCallBack;
 import com.hengye.share.module.util.encapsulation.paging.RecyclerRefreshFragment;
 import com.hengye.share.ui.widget.fab.FabAnimator;
-import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
 
@@ -84,7 +82,9 @@ public class TopicFragment extends RecyclerRefreshFragment<Topic> implements Top
 
         getLoadDataCallBack().initView();
 
-        mPresenter.loadCacheData();
+        if(!UserUtil.isUserEmpty()) {
+            refresh();
+        }
 
         View fab = getActivity().findViewById(R.id.fab);
         if(fab != null) {
@@ -101,10 +101,10 @@ public class TopicFragment extends RecyclerRefreshFragment<Topic> implements Top
     @Override
     public void onRefresh() {
         super.onRefresh();
-        if (UserUtil.isUserEmpty()) {
-            setRefreshing(false);
-            return;
-        }
+//        if (UserUtil.isUserEmpty()) {
+//            setRefreshing(false);
+//            return;
+//        }
         mPresenter.loadWBTopic(mTopicPager.getFirstPage(), true);
     }
 
@@ -128,19 +128,7 @@ public class TopicFragment extends RecyclerRefreshFragment<Topic> implements Top
     }
 
     public void refresh() {
-        mPresenter.loadCacheData();
-    }
-
-    @Override
-    public void handleCache(List<Topic> data) {
-        if (CommonUtil.isEmpty(data)) {
-            showLoading();
-            getLoadDataCallBack().refresh(true);
-        } else {
-            handleData(true, data);
-//            mAdapter.refresh(data);
-//            setLoadEnable(true);
-        }
+        mPresenter.loadWBTopic(mTopicPager.getFirstPage());
     }
 
     public void handleNoMoreTopics() {
