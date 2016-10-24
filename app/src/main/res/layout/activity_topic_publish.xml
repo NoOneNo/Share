@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <EditText
+                <com.hengye.share.ui.widget.TopicEditText
                     android:id="@+id/et_topic_publish"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

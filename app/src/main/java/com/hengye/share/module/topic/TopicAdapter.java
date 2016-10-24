@@ -275,6 +275,14 @@ public class TopicAdapter extends CommonAdapter<Topic>
 
                 int id = v.getId();
                 if(id == R.id.tv_topic_content) {
+                    //如果需要拦截长按关键字（比如@名字）则这样返回；
+//                    if(!TopicUrlOnTouchListener.getInstance().onTouch(v, event)) {
+//                        mTopicItem.onTouchEvent(event);
+//                        return false;
+//                    }else{
+//                        return true;
+//                    }
+
                     if(!TopicUrlOnTouchListener.getInstance().onTouch(v, event)) {
                         mTopicItem.onTouchEvent(event);
                     }

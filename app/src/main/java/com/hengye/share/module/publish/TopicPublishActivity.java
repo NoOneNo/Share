@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -139,6 +140,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
+                //自动调整EditText的位置
                 int currentLineCount = mContent.getLineCount();
                 if (currentLineCount > mContent.getMinLines()) {
                     int differCount = lastLineCount - currentLineCount;
@@ -150,6 +152,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
 
                 updateContentLength();
 
+                //输入@的时候自动弹出At用户的界面
                 boolean findAt = false;
                 if (count == 1) {
                     String str = s.toString();
@@ -167,6 +170,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
                 }
                 if (findAt) {
                     L.debug("find at action");
+                    mMentionBtn.performClick();
                 }
             }
         });
@@ -468,6 +472,9 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         ((LinearLayout.LayoutParams) mContainer.getLayoutParams()).weight = 1.0F;
     }
 
+    /**
+     * 更新还可以输入多少字数
+     */
     private void updateContentLength() {
         mCurrentContentLength = EncodeUtil.getChineseLength(mContent.getText().toString());
         int differLength = Math.abs(MAX_CHINESE_CONTENT_LENGTH - mCurrentContentLength);

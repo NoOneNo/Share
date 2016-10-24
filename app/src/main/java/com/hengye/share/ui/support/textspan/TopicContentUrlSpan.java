@@ -18,15 +18,24 @@ import com.hengye.share.util.L;
 import com.hengye.share.util.thirdparty.WBUtil;
 
 @SuppressLint("ParcelCreator")
-public class TopicContentUrlSpan extends CharacterStyle implements ParcelableSpan, SimpleClickableSpan {
+public class TopicContentUrlSpan extends CharacterStyle implements ParcelableSpan, SimpleClickableSpan, SimpleContentSpan {
 
-    private final String mURL;
+    public int mStart, mEnd;
+    public final String mURL;
 
-    public TopicContentUrlSpan(String url) {
+    public TopicContentUrlSpan(CustomContentSpan ccs) {
+        this(ccs.start, ccs.end, ccs.content);
+    }
+
+    public TopicContentUrlSpan(int start, int end, String url) {
+        mStart = start;
+        mEnd = end;
         mURL = url;
     }
 
     public TopicContentUrlSpan(Parcel src) {
+        mStart = src.readInt();
+        mEnd = src.readInt();
         mURL = src.readString();
     }
 
@@ -40,12 +49,28 @@ public class TopicContentUrlSpan extends CharacterStyle implements ParcelableSpa
     }
 
     public void writeToParcel(Parcel dest, int flags) {
-//        dest.writeString(mURL);
+        dest.writeInt(mStart);
+        dest.writeInt(mEnd);
         dest.writeString(mURL);
     }
 
     public String getURL() {
         return mURL;
+    }
+
+    @Override
+    public int getStart() {
+        return mStart;
+    }
+
+    @Override
+    public int getEnd() {
+        return mEnd;
+    }
+
+    @Override
+    public String getContent() {
+        return getURL();
     }
 
     @Override

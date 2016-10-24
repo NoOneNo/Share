@@ -12,6 +12,7 @@ import com.hengye.share.BuildConfig;
 import com.hengye.share.R;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
+import com.hengye.share.ui.support.textspan.CustomContentSpan;
 import com.hengye.share.ui.widget.emoticon.Emoticon;
 import com.hengye.share.ui.support.textspan.TopicContentUrlSpan;
 
@@ -98,13 +99,14 @@ public class DataUtil {
         topic.setUrlSpannableString(convertNormalStringToSpannableString(str));
     }
 
-    public static SpannableString convertNormalStringToSpannableString(String txt) {
-        return convertNormalStringToSpannableString(txt, true);
+    public static SpannableString convertNormalStringToSpannableString(CharSequence source) {
+        return convertNormalStringToSpannableString(source, true);
     }
 
-    public static SpannableString convertNormalStringToSpannableString(String txt, boolean isReplaceUrl) {
+    public static SpannableString convertNormalStringToSpannableString(CharSequence source, boolean isReplaceWebUrl) {
         //hack to fix android imagespan bug,see http://stackoverflow.com/questions/3253148/imagespan-is-cut-off-incorrectly-aligned
         //if string only contains emotion tags,add a empty char to the end
+        String txt = source.toString();
         String hackTxt;
         if (txt.startsWith("[") && txt.endsWith("]")) {
             hackTxt = txt + " ";
@@ -117,51 +119,8 @@ public class DataUtil {
 //        Linkify.addLinks(value, Linkify.WEB_URLS);
         Linkify.addLinks(value, WEB_URL, WEB_SCHEME);
 
-        URLSpan[] urlSpans = value.getSpans(0, value.length(), URLSpan.class);
-        if (isReplaceUrl) {
-            if (urlSpans != null && urlSpans.length != 0) {
-                List<SpanPosition> sps = new ArrayList<>();
-                List<URLSpan> temp = Arrays.asList(urlSpans);
-                List<URLSpan> us = new ArrayList<>(temp);
-                int size = us.size();
-                for (int i = 0; i < size; i++) {
-                    URLSpan urlSpan = us.get(i);
-                    int start = value.getSpanStart(urlSpan);
-                    int end = value.getSpanEnd(urlSpan);
-                    if (start >= 0 && end >= 0 && value.length() >= end) {
-                        value.removeSpan(urlSpan);
-                        us.remove(i);
-                        i--;
-                        size--;
-
-                        SpanPosition sp = new SpanPosition();
-                        sp.start = start;
-                        sp.end = end;
-                        sp.content = urlSpan.getURL();
-                        sps.add(sp);
-                    }
-                }
-
-                if (!CommonUtil.isEmpty(sps)) {
-                    int totalIndentLength = 0;
-                    for (SpanPosition sp : sps) {
-                        sp.start -= totalIndentLength;
-                        sp.end -= totalIndentLength;
-
-                        CharSequence cs1 = value.subSequence(0, sp.start);
-
-                        CharSequence cs2 = value.subSequence(sp.end, value.length());
-
-                        value = SpannableString.valueOf(cs1.toString() + WEB_URL_REPLACE + cs2.toString());
-                        totalIndentLength = totalIndentLength + (sp.end - sp.start) - WEB_URL_REPLACE.length();
-                        sp.end = sp.start + WEB_URL_REPLACE.length();
-                    }
-
-                    for (SpanPosition sp : sps) {
-                        value.setSpan(new TopicContentUrlSpan(sp.content), sp.start, sp.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    }
-                }
-            }
+        if (isReplaceWebUrl) {
+            value = replaceWebUrl(value);
         }
 
         //添加表情
@@ -170,7 +129,7 @@ public class DataUtil {
         Linkify.addLinks(value, MENTION_URL, MENTION_SCHEME);
         Linkify.addLinks(value, TOPIC_URL, TOPIC_SCHEME);
 
-        urlSpans = value.getSpans(0, value.length(), URLSpan.class);
+        URLSpan[] urlSpans = value.getSpans(0, value.length(), URLSpan.class);
         if (urlSpans == null || urlSpans.length == 0) {
             return value;
         }
@@ -181,41 +140,58 @@ public class DataUtil {
 
             if (start >= 0 && end >= 0 && value.length() >= end) {
                 value.removeSpan(urlSpan);
-                value.setSpan(new TopicContentUrlSpan(urlSpan.getURL()), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                value.setSpan(new TopicContentUrlSpan(start, end, urlSpan.getURL()), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
 
         return value;
     }
 
-    public static class SpanPosition {
-        int start;
-        int end;
-        String content;
+    public static SpannableString replaceWebUrl(SpannableString value) {
+        URLSpan[] urlSpans = value.getSpans(0, value.length(), URLSpan.class);
+        if (urlSpans != null && urlSpans.length != 0) {
+            List<CustomContentSpan> sps = new ArrayList<>();
+            List<URLSpan> us = new ArrayList<>(Arrays.asList(urlSpans));
+            int size = us.size();
+            for (int i = 0; i < size; i++) {
+                URLSpan urlSpan = us.get(i);
+                int start = value.getSpanStart(urlSpan);
+                int end = value.getSpanEnd(urlSpan);
+                if (start >= 0 && end >= 0 && value.length() >= end) {
+                    value.removeSpan(urlSpan);
+                    us.remove(i);
+                    i--;
+                    size--;
 
-        public int getStart() {
-            return start;
-        }
+                    CustomContentSpan sp = new CustomContentSpan();
+                    sp.start = start;
+                    sp.end = end;
+                    sp.content = urlSpan.getURL();
+                    sps.add(sp);
+                }
+            }
 
-        public void setStart(int start) {
-            this.start = start;
-        }
+            if (!CommonUtil.isEmpty(sps)) {
+                int totalIndentLength = 0;
+                for (CustomContentSpan sp : sps) {
+                    sp.start -= totalIndentLength;
+                    sp.end -= totalIndentLength;
 
-        public int getEnd() {
-            return end;
-        }
+                    CharSequence cs1 = value.subSequence(0, sp.start);
 
-        public void setEnd(int end) {
-            this.end = end;
-        }
+                    CharSequence cs2 = value.subSequence(sp.end, value.length());
 
-        public String getContent() {
-            return content;
-        }
+                    value = SpannableString.valueOf(cs1.toString() + WEB_URL_REPLACE + cs2.toString());
+                    totalIndentLength = totalIndentLength + (sp.end - sp.start) - WEB_URL_REPLACE.length();
+                    sp.end = sp.start + WEB_URL_REPLACE.length();
+                }
 
-        public void setContent(String content) {
-            this.content = content;
+                for (CustomContentSpan sp : sps) {
+                    value.setSpan(new TopicContentUrlSpan(sp), sp.start, sp.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+            }
         }
+        return value;
     }
 
     public static String addRetweetedNamePrefix(Topic topic) {
