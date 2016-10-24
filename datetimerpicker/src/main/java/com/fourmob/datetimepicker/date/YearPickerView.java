@@ -1,5 +1,6 @@
 package com.fourmob.datetimepicker.date;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.StateListDrawable;
@@ -15,6 +16,7 @@ import com.fourmob.datetimepicker.R;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressLint("ViewConstructor")
 public class YearPickerView extends ListView implements AdapterView.OnItemClickListener, DatePickerDialog.OnDateChangedListener {
 	
     private YearAdapter mAdapter;

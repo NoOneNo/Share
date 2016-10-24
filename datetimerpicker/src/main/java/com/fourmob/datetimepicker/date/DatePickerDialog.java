@@ -265,7 +265,7 @@ public class DatePickerDialog extends DialogFragment implements View.OnClickList
 	public View onCreateView(LayoutInflater layoutInflater, ViewGroup parent, Bundle bundle) {
 		getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
-		View view = layoutInflater.inflate(R.layout.date_picker_dialog, null);
+		View view = layoutInflater.inflate(R.layout.date_picker_dialog, parent);
 
 		mDayOfWeekView = ((TextView) view.findViewById(R.id.date_picker_header));
 		mMonthAndDayView = ((LinearLayout) view.findViewById(R.id.date_picker_month_and_day));

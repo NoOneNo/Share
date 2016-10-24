@@ -41,8 +41,8 @@ public class ActivityHelper {
     /* package */ void dispatchActivityCreated(Activity activity, Bundle savedInstanceState) {
         Object[] callbacks = collectActivityLifecycleListener();
         if (callbacks != null) {
-            for (int i=0; i<callbacks.length; i++) {
-                ((ActivityLifecycleListener)callbacks[i]).onActivityCreated(activity,
+            for (Object callback : callbacks) {
+                ((ActivityLifecycleListener) callback).onActivityCreated(activity,
                         savedInstanceState);
             }
         }
@@ -51,8 +51,8 @@ public class ActivityHelper {
     /* package */ void dispatchActivityStarted(Activity activity) {
         Object[] callbacks = collectActivityLifecycleListener();
         if (callbacks != null) {
-            for (int i=0; i<callbacks.length; i++) {
-                ((ActivityLifecycleListener)callbacks[i]).onActivityStarted(activity);
+            for (Object callback : callbacks) {
+                ((ActivityLifecycleListener) callback).onActivityStarted(activity);
             }
         }
     }
@@ -60,8 +60,8 @@ public class ActivityHelper {
     /* package */ void dispatchActivityResumed(Activity activity) {
         Object[] callbacks = collectActivityLifecycleListener();
         if (callbacks != null) {
-            for (int i=0; i<callbacks.length; i++) {
-                ((ActivityLifecycleListener)callbacks[i]).onActivityResumed(activity);
+            for (Object callback : callbacks) {
+                ((ActivityLifecycleListener) callback).onActivityResumed(activity);
             }
         }
     }
@@ -69,8 +69,8 @@ public class ActivityHelper {
     /* package */ void dispatchActivityPaused(Activity activity) {
         Object[] callbacks = collectActivityLifecycleListener();
         if (callbacks != null) {
-            for (int i=0; i<callbacks.length; i++) {
-                ((ActivityLifecycleListener)callbacks[i]).onActivityPaused(activity);
+            for (Object callback : callbacks) {
+                ((ActivityLifecycleListener) callback).onActivityPaused(activity);
             }
         }
     }
@@ -78,8 +78,8 @@ public class ActivityHelper {
     /* package */ void dispatchActivityStopped(Activity activity) {
         Object[] callbacks = collectActivityLifecycleListener();
         if (callbacks != null) {
-            for (int i=0; i<callbacks.length; i++) {
-                ((ActivityLifecycleListener)callbacks[i]).onActivityStopped(activity);
+            for (Object callback : callbacks) {
+                ((ActivityLifecycleListener) callback).onActivityStopped(activity);
             }
         }
     }
@@ -87,8 +87,8 @@ public class ActivityHelper {
     /* package */ void dispatchActivitySaveInstanceState(Activity activity, Bundle outState) {
         Object[] callbacks = collectActivityLifecycleListener();
         if (callbacks != null) {
-            for (int i=0; i<callbacks.length; i++) {
-                ((ActivityLifecycleListener)callbacks[i]).onActivitySaveInstanceState(activity,
+            for (Object callback : callbacks) {
+                ((ActivityLifecycleListener) callback).onActivitySaveInstanceState(activity,
                         outState);
             }
         }
@@ -97,8 +97,8 @@ public class ActivityHelper {
     /* package */ void dispatchActivityDestroyed(Activity activity) {
         Object[] callbacks = collectActivityLifecycleListener();
         if (callbacks != null) {
-            for (int i=0; i<callbacks.length; i++) {
-                ((ActivityLifecycleListener)callbacks[i]).onActivityDestroyed(activity);
+            for (Object callback : callbacks) {
+                ((ActivityLifecycleListener) callback).onActivityDestroyed(activity);
             }
         }
     }
@@ -106,8 +106,8 @@ public class ActivityHelper {
     /* package */ void dispatchActivityResulted(Activity activity, int requestCode, int resultCode, Intent data) {
         Object[] callbacks = collectActivityLifecycleListener();
         if (callbacks != null) {
-            for (int i=0; i<callbacks.length; i++) {
-                ((ActivityLifecycleListener)callbacks[i]).onActivityResulted(activity, requestCode, resultCode, data);
+            for (Object callback : callbacks) {
+                ((ActivityLifecycleListener) callback).onActivityResulted(activity, requestCode, resultCode, data);
             }
         }
     }

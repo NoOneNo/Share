@@ -116,7 +116,7 @@ public class TopicPagePresenter extends BasePresenter<TopicPageMvpView> {
 //    }
 
     public enum TopicType {
-        THEME, FAVORITES;
+        THEME, FAVORITES
     }
 
     public static class TopicGroup implements Serializable {

@@ -1,6 +1,7 @@
 package com.hengye.share.module.util.image;
 
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -46,10 +47,11 @@ public class ImageWebViewFragment extends BaseFragment {
 
     private WebView mWebView;
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_image_webview, null);
+        View view = inflater.inflate(R.layout.fragment_image_webview, container, false);
 
         mWebView = (WebView) view.findViewById(R.id.web_view);
 
@@ -93,8 +95,10 @@ public class ImageWebViewFragment extends BaseFragment {
     private void showContent(String path, WebView large) {
         File file = new File(path);
 
-        String str1 = "file://" + file.getAbsolutePath()
-                .replace("/mnt/sdcard/", "/sdcard/");
+//        String str1 = "file://" + file.getAbsolutePath()
+//                .replace("/mnt/sdcard/", "/sdcard/");
+        String str1 = "file://" + file.getAbsolutePath();
+
         String str2 =
                 "<html>\n<head>\n     <style>\n          html,body{background:transparent;margin:0;padding:0;}          *{-webkit-tap-highlight-color:rgba(0, 0, 0, 0);}\n     </style>\n     <script type=\"text/javascript\">\n     var imgUrl = \""
                         + str1 + "\";" + "     var objImage = new Image();\n"

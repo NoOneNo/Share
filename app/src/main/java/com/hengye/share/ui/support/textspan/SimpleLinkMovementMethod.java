@@ -146,12 +146,12 @@ public class SimpleLinkMovementMethod extends ScrollingMovementMethod {
                 beststart = -1;
                 bestend = -1;
 
-                for (int i = 0; i < candidates.length; i++) {
-                    int end = buffer.getSpanEnd(candidates[i]);
+                for (SimpleClickableSpan candidate1 : candidates) {
+                    int end = buffer.getSpanEnd(candidate1);
 
                     if (end < selEnd || selStart == selEnd) {
                         if (end > bestend) {
-                            beststart = buffer.getSpanStart(candidates[i]);
+                            beststart = buffer.getSpanStart(candidate1);
                             bestend = end;
                         }
                     }
@@ -168,13 +168,13 @@ public class SimpleLinkMovementMethod extends ScrollingMovementMethod {
                 beststart = Integer.MAX_VALUE;
                 bestend = Integer.MAX_VALUE;
 
-                for (int i = 0; i < candidates.length; i++) {
-                    int start = buffer.getSpanStart(candidates[i]);
+                for (SimpleClickableSpan candidate : candidates) {
+                    int start = buffer.getSpanStart(candidate);
 
                     if (start > selStart || selStart == selEnd) {
                         if (start < beststart) {
                             beststart = start;
-                            bestend = buffer.getSpanEnd(candidates[i]);
+                            bestend = buffer.getSpanEnd(candidate);
                         }
                     }
                 }

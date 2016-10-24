@@ -16,6 +16,7 @@
 
 package com.hengye.swiperefresh;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
@@ -36,6 +37,7 @@ import android.widget.ImageView;
  *
  * @hide
  */
+@SuppressLint("ViewConstructor")
 class CircleImageView extends ImageView {
 
     private static final int KEY_SHADOW_COLOR = 0x1E000000;

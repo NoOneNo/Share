@@ -5,8 +5,6 @@ import android.util.AttributeSet;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
-import com.hengye.share.R;
-
 import java.util.ArrayList;
 
 /**

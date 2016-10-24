@@ -43,10 +43,7 @@ public class WBApiException extends RuntimeException{
      * @return 如果属于API异常，则返回true;
      */
     public boolean isLegal(){
-        if(errorCode != 0){
-            return true;
-        }
-        return false;
+        return errorCode != 0;
     }
 
     @Override

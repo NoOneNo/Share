@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 
 import com.hengye.share.R;
-import com.hengye.share.handler.data.base.DataType;
 import com.hengye.share.ui.widget.pulltorefresh.PullToRefreshLayout;
 import com.hengye.share.util.L;
 import com.hengye.swiperefresh.listener.SwipeListener;

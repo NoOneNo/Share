@@ -1,6 +1,7 @@
 package com.hengye.share.util.thirdparty;
 
 import android.text.TextUtils;
+import android.util.SparseArray;
 
 import com.hengye.share.module.setting.SettingHelper;
 
@@ -91,13 +92,13 @@ public class WBUtil {
     //旧：@[^:： ]+(:|：| |\s)
     //从微博里得到匹配的@名字，正则表达式@[^:： ]+(:|：| |\s)
     @Deprecated
-    public static Map<Integer, String> getMatchAtWBName(String str) {
+    public static SparseArray<String> getMatchAtWBName(String str) {
 
         if (TextUtils.isEmpty(str)) {
             return null;
         }
 
-        Map<Integer, String> result = new HashMap<>();
+        SparseArray<String> result = new SparseArray<>();
         String regex = WB_USERNAME_REGEX;
         Matcher m = Pattern.compile(regex).matcher(str);
         while (m.find()) {

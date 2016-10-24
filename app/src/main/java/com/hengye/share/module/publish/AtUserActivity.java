@@ -31,7 +31,6 @@ import com.hengye.share.ui.widget.lettersort.SideBar;
 import com.hengye.share.ui.widget.listener.OnItemClickListener;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
-import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.ThemeUtil;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;

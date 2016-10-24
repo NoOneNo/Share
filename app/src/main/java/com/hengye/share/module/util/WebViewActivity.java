@@ -1,5 +1,6 @@
 package com.hengye.share.module.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -130,7 +131,8 @@ public class WebViewActivity extends BaseActivity{
                         mWebView.reload();
                         break;
                     case 1:
-                        ClipboardUtil.copyAndToast(mWebView.getUrl());
+                        ClipboardUtil.copy(mWebView.getUrl());
+                        ToastUtil.showToast(R.string.label_copy_url_to_clipboard_success);
                         break;
                     case 2:
                         openExternalBrowser(mWebView.getUrl());
@@ -150,6 +152,7 @@ public class WebViewActivity extends BaseActivity{
         });
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     private void initWebView() {
         mWebView.getSettings().setJavaScriptEnabled(true);
 

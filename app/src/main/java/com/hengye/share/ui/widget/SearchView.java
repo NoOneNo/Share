@@ -37,8 +37,7 @@ public class SearchView extends FrameLayout implements View.OnClickListener{
     }
 
     private void init(Context context){
-        View view = LayoutInflater.from(context).inflate(R.layout.item_search, null);
-        addView(view);
+        View.inflate(context, R.layout.item_search, this);
 
         mSearch = findViewById(R.id.card_search);
         mBackBtn = findViewById(R.id.iv_search_back);

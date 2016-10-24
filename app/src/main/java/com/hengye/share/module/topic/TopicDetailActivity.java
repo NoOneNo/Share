@@ -473,7 +473,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         if (id == R.id.over_lay) {
             mActionsMenu.collapse();
         } else if (id == R.id.action_copy) {
-            ClipboardUtil.copyAndToast(mTopic.getContent());
+            ClipboardUtil.copyWBContent(mTopic.getContent());
             mActionsMenu.collapseImmediately();
         } else if (id == R.id.action_repost) {
             mActionsMenu.collapseImmediately();
@@ -497,7 +497,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         if (isSelectedCommentTab()) {
             switch (which) {
                 case DialogBuilder.COMMENT_COPY:
-                    ClipboardUtil.copyAndToast(topicComment.getContent());
+                    ClipboardUtil.copyWBContent(topicComment.getContent());
                     break;
                 case DialogBuilder.COMMENT_REPLY:
                     startActivity(TopicPublishActivity.getStartIntent(this, TopicDraftHelper.getWBTopicDraftByCommentReply(mTopic, topicComment)));
@@ -510,7 +510,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         } else {
             switch (which) {
                 case DialogBuilder.REPOST_COPY:
-                    ClipboardUtil.copyAndToast(topicComment.getContent());
+                    ClipboardUtil.copyWBContent(topicComment.getContent());
                     break;
                 case DialogBuilder.REPOST_DETAIL:
                     startActivity(TopicDetailActivity.getStartIntent(this, topicComment.toTopic(), true));

@@ -169,7 +169,7 @@ public abstract class TabsFragment extends ViewPagerFragment {
         public BaseFragment getFragment(String tabTitle) {
             if (mFragments != null && !TextUtils.isEmpty(tabTitle)) {
                 for (int i = 0; i < mItems.size(); ++i) {
-                    if (tabTitle.equals(((TabItem) mItems.get(i)).getTitle())) {
+                    if (tabTitle.equals((mItems.get(i)).getTitle())) {
                         return mFragments.get(makeFragmentName(i));
                     }
                 }

@@ -1,5 +1,6 @@
 package com.fourmob.datetimepicker.date;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
@@ -9,6 +10,7 @@ import android.view.ViewConfiguration;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
+@SuppressLint("ViewConstructor")
 public class DayPickerView extends ListView implements AbsListView.OnScrollListener, DatePickerDialog.OnDateChangedListener {
 
     protected static final int GOTO_SCROLL_DURATION = 250;

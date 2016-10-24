@@ -83,10 +83,6 @@ public class ResUtil extends ApplicationUtil {
         return getResources().getDimensionPixelSize(id);
     }
 
-    public static int getDimensionPixelSize(Context context, @AttrRes int attr, int defaultValue) {
-        return getDimensionPixelSize(context, attr, defaultValue);
-    }
-
     public static int getDimensionPixelSize(@AttrRes int attr, int defaultValue) {
         int[] attrs = new int[]{attr};
         TypedArray ta = getContext().obtainStyledAttributes(attrs);

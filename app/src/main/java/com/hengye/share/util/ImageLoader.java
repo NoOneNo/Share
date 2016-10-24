@@ -100,7 +100,7 @@ public class ImageLoader {
 	 * 
 	 * @param key
 	 *            LruCache的键，这里传入图片的URL地址。
-	 * @param bitmap
+	 * @param bitmapData
 	 *            LruCache的键，这里传入从网络上下载的Bitmap对象。
 	 */
 	public void addBitmapToMemoryCache(String key, BitmapData bitmapData) {
@@ -155,7 +155,7 @@ public class ImageLoader {
 		try {
 			BitmapFactory.decodeFile(path, options);
 			// Calculate inSampleSize
-			bd = calculateScale(options, maxWidth, maxHeight);;
+			bd = calculateScale(options, maxWidth, maxHeight);
 			options.inSampleSize = Math.round(1 / bd.getScale());
 //			L.debug("image scale : {}", 1 / scale);
 //			options.inJustDecodeBounds = false;
@@ -181,7 +181,7 @@ public class ImageLoader {
 		try {
 			BitmapFactory.decodeFile(path, options);
 			// Calculate inSampleSize
-			bd = calculateScale(options, maxWidth, maxHeight);;
+			bd = calculateScale(options, maxWidth, maxHeight);
 			options.inSampleSize = Math.round(1 / bd.getScale());
 //			L.debug("image scale : {}", 1 / scale);
 			options.inJustDecodeBounds = false;
@@ -214,7 +214,7 @@ public class ImageLoader {
 			BitmapFactory.decodeStream(input, null, options);
 			input.close();
 			// Calculate inSampleSize
-			bd = calculateScale(options, maxWidth, maxHeight);;
+			bd = calculateScale(options, maxWidth, maxHeight);
 			options.inSampleSize = Math.round(1 / bd.getScale());
 //			L.debug("image scale : {}", 1 / scale);
 			options.inJustDecodeBounds = false;

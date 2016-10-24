@@ -57,7 +57,7 @@ public class ChineseToPinyin {
                 strChinese = strChinese.toLowerCase();
             }
 
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
 
             byte b[] = strChinese.getBytes("GBK");//把中文转化成byte数组
 

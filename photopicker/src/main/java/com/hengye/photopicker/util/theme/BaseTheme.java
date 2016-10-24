@@ -1,9 +1,5 @@
 package com.hengye.photopicker.util.theme;
 
-import android.view.View;
-
-import com.hengye.photopicker.model.Photo;
-
 import java.io.Serializable;
 
 public abstract class BaseTheme implements Serializable{

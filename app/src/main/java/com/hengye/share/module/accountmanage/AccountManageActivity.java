@@ -150,10 +150,8 @@ public class AccountManageActivity extends BaseActivity implements AccountManage
     private boolean isChangeAccount(User original, User now) {
         if (original == null && now == null) {
             return false;
-        } else if (original == null || now == null) {
-            return true;
         } else {
-            return !original.equals(now);
+            return original == null || now == null || !original.equals(now);
         }
     }
 

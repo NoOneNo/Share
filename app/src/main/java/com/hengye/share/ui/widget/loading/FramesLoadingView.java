@@ -3,7 +3,6 @@ package com.hengye.share.ui.widget.loading;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.hengye.share.R;

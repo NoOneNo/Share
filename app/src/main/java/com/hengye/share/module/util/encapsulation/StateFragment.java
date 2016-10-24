@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import com.hengye.share.R;
 import com.hengye.share.module.base.BaseFragment;
 import com.hengye.share.module.util.encapsulation.paging.TaskCallBack;
-import com.hengye.share.util.L;
 
 import static com.hengye.share.module.util.encapsulation.StateLayoutManager.*;
 import static com.hengye.share.module.util.encapsulation.paging.TaskState.isFailByNetwork;

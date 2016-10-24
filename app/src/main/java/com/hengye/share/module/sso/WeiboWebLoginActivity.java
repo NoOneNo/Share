@@ -1,5 +1,6 @@
 package com.hengye.share.module.sso;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -92,6 +93,7 @@ public class WeiboWebLoginActivity extends BaseActivity {
         mPassword = intent.getStringExtra("password");
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @SuppressWarnings("deprecation")
     @Override
     protected void afterCreate(Bundle savedInstanceState) {

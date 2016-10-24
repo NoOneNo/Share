@@ -4,9 +4,6 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.Button;
-import android.widget.ImageButton;
-
-import com.hengye.share.R;
 
 /**
  * Created by yuhy on 16/8/18.

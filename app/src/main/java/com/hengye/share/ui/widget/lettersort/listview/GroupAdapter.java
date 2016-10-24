@@ -1,7 +1,6 @@
 package com.hengye.share.ui.widget.lettersort.listview;
 
 import android.content.Context;
-import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.view.LayoutInflater;
 import android.view.View;

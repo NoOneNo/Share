@@ -16,7 +16,6 @@
 package uk.co.senab.photoview.gestures;
 
 import android.content.Context;
-import android.util.FloatMath;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;

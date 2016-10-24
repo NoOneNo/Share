@@ -2,8 +2,6 @@ package com.hengye.share.model.greenrobot;
 
 import org.greenrobot.greendao.annotation.*;
 
-import com.google.gson.reflect.TypeToken;
-import com.hengye.share.model.Topic;
 import com.hengye.share.model.greenrobot.DaoSession;
 import com.hengye.share.util.GsonUtil;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
@@ -12,7 +10,6 @@ import com.hengye.share.util.thirdparty.WBUtil;
 import org.greenrobot.greendao.DaoException;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;

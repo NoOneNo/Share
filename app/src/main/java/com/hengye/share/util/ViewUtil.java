@@ -14,7 +14,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
 import com.hengye.share.R;
-import com.hengye.share.module.base.BaseApplication;
 
 import java.lang.reflect.Field;
 
@@ -59,9 +58,8 @@ public class ViewUtil extends ResUtil {
         if (maxHeight == ViewGroup.LayoutParams.WRAP_CONTENT) {
             maxHeight = 0;
         }
-        return new StringBuilder(url.length() + 12).append("#W").append(maxWidth)
-                .append("#H").append(maxHeight).append("#S").append(scaleType.ordinal()).append(url)
-                .toString();
+        return "#W" + maxWidth +
+                "#H" + maxHeight + "#S" + scaleType.ordinal() + url;
     }
 
     public static void hideKeyBoard(Activity activity) {

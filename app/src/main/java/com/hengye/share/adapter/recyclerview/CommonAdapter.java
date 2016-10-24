@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.hengye.share.util.DiffUtil.checkEquals;
-
 public abstract class CommonAdapter<T> extends HeaderAdapter<ItemViewHolder>
         implements DataAdapter<T>, ItemTouchHelperAdapter {
 

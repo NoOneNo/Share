@@ -10,7 +10,6 @@ import android.view.animation.Interpolator;
 import android.widget.AbsListView;
 
 import com.hengye.share.R;
-import com.hengye.share.ui.widget.listview.CommonListView;
 import com.hengye.share.util.ResUtil;
 
 /**
@@ -207,7 +206,7 @@ public class FabAnimator {
             int translationY = visible ? 0 : height + getMarginBottom();
             if (animate) {
                 fabBtn.animate().setInterpolator(mInterpolator)
-                        .setDuration(TRANSLATE_DURATION_MILLIS)
+                        .setDuration(duration)
                         .translationY(translationY);
 //                ViewPropertyAnimator.animate(fabBtn).setInterpolator(mInterpolator)
 //                        .setDuration(TRANSLATE_DURATION_MILLIS)

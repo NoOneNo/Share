@@ -18,7 +18,7 @@ public class DateUtil {
     public static String formatDate(long time, String format) {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(time);
-        return new SimpleDateFormat(format).format(cal.getTime());
+        return new SimpleDateFormat(format, Locale.US).format(cal.getTime());
     }
 
     public static String formatDate(String longStr, String format) {
@@ -31,7 +31,7 @@ public class DateUtil {
     }
 
     public static long formatStr(String timeStr, String pattern) {
-        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.US);
         try {
             return sdf.parse(timeStr).getTime();
         } catch (ParseException e) {

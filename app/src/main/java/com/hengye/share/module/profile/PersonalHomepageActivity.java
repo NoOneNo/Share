@@ -12,7 +12,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.MotionEventCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.support.v7.widget.Toolbar;
 import android.view.MotionEvent;
@@ -369,11 +368,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
             //当收缩时
             if(verticalOffset < -50){
                 //如果刚好收缩到底部
-                if(Math.abs(verticalOffset) == mCollapsingToolbarLayout.getMaxVerticalOffset()){
-                    isEnabled = true;
-                }else{
-                    isEnabled = false;
-                }
+                isEnabled = Math.abs(verticalOffset) == mCollapsingToolbarLayout.getMaxVerticalOffset();
             }
 
             mFragment.getViewPager().setEnabled(isEnabled);

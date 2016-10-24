@@ -1,7 +1,6 @@
 package com.hengye.share.module.topic;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.hengye.share.R;

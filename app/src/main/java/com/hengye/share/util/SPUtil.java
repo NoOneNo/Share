@@ -7,7 +7,6 @@ import android.text.TextUtils;
 
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
-import com.hengye.share.module.base.BaseApplication;
 
 import java.lang.reflect.Type;
 

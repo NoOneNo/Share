@@ -15,7 +15,6 @@ import com.hengye.share.util.ResUtil;
 import com.hengye.share.R;
 
 import java.util.ArrayList;
-import java.util.List;
 // KEEP INCLUDES END
 /**
  * Entity mapped to table "TOPIC_DRAFT".
@@ -296,10 +295,7 @@ public class TopicDraft implements java.io.Serializable {
     }
 
     public boolean isCommentOrRepostConcurrently() {
-        if (getIsCommentOrigin() != null && getIsCommentOrigin() == 1) {
-            return true;
-        }
-        return false;
+        return getIsCommentOrigin() != null && getIsCommentOrigin() == 1;
     }
 
     public void setIsCommentOrRepostConcurrently(boolean flag) {
@@ -453,10 +449,7 @@ public class TopicDraft implements java.io.Serializable {
      * @return 如果已保存到数据库, 则返回true;
      */
     public boolean isSaved(){
-        if(getId() != null && getId() != 0){
-            return true;
-        }
-        return false;
+        return getId() != null && getId() != 0;
     }
 
     public ArrayList<String> getUrlList(){

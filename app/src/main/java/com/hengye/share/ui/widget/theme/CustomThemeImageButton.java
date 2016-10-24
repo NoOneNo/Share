@@ -5,9 +5,6 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.ImageButton;
 
-import com.hengye.share.R;
-import com.hengye.share.ui.widget.util.SelectorLoader;
-
 /**
  * Created by yuhy on 16/8/18.
  */

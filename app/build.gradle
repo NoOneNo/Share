@@ -121,8 +121,6 @@ dependencies {
     compile project(':photopicker')
     compile project(':swiperefresh')
 
-
-
     // Dependencies for local unit tests
     testCompile dep.junit
 //    testCompile "junit:junit:$rootProject.ext.junitVersion"

@@ -1,9 +1,11 @@
 package com.hengye.share.ui.support.textspan;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Parcel;
+import android.os.Parcelable;
 import android.provider.Browser;
 import android.text.ParcelableSpan;
 import android.text.TextPaint;
@@ -15,6 +17,7 @@ import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.thirdparty.WBUtil;
 
+@SuppressLint("ParcelCreator")
 public class TopicContentUrlSpan extends CharacterStyle implements ParcelableSpan, SimpleClickableSpan {
 
     private final String mURL;
@@ -105,4 +108,19 @@ public class TopicContentUrlSpan extends CharacterStyle implements ParcelableSpa
         tp.setColor(0xFF5061BB);
 //        tp.setUnderlineText(true);
     }
+
+    public static final Parcelable.Creator<TopicContentUrlSpan> CREATOR = new Creator<TopicContentUrlSpan>()
+    {
+        @Override
+        public TopicContentUrlSpan[] newArray(int size)
+        {
+            return new TopicContentUrlSpan[size];
+        }
+
+        @Override
+        public TopicContentUrlSpan createFromParcel(Parcel in)
+        {
+            return new TopicContentUrlSpan(in);
+        }
+    };
 }

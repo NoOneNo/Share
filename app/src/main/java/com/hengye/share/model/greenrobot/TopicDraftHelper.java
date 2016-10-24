@@ -10,11 +10,8 @@ import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
 
 import org.greenrobot.greendao.query.QueryBuilder;
-import org.greenrobot.greendao.query.WhereCondition;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 

@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.text.format.Formatter;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,7 +40,6 @@ import com.nineoldandroids.view.ViewPropertyAnimator;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 public class GalleryFragment extends ThemeFragment implements View.OnClickListener{
 
@@ -582,7 +580,7 @@ public class GalleryFragment extends ThemeFragment implements View.OnClickListen
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            View view = mLayoutInflater.inflate(R.layout.activity_gallery_viewpager_item, null);
+            View view = mLayoutInflater.inflate(R.layout.activity_gallery_viewpager_item, container);
             final TouchImageView touchIv = (TouchImageView) view.findViewById(R.id.select_photo_gallery_fragment_iv);
             TextView videoSize = (TextView) view.findViewById(R.id.tv_video_size);
             View videoPlayBtn = view.findViewById(R.id.btn_video_play);

@@ -118,10 +118,7 @@ public class SettingHelper {
     //滑动退出
     public static boolean isSwipeBack(){
         String value = getSwipeBack();
-        if("4".equals(value)){
-            return false;
-        }
-        return true;
+        return !"4".equals(value);
     }
 
     //是否单击图片返回上一层

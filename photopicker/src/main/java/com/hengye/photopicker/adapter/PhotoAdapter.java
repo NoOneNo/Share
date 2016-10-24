@@ -1,7 +1,6 @@
 package com.hengye.photopicker.adapter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -34,7 +33,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hengye.photopicker.R;
-import com.hengye.photopicker.activity.PhotoPickerActivity;
 import com.hengye.photopicker.activity.ThemeActivity;
 import com.hengye.photopicker.fragment.PhotoPickerFragment.SelectPhotoCallBackForPhotoAdapter;
 import com.hengye.photopicker.model.Photo;

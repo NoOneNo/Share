@@ -1,5 +1,6 @@
 package com.hengye.share.module.base;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -29,6 +30,7 @@ import com.hengye.skinloader.listener.OnSkinUpdateListener;
 import java.util.HashSet;
 import java.util.Set;
 
+@SuppressLint("Registered")
 public class BaseActivity extends AppCompatActivity implements OnSkinUpdateListener{
 
     protected String getRequestTag() {

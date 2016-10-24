@@ -8,7 +8,6 @@ import android.view.View;
 import com.hengye.share.R;
 import com.hengye.share.handler.data.DefaultDataHandler;
 import com.hengye.share.handler.data.base.DataHandler;
-import com.hengye.share.handler.data.base.Pager;
 import com.hengye.share.model.Select;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.module.util.encapsulation.paging.RecyclerRefreshFragment;

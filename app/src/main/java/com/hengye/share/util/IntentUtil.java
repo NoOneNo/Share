@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
-import com.hengye.share.module.base.BaseApplication;
-
 public class IntentUtil extends ApplicationUtil{
 
     private IntentUtil(){
@@ -18,10 +16,7 @@ public class IntentUtil extends ApplicationUtil{
      * @return
      */
     public static boolean resolveActivity(Intent intent){
-        if(intent != null && intent.resolveActivity(getContext().getPackageManager()) != null){
-            return true;
-        }
-        return false;
+        return intent != null && intent.resolveActivity(getContext().getPackageManager()) != null;
     }
 
     public static void startActivity(Context context, Class clazz){

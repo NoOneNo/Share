@@ -1,12 +1,10 @@
-<LinearLayout 
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:rcl="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/adapter_listview_photo_album_item_layout"
-    android:layout_width="match_parent"
-    android:layout_height="60dp"
-    android:background="@color/select_photo_album_listview_layout"
-    android:orientation="horizontal">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:rcl="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/adapter_listview_photo_album_item_layout"
+	android:layout_width="match_parent"
+	android:layout_height="60dp"
+	android:background="@color/select_photo_album_listview_layout"
+	android:orientation="horizontal">
 
     <RelativeLayout 
         android:layout_width="50dp"
@@ -46,7 +44,7 @@
 	    android:layout_width="wrap_content"
 	    android:layout_height="match_parent"
 	    android:maxWidth="200dp"
-	    android:singleLine="true"
+	    android:maxLines="1"
 	    android:textSize="20sp"
 	    android:textColor="#000000"
 	    android:gravity="center"
@@ -58,7 +56,7 @@
 	    android:layout_alignBottom="@id/adapter_listview_photo_album_item_name"
 	    android:layout_width="wrap_content"
 	    android:layout_height="match_parent"
-	    android:singleLine="true"
+	    android:maxLines="1"
 	    android:textSize="12sp"
 	    android:textColor="#000000"
 	    android:gravity="center"/>		

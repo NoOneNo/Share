@@ -27,7 +27,7 @@ public class ClipImageView extends GifImageView {
     private float clipRightPercent;
 
     private Rect rect;
-    private Paint paint;
+//    private Paint paint;
 
     public ClipImageView(Context context) {
         this(context, null, -1);
@@ -39,8 +39,8 @@ public class ClipImageView extends GifImageView {
 
     public ClipImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        paint = new Paint();
-        paint.setColor(Color.GREEN);
+//        paint = new Paint();
+//        paint.setColor(Color.GREEN);
     }
 
     public void setClipHorizontal(float value) {

@@ -55,7 +55,7 @@ public class ImageNormalFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_image_normal, null);
+        View view = inflater.inflate(R.layout.fragment_image_normal, container, false);
 
         mPhotoView = (PhotoView) view.findViewById(R.id.iv_normal);
 //        mPhotoView = (TouchImageView) view.findViewById(R.id.iv_normal);

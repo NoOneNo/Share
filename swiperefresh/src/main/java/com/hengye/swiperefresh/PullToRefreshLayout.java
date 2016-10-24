@@ -305,10 +305,7 @@ public class PullToRefreshLayout extends LinearLayout {
     }
 
     public boolean canLoadMore(){
-        if(!isLoadFail() && isLoadEnable() && !isRefreshing() && !isLoading()){
-            return true;
-        }
-        return false;
+        return !isLoadFail() && isLoadEnable() && !isRefreshing() && !isLoading();
     }
 
     private float getMotionEventY(MotionEvent ev, int activePointerId) {

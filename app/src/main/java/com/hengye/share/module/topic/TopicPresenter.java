@@ -332,10 +332,7 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
          * @return 如果是首页的列表内容, 则返回true;
          */
         public boolean isReadingType() {
-            if (topicType == TopicType.ALL || topicType == TopicType.BILATERAL || topicType == TopicType.GROUP_LIST) {
-                return true;
-            }
-            return false;
+            return topicType == TopicType.ALL || topicType == TopicType.BILATERAL || topicType == TopicType.GROUP_LIST;
         }
 
         @Override

@@ -3,8 +3,6 @@ package com.hengye.share.util;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
-import com.hengye.share.model.Parent;
-import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.sina.WBUserInfo;
 
 /**

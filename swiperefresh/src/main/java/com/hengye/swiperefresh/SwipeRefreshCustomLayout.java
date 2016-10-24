@@ -841,7 +841,7 @@ public class SwipeRefreshCustomLayout extends ViewGroup {
     private final Animation mAnimateLoadingRotate = new Animation(){
     	protected void applyTransformation(float interpolatedTime, Transformation t) {
     		mLoadingView.setRotation(MAX_ANGLE * interpolatedTime);
-    	};
+    	}
 	};	
     
     private final Animation mAnimateToCorrectPosition = new Animation() {

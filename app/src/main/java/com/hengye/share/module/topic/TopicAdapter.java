@@ -111,7 +111,7 @@ public class TopicAdapter extends CommonAdapter<Topic>
                 }
                 break;
             case DialogBuilder.LONG_CLICK_TOPIC_COPY:
-                ClipboardUtil.copyAndToast(topic.getContent());
+                ClipboardUtil.copyWBContent(topic.getContent());
                 break;
             default:
                 break;

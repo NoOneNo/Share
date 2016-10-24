@@ -8,7 +8,7 @@ import java.util.List;
 
 public class DiffUtil {
 
-    public static int checkEquals(List<? extends Object> dataList, List<? extends Object> targetList){
+    public static int checkEquals(List<?> dataList, List<?> targetList){
         if(dataList.isEmpty() || targetList.isEmpty()){
             return -1;
         }

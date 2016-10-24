@@ -58,10 +58,7 @@ public class DataType {
     }
 
     public static boolean hasNewData(int type){
-        if(type == REFRESH_NO_MORE_DATA || type == REFRESH_NO_DATA || type == LOAD_NO_DATA){
-            return false;
-        }
-        return true;
+        return !(type == REFRESH_NO_MORE_DATA || type == REFRESH_NO_DATA || type == LOAD_NO_DATA);
     }
 
     public static void handleSnackBar(int type, View v, int size) {

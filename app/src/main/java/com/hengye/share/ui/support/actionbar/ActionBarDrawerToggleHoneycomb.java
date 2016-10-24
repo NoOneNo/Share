@@ -17,7 +17,6 @@
 
 package com.hengye.share.ui.support.actionbar;
 
-import android.R;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.res.TypedArray;
@@ -42,7 +41,7 @@ class ActionBarDrawerToggleHoneycomb {
     private static final String TAG = "ActionBarDrawerToggleHoneycomb";
 
     private static final int[] THEME_ATTRS = new int[] {
-            R.attr.homeAsUpIndicator
+            android.R.attr.homeAsUpIndicator
     };
 
     public static SetIndicatorInfo setActionBarUpIndicator(SetIndicatorInfo info, Activity activity,

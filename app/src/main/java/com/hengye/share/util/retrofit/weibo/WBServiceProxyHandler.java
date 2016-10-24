@@ -6,7 +6,6 @@ import java.lang.reflect.Method;
 
 import rx.Observable;
 import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by yuhy on 16/8/2.
@@ -28,9 +27,7 @@ public class WBServiceProxyHandler implements InvocationHandler {
                         try {
 //                            checkTokenValid(method, args);
                             return (Observable<?>) method.invoke(mObject, args);
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                        } catch (InvocationTargetException e) {
+                        } catch (IllegalAccessException | InvocationTargetException e) {
                             e.printStackTrace();
                         }
                         return Observable.just(new Exception("method call error"));

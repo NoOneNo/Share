@@ -13,7 +13,6 @@ import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.model.sina.WBUserInfos;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.GsonUtil;
-import com.hengye.share.util.ImageUtil;
 
 import android.graphics.Bitmap;
 import android.widget.ImageView;

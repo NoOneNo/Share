@@ -1,9 +1,5 @@
 package com.hengye.share.util;
 
-import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-
 /**
  * Created by yuhy on 16/8/17.
  */

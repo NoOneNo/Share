@@ -18,7 +18,6 @@ import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
 import com.hengye.share.ui.widget.recyclerview.ItemTouchUtil;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.ToastUtil;
-import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -21,10 +21,7 @@ public class BaseFragment extends Fragment implements ActivityHelper.ActivityAct
     public final static String BASE_FRAGMENT = "BaseFragment";
 
     public boolean setToolBar() {
-        if(getTitle() == null){
-            return false;
-        }
-        return true;
+        return getTitle() != null;
     }
 
     public String getTitle(){

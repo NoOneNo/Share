@@ -1,20 +1,10 @@
 package com.hengye.photopicker.util;
 
-import java.io.InputStream;
-
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.ContentResolver;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.net.Uri;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.util.LruCache;
-import android.support.v7.view.ContextThemeWrapper;
-import android.util.DisplayMetrics;
 
 public class BitmapUtil {
     private LruCache<String, Bitmap> mMemoryCache;

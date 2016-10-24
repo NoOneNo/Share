@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by yuhy on 16/6/24.
@@ -55,11 +56,12 @@ public class FileUtil extends ApplicationUtil{
         return copyFile(new File(path), createImageFile());
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static File createImageFile() {
         File image = null;
         try {
             // Create an image file name
-            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
             String imageFileName = "IMG_" + timeStamp + "_";
             File storageDir = new File(Environment.getExternalStoragePublicDirectory(
                     Environment.DIRECTORY_DCIM), "Camera");

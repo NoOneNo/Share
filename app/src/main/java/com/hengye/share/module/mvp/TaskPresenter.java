@@ -4,7 +4,6 @@ import com.hengye.share.module.util.encapsulation.paging.TaskCallBack;
 import com.hengye.share.module.util.encapsulation.paging.TaskState;
 
 import java.net.UnknownHostException;
-import java.net.UnknownServiceException;
 
 /**
  * Created by yuhy on 2016/10/20.

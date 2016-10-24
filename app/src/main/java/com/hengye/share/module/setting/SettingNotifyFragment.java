@@ -76,12 +76,16 @@ public class SettingNotifyFragment extends BasePreferenceFragment {
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         super.onSharedPreferenceChanged(sharedPreferences, key);
 
-        if (key.equals(SettingHelper.KEY_NOTIFY_OPEN)) {
-            setNotifyItemsEnable(SettingHelper.isNotifyOpen());
-        } else if (key.equals(SettingHelper.KEY_NOTIFY_TYPE)) {
-            updateNotifyTypeSummary();
-        } else if(key.equals(SettingHelper.KEY_NOTIFY_RINGTONE)){
-            updateRingtoneSummary();
+        switch (key) {
+            case SettingHelper.KEY_NOTIFY_OPEN:
+                setNotifyItemsEnable(SettingHelper.isNotifyOpen());
+                break;
+            case SettingHelper.KEY_NOTIFY_TYPE:
+                updateNotifyTypeSummary();
+                break;
+            case SettingHelper.KEY_NOTIFY_RINGTONE:
+                updateRingtoneSummary();
+                break;
         }
     }
 

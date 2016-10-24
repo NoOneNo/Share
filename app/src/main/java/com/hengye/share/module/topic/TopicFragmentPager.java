@@ -21,13 +21,13 @@ public class TopicFragmentPager extends FragmentPagerAdapter {
         super(fm);
         mContext = context;
         mTopicGroupGroups = topicGroupGroups;
-        mFragmentTags = new HashMap<>();
+        mFragmentTags = new SparseArray<>();
         mFragments = new SparseArray<>();
     }
 
     private Context mContext;
     private List<TopicPresenter.TopicGroup> mTopicGroupGroups;
-    private Map<Integer, String> mFragmentTags;
+    private SparseArray<String> mFragmentTags;
     SparseArray<TopicFragment> mFragments;
 
     @Override
@@ -84,7 +84,7 @@ public class TopicFragmentPager extends FragmentPagerAdapter {
         return mTopicGroupGroups.size();
     }
 
-    public Map<Integer, String> getFragmentTags(){
+    public SparseArray<String> getFragmentTags(){
         return mFragmentTags;
     }
 

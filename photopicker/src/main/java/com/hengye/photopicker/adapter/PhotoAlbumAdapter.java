@@ -290,7 +290,6 @@ public class PhotoAlbumAdapter extends BaseAdapter implements OnScrollListener {
             }
         }
 
-        ;
     };
 
     public void preLoadbBitmaps() {

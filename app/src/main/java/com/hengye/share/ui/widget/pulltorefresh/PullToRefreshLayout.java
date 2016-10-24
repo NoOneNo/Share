@@ -5,7 +5,6 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AbsListView;
 
 import com.hengye.share.R;
@@ -21,7 +20,7 @@ public class PullToRefreshLayout extends com.hengye.swiperefresh.PullToRefreshLa
 
 
     public PullToRefreshLayout(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public PullToRefreshLayout(Context context, AttributeSet attrs) {

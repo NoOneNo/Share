@@ -149,7 +149,7 @@ public class UrlBuilder {
                     sb.append(URLEncoder.encode(key, "UTF-8")).append("=")
                             .append(URLEncoder.encode(param.get(key), "UTF-8"));
                 } catch (UnsupportedEncodingException e) {
-
+                    e.printStackTrace();
                 }
             }
         }

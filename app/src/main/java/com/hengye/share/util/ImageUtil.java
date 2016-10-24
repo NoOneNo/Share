@@ -4,10 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 
-import com.sina.weibo.sdk.utils.Utility;
-
-import java.io.File;
-
 public class ImageUtil {
 
     public static int getBitmapMaxSize() {

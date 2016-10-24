@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -57,17 +56,11 @@ public class CommonUtil {
     }
 
     public static boolean isEmpty(Collection collection) {
-        if (collection == null || collection.isEmpty()) {
-            return true;
-        }
-        return false;
+        return collection == null || collection.isEmpty();
     }
 
     public static boolean isEmpty(Iterable iterable) {
-        if (iterable == null || iterable.iterator() == null || !iterable.iterator().hasNext()) {
-            return true;
-        }
-        return false;
+        return iterable == null || iterable.iterator() == null || !iterable.iterator().hasNext();
     }
 
     public static boolean hasEmpty(Collection... collections) {
@@ -80,10 +73,7 @@ public class CommonUtil {
     }
 
     public static boolean isEmpty(Map map) {
-        if (map == null || map.isEmpty()) {
-            return true;
-        }
-        return false;
+        return map == null || map.isEmpty();
     }
 
     public static boolean isEquals(String str1, String str2) {

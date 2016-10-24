@@ -119,31 +119,31 @@ public class PullToRefreshHeader extends FrameLayout implements PullToRefreshCal
 		}
 		if (attrs.hasValue(R.styleable.PullToRefreshLayout_arrowWidth)) {
 			int size = attrs.getDimensionPixelSize(R.styleable.PullToRefreshLayout_arrowWidth, 0);
-			ViewGroup.LayoutParams lp = (ViewGroup.LayoutParams) mArrow.getLayoutParams();
+			ViewGroup.LayoutParams lp = mArrow.getLayoutParams();
 			lp.width = size;
 			requestLayout();
 		}
 		if (attrs.hasValue(R.styleable.PullToRefreshLayout_arrowHeight)) {
 			int size = attrs.getDimensionPixelSize(R.styleable.PullToRefreshLayout_arrowHeight, 0);
-			ViewGroup.LayoutParams lp = (ViewGroup.LayoutParams) mArrow.getLayoutParams();
+			ViewGroup.LayoutParams lp = mArrow.getLayoutParams();
 			lp.height = size;
 			requestLayout();
 		}
 		if (attrs.hasValue(R.styleable.PullToRefreshLayout_loadingWidth)) {
 			int size = attrs.getDimensionPixelSize(R.styleable.PullToRefreshLayout_loadingWidth, 0);
-			ViewGroup.LayoutParams lp = (ViewGroup.LayoutParams) mProgress.getLayoutParams();
+			ViewGroup.LayoutParams lp = mProgress.getLayoutParams();
 			lp.width = size;
 			requestLayout();
 		}
 		if (attrs.hasValue(R.styleable.PullToRefreshLayout_loadingHeight)) {
 			int size = attrs.getDimensionPixelSize(R.styleable.PullToRefreshLayout_loadingHeight, 0);
-			ViewGroup.LayoutParams lp = (ViewGroup.LayoutParams) mProgress.getLayoutParams();
+			ViewGroup.LayoutParams lp = mProgress.getLayoutParams();
 			lp.height = size;
 			requestLayout();
 		}
 		if (attrs.hasValue(R.styleable.PullToRefreshLayout_layoutHeight)) {
 			int size = attrs.getDimensionPixelSize(R.styleable.PullToRefreshLayout_layoutHeight, 0);
-			ViewGroup.LayoutParams lp = (ViewGroup.LayoutParams) mHeaderView.getLayoutParams();
+			ViewGroup.LayoutParams lp = mHeaderView.getLayoutParams();
 			lp.height = size;
 			requestLayout();
 		}

@@ -10,7 +10,6 @@ import com.android.volley.VolleyLog;
 import com.android.volley.cache.BitmapCache;
 import com.android.volley.cache.DiskLruCacheUtil;
 import com.android.volley.cache.ImageDiskLruCache;
-import com.android.volley.http.OkHttpStack;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
@@ -139,11 +138,7 @@ public class RequestManager {
 
 	public static boolean isExistCacheAndNotExpired(String cacheKey){
 		Cache.Entry entry = mDiskBasedCache.get(cacheKey);
-		if (entry == null || entry.isExpired()) {
-			return false;
-		}else{
-			return true;
-		}
+		return !(entry == null || entry.isExpired());
 	}
 
 	public static void clearImageCache(){

@@ -1,7 +1,6 @@
 package com.hengye.share.module.groupmanage.data;
 
 import com.hengye.share.model.greenrobot.GroupList;
-import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.rxjava.RxUtil;
 
 import java.util.List;

@@ -12,7 +12,6 @@ import com.hengye.share.handler.data.base.DataHandler;
 import com.hengye.share.handler.data.base.DataType;
 import com.hengye.share.handler.data.base.Pager;
 import com.hengye.share.model.Topic;
-import com.hengye.share.module.util.encapsulation.paging.PagingConfig;
 import com.hengye.share.module.util.encapsulation.paging.RecyclerRefreshFragment;
 import com.hengye.share.util.UserUtil;
 

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<merge
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <com.hengye.share.ui.widget.common.CommonViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -22,7 +23,8 @@
             android:id="@+id/left_point"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="1dp"
+            android:layout_marginEnd="1dp"
+            android:contentDescription="@null"
             android:paddingTop="15dp"
             android:src="@drawable/ic_point_on"
             android:visibility="visible" />
@@ -31,8 +33,9 @@
             android:id="@+id/center_point"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="1dp"
-            android:layout_marginRight="1dp"
+            android:layout_marginStart="1dp"
+            android:layout_marginEnd="1dp"
+            android:contentDescription="@null"
             android:paddingTop="15dp"
             android:src="@drawable/ic_point_on"
             android:visibility="visible" />
@@ -41,10 +44,11 @@
             android:id="@+id/right_point"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="1dp"
+            android:layout_marginStart="1dp"
+            android:contentDescription="@null"
             android:paddingTop="15dp"
             android:src="@drawable/ic_point_on"
             android:visibility="visible" />
     </LinearLayout>
 
-</LinearLayout>
+</merge>

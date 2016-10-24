@@ -51,13 +51,15 @@ public class EmoticonPicker extends LinearLayout implements AdapterView.OnItemCl
     ViewPager mViewPager;
 
     public void init(Context context) {
-        View view = LayoutInflater.from(context).inflate(R.layout.widget_emoticon_picker, null);
+
+        setOrientation(LinearLayout.VERTICAL);
+
+        View view = View.inflate(context, R.layout.widget_emoticon_picker, this);
 
         mViewPager = (ViewPager) view.findViewById(R.id.view_pager);
 
         mViewPager.setAdapter(new EmoticonPageAdapter());
 
-        addView(view);
     }
 
     EditText mEditText;
@@ -231,7 +233,7 @@ public class EmoticonPicker extends LinearLayout implements AdapterView.OnItemCl
                 return "→_→";
             }
 
-            Bitmap bitmap = Emoticon.getInstance().getEmoticonBitmap().get(source);
+            Bitmap bitmap = Emoticon.getInstance().getEmoticonBitmap().get(source.toString());
             if (bitmap != null) {
                 SpannableString emotionSpanned = new SpannableString(source.toString());
                 ImageSpan imageSpan = new ImageSpan(getContext(), bitmap, ImageSpan.ALIGN_BOTTOM);

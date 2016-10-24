@@ -9,7 +9,6 @@ import com.hengye.share.handler.data.base.DataType;
 import com.hengye.share.handler.data.base.Pager;
 import com.hengye.share.module.util.encapsulation.StateFragment;
 import com.hengye.share.util.CommonUtil;
-import com.hengye.share.util.L;
 
 import java.util.List;
 

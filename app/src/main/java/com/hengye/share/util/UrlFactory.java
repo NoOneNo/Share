@@ -155,9 +155,9 @@ public class UrlFactory {
         return convertMultiPartFormDataFromMap(getPublishTopicParams(tp, picUrls));
     }
 
-    public static Map<String, RequestBody> convertMultiPartFormDataFromMap(Map<String, ? extends Object> map){
+    public static Map<String, RequestBody> convertMultiPartFormDataFromMap(Map<String, ?> map){
         Map<String, RequestBody> convert = new HashMap<>();
-        for(Map.Entry<String, ? extends Object> entry : map.entrySet()){
+        for(Map.Entry<String, ?> entry : map.entrySet()){
             convert.put(entry.getKey(), convertMultiPartFormData(entry.getValue()));
         }
         return convert;
