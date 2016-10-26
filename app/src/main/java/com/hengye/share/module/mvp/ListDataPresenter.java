@@ -16,8 +16,6 @@ public class ListDataPresenter<D, V extends MvpView & ListDataCallBack<D>> exten
 
     public class ListDataSubscriber extends TaskSubscriber<List<D>>{
 
-        List<D> listData;
-
         public ListDataSubscriber(boolean isRefresh){
             super(isRefresh);
         }
@@ -30,12 +28,10 @@ public class ListDataPresenter<D, V extends MvpView & ListDataCallBack<D>> exten
         @Override
         public void onComplete(V v) {
             super.onComplete(v);
-//            v.onLoadListData(isRefresh, listData);
         }
 
         @Override
         public void onNext(V v, List<D> listData) {
-            this.listData = listData;
             v.onLoadListData(isRefresh, listData);
         }
     }

@@ -15,9 +15,9 @@ import com.hengye.share.handler.data.TopicIdPager;
 import com.hengye.share.handler.data.base.DataHandler;
 import com.hengye.share.handler.data.base.Pager;
 import com.hengye.share.model.Topic;
-import com.hengye.share.module.util.image.GalleryActivity;
-import com.hengye.share.module.profile.PersonalHomepageFragment.LoadDataCallBack;
+import com.hengye.share.module.topic.StatusFragment;
 import com.hengye.share.module.util.encapsulation.paging.RecyclerRefreshFragment;
+import com.hengye.share.module.util.image.GalleryActivity;
 import com.hengye.share.ui.widget.listener.OnItemClickListener;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
@@ -137,7 +137,7 @@ public class TopicAlbumFragment extends RecyclerRefreshFragment<String> implemen
     }
 
     @Override
-    protected RecyclerView.LayoutManager getLayoutManager() {
+    protected RecyclerView.LayoutManager generateLayoutManager() {
         return new GridLayoutManager(getContext(), 3, LinearLayoutManager.VERTICAL, false);
     }
 
@@ -203,20 +203,20 @@ public class TopicAlbumFragment extends RecyclerRefreshFragment<String> implemen
         }
     }
 
-    LoadDataCallBack mLoadDataCallBack;
+    StatusFragment.LoadDataCallBack mLoadDataCallBack;
 
-    public LoadDataCallBack getLoadDataCallBack() {
+    public StatusFragment.LoadDataCallBack getLoadDataCallBack() {
         if(mLoadDataCallBack == null){
             mLoadDataCallBack = new DefaultLoadDataCallBack();
         }
         return mLoadDataCallBack;
     }
 
-    public void setLoadDataCallBack(LoadDataCallBack loadDataCallBack) {
+    public void setLoadDataCallBack(StatusFragment.LoadDataCallBack loadDataCallBack) {
         this.mLoadDataCallBack = loadDataCallBack;
     }
 
-    public class DefaultLoadDataCallBack implements LoadDataCallBack {
+    public class DefaultLoadDataCallBack implements StatusFragment.LoadDataCallBack {
         @Override
         public void initView() {
 

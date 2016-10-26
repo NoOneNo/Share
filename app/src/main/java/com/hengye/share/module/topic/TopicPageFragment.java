@@ -96,7 +96,7 @@ public class TopicPageFragment extends RecyclerRefreshFragment<Topic> implements
 
     @Override
     public void onTaskComplete(boolean isRefresh, boolean isSuccess) {
-        onTaskComplete(isSuccess);
+        setTaskComplete(isSuccess);
     }
 
     @Override

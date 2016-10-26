@@ -72,7 +72,7 @@ public class UserListFragment extends RecyclerRefreshFragment<Select<UserInfo>> 
         if(!isSuccess){
             ToastUtil.showLoadErrorToast();
         }
-        onTaskComplete(isSuccess);
+        setTaskComplete(isSuccess);
     }
 
     @Override

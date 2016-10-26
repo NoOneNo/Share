@@ -6,7 +6,7 @@ package com.hengye.share.module.util.encapsulation.paging;
 
 public interface TaskCallBack {
 
-    public void onTaskStart();
+    void onTaskStart();
 
-    public void onTaskComplete(boolean isRefresh, int taskState);
+    void onTaskComplete(boolean isRefresh, int taskState);
 }

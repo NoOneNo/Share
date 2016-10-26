@@ -70,7 +70,9 @@
 
     <color name="touch_effect">#9ccc</color>
 
-    <color name="font_grey">#646464</color>
+    <color name="font_grey">#ff646464</color>
+
+    <color name="font_grey_light">#ffa5a5a5</color>
 
     <color name="font_red_warn">#FFD50000</color>
 </resources>

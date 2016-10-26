@@ -1,6 +1,8 @@
 package com.hengye.share.module.base;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.v4.app.Fragment;
@@ -37,6 +39,7 @@ public class BaseFragment extends Fragment implements ActivityHelper.ActivityAct
 //    private BasePresenter mPresenter;
     private Set<BasePresenter> mPresenters;
 
+    private Handler mHandler;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,6 +90,10 @@ public class BaseFragment extends Fragment implements ActivityHelper.ActivityAct
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if(mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler = null;
+        }
         cancelPendingRequestsIfNeeded();
         detachMvpView();
     }
@@ -135,5 +142,12 @@ public class BaseFragment extends Fragment implements ActivityHelper.ActivityAct
     @Override
     public boolean onBackPressed() {
         return false;
+    }
+
+    public Handler getHandler() {
+        if (mHandler == null) {
+            mHandler = new Handler(Looper.getMainLooper());
+        }
+        return mHandler;
     }
 }

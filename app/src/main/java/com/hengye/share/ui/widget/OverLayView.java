@@ -8,11 +8,12 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.hengye.share.R;
+import com.hengye.share.ui.widget.fab.FabAnimator;
 
 /**
  * Created by yuhy on 16/8/26.
  */
-public class OverLayView extends FrameLayout {
+public class OverLayView extends FrameLayout implements FabAnimator.OverLay{
 
     public OverLayView(Context context) {
         super(context);
@@ -34,7 +35,7 @@ public class OverLayView extends FrameLayout {
         setBackgroundColor(getContext().getResources().getColor(R.color.over_lay_background));
     }
 
-
+    @Override
     public void show() {
         ObjectAnimator animator = ObjectAnimator.ofFloat(this, "alpha", 0.0f, 1.0f);
         animator.setDuration(300);
@@ -64,6 +65,7 @@ public class OverLayView extends FrameLayout {
         animator.start();
     }
 
+    @Override
     public void dismiss() {
         ObjectAnimator animator = ObjectAnimator.ofFloat(this, "alpha", 1.0f, 0.0f);
         animator.setDuration(300);

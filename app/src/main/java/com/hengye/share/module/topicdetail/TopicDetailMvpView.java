@@ -1,4 +1,4 @@
-package com.hengye.share.module.topic;
+package com.hengye.share.module.topicdetail;
 
 import com.hengye.share.model.TopicComment;
 import com.hengye.share.module.mvp.MvpView;

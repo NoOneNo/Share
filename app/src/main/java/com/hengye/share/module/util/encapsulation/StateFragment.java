@@ -107,7 +107,7 @@ public abstract class StateFragment extends BaseFragment
 
     @Override
     public void onTaskStart() {
-        showLoading();
+//        showLoading();
     }
 
     @Override

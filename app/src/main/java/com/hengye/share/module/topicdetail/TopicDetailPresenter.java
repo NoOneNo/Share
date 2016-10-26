@@ -1,4 +1,4 @@
-package com.hengye.share.module.topic;
+package com.hengye.share.module.topicdetail;
 
 import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.sina.WBTopicComments;
@@ -57,8 +57,8 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailMvpView> {
                     public void onNext(TopicDetailMvpView v, Object[] objects) {
                         WBTopicComments obj1 = (WBTopicComments) objects[0];
                         WBTopicReposts obj2 = (WBTopicReposts) objects[1];
-                        v.handleCommentData(true, TopicComment.getComments(obj1), isRefresh, obj1.getTotal_number());
-                        v.handleCommentData(false, TopicComment.getComments(obj2), isRefresh, obj2.getTotal_number());
+                        v.handleCommentData(true, TopicComment.getCommentArrayList(obj1), isRefresh, obj1.getTotal_number());
+                        v.handleCommentData(false, TopicComment.getCommentArrayList(obj2), isRefresh, obj2.getTotal_number());
                         v.onTaskComplete(isRefresh, true);
                     }
                 });
@@ -84,9 +84,9 @@ public class TopicDetailPresenter extends BasePresenter<TopicDetailMvpView> {
                     @Override
                     public void onNext(TopicDetailMvpView v, Object o) {
                         if (isComment) {
-                            v.handleCommentData(isComment, TopicComment.getComments((WBTopicComments) o), isRefresh, 0);
+                            v.handleCommentData(isComment, TopicComment.getCommentArrayList((WBTopicComments) o), isRefresh, 0);
                         } else {
-                            v.handleCommentData(isComment, TopicComment.getComments((WBTopicReposts) o), isRefresh, 0);
+                            v.handleCommentData(isComment, TopicComment.getCommentArrayList((WBTopicReposts) o), isRefresh, 0);
                         }
                         v.onTaskComplete(isRefresh, true);
                     }

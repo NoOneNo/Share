@@ -132,7 +132,7 @@ public class TestRecyclerViewFragment extends RecyclerFragment<String>{
     }
 
     @Override
-    protected RecyclerView.LayoutManager getLayoutManager() {
+    protected RecyclerView.LayoutManager generateLayoutManager() {
         return mLayoutManager = new GridLayoutManager(getContext(), 3);
     }
 

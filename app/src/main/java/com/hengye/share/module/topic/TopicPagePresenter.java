@@ -104,12 +104,12 @@ public class TopicPagePresenter extends BasePresenter<TopicPageMvpView> {
 //        return new BaseSubscriber<WBTopicFavorites>() {
 //            @Override
 //            public void onError(TopicPageMvpView v, Throwable e) {
-//                v.onTaskComplete(isRefresh);
+//                v.setTaskComplete(isRefresh);
 //            }
 //
 //            @Override
 //            public void onNext(TopicPageMvpView v, WBTopicFavorites wbTopics) {
-//                v.onTaskComplete(isRefresh);
+//                v.setTaskComplete(isRefresh);
 //                v.handleTopicData(Topic.get(wbTopics), isRefresh);
 //            }
 //        };

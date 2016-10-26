@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.hengye.share.R;
 import com.hengye.share.model.Topic;
-import com.hengye.share.module.topic.TopicDetailActivity;
+import com.hengye.share.module.topicdetail.TopicDetailActivity;
 import com.hengye.share.module.util.image.GalleryFragment;
 import com.hengye.share.ui.support.AnimationRect;
 

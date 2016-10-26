@@ -15,10 +15,11 @@ public class TopicAdapterIdPager extends Pager {
     }
 
     DataAdapter<? extends TopicId> mAdapter;
+    boolean mForceRefresh = false;
 
     @Override
     public String getFirstPage() {
-        if (!mAdapter.isEmpty()) {
+        if (!mForceRefresh && !mAdapter.isEmpty()) {
             return mAdapter.getData().get(0).getId();
         } else {
             return "0";
@@ -37,4 +38,8 @@ public class TopicAdapterIdPager extends Pager {
 
     @Override
     public void handlePage(boolean isRefresh) {}
+
+    public void setForceRefresh(boolean forceRefresh) {
+        this.mForceRefresh = forceRefresh;
+    }
 }

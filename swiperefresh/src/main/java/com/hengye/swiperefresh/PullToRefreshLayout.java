@@ -660,7 +660,7 @@ public class PullToRefreshLayout extends LinearLayout {
         }
     }
 
-    public void onTaskComplete(boolean isSuccess) {
+    public void setTaskComplete(boolean isSuccess) {
         if (isRefreshing()) {
             setRefreshing(false);
         } else if (isLoading()) {

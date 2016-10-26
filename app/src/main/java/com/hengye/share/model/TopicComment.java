@@ -15,7 +15,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopicComment implements Serializable{
+public class TopicComment implements TopicId, Serializable{
 
     private static final long serialVersionUID = -4250789290948278492L;
 
@@ -32,7 +32,21 @@ public class TopicComment implements Serializable{
 
     private transient SpannableString urlSpannableString;
 
-    public static ArrayList<TopicComment> getComments(WBTopicComments wbTopicComments){
+    public static TopicComments getComments(WBTopicComments wbTopicComments){
+        TopicComments topicComments = new TopicComments();
+        topicComments.setComments(getCommentArrayList(wbTopicComments));
+        topicComments.setTotalNumber(wbTopicComments.getTotal_number());
+        return topicComments;
+    }
+
+    public static TopicComments getComments(WBTopicReposts wbTopicReposts){
+        TopicComments topicComments = new TopicComments();
+        topicComments.setComments(getCommentArrayList(wbTopicReposts));
+        topicComments.setTotalNumber(wbTopicReposts.getTotal_number());
+        return topicComments;
+    }
+
+    public static ArrayList<TopicComment> getCommentArrayList(WBTopicComments wbTopicComments){
         if(wbTopicComments == null || CommonUtil.isEmpty(wbTopicComments.getComments())){
             return null;
         }
@@ -69,7 +83,7 @@ public class TopicComment implements Serializable{
         return topicComment;
     }
 
-    public static ArrayList<TopicComment> getComments(WBTopicReposts wbTopicReposts){
+    public static ArrayList<TopicComment> getCommentArrayList(WBTopicReposts wbTopicReposts){
         if(wbTopicReposts == null || CommonUtil.isEmpty(wbTopicReposts.getReposts())){
             return null;
         }
@@ -139,6 +153,7 @@ public class TopicComment implements Serializable{
         this.urlSpannableString = urlSpannableString;
     }
 
+    @Override
     public String getId() {
         return id;
     }

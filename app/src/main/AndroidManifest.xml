@@ -150,7 +150,10 @@
             android:label="@string/title_activity_topic_draft"/>
 
         <activity
-            android:name=".module.topic.TopicDetailActivity"/>
+            android:name=".module.topicdetail.TopicDetailActivity"/>
+
+        <activity
+            android:name=".module.topicdetail.TopicDetail2Activity"/>
 
         <activity
             android:name=".module.topic.TopicMentionActivity"/>

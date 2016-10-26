@@ -30,6 +30,7 @@ import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.module.profile.PersonalHomepageActivity;
 import com.hengye.share.module.publish.TopicPublishActivity;
 import com.hengye.share.module.setting.SettingHelper;
+import com.hengye.share.module.topicdetail.TopicDetailActivity;
 import com.hengye.share.module.util.image.GalleryActivity;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.ui.support.textspan.TopicUrlOnTouchListener;
@@ -234,12 +235,13 @@ public class TopicAdapter extends CommonAdapter<Topic>
             registerOnClickListener(mTopicTitle.mAvatar);
             registerOnClickListener(mTopicTitle.mUsername);
             registerOnClickListener(mTopicTitle.mDescription);
-
             registerOnClickListener(mTopicTitle.mTitle);
+
             registerOnClickListener(mTopic.mContent);
             registerOnClickListener(mTopic.mGallery);
             registerOnClickListener(mTopic.mTopicLayout);
 
+            //不设置长按没法解决点击效果
             registerOnLongClickListener(mTopicTitle.mTitle);
             registerOnLongClickListener(mTopic.mContent);
             registerOnLongClickListener(mTopic.mGallery);

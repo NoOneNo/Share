@@ -48,9 +48,9 @@ public abstract class RecyclerRefreshFragment<T> extends RecyclerFragment<T>{
 
     }
 
-    public void onTaskComplete(boolean isSuccess) {
+    public void setTaskComplete(boolean isSuccess) {
         if (mPullToRefresh != null) {
-            mPullToRefresh.onTaskComplete(isSuccess);
+            mPullToRefresh.setTaskComplete(isSuccess);
         }
     }
 
@@ -113,7 +113,7 @@ public abstract class RecyclerRefreshFragment<T> extends RecyclerFragment<T>{
 
     @Override
     public void onTaskComplete(boolean isRefresh, int taskState) {
-        onTaskComplete(isSuccess(taskState));
+        setTaskComplete(isSuccess(taskState));
         super.onTaskComplete(isRefresh, taskState);
     }
 
@@ -134,7 +134,7 @@ public abstract class RecyclerRefreshFragment<T> extends RecyclerFragment<T>{
         if(getRecyclerView().getLayoutManager() != null){
             RecyclerView.LayoutManager layoutManager = getRecyclerView().getLayoutManager();
 
-            L.debug("childCount : {}, itemCount : {}", layoutManager.getChildCount(), layoutManager.getItemCount());
+//            L.debug("childCount : {}, itemCount : {}", layoutManager.getChildCount(), layoutManager.getItemCount());
             if(layoutManager.getChildCount() >= layoutManager.getItemCount()){
                 return true;
             }

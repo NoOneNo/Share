@@ -113,13 +113,13 @@ public class TopicFavoritesFragment extends RecyclerRefreshFragment<TopicFavorit
             public void onResponse(WBTopicFavorites response) {
                 L.debug("request success , url : {}, data : {}", ub, response);
                 handleData(TopicFavorites.getTopicFavorites(response), isRefresh);
-                onTaskComplete(true);
+                setTaskComplete(true);
             }
         }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                onTaskComplete(false);
+                setTaskComplete(false);
                 L.debug("request fail , url : {}, error : {}", ub, error);
             }
 

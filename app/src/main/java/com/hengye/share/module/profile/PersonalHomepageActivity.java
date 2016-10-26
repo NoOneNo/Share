@@ -9,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.MotionEventCompat;
@@ -201,67 +202,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                 android.R.color.holo_green_light, android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        mToolBarHeight = ResUtil.getDimensionPixelSize(R.dimen.header_personal_homepage_height);
-        mSwipeRefresh.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                final int action = MotionEventCompat.getActionMasked(event);
-
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        //ACTION_DOWN不会被触发被SwipeRefreshLayout拦截了, 所以由ACTION_MOVE开始时获取当前AppBar高度
-                        break;
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_CANCEL:
-
-                        mIsBeingDragged = false;
-
-                        final ViewGroup.LayoutParams lp = mCollapsingToolbarLayout.getLayoutParams();
-                        mAnimateToCorrectHeight = ValueAnimator.ofInt(lp.height, mToolBarHeight);
-                        mAnimateToCorrectHeight.setDuration(200);
-                        mAnimateToCorrectHeight.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                            @Override
-                            public void onAnimationUpdate(ValueAnimator animation) {
-                                lp.height = (int) animation.getAnimatedValue();
-                                mCollapsingToolbarLayout.requestLayout();
-                            }
-                        });
-                        mAnimateToCorrectHeight.start();
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-
-                        if (!mIsBeingDragged) {
-                            mIsBeingDragged = true;
-                            if (mAnimateToCorrectHeight != null) {
-                                mAnimateToCorrectHeight.pause();
-                            }
-                            mInitialDownY = event.getRawY();
-                            break;
-                        }
-
-                        float currentY = event.getRawY();
-                        int distance = (int) (DRAG_RATE * (currentY - mInitialDownY));
-
-                        if (distance > 0) {
-                            ViewGroup.LayoutParams lp_ = mCollapsingToolbarLayout.getLayoutParams();
-                            int height = mToolBarHeight + distance;
-                            if (height > getToolBarMaxHeight()) {
-                                if (lp_.height == getToolBarMaxHeight()) {
-                                    //如果已经到达高度的最大值
-                                    break;
-                                }
-                                height = getToolBarMaxHeight();
-                            }
-                            lp_.height = height;
-                            mCollapsingToolbarLayout.requestLayout();
-
-                        }
-
-                        break;
-                }
-                return false;
-            }
-        });
+        mSwipeRefresh.setOnTouchListener(new SwipeRefreshOnTouchListener(mCollapsingToolbarLayout, ResUtil.getDimensionPixelSize(R.dimen.header_personal_homepage_height)));
 
         if (mUserInfo.getParent().isWeiBo()) {
             WBUserInfo wbUserInfo = mUserInfo.getWBUserInfoFromParent();
@@ -339,20 +280,6 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         coverShowAnimator.start();
     }
 
-    private int getToolBarMaxHeight() {
-        if (mToolBarMaxHeight == 0) {
-            mToolBarMaxHeight = (int) (mToolBarHeight * MAX_APP_BAR_HEIGHT_RATE);
-        }
-        return mToolBarMaxHeight;
-    }
-
-    private static final float MAX_APP_BAR_HEIGHT_RATE = 1.5f;
-    private static final float DRAG_RATE = .5f;
-    private int mToolBarHeight, mToolBarMaxHeight;
-    private float mInitialDownY;
-    private boolean mIsBeingDragged;
-    private ValueAnimator mAnimateToCorrectHeight;
-
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         if (verticalOffset >= -50) {
@@ -374,6 +301,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
             mFragment.getViewPager().setEnabled(isEnabled);
             L.debug("viewpager set enbaled : {}", isEnabled);
         }
+
 //        L.debug("maxVerticalOffset : {}", mCollapsingToolbarLayout.getMaxVerticalOffset());
 //        L.debug("vertical offset : {}, height : {}, minimumHeight : {}", verticalOffset, mCollapsingToolbarLayout.getHeight(), ViewCompat.getMinimumHeight(mCollapsingToolbarLayout));
     }
@@ -539,6 +467,89 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                     }
                 });
     }
+
+    public static class SwipeRefreshOnTouchListener implements View.OnTouchListener{
+
+        public SwipeRefreshOnTouchListener(CollapsingToolbarLayout collapsingToolbarLayout, int headerHeight){
+            mHeaderHeight = headerHeight;
+            mCollapsingToolbarLayout = collapsingToolbarLayout;
+        }
+
+        private int getMaxHeaderHeight() {
+            if (mMaxHeaderHeight == 0) {
+                mMaxHeaderHeight = (int) (mHeaderHeight * MAX_APP_BAR_HEIGHT_RATE);
+            }
+            return mMaxHeaderHeight;
+        }
+
+        private static final float MAX_APP_BAR_HEIGHT_RATE = 1.5f;
+        private static final float DRAG_RATE = .5f;
+        private int mHeaderHeight, mMaxHeaderHeight;
+        private float mInitialDownY;
+        private boolean mIsBeingDragged;
+        private ValueAnimator mAnimateToCorrectHeight;
+        private CollapsingToolbarLayout mCollapsingToolbarLayout;
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            final int action = MotionEventCompat.getActionMasked(event);
+
+            switch (action) {
+                case MotionEvent.ACTION_DOWN:
+                    //ACTION_DOWN不会被触发被SwipeRefreshLayout拦截了, 所以由ACTION_MOVE开始时获取当前AppBar高度
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+
+                    mIsBeingDragged = false;
+
+                    final ViewGroup.LayoutParams lp = mCollapsingToolbarLayout.getLayoutParams();
+                    mAnimateToCorrectHeight = ValueAnimator.ofInt(lp.height, mHeaderHeight);
+                    mAnimateToCorrectHeight.setDuration(200);
+                    mAnimateToCorrectHeight.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator animation) {
+                            lp.height = (int) animation.getAnimatedValue();
+                            mCollapsingToolbarLayout.requestLayout();
+                        }
+                    });
+                    mAnimateToCorrectHeight.start();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+
+                    if (!mIsBeingDragged) {
+                        mIsBeingDragged = true;
+                        if (mAnimateToCorrectHeight != null) {
+                            mAnimateToCorrectHeight.pause();
+                        }
+                        mInitialDownY = event.getRawY();
+                        break;
+                    }
+
+                    float currentY = event.getRawY();
+                    int distance = (int) (DRAG_RATE * (currentY - mInitialDownY));
+
+                    if (distance > 0) {
+                        ViewGroup.LayoutParams lp_ = mCollapsingToolbarLayout.getLayoutParams();
+                        int height = mHeaderHeight + distance;
+                        if (height > getMaxHeaderHeight()) {
+                            if (lp_.height == getMaxHeaderHeight()) {
+                                //如果已经到达高度的最大值
+                                break;
+                            }
+                            height = getMaxHeaderHeight();
+                        }
+                        lp_.height = height;
+                        mCollapsingToolbarLayout.requestLayout();
+
+                    }
+
+                    break;
+            }
+            return false;
+        }
+    }
+
 }
 
 

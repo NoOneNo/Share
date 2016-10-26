@@ -9,6 +9,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.AbsListView;
 
+import com.hengye.floatingactionbutton.FloatingActionsMenu;
 import com.hengye.share.R;
 import com.hengye.share.util.ResUtil;
 
@@ -16,6 +17,20 @@ import com.hengye.share.util.ResUtil;
  * Created by wangdan on 16/2/2.
  */
 public class FabAnimator {
+
+    public static void adjustFloatingActionsMenuUpdate(FloatingActionsMenu floatingActionsMenu, final OverLay overLay){
+        floatingActionsMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
+            @Override
+            public void onMenuExpanded() {
+                overLay.show();
+            }
+
+            @Override
+            public void onMenuCollapsed() {
+                overLay.dismiss();
+            }
+        });
+    }
 
     public static FabAnimator create(View fabBtn) {
         return create(fabBtn, ResUtil.getDimensionPixelSize(R.dimen.fab_scroll_threshold));
@@ -284,5 +299,10 @@ public class FabAnimator {
 
     public interface CustomAnimator{
         int getViewHeight();
+    }
+
+    public interface OverLay{
+        void show();
+        void dismiss();
     }
 }

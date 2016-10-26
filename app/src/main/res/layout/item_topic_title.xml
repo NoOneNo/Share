@@ -34,7 +34,8 @@
         tools:text="11-3 来自 微博 weibo.com"
         android:textSize="@dimen/topic_description"
         android:textColor="@color/topic_description"
-        android:maxLines="1" />
+        android:maxLines="1"
+        android:ellipsize="end"/>
 
     <Button
         android:id="@+id/btn_topic_send_again"

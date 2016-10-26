@@ -41,9 +41,10 @@ public abstract class RecyclerFragment<T> extends PagingFragment<T> implements O
     }
 
     RecyclerView mRecyclerView;
+    CommonAdapter mCommonAdapter;
 
     protected void setUpRecycler(RecyclerView recyclerView){
-        recyclerView.setLayoutManager(getLayoutManager());
+        recyclerView.setLayoutManager(generateLayoutManager());
         recyclerView.setItemAnimator(getItemAnimator());
     }
 
@@ -52,7 +53,7 @@ public abstract class RecyclerFragment<T> extends PagingFragment<T> implements O
     }
 
     public void setAdapter(CommonAdapter adapter, boolean isBindClick){
-        mRecyclerView.setAdapter(adapter);
+        mRecyclerView.setAdapter(mCommonAdapter = adapter);
 
         if(isBindClick) {
             adapter.setOnItemClickListener(this);
@@ -60,13 +61,13 @@ public abstract class RecyclerFragment<T> extends PagingFragment<T> implements O
         }
     }
 
-    public RecyclerView.Adapter getAdapter(){
-        return mRecyclerView.getAdapter();
+    public CommonAdapter getAdapter(){
+        return mCommonAdapter;
     }
 
     public boolean isEmpty(){
         if(getAdapter() != null){
-            return getAdapter().getItemCount() == 0;
+            return getAdapter().getBasicItemCount() == 0;
         }
         return true;
     }
@@ -86,7 +87,7 @@ public abstract class RecyclerFragment<T> extends PagingFragment<T> implements O
      *
      * @return
      */
-    protected RecyclerView.LayoutManager getLayoutManager() {
+    protected RecyclerView.LayoutManager generateLayoutManager() {
         return new LinearLayoutManager(getContext());
     }
 

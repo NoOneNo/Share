@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface ListDataCallBack<T> extends TaskCallBack{
 
-    public void onLoadListData(boolean isRefresh, List<T> data);
+    void onLoadListData(boolean isRefresh, List<T> data);
 }

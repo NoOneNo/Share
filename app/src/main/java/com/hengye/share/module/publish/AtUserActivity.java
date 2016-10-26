@@ -413,7 +413,7 @@ public class AtUserActivity extends BaseActivity implements UserListMvpView {
 
     @Override
     public void onTaskComplete(boolean isRefresh, boolean isSuccess) {
-        mPullToRefreshLayout.onTaskComplete(isSuccess);
+        mPullToRefreshLayout.setTaskComplete(isSuccess);
     }
 
     @Override

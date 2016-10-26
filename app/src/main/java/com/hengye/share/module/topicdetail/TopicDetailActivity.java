@@ -1,4 +1,4 @@
-package com.hengye.share.module.topic;
+package com.hengye.share.module.topicdetail;
 
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -31,6 +31,8 @@ import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.module.profile.PersonalHomepageActivity;
 import com.hengye.share.module.publish.TopicPublishActivity;
+import com.hengye.share.module.topic.TopicAdapter;
+import com.hengye.share.module.topic.TopicCommentAdapter;
 import com.hengye.share.service.TopicPublishService;
 import com.hengye.share.ui.widget.OverLayView;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
@@ -57,7 +59,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     }
 
     public static Intent getStartIntent(Context context, Topic topic, boolean isRetweet) {
-        Intent intent = new Intent(context, TopicDetailActivity.class);
+        Intent intent = new Intent(context, TopicDetail2Activity.class);
         intent.putExtra("topic", topic);
         intent.putExtra("isRetweet", isRetweet);
         return intent;
@@ -110,17 +112,48 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
             } else if ("tab_layout".equals(str)) {
                 mTabLayoutAssist.getTabAt(tab.getPosition()).select();
 
+                int firstVisiblePosition = mListView.getFirstVisiblePosition();
+                int headerViewsCount = mListView.getHeaderViewsCount();
                 if (tab.getPosition() == 0) {
+
+                    //有mTabLayoutAssist挡住第一个，默认都加1
+                    mLastSelectRepostPosition = firstVisiblePosition + 1;
+
                     mAdapter.setData(mCommentData);
                     mAdapter.notifyDataSetChanged();
-//                    mListView.setSelection(1);
-                    mListView.setSelectionAfterHeaderView();
+
+                    if(firstVisiblePosition != 0){
+                        if(mLastSelectCommentPosition < headerViewsCount){
+                            mLastSelectCommentPosition = headerViewsCount;
+                        }
+                        mListView.setSelectionFromTop(mLastSelectCommentPosition, mTabLayoutHeight);
+                    }
+
+//                    if(firstVisiblePosition == 0){
+//                        mListView.setSelectionAfterHeaderView();
+//                    }else {
+//                        mListView.setSelection(mLastSelectCommentPosition);
+//                    }
                     mPullToRefreshLayout.setLoadEnable(mLoadCommentEnable);
                 } else if (tab.getPosition() == 1) {
+
+                    mLastSelectCommentPosition = firstVisiblePosition + 1;
+
                     mAdapter.setData(mRepostData);
                     mAdapter.notifyDataSetChanged();
-//                    mListView.setSelection(1);
-                    mListView.setSelectionAfterHeaderView();
+
+                    if(firstVisiblePosition != 0){
+                        if(mLastSelectRepostPosition < headerViewsCount){
+                            mLastSelectRepostPosition = headerViewsCount;
+                        }
+                        mListView.setSelectionFromTop(mLastSelectRepostPosition, mTabLayoutHeight);
+                    }
+
+//                    if(firstVisiblePosition == 0){
+//                        mListView.setSelectionAfterHeaderView();
+//                    }else {
+//                        mListView.setSelection(mLastSelectRepostPosition);
+//                    }
                     mPullToRefreshLayout.setLoadEnable(mLoadRepostEnable);
                 }
             }
@@ -135,6 +168,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         }
     };
 
+    int mLastSelectCommentPosition, mLastSelectRepostPosition;
     PullToRefreshLayout mPullToRefreshLayout;
     View mLoadingView, mEmptyView;
     boolean mHasAddEmpty = false;
@@ -218,7 +252,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
 //        mFab.setOnClickListener(this);
 
         mOverLay = (OverLayView) findViewById(R.id.over_lay);
-        mActionsMenu = (FloatingActionsMenu) findViewById(R.id.action_menu);
+        mActionsMenu = (FloatingActionsMenu) findViewById(R.id.fab);
         mCopyBtn = (FloatingActionButton) findViewById(R.id.action_copy);
         mRepostBtn = (FloatingActionButton) findViewById(R.id.action_repost);
         mCommentBtn = (FloatingActionButton) findViewById(R.id.action_comment);
@@ -227,20 +261,10 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         mRepostBtn.setOnClickListener(this);
         mCommentBtn.setOnClickListener(this);
 
-        mActionsMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
-            @Override
-            public void onMenuExpanded() {
-                mOverLay.show();
-            }
-
-            @Override
-            public void onMenuCollapsed() {
-                mOverLay.dismiss();
-            }
-        });
+        FabAnimator.adjustFloatingActionsMenuUpdate(mActionsMenu, mOverLay);
 
         mTabLayoutHeight = getResources().getDimensionPixelSize(R.dimen.tab_layout_height);
-        mTabLayoutAssist = (TabLayout) findViewById(R.id.tab_layout_assist);
+        mTabLayoutAssist = (TabLayout) findViewById(R.id.tab);
         mTabLayoutAssist.addTab((mTabLayoutAssist.newTab().setText(R.string.label_topic_comment).setTag("tab_layout_assist")));
         mTabLayoutAssist.addTab((mTabLayoutAssist.newTab().setText(R.string.label_topic_repost).setTag("tab_layout_assist")));
         mTabLayoutAssist.getTabAt(0).select();
@@ -350,7 +374,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         });
 
         mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.pull_to_refresh);
-//        mPullToRefreshLayout.setLoadEnable(true);
+//        mPullToRefresh.setLoadEnable(true);
         mPullToRefreshLayout.setOnRefreshListener(new SwipeListener.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -553,7 +577,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
                 }
             }
         }
-        mPullToRefreshLayout.onTaskComplete(isSuccess);
+        mPullToRefreshLayout.setTaskComplete(isSuccess);
     }
 
     @Override

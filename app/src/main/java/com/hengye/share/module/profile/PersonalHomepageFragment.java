@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.hengye.share.R;
 import com.hengye.share.model.sina.WBUserInfo;
+import com.hengye.share.module.topic.StatusFragment;
 import com.hengye.share.module.topic.TopicFragment;
 import com.hengye.share.module.base.BaseFragment;
 import com.hengye.share.module.util.encapsulation.TabLayoutFragment;
@@ -129,11 +130,11 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
 
             @Override
             public void onPageSelected(int position) {
-                if(position == 1 && mTopicFragment != null) {
-                    mSwipeRefresh.setScrollUpChild(mTopicFragment.getRecyclerView());
-                }else{
-                    mSwipeRefresh.setScrollUpChild(null);
-                }
+//                if(position == 1 && mTopicFragment != null) {
+//                    mSwipeRefresh.setScrollUpChild(mTopicFragment.getRecyclerView());
+//                }else{
+//                    mSwipeRefresh.setScrollUpChild(null);
+//                }
             }
 
             @Override
@@ -171,8 +172,8 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
         });
     }
 
-    public LoadDataCallBack getLoadDataCallBack(final BaseFragment baseFragment){
-        return new LoadDataCallBack(){
+    public StatusFragment.LoadDataCallBack getLoadDataCallBack(final BaseFragment baseFragment){
+        return new StatusFragment.LoadDataCallBack(){
             @Override
             public void initView() {
                 PullToRefreshLayout pullToRefresh = (PullToRefreshLayout) baseFragment.findViewById(R.id.pull_to_refresh);
@@ -200,10 +201,4 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
         };
     }
 
-    public interface LoadDataCallBack {
-
-        void initView();
-
-        void refresh(boolean isRefreshing);
-    }
 }

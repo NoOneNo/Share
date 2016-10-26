@@ -10,18 +10,19 @@ import android.util.Log;
 import android.view.View;
 
 import com.hengye.share.R;
+import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.module.publish.TopicPublishActivity;
 import com.hengye.share.module.sso.ThirdPartyLoginActivity;
-import com.hengye.share.module.util.FragmentActivity;
-import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.ui.widget.dialog.ListDialog;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
 import com.hengye.share.ui.widget.loading.FramesLoadingView;
+import com.hengye.share.util.L;
 import com.hengye.share.util.intercept.Action;
 import com.hengye.share.util.intercept.AdTokenInterceptor;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -97,8 +98,8 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
         } else if (v.getId() == R.id.btn_test6) {
 //            testInterceptor();
 
-//            TestTopicFragment.newInstance(new TopicPresenter.TopicGroup(TopicPresenter.TopicType.ALL));
-            startActivity(FragmentActivity.getStartIntent(this, TestContentFragment.class));
+            testResources();
+//            startActivity(FragmentActivity.getStartIntent(this, TestContentFragment.class));
 //            startActivity(WebViewActivity.getStartIntent(this, "http://www.baidu.com"));
         } else if (v.getId() == R.id.btn_test7) {
             startActivity(SetTokenActivity.class);
@@ -237,6 +238,19 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void testResources() {
+        try {
+            InputStream is = TestActivity.class.getResourceAsStream("testF2.xml");
+            if (is == null) {
+                L.debug("get resource is null");
+            } else {
+                L.debug("get resource is not null");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
 
