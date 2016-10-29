@@ -20,6 +20,7 @@ import com.hengye.share.module.util.encapsulation.paging.RecyclerRefreshFragment
 import com.hengye.share.module.util.image.GalleryActivity;
 import com.hengye.share.ui.widget.listener.OnItemClickListener;
 import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.L;
 import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.swiperefresh.listener.SwipeListener;
 
@@ -103,6 +104,7 @@ public class TopicAlbumFragment extends RecyclerRefreshFragment<String> implemen
     public void onResume() {
         super.onResume();
         handleStaticData(true);
+        L.debug("album onResume invoke()");
     }
 
     @Override

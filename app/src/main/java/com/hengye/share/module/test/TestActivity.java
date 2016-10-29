@@ -8,11 +8,13 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 
 import com.hengye.share.R;
 import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.module.publish.TopicPublishActivity;
 import com.hengye.share.module.sso.ThirdPartyLoginActivity;
+import com.hengye.share.module.util.FragmentActivity;
 import com.hengye.share.ui.widget.dialog.ListDialog;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
@@ -98,8 +100,8 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
         } else if (v.getId() == R.id.btn_test6) {
 //            testInterceptor();
 
-            testResources();
-//            startActivity(FragmentActivity.getStartIntent(this, TestContentFragment.class));
+//            testAnimation();
+            startActivity(FragmentActivity.getStartIntent(this, TestStateFragment.class));
 //            startActivity(WebViewActivity.getStartIntent(this, "http://www.baidu.com"));
         } else if (v.getId() == R.id.btn_test7) {
             startActivity(SetTokenActivity.class);
@@ -238,6 +240,20 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void testAnimation() {
+        if (mLoading.getVisibility() == View.VISIBLE) {
+            AlphaAnimation animation = new AlphaAnimation(1.0f, 0.0f);
+            animation.setDuration(350);
+            mLoading.setAnimation(animation);
+            mLoading.setVisibility(View.GONE);
+        } else {
+            AlphaAnimation animation = new AlphaAnimation(0.0f, 1.0f);
+            animation.setDuration(350);
+            mLoading.setAnimation(animation);
+            mLoading.setVisibility(View.VISIBLE);
+        }
     }
 
     private void testResources() {

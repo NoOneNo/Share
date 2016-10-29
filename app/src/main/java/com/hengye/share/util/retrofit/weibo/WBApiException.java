@@ -19,13 +19,24 @@ public class WBApiException extends RuntimeException{
     }
 
     /**
-     * @param errorCode
      * @return 如果返回true, 则表示需要高级授权;
      */
-    public static boolean isNeedAdPermission(int errorCode){
+    public boolean isNeedAdPermission(){
         switch (errorCode){
             case 10014:
             case 21335:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public boolean isTokenExpired(){
+        switch (errorCode){
+            case 21301:
+            case 21317:
+            case 21327:
+            case 21332:
                 return true;
             default:
                 return false;
@@ -83,7 +94,4 @@ public class WBApiException extends RuntimeException{
         this.request = request;
     }
 
-    public boolean isNeedAdPermission(){
-        return isNeedAdPermission(errorCode);
-    }
 }

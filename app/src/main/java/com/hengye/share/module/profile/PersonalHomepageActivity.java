@@ -299,7 +299,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
             }
 
             mFragment.getViewPager().setEnabled(isEnabled);
-            L.debug("viewpager set enbaled : {}", isEnabled);
+//            L.debug("viewpager set enbaled : {}", isEnabled);
         }
 
 //        L.debug("maxVerticalOffset : {}", mCollapsingToolbarLayout.getMaxVerticalOffset());

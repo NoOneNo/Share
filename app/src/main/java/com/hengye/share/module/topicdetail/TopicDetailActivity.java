@@ -404,7 +404,7 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
         }
 
 
-        mLoadingView = View.inflate(this, R.layout.header_stretch_loading, null);
+        mLoadingView = View.inflate(this, R.layout.state_stretch_loading, null);
         mEmptyView = View.inflate(this, R.layout.header_empty, null);
         mListView.addHeaderView(mLoadingView);
         mPullToRefreshLayout.getOnRefreshListener().onRefresh();

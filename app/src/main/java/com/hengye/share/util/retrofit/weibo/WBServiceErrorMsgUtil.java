@@ -1,5 +1,15 @@
 package com.hengye.share.util.retrofit.weibo;
 
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+
+import com.hengye.share.R;
+import com.hengye.share.module.base.BaseActivityHelper;
+import com.hengye.share.module.sso.ThirdPartyLoginActivity;
+import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +30,7 @@ public class WBServiceErrorMsgUtil {
             {"10014", "权限受限"},
             {"10017", "分组名称长度超过限制"},
             {"10022", "IP请求频次超过上限"},
-            {"10023", "用户请求频次超过上限,请重新授权"},
+            {"10023", "用户请求频次超过上限,请明天再试"},
             {"10024", "用户请求特殊接口频次超过上限"},
             {"10025", "备注长度不正确，应为0～30个字符"},
             {"20003", "用户不存在"},
@@ -76,42 +86,5 @@ public class WBServiceErrorMsgUtil {
 
         return null;
     }
-
-//	public void checkResponse(String response) throws TaskException {
-//
-//		if (!TextUtils.isEmpty(response)) {
-//			if (response.indexOf("that page doesn’t exist!") != -1)
-//				throw new TaskException("", "渣浪TMD的神经病，请稍后重试...");
-//		}
-//
-//		String code = null;
-//		String msg = null;
-//
-//		if (!TextUtils.isEmpty(response)) {
-//			JSONObject jsonMsg;
-//			try {
-//				jsonMsg = new JSONObject(response);
-//				if (jsonMsg.has("error")) {
-//					if (jsonMsg.has("errorCode")) {
-//						msg = jsonMsg.getString("error");
-//						if ("invalid_access_token".equals(msg)) {
-//							code = "21327";
-//						}
-//						else {
-//							code = jsonMsg.getString("errorCode");
-//						}
-//						if (errorMap.containsKey(code))
-//							msg = errorMap.get(code);
-//					}
-//				}
-//			} catch (Exception e) {
-//			}
-//		}
-//
-//		if (!TextUtils.isEmpty(msg))
-//			throw new TaskException(code, msg);
-//
-//		throw new TaskException(code);
-//	}
 
 }

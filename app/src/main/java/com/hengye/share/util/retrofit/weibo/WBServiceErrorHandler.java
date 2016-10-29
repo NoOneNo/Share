@@ -2,10 +2,13 @@ package com.hengye.share.util.retrofit.weibo;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 
 import com.hengye.share.R;
 import com.hengye.share.module.base.BaseActivity;
+import com.hengye.share.module.sso.ThirdPartyLoginActivity;
+import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
 import com.hengye.share.util.GsonUtil;
 import com.hengye.share.util.HandlerUtil;
 import com.hengye.share.util.L;
@@ -84,11 +87,22 @@ public class WBServiceErrorHandler {
                     if (BaseActivity.getCurrentActivity() != null) {
                         new AdTokenInterceptor(BaseActivity.getCurrentActivity()).start();
                     }else{
-                        ToastUtil.showToast("权限不足");
+                        ToastUtil.showToast(R.string.tip_permission_denied);
                     }
                 }
             });
             return true;
+        }else if(wbApiException.isTokenExpired()){
+            HandlerUtil.getInstance().post(new Runnable() {
+                @Override
+                public void run() {
+                    if (BaseActivity.getCurrentActivity() != null) {
+                        getTokenExpireDialog(BaseActivity.getCurrentActivity()).show();
+                    }else{
+                        ToastUtil.showToast(R.string.tip_token_expire);
+                    }
+                }
+            });
         }
         return false;
     }
@@ -126,6 +140,18 @@ public class WBServiceErrorHandler {
                 builder.create().show();
             }
         });
+    }
+
+    private  Dialog getTokenExpireDialog(final Activity activity){
+        SimpleTwoBtnDialog build = new SimpleTwoBtnDialog();
+        build.setContent(R.string.tip_token_expire);
+        build.setPositiveButtonClickListener(new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                activity.startActivity(ThirdPartyLoginActivity.getStartIntent(activity, true));
+            }
+        });
+        return build.create(activity);
     }
 
     private String getWBServiceErrorMsg(WBApiException wbApiException){

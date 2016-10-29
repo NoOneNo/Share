@@ -471,7 +471,6 @@ public class TopicActivity extends BaseActivity
 
     Action mStartGroup, mStartSearch;
     AdTokenInterceptor mAdTokenInterceptor;
-    TokenInterceptor mTokenInterceptor;
 
     public AdTokenInterceptor getAdTokenInterceptor() {
         if (mAdTokenInterceptor == null) {
@@ -497,13 +496,6 @@ public class TopicActivity extends BaseActivity
             };
         }
         return mAdTokenInterceptor;
-    }
-
-    public TokenInterceptor getTokenInterceptor(){
-        if(mTokenInterceptor == null){
-            mTokenInterceptor = new TokenInterceptor(this);
-        }
-        return mTokenInterceptor;
     }
 
 }

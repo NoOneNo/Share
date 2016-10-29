@@ -23,7 +23,7 @@
             android:summary="%s"
             android:entries="@array/swipe_back_entries"
             android:entryValues="@array/swipe_back_values"
-            android:defaultValue="1"/>
+            android:defaultValue="3"/>
 
         <Preference
             android:key="photo_save_path"

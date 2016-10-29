@@ -102,6 +102,13 @@ public abstract class RecyclerRefreshFragment<T> extends RecyclerFragment<T>{
                 RecyclerRefreshFragment.this.onLoad();
             }
         });
+
+        mPullToRefresh.ensureTarget();
+    }
+
+    @Override
+    public void showContent() {
+        super.showContent();
     }
 
     PullToRefreshLayout mPullToRefresh;

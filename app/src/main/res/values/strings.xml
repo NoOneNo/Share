@@ -8,7 +8,9 @@
     <string name="tip_load_error">加载失败</string>
     <string name="tip_unpredictable_error">出现不可预知的错误</string>
     <string name="tip_loading">加载中</string>
-    <string name="tip_need_advanced_authorize">需要高级授权, 是否继续?</string>
+    <string name="tip_need_advanced_authorize">需要高级授权，是否继续？</string>
+    <string name="tip_token_expire">当前登录信息已过期，是否重新登录？</string>
+    <string name="tip_permission_denied">权限不足</string>
     <string name="tip_authorize_success">授权成功</string>
     <string name="tip_empty">当前内容为空</string>
     <string name="tip_try_refresh">刷新试试</string>

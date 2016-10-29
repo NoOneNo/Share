@@ -48,12 +48,6 @@ public abstract class PagingFragment<T> extends StateFragment implements ListDat
     }
 
     public void handleDataType(int type) {
-//        if(type == DataType.REFRESH_NO_DATA){
-//            showEmpty();
-//        }else{
-//            showContent();
-//        }
-
         if(type != DataType.REFRESH_NO_DATA){
             showContent();
         }

@@ -68,6 +68,12 @@ public abstract class StateFragment extends BaseFragment
         initContent(savedInstanceState);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mStateLayoutManager.updateState();
+    }
+
     StateLayoutManager mStateLayoutManager;
 
     private void initStateLayoutManager(ViewGroup viewGroup){
@@ -107,7 +113,9 @@ public abstract class StateFragment extends BaseFragment
 
     @Override
     public void onTaskStart() {
-//        showLoading();
+        if(isEmpty()) {
+            showLoading();
+        }
     }
 
     @Override

@@ -2,9 +2,9 @@
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="@dimen/content_margin_50dp">
+    android:paddingTop="@dimen/content_margin_15dp">
 
     <include
-        layout="@layout/state_empty"/>
+        layout="@layout/state_stretch_loading"/>
 
 </android.support.v4.widget.NestedScrollView>

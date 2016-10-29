@@ -39,7 +39,9 @@ public class TopicCommentPresenter extends TaskPresenter<TopicCommentMvpView> {
 
     @SuppressWarnings("unchecked")
     public void loadWBCommentOrRepost(String topicId, String id, final boolean isRefresh, final boolean isComment) {
-        getMvpView().onTaskStart();
+        if(isRefresh) {
+            getMvpView().onTaskStart();
+        }
 
         WBService service = RetrofitManager.getWBService();
         Map<String, String> params = getParameter(isComment ? UserUtil.getToken() : UserUtil.getPriorToken(), topicId, id, isRefresh);

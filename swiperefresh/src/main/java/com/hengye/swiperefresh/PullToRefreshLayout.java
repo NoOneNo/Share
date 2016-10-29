@@ -178,14 +178,17 @@ public class PullToRefreshLayout extends LinearLayout {
                     }
                     mTarget = child;
 
-                    if (mAutoLoadingListener != null && !mIsSetAutoLoading) {
-                        mIsAutoLoading = mAutoLoadingListener.setAutoLoading(mTarget);
-                        mIsSetAutoLoading = true;
-                    }
+                    setAutoLoadingIfNeed();
                     break;
                 }
             }
-        } else if (mAutoLoadingListener != null && !mIsSetAutoLoading) {
+        }else{
+            setAutoLoadingIfNeed();
+        }
+    }
+
+    private void setAutoLoadingIfNeed(){
+        if (mAutoLoadingListener != null && !mIsSetAutoLoading) {
             mIsAutoLoading = mAutoLoadingListener.setAutoLoading(mTarget);
             mIsSetAutoLoading = true;
         }

@@ -28,6 +28,7 @@ public class PullToRefreshLayout extends com.hengye.swiperefresh.PullToRefreshLa
 
         setOnLoadMoreCallBack(this);
         setAutoLoadingListener(this);
+        ensureTarget();
     }
 
     private HeaderAdapter mHeaderAdapter;
