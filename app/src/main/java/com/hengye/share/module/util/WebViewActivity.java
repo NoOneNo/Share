@@ -17,7 +17,7 @@ import android.widget.ProgressBar;
 
 import com.hengye.share.R;
 import com.hengye.share.module.base.BaseActivity;
-import com.hengye.share.ui.widget.listener.OnItemClickListener;
+import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.dialog.DialogStyleHelper;
 import com.hengye.share.ui.widget.dialog.ListDialog;
 import com.hengye.share.util.ClipboardUtil;

@@ -4,7 +4,7 @@ import android.text.TextUtils;
 
 import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.model.sina.WBUserInfo;
-import com.hengye.share.module.mvp.BasePresenter;
+import com.hengye.share.module.util.encapsulation.mvp.RxPresenter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
@@ -13,7 +13,7 @@ import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
 import java.util.Map;
 
-public class UserPresenter extends BasePresenter<UserMvpView> {
+public class UserPresenter extends RxPresenter<UserMvpView> {
 
     public UserPresenter(UserMvpView mvpView){
         super(mvpView);

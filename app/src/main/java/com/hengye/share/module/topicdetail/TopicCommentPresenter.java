@@ -4,7 +4,7 @@ import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.TopicComments;
 import com.hengye.share.model.sina.WBTopicComments;
 import com.hengye.share.model.sina.WBTopicReposts;
-import com.hengye.share.module.mvp.TaskPresenter;
+import com.hengye.share.module.util.encapsulation.mvp.TaskPresenter;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;

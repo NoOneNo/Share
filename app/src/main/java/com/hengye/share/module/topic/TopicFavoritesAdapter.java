@@ -4,10 +4,9 @@ import android.content.Context;
 import android.view.ViewGroup;
 
 import com.hengye.share.R;
-import com.hengye.share.adapter.recyclerview.CommonAdapter;
-import com.hengye.share.adapter.recyclerview.ItemViewHolder;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapter;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemViewHolder;
 import com.hengye.share.model.TopicFavorites;
-import com.hengye.share.module.topic.TopicAdapter;
 
 import java.util.List;
 

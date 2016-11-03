@@ -8,8 +8,8 @@ import android.view.View;
 import android.widget.AbsListView;
 
 import com.hengye.share.R;
-import com.hengye.share.adapter.recyclerview.HeaderAdapter;
-import com.hengye.share.ui.widget.listview.CommonListView;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.HeaderAdapter;
+import com.hengye.share.module.util.encapsulation.view.listview.CommonListView;
 
 /**
  * Created by yuhy on 2016/10/12.

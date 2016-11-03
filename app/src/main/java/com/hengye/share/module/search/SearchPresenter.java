@@ -4,7 +4,7 @@ import com.hengye.share.model.Topic;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.sina.WBTopics;
 import com.hengye.share.model.sina.WBUserInfos;
-import com.hengye.share.module.mvp.BasePresenter;
+import com.hengye.share.module.util.encapsulation.mvp.RxPresenter;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.UserUtil;
@@ -15,7 +15,7 @@ import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
 import rx.Observable;
 
-public class SearchPresenter extends BasePresenter<SearchMvpView> {
+public class SearchPresenter extends RxPresenter<SearchMvpView> {
 
     public SearchPresenter(SearchMvpView mvpView){
         super(mvpView);

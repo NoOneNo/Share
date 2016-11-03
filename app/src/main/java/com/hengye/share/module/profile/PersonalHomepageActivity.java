@@ -23,7 +23,7 @@ import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.hengye.share.R;
-import com.hengye.share.helper.TransitionHelper;
+import com.hengye.share.util.TransitionHelper;
 import com.hengye.share.model.Parent;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.greenrobot.User;
@@ -37,7 +37,6 @@ import com.hengye.share.ui.widget.fab.CheckableFab;
 import com.hengye.share.ui.widget.image.AvatarImageView;
 import com.hengye.share.ui.widget.image.SuperImageView;
 import com.hengye.share.util.DataUtil;
-import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.ToastUtil;
@@ -280,28 +279,37 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         coverShowAnimator.start();
     }
 
+    boolean mHasSetSelection;
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         if (verticalOffset >= -50) {
             mSwipeRefresh.setRefreshEnable(true);
+
+            if(!mHasSetSelection && mFragment != null){
+                mHasSetSelection = true;
+                mFragment.setOtherTabScrollToTop();
+            }
+
         } else {
+            mHasSetSelection = false;
+
             mSwipeRefresh.setRefreshEnable(false);
         }
 
-        if(mFragment != null && mFragment.getViewPager() != null) {
-
-            boolean isEnabled = true;
-
-            //当收缩时
-            if(verticalOffset < -50){
-                //如果刚好收缩到底部
-                isEnabled = Math.abs(verticalOffset) == mCollapsingToolbarLayout.getMaxVerticalOffset();
-            }
-
-            mFragment.getViewPager().setEnabled(isEnabled);
+//        if(mFragment != null && mFragment.getViewPager() != null) {
+//
+//            boolean isEnabled = true;
+//
+//            //当收缩时
+//            if(verticalOffset < -50){
+//                //如果刚好收缩到底部
+//                isEnabled = Math.abs(verticalOffset) == mCollapsingToolbarLayout.getMaxVerticalOffset();
+//            }
+//
+////            mFragment.getViewPager().setEnabled(isEnabled);
 //            L.debug("viewpager set enbaled : {}", isEnabled);
-        }
-
+//        }
+//
 //        L.debug("maxVerticalOffset : {}", mCollapsingToolbarLayout.getMaxVerticalOffset());
 //        L.debug("vertical offset : {}, height : {}, minimumHeight : {}", verticalOffset, mCollapsingToolbarLayout.getHeight(), ViewCompat.getMinimumHeight(mCollapsingToolbarLayout));
     }

@@ -13,12 +13,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hengye.share.R;
-import com.hengye.share.adapter.recyclerview.CommonAdapter;
-import com.hengye.share.adapter.recyclerview.ItemViewHolder;
-import com.hengye.share.module.util.encapsulation.paging.PagingConfig;
-import com.hengye.share.module.util.encapsulation.paging.RecyclerFragment;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapter;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemViewHolder;
+import com.hengye.share.module.util.encapsulation.base.PagingConfig;
+import com.hengye.share.module.util.encapsulation.fragment.RecyclerFragment;
 import com.hengye.share.ui.widget.pulltorefresh.PullToRefreshLayout;
-import com.hengye.share.ui.widget.recyclerview.SimpleItemTouchHelperCallback;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.SimpleItemTouchHelperCallback;
 import com.hengye.swiperefresh.listener.SwipeListener;
 
 import java.util.ArrayList;

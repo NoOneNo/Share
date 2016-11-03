@@ -1,7 +1,7 @@
 package com.hengye.share.module.profile;
 
 import com.hengye.share.model.Topic;
-import com.hengye.share.module.mvp.TaskMvpView;
+import com.hengye.share.module.util.encapsulation.mvp.TaskMvpView;
 
 import java.util.ArrayList;
 

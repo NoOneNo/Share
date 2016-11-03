@@ -7,12 +7,11 @@ import android.view.View;
 
 import com.hengye.share.R;
 import com.hengye.share.model.Topic;
-import com.hengye.share.module.base.BaseFragment;
+import com.hengye.share.module.util.encapsulation.fragment.BaseFragment;
 import com.hengye.share.module.topic.StatusFragment;
 import com.hengye.share.module.topic.TopicFragment;
-import com.hengye.share.module.util.encapsulation.TabLayoutFragment;
+import com.hengye.share.module.util.encapsulation.fragment.TabLayoutFragment;
 import com.hengye.share.ui.widget.pulltorefresh.PullToRefreshLayout;
-import com.hengye.share.util.L;
 import com.hengye.share.util.ResUtil;
 import com.hengye.swiperefresh.listener.SwipeListener;
 
@@ -103,14 +102,14 @@ public class TopicCommentAndRepostFragment extends TabLayoutFragment{
         mPullToRefresh = pullToRefresh;
     }
 
-    public void setOtherTabScrollToTop(){
-        int currentPosition = getCurrentPosition();
-        StatusFragment target = currentPosition == 0 ? mRepostFragment : mCommentFragment;
-
-        if(target != null){
-            target.scrollToTop();
-        }
-    }
+//    public void setOtherTabScrollToTop(){
+//        int currentPosition = getCurrentPosition();
+//        StatusFragment target = currentPosition == 0 ? mRepostFragment : mCommentFragment;
+//
+//        if(target != null){
+//            target.scrollToTop();
+//        }
+//    }
 
     private void initPullToRefresh(){
         getViewPager().addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

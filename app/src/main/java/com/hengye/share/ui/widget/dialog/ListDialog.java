@@ -14,9 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hengye.share.R;
-import com.hengye.share.adapter.recyclerview.CommonAdapter;
-import com.hengye.share.adapter.recyclerview.ItemViewHolder;
-import com.hengye.share.ui.widget.listener.OnItemClickListener;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapter;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemViewHolder;
+import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.util.SelectorLoader;
 
 import java.util.List;

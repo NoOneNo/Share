@@ -121,6 +121,7 @@ dependencies {
     compile project(':swipebacklayout')
     compile project(':photopicker')
     compile project(':swiperefresh')
+    compile project(':module')
 
     // Dependencies for local unit tests
     testCompile dep.junit

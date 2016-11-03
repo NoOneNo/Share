@@ -20,12 +20,12 @@ import com.hengye.photopicker.util.BitmapUtil;
 import com.hengye.photopicker.util.theme.BaseTheme;
 import com.hengye.photopicker.util.theme.GreenTheme;
 import com.hengye.share.R;
-import com.hengye.share.adapter.recyclerview.CommonAdapter;
-import com.hengye.share.adapter.recyclerview.ItemViewHolder;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapter;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemViewHolder;
 import com.hengye.share.module.base.ActivityHelper;
 import com.hengye.share.module.base.BaseActivity;
-import com.hengye.share.ui.widget.listener.OnItemClickListener;
-import com.hengye.share.ui.widget.recyclerview.ItemTouchUtil;
+import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemTouchUtil;
 import com.hengye.share.util.ViewUtil;
 
 import java.util.ArrayList;

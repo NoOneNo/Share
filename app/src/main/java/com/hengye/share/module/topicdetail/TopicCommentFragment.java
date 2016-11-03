@@ -10,10 +10,10 @@ import android.view.View;
 
 import com.hengye.floatingactionbutton.FloatingActionsMenu;
 import com.hengye.share.R;
-import com.hengye.share.handler.data.TopicAdapterIdPager;
-import com.hengye.share.handler.data.TopicIdHandler;
-import com.hengye.share.handler.data.base.DataHandler;
-import com.hengye.share.handler.data.base.Pager;
+import com.hengye.share.util.handler.TopicAdapterIdPager;
+import com.hengye.share.util.handler.TopicIdHandler;
+import com.hengye.share.module.util.encapsulation.base.DataHandler;
+import com.hengye.share.module.util.encapsulation.base.Pager;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
@@ -22,12 +22,11 @@ import com.hengye.share.module.publish.TopicPublishActivity;
 import com.hengye.share.module.topic.StatusFragment;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
 import com.hengye.share.ui.widget.fab.FabAnimator;
-import com.hengye.share.ui.widget.listener.OnItemClickListener;
+import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.util.ClipboardUtil;
 import com.hengye.share.util.DataUtil;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class TopicCommentFragment extends StatusFragment<TopicComment> implements TopicCommentMvpView, DialogInterface.OnClickListener {
 

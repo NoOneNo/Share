@@ -7,7 +7,7 @@ import com.hengye.share.model.KeyValue;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.greenrobot.ShareJson;
 import com.hengye.share.model.sina.WBTopics;
-import com.hengye.share.module.mvp.TaskPresenter;
+import com.hengye.share.module.util.encapsulation.mvp.TaskPresenter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;

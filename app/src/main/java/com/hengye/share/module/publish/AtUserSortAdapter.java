@@ -9,7 +9,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.hengye.share.R;
-import com.hengye.share.adapter.recyclerview.ItemViewHolder;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemViewHolder;
 import com.hengye.share.model.AtUser;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.ui.widget.image.AvatarImageView;

@@ -3,7 +3,7 @@ package com.hengye.share.module.topicdetail;
 import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.sina.WBTopicComments;
 import com.hengye.share.model.sina.WBTopicReposts;
-import com.hengye.share.module.mvp.BasePresenter;
+import com.hengye.share.module.util.encapsulation.mvp.RxPresenter;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.rxjava.ObjectConverter;
@@ -16,7 +16,7 @@ import java.util.Map;
 
 import rx.Observable;
 
-public class TopicDetailPresenter extends BasePresenter<TopicDetailMvpView> {
+public class TopicDetailPresenter extends RxPresenter<TopicDetailMvpView> {
 
     public TopicDetailPresenter(TopicDetailMvpView mvpView) {
         super(mvpView);

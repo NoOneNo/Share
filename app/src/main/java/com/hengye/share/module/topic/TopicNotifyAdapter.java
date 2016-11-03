@@ -5,9 +5,8 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.hengye.share.R;
-import com.hengye.share.adapter.recyclerview.CommonAdapter;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapter;
 import com.hengye.share.model.Topic;
-import com.hengye.share.module.topic.TopicAdapter;
 
 import java.util.List;
 

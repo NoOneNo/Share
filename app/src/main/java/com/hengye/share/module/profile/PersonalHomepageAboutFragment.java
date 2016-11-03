@@ -9,13 +9,15 @@ import android.widget.TextView;
 import com.hengye.share.R;
 import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.module.publish.TopicPublishActivity;
-import com.hengye.share.module.base.BaseFragment;
+import com.hengye.share.module.util.encapsulation.fragment.BaseFragment;
+import com.hengye.share.module.util.encapsulation.view.listener.OnScrollToTopAndBottomListener;
 import com.hengye.share.util.CommonUtil;
 
 /**
  * Created by yuhy on 16/7/19.
  */
-public class PersonalHomepageAboutFragment extends BaseFragment implements View.OnClickListener{
+public class PersonalHomepageAboutFragment extends BaseFragment
+        implements View.OnClickListener, OnScrollToTopAndBottomListener {
 
     public static PersonalHomepageAboutFragment newInstance(WBUserInfo wbUserInfo){
         PersonalHomepageAboutFragment fragment = new PersonalHomepageAboutFragment();
@@ -37,8 +39,24 @@ public class PersonalHomepageAboutFragment extends BaseFragment implements View.
 
     @Override
     public boolean onToolbarDoubleClick(Toolbar toolbar) {
-        mScrollView.scrollTo(0, 0);
+        onScrollToTop(false);
         return true;
+    }
+
+    @Override
+    public void onScrollToTop(boolean isSmooth) {
+        if(isSmooth){
+            mScrollView.smoothScrollTo(0, 0);
+        }else {
+            mScrollView.fullScroll(View.FOCUS_UP);
+//            mScrollView.scrollTo(0, 0);
+        }
+
+    }
+
+    @Override
+    public void onScrollToBottom(boolean isSmooth) {
+        mScrollView.fullScroll(View.FOCUS_DOWN);
     }
 
     @Override

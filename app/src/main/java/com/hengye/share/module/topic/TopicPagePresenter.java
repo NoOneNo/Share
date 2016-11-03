@@ -4,10 +4,10 @@ import android.content.res.Resources;
 import android.text.TextUtils;
 
 import com.hengye.share.R;
-import com.hengye.share.handler.data.NumberPager;
+import com.hengye.share.util.handler.TopicNumberPager;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.sina.WBTopics;
-import com.hengye.share.module.mvp.BasePresenter;
+import com.hengye.share.module.util.encapsulation.mvp.RxPresenter;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
@@ -19,14 +19,14 @@ import java.util.Map;
 
 import rx.Subscriber;
 
-public class TopicPagePresenter extends BasePresenter<TopicPageMvpView> {
+public class TopicPagePresenter extends RxPresenter<TopicPageMvpView> {
 
     private TopicGroup mTopicGroup;
     private String mKeyword;
     private String uid, name;
-    private NumberPager mPager;
+    private TopicNumberPager mPager;
 
-    public TopicPagePresenter(TopicPageMvpView mvpView, TopicGroup topicGroup, NumberPager pager) {
+    public TopicPagePresenter(TopicPageMvpView mvpView, TopicGroup topicGroup, TopicNumberPager pager) {
         super(mvpView);
         mTopicGroup = topicGroup;
         mPager = pager;
@@ -81,7 +81,7 @@ public class TopicPagePresenter extends BasePresenter<TopicPageMvpView> {
 //            ub.addParameter("screen_name", name);
 //        }
 
-        ub.addParameter("count", WBUtil.getWBTopicRequestCount());
+        ub.addParameter("count", mPager.getPageSize());
         return ub.getParameters();
     }
 

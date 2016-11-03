@@ -19,19 +19,20 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.hengye.share.R;
-import com.hengye.share.module.mvp.BasePresenter;
+import com.hengye.share.module.util.encapsulation.mvp.BasePresenter;
+import com.hengye.share.module.util.encapsulation.mvp.RxPresenter;
 import com.hengye.share.ui.widget.common.CommonToolBar;
 import com.hengye.share.util.NetworkUtil;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.module.setting.SettingHelper;
-import com.hengye.share.ui.widget.listener.OnDoubleClickListener;
+import com.hengye.share.module.util.encapsulation.view.listener.OnDoubleClickListener;
 import com.hengye.skinloader.listener.OnSkinUpdateListener;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @SuppressLint("Registered")
-public class BaseActivity extends AppCompatActivity implements OnSkinUpdateListener{
+public class BaseActivity extends AppCompatActivity implements OnSkinUpdateListener {
 
     protected String getRequestTag() {
         return "BaseActivity";
@@ -78,12 +79,12 @@ public class BaseActivity extends AppCompatActivity implements OnSkinUpdateListe
 
     private static BaseActivity mInstance;
 
-    public ActivityHelper getActivityHelper(){
+    public ActivityHelper getActivityHelper() {
         return mActivityHelper;
     }
 
-    public static BaseActivity getCurrentActivity(){
-        if(mInstance != null && !mInstance.isDestroyed()){
+    public static BaseActivity getCurrentActivity() {
+        if (mInstance != null && !mInstance.isDestroyed()) {
             return mInstance;
         }
         return null;
@@ -176,7 +177,7 @@ public class BaseActivity extends AppCompatActivity implements OnSkinUpdateListe
     protected void onDestroy() {
         mActivityHelper.dispatchActivityDestroyed(this);
         super.onDestroy();
-        if(mHandler != null) {
+        if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
             mHandler = null;
         }
@@ -203,7 +204,7 @@ public class BaseActivity extends AppCompatActivity implements OnSkinUpdateListe
 
     @Override
     public void onBackPressed() {
-        if(!mActivityHelper.onBackPressed()){
+        if (!mActivityHelper.onBackPressed()) {
             super.onBackPressed();
         }
     }
@@ -214,9 +215,11 @@ public class BaseActivity extends AppCompatActivity implements OnSkinUpdateListe
         overridePendingTransitionOnFinish();
     }
 
-    protected void handleBundleExtra(Intent intent) {}
+    protected void handleBundleExtra(Intent intent) {
+    }
 
-    protected void afterCreate(Bundle savedInstanceState) {}
+    protected void afterCreate(Bundle savedInstanceState) {
+    }
 
     protected void setupContentView() {
         if (getLayoutResId() != 0) {
@@ -256,16 +259,16 @@ public class BaseActivity extends AppCompatActivity implements OnSkinUpdateListe
         }
     }
 
-    protected void detachMvpView(){
-        if(mPresenters != null){
-            for(BasePresenter presenter : mPresenters){
+    protected void detachMvpView() {
+        if (mPresenters != null) {
+            for (BasePresenter presenter : mPresenters) {
                 presenter.detachView();
             }
         }
     }
 
     public void addPresenter(BasePresenter presenter) {
-        if(mPresenters == null){
+        if (mPresenters == null) {
             mPresenters = new HashSet<>();
         }
         mPresenters.add(presenter);
@@ -338,9 +341,7 @@ public class BaseActivity extends AppCompatActivity implements OnSkinUpdateListe
         mToolbar = (CommonToolBar) findViewById(R.id.toolbar);
         if (mToolbar != null) {
             setSupportActionBar(mToolbar);
-//            if(mToolbar.getTitle() == null) {
-                mToolbar.setTitle(getToolbarTitle());
-//            }
+            mToolbar.setTitle(getToolbarTitle());
             mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -370,7 +371,7 @@ public class BaseActivity extends AppCompatActivity implements OnSkinUpdateListe
         updateToolbarTitle(getString(resId));
     }
 
-    public boolean onToolbarDoubleClick(Toolbar toolbar){
+    public boolean onToolbarDoubleClick(Toolbar toolbar) {
         return false;
     }
 
@@ -439,5 +440,6 @@ public class BaseActivity extends AppCompatActivity implements OnSkinUpdateListe
     }
 
     @Override
-    public void onSkinUpdate() {}
+    public void onSkinUpdate() {
+    }
 }

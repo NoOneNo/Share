@@ -9,8 +9,8 @@ import com.hengye.share.R;
 import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.module.topic.StatusFragment;
 import com.hengye.share.module.topic.TopicFragment;
-import com.hengye.share.module.base.BaseFragment;
-import com.hengye.share.module.util.encapsulation.TabLayoutFragment;
+import com.hengye.share.module.util.encapsulation.fragment.BaseFragment;
+import com.hengye.share.module.util.encapsulation.fragment.TabLayoutFragment;
 import com.hengye.share.module.topic.TopicPresenter;
 import com.hengye.share.ui.widget.ScrollChildSwipeRefreshLayout;
 import com.hengye.share.util.DataUtil;
@@ -116,7 +116,7 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
     @Override
     public boolean onToolbarDoubleClick(Toolbar toolbar) {
         if(getCurrentFragment() != null){
-            return ((BaseFragment)getCurrentFragment()).onToolbarDoubleClick(toolbar);
+            return getCurrentFragment().onToolbarDoubleClick(toolbar);
         }
         return super.onToolbarDoubleClick(toolbar);
     }
@@ -125,16 +125,18 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
         getViewPager().addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
             public void onPageSelected(int position) {
-//                if(position == 1 && mTopicFragment != null) {
-//                    mSwipeRefresh.setScrollUpChild(mTopicFragment.getRecyclerView());
-//                }else{
-//                    mSwipeRefresh.setScrollUpChild(null);
-//                }
+                //解决切换页面时，头部已经滑动到顶部
+                if(position == 1 && mTopicFragment != null) {
+                    mSwipeRefresh.setScrollUpChild(mTopicFragment.getRecyclerView());
+                }else if(position == 2 && mTopicAlbumFragment != null){
+                    mSwipeRefresh.setScrollUpChild(mTopicAlbumFragment.getRecyclerView());
+                }else{
+                    mSwipeRefresh.setScrollUpChild(null);
+                }
             }
 
             @Override
@@ -149,7 +151,6 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
                 switch (getCurrentPosition()){
                     case 0:
                         mSwipeRefresh.setRefreshing(false);
-//                        mPersonalHomepageAboutFragment
                         break;
                     case 1:
                         if(mTopicFragment != null) {

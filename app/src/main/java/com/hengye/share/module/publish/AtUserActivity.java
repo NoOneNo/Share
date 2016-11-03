@@ -28,7 +28,7 @@ import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.module.profile.UserListMvpView;
 import com.hengye.share.module.profile.UserListPresenter;
 import com.hengye.share.ui.widget.lettersort.SideBar;
-import com.hengye.share.ui.widget.listener.OnItemClickListener;
+import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.ThemeUtil;

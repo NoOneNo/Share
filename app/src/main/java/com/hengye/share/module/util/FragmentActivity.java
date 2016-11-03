@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.R;
-import com.hengye.share.module.base.BaseFragment;
+import com.hengye.share.module.util.encapsulation.fragment.BaseFragment;
 
 /**
  * This is a Activity to show a Fragment extends BaseFragment.

@@ -8,15 +8,15 @@ import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
 import com.google.gson.reflect.TypeToken;
-import com.hengye.share.handler.data.DefaultDataHandler;
-import com.hengye.share.handler.data.NumberPager;
-import com.hengye.share.handler.data.base.DataHandler;
-import com.hengye.share.handler.data.base.DataType;
-import com.hengye.share.handler.data.base.Pager;
+import com.hengye.share.module.util.encapsulation.base.DefaultDataHandler;
+import com.hengye.share.util.handler.TopicNumberPager;
+import com.hengye.share.module.util.encapsulation.base.DataHandler;
+import com.hengye.share.module.util.encapsulation.base.DataType;
+import com.hengye.share.module.util.encapsulation.base.Pager;
 import com.hengye.share.model.TopicFavorites;
 import com.hengye.share.model.greenrobot.ShareJson;
 import com.hengye.share.model.sina.WBTopicFavorites;
-import com.hengye.share.module.util.encapsulation.paging.RecyclerRefreshFragment;
+import com.hengye.share.module.util.encapsulation.fragment.RecyclerRefreshFragment;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
@@ -36,14 +36,14 @@ public class TopicFavoritesFragment extends RecyclerRefreshFragment<TopicFavorit
     }
 
     private TopicFavoritesAdapter mAdapter;
-    private NumberPager mPager;
+    private TopicNumberPager mPager;
     DefaultDataHandler<TopicFavorites.TopicFavorite> mHandler;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setAdapter(mAdapter = new TopicFavoritesAdapter(getActivity(), getData()));
-        mPager = new NumberPager();
+        mPager = new TopicNumberPager();
         mHandler = new DefaultDataHandler<>(mAdapter);
 
         if(mAdapter.getData().isEmpty()) {
@@ -104,7 +104,7 @@ public class TopicFavoritesFragment extends RecyclerRefreshFragment<TopicFavorit
         final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBTopicFavoritesUrl());
         ub.addParameter("access_token", token);
         ub.addParameter("page", mPager.getPage(isRefresh));
-        ub.addParameter("count", WBUtil.getWBTopicRequestCount());
+        ub.addParameter("count", mPager.getPageSize());
         return new GsonRequest<>(
                 WBTopicFavorites.class,
                 ub.getRequestUrl(),

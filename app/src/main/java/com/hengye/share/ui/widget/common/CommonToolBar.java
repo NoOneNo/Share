@@ -10,8 +10,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.hengye.share.R;
-import com.hengye.share.helper.ReflectionHelpers;
-import com.hengye.share.ui.widget.listener.OnDoubleClickListener;
+import com.hengye.share.util.ReflectionHelpers;
+import com.hengye.share.module.util.encapsulation.view.listener.OnDoubleClickListener;
 import com.hengye.share.util.ThemeUtil;
 import com.hengye.share.util.ViewUtil;
 
@@ -46,25 +46,12 @@ public class CommonToolBar extends Toolbar {
         setTitleTextColor(ThemeUtil.getTextColor());
         setSubtitleTextColor(ThemeUtil.getTextColor());
         if (getNavigation() != null) {
-//            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) getNavigation().getLayoutParams();
             int actionBarHeight = ViewUtil.getActionBarHeight();
             int size = getResources().getDimensionPixelSize(R.dimen.icon_size_small);
-//            lp.height = size;
-//            lp.width = size;
-//            lp.setMarginStart(actionBarHeight - size);
-//            getNavigation().requestLayout();
             int padding = (actionBarHeight - size) / 2;
             getNavigation().setPadding(0, padding, 0, padding);
             getNavigation().setScaleType(ImageView.ScaleType.FIT_CENTER);
         }
-//        this.setNavigationOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (getContext() instanceof Activity) {
-//                    ((Activity) getContext()).onBackPressed();
-//                }
-//            }
-//        });
     }
 
     private static final int DOUBLE_TAP_TIMEOUT = ViewConfiguration.getDoubleTapTimeout();

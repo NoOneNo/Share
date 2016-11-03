@@ -16,7 +16,7 @@ import com.hengye.share.module.profile.PersonalHomepageActivity;
 import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.R;
 import com.hengye.share.ui.widget.SearchView;
-import com.hengye.share.ui.widget.listener.OnItemClickListener;
+import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.ViewUtil;

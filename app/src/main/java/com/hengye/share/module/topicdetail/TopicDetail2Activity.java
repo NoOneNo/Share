@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.hengye.floatingactionbutton.FloatingActionButton;
 import com.hengye.floatingactionbutton.FloatingActionsMenu;
 import com.hengye.share.R;
-import com.hengye.share.helper.TransitionHelper;
+import com.hengye.share.util.TransitionHelper;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.module.base.BaseActivity;

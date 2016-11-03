@@ -5,8 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hengye.share.R;
-import com.hengye.share.module.base.BaseFragment;
-import com.hengye.share.module.util.encapsulation.StateLayoutManager;
+import com.hengye.share.module.util.encapsulation.fragment.BaseFragment;
+import com.hengye.share.module.util.encapsulation.base.StateLayoutManager;
 
 /**
  * Created by yuhy on 16/7/18.

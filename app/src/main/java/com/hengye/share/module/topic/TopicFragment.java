@@ -3,22 +3,17 @@ package com.hengye.share.module.topic;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.hengye.share.R;
-import com.hengye.share.handler.data.TopicAdapterIdPager;
-import com.hengye.share.handler.data.TopicIdHandler;
-import com.hengye.share.handler.data.base.DataHandler;
-import com.hengye.share.handler.data.base.DataType;
-import com.hengye.share.handler.data.base.Pager;
+import com.hengye.share.util.handler.TopicAdapterIdPager;
+import com.hengye.share.util.handler.TopicIdHandler;
+import com.hengye.share.module.util.encapsulation.base.DataHandler;
+import com.hengye.share.module.util.encapsulation.base.DataType;
+import com.hengye.share.module.util.encapsulation.base.Pager;
 import com.hengye.share.model.Topic;
-import com.hengye.share.ui.widget.fab.FabAnimator;
 import com.hengye.share.util.UserUtil;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class TopicFragment extends StatusFragment<Topic> implements TopicMvpView {
 

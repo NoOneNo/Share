@@ -19,8 +19,8 @@
         <item name="android:navigationBarColor">?attr/theme_color</item>
 
         <item name="android:colorBackground">@color/background_default</item>
-        <!--<item name="android:colorBackground">@null</item>-->
         <!-- 默认背景是设置在RootView上，但是大部分时候界面的布局又会设置不同背景颜色，为了防止重复绘制，不要设置colorBackground -->
+        <!--<item name="android:colorBackground">@null</item>-->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <!--<item name="android:statusBarColor">@android:color/transparent</item>-->
         <!-- 半透明 -->

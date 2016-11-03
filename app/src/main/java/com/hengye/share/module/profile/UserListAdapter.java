@@ -8,7 +8,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.hengye.share.R;
-import com.hengye.share.adapter.recyclerview.EditModeAdapter;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.EditModeAdapter;
 import com.hengye.share.model.Select;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.ui.widget.image.AvatarImageView;

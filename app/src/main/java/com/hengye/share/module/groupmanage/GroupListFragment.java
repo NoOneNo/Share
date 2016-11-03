@@ -11,11 +11,11 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.hengye.share.R;
-import com.hengye.share.adapter.recyclerview.CommonAdapter;
-import com.hengye.share.adapter.recyclerview.ItemViewHolder;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapter;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemViewHolder;
 import com.hengye.share.module.topic.TopicPresenter.TopicGroup;
 import com.hengye.share.module.topic.TopicPresenter.TopicType;
-import com.hengye.share.module.util.encapsulation.paging.RecyclerRefreshFragment;
+import com.hengye.share.module.util.encapsulation.fragment.RecyclerRefreshFragment;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.ViewUtil;
 

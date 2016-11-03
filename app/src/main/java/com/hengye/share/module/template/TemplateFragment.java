@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import com.hengye.share.module.base.BaseFragment;
+import com.hengye.share.module.util.encapsulation.fragment.BaseFragment;
 
 public class TemplateFragment extends BaseFragment {
 

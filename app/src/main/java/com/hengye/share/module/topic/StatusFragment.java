@@ -7,7 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.hengye.share.R;
-import com.hengye.share.module.util.encapsulation.paging.RecyclerRefreshFragment;
+import com.hengye.share.module.util.encapsulation.fragment.RecyclerRefreshFragment;
 import com.hengye.share.ui.widget.fab.FabAnimator;
 import com.hengye.share.util.thirdparty.WBUtil;
 

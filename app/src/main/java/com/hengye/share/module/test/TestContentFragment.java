@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.hengye.share.R;
-import com.hengye.share.module.util.encapsulation.StateFragment;
+import com.hengye.share.module.util.encapsulation.fragment.StateFragment;
 
 /**
  * Created by yuhy on 16/7/18.

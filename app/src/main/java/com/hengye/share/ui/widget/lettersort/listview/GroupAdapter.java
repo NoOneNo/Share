@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-import com.hengye.share.adapter.listview.CommonAdapter;
-import com.hengye.share.adapter.listview.ViewHolder;
+import com.hengye.share.module.util.encapsulation.view.listview.CommonAdapter;
+import com.hengye.share.module.util.encapsulation.view.listview.ViewHolder;
 
 import java.util.ArrayList;
 import java.util.HashMap;

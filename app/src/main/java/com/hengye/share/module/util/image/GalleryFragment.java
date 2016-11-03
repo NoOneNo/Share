@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.hengye.share.R;
 import com.hengye.share.module.base.ActivityHelper;
 import com.hengye.share.module.base.BaseActivity;
-import com.hengye.share.module.util.encapsulation.ViewPagerFragment;
+import com.hengye.share.module.util.encapsulation.fragment.ViewPagerFragment;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.util.AnimationUtil;
 

@@ -2,7 +2,7 @@ package com.hengye.share.module.sso;
 
 import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.model.sina.WBUserInfo;
-import com.hengye.share.module.mvp.MvpView;
+import com.hengye.share.module.util.encapsulation.mvp.MvpView;
 
 public interface UserMvpView extends MvpView {
 

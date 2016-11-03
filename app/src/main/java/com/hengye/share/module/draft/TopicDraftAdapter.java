@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.hengye.share.R;
-import com.hengye.share.adapter.recyclerview.CommonAdapter;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapter;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.greenrobot.TopicDraft;
 import com.hengye.share.module.topic.TopicAdapter;

@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.hengye.share.R;
-import com.hengye.share.module.base.BaseFragment;
+import com.hengye.share.module.util.encapsulation.fragment.BaseFragment;
 
 public class TestElasticScrollViewFragment extends BaseFragment {
 

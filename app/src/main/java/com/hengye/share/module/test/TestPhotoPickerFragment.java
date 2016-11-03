@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.hengye.share.R;
-import com.hengye.share.module.util.encapsulation.StateFragment;
+import com.hengye.share.module.util.encapsulation.fragment.StateFragment;
 import com.hengye.share.ui.widget.image.GridGalleryEditorView;
 
 /**

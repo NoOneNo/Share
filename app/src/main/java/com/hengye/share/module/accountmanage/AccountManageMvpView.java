@@ -1,7 +1,7 @@
 package com.hengye.share.module.accountmanage;
 
 import com.hengye.share.model.greenrobot.User;
-import com.hengye.share.module.mvp.MvpView;
+import com.hengye.share.module.util.encapsulation.mvp.MvpView;
 
 import java.util.List;
 

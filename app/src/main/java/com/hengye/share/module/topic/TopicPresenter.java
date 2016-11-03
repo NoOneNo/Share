@@ -11,7 +11,7 @@ import com.hengye.share.model.greenrobot.ShareJson;
 import com.hengye.share.model.sina.WBTopicComments;
 import com.hengye.share.model.sina.WBTopicIds;
 import com.hengye.share.model.sina.WBTopics;
-import com.hengye.share.module.mvp.ListDataPresenter;
+import com.hengye.share.module.util.encapsulation.mvp.ListDataPresenter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.ResUtil;

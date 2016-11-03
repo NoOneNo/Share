@@ -15,7 +15,7 @@ import android.webkit.WebView;
 
 import com.hengye.share.R;
 import com.hengye.share.module.setting.SettingHelper;
-import com.hengye.share.module.base.BaseFragment;
+import com.hengye.share.module.util.encapsulation.fragment.BaseFragment;
 import com.hengye.share.util.AnimationUtil;
 
 import java.io.File;

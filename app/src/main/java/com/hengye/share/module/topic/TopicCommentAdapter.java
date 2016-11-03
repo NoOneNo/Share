@@ -5,8 +5,8 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.hengye.share.R;
-import com.hengye.share.adapter.listview.CommonAdapter;
-import com.hengye.share.adapter.listview.ViewHolder;
+import com.hengye.share.module.util.encapsulation.view.listview.CommonAdapter;
+import com.hengye.share.module.util.encapsulation.view.listview.ViewHolder;
 import com.hengye.share.model.TopicComment;
 import com.hengye.share.ui.support.textspan.TopicUrlOnTouchListener;
 import com.hengye.share.ui.widget.util.SelectorLoader;

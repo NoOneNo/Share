@@ -4,12 +4,12 @@ import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
 import com.google.gson.reflect.TypeToken;
-import com.hengye.share.handler.data.NumberPager;
+import com.hengye.share.util.handler.TopicNumberPager;
 import com.hengye.share.model.AtUser;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.greenrobot.ShareJson;
 import com.hengye.share.model.sina.WBUserInfos;
-import com.hengye.share.module.mvp.BasePresenter;
+import com.hengye.share.module.util.encapsulation.mvp.RxPresenter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
@@ -27,16 +27,16 @@ import java.util.Map;
 
 import rx.Subscriber;
 
-public class UserListPresenter extends BasePresenter<UserListMvpView> {
+public class UserListPresenter extends RxPresenter<UserListMvpView> {
 
     private String mUid;
-    private NumberPager mPager;
+    private TopicNumberPager mPager;
 
     public UserListPresenter(UserListMvpView mvpView, String uid) {
         super(mvpView);
 
         mUid = uid;
-        mPager = new NumberPager(0);
+        mPager = new TopicNumberPager(0);
     }
 
     public ArrayList<AtUser> getSelectResultData() {

@@ -9,9 +9,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.hengye.share.R;
-import com.hengye.share.adapter.recyclerview.CommonAdapter;
-import com.hengye.share.adapter.recyclerview.HeaderAdapter;
-import com.hengye.share.adapter.recyclerview.ItemViewHolder;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapter;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.HeaderAdapter;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemViewHolder;
 import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.module.sso.ThirdPartyLoginActivity;
 import com.hengye.share.ui.widget.image.AvatarImageView;

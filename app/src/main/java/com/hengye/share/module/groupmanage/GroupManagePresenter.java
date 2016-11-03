@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.hengye.share.model.greenrobot.GroupList;
 import com.hengye.share.module.groupmanage.data.GroupManageDataSource;
-import com.hengye.share.module.mvp.BasePresenter;
+import com.hengye.share.module.util.encapsulation.mvp.RxPresenter;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
@@ -13,7 +13,7 @@ import java.util.List;
 import rx.Observable;
 import rx.functions.Func1;
 
-public class GroupManagePresenter extends BasePresenter<GroupManageMvpView> {
+public class GroupManagePresenter extends RxPresenter<GroupManageMvpView> {
 
     @NonNull
     private final GroupManageDataSource mGroupManageRepository;

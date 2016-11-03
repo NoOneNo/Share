@@ -6,13 +6,13 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.hengye.share.handler.data.DefaultDataHandler;
-import com.hengye.share.handler.data.NumberPager;
-import com.hengye.share.handler.data.base.DataHandler;
-import com.hengye.share.handler.data.base.DataType;
-import com.hengye.share.handler.data.base.Pager;
+import com.hengye.share.module.util.encapsulation.base.DefaultDataHandler;
+import com.hengye.share.util.handler.TopicNumberPager;
+import com.hengye.share.module.util.encapsulation.base.DataHandler;
+import com.hengye.share.module.util.encapsulation.base.DataType;
+import com.hengye.share.module.util.encapsulation.base.Pager;
 import com.hengye.share.model.Topic;
-import com.hengye.share.module.util.encapsulation.paging.RecyclerRefreshFragment;
+import com.hengye.share.module.util.encapsulation.fragment.RecyclerRefreshFragment;
 import com.hengye.share.util.UserUtil;
 
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class TopicPageFragment extends RecyclerRefreshFragment<Topic> implements
     private TopicPagePresenter mPresenter;
     private TopicPagePresenter.TopicGroup topicGroup;
 
-    private NumberPager mPager;
+    private TopicNumberPager mPager;
     private DefaultDataHandler<Topic> mHandler;
     private String mKeyword;
 
@@ -51,7 +51,7 @@ public class TopicPageFragment extends RecyclerRefreshFragment<Topic> implements
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setAdapter(mAdapter = new TopicAdapter(getContext(), new ArrayList<Topic>(), getRecyclerView()));
-        mPager = new NumberPager();
+        mPager = new TopicNumberPager();
         mHandler = new DefaultDataHandler<>(mAdapter);
         addPresenter(mPresenter = new TopicPagePresenter(this, topicGroup, mPager));
         mPresenter.setKeyword(mKeyword);

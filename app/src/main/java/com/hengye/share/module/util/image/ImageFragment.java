@@ -16,7 +16,7 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.ImageRequest;
 import com.android.volley.toolbox.Util;
 import com.hengye.share.R;
-import com.hengye.share.module.base.BaseFragment;
+import com.hengye.share.module.util.encapsulation.fragment.BaseFragment;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.util.FileUtil;
 import com.hengye.share.util.ImageUtil;

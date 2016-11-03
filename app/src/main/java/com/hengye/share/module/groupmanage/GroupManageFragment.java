@@ -12,10 +12,10 @@ import android.view.View;
 import com.hengye.share.R;
 import com.hengye.share.model.greenrobot.GroupList;
 import com.hengye.share.module.groupmanage.data.GroupManageRepository;
-import com.hengye.share.module.util.encapsulation.paging.RecyclerFragment;
+import com.hengye.share.module.util.encapsulation.fragment.RecyclerFragment;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
-import com.hengye.share.ui.widget.recyclerview.ItemTouchUtil;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemTouchUtil;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.ToastUtil;
 

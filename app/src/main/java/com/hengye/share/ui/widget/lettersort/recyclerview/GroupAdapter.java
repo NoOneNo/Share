@@ -4,8 +4,8 @@ package com.hengye.share.ui.widget.lettersort.recyclerview;
 import android.content.Context;
 import android.view.ViewGroup;
 
-import com.hengye.share.adapter.recyclerview.CommonAdapter;
-import com.hengye.share.adapter.recyclerview.ItemViewHolder;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapter;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemViewHolder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
