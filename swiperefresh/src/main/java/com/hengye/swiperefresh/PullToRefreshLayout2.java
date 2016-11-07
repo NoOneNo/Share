@@ -71,8 +71,8 @@ public class PullToRefreshLayout2 extends LinearLayout {
     private boolean mLoading = false;
     private boolean mLoadFail = false;
 
-    private boolean mResetting = false;
-    private boolean mCanTouchEvent = false;
+    private boolean mResetting = false;//用于拦截触摸事件onIntercept，在执行动画的时候；
+    private boolean mCanTouchEvent = false;//用于拦截触摸事件onTouch，因为在接受滑动
     private OnLoadListener mLoadListener;
 
     private float mInitialMotionY;
@@ -124,7 +124,6 @@ public class PullToRefreshLayout2 extends LinearLayout {
 //        addView(mPullToRefreshLoadingView);
 
         mNestedScrollingParentHelper = new NestedScrollingParentHelper(this);
-
         mNestedScrollingChildHelper = new NestedScrollingChildHelper(this);
         setNestedScrollingEnabled(true);
     }
@@ -350,7 +349,7 @@ public class PullToRefreshLayout2 extends LinearLayout {
 //        Log.d(LOG_TAG, "onTouchEvent invoke");
         final int action = MotionEventCompat.getActionMasked(ev);
 
-        if (!isEnabled() || !mCanTouchEvent || canChildScrollUp()) {
+        if (!isEnabled() || mResetting || canChildScrollUp()) {
             // Fail fast if we're not in a state where a swipe is possible
             return false;
         }
@@ -432,8 +431,8 @@ public class PullToRefreshLayout2 extends LinearLayout {
                 final int pointerIndex = MotionEventCompat.findPointerIndex(ev, mActivePointerId);
                 final float y = MotionEventCompat.getY(ev, pointerIndex);
                 final float overscrollTop = (y - mInitialMotionY) * DRAG_RATE;
-                mIsBeingDragged = false;
 //                finishPullDown(overscrollTop);
+                mIsBeingDragged = false;
                 finishPullDown(mCurrentTargetOffsetTop);
                 mActivePointerId = INVALID_POINTER;
                 return false;
