@@ -1,5 +1,7 @@
 package com.hengye.share.util.retrofit.weibo;
 
+import com.hengye.share.util.L;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -20,12 +22,15 @@ public class WBServiceProxyHandler implements InvocationHandler {
 
     @Override
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+        if(method.getReturnType() != Observable.class){
+            return method.invoke(mObject, args);
+        }
+
         return Observable.just(null)
                 .flatMap(new Func1<Object, Observable<?>>() {
                     @Override
                     public Observable<?> call(Object o) {
                         try {
-//                            checkTokenValid(method, args);
                             return (Observable<?>) method.invoke(mObject, args);
                         } catch (IllegalAccessException | InvocationTargetException e) {
                             e.printStackTrace();

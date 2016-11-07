@@ -90,9 +90,9 @@ public class TransitionHelper {
         if(activity instanceof BaseActivity){
             ((BaseActivity)activity).setHideAnimationOnStart();
         }
-//        activity.getWindow().setAllowEnterTransitionOverlap(false);
         activity.getWindow().setAllowEnterTransitionOverlap(false);
-        activity.getWindow().setAllowReturnTransitionOverlap(false);
+//        activity.getWindow().setAllowEnterTransitionOverlap(false);
+//        activity.getWindow().setAllowReturnTransitionOverlap(false);
         final Pair[] pairs = TransitionHelper.createSafeTransitionParticipants(activity, false,
                 new Pair<>(startView, transitionName));
         ActivityOptionsCompat activityOptions = ActivityOptionsCompat

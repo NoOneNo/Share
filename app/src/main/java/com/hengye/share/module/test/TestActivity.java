@@ -101,7 +101,7 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
 //            testInterceptor();
 
 //            testAnimation();
-            startActivity(FragmentActivity.getStartIntent(this, TestStateFragment.class));
+            startActivity(FragmentActivity.getStartIntent(this, TestRecyclerViewFragment.class));
 //            startActivity(WebViewActivity.getStartIntent(this, "http://www.baidu.com"));
         } else if (v.getId() == R.id.btn_test7) {
             startActivity(SetTokenActivity.class);

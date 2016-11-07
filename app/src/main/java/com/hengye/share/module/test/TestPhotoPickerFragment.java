@@ -24,7 +24,9 @@ public class TestPhotoPickerFragment extends StateFragment {
     }
 
     @Override
-    public void initContent(@Nullable Bundle savedInstanceState) {
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
 
         mGGEV = (GridGalleryEditorView) findViewById(R.id.gallery_edit);
 

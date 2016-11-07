@@ -2,6 +2,7 @@ package com.hengye.share.module.test;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.View;
 
 import com.hengye.share.R;
 import com.hengye.share.module.util.encapsulation.fragment.StateFragment;
@@ -27,9 +28,8 @@ public class TestContentFragment extends StateFragment {
     }
 
     @Override
-    public void initContent(@Nullable Bundle savedInstanceState) {
-//        showContent();
-//        onShowLoading();
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         showEmpty();
     }
 

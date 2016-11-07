@@ -109,7 +109,7 @@ public class TestRecyclerViewFragment extends RecyclerFragment<String>{
 
         final PullToRefreshLayout pullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.pull_to_refresh);
 
-//        pullToRefreshLayout.setLoadEnable(true);
+        pullToRefreshLayout.setLoadEnable(false);
         pullToRefreshLayout.setOnLoadListener(new SwipeListener.OnLoadListener() {
             @Override
             public void onLoad() {
@@ -128,6 +128,17 @@ public class TestRecyclerViewFragment extends RecyclerFragment<String>{
             }
         });
 
+        pullToRefreshLayout.setOnRefreshListener(new SwipeListener.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        pullToRefreshLayout.setRefreshing(false);
+                    }
+                }, 10000);
+            }
+        });
 
     }
 

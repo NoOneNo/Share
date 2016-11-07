@@ -118,6 +118,8 @@ public class UrlFactory {
     public static final String WB_FOLLOW_CREATE = "friendships/create.json";
     //取消关注某用户
     public static final String WB_FOLLOW_DESTROY = "friendships/destroy.json";
+    //短链转长链
+    public static final String WB_EXPAND_URL = "short_url/expand.json";
 
     /**
      * 微博接口

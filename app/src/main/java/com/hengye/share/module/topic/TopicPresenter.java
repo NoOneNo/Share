@@ -1,13 +1,18 @@
 package com.hengye.share.module.topic;
 
 import android.content.res.Resources;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.URLSpan;
+import android.text.util.Linkify;
 
 import com.google.gson.reflect.TypeToken;
 import com.hengye.share.R;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.greenrobot.GroupList;
 import com.hengye.share.model.greenrobot.ShareJson;
+import com.hengye.share.model.sina.WBShortUrl;
+import com.hengye.share.model.sina.WBShortUrls;
 import com.hengye.share.model.sina.WBTopicComments;
 import com.hengye.share.model.sina.WBTopicIds;
 import com.hengye.share.model.sina.WBTopics;
@@ -16,20 +21,33 @@ import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.UrlBuilder;
+import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 import com.hengye.share.util.thirdparty.WBUtil;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
 
+import retrofit2.Call;
+import retrofit2.Response;
 import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Func1;
+
+import static com.hengye.share.util.DataUtil.WEB_SCHEME;
+import static com.hengye.share.util.DataUtil.WEB_URL;
 
 public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
 
@@ -47,6 +65,7 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
 
     public void loadWBTopic(String id, final boolean isRefresh, boolean isLoadId) {
         getTopics(id, isRefresh, isLoadId)
+                .flatMap(flatShortUrl())
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
                 .subscribe(getTopicsSubscriber(isRefresh));
@@ -56,8 +75,8 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
         switch (mTopicGroup.topicType) {
             case ALL:
                 return RetrofitManager
-                                .getWBService()
-                                .listTopicIds(getWBAllTopicParameter(id, true));
+                        .getWBService()
+                        .listTopicIds(getWBAllTopicParameter(id, true));
             case BILATERAL:
                 return RetrofitManager
                         .getWBService()
@@ -117,7 +136,7 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
                     return getWBTopicIds(id)
                             .flatMap(flatWBTopicId(id))
                             .flatMap(flatWBTopics());
-                }else{
+                } else {
                     return getWBTopics(id, isRefresh)
                             .flatMap(flatWBTopics());
                 }
@@ -250,9 +269,9 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
                 .flatMap(new Func1<ArrayList<Topic>, Observable<ArrayList<Topic>>>() {
                     @Override
                     public Observable<ArrayList<Topic>> call(ArrayList<Topic> topics) {
-                        if(CommonUtil.isEmpty(topics)){
+                        if (CommonUtil.isEmpty(topics)) {
                             return getTopics(firstPage, true, false);
-                        }else{
+                        } else {
                             return Observable
                                     .just(topics)
                                     .delay(400, TimeUnit.MILLISECONDS);
@@ -435,5 +454,125 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+
+    Func1<ArrayList<Topic>, Observable<ArrayList<Topic>>> mFlatShortUrl;
+    /**
+     * 把微博的短链转换成长链
+     */
+    public Func1<ArrayList<Topic>, Observable<ArrayList<Topic>>> flatShortUrl(){
+        if(mFlatShortUrl == null) {
+            mFlatShortUrl = new Func1<ArrayList<Topic>, Observable<ArrayList<Topic>>>() {
+                @Override
+                public Observable<ArrayList<Topic>> call(ArrayList<Topic> topics) {
+
+                    if (topics != null) {
+                        Map<Topic, Set<String>> contents = new HashMap<>();
+
+                        //获得所有微博
+                        Set<Topic> topicSet = Topic.getAllTopic(topics);
+                        if (topicSet != null) {
+
+                            //解析微博的url
+                            for (Topic topic : topicSet) {
+
+                                Matcher matcher = WEB_URL.matcher(topic.getContent());
+                                Set<String> set = contents.get(topic);
+                                while (matcher.find()){
+                                    if (set == null) {
+                                        set = new HashSet<>();
+                                        contents.put(topic, set);
+                                    }
+                                    set.add(matcher.group());
+                                }
+                            }
+
+                            if (!contents.isEmpty()) {
+                                Collection<Set<String>> contentValues = contents.values();
+
+                                List<String> shortUrls = new ArrayList<>();
+                                //把所有短链放到集合里
+                                for (Set<String> stringSet : contentValues) {
+                                    shortUrls.addAll(stringSet);
+                                }
+
+                                HashMap<String, String> shortExpandUrlMap = new HashMap<>();
+                                boolean isFinish = false;
+
+                                //因为每次解析短链数量限制，循环获取长链
+                                while (!isFinish) {
+
+                                    if (shortUrls.size() <= 20) {
+                                        isFinish = true;
+                                    }
+                                    int end = isFinish ? shortUrls.size() : 20;
+
+                                    final List<String> shortUrlPart = shortUrls.subList(0, end);
+                                    if (!isFinish) {
+                                        shortUrls = shortUrls.subList(end, shortUrls.size());
+                                    }
+
+
+                                    //因为url_short有多个，请求参数用map拼接的话不能重复，所以手动拼接字符串；
+                                    StringBuilder shortUrlRequest = new StringBuilder(UrlFactory.WB_EXPAND_URL);
+                                    shortUrlRequest.append("?access_token=");
+                                    shortUrlRequest.append(UserUtil.getToken());
+                                    for (String shortUrl : shortUrlPart) {
+                                        shortUrlRequest.append("&url_short=");
+                                        shortUrlRequest.append(shortUrl);
+                                    }
+                                    Call<WBShortUrls> expandUrlCall = RetrofitManager.getWBService().expandUrl(shortUrlRequest.toString());
+                                    try {
+                                        Response<WBShortUrls> response = expandUrlCall.execute();
+                                        WBShortUrls wbShortUrls = response.body();
+
+                                        if (wbShortUrls != null && wbShortUrls.getUrls() != null) {
+                                            List<WBShortUrl> urls = wbShortUrls.getUrls();
+
+                                            for (WBShortUrl wbShortUrl : urls) {
+                                                shortExpandUrlMap.put(wbShortUrl.getUrl_short(), wbShortUrl.getUrl_long());
+                                            }
+                                        }
+
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                if (!shortExpandUrlMap.isEmpty()) {
+                                    //把微博的短链换成长链
+                                    Set<Map.Entry<Topic, Set<String>>> entrySet = contents.entrySet();
+                                    for (Map.Entry<Topic, Set<String>> entry : entrySet) {
+                                        Topic topic = entry.getKey();
+
+                                        if (topic.getContent() == null) {
+                                            continue;
+                                        }
+
+                                        for (String shortUrl : entry.getValue()) {
+                                            String longUrl = shortExpandUrlMap.get(shortUrl);
+                                            if (longUrl != null) {
+                                                topic.setContent(topic.getContent().replace(shortUrl, longUrl));
+//                                                L.debug("shortUrl : {}", shortUrl);
+//                                                L.debug("convert to");
+//                                                L.debug("longUrl : {}", longUrl);
+                                            }
+                                        }
+
+                                        L.debug("convert shortUrl to longUrl, total count : {}", shortExpandUrlMap.size());
+                                    }
+
+                                }
+
+                            }
+                        }
+                    }
+
+                    return Observable.just(topics);
+                }
+            };
+        }
+        return mFlatShortUrl;
     }
 }

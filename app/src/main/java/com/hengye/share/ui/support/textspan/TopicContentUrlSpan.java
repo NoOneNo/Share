@@ -79,25 +79,11 @@ public class TopicContentUrlSpan extends CharacterStyle implements ParcelableSpa
         Context context = widget.getContext();
         // TODO: 16/9/20 需要优化
         //如果是网页已经替换成DataUtil.WEB_SCHEME
-        if (DataUtil.isHttpUrl(uri.getScheme())) {
-            String url = uri.toString();
-            if (WBUtil.isWBAccountIdLink(url)) {
-                Intent intent = new Intent(context, PersonalHomepageActivity.class);
-                intent.putExtra("id", WBUtil.getIdFromWBAccountLink(url));
-                context.startActivity(intent);
-            }
-//            else if (Utility.isWeiboAccountDomainLink(url)) {
-//                Intent intent = new Intent(context, UserInfoActivity.class);
-//                intent.putExtra("domain", Utility.getDomainFromWeiboAccountLink(url));
-//                context.startActivity(intent);
-//            } else {
-//                //otherwise some urls cant be opened, will be redirected to sina error page
-//                String openUrl = url;
-//                if (openUrl.endsWith("/")) {
-//                    openUrl = openUrl.substring(0, openUrl.lastIndexOf("/"));
-//                }
-//                WebBrowserSelector.openLink(context, Uri.parse(openUrl));
-//            }
+        String url = uri.toString();
+        if (WBUtil.isWBAccountIdLink(url)) {
+            Intent intent = new Intent(context, PersonalHomepageActivity.class);
+            intent.putExtra("id", WBUtil.getIdFromWBAccountLink(url));
+            context.startActivity(intent);
         } else {
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
@@ -120,11 +106,6 @@ public class TopicContentUrlSpan extends CharacterStyle implements ParcelableSpa
             }
 
             L.debug("long click value : {}", newValue);
-//            if (!TextUtils.isEmpty(newValue)) {
-//                Utility.vibrate(widget.getContext(), widget);
-//                LongClickLinkDialog dialog = new LongClickLinkDialog(data);
-//                Utility.forceShowDialog((FragmentActivity) widget.getContext(), dialog);
-//            }
         }
     }
 

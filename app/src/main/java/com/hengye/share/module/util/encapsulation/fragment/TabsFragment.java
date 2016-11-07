@@ -148,9 +148,9 @@ public abstract class TabsFragment extends ViewPagerFragment {
             if (fragment == null) {
                 fragment = newFragment(mItems.get(position));
                 mFragments.put(this.makeFragmentName(position), fragment);
-                L.debug("position is null :{}", position);
+//                L.debug("position is null :{}", position);
             }
-            L.debug("position is not null : {}", position);
+//            L.debug("position is not null : {}", position);
 
             return fragment;
         }

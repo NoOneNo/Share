@@ -17,6 +17,7 @@ import com.hengye.share.module.topic.TopicPresenter.TopicGroup;
 import com.hengye.share.module.topic.TopicPresenter.TopicType;
 import com.hengye.share.module.util.encapsulation.fragment.RecyclerRefreshFragment;
 import com.hengye.share.util.SPUtil;
+import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
 
 import java.util.ArrayList;
@@ -46,13 +47,13 @@ public class GroupListFragment extends RecyclerRefreshFragment<TopicGroup>{
         mMaxHeight = ViewUtil.dp2px(340f);
         mHalfScreenWidth = ViewUtil.getScreenWidth(getActivity()) / 2;
 
-        mLastSelectPosition = SPUtil.getInt("GroupListSelectPosition", 0);
+        mLastSelectPosition = SPUtil.getInt("GroupListSelectPosition@" + UserUtil.getUid(), 0);
 
     }
 
     @Override
     public void onPause() {
-        SPUtil.putInt("GroupListSelectPosition", mAdapter.getSelectPosition());
+        SPUtil.putInt("GroupListSelectPosition@" + UserUtil.getUid(), mAdapter.getSelectPosition());
         super.onPause();
     }
 
@@ -74,7 +75,7 @@ public class GroupListFragment extends RecyclerRefreshFragment<TopicGroup>{
         }
     }
 
-    public void refresh(){
+    public void load(boolean isRefresh){
         List<TopicGroup> groups = TopicGroup.getAllTopicGroups();
         TopicGroup tg = new TopicGroup(TopicType.NONE);
         groups.add(tg);
@@ -82,9 +83,11 @@ public class GroupListFragment extends RecyclerRefreshFragment<TopicGroup>{
         mAdapter.refresh(groups);
         adjustSize();
 
-        //默认选中第一个
-        onItemClick(null, mLastSelectPosition);
-        mLastSelectPosition = 0;//默认选中上一次位置只有在重新打开的时候选中一次,下次刷新时不再默认选中
+        if(isRefresh){
+            mLastSelectPosition = 0;
+        }
+        mAdapter.setSelectPosition(mLastSelectPosition);
+        selectGroupByPosition(mLastSelectPosition);
     }
 
     @Override
@@ -93,10 +96,16 @@ public class GroupListFragment extends RecyclerRefreshFragment<TopicGroup>{
 
         boolean isSelected = true;
         if(position != mAdapter.getLastItemPosition()){
-            //当为0时,选择分组管理,不设置选中效果
+            //当为最后的位置时,选择分组管理,不设置选中效果
             isSelected = mAdapter.setSelectPosition(position);
         }
-        if (isSelected && getActivity() instanceof OnGroupSelectedCallback) {
+        if (isSelected){
+            selectGroupByPosition(position);
+        }
+    }
+
+    protected void selectGroupByPosition(int position){
+        if (getActivity() instanceof OnGroupSelectedCallback) {
             ((OnGroupSelectedCallback) getActivity()).onGroupSelected(position, mAdapter.getItem(position));
         }
     }

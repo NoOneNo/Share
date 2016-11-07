@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
+import android.util.Patterns;
 
 import com.hengye.share.BuildConfig;
 import com.hengye.share.R;
@@ -39,8 +40,9 @@ public class DataUtil {
         return getCounter(count, "");
     }
 
-    public static final Pattern WEB_URL = Pattern
-            .compile("http://[a-zA-Z0-9+&@#/%?=~_\\-|!:,\\.;]*[a-zA-Z0-9+&@#/%=~_|]");
+//    public static final Pattern WEB_URL = Pattern
+//            .compile("http://[a-zA-Z0-9+&@#/%?=~_\\-|!:,\\.;]*[a-zA-Z0-9+&@#/%=~_|]");
+    public static final Pattern WEB_URL = Patterns.WEB_URL;
     public static final Pattern TOPIC_URL = Pattern
             .compile("#[\\p{Print}\\p{InCJKUnifiedIdeographs}&&[^#]]+#");
     public static final Pattern MENTION_URL = Pattern

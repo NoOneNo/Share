@@ -70,7 +70,6 @@ public abstract class StateFragment extends BaseFragment
         }
         initStateLayoutManager(viewGroup);
         showContent();
-        initContent(savedInstanceState);
     }
 
     @Override
@@ -141,8 +140,6 @@ public abstract class StateFragment extends BaseFragment
     }
 
     public void onRetry(){}
-
-    protected void initContent(@Nullable Bundle savedInstanceState){}
 
     public View getLoading() {
         return mStateLayoutManager.getStateView(STATE_LOADING);

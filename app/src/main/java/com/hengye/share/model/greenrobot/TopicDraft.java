@@ -11,6 +11,7 @@ import org.greenrobot.greendao.DaoException;
 import com.hengye.share.model.Topic;
 import com.hengye.share.module.topic.TopicPresenter;
 import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.GsonUtil;
 import com.hengye.share.util.ResUtil;
 import com.hengye.share.R;
 
@@ -313,7 +314,7 @@ public class TopicDraft implements java.io.Serializable {
 
     public Topic getTargetTopic() {
         if (getTargetTopicJson() != null && targetTopic == null) {
-            targetTopic = Topic.fromJson(getTargetTopicJson());
+            targetTopic = GsonUtil.fromJson(getTargetTopicJson(), Topic.class);
         }
         return targetTopic;
     }

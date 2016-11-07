@@ -34,11 +34,9 @@ public abstract class RecyclerFragment<T> extends ListDataFragment<T>
     }
 
     @Override
-    protected void initContent(@Nullable Bundle savedInstanceState) {
-        super.initContent(savedInstanceState);
-
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         mRecyclerView = (RecyclerView) findViewById(getRecyclerViewId());
-
         setUpRecycler(mRecyclerView);
     }
 

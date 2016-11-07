@@ -1,6 +1,7 @@
 package com.hengye.share.util.retrofit.weibo;
 
 import com.hengye.share.model.sina.WBGroups;
+import com.hengye.share.model.sina.WBShortUrls;
 import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.model.sina.WBTopicComment;
 import com.hengye.share.model.sina.WBTopicComments;
@@ -17,6 +18,7 @@ import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
@@ -26,6 +28,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.QueryMap;
+import retrofit2.http.Url;
 import rx.Observable;
 
 public interface WBService {
@@ -186,4 +189,14 @@ public interface WBService {
 
     @GET(UrlFactory.WB_USER_FOLLOWERS)
     Observable<WBUserInfos> listFollowers(@QueryMap Map<String, String> options);
+
+//    @GET(UrlFactory.WB_EXPAND_URL)
+//    Call<WBShortUrls> expandUrl(@QueryMap Map<String, String> options);
+
+    /**
+     * @param url 因为url参数含有多个同样的shortUrl键值，如果用@QueryMap就不能出现重复的键值了
+     * @return
+     */
+    @GET
+    Call<WBShortUrls> expandUrl(@Url String url);
 }

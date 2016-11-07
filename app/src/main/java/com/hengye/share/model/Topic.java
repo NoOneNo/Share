@@ -15,6 +15,7 @@ import com.hengye.share.util.GsonUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class Topic extends ParentInherit implements TopicId, Serializable{
@@ -138,8 +139,23 @@ public class Topic extends ParentInherit implements TopicId, Serializable{
         return GsonUtil.fromJson(topic.getParent().getJson(), WBTopic.class);
     }
 
-    public static Topic fromJson(String json){
-        return GsonUtil.fromJson(json, Topic.class);
+    /**
+     * @param topics
+     * @return 返回包括当前微博和转发的微博的集合
+     */
+    public static HashSet<Topic> getAllTopic(List<Topic> topics){
+        if(CommonUtil.isEmpty(topics)){
+            return null;
+        }
+
+        HashSet<Topic> set = new HashSet<>();
+        for(Topic topic : topics){
+            set.add(topic);
+            if(topic.getRetweetedTopic() != null){
+                set.add(topic.getRetweetedTopic());
+            }
+        }
+        return set;
     }
 
     public String toJson(){
@@ -249,12 +265,10 @@ public class Topic extends ParentInherit implements TopicId, Serializable{
     }
 
     public SpannableString getUrlSpannableString(boolean isRetweeted) {
-        if (!TextUtils.isEmpty(urlSpannableString)) {
-            return urlSpannableString;
-        } else {
+        if (urlSpannableString == null) {
             DataUtil.addTopicContentHighLightLinks(this, isRetweeted);
-            return urlSpannableString;
         }
+        return urlSpannableString;
     }
 
     public void setUrlSpannableString(SpannableString urlSpannableString) {

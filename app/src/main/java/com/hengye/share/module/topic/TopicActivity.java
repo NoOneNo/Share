@@ -233,7 +233,8 @@ public class TopicActivity extends BaseActivity
 
         mMaterialSheetFab.showFab();
         mGroupsFragment = (GroupListFragment) getSupportFragmentManager().findFragmentById(R.id.group_list_fragment);
-        mGroupsFragment.refresh();
+        //刷新当前选中的fragment
+        mGroupsFragment.load(false);
     }
 
     public void onGroupSelected(int position, TopicPresenter.TopicGroup topicGroup) {
@@ -448,18 +449,13 @@ public class TopicActivity extends BaseActivity
         if (requestCode == AccountManageActivity.ACCOUNT_CHANGE && resultCode == Activity.RESULT_OK) {
             updateView();
         } else if (requestCode == GroupManageActivity.GROUP_UPDATE && resultCode == Activity.RESULT_OK) {
-            mGroupsFragment.refresh();
+            mGroupsFragment.load(true);
         }
     }
 
     private void updateView() {
         loadSuccess(UserUtil.getCurrentUser());
-
-        if (mCurrentTopicFragment != null) {
-            mCurrentTopicFragment.refresh();
-        }
-
-        mGroupsFragment.refresh();
+        mGroupsFragment.load(true);
     }
 
 

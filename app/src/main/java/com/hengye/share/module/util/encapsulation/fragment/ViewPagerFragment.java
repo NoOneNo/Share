@@ -21,7 +21,7 @@ public abstract class ViewPagerFragment extends BaseFragment implements ViewPage
     @Override
     public void onViewCreated(View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-            setUpViewPager(savedInstanceState);
+        setUpViewPager(savedInstanceState);
     }
 
     protected
@@ -42,7 +42,7 @@ public abstract class ViewPagerFragment extends BaseFragment implements ViewPage
         return mViewPager;
     }
 
-    public PagerAdapter getAdapter(){
+    public PagerAdapter getAdapter() {
         return mViewPager.getAdapter();
     }
 
@@ -63,18 +63,18 @@ public abstract class ViewPagerFragment extends BaseFragment implements ViewPage
 
         mViewPager.setOffscreenPageLimit(getOffscreenPageLimit());
 
-        if(getAdapter() != null && mCurrentPosition >= getAdapter().getCount()){
+        if (getAdapter() != null && mCurrentPosition >= getAdapter().getCount()) {
             mCurrentPosition = 0;
         }
         mViewPager.setCurrentItem(mCurrentPosition);
         mViewPager.addOnPageChangeListener(this);
     }
 
-    protected int getOffscreenPageLimit(){
+    protected int getOffscreenPageLimit() {
         return 0;
     }
 
-    protected int getDefaultSelectPosition(){
+    protected int getDefaultSelectPosition() {
         return 0;
     }
 
@@ -83,7 +83,7 @@ public abstract class ViewPagerFragment extends BaseFragment implements ViewPage
     }
 
     protected void updateViewPager() {
-        if(getAdapter() != null){
+        if (getAdapter() != null) {
             getAdapter().notifyDataSetChanged();
         }
     }

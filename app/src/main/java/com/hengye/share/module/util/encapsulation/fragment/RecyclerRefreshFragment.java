@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.hengye.share.R;
 import com.hengye.share.module.util.encapsulation.base.PagingConfig;
@@ -32,6 +33,27 @@ public abstract class RecyclerRefreshFragment<T> extends RecyclerFragment<T>{
 
     public PullToRefreshLayout getPullToRefresh() {
         return mPullToRefresh;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mPullToRefresh = (PullToRefreshLayout) findViewById(getPullToRefreshId());
+        mPullToRefresh.setOnRefreshListener(new SwipeListener.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                RecyclerRefreshFragment.this.onRefresh();
+            }
+        });
+        mPullToRefresh.setOnLoadListener(new SwipeListener.OnLoadListener() {
+            @Override
+            public void onLoad() {
+                RecyclerRefreshFragment.this.onLoad();
+            }
+        });
+
+        mPullToRefresh.ensureTarget();
     }
 
     @Override
@@ -85,32 +107,6 @@ public abstract class RecyclerRefreshFragment<T> extends RecyclerFragment<T>{
         }
     }
 
-    @Override
-    protected void initContent(@Nullable Bundle savedInstanceState) {
-        super.initContent(savedInstanceState);
-
-        mPullToRefresh = (PullToRefreshLayout) findViewById(getPullToRefreshId());
-        mPullToRefresh.setOnRefreshListener(new SwipeListener.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                RecyclerRefreshFragment.this.onRefresh();
-            }
-        });
-        mPullToRefresh.setOnLoadListener(new SwipeListener.OnLoadListener() {
-            @Override
-            public void onLoad() {
-                RecyclerRefreshFragment.this.onLoad();
-            }
-        });
-
-        mPullToRefresh.ensureTarget();
-    }
-
-    @Override
-    public void showContent() {
-        super.showContent();
-    }
-
     PullToRefreshLayout mPullToRefresh;
 
     @Override
@@ -137,7 +133,7 @@ public abstract class RecyclerRefreshFragment<T> extends RecyclerFragment<T>{
      * adapter的内容是否都已经显示完；
      * @return
      */
-    public boolean isLEChildCount(){
+    protected boolean isLEChildCount(){
         if(getRecyclerView().getLayoutManager() != null){
             RecyclerView.LayoutManager layoutManager = getRecyclerView().getLayoutManager();
 
