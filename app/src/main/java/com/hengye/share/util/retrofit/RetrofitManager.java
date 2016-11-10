@@ -1,5 +1,6 @@
 package com.hengye.share.util.retrofit;
 
+import com.hengye.share.util.L;
 import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.retrofit.weibo.WBGsonConverterFactory;
 import com.hengye.share.util.retrofit.weibo.WBNetworkInterceptor;
@@ -24,7 +25,7 @@ public class RetrofitManager {
     public static OkHttpClient getWBOkHttpClient(){
         if(mOkHttpClient == null) {
 //            CustomLoggingInterceptor logging = new CustomLoggingInterceptor();
-            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new OkHttpLog());
             logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
             mOkHttpClient = new OkHttpClient.Builder()
                     .addInterceptor(logging)
@@ -59,6 +60,14 @@ public class RetrofitManager {
         WBService wbService = getWBRetrofit().create(WBService.class);
         WBServiceProxyHandler mProxyHandler = new WBServiceProxyHandler(wbService);
         return (WBService) Proxy.newProxyInstance(WBService.class.getClassLoader(), new Class<?>[]{WBService.class}, mProxyHandler);
+    }
+
+    public static class OkHttpLog implements HttpLoggingInterceptor.Logger{
+
+        @Override
+        public void log(String message) {
+            L.debug(message);
+        }
     }
 
 }

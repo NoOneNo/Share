@@ -3,6 +3,7 @@ package com.hengye.share.model;
 import android.text.SpannableString;
 import android.text.TextUtils;
 
+import com.hengye.share.model.sina.WBShortUrl;
 import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.model.sina.WBTopicComment;
 import com.hengye.share.model.sina.WBTopicComments;
@@ -13,9 +14,10 @@ import com.hengye.share.util.GsonUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-public class TopicComment implements TopicId, Serializable{
+public class TopicComment implements TopicId, TopicShortUrl, Serializable{
 
     private static final long serialVersionUID = -4250789290948278492L;
 
@@ -29,6 +31,8 @@ public class TopicComment implements TopicId, Serializable{
     private Topic topic;//评论或转发的主题
     private List<String> imageUrls;//缩略图
     private List<String> imageLargeUrls;//原图
+
+    private HashMap<String, TopicUrl> urlMap;
 
     private transient SpannableString urlSpannableString;
 
@@ -224,5 +228,14 @@ public class TopicComment implements TopicId, Serializable{
 
     public void setImageLargeUrls(List<String> imageLargeUrls) {
         this.imageLargeUrls = imageLargeUrls;
+    }
+
+    @Override
+    public HashMap<String, TopicUrl> getUrlMap() {
+        return urlMap;
+    }
+
+    public void setUrlMap(HashMap<String, TopicUrl> urlMap) {
+        this.urlMap = urlMap;
     }
 }

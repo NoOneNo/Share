@@ -93,6 +93,7 @@
     <string name="title_activity_group_manage">分组管理</string>
     <string name="title_activity_account_manage">账号管理</string>
     <string name="title_activity_topic_theme">相关话题</string>
+    <string name="title_activity_favorite">我收藏的微博</string>
     <string name="title_activity_web_view">浏览</string>
     <string name="title_activity_follower_list">粉丝列表</string>
     <string name="title_activity_attention_list">关注列表</string>

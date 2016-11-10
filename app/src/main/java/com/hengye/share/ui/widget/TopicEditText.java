@@ -67,7 +67,7 @@ public class TopicEditText extends AppCompatEditText {
 
         //if user cancel a selection of mention string, reset the state of 'mIsSelected'
         Range closestRange = getRangeOfClosestMentionString(selStart, selEnd);
-        if (closestRange != null && closestRange.mEnd == selEnd) {
+        if (closestRange != null && closestRange.end == selEnd) {
             mIsSelected = false;
         }
 
@@ -81,11 +81,11 @@ public class TopicEditText extends AppCompatEditText {
         if (selStart == selEnd) {
             setSelection(nearbyRange.getAnchorPosition(selStart));
         } else {
-            if (selEnd < nearbyRange.mEnd) {
-                setSelection(selStart, nearbyRange.mEnd);
+            if (selEnd < nearbyRange.end) {
+                setSelection(selStart, nearbyRange.end);
             }
-            if (selStart > nearbyRange.mStart) {
-                setSelection(nearbyRange.mStart, selEnd);
+            if (selStart > nearbyRange.start) {
+                setSelection(nearbyRange.start, selEnd);
             }
         }
     }
@@ -153,14 +153,14 @@ public class TopicEditText extends AppCompatEditText {
                     return super.sendKeyEvent(event);
                 }
                 //if mention string has been selected or the cursor is at the beginning of mention string, just use default action(delete)
-                if (mIsSelected || selectionStart == closestRange.mStart) {
+                if (mIsSelected || selectionStart == closestRange.start) {
                     mIsSelected = false;
                     return super.sendKeyEvent(event);
                 } else {
                     //select the mention string
                     mIsSelected = true;
                     mLastSelectedRange = closestRange;
-                    setSelection(closestRange.mEnd, closestRange.mStart);
+                    setSelection(closestRange.end, closestRange.start);
                 }
                 return true;
             }
@@ -181,29 +181,29 @@ public class TopicEditText extends AppCompatEditText {
     private class Range extends TopicContentUrlSpan{
 
         public Range(TopicContentUrlSpan ccs) {
-            this(ccs.mStart, ccs.mEnd, ccs.mURL);
+            this(ccs.start, ccs.end, ccs.url);
         }
 
         public Range(int start, int end, String url) {
             super(start, end, url);
         }
         public boolean isWrappedBy(int start, int end) {
-            return (start > mStart && start < mEnd) || (end > mStart && end < mEnd);
+            return (start > this.start && start < this.end) || (end > this.start && end < this.end);
         }
 
         public boolean contains(int start, int end) {
-            return mStart <= start && mEnd >= end;
+            return this.start <= start && this.end >= end;
         }
 
         public boolean isEqual(int start, int end) {
-            return (mStart == start && mEnd == end) || (mStart == end && mEnd == start);
+            return (this.start == start && this.end == end) || (this.start == end && this.end == start);
         }
 
         public int getAnchorPosition(int value) {
-            if ((value - mStart) - (mEnd - value) >= 0) {
-                return mEnd;
+            if ((value - start) - (end - value) >= 0) {
+                return end;
             } else {
-                return mStart;
+                return start;
             }
         }
     }

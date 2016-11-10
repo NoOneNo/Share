@@ -19,6 +19,10 @@ import com.hengye.share.module.base.BaseActivity;
  */
 public class ResUtil extends ApplicationUtil {
 
+    public static Resources getResources(){
+        return getContext().getResources();
+    }
+
     @NonNull
     public static String getString(@StringRes int id){
         return getResources().getString(id);

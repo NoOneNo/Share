@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"></FrameLayout>
+<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:id="@id/media_player_surface_layout"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="fill_parent"-->
+    <!--android:background="@color/black">-->
+
+    <!--<SurfaceView-->
+        <!--android:id="@id/media_player_surface"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="fill_parent"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:background="@null"-->
+        <!--android:layerType="none" />-->
+
+    <!--<ImageView-->
+        <!--android:id="@id/media_player_pauseorplay"-->
+        <!--android:layout_width="48.0dip"-->
+        <!--android:layout_height="48.0dip"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:scaleType="center"-->
+        <!--android:src="@drawable/video_play_pause_selector" />-->
+
+    <!--<LinearLayout-->
+        <!--android:id="@id/media_player_control_layout"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="50.0dip"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:background="@color/pers75_black"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:paddingLeft="0.0dip"-->
+        <!--android:paddingRight="0.0dip"-->
+        <!--android:visibility="visible">-->
+
+        <!--<TextView-->
+            <!--android:id="@id/media_player_played_time"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingLeft="16.0dip"-->
+            <!--android:paddingRight="0.0dip"-->
+            <!--android:text="0:00:00"-->
+            <!--android:textColor="#ff999999" />-->
+
+        <!--<SeekBar-->
+            <!--android:id="@id/media_player_seekbar"-->
+            <!--android:layout_width="0.0dip"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:layout_weight="10000.0"-->
+            <!--android:background="@null"-->
+            <!--android:max="@integer/progress_length1000"-->
+            <!--android:maxHeight="4.0dip"-->
+            <!--android:minHeight="4.0dip"-->
+            <!--android:paddingBottom="8.0dip"-->
+            <!--android:paddingTop="8.0dip"-->
+            <!--android:progressDrawable="@drawable/jc_seek_progress"-->
+            <!--android:thumb="@drawable/jc_seek_thumb"-->
+            <!--android:thumbOffset="7.0dip" />-->
+
+        <!--<TextView-->
+            <!--android:id="@id/media_player_remained_time"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingLeft="0.0dip"-->
+            <!--android:paddingRight="0.0dip"-->
+            <!--android:text="0:00:00"-->
+            <!--android:textColor="#ff999999" />-->
+
+        <!--<ImageView-->
+            <!--android:id="@id/media_player_full_screen"-->
+            <!--android:layout_width="48.0dip"-->
+            <!--android:layout_height="48.0dip"-->
+            <!--android:scaleType="center"-->
+            <!--android:src="@drawable/discover_video_fullscr" />-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
+        <!--android:id="@id/media_end_control_layout"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="50.0dip"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:background="@color/pers75_black"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:paddingLeft="0.0dip"-->
+        <!--android:paddingRight="0.0dip"-->
+        <!--android:visibility="gone">-->
+
+        <!--<TextView-->
+            <!--android:id="@id/media_restart"-->
+            <!--android:layout_width="0.0dip"-->
+            <!--android:layout_height="fill_parent"-->
+            <!--android:layout_weight="1.0"-->
+            <!--android:gravity="center"-->
+            <!--android:text="重播"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:textSize="15.0sp" />-->
+
+        <!--<TextView-->
+            <!--android:id="@id/media_repeat"-->
+            <!--android:layout_width="0.0dip"-->
+            <!--android:layout_height="fill_parent"-->
+            <!--android:layout_weight="1.0"-->
+            <!--android:gravity="center"-->
+            <!--android:text="转发"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:textSize="15.0sp" />-->
+
+        <!--<TextView-->
+            <!--android:id="@id/media_weibo"-->
+            <!--android:layout_width="0.0dip"-->
+            <!--android:layout_height="fill_parent"-->
+            <!--android:layout_weight="1.0"-->
+            <!--android:gravity="center"-->
+            <!--android:text="微博"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:textSize="15.0sp" />-->
+
+        <!--<TextView-->
+            <!--android:id="@id/media_close"-->
+            <!--android:layout_width="0.0dip"-->
+            <!--android:layout_height="fill_parent"-->
+            <!--android:layout_weight="1.0"-->
+            <!--android:gravity="center"-->
+            <!--android:text="关闭"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:textSize="15.0sp" />-->
+    <!--</LinearLayout>-->
+
+    <!--<ImageView-->
+        <!--android:id="@id/media_player_close"-->
+        <!--android:layout_width="48.0dip"-->
+        <!--android:layout_height="48.0dip"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:scaleType="center"-->
+        <!--android:src="@drawable/video_window_icon_close"-->
+        <!--android:visibility="visible" />-->
+
+    <!--<View-->
+        <!--android:id="@id/sb"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="6.0dip"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:background="@color/transparent"-->
+        <!--android:visibility="invisible" />-->
+
+    <!--<RelativeLayout-->
+        <!--android:layout_width="70.0dip"-->
+        <!--android:layout_height="70.0dip"-->
+        <!--android:layout_above="@id/sb"-->
+        <!--android:layout_alignParentLeft="true">-->
+
+        <!--<ImageView-->
+            <!--android:id="@id/media_player_image_cover"-->
+            <!--android:layout_width="70.0dip"-->
+            <!--android:layout_height="70.0dip"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:background="@drawable/video_pic"-->
+            <!--android:visibility="visible" />-->
+
+        <!--<ProgressBar-->
+            <!--android:id="@id/media_player_progressbar"-->
+            <!--style="?android:attr/progressBarStyleSmall"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:indeterminateDrawable="@drawable/video_rotate_drawable" />-->
+    <!--</RelativeLayout>-->
+<!--</RelativeLayout>-->

@@ -1,6 +1,8 @@
 package com.hengye.share.util;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -13,9 +15,12 @@ import com.hengye.share.BuildConfig;
 import com.hengye.share.R;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
+import com.hengye.share.model.TopicId;
+import com.hengye.share.model.TopicShortUrl;
+import com.hengye.share.model.TopicUrl;
 import com.hengye.share.ui.support.textspan.CustomContentSpan;
-import com.hengye.share.ui.widget.emoticon.Emoticon;
 import com.hengye.share.ui.support.textspan.TopicContentUrlSpan;
+import com.hengye.share.ui.widget.emoticon.Emoticon;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -40,9 +45,9 @@ public class DataUtil {
         return getCounter(count, "");
     }
 
-//    public static final Pattern WEB_URL = Pattern
-//            .compile("http://[a-zA-Z0-9+&@#/%?=~_\\-|!:,\\.;]*[a-zA-Z0-9+&@#/%=~_|]");
-    public static final Pattern WEB_URL = Patterns.WEB_URL;
+    public static final Pattern WEB_URL = Pattern
+            .compile("(http|https|Http|Https|rtsp|Rtsp)://[a-zA-Z0-9+&@#/%?=~_\\-|!:,\\.;]*[a-zA-Z0-9+&@#/%=~_|]");
+    public static final Pattern WEB_URL2 = Patterns.WEB_URL;
     public static final Pattern TOPIC_URL = Pattern
             .compile("#[\\p{Print}\\p{InCJKUnifiedIdeographs}&&[^#]]+#");
     public static final Pattern MENTION_URL = Pattern
@@ -51,9 +56,9 @@ public class DataUtil {
 
     public static final String WEB_URL_REPLACE = "➢网页链接";
 
-    public static final String WEB_SCHEME = BuildConfig.APPLICATION_ID + ".http://";
-    public static final String TOPIC_SCHEME = BuildConfig.APPLICATION_ID + ".topic://";
-    public static final String MENTION_SCHEME = BuildConfig.APPLICATION_ID + ".mention://";
+    public static final String WEB_SCHEME = BuildConfig.APPLICATION_ID + ".http:";
+    public static final String TOPIC_SCHEME = BuildConfig.APPLICATION_ID + ".topic:";
+    public static final String MENTION_SCHEME = BuildConfig.APPLICATION_ID + ".mention:";
 
     public static boolean isTopic(String url) {
         if (!TextUtils.isEmpty(url)) {
@@ -93,19 +98,19 @@ public class DataUtil {
 //    }
 
     public static void addTopicContentHighLightLinks(TopicComment topicComment) {
-        topicComment.setUrlSpannableString(convertNormalStringToSpannableString(topicComment.getContent()));
+        topicComment.setUrlSpannableString(convertNormalStringToSpannableString(topicComment, topicComment.getContent()));
     }
 
     public static void addTopicContentHighLightLinks(Topic topic, boolean isRetweeted) {
         String str = isRetweeted ? addRetweetedNamePrefix(topic) : topic.getContent();
-        topic.setUrlSpannableString(convertNormalStringToSpannableString(str));
+        topic.setUrlSpannableString(convertNormalStringToSpannableString(topic, str));
     }
 
-    public static SpannableString convertNormalStringToSpannableString(CharSequence source) {
-        return convertNormalStringToSpannableString(source, true);
+    public static <T extends TopicShortUrl & TopicId> SpannableString convertNormalStringToSpannableString(@Nullable T topic, CharSequence source) {
+        return convertNormalStringToSpannableString(topic, source, true);
     }
 
-    public static SpannableString convertNormalStringToSpannableString(CharSequence source, boolean isReplaceWebUrl) {
+    public static <T extends TopicShortUrl & TopicId> SpannableString convertNormalStringToSpannableString(@Nullable T topic, CharSequence source, boolean isReplaceWebUrl) {
         //hack to fix android imagespan bug,see http://stackoverflow.com/questions/3253148/imagespan-is-cut-off-incorrectly-aligned
         //if string only contains emotion tags,add a empty char to the end
         String txt = source.toString();
@@ -118,11 +123,11 @@ public class DataUtil {
 
         SpannableString value = SpannableString.valueOf(hackTxt);
 
-//        Linkify.addLinks(value, Linkify.WEB_URLS);
         Linkify.addLinks(value, WEB_URL, WEB_SCHEME);
+//        Linkify.addLinks(value, WEB_URL, null);
 
         if (isReplaceWebUrl) {
-            value = replaceWebUrl(value);
+            value = replaceWebUrl(topic, value);
         }
 
         //添加表情
@@ -142,14 +147,16 @@ public class DataUtil {
 
             if (start >= 0 && end >= 0 && value.length() >= end) {
                 value.removeSpan(urlSpan);
-                value.setSpan(new TopicContentUrlSpan(start, end, urlSpan.getURL()), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                TopicContentUrlSpan topicContentUrlSpan = new TopicContentUrlSpan(start, end, urlSpan.getURL());
+                setTopicContentUrl(topic, topicContentUrlSpan);
+                value.setSpan(topicContentUrlSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
 
         return value;
     }
 
-    public static SpannableString replaceWebUrl(SpannableString value) {
+    public static  <T extends TopicShortUrl & TopicId> SpannableString replaceWebUrl(T topic, SpannableString value) {
         URLSpan[] urlSpans = value.getSpans(0, value.length(), URLSpan.class);
         if (urlSpans != null && urlSpans.length != 0) {
             List<CustomContentSpan> sps = new ArrayList<>();
@@ -183,17 +190,53 @@ public class DataUtil {
 
                     CharSequence cs2 = value.subSequence(sp.end, value.length());
 
-                    value = SpannableString.valueOf(cs1.toString() + WEB_URL_REPLACE + cs2.toString());
-                    totalIndentLength = totalIndentLength + (sp.end - sp.start) - WEB_URL_REPLACE.length();
-                    sp.end = sp.start + WEB_URL_REPLACE.length();
+                    String replaceUrlContent = getReplaceUrlContent(topic, Uri.parse(sp.content).getSchemeSpecificPart());
+                    value = SpannableString.valueOf(cs1.toString() + replaceUrlContent + cs2.toString());
+                    totalIndentLength = totalIndentLength + (sp.end - sp.start) - replaceUrlContent.length();
+                    sp.end = sp.start + replaceUrlContent.length();
                 }
 
                 for (CustomContentSpan sp : sps) {
-                    value.setSpan(new TopicContentUrlSpan(sp), sp.start, sp.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    TopicContentUrlSpan topicContentUrlSpan = new TopicContentUrlSpan(sp);
+                    setTopicContentUrl(topic, topicContentUrlSpan);
+                    value.setSpan(topicContentUrlSpan, sp.start, sp.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }
         }
         return value;
+    }
+
+    private static void setTopicContentUrl(TopicShortUrl topicShortUrl, TopicContentUrlSpan topicContentUrlSpan){
+        if(topicShortUrl != null && topicShortUrl.getUrlMap() != null){
+            String url = topicContentUrlSpan.getPath();
+//            if(url != null && url.startsWith(WEB_SCHEME) && url.length() > WEB_SCHEME.length()){
+//                url = url.substring(WEB_SCHEME.length());
+//            }
+            TopicUrl topicUrl = topicShortUrl.getUrlMap().get(url);
+            topicContentUrlSpan.setTopicUrl(topicUrl);
+            if(topicUrl != null) {
+                L.debug("wbShortUrl type : {}, url : {}", topicUrl.getType(), url);
+            }
+        }
+    }
+
+    private static String getReplaceUrlContent(TopicShortUrl topicShortUrl, String url){
+        if(topicShortUrl != null && topicShortUrl.getUrlMap() != null){
+            TopicUrl topicUrl = topicShortUrl.getUrlMap().get(url);
+            if(topicUrl != null){
+                if(topicUrl.getDisplayName() != null){
+                    return "➢" + topicUrl.getDisplayName();
+                }else{
+                    switch (topicUrl.getType()){
+                        case TopicUrl.VIDEO:
+                            return "➢视频";
+                        case TopicUrl.MUSIC:
+                            return "➢音乐";
+                    }
+                }
+            }
+        }
+        return WEB_URL_REPLACE;
     }
 
     public static String addRetweetedNamePrefix(Topic topic) {

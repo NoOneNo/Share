@@ -1,12 +1,26 @@
 package com.hengye.share.model.sina;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by yuhy on 2016/11/4.
  */
 
-public class WBShortUrl {
+public class WBShortUrl implements Serializable{
+
+//    type	int	链接的类型，0：普通网页、1：视频、2：音乐、3：活动、5、投票 没用。。
+
+//    public static final int COMMON = 0;
+//    public static final int VIDEO = 1;
+//    public static final int MUSIC = 2;
+//    public static final int ACTIVITY = 3;
+//    public static final int VOTE = 5;
+
+    public static final String TYPE_WEBPAGE = "webpage";
+    public static final String TYPE_VIDEO = "video";
+
+    private static final long serialVersionUID = 9001551206789189699L;
 
     /**
      * result : true
@@ -138,7 +152,7 @@ public class WBShortUrl {
          * url : http://tech.sina.com.cn/t/2016-11-03/doc-ifxxnety7248984.shtml
          */
 
-        private ObjectBean object;
+        private Object object;
         private long uuid;
         private String show_status;
         private String object_domain_id;
@@ -207,11 +221,11 @@ public class WBShortUrl {
             this.act_status = act_status;
         }
 
-        public ObjectBean getObject() {
+        public Object getObject() {
             return object;
         }
 
-        public void setObject(ObjectBean object) {
+        public void setObject(Object object) {
             this.object = object;
         }
 
@@ -239,150 +253,5 @@ public class WBShortUrl {
             this.object_domain_id = object_domain_id;
         }
 
-        public static class ObjectBean {
-            private String summary;
-            private String id;
-            private String object_type;
-            private String display_name;
-            /**
-             * height : 423
-             * width : 630
-             * url : http://n.sinaimg.cn/tech/transform/20161103/6dju-fxxnety7248684.jpg
-             */
-
-            private ImageBean image;
-            private int url_oid_bind;
-            private String target_url;
-            /**
-             * biz_id :
-             * containerid :
-             */
-
-            private BizBean biz;
-            private String url;
-
-            public String getSummary() {
-                return summary;
-            }
-
-            public void setSummary(String summary) {
-                this.summary = summary;
-            }
-
-            public String getId() {
-                return id;
-            }
-
-            public void setId(String id) {
-                this.id = id;
-            }
-
-            public String getObject_type() {
-                return object_type;
-            }
-
-            public void setObject_type(String object_type) {
-                this.object_type = object_type;
-            }
-
-            public String getDisplay_name() {
-                return display_name;
-            }
-
-            public void setDisplay_name(String display_name) {
-                this.display_name = display_name;
-            }
-
-            public ImageBean getImage() {
-                return image;
-            }
-
-            public void setImage(ImageBean image) {
-                this.image = image;
-            }
-
-            public int getUrl_oid_bind() {
-                return url_oid_bind;
-            }
-
-            public void setUrl_oid_bind(int url_oid_bind) {
-                this.url_oid_bind = url_oid_bind;
-            }
-
-            public String getTarget_url() {
-                return target_url;
-            }
-
-            public void setTarget_url(String target_url) {
-                this.target_url = target_url;
-            }
-
-            public BizBean getBiz() {
-                return biz;
-            }
-
-            public void setBiz(BizBean biz) {
-                this.biz = biz;
-            }
-
-            public String getUrl() {
-                return url;
-            }
-
-            public void setUrl(String url) {
-                this.url = url;
-            }
-
-            public static class ImageBean {
-                private int height;
-                private int width;
-                private String url;
-
-                public int getHeight() {
-                    return height;
-                }
-
-                public void setHeight(int height) {
-                    this.height = height;
-                }
-
-                public int getWidth() {
-                    return width;
-                }
-
-                public void setWidth(int width) {
-                    this.width = width;
-                }
-
-                public String getUrl() {
-                    return url;
-                }
-
-                public void setUrl(String url) {
-                    this.url = url;
-                }
-            }
-
-            public static class BizBean {
-                private String biz_id;
-                private String containerid;
-
-                public String getBiz_id() {
-                    return biz_id;
-                }
-
-                public void setBiz_id(String biz_id) {
-                    this.biz_id = biz_id;
-                }
-
-                public String getContainerid() {
-                    return containerid;
-                }
-
-                public void setContainerid(String containerid) {
-                    this.containerid = containerid;
-                }
-            }
-        }
     }
 }

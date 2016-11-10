@@ -9,8 +9,4 @@ public class ApplicationUtil {
     public static Application getContext(){
         return BaseApplication.getInstance();
     }
-
-    public static Resources getResources(){
-        return getContext().getResources();
-    }
 }

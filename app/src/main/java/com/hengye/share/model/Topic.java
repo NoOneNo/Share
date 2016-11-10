@@ -1,8 +1,8 @@
 package com.hengye.share.model;
 
 import android.text.SpannableString;
-import android.text.TextUtils;
 
+import com.hengye.share.model.sina.WBShortUrl;
 import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.model.sina.WBTopicComment;
 import com.hengye.share.model.sina.WBTopicComments;
@@ -15,10 +15,11 @@ import com.hengye.share.util.GsonUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-public class Topic extends ParentInherit implements TopicId, Serializable{
+public class Topic extends ParentInherit implements TopicId, TopicShortUrl, Serializable{
 
     private static final long serialVersionUID = 971288752432928272L;
 
@@ -32,6 +33,7 @@ public class Topic extends ParentInherit implements TopicId, Serializable{
 
     private UserInfo userInfo;//用户信息
 
+    private HashMap<String, TopicUrl> urlMap;
     private transient SpannableString urlSpannableString;
     private transient String formatDate;
 
@@ -258,6 +260,15 @@ public class Topic extends ParentInherit implements TopicId, Serializable{
 
     public void setImageLargeUrls(List<String> imageLargeUrls) {
         this.imageLargeUrls = imageLargeUrls;
+    }
+
+    @Override
+    public HashMap<String, TopicUrl> getUrlMap() {
+        return urlMap;
+    }
+
+    public void setUrlMap(HashMap<String, TopicUrl> urlMap) {
+        this.urlMap = urlMap;
     }
 
     public SpannableString getUrlSpannableString() {

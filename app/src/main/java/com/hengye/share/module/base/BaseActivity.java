@@ -22,10 +22,13 @@ import com.hengye.share.R;
 import com.hengye.share.module.util.encapsulation.mvp.BasePresenter;
 import com.hengye.share.module.util.encapsulation.mvp.RxPresenter;
 import com.hengye.share.ui.widget.common.CommonToolBar;
+import com.hengye.share.util.AppUtils;
+import com.hengye.share.util.L;
 import com.hengye.share.util.NetworkUtil;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.module.util.encapsulation.view.listener.OnDoubleClickListener;
+import com.hengye.share.util.ToastUtil;
 import com.hengye.skinloader.listener.OnSkinUpdateListener;
 
 import java.util.HashSet;
@@ -142,6 +145,7 @@ public class BaseActivity extends AppCompatActivity implements OnSkinUpdateListe
 
     @Override
     protected void onResume() {
+        L.debug("activity onResume");
         mInstance = this;
         mActivityHelper.dispatchActivityResumed(this);
         super.onResume();

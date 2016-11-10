@@ -788,7 +788,7 @@ public class PullToRefreshLayout extends LinearLayout implements NestedScrolling
 //        return isEnabled() && !mReturningToStart && !mRefreshing
 //                && (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
 
-        return isEnabled() && !mResetting
+        return isEnabled() && !mResetting && mRefreshEnable
                 && (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
     }
 
@@ -883,7 +883,7 @@ public class PullToRefreshLayout extends LinearLayout implements NestedScrolling
             }
             setTargetOffsetTopAndBottom(mActionDownOffsetTop + (int) overscrollTop, true /* requires update */);
         }
-        Log.d("debug", "dy : " + dy + ", mTotalUnconsumed : " + mTotalUnconsumed);
+//        Log.d("debug", "dy : " + dy + ", mTotalUnconsumed : " + mTotalUnconsumed);
     }
 
     // NestedScrollingChild

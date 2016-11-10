@@ -11,6 +11,17 @@ import java.util.List;
 
 public class TopicFavorites {
 
+    public static ArrayList<Topic> getTopics(WBTopicFavorites wbTopicFavorites){
+        if(wbTopicFavorites == null || CommonUtil.isEmpty(wbTopicFavorites.getFavorites())){
+            return null;
+        }
+        ArrayList<Topic> topics = new ArrayList<>();
+        for(WBTopicFavorite entity : wbTopicFavorites.getFavorites()){
+            topics.add(getTopicFavorite(entity).getTopic());
+        }
+        return topics;
+    }
+
     public static ArrayList<TopicFavorite> getTopicFavorites(WBTopicFavorites wbTopicFavorites){
         if(wbTopicFavorites == null || CommonUtil.isEmpty(wbTopicFavorites.getFavorites())){
             return null;

@@ -8,6 +8,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
+import com.hengye.share.util.L;
+
 public class SimpleLinkOnTouchListener implements View.OnTouchListener {
 
     private boolean find = false;
@@ -63,13 +65,14 @@ public class SimpleLinkOnTouchListener implements View.OnTouchListener {
                 return find;
             case MotionEvent.ACTION_MOVE:
                 if (find) {
-                    SimpleLinkMovementMethod.getInstance().onTouchEvent(tv, value, event);
+                    return SimpleLinkMovementMethod.getInstance().onTouchEvent(tv, value, event);
                 }
                 break;
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
+                boolean result = false;
                 if (find) {
-                    SimpleLinkMovementMethod.getInstance().onTouchEvent(tv, value, event);
+                    result = SimpleLinkMovementMethod.getInstance().onTouchEvent(tv, value, event);
                     SimpleLinkMovementMethod.getInstance().removeLongClickCallback();
 
                     BackgroundColorSpan[] backgroundColorSpans = value
@@ -80,8 +83,8 @@ public class SimpleLinkOnTouchListener implements View.OnTouchListener {
                     tv.setText(value);
                     find = false;
                 }
-
-                break;
+                L.debug("result : {}", result);
+                return result;
         }
 
         return false;

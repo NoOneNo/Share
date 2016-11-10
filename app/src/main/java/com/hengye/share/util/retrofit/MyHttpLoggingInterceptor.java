@@ -93,7 +93,7 @@ public final class MyHttpLoggingInterceptor implements Interceptor {
         void log(String message);
 
         /** A {@link okhttp3.logging.HttpLoggingInterceptor.Logger} defaults output appropriate for the current platform. */
-        okhttp3.logging.HttpLoggingInterceptor.Logger DEFAULT = new okhttp3.logging.HttpLoggingInterceptor.Logger() {
+        Logger DEFAULT = new Logger() {
             @Override public void log(String message) {
                 Platform.get().log(INFO, message, null);
             }
@@ -101,14 +101,14 @@ public final class MyHttpLoggingInterceptor implements Interceptor {
     }
 
     public MyHttpLoggingInterceptor() {
-        this(okhttp3.logging.HttpLoggingInterceptor.Logger.DEFAULT);
+        this(Logger.DEFAULT);
     }
 
-    public MyHttpLoggingInterceptor(okhttp3.logging.HttpLoggingInterceptor.Logger logger) {
+    public MyHttpLoggingInterceptor(Logger logger) {
         this.logger = logger;
     }
 
-    private final okhttp3.logging.HttpLoggingInterceptor.Logger logger;
+    private final Logger logger;
 
     private volatile okhttp3.logging.HttpLoggingInterceptor.Level level = okhttp3.logging.HttpLoggingInterceptor.Level.NONE;
 

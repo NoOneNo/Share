@@ -19,6 +19,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
+import com.hengye.share.BuildConfig;
 import com.hengye.share.R;
 import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapter;
 import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemViewHolder;
@@ -74,7 +75,10 @@ public class TopicAdapter extends CommonAdapter<Topic>
         mLongClickDialog = DialogBuilder.getOnLongClickTopicDialog(getContext(), this);
         setOnItemClickListener(this);
         setOnItemLongClickListener(this);
-        setCheckDiffMode(true);
+
+        if (!BuildConfig.DEBUG) {
+            setCheckDiffMode(true);
+        }
     }
 
     @Override
@@ -89,10 +93,10 @@ public class TopicAdapter extends CommonAdapter<Topic>
         if (topic == null) {
             return;
         }
-        if(mIsRetweetedLongClick){
-            if(topic.getRetweetedTopic() == null){
+        if (mIsRetweetedLongClick) {
+            if (topic.getRetweetedTopic() == null) {
                 return;
-            }else {
+            } else {
                 topic = topic.getRetweetedTopic();
             }
         }
@@ -122,7 +126,7 @@ public class TopicAdapter extends CommonAdapter<Topic>
     @Override
     public boolean onItemLongClick(View view, int position) {
         boolean isRetweeted = false;
-        if(view.getTag() != null && view.getTag() instanceof Boolean){
+        if (view.getTag() != null && view.getTag() instanceof Boolean) {
             isRetweeted = (Boolean) view.getTag();
         }
 
@@ -142,7 +146,7 @@ public class TopicAdapter extends CommonAdapter<Topic>
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                   startPersonHomePage(position);
+                    startPersonHomePage(position);
                 }
             }, 100);
 //            IntentUtil.startActivity(getContext(), PersonalHomepageActivity.getStartIntent(getContext(), getItem(position).getUserInfo()));
@@ -163,7 +167,7 @@ public class TopicAdapter extends CommonAdapter<Topic>
 //        }
     }
 
-    public void startPersonHomePage(int position){
+    public void startPersonHomePage(int position) {
         Topic topic = getItem(position);
         TopicDefaultViewHolder vh = (TopicDefaultViewHolder) mRecyclerView.findViewHolderForAdapterPosition(position);
         if (topic == null || vh == null) {
@@ -276,7 +280,7 @@ public class TopicAdapter extends CommonAdapter<Topic>
             public boolean onTouch(View v, MotionEvent event) {
 
                 int id = v.getId();
-                if(id == R.id.tv_topic_content) {
+                if (id == R.id.tv_topic_content) {
                     //如果需要拦截长按关键字（比如@名字）则这样返回；
 //                    if(!TopicUrlOnTouchListener.getInstance().onTouch(v, event)) {
 //                        mTopicItem.onTouchEvent(event);
@@ -285,11 +289,14 @@ public class TopicAdapter extends CommonAdapter<Topic>
 //                        return true;
 //                    }
 
-                    if(!TopicUrlOnTouchListener.getInstance().onTouch(v, event)) {
+                    boolean result = TopicUrlOnTouchListener.getInstance().onTouch(v, event);
+                    if (!result) {
                         mTopicItem.onTouchEvent(event);
+                        return false;
+                    }else{
+                        return true;
                     }
-                    return false;
-                }else{
+                } else {
                     mTopicItem.onTouchEvent(event);
                     return false;
                 }
@@ -301,12 +308,15 @@ public class TopicAdapter extends CommonAdapter<Topic>
             public boolean onTouch(View v, MotionEvent event) {
 
                 int id = v.getId();
-                if(id == R.id.tv_topic_content) {
-                    if(!TopicUrlOnTouchListener.getInstance().onTouch(v, event)){
+                if (id == R.id.tv_topic_content) {
+                    boolean result = TopicUrlOnTouchListener.getInstance().onTouch(v, event);
+                    if (!result) {
                         mRetweetTopic.mTopicLayout.onTouchEvent(event);
+                        return false;
+                    }else{
+                        return true;
                     }
-                    return false;
-                }else{
+                } else {
                     mRetweetTopic.mTopicLayout.onTouchEvent(event);
                     return false;
                 }
@@ -354,9 +364,9 @@ public class TopicAdapter extends CommonAdapter<Topic>
             UserInfo userInfo = topic.getUserInfo();
             if (userInfo != null) {
                 mUsername.setText(userInfo.getName());
-                if(SettingHelper.isShowTopicAvatar()){
+                if (SettingHelper.isShowTopicAvatar()) {
                     mAvatar.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());
-                }else{
+                } else {
                     mAvatar.setImageResource(R.drawable.ic_user_avatar);
                 }
             }
@@ -374,9 +384,9 @@ public class TopicAdapter extends CommonAdapter<Topic>
             UserInfo userInfo = topicComment.getUserInfo();
             if (userInfo != null) {
                 mUsername.setText(userInfo.getName());
-                if(SettingHelper.isShowCommentAndRepostAvatar()) {
+                if (SettingHelper.isShowCommentAndRepostAvatar()) {
                     mAvatar.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());
-                }else{
+                } else {
                     mAvatar.setImageResource(R.drawable.ic_user_avatar);
                 }
             }

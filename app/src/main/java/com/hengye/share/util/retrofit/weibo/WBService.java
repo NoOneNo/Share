@@ -5,6 +5,7 @@ import com.hengye.share.model.sina.WBShortUrls;
 import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.model.sina.WBTopicComment;
 import com.hengye.share.model.sina.WBTopicComments;
+import com.hengye.share.model.sina.WBTopicFavorites;
 import com.hengye.share.model.sina.WBTopicIds;
 import com.hengye.share.model.sina.WBTopicReposts;
 import com.hengye.share.model.sina.WBTopics;
@@ -27,6 +28,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
+import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 import retrofit2.http.Url;
 import rx.Observable;
@@ -135,7 +137,7 @@ public interface WBService {
     Observable<WBTopicIds> listBilateralTopicIds(@QueryMap Map<String, String> options);
 
     @GET(UrlFactory.WB_FAVORITES_TOPIC)
-    Observable<WBTopics> listFavoritesTopic(@QueryMap Map<String, String> options);
+    Observable<WBTopicFavorites> listFavoritesTopic(@QueryMap Map<String, String> options);
 
     @GET(UrlFactory.WB_GROUP_TOPIC)
     Observable<WBTopics> listGroupTopic(@QueryMap Map<String, String> options);
@@ -199,4 +201,8 @@ public interface WBService {
      */
     @GET
     Call<WBShortUrls> expandUrl(@Url String url);
+
+    @FormUrlEncoded
+    @POST("http://weicoapi.weico.cc/portal.php?a=get_video&c=default")
+    Observable<Object> getMediaPlayUrl(@Field("weibo_id") String weiboId);
 }

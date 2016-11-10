@@ -97,6 +97,7 @@ public class TopicCommentFragment extends StatusFragment<TopicComment> implement
     }
 
     private void initView() {
+        setRefreshEnable(false);
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, final int position) {

@@ -580,7 +580,7 @@ public class GalleryFragment extends ThemeFragment implements View.OnClickListen
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            View view = mLayoutInflater.inflate(R.layout.activity_gallery_viewpager_item, container);
+            View view = mLayoutInflater.inflate(R.layout.activity_gallery_viewpager_item, null);
             final TouchImageView touchIv = (TouchImageView) view.findViewById(R.id.select_photo_gallery_fragment_iv);
             TextView videoSize = (TextView) view.findViewById(R.id.tv_video_size);
             View videoPlayBtn = view.findViewById(R.id.btn_video_play);

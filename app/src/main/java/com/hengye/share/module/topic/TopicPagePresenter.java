@@ -4,6 +4,8 @@ import android.content.res.Resources;
 import android.text.TextUtils;
 
 import com.hengye.share.R;
+import com.hengye.share.model.TopicFavorites;
+import com.hengye.share.model.sina.WBTopicFavorites;
 import com.hengye.share.util.handler.TopicNumberPager;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.sina.WBTopics;
@@ -12,12 +14,14 @@ import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
-import com.hengye.share.util.thirdparty.WBUtil;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Map;
 
+import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Func1;
 
 public class TopicPagePresenter extends RxPresenter<TopicPageMvpView> {
 
@@ -33,38 +37,30 @@ public class TopicPagePresenter extends RxPresenter<TopicPageMvpView> {
     }
 
     public void loadWBTopic(boolean isRefresh) {
+        getTopics(isRefresh)
+                .flatMap(TopicRxUtil.flatShortUrl())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
+                .subscribe(getTopicsSubscriber(isRefresh));
+    }
+
+    private Observable<ArrayList<Topic>> getTopics(final boolean isRefresh) {
         switch (mTopicGroup.topicType) {
             case THEME:
-                loadWBThemeTopic(isRefresh);
-                break;
+                return RetrofitManager
+                        .getWBService()
+                        .searchTopic(getWBAllTopicParameter(mPager.getPage(isRefresh)))
+                        .flatMap(flatWBTopics());
             case FAVORITES:
-                loadWBFavoritesTopic(isRefresh);
-                break;
             default:
-                break;
+                return RetrofitManager
+                        .getWBService()
+                        .listFavoritesTopic(getWBAllTopicParameter(mPager.getPage(isRefresh)))
+                        .flatMap(flatWBTopicFavorites());
         }
-
     }
 
-    public void loadWBThemeTopic(boolean isRefresh) {
-        RetrofitManager
-                .getWBService()
-                .searchTopic(getWBAllTopicParameter(mPager.getPage(isRefresh)))
-                .subscribeOn(SchedulerProvider.io())
-                .observeOn(SchedulerProvider.ui())
-                .subscribe(getWBTopicsSubscriber(isRefresh));
-    }
-
-    public void loadWBFavoritesTopic(boolean isRefresh) {
-        RetrofitManager
-                .getWBService()
-                .listFavoritesTopic(getWBAllTopicParameter(mPager.getPage(isRefresh)))
-                .subscribeOn(SchedulerProvider.io())
-                .observeOn(SchedulerProvider.ui())
-                .subscribe(getWBTopicsSubscriber(isRefresh));
-    }
-
-    public Map<String, String> getWBAllTopicParameter(int page) {
+    private Map<String, String> getWBAllTopicParameter(int page) {
         final UrlBuilder ub = new UrlBuilder();
 //        ub.addParameter("access_token", "2.00tJ6X3GiGSdcC5f7433b5a40iAPJB");
         ub.addParameter("access_token", UserUtil.getPriorToken());
@@ -85,35 +81,46 @@ public class TopicPagePresenter extends RxPresenter<TopicPageMvpView> {
         return ub.getParameters();
     }
 
-    public Subscriber<WBTopics> getWBTopicsSubscriber(final boolean isRefresh) {
-        return new BaseSubscriber<WBTopics>() {
+    private Subscriber<ArrayList<Topic>> getTopicsSubscriber(final boolean isRefresh) {
+        return new BaseSubscriber<ArrayList<Topic>>() {
             @Override
             public void onError(TopicPageMvpView v, Throwable e) {
                 v.onTaskComplete(isRefresh, false);
             }
 
             @Override
-            public void onNext(TopicPageMvpView v, WBTopics wbTopics) {
+            public void onNext(TopicPageMvpView v, ArrayList<Topic> topics) {
                 v.onTaskComplete(isRefresh, true);
-                v.handleTopicData(Topic.getTopics(wbTopics), isRefresh);
+                v.handleTopicData(topics, isRefresh);
             }
         };
     }
 
-//    public Subscriber<WBTopicFavorites> getWBFavoritesTopicsSubscriber(final boolean isRefresh) {
-//        return new BaseSubscriber<WBTopicFavorites>() {
-//            @Override
-//            public void onError(TopicPageMvpView v, Throwable e) {
-//                v.setTaskComplete(isRefresh);
-//            }
-//
-//            @Override
-//            public void onNext(TopicPageMvpView v, WBTopicFavorites wbTopics) {
-//                v.setTaskComplete(isRefresh);
-//                v.handleTopicData(Topic.get(wbTopics), isRefresh);
-//            }
-//        };
-//    }
+    Func1<WBTopics, Observable<ArrayList<Topic>>> mFlatWBTopics;
+    private Func1<WBTopics, Observable<ArrayList<Topic>>> flatWBTopics() {
+        if (mFlatWBTopics == null) {
+            mFlatWBTopics = new Func1<WBTopics, Observable<ArrayList<Topic>>>() {
+                @Override
+                public Observable<ArrayList<Topic>> call(WBTopics wbTopics) {
+                    return Observable.just(Topic.getTopics(wbTopics));
+                }
+            };
+        }
+        return mFlatWBTopics;
+    }
+
+    Func1<WBTopicFavorites, Observable<ArrayList<Topic>>> mFlatWBTopicFavorites;
+    private Func1<WBTopicFavorites, Observable<ArrayList<Topic>>> flatWBTopicFavorites() {
+        if (mFlatWBTopicFavorites == null) {
+            mFlatWBTopicFavorites = new Func1<WBTopicFavorites, Observable<ArrayList<Topic>>>() {
+                @Override
+                public Observable<ArrayList<Topic>> call(WBTopicFavorites wbTopicFavorites) {
+                    return Observable.just(TopicFavorites.getTopics(wbTopicFavorites));
+                }
+            };
+        }
+        return mFlatWBTopicFavorites;
+    }
 
     public enum TopicType {
         THEME, FAVORITES

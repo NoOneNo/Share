@@ -35,12 +35,13 @@ public class WebViewActivity extends BaseActivity{
 
         if (mUrl == null) {
             Uri data = intent.getData();
-            if (data != null && data.toString() != null) {
-                String value = data.toString();
-                int start = value.indexOf("http://");
-                if (start != -1) {
-                    mUrl = value.substring(start + 7);
-                }
+            mUrl = data.getSchemeSpecificPart();
+//            if (data != null && data.toString() != null) {
+//                String value = data.toString();
+//                int start = value.indexOf("http://");
+//                if (start != -1) {
+//                    mUrl = value.substring(start + 7);
+//                }
             }
         }
 
@@ -50,7 +51,6 @@ public class WebViewActivity extends BaseActivity{
 //                mUrl = "http://" + mUrl;
 //            }
 //        }
-    }
 
     public static Intent getStartIntent(Context context, String url) {
         Intent intent = new Intent(context, WebViewActivity.class);

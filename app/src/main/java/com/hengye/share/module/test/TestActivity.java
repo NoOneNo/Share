@@ -3,6 +3,7 @@ package com.hengye.share.module.test;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -25,6 +26,7 @@ import com.hengye.share.util.intercept.AdTokenInterceptor;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -101,11 +103,12 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
 //            testInterceptor();
 
 //            testAnimation();
-            startActivity(FragmentActivity.getStartIntent(this, TestRecyclerViewFragment.class));
+            startActivity(FragmentActivity.getStartIntent(this, TestWindowManagerFragment.class));
 //            startActivity(WebViewActivity.getStartIntent(this, "http://www.baidu.com"));
         } else if (v.getId() == R.id.btn_test7) {
             startActivity(SetTokenActivity.class);
         }
+
     }
 
     void onRunSchedulerExampleButtonClicked2() {

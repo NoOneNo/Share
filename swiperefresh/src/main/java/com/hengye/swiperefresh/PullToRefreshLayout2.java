@@ -918,7 +918,7 @@ public class PullToRefreshLayout2 extends LinearLayout {
             final float overscrollTop = mTotalUnconsumed * DRAG_RATE;
             setTargetOffsetTopAndBottom(mActionDownOffsetTop + (int)overscrollTop, true /* requires update */);
         }
-        Log.d("debug", "dy : " + dy + ", mTotalUnconsumed : " + mTotalUnconsumed);
+//        Log.d("debug", "dy : " + dy + ", mTotalUnconsumed : " + mTotalUnconsumed);
     }
 
     // NestedScrollingChild

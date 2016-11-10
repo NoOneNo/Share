@@ -62,9 +62,14 @@
 
     <color name="topic_username">#FF4081</color>
     <color name="topic_description">#9a9a9a</color>
-    <color name="topic_content">#646464</color>
-
+    <!--<color name="topic_content">#646464</color>-->
+    <color name="topic_content">#474e5e</color>
+    <!--6a7081-->
     <color name="topic_name_at">#5061BB</color>
+
+    <color name="topic_press_bg">#FFFF4081</color>
+    <color name="topic_content_span">#FF5061BB</color>
+
 
     <color name="image_default_bg">#ffe0e0e0</color>
 

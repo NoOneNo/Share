@@ -12,19 +12,19 @@ public class L {
     public final static Logger L = LoggerFactory.getLogger(L.class);
 
     public static void debug(String msg) {
-        L.debug(msg);
+        L.info(msg);
     }
 
     public static void debug(String format, Object arg) {
-        L.debug(format, arg);
+        L.info(format, arg);
     }
 
     public static void debug(String format, Object arg1, Object arg2) {
-        L.debug(format, arg1, arg2);
+        L.info(format, arg1, arg2);
     }
 
     public static void debug(String format, Object... argArray) {
-        L.debug(format, argArray);
+        L.info(format, argArray);
     }
 
     public static void info(String msg) {

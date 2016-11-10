@@ -14,6 +14,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- 悬浮框权限 -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
@@ -36,6 +38,7 @@
 
         <service android:name="com.hengye.share.service.ShareService" />
         <service android:name="com.hengye.share.service.TopicPublishService" />
+        <service android:name="com.hengye.share.service.VideoPlayService" />
 
         <!-- 定时发布广播 -->
         <receiver android:name="com.hengye.share.service.TopicPublishTimingBroadcastReceiver">
@@ -160,6 +163,10 @@
 
         <activity
             android:name=".module.topic.TopicCommentActivity"/>
+
+        <activity
+            android:name=".module.topic.TopicFavoriteActivity"
+            android:label="@string/title_activity_favorite"/>
 
         <activity
             android:name=".module.publish.AtUserActivity"

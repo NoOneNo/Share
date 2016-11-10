@@ -384,8 +384,8 @@ public class TopicActivity extends BaseActivity
         } else if (id == R.id.nav_comment) {
             startActivity(TopicCommentActivity.class);
         } else if (id == R.id.nav_favorites) {
-            startActivity(FragmentActivity.getStartIntent(this, TopicFavoritesFragment.class));
 //            startActivity(FragmentActivity.getStartIntent(this, TopicFavoritesFragment.class));
+            startActivity(TopicFavoriteActivity.class);
         } else if (id == R.id.nav_setting) {
 //            mDrawer.closeDrawer(GravityCompat.END);
             startActivity(SettingActivity.class);

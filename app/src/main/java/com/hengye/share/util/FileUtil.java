@@ -22,9 +22,9 @@ public class FileUtil extends ApplicationUtil{
         StringBuilder sb = new StringBuilder();
 
         try {
-            InputStream e = getResources().getAssets().open(file);
+            InputStream e = getContext().getResources().getAssets().open(file);
             BufferedReader reader = new BufferedReader(new InputStreamReader(e, "UTF-8"));
-            String readLine = null;
+            String readLine;
 
             while((readLine = reader.readLine()) != null) {
                 sb.append(readLine);
