@@ -120,7 +120,8 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         }
     }
 
-    private TextView mDivision, mAttention, mFans, mSign;
+    private TextView mDivision, mAttention, mFans;
+//    private TextView mSign;
     private SuperImageView mCover;
     private AvatarImageView mAvatar;
     private PersonalHomePageToolbarLayout mCollapsingToolbarLayout;
@@ -149,7 +150,10 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 
         initToolbar();
         updateToolbarTitle(" ");
-        getToolbar().setBackgroundResource(0);
+        if(getToolbar() != null){
+            getToolbar().setBackground(null);
+        }
+
 
         mFollowButton = (CheckableFab) findViewById(R.id.fab);
         mFollowButton.setOnClickListener(this);
@@ -187,7 +191,19 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         mDivision = (TextView) findViewById(R.id.tv_division);
         mAttention = (TextView) findViewById(R.id.tv_attention);
         mFans = (TextView) findViewById(R.id.tv_fans);
-        mSign = (TextView) findViewById(R.id.tv_sign);
+
+        mUserInfoLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(mCollapsingToolbarLayout.isShowScrims()){
+                    //当是闭合的时候，模拟toolbar的触摸事件
+                    return getToolbar().onTouchEvent(event);
+                }else{
+                    return false;
+                }
+            }
+        });
+//        mSign = (TextView) findViewById(R.id.tv_sign);
 
         mAttention.setOnClickListener(this);
         mFans.setOnClickListener(this);
@@ -350,7 +366,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         mDivision.setVisibility(View.VISIBLE);
         mAttention.setText(String.format(getString(R.string.label_attention), DataUtil.getCounter(wbUserInfo.getFriends_count())));
         mFans.setText(String.format(getString(R.string.label_fans), DataUtil.getCounter(wbUserInfo.getFollowers_count())));
-        mSign.setText(wbUserInfo.getDescription());
+//        mSign.setText(wbUserInfo.getDescription());
         mFollowButton.setChecked(mWBUserInfo.isFollowing());
 //        mFollowButton.setVisibility(View.VISIBLE);
         mUserDescription.setVisibility(View.VISIBLE);

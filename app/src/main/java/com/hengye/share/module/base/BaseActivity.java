@@ -365,7 +365,9 @@ public class BaseActivity extends AppCompatActivity implements OnSkinUpdateListe
     }
 
     public void updateToolbarTitle(String title) {
-        mToolbar.setTitle(title);
+        if(mToolbar != null) {
+            mToolbar.setTitle(title);
+        }
     }
 
     public void updateToolbarTitle(@StringRes int resId) {

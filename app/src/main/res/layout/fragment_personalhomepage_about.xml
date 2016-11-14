@@ -37,7 +37,7 @@
         </LinearLayout>
 
         <include
-            android:id="@+id/item_remark"
+            android:id="@+id/item_sign"
             layout="@layout/item_text_key_value_v" />
 
         <include
@@ -53,7 +53,7 @@
             layout="@layout/item_text_key_value_v" />
 
         <include
-            android:id="@+id/item_sign"
+            android:id="@+id/item_remark"
             layout="@layout/item_text_key_value_v" />
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

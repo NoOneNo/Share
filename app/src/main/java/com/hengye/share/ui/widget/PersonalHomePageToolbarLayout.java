@@ -73,6 +73,13 @@ public class PersonalHomePageToolbarLayout extends CollapsingToolbarLayout {
         }
     }
 
+    /**
+     * @return 如果是闭合的，则返回true，如果是展开的，则返回false；
+     */
+    public boolean isShowScrims(){
+        return mScrimsShownFlag;
+    }
+
     AppBarLayout appBarLayout;
     Toolbar toolbar;
     View avatar, userInfoBgLayout, userInfoLayout;
@@ -135,6 +142,10 @@ public class PersonalHomePageToolbarLayout extends CollapsingToolbarLayout {
         invalidate();
     }
 
+    private int getToolbarHeight(){
+        return toolbar == null ? 0 : toolbar.getHeight();
+    }
+
     private void maybeSetup() {
         if (appBarLayout == null) {
             return;
@@ -153,11 +164,10 @@ public class PersonalHomePageToolbarLayout extends CollapsingToolbarLayout {
         if (mAppBarHeight != appBarLayout.getHeight()) {
             mAppBarHeight = appBarLayout.getHeight();
 
-            maxVerticalOffset = getHeight() - (ViewUtil.getStatusBarHeight() + toolbar.getHeight());
+            maxVerticalOffset = getHeight() - (ViewUtil.getStatusBarHeight() + getToolbarHeight());
             // 计算Detail的layout_collapseParallaxMultiplier，使其收起来时刚好高度为ToolBar的高度
             CollapsingToolbarLayout.LayoutParams params = (CollapsingToolbarLayout.LayoutParams) userInfoBgLayout.getLayoutParams();
             // 最大移动的距离
-//            maxVerticalOffset = appBarLayout.getHeight() - (statusbarHeight + toolbar.getHeight() + tabLayout.getHeight()) - 2;
             // 计算移动后的top减去移动前的top就是需要offset，再用offset计算出multiplier
             float multiplier = ((maxVerticalOffset + ViewUtil.getStatusBarHeight()) -
                     (getHeight() - userInfoBgLayout.getHeight())) * 1.0f / maxVerticalOffset;
@@ -213,7 +223,7 @@ public class PersonalHomePageToolbarLayout extends CollapsingToolbarLayout {
                 float startAvatarTop = userInfoBgLayout.getTop() - avatar.getHeight() / 2;
                 avatarMarginLeft = avatar.getLeft();
                 // 最终显示的Top
-                float toAvatarTop = maxVerticalOffset + ViewUtil.getStatusBarHeight() + (toolbar.getHeight() - finalAvatarSize) * 1.0f / 2;
+                float toAvatarTop = maxVerticalOffset + ViewUtil.getStatusBarHeight() + (getToolbarHeight() - finalAvatarSize) * 1.0f / 2;
                 float avatarTop = startAvatarTop - (startAvatarTop - toAvatarTop) * factor;
 
                 // 初始化MarginLeft

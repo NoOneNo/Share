@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
@@ -162,17 +163,6 @@ public class TopicDetail2Activity extends BaseActivity implements View.OnClickLi
                 .beginTransaction()
                 .replace(R.id.content, mFragment)
                 .commit();
-
-//        FabAnimator
-//                .create(mActionsMenu)
-//                .attachToListView(mListView, onScrollListener)
-//                .setCustomAnimator(new FabAnimator.CustomAnimator() {
-//                    @Override
-//                    public int getViewHeight() {
-//                        return mActionsMenu.getAddButtion().getHeight();
-//                    }
-//                });
-
     }
 
     boolean mHasSetSelection;
@@ -193,6 +183,11 @@ public class TopicDetail2Activity extends BaseActivity implements View.OnClickLi
         }else{
             mHasSetSelection = false;
         }
+    }
+
+    @Override
+    public void onToolbarDoubleClick(Toolbar toolbar) {
+        mAppBarLayout.setExpanded(true);
     }
 
     @Override

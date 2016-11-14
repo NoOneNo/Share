@@ -98,17 +98,17 @@
                         tools:text="粉丝 1" />
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tv_sign"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/spacing_double"
-                    android:layout_marginTop="@dimen/spacing_normal"
-                    android:ellipsize="end"
-                    android:maxLines="3"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_small"
-                    tools:text="签名" />
+                <!--<TextView-->
+                    <!--android:id="@+id/tv_sign"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginStart="@dimen/spacing_double"-->
+                    <!--android:layout_marginTop="@dimen/spacing_normal"-->
+                    <!--android:ellipsize="end"-->
+                    <!--android:maxLines="3"-->
+                    <!--android:textColor="@color/white"-->
+                    <!--android:textSize="@dimen/text_small"-->
+                    <!--tools:text="签名" />-->
 
             </LinearLayout>
         </FrameLayout>
@@ -130,7 +130,7 @@
 
         <include
             layout="@layout/widget_tool_bar"
-            app:layout_collapseMode="pin"/>
+            app:layout_collapseMode="parallax"/>
 
     </com.hengye.share.ui.widget.PersonalHomePageToolbarLayout>
 
