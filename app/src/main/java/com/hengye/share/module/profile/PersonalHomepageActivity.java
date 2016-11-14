@@ -114,11 +114,10 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     }
 
     @Override
-    public boolean onToolbarDoubleClick(Toolbar toolbar) {
+    public void onToolbarDoubleClick(Toolbar toolbar) {
         if (mFragment != null) {
-            return mFragment.onToolbarDoubleClick(toolbar);
+            mFragment.onToolbarDoubleClick(toolbar);
         }
-        return super.onToolbarDoubleClick(toolbar);
     }
 
     private TextView mDivision, mAttention, mFans, mSign;

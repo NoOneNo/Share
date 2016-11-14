@@ -10,7 +10,7 @@
         android:id="@+id/pull_to_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <com.hengye.share.module.util.encapsulation.view.listview.CommonListView
+        <com.hengye.share.ui.widget.common.CommonListView
             android:id="@+id/list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

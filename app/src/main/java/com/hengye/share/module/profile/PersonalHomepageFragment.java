@@ -114,11 +114,10 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
     }
 
     @Override
-    public boolean onToolbarDoubleClick(Toolbar toolbar) {
+    public void onToolbarDoubleClick(Toolbar toolbar) {
         if(getCurrentFragment() != null){
-            return getCurrentFragment().onToolbarDoubleClick(toolbar);
+            getCurrentFragment().onToolbarDoubleClick(toolbar);
         }
-        return super.onToolbarDoubleClick(toolbar);
     }
 
     private void initSwipeRefresh(){

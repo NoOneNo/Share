@@ -64,7 +64,7 @@ public class TopicFragment extends StatusFragment<Topic> implements TopicMvpView
         mPresenter.setName(name);
 
         if(!UserUtil.isUserEmpty()) {
-            refresh();
+            loadTopic();
         }
 
     }
@@ -94,7 +94,10 @@ public class TopicFragment extends StatusFragment<Topic> implements TopicMvpView
         return mTopicPager;
     }
 
-    public void refresh() {
+    /**
+     * 先检测有没有缓存，没有再请求服务器
+     */
+    public void loadTopic() {
         mPresenter.loadWBTopic(mTopicPager.getFirstPage());
     }
 

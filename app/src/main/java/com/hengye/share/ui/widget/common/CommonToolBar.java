@@ -11,14 +11,17 @@ import android.widget.ImageView;
 
 import com.hengye.share.R;
 import com.hengye.share.util.ReflectionHelpers;
-import com.hengye.share.module.util.encapsulation.view.listener.OnDoubleClickListener;
+import com.hengye.share.module.util.encapsulation.view.listener.OnDoubleTapListener;
 import com.hengye.share.util.ThemeUtil;
 import com.hengye.share.util.ViewUtil;
+
+import java.util.ArrayList;
 
 public class CommonToolBar extends Toolbar {
 
     long mLastClickTime;
-    OnDoubleClickListener mOnDoubleClickListener;
+//    OnDoubleTapListener mOnDoubleTapListener;
+    ArrayList<OnDoubleTapListener> mOnDoubleTapListeners = new ArrayList<>();
 
     public CommonToolBar(Context context) {
         this(context, null);
@@ -60,26 +63,27 @@ public class CommonToolBar extends Toolbar {
         boolean handler = super.onTouchEvent(ev);
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             if (this.mLastClickTime != 0L && System.currentTimeMillis() - this.mLastClickTime <= DOUBLE_TAP_TIMEOUT) {
-                performDoubleClick();
+                performDoubleTap();
             }
             this.mLastClickTime = System.currentTimeMillis();
         }
         return handler;
     }
 
-    public void performDoubleClick() {
-        if (getOnDoubleClickListener() != null) {
-            getOnDoubleClickListener().onDoubleClick(this);
+    public void performDoubleTap() {
+        for(OnDoubleTapListener onDoubleTapListener : mOnDoubleTapListeners){
+            onDoubleTapListener.onDoubleTap(this);
         }
     }
 
-    public OnDoubleClickListener getOnDoubleClickListener() {
-        return mOnDoubleClickListener;
+    public void addOnDoubleTapListener(OnDoubleTapListener onDoubleTapListener) {
+        mOnDoubleTapListeners.add(onDoubleTapListener);
     }
 
-    public void setOnDoubleClickListener(OnDoubleClickListener onDoubleClickListener) {
-        this.mOnDoubleClickListener = onDoubleClickListener;
+    public void removeOnDoubleTapListener(OnDoubleTapListener onDoubleTapListener) {
+        mOnDoubleTapListeners.remove(onDoubleTapListener);
     }
+
 
     ImageButton mNavigation;
 

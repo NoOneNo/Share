@@ -264,13 +264,11 @@ public class TopicActivity extends BaseActivity
     }
 
     @Override
-    public boolean onToolbarDoubleClick(Toolbar toolbar) {
+    public void onToolbarDoubleClick(Toolbar toolbar) {
         TopicFragment topicFragment = mCurrentTopicFragment;
         if (topicFragment != null) {
-            topicFragment.scrollToTop();
-            return true;
+            topicFragment.onScrollToTop(false);
         }
-        return false;
     }
 
     private void initSearch() {

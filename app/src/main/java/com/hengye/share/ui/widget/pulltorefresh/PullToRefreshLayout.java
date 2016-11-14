@@ -9,7 +9,7 @@ import android.widget.AbsListView;
 
 import com.hengye.share.R;
 import com.hengye.share.module.util.encapsulation.view.recyclerview.HeaderAdapter;
-import com.hengye.share.module.util.encapsulation.view.listview.CommonListView;
+import com.hengye.share.ui.widget.common.CommonListView;
 
 /**
  * Created by yuhy on 2016/10/12.

@@ -18,7 +18,7 @@ import com.hengye.share.util.UserUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopicPageFragment extends RecyclerRefreshFragment<Topic> implements TopicPageMvpView {
+public class TopicPageFragment extends StatusFragment<Topic> implements TopicPageMvpView {
 
     public static TopicPageFragment newInstance(TopicPagePresenter.TopicGroup topicGroup, String keyword) {
         TopicPageFragment fragment = new TopicPageFragment();
@@ -55,25 +55,20 @@ public class TopicPageFragment extends RecyclerRefreshFragment<Topic> implements
         mHandler = new DefaultDataHandler<>(mAdapter);
         addPresenter(mPresenter = new TopicPagePresenter(this, topicGroup, mPager));
         mPresenter.setKeyword(mKeyword);
-        setRefreshing(true);
+        showLoading();
+        onRefresh();
     }
 
     @Override
     public void onRefresh() {
         super.onRefresh();
-        if (UserUtil.isUserEmpty()) {
-            setRefreshing(false);
-            return;
-        }
         mPresenter.loadWBTopic(true);
     }
 
     @Override
     public void onLoad() {
         super.onLoad();
-        if (!mAdapter.isEmpty()) {
-            mPresenter.loadWBTopic(false);
-        }
+        mPresenter.loadWBTopic(false);
     }
 
     @Override
@@ -91,26 +86,17 @@ public class TopicPageFragment extends RecyclerRefreshFragment<Topic> implements
             return;
         }
         mPresenter.setKeyword(keyword);
-        setRefreshing(true);
+        showLoading();
+        onRefresh();
     }
 
     @Override
-    public void onTaskComplete(boolean isRefresh, boolean isSuccess) {
-        setTaskComplete(isSuccess);
-    }
-
-    @Override
-    public void handleTopicData(List<Topic> data, boolean isRefresh) {
-        int type = handleData(isRefresh, data);
+    public void onLoadListData(boolean isRefresh, List<Topic> data) {
+        super.onLoadListData(isRefresh, data);
     }
 
     @Override
     public void handleDataType(int type) {
         super.handleDataType(type);
-        if(type == DataType.LOAD_NO_DATA || type == DataType.REFRESH_DATA_SIZE_LESS){
-            setLoadEnable(false);
-        }else{
-            setLoadEnable(true);
-        }
     }
 }

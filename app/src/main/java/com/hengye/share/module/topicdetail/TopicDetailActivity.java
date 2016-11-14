@@ -98,9 +98,8 @@ public class TopicDetailActivity extends BaseActivity implements TopicDetailMvpV
     }
 
     @Override
-    public boolean onToolbarDoubleClick(Toolbar toolbar) {
+    public void onToolbarDoubleClick(Toolbar toolbar) {
         mListView.setSelection(0);
-        return true;
     }
 
     TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener() {

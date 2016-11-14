@@ -239,11 +239,11 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
                     if (wbTopicIds.getStatuses().size() >= WBUtil.getWBTopicRequestCount()) {
                         //还有更新的微博，重新请求刷新
 //                                RequestManager.addToRequestQueue(getWBTopicRequest(token, 0 + "", true), getRequestTag());
-                        L.debug("exist newer topic, request refresh again");
+                        L.debug("exist newer topic, request loadTopic again");
                         observable = getWBTopics("0", true);
                     } else {
                         //新的微博条数没有超过请求条数，显示更新多少条微博，根据请求的since_id获取微博
-                        L.debug("new topic is less than MAX_COUNT_REQUEST, request refresh by since_id");
+                        L.debug("new topic is less than MAX_COUNT_REQUEST, request loadTopic by since_id");
                         observable = getWBTopics(since_id, true);
                     }
                 }

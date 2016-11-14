@@ -224,7 +224,7 @@ public class TopicDraftActivity extends BaseActivity implements DialogInterface.
                 TopicDraft newDraft = TopicDraftHelper.loadTopicDraft(draft.getId());
                 mAdapter.updateItem(mItemClickPosition, newDraft);
             }
-//            mAdapter.refresh(getTopicDraftData());
+//            mAdapter.loadTopic(getTopicDraftData());
         }
     }
 }

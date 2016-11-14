@@ -38,9 +38,8 @@ public class PersonalHomepageAboutFragment extends BaseFragment
     }
 
     @Override
-    public boolean onToolbarDoubleClick(Toolbar toolbar) {
+    public void onToolbarDoubleClick(Toolbar toolbar) {
         onScrollToTop(false);
-        return true;
     }
 
     @Override

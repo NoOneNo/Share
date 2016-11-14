@@ -60,8 +60,8 @@ public class TopicCommentActivity extends BaseActivity{
         return topicGroupGroups;
     }
 
-    @Override
-    public boolean onToolbarDoubleClick(Toolbar toolbar) {
-        return mAdapter.getItem(mViewPager.getCurrentItem()).onToolbarDoubleClick(toolbar);
-    }
+//    @Override
+//    public void onToolbarDoubleClick(Toolbar toolbar) {
+//        mAdapter.getItem(mViewPager.getCurrentItem()).onToolbarDoubleClick(toolbar);
+//    }
 }

@@ -50,9 +50,9 @@ public abstract class ListDataFragment<T> extends StateFragment implements ListD
     }
 
     public void handleDataType(int type) {
-        if(type != DataType.REFRESH_NO_DATA){
-            showContent();
-        }
+//        if(type != DataType.REFRESH_NO_DATA){
+//            showContent();
+//        }
     }
 
     @Override

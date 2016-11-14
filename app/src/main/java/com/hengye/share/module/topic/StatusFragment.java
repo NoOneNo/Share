@@ -7,7 +7,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.hengye.share.R;
+import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.module.util.encapsulation.fragment.RecyclerRefreshFragment;
+import com.hengye.share.module.util.encapsulation.view.listener.OnDoubleTapListener;
 import com.hengye.share.ui.widget.fab.FabAnimator;
 import com.hengye.share.util.thirdparty.WBUtil;
 
@@ -32,11 +34,17 @@ public abstract class StatusFragment<T> extends RecyclerRefreshFragment<T> {
         }
 
         getLoadDataCallBack().initView();
-    }
 
-    public void scrollToTop(){
-        if(getAdapter() != null) {
-            getAdapter().scrollToPosition(0);
+        if(getActivity() instanceof BaseActivity){
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            if(baseActivity.getToolbar() != null){
+                baseActivity.getToolbar().addOnDoubleTapListener(new OnDoubleTapListener() {
+                    @Override
+                    public void onDoubleTap(View view) {
+                        onToolbarDoubleClick((Toolbar)view);
+                    }
+                });
+            }
         }
     }
 
@@ -45,9 +53,8 @@ public abstract class StatusFragment<T> extends RecyclerRefreshFragment<T> {
     }
 
     @Override
-    public boolean onToolbarDoubleClick(Toolbar toolbar) {
-        scrollToTop();
-        return true;
+    public void onToolbarDoubleClick(Toolbar toolbar) {
+        onScrollToTop(false);
     }
 
     @Override

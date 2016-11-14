@@ -1,4 +1,4 @@
-package com.hengye.share.module.util.encapsulation.view.listview;
+package com.hengye.share.ui.widget.common;
 
 import android.content.Context;
 import android.util.AttributeSet;

@@ -85,9 +85,8 @@ public class TopicAlbumFragment extends RecyclerRefreshFragment<String> implemen
     }
 
     @Override
-    public boolean onToolbarDoubleClick(Toolbar toolbar) {
-        getRecyclerView().getLayoutManager().scrollToPosition(0);
-        return true;
+    public void onToolbarDoubleClick(Toolbar toolbar) {
+        onScrollToTop(false);
     }
 
     public void handleStaticData(boolean isReset){

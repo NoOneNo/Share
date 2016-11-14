@@ -129,8 +129,7 @@ public class BaseFragment extends Fragment implements ActivityHelper.ActivityAct
         }
     }
 
-    public boolean onToolbarDoubleClick(Toolbar toolbar){
-        return false;
+    public void onToolbarDoubleClick(Toolbar toolbar){
     }
 
     public final void setResult(int resultCode) {

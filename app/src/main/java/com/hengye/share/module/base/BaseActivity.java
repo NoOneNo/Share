@@ -20,15 +20,12 @@ import android.widget.LinearLayout;
 
 import com.hengye.share.R;
 import com.hengye.share.module.util.encapsulation.mvp.BasePresenter;
-import com.hengye.share.module.util.encapsulation.mvp.RxPresenter;
 import com.hengye.share.ui.widget.common.CommonToolBar;
-import com.hengye.share.util.AppUtils;
 import com.hengye.share.util.L;
 import com.hengye.share.util.NetworkUtil;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.module.setting.SettingHelper;
-import com.hengye.share.module.util.encapsulation.view.listener.OnDoubleClickListener;
-import com.hengye.share.util.ToastUtil;
+import com.hengye.share.module.util.encapsulation.view.listener.OnDoubleTapListener;
 import com.hengye.skinloader.listener.OnSkinUpdateListener;
 
 import java.util.HashSet;
@@ -352,10 +349,10 @@ public class BaseActivity extends AppCompatActivity implements OnSkinUpdateListe
                     onBackPressed();
                 }
             });
-            mToolbar.setOnDoubleClickListener(new OnDoubleClickListener() {
+            mToolbar.addOnDoubleTapListener(new OnDoubleTapListener() {
                 @Override
-                public boolean onDoubleClick(View view) {
-                    return onToolbarDoubleClick(mToolbar);
+                public void onDoubleTap(View view) {
+                    onToolbarDoubleClick(mToolbar);
                 }
             });
         }
@@ -375,8 +372,8 @@ public class BaseActivity extends AppCompatActivity implements OnSkinUpdateListe
         updateToolbarTitle(getString(resId));
     }
 
-    public boolean onToolbarDoubleClick(Toolbar toolbar) {
-        return false;
+    public void onToolbarDoubleClick(Toolbar toolbar) {
+
     }
 
     protected CharSequence getToolbarTitle() {

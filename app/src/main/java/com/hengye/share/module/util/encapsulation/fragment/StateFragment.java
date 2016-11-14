@@ -132,6 +132,8 @@ public abstract class StateFragment extends BaseFragment
             }else{
                 showEmpty();
             }
+        }else{
+            showContent();
         }
     }
 

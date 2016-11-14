@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import com.hengye.share.R;
 import com.hengye.share.model.TopicFavorites;
 import com.hengye.share.model.sina.WBTopicFavorites;
+import com.hengye.share.module.util.encapsulation.mvp.ListDataPresenter;
 import com.hengye.share.util.handler.TopicNumberPager;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.sina.WBTopics;
@@ -17,13 +18,14 @@ import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Func1;
 
-public class TopicPagePresenter extends RxPresenter<TopicPageMvpView> {
+public class TopicPagePresenter extends ListDataPresenter<Topic, TopicPageMvpView> {
 
     private TopicGroup mTopicGroup;
     private String mKeyword;
@@ -81,19 +83,20 @@ public class TopicPagePresenter extends RxPresenter<TopicPageMvpView> {
         return ub.getParameters();
     }
 
-    private Subscriber<ArrayList<Topic>> getTopicsSubscriber(final boolean isRefresh) {
-        return new BaseSubscriber<ArrayList<Topic>>() {
-            @Override
-            public void onError(TopicPageMvpView v, Throwable e) {
-                v.onTaskComplete(isRefresh, false);
-            }
-
-            @Override
-            public void onNext(TopicPageMvpView v, ArrayList<Topic> topics) {
-                v.onTaskComplete(isRefresh, true);
-                v.handleTopicData(topics, isRefresh);
-            }
-        };
+    private Subscriber<List<Topic>> getTopicsSubscriber(final boolean isRefresh) {
+        return new ListDataSubscriber(isRefresh);
+//        return new BaseSubscriber<ArrayList<Topic>>() {
+//            @Override
+//            public void onError(TopicPageMvpView v, Throwable e) {
+//                v.onTaskComplete(isRefresh, false);
+//            }
+//
+//            @Override
+//            public void onNext(TopicPageMvpView v, ArrayList<Topic> topics) {
+//                v.onTaskComplete(isRefresh, true);
+//                v.handleTopicData(topics, isRefresh);
+//            }
+//        };
     }
 
     Func1<WBTopics, Observable<ArrayList<Topic>>> mFlatWBTopics;
