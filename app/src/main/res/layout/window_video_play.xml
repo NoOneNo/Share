@@ -1,15 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+<!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="@color/black">-->
 
-    <!--<View-->
-        <!--android:id="@+id/window_video_play"-->
+    <!--<com.hengye.share.ui.widget.media.MediaController-->
+        <!--android:id="@+id/media_controller"-->
         <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="200dp"-->
-        <!--android:background="@color/font_grey"/>-->
+        <!--android:layout_height="200dp" >-->
 
-    <include
-        layout="@layout/widget_video_player"/>
-</LinearLayout>
+        <!--<com.hengye.share.ui.widget.media.VideoView-->
+            <!--android:id="@+id/video_view"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_gravity="center" />-->
+
+    <!--</com.hengye.share.ui.widget.media.MediaController>-->
+
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/root"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@color/black">
+
+        <com.hengye.share.ui.widget.media.VideoView
+            android:id="@+id/video_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/black"
+            android:layout_gravity="center" />
+
+        <com.hengye.share.ui.widget.media.MediaController
+            android:id="@+id/media_controller"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
+<!--</FrameLayout>-->

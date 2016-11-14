@@ -8,36 +8,30 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
-        <SeekBar
-            android:id="@+id/seek_bar_voice"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
-
-        <LinearLayout
-            android:id="@+id/ll_voice_control"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:id="@+id/voice_play"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="播放音频" />
-
-            <Button
-                android:id="@+id/voice_stop"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="停止播放" />
-        </LinearLayout>
-
         <SurfaceView
             android:id="@+id/surface_video"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:background="@color/font_grey" />
+            android:background="@color/font_grey"
+            android:visibility="gone"/>
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@color/black">
+
+            <com.hengye.share.ui.widget.media.VideoView
+                android:id="@+id/video_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"/>
+
+            <com.hengye.share.ui.widget.media.MediaController
+                android:id="@+id/media_controller"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </FrameLayout>
         <SeekBar
             android:id="@+id/seek_bar_video"
             android:layout_width="fill_parent"

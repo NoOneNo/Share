@@ -32,30 +32,6 @@ public class BaseApplication extends Application{
 		long end = System.currentTimeMillis();
 
 		L.debug("application onCreate consume : {}", end - start);
-
-		registerActivityLifecycleCallbacks(new DefaultActivityLifecycleCallback(){
-
-			boolean isForeground = false;
-
-			@Override
-			public void onActivityResumed(final Activity activity) {
-				super.onActivityResumed(activity);
-				L.debug("app onResume()");
-				if (!isForeground) {
-					ToastUtil.showToast("切回到前台");
-					isForeground = true;
-				}
-			}
-
-			@Override
-			public void onActivityStopped(Activity activity) {
-				super.onActivityStopped(activity);
-				if (!AppUtils.isAppOnForeground()) {
-					isForeground = false;
-					ToastUtil.showToast("切到后台");
-				}
-			}
-		});
 	}
 
 	private void init() {
@@ -68,6 +44,32 @@ public class BaseApplication extends Application{
 		RequestManager.init(this, null, MAX_NETWORK_CACHE_SIZE);
 
 		CrashReport.initCrashReport(getApplicationContext(), "900019432", false);
+
+
+		registerActivityLifecycleCallbacks(new DefaultActivityLifecycleCallback(){
+
+			boolean isForeground = false;
+
+			@Override
+			public void onActivityResumed(final Activity activity) {
+				super.onActivityResumed(activity);
+				if (!isForeground) {
+					L.debug("app切回到前台");
+					isForeground = true;
+				}
+			}
+
+			@Override
+			public void onActivityStopped(Activity activity) {
+				super.onActivityStopped(activity);
+				if (!AppUtils.isAppOnForeground()) {
+					L.debug("app切到后台");
+					isForeground = false;
+					//如果开启了视频播放，关闭；
+					stopService(new Intent(BaseApplication.this, VideoPlayService.class));
+				}
+			}
+		});
 	}
 
 	@Override

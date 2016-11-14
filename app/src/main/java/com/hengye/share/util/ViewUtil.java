@@ -150,14 +150,22 @@ public class ViewUtil extends ResUtil {
     }
 
     public static int getScreenWidth(Context context) {
-        if (screenWidth == 0) {
+        return getScreenWidth(context, false);
+    }
+
+    public static int getScreenWidth(Context context, boolean refresh) {
+        if (screenWidth == 0 || refresh) {
             setScreenInfo(context);
         }
         return screenWidth;
     }
 
     public static int getScreenHeight(Context context) {
-        if (screenHeight == 0) {
+        return getScreenHeight(context, false);
+    }
+
+    public static int getScreenHeight(Context context, boolean refresh) {
+        if (screenHeight == 0 || refresh) {
             setScreenInfo(context);
         }
         return screenHeight;

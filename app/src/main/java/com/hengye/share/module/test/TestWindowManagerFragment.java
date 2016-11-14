@@ -3,6 +3,7 @@ package com.hengye.share.module.test;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.SurfaceHolder;
@@ -10,14 +11,13 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
-import android.widget.VideoView;
 
 import com.hengye.share.R;
 import com.hengye.share.module.util.encapsulation.fragment.BaseFragment;
 import com.hengye.share.service.VideoPlayService;
+import com.hengye.share.ui.widget.media.MediaController;
+import com.hengye.share.ui.widget.media.VideoView;
 import com.hengye.share.util.L;
-
-import java.io.IOException;
 
 /**
  * Created by yuhy on 16/7/18.
@@ -64,6 +64,11 @@ public class TestWindowManagerFragment extends BaseFragment implements View.OnCl
         mSurfaceHolder = mSurfaceView.getHolder();
         mSurfaceHolder.setFixedSize(100, 100);
 
+        VideoView videoView = (VideoView) findViewById(R.id.video_view);
+        videoView.setVideoURI(Uri.parse("http://220.170.49.101/6/u/z/n/i/uznieiofgthpmyvbfvujnrezonnstk/he.yinyuetai.com/6644014F4059639839454D0994238FBE.flv?sc\\u003da317971751670318\\u0026br\\u003d3142\\u0026vid\\u003d2353215\\u0026aid\\u003d28047\\u0026area\\u003dML\\u0026vst\\u003d0"));
+        MediaController mc = (MediaController) findViewById(R.id.media_controller);
+        videoView.setMediaController(mc);
+        videoView.start();
     }
 
     @Override
@@ -86,21 +91,7 @@ public class TestWindowManagerFragment extends BaseFragment implements View.OnCl
         }
 
 
-        if (id == R.id.voice_play) {
-//            mMediaPlayer.reset();//恢复到未初始化的状态
-//            mMediaPlayer = MediaPlayer.create(testMedia.this, R.raw.big);//读取音频
-//            skb_audio.setMax(mMediaPlayer.getDuration());//设置SeekBar的长度
-//            try {
-//                mMediaPlayer.prepare();    //准备
-//            } catch (IllegalStateException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            } catch (IOException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
-//            mMediaPlayer.start();  //播放
-        } else if (id == R.id.voice_stop || id == R.id.video_stop) {
+        if (id == R.id.video_stop) {
             mMediaPlayer.stop();
         } else if (id == R.id.video_play) {
             try {
@@ -156,6 +147,7 @@ public class TestWindowManagerFragment extends BaseFragment implements View.OnCl
             }
         }
     }
+
 }
 
 
