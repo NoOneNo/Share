@@ -9,13 +9,12 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.hengye.share.R;
-import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapter;
-import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemViewHolder;
 import com.hengye.share.model.AtUser;
 import com.hengye.share.model.UserInfo;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapter;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemViewHolder;
 import com.hengye.share.ui.widget.image.AvatarImageView;
 import com.hengye.share.ui.widget.util.SelectorLoader;
-import com.hengye.share.util.RequestManager;
 
 import java.util.List;
 
@@ -64,7 +63,7 @@ public class AtUserSearchAdapter extends CommonAdapter<AtUser> {
             UserInfo userInfo = atUser.getUserInfo();
             if (userInfo != null) {
                 mUsername.setText(userInfo.getName());
-                mAvatar.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());
+                mAvatar.setImageUrl(userInfo.getAvatar());
             } else {
                 mAvatar.setImageResource(0);
             }

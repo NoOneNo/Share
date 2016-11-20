@@ -125,7 +125,7 @@ public class StateLayoutManager {
 
         if(currentStateView.getVisibility() == View.VISIBLE){
             //isVisible already
-            L.debug("isVisible already");
+//            L.debug("isVisible already");
             return;
         }
 
@@ -157,7 +157,7 @@ public class StateLayoutManager {
     }
 
     public void updateState(){
-        L.debug("updateState invoke()");
+//        L.debug("updateState invoke()");
         setView(mCurrentState);
     }
 
@@ -212,6 +212,20 @@ public class StateLayoutManager {
 
         @Override
         public Animation getDisappearAnimation() {
+//            Animation animation = new Animation() {
+//                @Override
+//                public void applyTransformation(float interpolatedTime, Transformation t) {
+//                    if(interpolatedTime == 1.0f){
+//                        t.setAlpha(0.0f);
+//                    }else{
+//                        t.setAlpha(1.0f);
+//                    }
+//                }
+//            };
+//            animation.setDuration(350);
+//            return animation;
+
+
             AlphaAnimation animation = new AlphaAnimation(1.0f, 0.0f);
             animation.setDuration(350);
             return animation;

@@ -7,11 +7,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hengye.share.R;
+import com.hengye.share.model.UserInfo;
 import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapter;
 import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemViewHolder;
-import com.hengye.share.model.UserInfo;
 import com.hengye.share.ui.widget.image.AvatarImageView;
-import com.hengye.share.util.RequestManager;
 
 import java.util.List;
 
@@ -41,7 +40,7 @@ public class SearchUserAdapter extends CommonAdapter<UserInfo> {
         @Override
         public void bindData(Context context, UserInfo userInfo, int position) {
             username.setText(userInfo.getName());
-            avatar.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());
+            avatar.setImageUrl(userInfo.getAvatar());
         }
     }
 }

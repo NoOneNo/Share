@@ -175,7 +175,7 @@ public class GridGalleryView extends GridLayout implements View.OnClickListener 
             if (count == 1) {
                 int size = ViewGroup.LayoutParams.WRAP_CONTENT;
                 int minSize = maxWidth / 2;
-                return new ImageSize(minSize, minSize, minSize, minSize, maxWidth, minSize);
+                return new ImageSize(minSize, minSize, minSize, minSize, maxWidth, maxWidth);
             } else if (count == 2 || count == 4) {
                 return new ImageSize((maxWidth - marginLength) / 3);
             } else {
@@ -188,9 +188,6 @@ public class GridGalleryView extends GridLayout implements View.OnClickListener 
 
             GridLayout.LayoutParams lp = new GridLayout.LayoutParams();
 
-            lp.width = is.width;
-            lp.height = is.height;
-
             if(count % 3 == 0) {
                 int actualPosition = position % 3;
                 if (actualPosition == 0 || actualPosition == 1){
@@ -201,11 +198,17 @@ public class GridGalleryView extends GridLayout implements View.OnClickListener 
             }
 
             lp.bottomMargin = margin;
+
             if (count == 1) {
-//                imageView.setMinimumWidth(is.minWidth);
-//                imageView.setMinimumHeight(is.minHeight);
-//                imageView.setMaxWidth(is.maxWidth);
-//                imageView.setMaxHeight(is.maxHeight);
+                imageView.setMinimumWidth(is.minWidth);
+                imageView.setMinimumHeight(is.minHeight);
+                imageView.setMaxWidth(is.maxWidth);
+                imageView.setMaxHeight(is.maxHeight);
+                lp.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            }else{
+                lp.width = is.width;
+                lp.height = is.height;
             }
             imageView.setLayoutParams(lp);
         }

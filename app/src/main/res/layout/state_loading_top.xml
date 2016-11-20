@@ -4,7 +4,11 @@
     android:layout_height="match_parent"
     android:paddingTop="@dimen/content_margin_50dp">
 
-    <include
-        layout="@layout/state_loading"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal">
+        <include layout="@layout/state_loading" />
+    </FrameLayout>
 
 </android.support.v4.widget.NestedScrollView>

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 
+import com.android.volley.cache.BitmapCache;
 import com.hengye.share.R;
 import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.module.publish.TopicPublishActivity;
@@ -79,7 +80,8 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_test) {
-            onRunSchedulerExampleButtonClicked();
+            BitmapCache.getInstance().clearCacheFromMemory();
+//            onRunSchedulerExampleButtonClicked();
         } else if (v.getId() == R.id.btn_test2) {
             onRunSchedulerExampleButtonClicked2();
         } else if (v.getId() == R.id.btn_test3) {

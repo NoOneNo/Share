@@ -9,15 +9,14 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.hengye.share.R;
+import com.hengye.share.model.greenrobot.User;
+import com.hengye.share.module.sso.ThirdPartyLoginActivity;
 import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapter;
 import com.hengye.share.module.util.encapsulation.view.recyclerview.HeaderAdapter;
 import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemViewHolder;
-import com.hengye.share.model.greenrobot.User;
-import com.hengye.share.module.sso.ThirdPartyLoginActivity;
 import com.hengye.share.ui.widget.image.AvatarImageView;
 import com.hengye.share.ui.widget.image.SuperImageView;
 import com.hengye.share.ui.widget.util.SelectorLoader;
-import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.thirdparty.ThirdPartyUtils;
 
 import java.util.List;
@@ -96,7 +95,7 @@ public class AccountManageAdapter extends CommonAdapter<User> {
         public void bindData(Context context, User user, int position) {
 
             mAvatar.setAutoClipBitmap(false);
-            mAvatar.setImageUrl(user.getAvatar(), RequestManager.getImageLoader());
+            mAvatar.setImageUrl(user.getAvatar());
 
             mUsername.setText(user.getName());
 

@@ -787,9 +787,9 @@ public class PullToRefreshLayout extends LinearLayout implements NestedScrolling
     public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
 //        return isEnabled() && !mReturningToStart && !mRefreshing
 //                && (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
-
-        return isEnabled() && !mResetting && mRefreshEnable
-                && (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
+        return false;//暂时关闭嵌套
+//        return isEnabled() && !mResetting && mRefreshEnable
+//                && (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
     }
 
     @Override
@@ -803,7 +803,7 @@ public class PullToRefreshLayout extends LinearLayout implements NestedScrolling
 
         mActionDownOffsetTop = mCurrentTargetOffsetTop;
 
-        Log.e(LOG_TAG, "onNestedScrollAccepted");
+//        Log.e(LOG_TAG, "onNestedScrollAccepted");
     }
 
     @Override

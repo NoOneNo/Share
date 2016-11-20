@@ -6,12 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hengye.share.R;
-import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapter;
-import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemViewHolder;
 import com.hengye.share.model.AtUser;
 import com.hengye.share.model.UserInfo;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapter;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemViewHolder;
 import com.hengye.share.ui.widget.image.AvatarImageView;
-import com.hengye.share.util.RequestManager;
 
 import java.util.List;
 
@@ -66,7 +65,7 @@ public class AtUserSelectAdapter extends CommonAdapter<AtUser> {
 
             UserInfo userInfo = atUser.getUserInfo();
             if (userInfo != null) {
-                mAvatar.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());
+                mAvatar.setImageUrl(userInfo.getAvatar());
             }
         }
     }

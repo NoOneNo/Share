@@ -75,7 +75,7 @@ public class GroupListFragment extends RecyclerRefreshFragment<TopicGroup>{
         }
     }
 
-    public void load(boolean isRefresh){
+    public void load(boolean isRefresh, boolean selected){
         List<TopicGroup> groups = TopicGroup.getAllTopicGroups();
         TopicGroup tg = new TopicGroup(TopicType.NONE);
         groups.add(tg);
@@ -85,9 +85,14 @@ public class GroupListFragment extends RecyclerRefreshFragment<TopicGroup>{
 
         if(isRefresh){
             mLastSelectPosition = 0;
+        }else if(mLastSelectPosition < 0 || mLastSelectPosition >= mAdapter.getBasicItemCount()){
+            mLastSelectPosition = 0;
         }
         mAdapter.setSelectPosition(mLastSelectPosition);
-        selectGroupByPosition(mLastSelectPosition);
+
+        if(selected) {
+            selectGroupByPosition(mLastSelectPosition);
+        }
     }
 
     @Override

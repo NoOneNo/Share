@@ -8,12 +8,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.hengye.share.R;
-import com.hengye.share.module.util.encapsulation.view.recyclerview.EditModeAdapter;
 import com.hengye.share.model.Select;
 import com.hengye.share.model.UserInfo;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.EditModeAdapter;
 import com.hengye.share.ui.widget.image.AvatarImageView;
 import com.hengye.share.ui.widget.util.SelectorLoader;
-import com.hengye.share.util.RequestManager;
 
 public class UserListAdapter extends EditModeAdapter<Select<UserInfo>> {
 
@@ -59,7 +58,7 @@ public class UserListAdapter extends EditModeAdapter<Select<UserInfo>> {
             UserInfo userInfo = select.getTarget();
             if (userInfo != null) {
                 mUsername.setText(userInfo.getName());
-                mAvatar.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());
+                mAvatar.setImageUrl(userInfo.getAvatar());
             } else {
                 mAvatar.setImageResource(0);
             }

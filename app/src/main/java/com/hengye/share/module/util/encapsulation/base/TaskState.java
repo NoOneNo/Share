@@ -1,5 +1,8 @@
 package com.hengye.share.module.util.encapsulation.base;
 
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
+
 /**
  * Created by yuhy on 2016/10/20.
  */
@@ -20,5 +23,13 @@ public class TaskState {
 
     public static boolean isFailByServer(int taskState){
         return taskState == STATE_FAIL_BY_SERVER;
+    }
+
+    public static boolean isNetworkException(Throwable throwable){
+        if(throwable instanceof UnknownHostException
+                || throwable instanceof SocketTimeoutException){
+            return true;
+        }
+        return false;
     }
 }

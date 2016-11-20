@@ -15,14 +15,14 @@
         android:id="@+id/btn_test"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="test RXJAVA"
+        android:text="clear image memory cache"
         android:layout_centerInParent="true"/>
 
     <Button
         android:id="@+id/btn_test2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="test2 RXJAVA"
+        android:text="test RXJAVA"
         android:layout_centerInParent="true"/>
 
     <Button
@@ -65,12 +65,12 @@
         android:layout_width="35dp"
         android:layout_height="45dp" />
 
-    <com.hengye.share.ui.widget.loading.StretchLoadingView
-        android:id="@+id/process_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        stretch:stretch_target="@drawable/loading1"
-        stretch:stretch_targetCount="5"/>
+    <!--<com.hengye.share.ui.widget.loading.StretchLoadingView-->
+        <!--android:id="@+id/process_bar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--stretch:stretch_target="@drawable/loading1"-->
+        <!--stretch:stretch_targetCount="5"/>-->
 </LinearLayout>
 </ScrollView>

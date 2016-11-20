@@ -21,7 +21,6 @@ import android.widget.LinearLayout;
 import com.hengye.share.R;
 import com.hengye.share.module.util.encapsulation.mvp.BasePresenter;
 import com.hengye.share.ui.widget.common.CommonToolBar;
-import com.hengye.share.util.L;
 import com.hengye.share.util.NetworkUtil;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.module.setting.SettingHelper;
@@ -142,7 +141,6 @@ public class BaseActivity extends AppCompatActivity implements OnSkinUpdateListe
 
     @Override
     protected void onResume() {
-        L.debug("activity onResume");
         mInstance = this;
         mActivityHelper.dispatchActivityResumed(this);
         super.onResume();
@@ -346,7 +344,7 @@ public class BaseActivity extends AppCompatActivity implements OnSkinUpdateListe
             mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onBackPressed();
+                    onNavigationClick(v);
                 }
             });
             mToolbar.addOnDoubleTapListener(new OnDoubleTapListener() {
@@ -372,6 +370,10 @@ public class BaseActivity extends AppCompatActivity implements OnSkinUpdateListe
 
     public void updateToolbarTitle(@StringRes int resId) {
         updateToolbarTitle(getString(resId));
+    }
+
+    public void onNavigationClick(View v){
+        onBackPressed();
     }
 
     public void onToolbarDoubleClick(Toolbar toolbar) {

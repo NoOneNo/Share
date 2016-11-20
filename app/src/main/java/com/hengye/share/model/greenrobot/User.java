@@ -2,6 +2,7 @@ package com.hengye.share.model.greenrobot;
 
 import org.greenrobot.greendao.annotation.*;
 
+import com.android.volley.toolbox.ImageKey;
 import com.hengye.share.model.greenrobot.DaoSession;
 import org.greenrobot.greendao.DaoException;
 
@@ -309,7 +310,7 @@ public class User implements java.io.Serializable {
     }
 
     public Bitmap getUserAvatarBitmap(){
-        BitmapUtil.CacheKey ck = new BitmapUtil.CacheKey(getAvatar(), 0, 0, ImageView.ScaleType.FIT_CENTER);
+        ImageKey ck = new ImageKey(getAvatar(), 0, 0, 0, 0, ImageView.ScaleType.FIT_CENTER);
         return ImageLoader.getBitmap(ck);
     }
     // KEEP METHODS END

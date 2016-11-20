@@ -19,10 +19,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
-import com.hengye.share.BuildConfig;
 import com.hengye.share.R;
-import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapter;
-import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemViewHolder;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.UserInfo;
@@ -32,6 +29,10 @@ import com.hengye.share.module.profile.PersonalHomepageActivity;
 import com.hengye.share.module.publish.TopicPublishActivity;
 import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.module.topicdetail.TopicDetailActivity;
+import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
+import com.hengye.share.module.util.encapsulation.view.listener.OnItemLongClickListener;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapter;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemViewHolder;
 import com.hengye.share.module.util.image.GalleryActivity;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.ui.support.textspan.TopicUrlOnTouchListener;
@@ -39,8 +40,6 @@ import com.hengye.share.ui.widget.dialog.DialogBuilder;
 import com.hengye.share.ui.widget.image.AvatarImageView;
 import com.hengye.share.ui.widget.image.GridGalleryView;
 import com.hengye.share.ui.widget.image.SuperImageView;
-import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
-import com.hengye.share.module.util.encapsulation.view.listener.OnItemLongClickListener;
 import com.hengye.share.ui.widget.util.SelectorLoader;
 import com.hengye.share.util.ClipboardUtil;
 import com.hengye.share.util.CommonUtil;
@@ -76,9 +75,9 @@ public class TopicAdapter extends CommonAdapter<Topic>
         setOnItemClickListener(this);
         setOnItemLongClickListener(this);
 
-        if (!BuildConfig.DEBUG) {
-            setCheckDiffMode(true);
-        }
+//        if (!BuildConfig.DEBUG) {
+//            setCheckDiffMode(true);
+//        }
     }
 
     @Override
@@ -365,7 +364,7 @@ public class TopicAdapter extends CommonAdapter<Topic>
             if (userInfo != null) {
                 mUsername.setText(userInfo.getName());
                 if (SettingHelper.isShowTopicAvatar()) {
-                    mAvatar.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());
+                    mAvatar.setImageUrl(userInfo.getAvatar());
                 } else {
                     mAvatar.setImageResource(R.drawable.ic_user_avatar);
                 }
@@ -385,7 +384,7 @@ public class TopicAdapter extends CommonAdapter<Topic>
             if (userInfo != null) {
                 mUsername.setText(userInfo.getName());
                 if (SettingHelper.isShowCommentAndRepostAvatar()) {
-                    mAvatar.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());
+                    mAvatar.setImageUrl(userInfo.getAvatar());
                 } else {
                     mAvatar.setImageResource(R.drawable.ic_user_avatar);
                 }
@@ -434,6 +433,7 @@ public class TopicAdapter extends CommonAdapter<Topic>
                         SuperImageView iv = new SuperImageView(context);
 //                                iv.setFadeInImage(mIsFadeInImage);
                         iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//                        iv.setScaleType(ImageView.ScaleType.FIT_XY);
                         iv.setBackgroundColor(context.getResources().getColor(R.color.image_default_bg));
                         iv.setTag(mGallery);
                         iv.setId(View.NO_ID);

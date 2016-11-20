@@ -74,7 +74,8 @@
         <activity
             android:name=".module.topic.TopicActivity"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.Main"/>
+            android:theme="@style/AppTheme.Main"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
 
         <activity
             android:name=".module.sso.LoginActivity"
@@ -111,7 +112,8 @@
         </activity>
 
         <activity
-            android:name=".module.profile.PersonalHomepageActivity">
+            android:name=".module.profile.PersonalHomepageActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize">
 
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
@@ -156,7 +158,8 @@
             android:name=".module.topicdetail.TopicDetailActivity"/>
 
         <activity
-            android:name=".module.topicdetail.TopicDetail2Activity"/>
+            android:name=".module.topicdetail.TopicDetail2Activity"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
 
         <activity
             android:name=".module.topic.TopicMentionActivity"/>

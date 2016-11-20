@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
@@ -21,24 +22,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hengye.share.R;
-import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.module.accountmanage.AccountManageActivity;
-import com.hengye.share.module.groupmanage.GroupManageActivity;
-import com.hengye.share.module.search.SearchActivity;
-import com.hengye.share.module.util.FragmentActivity;
-import com.hengye.share.module.profile.PersonalHomepageActivity;
-import com.hengye.share.module.test.TestActivity;
-import com.hengye.share.module.draft.TopicDraftActivity;
-import com.hengye.share.module.publish.TopicPublishActivity;
-import com.hengye.share.module.setting.SettingActivity;
 import com.hengye.share.module.base.ActivityHelper;
 import com.hengye.share.module.base.BaseActivity;
+import com.hengye.share.module.draft.TopicDraftActivity;
 import com.hengye.share.module.groupmanage.GroupListFragment;
+import com.hengye.share.module.groupmanage.GroupManageActivity;
+import com.hengye.share.module.profile.PersonalHomepageActivity;
+import com.hengye.share.module.publish.TopicPublishActivity;
+import com.hengye.share.module.search.SearchActivity;
+import com.hengye.share.module.setting.SettingActivity;
+import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.module.sso.UserMvpView;
 import com.hengye.share.module.sso.UserPresenter;
+import com.hengye.share.module.test.TestActivity;
 import com.hengye.share.ui.support.actionbar.ActionBarDrawerToggleCustom;
 import com.hengye.share.ui.widget.SearchView;
 import com.hengye.share.ui.widget.fab.AnimatedFloatingActionButton;
@@ -48,7 +48,6 @@ import com.hengye.share.ui.widget.sheetfab.MaterialSheetFabEventListener;
 import com.hengye.share.ui.widget.util.SelectorLoader;
 import com.hengye.share.util.L;
 import com.hengye.share.util.NetworkUtil;
-import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.ThemeUtil;
 import com.hengye.share.util.ToastUtil;
@@ -56,7 +55,6 @@ import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.intercept.Action;
 import com.hengye.share.util.intercept.AdTokenInterceptor;
-import com.hengye.share.util.intercept.TokenInterceptor;
 
 public class TopicActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -93,9 +91,9 @@ public class TopicActivity extends BaseActivity
         addPresenter(mPresenter = new UserPresenter(this));
         initView();
 
-        if(UserUtil.isUserEmpty()) {
+        if (UserUtil.isUserEmpty()) {
             startActivity(AccountManageActivity.class);
-        }else if (UserUtil.isUserNameEmpty()) {
+        } else if (UserUtil.isUserNameEmpty()) {
             mPresenter.loadWBUserInfo();
         } else {
             loadSuccess(UserUtil.getCurrentUser());
@@ -234,7 +232,14 @@ public class TopicActivity extends BaseActivity
         mMaterialSheetFab.showFab();
         mGroupsFragment = (GroupListFragment) getSupportFragmentManager().findFragmentById(R.id.group_list_fragment);
         //刷新当前选中的fragment
-        mGroupsFragment.load(false);
+
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content);
+        if (fragment != null && fragment instanceof TopicFragment) {
+            mCurrentTopicFragment = (TopicFragment) fragment;
+            mGroupsFragment.load(false, false);
+        } else {
+            mGroupsFragment.load(false, true);
+        }
     }
 
     public void onGroupSelected(int position, TopicPresenter.TopicGroup topicGroup) {
@@ -330,7 +335,7 @@ public class TopicActivity extends BaseActivity
 
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-        if(mCurrentTopicFragment == null){
+        if (mCurrentTopicFragment == null) {
             return;
         }
         if (verticalOffset >= 0) {
@@ -420,7 +425,7 @@ public class TopicActivity extends BaseActivity
     @Override
     public void loadSuccess(User user) {
         if (user != null) {
-            mAvatar.setImageUrl(user.getAvatar(), RequestManager.getImageLoader());
+            mAvatar.setImageUrl(user.getAvatar());
             mUsername.setText(user.getName());
             mSign.setText(user.getSign());
         } else {
@@ -447,13 +452,13 @@ public class TopicActivity extends BaseActivity
         if (requestCode == AccountManageActivity.ACCOUNT_CHANGE && resultCode == Activity.RESULT_OK) {
             updateView();
         } else if (requestCode == GroupManageActivity.GROUP_UPDATE && resultCode == Activity.RESULT_OK) {
-            mGroupsFragment.load(true);
+            mGroupsFragment.load(true, true);
         }
     }
 
     private void updateView() {
         loadSuccess(UserUtil.getCurrentUser());
-        mGroupsFragment.load(true);
+        mGroupsFragment.load(true, true);
     }
 
 

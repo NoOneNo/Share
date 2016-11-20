@@ -9,13 +9,12 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.hengye.share.R;
-import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemViewHolder;
 import com.hengye.share.model.AtUser;
 import com.hengye.share.model.UserInfo;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemViewHolder;
 import com.hengye.share.ui.widget.image.AvatarImageView;
 import com.hengye.share.ui.widget.lettersort.recyclerview.GroupAdapter;
 import com.hengye.share.ui.widget.util.SelectorLoader;
-import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.ResUtil;
 
 import java.util.ArrayList;
@@ -94,7 +93,7 @@ public class AtUserSortAdapter extends GroupAdapter<AtUserSortAdapter.Letter, At
             UserInfo userInfo = atUser.getUserInfo();
             if (userInfo != null) {
                 mUsername.setText(userInfo.getName());
-                mAvatar.setImageUrl(userInfo.getAvatar(), RequestManager.getImageLoader());
+                mAvatar.setImageUrl(userInfo.getAvatar());
             } else {
                 mAvatar.setImageResource(0);
             }

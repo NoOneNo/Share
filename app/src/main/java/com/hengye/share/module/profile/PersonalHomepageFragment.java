@@ -61,7 +61,7 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
 
     @Override
     protected int getDefaultSelectPosition() {
-        return 1;
+        return 0;
     }
 
     WBUserInfo mWbUserInfo;

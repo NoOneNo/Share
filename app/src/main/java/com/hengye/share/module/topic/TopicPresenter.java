@@ -125,7 +125,9 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
                     }
                 }
 
-                if (isRefresh && BuildConfig.DEBUG) {
+                //暂时先统一不设置loadId
+//                if (isRefresh && BuildConfig.DEBUG) {
+                if (isRefresh) {
                     isNeedLoadId = false;
                     if (mTopicGroup.topicType == TopicType.GROUP_LIST) {
                         id = "1";

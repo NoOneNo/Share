@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.DownloadListener;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -27,7 +28,7 @@ import com.hengye.share.util.ToastUtil;
 
 import java.util.ArrayList;
 
-public class WebViewActivity extends BaseActivity{
+public class WebViewActivity extends BaseActivity {
 
     @Override
     protected void handleBundleExtra(Intent intent) {
@@ -42,8 +43,8 @@ public class WebViewActivity extends BaseActivity{
 //                if (start != -1) {
 //                    mUrl = value.substring(start + 7);
 //                }
-            }
         }
+    }
 
 //        if (mUrl != null) {
 //            mUrl.startsWith()
@@ -73,21 +74,21 @@ public class WebViewActivity extends BaseActivity{
         if (mUrl == null) {
             finish();
         } else {
-            if(SettingHelper.isUseInternalBrowser()){
+            if (SettingHelper.isUseInternalBrowser()) {
                 initView();
-            }else{
+            } else {
                 openExternalBrowser(mUrl);
                 finish();
             }
         }
     }
 
-    private void openExternalBrowser(String url){
+    private void openExternalBrowser(String url) {
         final Uri uri = Uri.parse(url);
         final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        if(IntentUtil.resolveActivity(intent)){
+        if (IntentUtil.resolveActivity(intent)) {
             startActivity(intent);
-        }else{
+        } else {
             ToastUtil.showToast(R.string.label_resolve_url_activity_fail);
         }
     }
@@ -154,8 +155,10 @@ public class WebViewActivity extends BaseActivity{
 
     @SuppressLint("SetJavaScriptEnabled")
     private void initWebView() {
-        mWebView.getSettings().setJavaScriptEnabled(true);
-
+        WebSettings settings = mWebView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setDomStorageEnabled(true);
+//        mWebView.getSettings().set
         mWebView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
@@ -214,12 +217,17 @@ public class WebViewActivity extends BaseActivity{
     }
 
     @Override
-    public void onBackPressed() {
-//        if (mWebView.canGoBack()) {
-//            mWebView.goBack();
-//        } else {
+    public void onNavigationClick(View v) {
+        if (mWebView.canGoBack()) {
+            mWebView.goBack();
+        } else {
             super.onBackPressed();
-//        }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     @Override
@@ -241,5 +249,26 @@ public class WebViewActivity extends BaseActivity{
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mWebView.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mWebView.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mWebView != null) {
+            mWebView.destroy();
+            mWebView = null;
+        }
     }
 }

@@ -13,6 +13,7 @@
     <string name="tip_permission_denied">权限不足</string>
     <string name="tip_authorize_success">授权成功</string>
     <string name="tip_empty">当前内容为空</string>
+    <string name="tip_service_error">当前请求不可用，请稍后尝试</string>
     <string name="tip_try_refresh">刷新试试</string>
     <string name="tip_exit_on_back_pressed">再按一次退出应用</string>
     <string name="tip_no_app_store">找不到可用的应用市场</string>

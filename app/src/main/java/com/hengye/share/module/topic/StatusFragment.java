@@ -24,6 +24,22 @@ public abstract class StatusFragment<T> extends RecyclerRefreshFragment<T> {
     private LinearLayoutManager mLinearLayoutManager;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+//        setRetainInstance(true);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mLinearLayoutManager = (LinearLayoutManager) getRecyclerView().getLayoutManager();
