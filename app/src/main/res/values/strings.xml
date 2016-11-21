@@ -138,9 +138,11 @@
     <!-- Strings related to TopicDetail-->
 
     <!-- Strings related to PersonalHomePage -->
-    <string name="label_attention">关注 %s</string>
+    <string name="label_attention_count">关注 %s</string>
     <string name="label_division">|</string>
-    <string name="label_fans">粉丝 %s</string>
+    <string name="label_fans_count">粉丝 %s</string>
+    <string name="label_status_following">已关注</string>
+    <string name="label_status_unfollowing">添加关注</string>
     <string name="label_follow_create_success">关注成功</string>
     <string name="label_follow_destroy_success">成功取消关注</string>
     <string name="label_tab_about">关于</string>

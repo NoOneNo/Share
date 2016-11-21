@@ -276,7 +276,7 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
                         } else {
                             return Observable
                                     .just(topics)
-                                    .delay(400, TimeUnit.MILLISECONDS);
+                                    .delay(500, TimeUnit.MILLISECONDS);
                         }
                     }
                 })

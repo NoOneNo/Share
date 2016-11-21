@@ -98,5 +98,8 @@ public class TopicPageFragment extends StatusFragment<Topic> implements TopicPag
     @Override
     public void handleDataType(int type) {
         super.handleDataType(type);
+        if(DataType.hasNewData(type)){
+            mPresenter.saveData(mAdapter.getData());
+        }
     }
 }

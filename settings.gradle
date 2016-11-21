@@ -1,2 +1,11 @@
-include ':app', ':greendaogenerator', ':draglistview', ':floatingactionbutton', ':swipebacklayout', ':datetimerpicker', ':photopicker', ':swiperefresh', ':module'
+include ':app',
+        ':greendaogenerator',
+        ':draglistview',
+        ':floatingactionbutton',
+        ':swipebacklayout',
+        ':datetimerpicker',
+        ':photopicker',
+        ':swiperefresh',
+        ':module',
+        ':spinkit'
 

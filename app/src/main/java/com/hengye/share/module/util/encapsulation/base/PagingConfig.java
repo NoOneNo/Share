@@ -1,8 +1,5 @@
 package com.hengye.share.module.util.encapsulation.base;
 
-import com.hengye.share.R;
-import com.hengye.share.util.ResUtil;
-
 import java.io.Serializable;
 
 /**
@@ -10,15 +7,13 @@ import java.io.Serializable;
  */
 public class PagingConfig implements Serializable {
 
-    boolean refreshEnable = true; //是否可以刷新
+    private boolean refreshEnable = true; //是否可以刷新
 
-    boolean loadEnable = false; //是否可以加载更多
+    private boolean loadEnable = false; //是否可以加载更多
 
-    boolean autoLoad = false; //是否自动加载更多(如果是,当滑动到底部时,不需要松开再滑动去加载)
+    private boolean autoLoad = false; //是否自动加载更多(如果是,当滑动到底部时,不需要松开再滑动去加载)
 
-    String emptyHint = ResUtil.getString(R.string.tip_empty); //当内容为空时的提示
-
-    boolean change = false; //用于判断配置是否发生变更;
+    private boolean change = false; //用于判断配置是否发生变更;
 
     public void resetChange(){
         change = false;
@@ -58,17 +53,6 @@ public class PagingConfig implements Serializable {
         if(this.autoLoad != autoLoad){
             change();
             this.autoLoad = autoLoad;
-        }
-    }
-
-    public String getEmptyHint() {
-        return emptyHint;
-    }
-
-    public void setEmptyHint(String emptyHint) {
-        if(this.emptyHint == null || !this.emptyHint.equals(emptyHint)){
-            change();
-            this.emptyHint = emptyHint;
         }
     }
 

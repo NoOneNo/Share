@@ -32,7 +32,6 @@ import com.hengye.share.module.sso.UserMvpView;
 import com.hengye.share.module.sso.UserPresenter;
 import com.hengye.share.ui.widget.PersonalHomePageToolbarLayout;
 import com.hengye.share.ui.widget.ScrollChildSwipeRefreshLayout;
-import com.hengye.share.ui.widget.fab.CheckableFab;
 import com.hengye.share.ui.widget.image.AvatarImageView;
 import com.hengye.share.ui.widget.image.SuperImageView;
 import com.hengye.share.util.DataUtil;
@@ -130,7 +129,8 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     private View mUserInfoLayout;
     private View mUserDescription;
     //    private FloatingActionButton mFollowButton;
-    private CheckableFab mFollowButton;
+//    private CheckableFab mFollowButton;
+    private TextView mFollowButton;
     private TabLayout mTab;
 
     private UserInfo mUserInfo;
@@ -154,7 +154,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         }
 
 
-        mFollowButton = (CheckableFab) findViewById(R.id.fab);
+        mFollowButton = (TextView) findViewById(R.id.btn_attention);
         mFollowButton.setOnClickListener(this);
         mCollapsingToolbarLayout =
                 (PersonalHomePageToolbarLayout) findViewById(R.id.collapsing_toolbar);
@@ -363,11 +363,11 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         mCover.setImageUrl(wbUserInfo.getCover_image_phone());
         mAvatar.setImageUrl(wbUserInfo.getAvatar_large());
         mDivision.setVisibility(View.VISIBLE);
-        mAttention.setText(String.format(getString(R.string.label_attention), DataUtil.getCounter(wbUserInfo.getFriends_count())));
-        mFans.setText(String.format(getString(R.string.label_fans), DataUtil.getCounter(wbUserInfo.getFollowers_count())));
+        mAttention.setText(String.format(getString(R.string.label_attention_count), DataUtil.getCounter(wbUserInfo.getFriends_count())));
+        mFans.setText(String.format(getString(R.string.label_fans_count), DataUtil.getCounter(wbUserInfo.getFollowers_count())));
 //        mSign.setText(wbUserInfo.getDescription());
-        mFollowButton.setChecked(mWBUserInfo.isFollowing());
-//        mFollowButton.setVisibility(View.VISIBLE);
+//        mFollowButton.setChecked(mWBUserInfo.isFollowing());
+        updateFollowButton(mWBUserInfo.isFollowing());
         mUserDescription.setVisibility(View.VISIBLE);
         mUserDescription.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
@@ -377,17 +377,22 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                 int avatarMarginTop = ViewUtil.dp2px(R.dimen.header_personal_avatar_margin_top);
                 int descHeight = mUserDescription.getHeight();
                 float marginBottom = descHeight + (avatarMarginTop - textHeight) / 2;
+                //设置展开时标题的位置
                 mCollapsingToolbarLayout.setExpandedTitleMarginBottom((int) marginBottom);
 
-                ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mFollowButton.getLayoutParams();
-                lp.bottomMargin = descHeight;
-                mFollowButton.setLayoutParams(lp);
-                mFollowButton.requestLayout();
+//                ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mFollowButton.getLayoutParams();
+//                lp.bottomMargin = descHeight;
+//                mFollowButton.setLayoutParams(lp);
+//                mFollowButton.requestLayout();
                 return true;
             }
         });
 
         loadData(wbUserInfo);
+    }
+
+    private void updateFollowButton(boolean isFollowing){
+        mFollowButton.setText(isFollowing ? ResUtil.getString(R.string.label_status_following) : ResUtil.getString(R.string.label_status_unfollowing));
     }
 
     private void loadData(final WBUserInfo wbUserInfo) {
@@ -413,7 +418,8 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         int id = v.getId();
 
         if (mWBUserInfo != null) {
-            if (id == R.id.fab) {
+            if (id == R.id.btn_attention) {
+                mFollowButton.setEnabled(false);
                 follow(!mWBUserInfo.isFollowing(), mWBUserInfo.getIdstr());
             } else if (id == R.id.tv_attention) {
                 if (mWBUserInfo.getIdstr() != null) {
@@ -464,7 +470,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                 .subscribe(new Subscriber<WBUserInfo>() {
                     @Override
                     public void onCompleted() {
-
+                        mFollowButton.setEnabled(true);
                     }
 
                     @Override
@@ -480,11 +486,10 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                             } else {
                                 ToastUtil.showToast(R.string.label_follow_destroy_success);
                             }
-                            mFollowButton.setChecked(isFollow);
+                            updateFollowButton(isFollow);
                             if (mWBUserInfo != null) {
                                 mWBUserInfo.setFollowing(isFollow);
                             }
-//                            initUserInfo(wbUserInfo);
                         }
                     }
                 });
@@ -573,46 +578,6 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     }
 
 }
-
-
-//    private Matrix setCoverMatrix() {
-//
-//        Matrix drawMatrix = new Matrix();
-//
-//        if (mCover.getDrawable() == null) {
-//            return drawMatrix;
-//        }
-//
-//        int dWidth = mCover.getDrawable().getIntrinsicWidth();
-//        int dHeight = mCover.getDrawable().getIntrinsicHeight();
-//
-//        int vWidth = mCover.getWidth();
-//        int vHeight = mCover.getHeight();
-//        float scale;
-//        float dx = 0, dy = 0;
-//        scale = (float) vWidth / (float) dWidth;
-//        dy = vHeight - dHeight * scale;
-//        if (dy < 0) {
-//            dy /= 2;
-//        } else {
-//            dy = 0;
-//            if (dWidth * vHeight * 1.5 > vWidth * dHeight) {
-//                scale = (float) vHeight / (float) dHeight;
-//
-//                dx = (vWidth - dWidth * scale) * 0.5f;
-//            }
-////            已经计算scale, dy
-////            else {
-////                scale = (float) vWidth / (float) dWidth;
-////                dy = (vHeight - dHeight * scale) * 0.5f;
-////            }
-//        }
-//
-//        drawMatrix.setScale(scale, scale);
-//        drawMatrix.postTranslate(Math.round(dx), Math.round(dy));
-//        return drawMatrix;
-//    }
-
 
 
 

@@ -113,6 +113,7 @@ public class WBServiceErrorHandler {
         Activity activity = BaseActivity.getCurrentActivity();
 
         if(activity == null || mIsDialogShowing){
+            mIsDialogShowing = false;
             return;
         }
 

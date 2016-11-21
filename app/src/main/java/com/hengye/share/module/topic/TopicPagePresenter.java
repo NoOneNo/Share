@@ -3,10 +3,13 @@ package com.hengye.share.module.topic;
 import android.content.res.Resources;
 import android.text.TextUtils;
 
+import com.google.gson.reflect.TypeToken;
 import com.hengye.share.R;
 import com.hengye.share.model.TopicFavorites;
+import com.hengye.share.model.greenrobot.ShareJson;
 import com.hengye.share.model.sina.WBTopicFavorites;
 import com.hengye.share.module.util.encapsulation.mvp.ListDataPresenter;
+import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.handler.TopicNumberPager;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.sina.WBTopics;
@@ -20,6 +23,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -38,7 +42,7 @@ public class TopicPagePresenter extends ListDataPresenter<Topic, TopicPageMvpVie
         mPager = pager;
     }
 
-    public void loadWBTopic(boolean isRefresh) {
+    public void loadRemoteWBTopic(boolean isRefresh) {
         getTopics(isRefresh)
                 .flatMap(TopicRxUtil.flatShortUrl())
                 .subscribeOn(SchedulerProvider.io())
@@ -85,21 +89,10 @@ public class TopicPagePresenter extends ListDataPresenter<Topic, TopicPageMvpVie
 
     private Subscriber<List<Topic>> getTopicsSubscriber(final boolean isRefresh) {
         return new ListDataSubscriber(isRefresh);
-//        return new BaseSubscriber<ArrayList<Topic>>() {
-//            @Override
-//            public void onError(TopicPageMvpView v, Throwable e) {
-//                v.onTaskComplete(isRefresh, false);
-//            }
-//
-//            @Override
-//            public void onNext(TopicPageMvpView v, ArrayList<Topic> topics) {
-//                v.onTaskComplete(isRefresh, true);
-//                v.handleTopicData(topics, isRefresh);
-//            }
-//        };
     }
 
     Func1<WBTopics, Observable<ArrayList<Topic>>> mFlatWBTopics;
+
     private Func1<WBTopics, Observable<ArrayList<Topic>>> flatWBTopics() {
         if (mFlatWBTopics == null) {
             mFlatWBTopics = new Func1<WBTopics, Observable<ArrayList<Topic>>>() {
@@ -113,6 +106,7 @@ public class TopicPagePresenter extends ListDataPresenter<Topic, TopicPageMvpVie
     }
 
     Func1<WBTopicFavorites, Observable<ArrayList<Topic>>> mFlatWBTopicFavorites;
+
     private Func1<WBTopicFavorites, Observable<ArrayList<Topic>>> flatWBTopicFavorites() {
         if (mFlatWBTopicFavorites == null) {
             mFlatWBTopicFavorites = new Func1<WBTopicFavorites, Observable<ArrayList<Topic>>>() {
@@ -124,6 +118,68 @@ public class TopicPagePresenter extends ListDataPresenter<Topic, TopicPageMvpVie
         }
         return mFlatWBTopicFavorites;
     }
+
+    /**
+     * 先检测有没有缓存，没有再请求服务器
+     */
+    public void loadWBTopic(final boolean isRefresh) {
+        getMvpView().onTaskStart();
+        Observable
+                .create(new Observable.OnSubscribe<ArrayList<Topic>>() {
+                    @Override
+                    public void call(Subscriber<? super ArrayList<Topic>> subscriber) {
+                        subscriber.onNext(findData());
+                        subscriber.onCompleted();
+                    }
+                })
+                .flatMap(new Func1<ArrayList<Topic>, Observable<ArrayList<Topic>>>() {
+                    @Override
+                    public Observable<ArrayList<Topic>> call(ArrayList<Topic> topics) {
+                        if (CommonUtil.isEmpty(topics)) {
+                            return getTopics(isRefresh);
+                        } else {
+                            return Observable
+                                    .just(topics)
+                                    .delay(400, TimeUnit.MILLISECONDS);
+                        }
+                    }
+                })
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
+                .subscribe(getTopicsSubscriber(true));
+    }
+
+    public ArrayList<Topic> findData() {
+        if (mTopicGroup.getTopicType() == TopicType.FAVORITES) {
+            return ShareJson.findData(getModelName(), new TypeToken<ArrayList<Topic>>() {
+            }.getType());
+        }else{
+            return null;
+        }
+    }
+
+    public void saveData(List<Topic> data) {
+        ShareJson.saveListData(getModelName(), data);
+    }
+
+    private String mModuleName;
+    private String mModuleUid;
+
+    public String getModelName() {
+        if (mModuleName == null || mModuleUid == null || !mModuleUid.equals(UserUtil.getUid())) {
+            mModuleUid = UserUtil.getUid();
+            mModuleName = Topic.class.getSimpleName()
+                    + mModuleUid
+                    + "/"
+                    + uid
+                    + "/"
+                    + name
+                    + "/"
+                    + mTopicGroup;
+        }
+        return mModuleName;
+    }
+
 
     public enum TopicType {
         THEME, FAVORITES

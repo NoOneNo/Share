@@ -122,6 +122,7 @@ dependencies {
     compile project(':photopicker')
     compile project(':swiperefresh')
     compile project(':module')
+    compile project(':spinkit')
 
     // Dependencies for local unit tests
     testCompile dep.junit

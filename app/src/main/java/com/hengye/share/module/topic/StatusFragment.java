@@ -26,7 +26,6 @@ public abstract class StatusFragment<T> extends RecyclerRefreshFragment<T> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setRetainInstance(true);
     }
 
     @Override
