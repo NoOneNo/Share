@@ -1,4 +1,4 @@
-package com.hengye.share.util.retrofit.weibo;
+package com.hengye.share.util.retrofit.api;
 
 import com.hengye.share.model.sina.WBGroups;
 import com.hengye.share.model.sina.WBShortUrls;
@@ -17,6 +17,7 @@ import com.hengye.share.util.UrlFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.reactivex.Observable;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -31,7 +32,7 @@ import retrofit2.http.PartMap;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 import retrofit2.http.Url;
-import rx.Observable;
+import io.reactivex.Observable;
 
 public interface WBService {
 

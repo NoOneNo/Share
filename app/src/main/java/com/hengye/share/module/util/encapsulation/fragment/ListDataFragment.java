@@ -10,11 +10,14 @@ import com.hengye.share.module.util.encapsulation.base.ListDataCallBack;
 import com.hengye.share.module.util.encapsulation.base.Pager;
 import com.hengye.share.module.util.encapsulation.base.PagingConfig;
 import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.ToastUtil;
 
 import java.util.List;
 
 import static com.hengye.share.module.util.encapsulation.base.DataType.LOAD_NO_DATA;
 import static com.hengye.share.module.util.encapsulation.base.DataType.REFRESH_NO_DATA;
+import static com.hengye.share.module.util.encapsulation.base.TaskState.isFailByNetwork;
+import static com.hengye.share.module.util.encapsulation.base.TaskState.isFailByServer;
 
 /**
  * Created by yuhy on 16/7/27.
@@ -55,11 +58,6 @@ public abstract class ListDataFragment<T> extends StateFragment implements ListD
 //        }
     }
 
-    @Override
-    public void onLoadListData(boolean isRefresh, List<T> data) {
-        handleData(isRefresh, data);
-    }
-
     public Pager getPager(){
         return null;
     }
@@ -76,6 +74,45 @@ public abstract class ListDataFragment<T> extends StateFragment implements ListD
 
     final protected void updatePagingConfig(){
         updatePagingConfig(mPagingConfig);
+    }
+
+    @Override
+    public void onTaskStart() {
+        if(isEmpty()) {
+            showLoading();
+        }
+    }
+
+    @Override
+    public void onTaskComplete(boolean isRefresh, final int taskState) {
+        if(isRefresh && isEmpty()){
+            getHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if(isFailByNetwork(taskState)) {
+                        showNoNetwork();
+                    }else if(isFailByServer(taskState)){
+                        showServiceError();
+                    }else{
+                        showEmpty();
+                    }
+                }
+            }, 1000);
+
+        }else{
+            showContent();
+
+            if(isFailByNetwork(taskState)) {
+                ToastUtil.showNetWorkErrorToast();
+            }else if(isFailByServer(taskState)){
+                ToastUtil.showLoadErrorToast();
+            }
+        }
+    }
+
+    @Override
+    public void onLoadListData(boolean isRefresh, List<T> data) {
+        handleData(isRefresh, data);
     }
 }
 

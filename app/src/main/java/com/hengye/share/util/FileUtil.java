@@ -1,5 +1,8 @@
 package com.hengye.share.util;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Environment;
 
 import java.io.BufferedReader;
@@ -52,12 +55,23 @@ public class FileUtil extends ApplicationUtil{
      * @param path
      * @return 如果保存成功, 返回保存图片的绝对路径, 否则返回null
      */
-    public static String saveImage(String path) {
-        return copyFile(new File(path), createImageFile());
+    public static String saveImage(String path, boolean isGif) {
+        return copyFile(new File(path), createImageFile(isGif));
+    }
+
+    public static void sendMediaScanIntent(Context context, String path){
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File file = new File(path);
+        if(!file.exists()){
+            return;
+        }
+        Uri contentUri = Uri.fromFile(file);
+        mediaScanIntent.setData(contentUri);
+        context.sendBroadcast(mediaScanIntent);
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static File createImageFile() {
+    public static File createImageFile(boolean isGif) {
         File image = null;
         try {
             // Create an image file name
@@ -68,11 +82,12 @@ public class FileUtil extends ApplicationUtil{
             if (!storageDir.exists()) {
                 storageDir.mkdirs();
             }
+            String suffix = isGif ? ".gif" : ".jpg";
 //        Environment.getExternalStorageDirectory().
 //        File image = new File(storageDir, imageFileName + ".jpg");
             image = File.createTempFile(
                     imageFileName,  /* prefix */
-                    ".jpg",         /* suffix */
+                    suffix,         /* suffix */
                     storageDir      /* directory */
             );
         } catch (Exception e) {

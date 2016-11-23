@@ -110,6 +110,11 @@ public class Emoticon {
 
         mWeiBoEmoticon = new LinkedHashMap<>();
 
+        //哆啦A梦
+        mWeiBoEmoticon.put("[哆啦A梦吃惊]", "dora_chijing.png");
+        mWeiBoEmoticon.put("[哆啦A梦好色]", "dora_haose.png");
+        mWeiBoEmoticon.put("[哆啦A梦微笑]", "dora_weixiao.png");
+        //---
         mWeiBoEmoticon.put("[最右]", "d_zuiyou.png");
         mWeiBoEmoticon.put("[微笑]", "d_hehe.png");
         mWeiBoEmoticon.put("[嘻嘻]", "d_xixi.png");
@@ -163,6 +168,15 @@ public class Emoticon {
         mWeiBoEmoticon.put("[阴险]", "d_yinxian.png");
         mWeiBoEmoticon.put("[打脸]", "d_dalian.png");
         mWeiBoEmoticon.put("[傻眼]", "d_shayan.png");
+        //--16.11.22添加
+        mWeiBoEmoticon.put("[马到成功]", "d_madaochenggong.png");
+        mWeiBoEmoticon.put("[骷髅]", "d_kulou.png");
+        mWeiBoEmoticon.put("[摊手]", "d_tanshou.png");
+        mWeiBoEmoticon.put("[坏笑]", "d_huaixiao.png");
+        mWeiBoEmoticon.put("[舔]", "d_tian.png");
+        mWeiBoEmoticon.put("[污]", "d_wu.png");
+        mWeiBoEmoticon.put("[抱抱]", "d_baobao.png");
+        mWeiBoEmoticon.put("[二哈]", "d_erha.png");
         //-----
         mWeiBoEmoticon.put("[互粉]", "f_hufen.png");
         mWeiBoEmoticon.put("[心]", "l_xin.png");

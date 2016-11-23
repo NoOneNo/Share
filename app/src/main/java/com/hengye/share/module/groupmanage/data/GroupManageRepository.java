@@ -2,12 +2,15 @@ package com.hengye.share.module.groupmanage.data;
 
 import com.hengye.share.model.greenrobot.GroupList;
 import com.hengye.share.util.rxjava.RxUtil;
+import com.hengye.share.util.rxjava.datasource.ObservableHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func1;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 /**
  * Created by yuhy on 2016/10/3.
@@ -29,21 +32,21 @@ public class GroupManageRepository implements GroupManageDataSource {
     }
 
     @Override
-    public Observable<List<GroupList>> getGroupList() {
+    public Single<ArrayList<GroupList>> getGroupList() {
 
-        Observable<List<GroupList>> localGroups = mGroupManageLocalDataSource.getGroupList();
-        Observable<List<GroupList>> remoteGroups = mGroupManageRemoteDataSource.getGroupList();
+        Single<ArrayList<GroupList>> localGroups = mGroupManageLocalDataSource.getGroupList();
+        Single<ArrayList<GroupList>> remoteGroups = mGroupManageRemoteDataSource.getGroupList();
 
         return RxUtil.filterEmpty(localGroups, remoteGroups);
     }
 
     @Override
-    public Observable<List<GroupList>> refreshGroupList() {
+    public Single<ArrayList<GroupList>> refreshGroupList() {
         return mGroupManageRemoteDataSource
                 .getGroupList()
-                .doOnNext(new Action1<List<GroupList>>() {
+                .doOnSuccess(new Consumer<ArrayList<GroupList>>() {
                     @Override
-                    public void call(List<GroupList> groupLists) {
+                    public void accept(ArrayList<GroupList> groupLists) {
                         RxUtil.subscribeIgnoreAll(mGroupManageLocalDataSource.updateGroupList(groupLists));
                     }
                 });
@@ -54,13 +57,13 @@ public class GroupManageRepository implements GroupManageDataSource {
         final Observable<Boolean> localResult = mGroupManageLocalDataSource.updateGroupList(groupLists);
         Observable<Boolean> remoteResult = mGroupManageRemoteDataSource.updateGroupList(groupLists);
 
-        return remoteResult.flatMap(new Func1<Boolean, Observable<Boolean>>() {
+        return remoteResult.flatMap(new Function<Boolean, Observable<Boolean>>() {
             @Override
-            public Observable<Boolean> call(Boolean isSuccess) {
+            public Observable<Boolean> apply(Boolean isSuccess) {
                 if (isSuccess) {
                     return localResult;
                 }
-                return Observable.just(false);
+                return ObservableHelper.just(false);
             }
         });
     }

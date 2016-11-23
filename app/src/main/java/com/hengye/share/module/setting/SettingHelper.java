@@ -15,6 +15,7 @@ public class SettingHelper {
     public static HashMap<String, Object> mCache = new HashMap<>();
 
     //基本设置
+    public final static String KEY_BASIC_LAUNCH_CHECK_UPDATE = "launch_check_update";
     public final static String KEY_BASIC_SWIPE_BACK = "swipe_back";
     public final static String KEY_BASIC_HOME_BACK = "home_back";
     public final static String KEY_BASIC_CLICK_TO_CLOSE_GALLERY = "click_photo_back";
@@ -103,6 +104,10 @@ public class SettingHelper {
         }else{
             return THEME_RES_ID_DEFAULT;
         }
+    }
+
+    public static boolean isLaunchCheckUpdate(){
+        return getBoolean(KEY_BASIC_LAUNCH_CHECK_UPDATE, true);
     }
 
     //首页按返回键退出

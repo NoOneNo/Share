@@ -16,7 +16,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
 import com.hengye.share.R;
-import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.TopicPublish;
@@ -25,6 +24,7 @@ import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.model.sina.WBTopicComment;
 import com.hengye.share.model.sina.WBUploadPicture;
+import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.util.ApplicationUtil;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
@@ -33,9 +33,13 @@ import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
-import com.hengye.share.util.retrofit.weibo.WBService;
+import com.hengye.share.util.retrofit.api.WBService;
+import com.hengye.share.util.rxjava.DefaultSubscriber;
 import com.hengye.share.util.rxjava.ObjectConverter;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
+
+import io.reactivex.Observer;
+import org.reactivestreams.Subscription;
 
 import java.io.File;
 import java.io.Serializable;
@@ -45,14 +49,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import io.reactivex.Observable;
+import io.reactivex.functions.Function;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-
-import rx.Observable;
-import rx.Subscriber;
-import rx.functions.Func1;
-import rx.functions.FuncN;
 
 public class TopicPublishService extends Service {
 
@@ -298,10 +299,10 @@ public class TopicPublishService extends Service {
 
         Observable.zip(
                 Observable
-                        .from(urls)
-                        .map(new Func1<String, Observable<WBUploadPicture>>() {
+                        .fromIterable(urls)
+                        .map(new Function<String, Observable<WBUploadPicture>>() {
                             @Override
-                            public Observable<WBUploadPicture> call(String s) {
+                            public Observable<WBUploadPicture> apply(String s) {
 
                                 RequestBody requestFile = RequestBody.create(MediaType.parse("application/otcet-stream"),
                                         new File(s));
@@ -311,22 +312,22 @@ public class TopicPublishService extends Service {
                                         UserUtil.getPriorToken()), body);
                             }
                         })
-                , new FuncN<List<String>>() {
+                , new Function<Object[], List<String>>() {
                     @Override
-                    public List<String> call(Object... args) {
-                        if (args == null) {
+                    public List<String> apply(Object[] objects) throws Exception {
+                        if (objects == null) {
                             return null;
                         }
                         List<String> urls = new ArrayList<>();
-                        for (Object obj : args) {
+                        for (Object obj : objects) {
                             urls.add(((WBUploadPicture) obj).getPic_id());
                         }
                         return urls;
                     }
                 })
-                .flatMap(new Func1<List<String>, Observable<WBTopic>>() {
+                .flatMap(new Function<List<String>, Observable<WBTopic>>() {
                     @Override
-                    public Observable<WBTopic> call(List<String> urls) {
+                    public Observable<WBTopic> apply(List<String> urls) {
 
                         tp.setToken(UserUtil.getPriorToken());
                         return RetrofitManager
@@ -396,7 +397,7 @@ public class TopicPublishService extends Service {
     }
 
 
-    public abstract class PublishSubscriber<T> extends Subscriber<T> {
+    public abstract class PublishSubscriber<T> extends DefaultSubscriber<T> {
 
         TopicPublish tp;
 
@@ -405,7 +406,7 @@ public class TopicPublishService extends Service {
         }
 
         @Override
-        public void onCompleted() {
+        public void onComplete() {
             L.debug("onCompleted invoke");
         }
 
@@ -414,6 +415,7 @@ public class TopicPublishService extends Service {
             L.debug("request fail, error : {}", e);
             handlePublishFail(tp);
         }
+
     }
 
     public class PublishTopicSubscriber extends PublishSubscriber<WBTopic> {

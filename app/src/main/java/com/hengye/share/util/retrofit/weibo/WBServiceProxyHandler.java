@@ -1,13 +1,13 @@
 package com.hengye.share.util.retrofit.weibo;
 
-import com.hengye.share.util.L;
+import com.hengye.share.util.rxjava.datasource.ObservableHelper;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import rx.Observable;
-import rx.functions.Func1;
+import io.reactivex.Observable;
+import io.reactivex.functions.Function;
 
 /**
  * Created by yuhy on 16/8/2.
@@ -22,35 +22,86 @@ public class WBServiceProxyHandler implements InvocationHandler {
 
     @Override
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-        if(method.getReturnType() != Observable.class){
+//        return method.invoke(mObject, args);
+
+        if (method.getReturnType() != Observable.class) {
             return method.invoke(mObject, args);
         }
 
-        return Observable.just(null)
-                .flatMap(new Func1<Object, Observable<?>>() {
-                    @Override
-                    public Observable<?> call(Object o) {
-                        try {
-                            return (Observable<?>) method.invoke(mObject, args);
-                        } catch (IllegalAccessException | InvocationTargetException e) {
-                            e.printStackTrace();
-                        }
-                        return Observable.just(new Exception("method call error"));
-                    }
-                }).retryWhen(new Func1<Observable<? extends Throwable>, Observable<?>>() {
-                                 @Override
-                                 public Observable<?> call(Observable<? extends Throwable> observable) {
-                                     return observable.
-                                             flatMap(new Func1<Throwable, Observable<?>>() {
-                                                         @Override
-                                                         public Observable<?> call(Throwable throwable) {
-                                                             WBServiceErrorHandler.getInstance().checkError(throwable);
+        try {
+            return ((Observable<?>) method.invoke(mObject, args))
+                    .retryWhen(new Function<Observable<? extends Throwable>, Observable<?>>() {
+                        @Override
+                        public Observable<?> apply(Observable<? extends Throwable> observable) {
+                            return observable.
+                                    flatMap(new Function<Throwable, Observable<?>>() {
+                                                @Override
+                                                public Observable<?> apply(Throwable throwable) {
+                                                    WBServiceErrorHandler.getInstance().checkError(throwable);
 
-                                                             return Observable.error(throwable);
-                                                         }
-                                                     }
-                                             );
-                                 }
-                             });
+                                                    return Observable.error(throwable);
+                                                }
+                                            }
+                                    );
+                        }
+                    });
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return ObservableHelper.just(new Exception("method call error"));
+
+//        return Observable.fromCallable(new Callable<Observable<?>>() {
+//            @Override
+//            public Observable<?> call() throws Exception {
+//                try {
+//                    return (Observable<?>) method.invoke(mObject, args);
+//                } catch (IllegalAccessException | InvocationTargetException e) {
+//                    e.printStackTrace();
+//                }
+//                return ObservableHelper.just(new Exception("method call error"));
+//            }
+//        });
+//                .retryWhen(new Function<Observable<? extends Throwable>, Observable<?>>() {
+//            @Override
+//            public Observable<?> apply(Observable<? extends Throwable> observable) {
+//                return observable.
+//                        flatMap(new Function<Throwable, Observable<?>>() {
+//                                    @Override
+//                                    public Observable<?> apply(Throwable throwable) {
+//                                        WBServiceErrorHandler.getInstance().checkError(throwable);
+//
+//                                        return Observable.error(throwable);
+//                                    }
+//                                }
+//                        );
+//            }
+//        });
+
+//        return ObservableHelper.just(null)
+//                .flatMap(new Function<Object, Observable<?>>() {
+//                    @Override
+//                    public Observable<?> apply(Object o) {
+//                        try {
+//                            return (Observable<?>) method.invoke(mObject, args);
+//                        } catch (IllegalAccessException | InvocationTargetException e) {
+//                            e.printStackTrace();
+//                        }
+//                        return ObservableHelper.just(new Exception("method call error"));
+//                    }
+//                }).retryWhen(new Function<Observable<? extends Throwable>, Observable<?>>() {
+//                    @Override
+//                    public Observable<?> apply(Observable<? extends Throwable> observable) {
+//                        return observable.
+//                                flatMap(new Function<Throwable, Observable<?>>() {
+//                                            @Override
+//                                            public Observable<?> apply(Throwable throwable) {
+//                                                WBServiceErrorHandler.getInstance().checkError(throwable);
+//
+//                                                return Observable.error(throwable);
+//                                            }
+//                                        }
+//                                );
+//                    }
+//                });
     }
 }

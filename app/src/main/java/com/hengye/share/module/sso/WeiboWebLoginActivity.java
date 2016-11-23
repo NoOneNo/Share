@@ -24,6 +24,7 @@ import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.Utility;
 import com.hengye.share.util.retrofit.RetrofitManager;
+import com.hengye.share.util.rxjava.DefaultSubscriber;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 import com.hengye.share.util.thirdparty.ThirdPartyUtils;
 import com.hengye.share.util.thirdparty.ThirdPartyUtils.WeiboApp;
@@ -36,8 +37,10 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
-import rx.Observable;
-import rx.Subscriber;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 
 /**
  * Created by yuhy on 16/7/11.
@@ -118,14 +121,15 @@ public class WeiboWebLoginActivity extends BaseActivity {
 
     private void loadData() {
         Observable
-                .create(new Observable.OnSubscribe<String>() {
+                .create(new ObservableOnSubscribe<String>() {
                     @Override
-                    public void call(Subscriber<? super String> subscriber) {
+                    public void subscribe(ObservableEmitter<String> subscriber) {
                         String url = null;
                         try {
                             url = getEncapsulationLoginUrl();
                         }catch (UnknownHostException uhe){
                             subscriber.onError(uhe);
+                            return;
                         }
                         if(url == null){
                             subscriber.onError(new Throwable("get encapsulation login url fail"));
@@ -136,9 +140,9 @@ public class WeiboWebLoginActivity extends BaseActivity {
                 })
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(new Subscriber<String>() {
+                .subscribe(new DefaultSubscriber<String>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
 
                     }
 
@@ -246,9 +250,9 @@ public class WeiboWebLoginActivity extends BaseActivity {
                     .oauthToken(ub.getParameters())
                     .subscribeOn(SchedulerProvider.io())
                     .observeOn(SchedulerProvider.ui())
-                    .subscribe(new Subscriber<HashMap<String, String>>() {
+                    .subscribe(new DefaultSubscriber<HashMap<String,String>>() {
                         @Override
-                        public void onCompleted() {
+                        public void onComplete() {
 
                         }
 
@@ -279,7 +283,7 @@ public class WeiboWebLoginActivity extends BaseActivity {
                     });
 
         } else {
-            ToastUtil.showToast(R.string.label_cancel_authorize);
+            ToastUtil.showToast(R.string.tip_cancel_authorize);
             finish();
         }
     }
@@ -303,7 +307,7 @@ public class WeiboWebLoginActivity extends BaseActivity {
         if (mWebView.canGoBack()) {
             mWebView.goBack();
         } else {
-            ToastUtil.showToast(R.string.label_cancel_authorize);
+            ToastUtil.showToast(R.string.tip_cancel_authorize);
             finish();
         }
     }

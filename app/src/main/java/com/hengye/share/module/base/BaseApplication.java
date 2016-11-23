@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.multidex.MultiDex;
 
+import com.hengye.share.module.setting.SettingHelper;
+import com.hengye.share.module.update.CheckUpdateMvpImpl;
+import com.hengye.share.module.update.CheckUpdatePresenter;
 import com.hengye.share.service.VideoPlayService;
 import com.hengye.share.support.DefaultActivityLifecycleCallback;
 import com.hengye.share.util.AppUtils;
@@ -70,6 +73,7 @@ public class BaseApplication extends Application{
 				}
 			}
 		});
+
 	}
 
 	@Override

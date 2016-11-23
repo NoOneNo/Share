@@ -6,16 +6,8 @@ package com.hengye.share.util;
 public class SystemUtil extends ApplicationUtil{
 
 
-    public static String getPackageName() {
-        return getContext().getPackageName();
-//
-//        try {
-//            PackageManager packageManager = getContext().getPackageManager();
-//            PackageInfo packageInfo = packageManager.getPackageInfo(getContext().getPackageName(), 0);
-//            return packageInfo.packageName;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return "";
-    }
+//    public static String getPackageName() {
+//        return BuildConfig.APPLICATION_ID;
+////        return getContext().getPackageName();
+//    }
 }

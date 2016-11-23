@@ -4,7 +4,6 @@ import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
 import com.google.gson.reflect.TypeToken;
-import com.hengye.share.util.handler.TopicNumberPager;
 import com.hengye.share.model.AtUser;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.greenrobot.ShareJson;
@@ -16,16 +15,17 @@ import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.UserUtil;
+import com.hengye.share.util.handler.TopicNumberPager;
 import com.hengye.share.util.retrofit.RetrofitManager;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 import com.hengye.share.util.text.ChineseToPinyin;
 import com.hengye.share.util.thirdparty.WBUtil;
 
+import io.reactivex.Observer;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import rx.Subscriber;
 
 public class UserListPresenter extends RxPresenter<UserListMvpView> {
 
@@ -125,7 +125,7 @@ public class UserListPresenter extends RxPresenter<UserListMvpView> {
         return ub.getParameters();
     }
 
-    private Subscriber<WBUserInfos> getWBUserListSubscriber(final boolean isRefresh) {
+    private Observer<WBUserInfos> getWBUserListSubscriber(final boolean isRefresh) {
         return new BaseSubscriber<WBUserInfos>() {
             @Override
             public void onError(UserListMvpView v, Throwable e) {

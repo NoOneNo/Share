@@ -179,7 +179,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         if (mTopicDraft.getUrls() != null) {
             mGalleryEditor.setPaths(mTopicDraft.getUrlList());
         }
-        mContent.setFilters(new InputFilter[]{mAtUserInputFilter, mEmoticonPicker.getEmoticonInputFilter()});
+        mContent.setFilters(new InputFilter[]{mEmoticonPicker.getEmoticonInputFilter(), mAtUserInputFilter});
         initSaveToDraftDialog();
 
         initViewByType();

@@ -71,7 +71,7 @@ public class SettingAboutFragment extends BasePreferenceFragment {
     }
 
     public static void startMarket() {
-        Uri uri = Uri.parse(String.format("market://details?id=%s", SystemUtil.getPackageName()));
+        Uri uri = Uri.parse(String.format("market://details?id=%s", BuildConfig.APPLICATION_ID));
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if (IntentUtil.resolveActivity(intent)) {

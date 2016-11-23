@@ -8,13 +8,13 @@ import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.rxjava.ObjectConverter;
 import com.hengye.share.util.retrofit.RetrofitManager;
-import com.hengye.share.util.retrofit.weibo.WBService;
+import com.hengye.share.util.retrofit.api.WBService;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 import com.hengye.share.util.thirdparty.WBUtil;
 
 import java.util.Map;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 public class TopicDetailPresenter extends RxPresenter<TopicDetailMvpView> {
 

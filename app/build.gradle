@@ -47,6 +47,7 @@ android {
     buildTypes {
         release {
             debuggable true
+            //是否开启混淆
             minifyEnabled true
             zipAlignEnabled true
             signingConfig signingConfigs.release
@@ -90,7 +91,8 @@ dependencies {
     compile "com.squareup.okhttp3:logging-interceptor:$OKHTTP_VERSION"
     compile "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
     compile "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
-    compile "com.squareup.retrofit2:adapter-rxjava:$RETROFIT_VERSION"
+//    compile "com.squareup.retrofit2:adapter-rxjava:$RETROFIT_VERSION"
+    compile 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
 
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
@@ -99,8 +101,14 @@ dependencies {
     compile 'org.slf4j:slf4j-android:1.7.12'
     compile 'org.greenrobot:greendao:3.1.1'
     compile 'org.jsoup:jsoup:1.8.2'
-    compile 'io.reactivex:rxandroid:1.1.0'
-    compile 'io.reactivex:rxjava:1.1.0'
+
+//    compile 'io.reactivex:rxjava2:rxandroid:2.0.1'
+//    compile 'io.reactivex:rxjava2:rxjava:2.0.1'
+    compile 'io.reactivex.rxjava2:rxjava:2.0.1'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+
+//    compile 'io.reactivex:rxandroid:1.1.0'
+//    compile 'io.reactivex:rxjava:1.1.0'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.10'
 
     compile 'com.tencent.bugly:crashreport:latest.release'

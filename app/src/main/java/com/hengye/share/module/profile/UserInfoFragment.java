@@ -12,15 +12,16 @@ import com.hengye.share.module.publish.TopicPublishActivity;
 import com.hengye.share.module.util.encapsulation.fragment.BaseFragment;
 import com.hengye.share.module.util.encapsulation.view.listener.OnScrollToTopAndBottomListener;
 import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.ToastUtil;
 
 /**
  * Created by yuhy on 16/7/19.
  */
-public class PersonalHomepageAboutFragment extends BaseFragment
+public class UserInfoFragment extends BaseFragment
         implements View.OnClickListener, OnScrollToTopAndBottomListener {
 
-    public static PersonalHomepageAboutFragment newInstance(WBUserInfo wbUserInfo){
-        PersonalHomepageAboutFragment fragment = new PersonalHomepageAboutFragment();
+    public static UserInfoFragment newInstance(WBUserInfo wbUserInfo){
+        UserInfoFragment fragment = new UserInfoFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("wbUserInfo", wbUserInfo);
         fragment.setArguments(bundle);
@@ -84,6 +85,8 @@ public class PersonalHomepageAboutFragment extends BaseFragment
         int id = v.getId();
         if(id == R.id.btn_at_ta){
             startActivity(TopicPublishActivity.getAtTaStartIntent(getContext(), mWbUserInfo.getName()));
+        }else{
+            ToastUtil.showToBeAchievedToast();
         }
     }
 

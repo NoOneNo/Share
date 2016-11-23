@@ -1,6 +1,6 @@
 package com.hengye.share.util.rxjava;
 
-import rx.functions.Func2;
+import io.reactivex.functions.BiFunction;
 
 public class ObjectConverter {
 
@@ -8,14 +8,14 @@ public class ObjectConverter {
         return objects;
     }
 
-    private static Func2<Object, Object, Object[]> mObjectConverter2;
+    private static BiFunction<Object, Object, Object[]> mObjectConverter2;
 
-    public static Func2<Object, Object, Object[]> getObjectConverter2(){
+    public static BiFunction<Object, Object, Object[]> getObjectConverter2(){
         if(mObjectConverter2 == null){
-            mObjectConverter2 = new Func2<Object, Object, Object[]>() {
+            mObjectConverter2 = new BiFunction<Object, Object, Object[]>() {
                 @Override
-                public Object[] call(Object obj1, Object obj2) {
-                    return ObjectConverter.get(obj1, obj2);
+                public Object[] apply(Object obj1, Object obj2) {
+                    return get(obj1, obj2);
                 }
             };
         }

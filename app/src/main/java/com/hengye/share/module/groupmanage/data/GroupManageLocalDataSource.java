@@ -2,11 +2,15 @@ package com.hengye.share.module.groupmanage.data;
 
 import com.hengye.share.model.greenrobot.GroupList;
 import com.hengye.share.util.UserUtil;
+import com.hengye.share.util.rxjava.datasource.ObservableHelper;
+import com.hengye.share.util.rxjava.datasource.SingleHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
-import rx.functions.Func1;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.functions.Function;
 
 /**
  * Created by yuhy on 2016/10/3.
@@ -15,17 +19,18 @@ import rx.functions.Func1;
 public class GroupManageLocalDataSource implements GroupManageDataSource {
 
     @Override
-    public Observable<List<GroupList>> getGroupList() {
-        return Observable.just(UserUtil.queryGroupList());
+    public Single<ArrayList<GroupList>> getGroupList() {
+
+        return SingleHelper.justArrayList(UserUtil.queryGroupList());
     }
 
     @Override
     public Observable<Boolean> updateGroupList(List<GroupList> groupLists) {
-        return Observable
-                .just(groupLists)
-                .flatMap(new Func1<List<GroupList>, Observable<Boolean>>() {
+        return ObservableHelper
+                .justArrayList(groupLists)
+                .flatMap(new Function<List<GroupList>, Observable<Boolean>>() {
                     @Override
-                    public Observable<Boolean> call(List<GroupList> groupLists) {
+                    public Observable<Boolean> apply(List<GroupList> groupLists) {
                         boolean isSuccess = true;
                         try {
                             UserUtil.updateGroupList(groupLists, false);
@@ -33,13 +38,13 @@ public class GroupManageLocalDataSource implements GroupManageDataSource {
                             e.printStackTrace();
                             isSuccess = false;
                         }
-                        return Observable.just(isSuccess);
+                        return ObservableHelper.just(isSuccess);
                     }
                 });
     }
 
     @Override
-    public Observable<List<GroupList>> refreshGroupList() {
+    public Single<ArrayList<GroupList>> refreshGroupList() {
         return null;
     }
 }

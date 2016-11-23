@@ -233,15 +233,17 @@ public class EmoticonPicker extends LinearLayout implements AdapterView.OnItemCl
                 return "→_→";
             }
 
-            Bitmap bitmap = Emoticon.getInstance().getEmoticonBitmap().get(source.toString());
-            if (bitmap != null) {
-                SpannableString emotionSpanned = new SpannableString(source.toString());
-                ImageSpan imageSpan = new ImageSpan(getContext(), bitmap, ImageSpan.ALIGN_BOTTOM);
-                emotionSpanned.setSpan(imageSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                return emotionSpanned;
-            } else {
-                return source;
-            }
+            return source;
+            //已经跟其他uri一起处理图片，这里无须再重复处理
+//            Bitmap bitmap = Emoticon.getInstance().getEmoticonBitmap().get(source.toString());
+//            if (bitmap != null) {
+//                SpannableString emotionSpanned = new SpannableString(source.toString());
+//                ImageSpan imageSpan = new ImageSpan(getContext(), bitmap, ImageSpan.ALIGN_BOTTOM);
+//                emotionSpanned.setSpan(imageSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                return emotionSpanned;
+//            } else {
+//                return source;
+//            }
         }
     };
 

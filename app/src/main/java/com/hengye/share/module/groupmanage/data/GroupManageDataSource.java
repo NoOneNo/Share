@@ -2,9 +2,11 @@ package com.hengye.share.module.groupmanage.data;
 
 import com.hengye.share.model.greenrobot.GroupList;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
+import io.reactivex.Observable;
+import io.reactivex.Single;
 
 /**
  * Created by yuhy on 2016/10/3.
@@ -12,9 +14,9 @@ import rx.Observable;
 
 public interface GroupManageDataSource {
 
-    Observable<List<GroupList>> getGroupList();
+    Single<ArrayList<GroupList>> getGroupList();
 
-    Observable<List<GroupList>> refreshGroupList();
+    Single<ArrayList<GroupList>> refreshGroupList();
 
     Observable<Boolean> updateGroupList(List<GroupList> groupLists);
 //    List<GroupList>

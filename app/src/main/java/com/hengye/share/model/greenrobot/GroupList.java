@@ -221,7 +221,7 @@ public class GroupList implements java.io.Serializable {
         return sb.toString();
     }
 
-    public static List<GroupList> getGroupLists(WBGroups wbGroups, String uid){
+    public static ArrayList<GroupList> getGroupLists(WBGroups wbGroups, String uid){
         if(wbGroups == null || CommonUtil.isEmpty(wbGroups.getLists())){
             return null;
         }

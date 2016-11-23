@@ -19,8 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import rx.Observable;
-import rx.Subscriber;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 
 public class TopicAlbumPresenter extends TaskPresenter<TopicAlbumMvpView> {
 
@@ -93,10 +94,14 @@ public class TopicAlbumPresenter extends TaskPresenter<TopicAlbumMvpView> {
 
     public void loadCacheData(){
         Observable
-                .create(new Observable.OnSubscribe<ArrayList<Topic>>() {
+                .create(new ObservableOnSubscribe<ArrayList<Topic>>() {
                     @Override
-                    public void call(Subscriber<? super ArrayList<Topic>> subscriber) {
-                        subscriber.onNext(findData());
+                    public void subscribe(ObservableEmitter<ArrayList<Topic>> subscriber) {
+                        ArrayList<Topic> topics = findData();
+                        if(topics == null){
+                            topics = new ArrayList<>();
+                        }
+                        subscriber.onNext(topics);
                     }
                 })
                 .subscribeOn(SchedulerProvider.io())

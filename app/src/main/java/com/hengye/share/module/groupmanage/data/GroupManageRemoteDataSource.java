@@ -2,15 +2,17 @@ package com.hengye.share.module.groupmanage.data;
 
 import com.hengye.share.model.greenrobot.GroupList;
 import com.hengye.share.model.sina.WBGroups;
-import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
+import com.hengye.share.util.rxjava.datasource.ObservableHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
-import rx.functions.Func1;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.functions.Function;
 
 /**
  * Created by yuhy on 2016/10/3.
@@ -19,7 +21,7 @@ import rx.functions.Func1;
 public class GroupManageRemoteDataSource implements GroupManageDataSource {
 
     @Override
-    public Observable<List<GroupList>> getGroupList() {
+    public Single<ArrayList<GroupList>> getGroupList() {
 
         final UrlBuilder ub = new UrlBuilder();
         ub.addParameter("access_token", UserUtil.getPriorToken());
@@ -27,19 +29,17 @@ public class GroupManageRemoteDataSource implements GroupManageDataSource {
         return RetrofitManager
                 .getWBService()
                 .listGroups(ub.getParameters())
-                .flatMap(new Func1<WBGroups, Observable<List<GroupList>>>() {
+                .flatMap(new Function<WBGroups, Observable<ArrayList<GroupList>>>() {
                     @Override
-                    public Observable<List<GroupList>> call(WBGroups wbGroups) {
+                    public Observable<ArrayList<GroupList>> apply(WBGroups wbGroups) {
 
-                        if (wbGroups == null || CommonUtil.isEmpty(wbGroups.getLists())) {
-                            return null;
-                        }
+                        ArrayList<GroupList> list = GroupList.getGroupLists(wbGroups, UserUtil.getUid());
 
-                        List<GroupList> list = GroupList.getGroupLists(wbGroups, UserUtil.getUid());
                         UserUtil.updateGroupList(list);
-                        return Observable.just(list);
+                        return ObservableHelper.justArrayList(list);
                     }
-                });
+                })
+                .firstOrError();
     }
 
     @Override
@@ -47,21 +47,21 @@ public class GroupManageRemoteDataSource implements GroupManageDataSource {
         return RetrofitManager
                 .getWBService()
                 .updateGroupOrder(UserUtil.getPriorToken(), groupLists.size() + "", GroupList.getGroupIds(groupLists))
-                .flatMap(new Func1<WBGroups.WBGroupUpdateOrder, Observable<Boolean>>() {
+                .flatMap(new Function<WBGroups.WBGroupUpdateOrder, Observable<Boolean>>() {
                     @Override
-                    public Observable<Boolean> call(WBGroups.WBGroupUpdateOrder result) {
+                    public Observable<Boolean> apply(WBGroups.WBGroupUpdateOrder result) {
 //                        {"result":true}
                         boolean isSuccess = false;
                         if (result != null && "true".equals(result.getResult())) {
                             isSuccess = true;
                         }
-                        return Observable.just(isSuccess);
+                        return ObservableHelper.just(isSuccess);
                     }
                 });
     }
 
     @Override
-    public Observable<List<GroupList>> refreshGroupList() {
+    public Single<ArrayList<GroupList>> refreshGroupList() {
         return null;
     }
 

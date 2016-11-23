@@ -1,12 +1,17 @@
 package com.hengye.share.module.other;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.hengye.share.R;
+import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.module.topic.TopicActivity;
 import com.hengye.share.module.base.BaseActivity;
+import com.hengye.share.module.update.CheckUpdateMvpImpl;
+import com.hengye.share.module.update.CheckUpdatePresenter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.SPUtil;
@@ -31,6 +36,7 @@ public class GuidanceActivity extends BaseActivity {
         }
         welcomeTV.setText(getString(R.string.tip_welcome, name));
         createShortcutIfNeed();
+        checkUpdateIfNeed();
         getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -65,5 +71,12 @@ public class GuidanceActivity extends BaseActivity {
         sendBroadcast(shortcut);
 
         SPUtil.putBoolean("isShortcutCreate", true);
+    }
+
+    private void checkUpdateIfNeed(){
+        if(SettingHelper.isLaunchCheckUpdate()) {
+            //启动时检查更新
+            new CheckUpdatePresenter(new CheckUpdateMvpImpl(), false).checkUpdate();
+        }
     }
 }

@@ -3,6 +3,9 @@ package com.hengye.share.module.util.image;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -19,10 +22,12 @@ import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.module.util.encapsulation.fragment.ViewPagerFragment;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.util.AnimationUtil;
+import com.hengye.share.util.ResUtil;
+import com.hengye.share.util.ViewUtil;
 
 import java.util.ArrayList;
 
-public class GalleryFragment extends ViewPagerFragment {
+public class GalleryFragment extends ViewPagerFragment implements View.OnLongClickListener{
 
     public final static String IMG_URLS = "img_paths";
     public final static String IMG_INDEX = "img_index";
@@ -32,8 +37,9 @@ public class GalleryFragment extends ViewPagerFragment {
     private int mIndexStart;
     private ArrayList<String> mUrls;
     private ArrayList<AnimationRect> mRectList;
-    private View mBackground, mSaveBtn;
+    private View mBackground;
     private ColorDrawable mBackgroundColor;
+    private Dialog mLongClickDialog;
 
     @Override
     protected String getRequestTag() {
@@ -88,13 +94,6 @@ public class GalleryFragment extends ViewPagerFragment {
         mBackground.setBackground(mBackgroundColor);
         mPages = (TextView) findViewById(R.id.select_photo_gallery_pages);
         updatePage(mIndexStart);
-        mSaveBtn = findViewById(R.id.btn_image_save);
-        mSaveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAdapter.getItem(getCurrentPosition()).saveImage();
-            }
-        });
         getViewPager().setCurrentItem(mIndexStart);
         if (getActivity() instanceof BaseActivity) {
             BaseActivity baseActivity = (BaseActivity) getActivity();
@@ -111,6 +110,27 @@ public class GalleryFragment extends ViewPagerFragment {
                 }
             });
         }
+    }
+
+    private Dialog getLongClickDialog(){
+        if(mLongClickDialog == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+                    .setItems(new CharSequence[]{ResUtil.getString(R.string.label_gallery_save_to_local)}, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mAdapter.getItem(getCurrentPosition()).saveImage();
+                        }
+                    });
+            mLongClickDialog = builder.create();
+        }
+        return mLongClickDialog;
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        ViewUtil.vibrate(v);
+        getLongClickDialog().show();
+        return true;
     }
 
     public void updatePage(int pageNo) {

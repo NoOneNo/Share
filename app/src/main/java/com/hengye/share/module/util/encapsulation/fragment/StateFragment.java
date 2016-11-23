@@ -22,7 +22,7 @@ import static com.hengye.share.module.util.encapsulation.base.TaskState.isFailBy
  * Created by yuhy on 16/7/18.
  */
 public abstract class StateFragment extends BaseFragment
-        implements OnFindStateViewListener, TaskCallBack{
+        implements OnFindStateViewListener{
 
     @Override
     public int getLayoutResId() {
@@ -113,28 +113,6 @@ public abstract class StateFragment extends BaseFragment
             };
         }
         return mOnClickRetryListener;
-    }
-
-    @Override
-    public void onTaskStart() {
-        if(isEmpty()) {
-            showLoading();
-        }
-    }
-
-    @Override
-    public void onTaskComplete(boolean isRefresh, int taskState) {
-        if(isRefresh && isEmpty()){
-            if(isFailByNetwork(taskState)) {
-                showNoNetwork();
-            }else if(isFailByServer(taskState)){
-                showServiceError();
-            }else{
-                showEmpty();
-            }
-        }else{
-            showContent();
-        }
     }
 
     public boolean isEmpty(){

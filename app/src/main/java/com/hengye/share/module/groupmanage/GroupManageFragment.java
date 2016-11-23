@@ -71,7 +71,7 @@ public class GroupManageFragment extends RecyclerFragment implements GroupManage
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mLoadingDialog.show();
-                mPresenter.updateGroupOrder(mAdapter.getData());
+                mPresenter.updateGroupOrder(new ArrayList<>(mAdapter.getData()));
             }
         });
         mConfirmDialog = builder.create(getContext());

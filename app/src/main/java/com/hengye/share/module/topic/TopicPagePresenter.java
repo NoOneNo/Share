@@ -5,18 +5,18 @@ import android.text.TextUtils;
 
 import com.google.gson.reflect.TypeToken;
 import com.hengye.share.R;
+import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicFavorites;
 import com.hengye.share.model.greenrobot.ShareJson;
 import com.hengye.share.model.sina.WBTopicFavorites;
+import com.hengye.share.model.sina.WBTopics;
 import com.hengye.share.module.util.encapsulation.mvp.ListDataPresenter;
 import com.hengye.share.util.CommonUtil;
-import com.hengye.share.util.handler.TopicNumberPager;
-import com.hengye.share.model.Topic;
-import com.hengye.share.model.sina.WBTopics;
-import com.hengye.share.module.util.encapsulation.mvp.RxPresenter;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
+import com.hengye.share.util.handler.TopicNumberPager;
 import com.hengye.share.util.retrofit.RetrofitManager;
+import com.hengye.share.util.rxjava.datasource.ObservableHelper;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
 import java.io.Serializable;
@@ -25,9 +25,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.functions.Func1;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.functions.Function;
 
 public class TopicPagePresenter extends ListDataPresenter<Topic, TopicPageMvpView> {
 
@@ -87,32 +87,32 @@ public class TopicPagePresenter extends ListDataPresenter<Topic, TopicPageMvpVie
         return ub.getParameters();
     }
 
-    private Subscriber<List<Topic>> getTopicsSubscriber(final boolean isRefresh) {
+    private Observer<List<Topic>> getTopicsSubscriber(final boolean isRefresh) {
         return new ListDataSubscriber(isRefresh);
     }
 
-    Func1<WBTopics, Observable<ArrayList<Topic>>> mFlatWBTopics;
+    Function<WBTopics, Observable<ArrayList<Topic>>> mFlatWBTopics;
 
-    private Func1<WBTopics, Observable<ArrayList<Topic>>> flatWBTopics() {
+    private Function<WBTopics, Observable<ArrayList<Topic>>> flatWBTopics() {
         if (mFlatWBTopics == null) {
-            mFlatWBTopics = new Func1<WBTopics, Observable<ArrayList<Topic>>>() {
+            mFlatWBTopics = new Function<WBTopics, Observable<ArrayList<Topic>>>() {
                 @Override
-                public Observable<ArrayList<Topic>> call(WBTopics wbTopics) {
-                    return Observable.just(Topic.getTopics(wbTopics));
+                public Observable<ArrayList<Topic>> apply(WBTopics wbTopics) {
+                    return ObservableHelper.just(Topic.getTopics(wbTopics));
                 }
             };
         }
         return mFlatWBTopics;
     }
 
-    Func1<WBTopicFavorites, Observable<ArrayList<Topic>>> mFlatWBTopicFavorites;
+    Function<WBTopicFavorites, Observable<ArrayList<Topic>>> mFlatWBTopicFavorites;
 
-    private Func1<WBTopicFavorites, Observable<ArrayList<Topic>>> flatWBTopicFavorites() {
+    private Function<WBTopicFavorites, Observable<ArrayList<Topic>>> flatWBTopicFavorites() {
         if (mFlatWBTopicFavorites == null) {
-            mFlatWBTopicFavorites = new Func1<WBTopicFavorites, Observable<ArrayList<Topic>>>() {
+            mFlatWBTopicFavorites = new Function<WBTopicFavorites, Observable<ArrayList<Topic>>>() {
                 @Override
-                public Observable<ArrayList<Topic>> call(WBTopicFavorites wbTopicFavorites) {
-                    return Observable.just(TopicFavorites.getTopics(wbTopicFavorites));
+                public Observable<ArrayList<Topic>> apply(WBTopicFavorites wbTopicFavorites) {
+                    return ObservableHelper.just(TopicFavorites.getTopics(wbTopicFavorites));
                 }
             };
         }
@@ -124,17 +124,12 @@ public class TopicPagePresenter extends ListDataPresenter<Topic, TopicPageMvpVie
      */
     public void loadWBTopic(final boolean isRefresh) {
         getMvpView().onTaskStart();
-        Observable
-                .create(new Observable.OnSubscribe<ArrayList<Topic>>() {
+
+
+        ObservableHelper.just(findData())
+                .flatMap(new Function<ArrayList<Topic>, Observable<ArrayList<Topic>>>() {
                     @Override
-                    public void call(Subscriber<? super ArrayList<Topic>> subscriber) {
-                        subscriber.onNext(findData());
-                        subscriber.onCompleted();
-                    }
-                })
-                .flatMap(new Func1<ArrayList<Topic>, Observable<ArrayList<Topic>>>() {
-                    @Override
-                    public Observable<ArrayList<Topic>> call(ArrayList<Topic> topics) {
+                    public Observable<ArrayList<Topic>> apply(ArrayList<Topic> topics) {
                         if (CommonUtil.isEmpty(topics)) {
                             return getTopics(isRefresh);
                         } else {
@@ -146,7 +141,32 @@ public class TopicPagePresenter extends ListDataPresenter<Topic, TopicPageMvpVie
                 })
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(getTopicsSubscriber(true));
+                .subscribeWith(getTopicsSubscriber(true));
+
+//        Observable
+//                .create(new ObservableOnSubscribe<Optional<ArrayList<Topic>>>() {
+//                    @Override
+//                    public void subscribe(ObservableEmitter<Optional<ArrayList<Topic>>> subscriber) {
+//                        subscriber.onNext(Optional.ofNullable(findData()));
+//                        subscriber.onComplete();
+//                    }
+//                })
+//                .compose(RxUtil.<ArrayList<Topic>>deoptionalize())
+//                .flatMap(new Function<ArrayList<Topic>, Observable<ArrayList<Topic>>>() {
+//                    @Override
+//                    public Observable<ArrayList<Topic>> apply(ArrayList<Topic> topics) {
+//                        if (CommonUtil.isEmpty(topics)) {
+//                            return getTopics(isRefresh);
+//                        } else {
+//                            return Observable
+//                                    .just(topics)
+//                                    .delay(400, TimeUnit.MILLISECONDS);
+//                        }
+//                    }
+//                })
+//                .subscribeOn(SchedulerProvider.io())
+//                .observeOn(SchedulerProvider.ui())
+//                .subscribeWith(getTopicsSubscriber(true));
     }
 
     public ArrayList<Topic> findData() {

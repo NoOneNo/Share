@@ -30,6 +30,7 @@ import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.module.sso.UserMvpView;
 import com.hengye.share.module.sso.UserPresenter;
+import com.hengye.share.module.util.encapsulation.base.TaskState;
 import com.hengye.share.ui.widget.PersonalHomePageToolbarLayout;
 import com.hengye.share.ui.widget.ScrollChildSwipeRefreshLayout;
 import com.hengye.share.ui.widget.image.AvatarImageView;
@@ -41,10 +42,12 @@ import com.hengye.share.util.TransitionHelper;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
+import com.hengye.share.util.rxjava.DefaultSubscriber;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
-import rx.Observable;
-import rx.Subscriber;
+import org.reactivestreams.Subscription;
+
+import io.reactivex.Observable;
 
 public class PersonalHomepageActivity extends BaseActivity implements View.OnClickListener, AppBarLayout.OnOffsetChangedListener, UserMvpView {
 
@@ -119,7 +122,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     }
 
     private TextView mDivision, mAttention, mFans;
-//    private TextView mSign;
+    //    private TextView mSign;
     private SuperImageView mCover;
     private AvatarImageView mAvatar;
     private PersonalHomePageToolbarLayout mCollapsingToolbarLayout;
@@ -149,7 +152,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 
         initToolbar();
         updateToolbarTitle(" ");
-        if(getToolbar() != null){
+        if (getToolbar() != null) {
             getToolbar().setBackground(null);
         }
 
@@ -194,10 +197,10 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         mUserInfoLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(mCollapsingToolbarLayout.isShowScrims()){
+                if (mCollapsingToolbarLayout.isShowScrims()) {
                     //当是闭合的时候，模拟toolbar的触摸事件
                     return getToolbar().onTouchEvent(event);
-                }else{
+                } else {
                     return false;
                 }
             }
@@ -294,12 +297,13 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     }
 
     boolean mHasSetSelection;
+
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         if (verticalOffset >= -50) {
             mSwipeRefresh.setRefreshEnable(true);
 
-            if(!mHasSetSelection && mFragment != null){
+            if (!mHasSetSelection && mFragment != null) {
                 mHasSetSelection = true;
                 mFragment.setOtherTabScrollToTop();
             }
@@ -391,7 +395,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         loadData(wbUserInfo);
     }
 
-    private void updateFollowButton(boolean isFollowing){
+    private void updateFollowButton(boolean isFollowing) {
         mFollowButton.setText(isFollowing ? ResUtil.getString(R.string.label_status_following) : ResUtil.getString(R.string.label_status_unfollowing));
     }
 
@@ -455,9 +459,9 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 
     public void follow(final boolean isFollow, String uid) {
 
-        Observable<WBUserInfo> observable;
+        Observable<WBUserInfo> flowable;
 
-        observable = isFollow ?
+        flowable = isFollow ?
                 RetrofitManager
                         .getWBService()
                         .followCreate(UserUtil.getPriorToken(), uid) :
@@ -465,17 +469,19 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                         .getWBService()
                         .followDestroy(UserUtil.getPriorToken(), uid);
 
-        observable.subscribeOn(SchedulerProvider.io())
+        flowable.subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(new Subscriber<WBUserInfo>() {
+                .subscribe(new DefaultSubscriber<WBUserInfo>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         mFollowButton.setEnabled(true);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        ToastUtil.showNetWorkErrorToast();
+                        if (TaskState.isNetworkException(e)) {
+                            ToastUtil.showNetWorkErrorToast();
+                        }
                     }
 
                     @Override
@@ -495,9 +501,9 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                 });
     }
 
-    public static class SwipeRefreshOnTouchListener implements View.OnTouchListener{
+    public static class SwipeRefreshOnTouchListener implements View.OnTouchListener {
 
-        public SwipeRefreshOnTouchListener(CollapsingToolbarLayout collapsingToolbarLayout, int headerHeight){
+        public SwipeRefreshOnTouchListener(CollapsingToolbarLayout collapsingToolbarLayout, int headerHeight) {
             mHeaderHeight = headerHeight;
             mCollapsingToolbarLayout = collapsingToolbarLayout;
         }

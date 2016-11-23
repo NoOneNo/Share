@@ -8,6 +8,7 @@ import com.hengye.share.util.L;
 import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
+import com.hengye.share.util.rxjava.datasource.ObservableHelper;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,8 +21,8 @@ import java.util.regex.Matcher;
 
 import retrofit2.Call;
 import retrofit2.Response;
-import rx.Observable;
-import rx.functions.Func1;
+import io.reactivex.Observable;
+import io.reactivex.functions.Function;
 
 import static com.hengye.share.util.DataUtil.WEB_URL;
 
@@ -32,16 +33,16 @@ import static com.hengye.share.util.DataUtil.WEB_URL;
 public class TopicRxUtil {
 
 
-    static Func1<ArrayList<Topic>, Observable<ArrayList<Topic>>> mFlatShortUrl;
+    static Function<ArrayList<Topic>, Observable<ArrayList<Topic>>> mFlatShortUrl;
 
     /**
      * 把微博的短链转换成长链
      */
-    public static Func1<ArrayList<Topic>, Observable<ArrayList<Topic>>> flatShortUrl() {
+    public static Function<ArrayList<Topic>, Observable<ArrayList<Topic>>> flatShortUrl() {
         if (mFlatShortUrl == null) {
-            mFlatShortUrl = new Func1<ArrayList<Topic>, Observable<ArrayList<Topic>>>() {
+            mFlatShortUrl = new Function<ArrayList<Topic>, Observable<ArrayList<Topic>>>() {
                 @Override
-                public Observable<ArrayList<Topic>> call(ArrayList<Topic> topics) {
+                public Observable<ArrayList<Topic>> apply(ArrayList<Topic> topics) {
 
                     if (topics != null) {
                         Map<Topic, Set<String>> contents = new HashMap<>();
@@ -146,7 +147,7 @@ public class TopicRxUtil {
                         }
                     }
 
-                    return Observable.just(topics);
+                    return ObservableHelper.justArrayList(topics);
                 }
             };
         }

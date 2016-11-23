@@ -2,6 +2,7 @@ package com.hengye.share.module.setting;
 
 import android.app.Fragment;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
@@ -70,10 +71,10 @@ public class SettingFragment extends BasePreferenceFragment {
                 getFragmentManager().
                         beginTransaction().
                         setCustomAnimations(
-                                R.anim.fragment_enter,
-                                R.anim.fragment_exit,
-                                R.anim.fragment_pop_enter,
-                                R.anim.fragment_pop_exit).
+                                R.animator.fragment_enter,
+                                R.animator.fragment_exit,
+                                R.animator.fragment_pop_enter,
+                                R.animator.fragment_pop_exit).
                         replace(R.id.content, clazz.newInstance()).
                         addToBackStack(null).
                         commit();
@@ -100,9 +101,10 @@ public class SettingFragment extends BasePreferenceFragment {
     }
 
     private String getFeedBackContent(){
-        return "#Share意见反馈# @我是一只小小小鸡仔 ";
+        String prefix = "#Share意见反馈# @我是一只小小小鸡仔 ";
+        String suffix = "设备型号：" + Build.MODEL + "，Android版本号：" + Build.VERSION.RELEASE + "；";
+        return prefix + suffix;
     }
-
 
 
 //    private static final String SKIN_NAME = "night_skin.zip";

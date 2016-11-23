@@ -79,7 +79,7 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
         return tabItems;
     }
 
-    PersonalHomepageAboutFragment mPersonalHomepageAboutFragment;
+    UserInfoFragment mPersonalHomepageAboutFragment;
     TopicFragment mTopicFragment;
     TopicAlbumFragment mTopicAlbumFragment;
 
@@ -90,7 +90,7 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
         BaseFragment fragment;
         switch (tabItem.getType()){
             case 0:
-                mPersonalHomepageAboutFragment = PersonalHomepageAboutFragment.newInstance(mWbUserInfo);
+                mPersonalHomepageAboutFragment = UserInfoFragment.newInstance(mWbUserInfo);
                 fragment = mPersonalHomepageAboutFragment;
                 break;
             case 1:

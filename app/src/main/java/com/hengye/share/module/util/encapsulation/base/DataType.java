@@ -32,8 +32,8 @@ public class DataType {
                 } else {
                     status = REFRESH_NO_MORE_DATA;
                 }
-            } else if (data.size() < WBUtil.getWBTopicRequestCount()) {
-                //结果小于请求条数
+            } else if (data.size() < WBUtil.getWBTopicRequestCount() / 2) {
+                //结果小于请求条数的一半， 不跟全部比较，以为微博开放接口返回数据不准确
                 status = REFRESH_DATA_SIZE_LESS;
             } else {
                 //结果大于或等于请求条数

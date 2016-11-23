@@ -14,9 +14,9 @@ import com.hengye.share.util.HandlerUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.intercept.AdTokenInterceptor;
+import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
 
 import retrofit2.Response;
-import retrofit2.adapter.rxjava.HttpException;
 
 /**
  * Created by yuhy on 16/9/5.
@@ -119,7 +119,7 @@ public class WBServiceErrorHandler {
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(activity)
                 .setCancelable(true)
-                .setTitle(activity.getString(R.string.dialog_text_error_tip))
+                .setTitle(R.string.dialog_text_error_tip)
                 .setMessage("(" +  wbApiException.errorCode + ")" + getWBServiceErrorMsg(wbApiException))
                 .setPositiveButton(activity.getString(R.string.dialog_text_confirm), new DialogInterface.OnClickListener() {
                     @Override

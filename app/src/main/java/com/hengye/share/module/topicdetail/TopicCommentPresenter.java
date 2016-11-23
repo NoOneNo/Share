@@ -8,15 +8,17 @@ import com.hengye.share.module.util.encapsulation.mvp.TaskPresenter;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
-import com.hengye.share.util.retrofit.weibo.WBService;
+import com.hengye.share.util.retrofit.api.WBService;
+import com.hengye.share.util.rxjava.datasource.ObservableHelper;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 import com.hengye.share.util.thirdparty.WBUtil;
 
+import io.reactivex.Observer;
+
 import java.util.Map;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.functions.Func1;
+import io.reactivex.Observable;
+import io.reactivex.functions.Function;
 
 public class TopicCommentPresenter extends TaskPresenter<TopicCommentMvpView> {
 
@@ -49,16 +51,16 @@ public class TopicCommentPresenter extends TaskPresenter<TopicCommentMvpView> {
         Observable observable = isComment ? service.listComment(params) : service.listRepost(params);
 
         observable
-                .flatMap(new Func1() {
+                .flatMap(new Function() {
                     @Override
-                    public Observable<TopicComments> call(Object o) {
+                    public Observable<TopicComments> apply(Object o) {
                         TopicComments result;
                         if (isComment) {
                             result = TopicComment.getComments((WBTopicComments) o);
                         } else {
                             result = TopicComment.getComments((WBTopicReposts) o);
                         }
-                        return Observable.just(result);
+                        return ObservableHelper.just(result);
                     }
                 })
                 .subscribeOn(SchedulerProvider.io())
@@ -66,7 +68,7 @@ public class TopicCommentPresenter extends TaskPresenter<TopicCommentMvpView> {
                 .subscribe(getTopicCommentsSubscriber(isRefresh));
     }
 
-    public Subscriber<TopicComments> getTopicCommentsSubscriber(boolean isRefresh) {
+    public Observer<TopicComments> getTopicCommentsSubscriber(boolean isRefresh) {
         return new TaskSubscriber<TopicComments>(isRefresh) {
             @Override
             public void onNext(TopicCommentMvpView mvpView, TopicComments list) {

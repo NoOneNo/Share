@@ -4,6 +4,7 @@ package com.hengye.share.module.util.image;
 import android.animation.ObjectAnimator;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,11 +17,15 @@ import com.hengye.share.R;
 import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.module.util.encapsulation.fragment.BaseFragment;
 import com.hengye.share.ui.support.AnimationRect;
+import com.hengye.share.util.L;
+import com.hengye.share.util.ViewUtil;
 
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-public class ImageNormalFragment extends BaseFragment {
+import static android.content.Context.VIBRATOR_SERVICE;
+
+public class ImageNormalFragment extends ImageBaseFragment {
 
     public static ImageNormalFragment newInstance(String path, AnimationRect rect,
                                                   boolean animationIn) {
@@ -69,6 +74,8 @@ public class ImageNormalFragment extends BaseFragment {
             }
         }
         mPhotoView.setImageBitmap(bitmap);
+
+        mPhotoView.setOnLongClickListener(this);
 
         if(SettingHelper.isClickToCloseGallery()) {
             mPhotoView.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {

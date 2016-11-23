@@ -20,7 +20,7 @@ import com.hengye.share.util.AnimationUtil;
 
 import java.io.File;
 
-public class ImageWebViewFragment extends BaseFragment {
+public class ImageWebViewFragment extends ImageBaseFragment {
 
     public static ImageWebViewFragment newInstance(String path, boolean animationIn) {
         ImageWebViewFragment fragment = new ImageWebViewFragment();
@@ -72,6 +72,7 @@ public class ImageWebViewFragment extends BaseFragment {
         mWebView.setHorizontalScrollBarEnabled(false);
         mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
+        mWebView.setOnLongClickListener(this);
         if(SettingHelper.isClickToCloseGallery()) {
             mWebView.setOnTouchListener(new LargeOnTouchListener(mWebView));
         }

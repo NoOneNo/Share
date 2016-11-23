@@ -25,7 +25,7 @@ import pl.droidsonroids.gif.GifDrawable;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-public class ImageGifFragment extends BaseFragment {
+public class ImageGifFragment extends ImageBaseFragment {
 
     public static ImageGifFragment newInstance(String path, AnimationRect rect,
                                                   boolean animationIn) {
@@ -67,6 +67,8 @@ public class ImageGifFragment extends BaseFragment {
         mPhotoView = (ClipImageView) view.findViewById(R.id.cover);
         mScreenWidth = getResources().getDisplayMetrics().widthPixels;
 
+        mGifView.setOnLongClickListener(this);
+
         File gifFile = new File(mPath);
         try {
             GifDrawable gifFromFile = new GifDrawable(gifFile);
@@ -79,9 +81,6 @@ public class ImageGifFragment extends BaseFragment {
         setBitmapToPhotoView();
         if (mAnimateIn) {
             mAnimateIn = false;
-
-//            setBitmapToPhotoView();
-
             runEnterAnimation();
         }
 

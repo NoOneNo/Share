@@ -20,10 +20,11 @@ import com.hengye.share.module.util.encapsulation.fragment.BaseFragment;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.util.FileUtil;
 import com.hengye.share.util.ImageUtil;
+import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.ToastUtil;
 
-public class ImageFragment extends BaseFragment {
+public class ImageFragment extends BaseFragment implements View.OnLongClickListener{
 
     public static ImageFragment newInstance(String url, AnimationRect rect,
                                             boolean animationIn, boolean firstEnter) {
@@ -83,10 +84,23 @@ public class ImageFragment extends BaseFragment {
 
     }
 
+    @Override
+    public boolean onLongClick(View v) {
+        if(getActivity() != null){
+            Fragment fragment = getActivity().getSupportFragmentManager()
+                    .findFragmentById(R.id.content);
+            if(fragment != null && fragment instanceof GalleryFragment){
+                return ((GalleryFragment)fragment).onLongClick(v);
+            }
+        }
+        return false;
+    }
+
     public void saveImage(){
-        if(mPath != null){
+        if(mPath != null && mUrl != null){
             String path;
-            if((path = FileUtil.saveImage(mPath)) != null){
+            if((path = FileUtil.saveImage(mPath, mUrl.endsWith("gif"))) != null){
+                FileUtil.sendMediaScanIntent(getContext(), path);
                 ToastUtil.showToast(getString(R.string.topic_gallery_image_save_success, path));
             }
         }

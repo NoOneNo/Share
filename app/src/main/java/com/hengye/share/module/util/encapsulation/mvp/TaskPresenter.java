@@ -27,8 +27,7 @@ public class TaskPresenter<V extends MvpView & TaskCallBack> extends RxPresenter
         public void onError(V v, Throwable e) {
             super.onError(v, e);
             //根据e来判断是网络异常还是服务器异常;
-            int errorType = TaskState.isNetworkException(e) ? TaskState.STATE_FAIL_BY_NETWORK : TaskState.STATE_FAIL_BY_SERVER;
-            v.onTaskComplete(isRefresh, errorType);
+            v.onTaskComplete(isRefresh, TaskState.getTaskFailState(e));
         }
 
         @Override
