@@ -3,6 +3,7 @@ package com.hengye.share.ui.widget;
 import android.content.Context;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -48,7 +49,7 @@ public class TopicEditText extends AppCompatEditText {
     @Override
     protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
         super.onTextChanged(text, start, lengthBefore, lengthAfter);
-        ensureRange();
+//        ensureRange(text);
     }
 
 
@@ -90,18 +91,21 @@ public class TopicEditText extends AppCompatEditText {
         }
     }
 
-    private void ensureRange(){
+    /**
+     * 在text改变后调用此方法重新确认span的位置
+     * @param text
+     */
+    public void ensureRange(CharSequence text){
         //reset state
         mIsSelected = false;
         if (mRangeArrayList != null) {
             mRangeArrayList.clear();
         }
 
-        Editable spannableText = getText();
-        if (spannableText == null || TextUtils.isEmpty(spannableText.toString())) {
+        if (TextUtils.isEmpty(text)) {
             return;
         }
-
+        SpannableString spannableText = SpannableString.valueOf(text);
         TopicContentUrlSpan[] spans = spannableText.getSpans(0, spannableText.length(), TopicContentUrlSpan.class);
 
         for (TopicContentUrlSpan span : spans) {

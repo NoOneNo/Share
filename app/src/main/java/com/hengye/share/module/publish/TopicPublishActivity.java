@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -30,6 +31,7 @@ import com.hengye.share.model.greenrobot.TopicDraft;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.module.topic.TopicPresenter;
 import com.hengye.share.service.TopicPublishService;
+import com.hengye.share.ui.widget.TopicEditText;
 import com.hengye.share.ui.widget.dialog.DateAndTimePickerDialog;
 import com.hengye.share.ui.widget.emoticon.EmoticonPicker;
 import com.hengye.share.ui.widget.emoticon.EmoticonPickerUtil;
@@ -105,7 +107,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     private EmoticonPicker mEmoticonPicker;
     private View mContainer;
     private TextView mContentLength, mGroupVisibleStatus;
-    private EditText mContent;
+    private TopicEditText mContent;
     private ScrollView mScrollView;
     private CheckBox mPublishCB;
     private Dialog mSaveToDraftDialog, mSkipToLoginDialog;
@@ -115,7 +117,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     @SuppressWarnings("ConstantConditions")
     private void initView() {
         mContainer = findViewById(R.id.rl_container);
-        mContent = (EditText) findViewById(R.id.et_topic_publish);
+        mContent = (TopicEditText) findViewById(R.id.et_topic_publish);
         mContentLength = (TextView) findViewById(R.id.tv_content_length);
         mContent.setSelection(0);
         mContent.setOnClickListener(this);
@@ -172,6 +174,17 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
                     L.debug("find at action");
                     mMentionBtn.performClick();
                 }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //避免监听死循环，因为要改动text
+                mContent.removeTextChangedListener(this);
+                SpannableString ss = DataUtil.convertNormalStringToSpannableString(null, s, false);
+                mContent.ensureRange(ss);
+                mContent.setTextKeepState(ss);
+                mContent.addTextChangedListener(this);
             }
         });
 
@@ -179,11 +192,21 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         if (mTopicDraft.getUrls() != null) {
             mGalleryEditor.setPaths(mTopicDraft.getUrlList());
         }
-        mContent.setFilters(new InputFilter[]{mEmoticonPicker.getEmoticonInputFilter(), mAtUserInputFilter});
+        mContent.setFilters(new InputFilter[]{mEmoticonPicker.getEmoticonInputFilter()});
         initSaveToDraftDialog();
 
         initViewByType();
     }
+
+    /**
+     * 直接在afterTextChanged里设置span就好
+     */
+//    private InputFilter mAtUserInputFilter = new InputFilter() {
+//        @Override
+//        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+//            return DataUtil.convertNormalStringToSpannableString(null, source, false);
+//        }
+//    };
 
     private void initViewByType() {
         switch (mTopicDraft.getType()) {
@@ -428,13 +451,6 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
             }
         }
     }
-
-    private InputFilter mAtUserInputFilter = new InputFilter() {
-        @Override
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            return DataUtil.convertNormalStringToSpannableString(null, String.valueOf(source), false);
-        }
-    };
 
     private void showEmoticonPicker(boolean showAnimation) {
         mEmoticonPicker.show(showAnimation);

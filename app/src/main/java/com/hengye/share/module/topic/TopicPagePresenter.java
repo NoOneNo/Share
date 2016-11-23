@@ -98,7 +98,7 @@ public class TopicPagePresenter extends ListDataPresenter<Topic, TopicPageMvpVie
             mFlatWBTopics = new Function<WBTopics, Observable<ArrayList<Topic>>>() {
                 @Override
                 public Observable<ArrayList<Topic>> apply(WBTopics wbTopics) {
-                    return ObservableHelper.just(Topic.getTopics(wbTopics));
+                    return ObservableHelper.justArrayList(Topic.getTopics(wbTopics));
                 }
             };
         }
@@ -112,7 +112,7 @@ public class TopicPagePresenter extends ListDataPresenter<Topic, TopicPageMvpVie
             mFlatWBTopicFavorites = new Function<WBTopicFavorites, Observable<ArrayList<Topic>>>() {
                 @Override
                 public Observable<ArrayList<Topic>> apply(WBTopicFavorites wbTopicFavorites) {
-                    return ObservableHelper.just(TopicFavorites.getTopics(wbTopicFavorites));
+                    return ObservableHelper.justArrayList(TopicFavorites.getTopics(wbTopicFavorites));
                 }
             };
         }
@@ -126,7 +126,7 @@ public class TopicPagePresenter extends ListDataPresenter<Topic, TopicPageMvpVie
         getMvpView().onTaskStart();
 
 
-        ObservableHelper.just(findData())
+        ObservableHelper.justArrayList(findData())
                 .flatMap(new Function<ArrayList<Topic>, Observable<ArrayList<Topic>>>() {
                     @Override
                     public Observable<ArrayList<Topic>> apply(ArrayList<Topic> topics) {

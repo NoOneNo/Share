@@ -29,7 +29,8 @@ public class AtUser implements Serializable{
         }
         StringBuilder sb = new StringBuilder();
         for(String str : username){
-            sb.append("@");
+            //已经输入@了
+//            sb.append("@");
             sb.append(str);
             sb.append(" ");
         }

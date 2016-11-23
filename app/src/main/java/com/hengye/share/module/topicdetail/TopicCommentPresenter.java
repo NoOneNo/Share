@@ -68,7 +68,7 @@ public class TopicCommentPresenter extends TaskPresenter<TopicCommentMvpView> {
                 .subscribe(getTopicCommentsSubscriber(isRefresh));
     }
 
-    public Observer<TopicComments> getTopicCommentsSubscriber(boolean isRefresh) {
+    private Observer<TopicComments> getTopicCommentsSubscriber(boolean isRefresh) {
         return new TaskSubscriber<TopicComments>(isRefresh) {
             @Override
             public void onNext(TopicCommentMvpView mvpView, TopicComments list) {

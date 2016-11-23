@@ -248,7 +248,7 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
      */
     public void loadWBTopic(final String firstPage) {
         getMvpView().onTaskStart();
-        ObservableHelper.just(findData())
+        ObservableHelper.justArrayList(findData())
                 .flatMap(new Function<ArrayList<Topic>, Observable<ArrayList<Topic>>>() {
                     @Override
                     public Observable<ArrayList<Topic>> apply(ArrayList<Topic> topics) {
