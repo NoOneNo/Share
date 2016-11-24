@@ -20,9 +20,11 @@
 -dontwarn org.apache.**
 -dontwarn android.net.**
 
-#-keep class retrofit2.**
-#-dontwarn retrofit2.Platform.**
-
+## retrofit
+-keep class retrofit.** { *; }
+-keepclasseswithmembers class * {
+    @retrofit.http.* <methods>;
+}
 # Platform calls Class.forName on types which do not exist on Android to determine platform.
 -dontnote retrofit2.Platform
 # Platform used when running on RoboVM on iOS. Will not be used at runtime.
@@ -33,32 +35,28 @@
 -keepattributes Signature
 # Retain declared checked exceptions for use by a Proxy instance.
 -keepattributes Exceptions
+## retrofit
 
-
+## okio
 -keep class okio.**
 -dontwarn okio.**
+## okio
 
--keep class rx.**
+#-keep class rx.**
 -dontwarn rx.internal.util.unsafe.**
 
+# greendao
 -keep class org.greenrobot.greendao.** {*;}
 -keepclassmembers class * extends org.greenrobot.greendao.AbstractDao {
 public static java.lang.String TABLENAME;
 }
 -keep class **$Properties
-
 # If you do not use SQLCipher:
 -dontwarn org.greenrobot.greendao.database.**
+-dontwarn org.greenrobot.greendao.**
+# greendao
 
-#-keep class de.greenrobot.dao.** {*;}
-##保持greenDao的方法不被混淆
-##用来保持生成的表名不被混淆
-#-keepclassmembers class * extends de.greenrobot.dao.AbstractDao {
-#    public static java.lang.String TABLENAME;
-#}
-#-keep class **$Properties
-#-keep class com.android.volley.** { *; }
-
+-keep class com.hengye.share.model.** {*;}
 
 #指定代码的压缩级别
 -optimizationpasses 5
@@ -112,6 +110,8 @@ public static java.lang.String TABLENAME;
 
 #如果引用了v4或者v7包
 -dontwarn android.support.**
+
+-keep class android.support.** {*;}
 
 ####混淆保护自己项目的部分代码以及引用的第三方jar包library-end####
 
@@ -173,5 +173,9 @@ public static java.lang.String TABLENAME;
     public static <fields>;
 }
 
+
+-renamesourcefileattribute SourceFile
+# 保持混淆时类的实名及行号(——————— 调试时打开 ———————)
+#-keepattributes SourceFile,LineNumberTable
 #避免混淆泛型 如果混淆报错建议关掉
 -keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod

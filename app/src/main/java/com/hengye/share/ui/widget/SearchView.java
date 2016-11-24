@@ -3,6 +3,7 @@ package com.hengye.share.ui.widget;
 import android.animation.Animator;
 import android.app.Activity;
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -23,11 +24,11 @@ import com.hengye.share.util.ViewUtil;
 public class SearchView extends FrameLayout implements View.OnClickListener{
 
     public SearchView(Context context) {
-        this(context, null, -1);
+        this(context, null, 0);
     }
 
     public SearchView(Context context, AttributeSet attrs) {
-        this(context, attrs, -1);
+        this(context, attrs, 0);
     }
 
     public SearchView(Context context, AttributeSet attrs, int defStyle) {
@@ -39,7 +40,7 @@ public class SearchView extends FrameLayout implements View.OnClickListener{
     private void init(Context context){
         View.inflate(context, R.layout.item_search, this);
 
-        mSearch = findViewById(R.id.card_search);
+        mSearch = (CardView) findViewById(R.id.card_search);
         mBackBtn = findViewById(R.id.iv_search_back);
         mClearBtn = findViewById(R.id.iv_clear_content);
         mSearchContent = (EditText) findViewById(R.id.et_search_content);
@@ -85,7 +86,8 @@ public class SearchView extends FrameLayout implements View.OnClickListener{
 
     }
 
-    private View mSearch, mBackBtn, mClearBtn;
+    private CardView mSearch;
+    private View  mBackBtn, mClearBtn;
     private EditText mSearchContent;
     private ListView mSearchResult;
 
@@ -102,9 +104,7 @@ public class SearchView extends FrameLayout implements View.OnClickListener{
         this.mMode = mode;
         setup(activity);
 
-        if(mode != MODE_ANIMATION){
-            setVisibility(View.VISIBLE);
-        }
+        mSearch.setVisibility(mode == MODE_ANIMATION ? View.GONE : View.VISIBLE);
     }
 
     public int getMode(){
@@ -156,7 +156,7 @@ public class SearchView extends FrameLayout implements View.OnClickListener{
     }
 
     public boolean isSearchShow(){
-        return getVisibility() == View.VISIBLE;
+        return mSearch.getVisibility() == View.VISIBLE;
     }
 
     public void handleSearch() {
@@ -173,7 +173,7 @@ public class SearchView extends FrameLayout implements View.OnClickListener{
 
 
     private void startSearchHideAnimation() {
-        final Animator searchHideAnimator = ViewAnimationUtils.createCircularReveal(this,
+        final Animator searchHideAnimator = ViewAnimationUtils.createCircularReveal(mSearch,
                 getWidth() - 100,
                 ViewUtil.getActionBarHeight() / 2,
                 (float) Math.hypot(getWidth(), getHeight()),
@@ -182,12 +182,12 @@ public class SearchView extends FrameLayout implements View.OnClickListener{
             @Override
             public void onAnimationStart(Animator animation) {
                 mSearchContent.setText("");
-                setEnabled(false);
+                mSearch.setEnabled(false);
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                setVisibility(View.GONE);
+                mSearch.setVisibility(View.GONE);
                 ViewUtil.hideKeyBoard(mSearchContent);
                 mSearchResult.setVisibility(View.GONE);
             }
@@ -202,21 +202,23 @@ public class SearchView extends FrameLayout implements View.OnClickListener{
 
             }
         });
+
         searchHideAnimator.setDuration(300);
         searchHideAnimator.start();
     }
 
     private void startSearchShowAnimation() {
-        final Animator searchShowAnimator = ViewAnimationUtils.createCircularReveal(this,
-                mSearchContent.getWidth(),
+        final Animator searchShowAnimator = ViewAnimationUtils.createCircularReveal(mSearch,
+//                mSearch.getMeasuredWidth(),
+                ViewUtil.getScreenWidth(getContext()),
                 ViewUtil.getActionBarHeight() / 2,
                 0,
                 (float) Math.hypot(getWidth(), getHeight()));
         searchShowAnimator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-                setVisibility(View.VISIBLE);
-                setEnabled(true);
+                mSearch.setVisibility(View.VISIBLE);
+                mSearch.setEnabled(true);
             }
 
             @Override
@@ -235,6 +237,7 @@ public class SearchView extends FrameLayout implements View.OnClickListener{
 
             }
         });
+
         searchShowAnimator.setDuration(300);
         searchShowAnimator.start();
     }

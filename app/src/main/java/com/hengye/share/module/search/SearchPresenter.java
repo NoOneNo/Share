@@ -4,7 +4,9 @@ import com.hengye.share.model.Topic;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.sina.WBTopics;
 import com.hengye.share.model.sina.WBUserInfos;
+import com.hengye.share.module.util.encapsulation.base.TaskState;
 import com.hengye.share.module.util.encapsulation.mvp.RxPresenter;
+import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.UserUtil;
@@ -29,40 +31,6 @@ public class SearchPresenter extends RxPresenter<SearchMvpView> {
         super(mvpView);
     }
 
-//    public void loadWBSearchContent(String content){
-//        final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBSearchUserUrl());
-//        ub.addParameter("access_token", UserUtil.getPriorToken());
-//        ub.addParameter("q", content);
-//        ub.addParameter("sid", "o_weico");
-//
-//        WBService service = RetrofitManager.getWBService();
-//
-//        Observable.zip(
-//                service.searchUser(ub.getParameters()),
-//                service.searchPublic(ub.getParameters()),
-//                ObjectConverter.getObjectConverter2())
-//                .subscribeOn(SchedulerProvider.io())
-//                .observeOn(SchedulerProvider.ui())
-//                .toFlowable(BackpressureStrategy.LATEST)
-//                .subscribe(new ResourceSubscriber<Object[]>() {
-//                    @Override
-//                    public void onNext(Object[] objects) {
-//                        getMvpView().handleSearchUserData(UserInfo.getUserInfos((WBUserInfos) objects[0]));
-//                        getMvpView().handleSearchPublicData(Topic.getTopics((WBTopics) objects[1]));
-//                        getMvpView().loadSuccess();
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable t) {
-//                        getMvpView().loadFail();
-//                    }
-//                    @Override
-//                    public void onComplete() {
-//
-//                    }
-//                });
-//    }
-
     public void loadWBSearchContent(String content) {
         final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBSearchUserUrl());
         ub.addParameter("access_token", UserUtil.getPriorToken());
@@ -82,6 +50,7 @@ public class SearchPresenter extends RxPresenter<SearchMvpView> {
                     @Override
                     public void onError(SearchMvpView v, Throwable e) {
                         v.loadFail();
+                        ToastUtil.showToast(TaskState.toTaskStateString(TaskState.getTaskFailState(e)));
                     }
 
                     @Override

@@ -15,6 +15,7 @@
         android:id="@+id/btn_retry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/tip_try_refresh" />
+        android:text="@string/tip_try_refresh"
+        style="@style/Widget.Material.Button" />
 
 </LinearLayout>

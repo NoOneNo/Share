@@ -122,7 +122,7 @@ public class TopicPagePresenter extends ListDataPresenter<Topic, TopicPageMvpVie
     /**
      * 先检测有没有缓存，没有再请求服务器
      */
-    public void loadWBTopic(final boolean isRefresh) {
+    public void loadWBTopic() {
         getMvpView().onTaskStart();
 
 
@@ -131,7 +131,7 @@ public class TopicPagePresenter extends ListDataPresenter<Topic, TopicPageMvpVie
                     @Override
                     public Observable<ArrayList<Topic>> apply(ArrayList<Topic> topics) {
                         if (CommonUtil.isEmpty(topics)) {
-                            return getTopics(isRefresh);
+                            return getTopics(true);
                         } else {
                             return Observable
                                     .just(topics)
@@ -142,31 +142,6 @@ public class TopicPagePresenter extends ListDataPresenter<Topic, TopicPageMvpVie
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
                 .subscribeWith(getTopicsSubscriber(true));
-
-//        Observable
-//                .create(new ObservableOnSubscribe<Optional<ArrayList<Topic>>>() {
-//                    @Override
-//                    public void subscribe(ObservableEmitter<Optional<ArrayList<Topic>>> subscriber) {
-//                        subscriber.onNext(Optional.ofNullable(findData()));
-//                        subscriber.onComplete();
-//                    }
-//                })
-//                .compose(RxUtil.<ArrayList<Topic>>deoptionalize())
-//                .flatMap(new Function<ArrayList<Topic>, Observable<ArrayList<Topic>>>() {
-//                    @Override
-//                    public Observable<ArrayList<Topic>> apply(ArrayList<Topic> topics) {
-//                        if (CommonUtil.isEmpty(topics)) {
-//                            return getTopics(isRefresh);
-//                        } else {
-//                            return Observable
-//                                    .just(topics)
-//                                    .delay(400, TimeUnit.MILLISECONDS);
-//                        }
-//                    }
-//                })
-//                .subscribeOn(SchedulerProvider.io())
-//                .observeOn(SchedulerProvider.ui())
-//                .subscribeWith(getTopicsSubscriber(true));
     }
 
     public ArrayList<Topic> findData() {
@@ -179,7 +154,16 @@ public class TopicPagePresenter extends ListDataPresenter<Topic, TopicPageMvpVie
     }
 
     public void saveData(List<Topic> data) {
-        ShareJson.saveListData(getModelName(), data);
+        if(isNeedCache()) {
+            ShareJson.saveListData(getModelName(), data);
+        }
+    }
+
+    public boolean isNeedCache() {
+        if (mTopicGroup.topicType == TopicType.THEME) {
+            return false;
+        }
+        return true;
     }
 
     private String mModuleName;

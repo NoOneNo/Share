@@ -56,19 +56,19 @@ public class TopicPageFragment extends StatusFragment<Topic> implements TopicPag
         addPresenter(mPresenter = new TopicPagePresenter(this, topicGroup, mPager));
         mPresenter.setKeyword(mKeyword);
         showLoading();
-        onRefresh();
+        mPresenter.loadWBTopic();
     }
 
     @Override
     public void onRefresh() {
         super.onRefresh();
-        mPresenter.loadWBTopic(true);
+        mPresenter.loadRemoteWBTopic(true);
     }
 
     @Override
     public void onLoad() {
         super.onLoad();
-        mPresenter.loadWBTopic(false);
+        mPresenter.loadRemoteWBTopic(false);
     }
 
     @Override

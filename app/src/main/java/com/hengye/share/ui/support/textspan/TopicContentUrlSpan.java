@@ -91,6 +91,8 @@ public class TopicContentUrlSpan extends CharacterStyle implements ParcelableSpa
         // TODO: 16/9/20 需要优化
         //如果是网页已经替换成DataUtil.WEB_SCHEME
         String url = uri.toString();
+
+        L.debug("onClick url : {}", url);
         if (WBUtil.isWBAccountIdLink(url)) {
             Intent intent = new Intent(context, PersonalHomepageActivity.class);
             intent.putExtra("id", WBUtil.getIdFromWBAccountLink(url));

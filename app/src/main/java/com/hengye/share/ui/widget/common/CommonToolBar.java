@@ -92,12 +92,16 @@ public class CommonToolBar extends Toolbar {
             return mNavigation;
         }
 
-        ReflectionHelpers.callInstanceMethod(Toolbar.class, this, "ensureNavButtonView");
+        try {
+            ReflectionHelpers.callInstanceMethod(Toolbar.class, this, "ensureNavButtonView");
 
-        Object obj = ReflectionHelpers.getField(this, "mNavButtonView");
-        if (obj != null && obj instanceof ImageButton) {
-            mNavigation = (ImageButton) obj;
-            return mNavigation;
+            Object obj = ReflectionHelpers.getField(this, "mNavButtonView");
+            if (obj != null && obj instanceof ImageButton) {
+                mNavigation = (ImageButton) obj;
+                return mNavigation;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return null;
     }

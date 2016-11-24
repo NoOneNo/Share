@@ -272,7 +272,16 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
     }
 
     public void saveData(List<Topic> data) {
-        ShareJson.saveListData(getModelName(), data);
+        if (isNeedCache()) {
+            ShareJson.saveListData(getModelName(), data);
+        }
+    }
+
+    public boolean isNeedCache() {
+        if (mTopicGroup.topicType == TopicType.HOMEPAGE && uid != null && !uid.equals(UserUtil.getUid())) {
+            return false;
+        }
+        return true;
     }
 
     private String mModuleName;

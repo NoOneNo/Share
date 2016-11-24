@@ -120,7 +120,8 @@ public class VideoPlayService extends Service implements View.OnClickListener {
             mParentParams = new WindowManager.LayoutParams();
             //api大于等于19时用toast，小于19用于TYPE_SYSTEM_ALERT
 //        params.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
-            mParentParams.type = WindowManager.LayoutParams.TYPE_PHONE;
+//            mParentParams.type = WindowManager.LayoutParams.TYPE_PHONE;
+            mParentParams.type = WindowManager.LayoutParams.TYPE_TOAST;
             mParentParams.width = WindowManager.LayoutParams.MATCH_PARENT;
             mParentParams.height = getVideoHeight(config);
             mParentParams.x = 0;

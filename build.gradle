@@ -40,7 +40,7 @@ ext {
 
     // common dependencies for Android projects
 
-    final ANDROID_SUPPORT_VERSION = '25.0.0'
+    final ANDROID_SUPPORT_VERSION = '25.0.1'
     dep = [
             androidPlugin  : 'com.android.tools.build:gradle:2.2.0',
             junit          : 'junit:junit:4.12',

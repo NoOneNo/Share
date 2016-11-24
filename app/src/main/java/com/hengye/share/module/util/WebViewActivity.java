@@ -155,6 +155,7 @@ public class WebViewActivity extends BaseActivity {
 
     @SuppressLint("SetJavaScriptEnabled")
     private void initWebView() {
+        mWebView.setHapticFeedbackEnabled(true);
         WebSettings settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);

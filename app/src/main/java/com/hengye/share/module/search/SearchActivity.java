@@ -18,6 +18,7 @@ import com.hengye.share.R;
 import com.hengye.share.ui.widget.SearchView;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
+import com.hengye.share.util.L;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.ViewUtil;
 
@@ -43,7 +44,7 @@ public class SearchActivity extends BaseActivity implements SearchMvpView{
 
     @Override
     protected boolean canSwipeBack() {
-        return false;
+        return true;
     }
 
     @Override
@@ -155,6 +156,7 @@ public class SearchActivity extends BaseActivity implements SearchMvpView{
 
     @Override
     public void handleSearchUserData(List<UserInfo> userInfos) {
+        L.debug("handleSearchUserData invoke, userInfos : {}", userInfos);
         mUserAdapter.refresh(userInfos);
     }
 

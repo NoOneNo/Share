@@ -12,6 +12,7 @@ public class ItemViewHolder<T> extends RecyclerView.ViewHolder {
 
     public ItemViewHolder(View itemView) {
         super(itemView);
+        itemView.setTag(this);
     }
 
     public View findViewById(@IdRes int id) {

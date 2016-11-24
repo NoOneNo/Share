@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TextAppearance.Material.Button" parent="TextAppearance.AppCompat.Widget.Button">
+        <item name="android:textSize">@dimen/text_size_button_material</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+    </style>
+    <!-- Bordered ink button -->
+    <style name="Widget.Material.Button" parent="">
+        <item name="android:background">@drawable/btn_default_material</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Widget.Button</item>
+        <item name="android:minHeight">48dip</item>
+        <item name="android:minWidth">88dip</item>
+        <item name="android:stateListAnimator">@animator/button_state_list_anim_material</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+    </style>
+</resources>
