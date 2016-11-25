@@ -135,7 +135,7 @@ public class ShareJson implements java.io.Serializable {
     // KEEP METHODS - put your custom methods here
 
     public static void saveListData(final String modelName, List data) {
-        if(data == null){
+        if (data == null) {
             data = new ArrayList();
         }
         ObservableHelper
@@ -144,8 +144,9 @@ public class ShareJson implements java.io.Serializable {
                     @Override
                     public Observable<List> apply(@NonNull List data) {
                         int requestCount = WBUtil.getWBTopicRequestCount();
-                        if (requestCount > 0 && data.size() > requestCount) {
-                            data = data.subList(0, requestCount);
+                        int maxCacheCount = requestCount * 2;
+                        if (requestCount > 0 && data.size() > maxCacheCount) {
+                            data = data.subList(0, maxCacheCount);
                         }
                         return ObservableHelper.just(data);
                     }

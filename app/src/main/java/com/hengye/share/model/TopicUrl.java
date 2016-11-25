@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.hengye.share.model.sina.WBShortUrl;
 import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.GsonUtil;
 import com.hengye.share.util.L;
 
@@ -83,6 +84,10 @@ public class TopicUrl implements Serializable {
 
     public String getUrl() {
         return url;
+    }
+
+    public String getLinkUrl(){
+        return DataUtil.WEB_SCHEME + url;
     }
 
     public void setUrl(String url) {
