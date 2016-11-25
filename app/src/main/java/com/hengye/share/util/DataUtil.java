@@ -3,6 +3,7 @@ package com.hengye.share.util;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -19,6 +20,8 @@ import com.hengye.share.model.TopicId;
 import com.hengye.share.model.TopicShortUrl;
 import com.hengye.share.model.TopicUrl;
 import com.hengye.share.ui.support.textspan.CustomContentSpan;
+import com.hengye.share.ui.support.textspan.EmotionSpan;
+import com.hengye.share.ui.support.textspan.SimpleContentSpan;
 import com.hengye.share.ui.support.textspan.TopicContentUrlSpan;
 import com.hengye.share.ui.widget.emoticon.Emoticon;
 
@@ -52,6 +55,8 @@ public class DataUtil {
             .compile("#[\\p{Print}\\p{InCJKUnifiedIdeographs}&&[^#]]+#");
     public static final Pattern MENTION_URL = Pattern
             .compile("@[\\w\\p{InCJKUnifiedIdeographs}-]{1,26}");
+//    public static final Pattern EMOTION_URL = Pattern
+//            .compile("\\[[\\p{Print}\\p{InCJKUnifiedIdeographs}&&[^]+\\]");
     public static final Pattern EMOTION_URL = Pattern.compile("\\[(\\S+?)\\]");
 
     public static final String WEB_URL_REPLACE = "➢网页链接";
@@ -172,10 +177,7 @@ public class DataUtil {
                     i--;
                     size--;
 
-                    CustomContentSpan sp = new CustomContentSpan();
-                    sp.start = start;
-                    sp.end = end;
-                    sp.content = urlSpan.getURL();
+                    CustomContentSpan sp = new CustomContentSpan(start, end, urlSpan.getURL());
                     sps.add(sp);
                 }
             }
@@ -261,7 +263,8 @@ public class DataUtil {
         return str;
     }
 
-    private static void addEmotions(SpannableString value) {
+    private static List<SimpleContentSpan> addEmotions(Spannable value) {
+        List<SimpleContentSpan> simpleContentSpans = new ArrayList<>();
         Matcher localMatcher = EMOTION_URL.matcher(value);
         while (localMatcher.find()) {
             String str = localMatcher.group();
@@ -271,55 +274,47 @@ public class DataUtil {
                 //表情文字描述长度都小于10
                 Bitmap bitmap = Emoticon.getInstance().getEmoticonBitmap().get(str);
                 if (bitmap != null) {
-                    ImageSpan localImageSpan = new ImageSpan(ApplicationUtil.getContext(), bitmap, ImageSpan.ALIGN_BOTTOM);
-//                    TopicHttpUrlSpan localImageSpan = new TopicHttpUrlSpan("www.baidu.com",context, bitmap, ImageSpan.ALIGN_BOTTOM);
-                    value.setSpan(localImageSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    CustomContentSpan customContentSpan = new CustomContentSpan(start, end, str);
+//                    ImageSpan localImageSpan = new ImageSpan(ApplicationUtil.getContext(), bitmap, ImageSpan.ALIGN_BOTTOM);
+                    EmotionSpan emotionSpan = new EmotionSpan(customContentSpan, ApplicationUtil.getContext(), bitmap, ImageSpan.ALIGN_BOTTOM);
+                    simpleContentSpans.add(emotionSpan);
+                    value.setSpan(emotionSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }
         }
+        return simpleContentSpans;
+    }
+
+    public static List<SimpleContentSpan> convertNormalStringToSimpleContentUrlSpans(CharSequence source) {
+
+        SpannableString value = SpannableString.valueOf(source);
+
+        Linkify.addLinks(value, WEB_URL, WEB_SCHEME);
+
+        //添加表情
+        List<SimpleContentSpan> simpleContentSpans = addEmotions(value);
+
+        Linkify.addLinks(value, MENTION_URL, MENTION_SCHEME);
+        Linkify.addLinks(value, TOPIC_URL, TOPIC_SCHEME);
+
+        URLSpan[] urlSpans = value.getSpans(0, value.length(), URLSpan.class);
+        if (urlSpans == null || urlSpans.length == 0) {
+            return simpleContentSpans;
+        }
+
+        for (URLSpan urlSpan : urlSpans) {
+            int start = value.getSpanStart(urlSpan);
+            int end = value.getSpanEnd(urlSpan);
+
+            if (start >= 0 && end >= 0 && value.length() >= end) {
+                TopicContentUrlSpan topicContentUrlSpan = new TopicContentUrlSpan(start, end, urlSpan.getURL());
+                simpleContentSpans.add(topicContentUrlSpan);
+            }
+        }
+
+        return simpleContentSpans;
     }
 }
-
-//        for (URLSpan urlSpan : urlSpans) {
-//            int start = value.getSpanStart(urlSpan);
-//            int end = value.getSpanEnd(urlSpan);
-////            value.removeSpan(urlSpan);
-//
-//            if (isHttpUrl(urlSpan.getURL())) {
-////                if (start >= 0 && end >= 0 && value.length() >= end) {
-//////                    CharSequence cs1 = value.subSequence(0, start);
-//////                    CharSequence cs2 = value.subSequence(end, value.length());
-//////                    value = SpannableString.valueOf(cs1.toString() + "网页链接" + cs2.toString());
-////
-//////                    value.setSpan(new TopicHttpUrlSpan(urlSpan.getURL(), context, R.drawable.compose_mentionbutton_background_highlighted),
-//////                            start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//////                    value.setSpan(new TopicHttpUrlSpan(urlSpan.getURL()), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-////                    value.setSpan(new TopicContentUrlSpan(urlSpan.getURL()), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-////                }
-//            }else {
-//                value.removeSpan(urlSpan);
-//                value.setSpan(new TopicContentUrlSpan(urlSpan.getURL()), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//            }
-//        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

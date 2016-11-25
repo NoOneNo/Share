@@ -62,6 +62,10 @@ public class TopicContentUrlSpan extends CharacterStyle implements ParcelableSpa
     }
 
     public String getURL() {
+        if(topicUrl != null){
+            //长链地址
+            return topicUrl.getUrl();
+        }
         return url;
     }
 

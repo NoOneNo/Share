@@ -13,9 +13,12 @@ import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputConnectionWrapper;
 import android.widget.EditText;
 
+import com.hengye.share.ui.support.textspan.CustomContentSpan;
+import com.hengye.share.ui.support.textspan.SimpleContentSpan;
 import com.hengye.share.ui.support.textspan.TopicContentUrlSpan;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by yuhy on 2016/10/24.
@@ -106,9 +109,25 @@ public class TopicEditText extends AppCompatEditText {
             return;
         }
         SpannableString spannableText = SpannableString.valueOf(text);
-        TopicContentUrlSpan[] spans = spannableText.getSpans(0, spannableText.length(), TopicContentUrlSpan.class);
+        SimpleContentSpan[] spans = spannableText.getSpans(0, spannableText.length(), SimpleContentSpan.class);
 
-        for (TopicContentUrlSpan span : spans) {
+        for (SimpleContentSpan span : spans) {
+            mRangeArrayList.add(new Range(span));
+        }
+    }
+
+    public void ensureRange(List<SimpleContentSpan> spans){
+        //reset state
+        mIsSelected = false;
+        if (mRangeArrayList != null) {
+            mRangeArrayList.clear();
+        }
+
+        if(spans == null || spans.isEmpty()){
+            return;
+        }
+
+        for (SimpleContentSpan span : spans) {
             mRangeArrayList.add(new Range(span));
         }
     }
@@ -182,10 +201,10 @@ public class TopicEditText extends AppCompatEditText {
 
 
     //helper class to record the position of mention string in EditText
-    private class Range extends TopicContentUrlSpan{
+    private class Range extends CustomContentSpan{
 
-        public Range(TopicContentUrlSpan ccs) {
-            this(ccs.start, ccs.end, ccs.url);
+        public Range(SimpleContentSpan span) {
+            super(span);
         }
 
         public Range(int start, int end, String url) {

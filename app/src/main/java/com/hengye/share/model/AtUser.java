@@ -30,7 +30,7 @@ public class AtUser implements Serializable{
         StringBuilder sb = new StringBuilder();
         for(String str : username){
             //已经输入@了
-//            sb.append("@");
+            sb.append("@");
             sb.append(str);
             sb.append(" ");
         }

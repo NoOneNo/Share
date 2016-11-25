@@ -9,6 +9,16 @@ public class CustomContentSpan {
     public int end;
     public String content;
 
+    public CustomContentSpan(SimpleContentSpan span) {
+        this(span.getStart(), span.getEnd(), span.getContent());
+    }
+
+    public CustomContentSpan(int start, int end, String content) {
+        this.start = start;
+        this.end = end;
+        this.content = content;
+    }
+
     public int getStart() {
         return start;
     }

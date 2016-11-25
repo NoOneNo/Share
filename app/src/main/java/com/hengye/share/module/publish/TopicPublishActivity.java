@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -31,6 +30,8 @@ import com.hengye.share.model.greenrobot.TopicDraft;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.module.topic.TopicPresenter;
 import com.hengye.share.service.TopicPublishService;
+import com.hengye.share.ui.support.textspan.SimpleContentSpan;
+import com.hengye.share.ui.support.textspan.TopicContentUrlSpan;
 import com.hengye.share.ui.widget.TopicEditText;
 import com.hengye.share.ui.widget.dialog.DateAndTimePickerDialog;
 import com.hengye.share.ui.widget.emoticon.EmoticonPicker;
@@ -111,7 +112,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     private ScrollView mScrollView;
     private CheckBox mPublishCB;
     private Dialog mSaveToDraftDialog, mSkipToLoginDialog;
-
+    private boolean mIsWithAtChar;
     private int mCurrentContentLength;
 
     @SuppressWarnings("ConstantConditions")
@@ -172,19 +173,27 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
                 }
                 if (findAt) {
                     L.debug("find at action");
-                    mMentionBtn.performClick();
+                    startAtUser(true);
                 }
-
             }
 
             @Override
             public void afterTextChanged(Editable s) {
                 //避免监听死循环，因为要改动text
-                mContent.removeTextChangedListener(this);
-                SpannableString ss = DataUtil.convertNormalStringToSpannableString(null, s, false);
-                mContent.ensureRange(ss);
-                mContent.setTextKeepState(ss);
-                mContent.addTextChangedListener(this);
+//                mContent.removeTextChangedListener(this);
+//                SpannableString ss = DataUtil.convertNormalStringToSpannableString(null, s, false);
+//                mContent.ensureRange(ss);
+//                mContent.setTextKeepState(ss);
+//                mContent.addTextChangedListener(this);
+
+                List<SimpleContentSpan> simpleContentSpans = DataUtil.convertNormalStringToSimpleContentUrlSpans(s);
+                mContent.ensureRange(simpleContentSpans);
+                if(simpleContentSpans != null){
+                    mContent.ensureRange(simpleContentSpans);
+                    for(SimpleContentSpan span : simpleContentSpans){
+                        s.setSpan(span, span.getStart(), span.getEnd(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                }
             }
         });
 
@@ -192,7 +201,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         if (mTopicDraft.getUrls() != null) {
             mGalleryEditor.setPaths(mTopicDraft.getUrlList());
         }
-        mContent.setFilters(new InputFilter[]{mEmoticonPicker.getEmoticonInputFilter()});
+        mContent.setFilters(new InputFilter[]{ mEmoticonPicker.getEmoticonInputFilter(), mAtUserInputFilter});
         initSaveToDraftDialog();
 
         initViewByType();
@@ -201,12 +210,12 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     /**
      * 直接在afterTextChanged里设置span就好
      */
-//    private InputFilter mAtUserInputFilter = new InputFilter() {
-//        @Override
-//        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-//            return DataUtil.convertNormalStringToSpannableString(null, source, false);
-//        }
-//    };
+    private InputFilter mAtUserInputFilter = new InputFilter() {
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+            return DataUtil.convertNormalStringToSpannableString(null, source, false);
+        }
+    };
 
     private void initViewByType() {
         switch (mTopicDraft.getType()) {
@@ -301,11 +310,19 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         updateToolbarTitle(titleResId);
     }
 
+    /**
+     * @param isWithAtChar 是否由@去打开AtUser，是的话在回调的时候把前面的@去掉
+     */
+    private void startAtUser(boolean isWithAtChar){
+        mIsWithAtChar = isWithAtChar;
+        IntentUtil.startActivityForResult(this, AtUserActivity.class, AtUserActivity.REQUEST_AT_USER);
+    }
+
     @Override
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.btn_mention) {
-            IntentUtil.startActivityForResult(this, AtUserActivity.class, AtUserActivity.REQUEST_AT_USER);
+            startAtUser(false);
         } else if (id == R.id.btn_emoticon) {
             if (mEmoticonPicker.isShown()) {
                 hideEmoticonPicker(true);
@@ -447,7 +464,12 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         if (resultCode == Activity.RESULT_OK && requestCode == AtUserActivity.REQUEST_AT_USER) {
             if (data != null) {
                 ArrayList<String> result = (ArrayList<String>) data.getSerializableExtra("atUser");
-                EmoticonPickerUtil.addContentToEditTextEnd(mContent, AtUser.getFormatAtUserName(result));
+                String userNames = AtUser.getFormatAtUserName(result);
+                if(mContent.getText().toString().endsWith("@") && !CommonUtil.isEmpty(userNames)) {
+                    Editable editable = mContent.getText();
+                    editable.replace(editable.length() - 1, editable.length(), "");
+                }
+                EmoticonPickerUtil.addContentToEditTextEnd(mContent, userNames);
             }
         }
     }

@@ -131,8 +131,9 @@ public class TopicRxUtil {
                                         for (String shortUrl : entry.getValue()) {
                                             WBShortUrl wbShortUrl = shortExpandUrlMap.get(shortUrl);
                                             if (wbShortUrl != null && wbShortUrl.getUrl_long() != null) {
-                                                topic.setContent(topic.getContent().replace(shortUrl, wbShortUrl.getUrl_long()));
-                                                topicUrlMap.put(wbShortUrl.getUrl_long(), TopicUrl.getTopicUrl(topic.getId(), wbShortUrl));
+                                                //保留短链内容
+//                                                topic.setContent(topic.getContent().replace(shortUrl, wbShortUrl.getUrl_long()));
+                                                topicUrlMap.put(wbShortUrl.getUrl_short(), TopicUrl.getTopicUrl(topic.getId(), wbShortUrl));
 //                                                L.debug("shortUrl : {}", shortUrl);
 //                                                L.debug("convert to");
 //                                                L.debug("longUrl : {}", longUrl);
