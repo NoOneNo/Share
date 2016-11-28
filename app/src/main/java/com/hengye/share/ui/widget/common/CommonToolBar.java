@@ -43,7 +43,7 @@ public class CommonToolBar extends Toolbar {
     public void init() {
         this.setNavigationIcon(R.drawable.ic_arrow_back_white_48dp);
         if (getNavigationIcon() != null) {
-            getNavigationIcon().setTint(ThemeUtil.getTintColor());
+            getNavigationIcon().setTint(ThemeUtil.getUntingedColor());
         }
         setBackgroundColor(ThemeUtil.getColor());
         setTitleTextColor(ThemeUtil.getTextColor());

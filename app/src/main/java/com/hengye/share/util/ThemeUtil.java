@@ -22,30 +22,35 @@ public class ThemeUtil extends ResUtil{
     }
 
     public static int getTextColor(){
-        return getTintColor();
+        return getUntingedColor();
     }
 
-    public static int getTintColor(){
-        return getColor(getTintColorResId());
+    public static int getTintColor(boolean isTinted){
+        return isTinted ? getColor() : getUntingedColor();
     }
 
-    public static int getTintLightColor(){
-        return getColor(getTintLightColorResId());
+    public static int getUntingedColor(){
+        return getColor(getUntingedColorResId());
     }
 
-    public static int getTintDarkColor(){
-        return getColor(getTintDarkColorResId());
+    public static int getTintLightBgColor(){
+        return getColor(getTintLightBgResId());
     }
 
-    public static @ColorRes int getTintColorResId(){
-        return R.color.theme_tint_color;
+    public static int getTintDarkBgColor(){
+        return getColor(getTintDarkBgResId());
     }
 
-    public static @ColorRes int getTintLightColorResId(){
-        return R.color.theme_tint_light_color;
+    public static @ColorRes int getUntingedColorResId(){
+        return R.color.theme_untinged;
     }
 
-    public static @ColorRes int getTintDarkColorResId(){
-        return R.color.theme_tint_dark_color;
+    public static @ColorRes int getTintLightBgResId(){
+        return R.color.theme_tint_light_bg;
     }
+
+    public static @ColorRes int getTintDarkBgResId(){
+        return R.color.theme_tint_dark_bg;
+    }
+
 }

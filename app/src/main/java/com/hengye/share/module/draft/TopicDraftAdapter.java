@@ -26,7 +26,7 @@ public class TopicDraftAdapter extends CommonAdapter<TopicDraft> {
 
     @Override
     public TopicDraftViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
-        return new TopicDraftViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_topic_total, parent, false));
+        return new TopicDraftViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_topic_draft_total, parent, false));
     }
 
     public static class TopicDraftViewHolder extends TopicAdapter.TopicViewHolder<TopicDraft> {

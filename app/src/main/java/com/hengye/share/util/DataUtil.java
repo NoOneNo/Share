@@ -38,9 +38,9 @@ public class DataUtil {
         if (count < 10000) {
             return String.valueOf(count) + append;
         } else if (count < 100 * 10000) {
-            return new DecimalFormat("#.0").format(count * 1.0f / 10000) + append + ResUtil.getString(R.string.unit_ten_thousand);
+            return new DecimalFormat("#.0").format(count * 1.0f / 10000) + ResUtil.getString(R.string.unit_ten_thousand) + append;
         } else {
-            return new DecimalFormat("#").format(count * 1.0f / 10000) + append + ResUtil.getString(R.string.unit_ten_thousand);
+            return new DecimalFormat("#").format(count * 1.0f / 10000) + ResUtil.getString(R.string.unit_ten_thousand) + append;
         }
     }
 
@@ -118,6 +118,10 @@ public class DataUtil {
     public static <T extends TopicShortUrl & TopicId> SpannableString convertNormalStringToSpannableString(@Nullable T topic, CharSequence source, boolean isReplaceWebUrl) {
         //hack to fix android imagespan bug,see http://stackoverflow.com/questions/3253148/imagespan-is-cut-off-incorrectly-aligned
         //if string only contains emotion tags,add a empty char to the end
+        if(source == null){
+            return null;
+        }
+
         String txt = source.toString();
         String hackTxt;
         if (txt.startsWith("[") && txt.endsWith("]")) {
@@ -286,6 +290,10 @@ public class DataUtil {
     }
 
     public static List<SimpleContentSpan> convertNormalStringToSimpleContentUrlSpans(CharSequence source) {
+
+        if(source == null){
+            return null;
+        }
 
         SpannableString value = SpannableString.valueOf(source);
 

@@ -28,7 +28,7 @@ import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.module.profile.PersonalHomepageActivity;
 import com.hengye.share.module.publish.TopicPublishActivity;
 import com.hengye.share.module.setting.SettingHelper;
-import com.hengye.share.module.topicdetail.TopicDetailActivity;
+import com.hengye.share.module.topicdetail.TopicDetail2Activity;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemLongClickListener;
 import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapter;
@@ -149,7 +149,7 @@ public class TopicAdapter extends CommonAdapter<Topic>
                 }
             }, 100);
 //            IntentUtil.startActivity(getContext(), PersonalHomepageActivity.getStartIntent(getContext(), getItem(position).getUserInfo()));
-        } else if (id == R.id.tv_topic_content || id == R.id.gl_topic_gallery || id == R.id.rl_topic_title || id == R.id.ll_topic_content || id == R.id.ll_topic_retweeted_content) {
+        } else if (id == R.id.tv_topic_content || id == R.id.gl_topic_gallery || id == R.id.rl_topic_title || id == R.id.ll_topic_content || id == R.id.item_topic_retweeted_content) {
             final boolean isRetweeted = (Boolean) view.getTag();
             //为了显示波纹效果再启动
             mHandler.postDelayed(new Runnable() {
@@ -220,20 +220,11 @@ public class TopicAdapter extends CommonAdapter<Topic>
                 mTopic = new TopicContentViewHolder(findViewById(R.id.ll_topic_content));
             }
             if (mRetweetTopic == null) {
-                mRetweetTopic = new TopicContentViewHolder(findViewById(R.id.ll_topic_retweeted_content), true);
+                mRetweetTopic = new TopicContentViewHolder(findViewById(R.id.item_topic_retweeted_content), true);
             }
 
-            mTopicItem = findViewById(R.id.ll_topic);
-            mTopicTotalItem = findViewById(R.id.item_topic);
-
-//            mTopic.mContent = (TextView) findViewById(R.id.tv_topic_content);
-//            mTopic.mGallery = (GridGalleryView) findViewById(R.id.gl_topic_gallery);
-//            mTopic.mTopicLayout = findViewById(R.id.ll_topic_content);
-//
-//            mRetweetTopic.mContent = (TextView) findViewById(R.id.tv_topic_retweeted_content);
-//            mRetweetTopic.mGallery = (GridGalleryView) findViewById(R.id.gl_topic_retweeted_gallery);
-//            mRetweetTopic.mTopicLayout = findViewById(R.id.ll_topic_retweeted_content);
-
+            mTopicItem = findViewById(R.id.item_topic);
+            mTopicTotalItem = findViewById(R.id.item_topic_total);
 
             registerOnClickListener(mTopicTitle.mAvatar);
             registerOnClickListener(mTopicTitle.mUsername);
@@ -244,25 +235,21 @@ public class TopicAdapter extends CommonAdapter<Topic>
             registerOnClickListener(mTopic.mGallery);
             registerOnClickListener(mTopic.mTopicLayout);
 
+            registerOnClickListener(mRetweetTopic.mContent);
+            registerOnClickListener(mRetweetTopic.mGallery);
+            registerOnClickListener(mRetweetTopic.mTopicLayout);
+
             //不设置长按没法解决点击效果
             registerOnLongClickListener(mTopicTitle.mTitle);
             registerOnLongClickListener(mTopic.mContent);
             registerOnLongClickListener(mTopic.mGallery);
             registerOnLongClickListener(mTopic.mTopicLayout);
 
-            registerOnClickListener(mRetweetTopic.mContent);
-            registerOnClickListener(mRetweetTopic.mGallery);
-            registerOnClickListener(mRetweetTopic.mTopicLayout);
+            registerOnLongClickListener(mTopicItem);
 
             registerOnLongClickListener(mRetweetTopic.mContent);
             registerOnLongClickListener(mRetweetTopic.mGallery);
             registerOnLongClickListener(mRetweetTopic.mTopicLayout);
-
-
-            registerOnLongClickListener(mTopicItem);
-
-            SelectorLoader.getInstance().setDefaultRippleBackground(mTopicItem);
-            SelectorLoader.getInstance().setDefaultRippleWhiteBackground(mRetweetTopic.mTopicLayout);
 
             mTopicTitle.mAvatar.setOnTouchListener(mTopicOnTouchListener);
             mTopicTitle.mUsername.setOnTouchListener(mTopicOnTouchListener);
@@ -270,8 +257,12 @@ public class TopicAdapter extends CommonAdapter<Topic>
             mTopicTitle.mTitle.setOnTouchListener(mTopicOnTouchListener);
             mTopic.mContent.setOnTouchListener(mTopicOnTouchListener);
             mTopic.mGallery.setOnTouchListener(mTopicOnTouchListener);
+
             mRetweetTopic.mContent.setOnTouchListener(mRetweetedTopicOnTouchListener);
             mRetweetTopic.mGallery.setOnTouchListener(mRetweetedTopicOnTouchListener);
+
+            SelectorLoader.getInstance().setDefaultRippleBackground(mTopicItem);
+            SelectorLoader.getInstance().setDefaultRippleWhiteBackground(mRetweetTopic.mTopicLayout);
         }
 
         private View.OnTouchListener mTopicOnTouchListener = new View.OnTouchListener() {
@@ -282,7 +273,7 @@ public class TopicAdapter extends CommonAdapter<Topic>
                 if (id == R.id.tv_topic_content) {
                     //如果需要拦截长按关键字（比如@名字）则这样返回；
 //                    if(!TopicUrlOnTouchListener.getInstance().onTouch(v, event)) {
-//                        mTopicItem.onTouchEvent(event);
+//                        mTopicTotalItem.onTouchEvent(event);
 //                        return false;
 //                    }else{
 //                        return true;
@@ -292,7 +283,7 @@ public class TopicAdapter extends CommonAdapter<Topic>
                     if (!result) {
                         mTopicItem.onTouchEvent(event);
                         return false;
-                    }else{
+                    } else {
                         return true;
                     }
                 } else {
@@ -312,7 +303,7 @@ public class TopicAdapter extends CommonAdapter<Topic>
                     if (!result) {
                         mRetweetTopic.mTopicLayout.onTouchEvent(event);
                         return false;
-                    }else{
+                    } else {
                         return true;
                     }
                 } else {
@@ -327,7 +318,7 @@ public class TopicAdapter extends CommonAdapter<Topic>
                 return;
             }
 
-            TopicDetailActivity.start(context,
+            TopicDetail2Activity.start(context,
                     isRetweet ? tvh.mRetweetTopic.mTopicLayout : tvh.mTopicTotalItem,
                     topic,
                     isRetweet);
@@ -349,7 +340,7 @@ public class TopicAdapter extends CommonAdapter<Topic>
             mUsername = (TextView) v.findViewById(R.id.tv_topic_username);
             mDescription = (TextView) v.findViewById(R.id.tv_topic_description);
 
-            mTitle.setTag(false);
+//            mTitle.setTag(false);
         }
 
         public void initTopicTitle(final Context context, Topic topic) {
@@ -364,26 +355,6 @@ public class TopicAdapter extends CommonAdapter<Topic>
             if (userInfo != null) {
                 mUsername.setText(userInfo.getName());
                 if (SettingHelper.isShowTopicAvatar()) {
-                    mAvatar.setImageUrl(userInfo.getAvatar());
-                } else {
-                    mAvatar.setImageResource(R.drawable.ic_user_avatar);
-                }
-            }
-        }
-
-        public void initTopicTitle(final Context context, TopicComment topicComment) {
-            String time = DateUtil.getEarlyDateFormat(topicComment.getDate());
-            if (TextUtils.isEmpty(topicComment.getChannel())) {
-                mDescription.setText(time);
-            } else {
-                String str = String.format(context.getString(R.string.label_time_and_from), time, Html.fromHtml(topicComment.getChannel()));
-                mDescription.setText(str);
-            }
-
-            UserInfo userInfo = topicComment.getUserInfo();
-            if (userInfo != null) {
-                mUsername.setText(userInfo.getName());
-                if (SettingHelper.isShowCommentAndRepostAvatar()) {
                     mAvatar.setImageUrl(userInfo.getAvatar());
                 } else {
                     mAvatar.setImageResource(R.drawable.ic_user_avatar);

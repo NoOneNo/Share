@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rl_topic_title"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    tools:showIn="@layout/item_topic_total">
+    tools:showIn="@layout/item_title_topic">
+
 
     <com.hengye.share.ui.widget.image.AvatarImageView
         android:id="@+id/iv_topic_avatar"
         android:layout_width="@dimen/topic_avatar"
         android:layout_height="@dimen/topic_avatar"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"/>
+        android:layout_marginEnd="@dimen/activity_horizontal_margin" />
 
     <TextView
         android:id="@+id/tv_topic_username"
@@ -35,15 +30,5 @@
         android:textSize="@dimen/topic_description"
         android:textColor="@color/topic_description"
         android:maxLines="1"
-        android:ellipsize="end"/>
-
-    <Button
-        android:id="@+id/btn_topic_send_again"
-        android:layout_width="60dp"
-        android:layout_height="35dp"
-        android:text="重发"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:textSize="12sp"
-        android:visibility="gone"/>
-</RelativeLayout>
+        android:ellipsize="end" />
+</merge>

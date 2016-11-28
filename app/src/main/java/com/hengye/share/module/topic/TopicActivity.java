@@ -169,7 +169,7 @@ public class TopicActivity extends BaseActivity
         ActionBarDrawerToggleCustom toggle = new ActionBarDrawerToggleCustom(
                 this, mDrawer, getToolbar(), R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         if (toggle.getDrawerArrowDrawable() != null) {
-            toggle.getDrawerArrowDrawable().setColor(ThemeUtil.getTintColor());
+            toggle.getDrawerArrowDrawable().setColor(ThemeUtil.getUntingedColor());
         }
 
         toggle.setGravityCompat(GravityCompat.END);

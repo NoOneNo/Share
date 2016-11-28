@@ -28,6 +28,8 @@ public class TopicComment implements TopicId, TopicShortUrl, Serializable{
     private String channel;//渠道，通过什么发表
     private String content;//内容
     private String id;//评论或转发的唯一id
+    private long likeCounts;//评论点赞数
+    private boolean isLiked;//是否已经点赞
     private Topic topic;//评论或转发的主题
     private List<String> imageUrls;//缩略图
     private List<String> imageLargeUrls;//原图
@@ -73,6 +75,8 @@ public class TopicComment implements TopicId, TopicShortUrl, Serializable{
         topicComment.setContent(entity.getText());
         topicComment.setId(entity.getIdstr());
         topicComment.setTopic(Topic.getTopic(entity.getStatus()));
+        topicComment.setLiked(entity.isLiked());
+        topicComment.setLikeCounts(entity.getLike_counts());
 //        if(!CommonUtil.isEmpty(entity.getPic_urls())){
 //            List<String> imageUrls = new ArrayList<>();
 //            List<String> imageLargeUrls = new ArrayList<>();
@@ -122,9 +126,13 @@ public class TopicComment implements TopicId, TopicShortUrl, Serializable{
                 ", channel='" + channel + '\'' +
                 ", content='" + content + '\'' +
                 ", id='" + id + '\'' +
+                ", likeCounts=" + likeCounts +
+                ", isLiked=" + isLiked +
                 ", topic=" + topic +
                 ", imageUrls=" + imageUrls +
                 ", imageLargeUrls=" + imageLargeUrls +
+                ", urlMap=" + urlMap +
+                ", urlSpannableString=" + urlSpannableString +
                 '}';
     }
 
@@ -204,6 +212,22 @@ public class TopicComment implements TopicId, TopicShortUrl, Serializable{
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public long getLikeCounts() {
+        return likeCounts;
+    }
+
+    public void setLikeCounts(long likeCounts) {
+        this.likeCounts = likeCounts;
+    }
+
+    public boolean isLiked() {
+        return isLiked;
+    }
+
+    public void setLiked(boolean liked) {
+        isLiked = liked;
     }
 
     public Topic getTopic() {

@@ -1,10 +1,11 @@
-package com.hengye.share.module.topic;
+package com.hengye.share.module.topicdetail;
 
 import android.content.Context;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.hengye.share.R;
+import com.hengye.share.module.topic.TopicAdapter;
 import com.hengye.share.module.util.encapsulation.view.listview.CommonAdapter;
 import com.hengye.share.module.util.encapsulation.view.listview.ViewHolder;
 import com.hengye.share.model.TopicComment;
@@ -13,9 +14,9 @@ import com.hengye.share.ui.widget.util.SelectorLoader;
 
 import java.util.List;
 
-public class TopicCommentAdapter extends CommonAdapter<TopicComment, TopicCommentAdapter.TopicCommentViewHolder> {
+public class TopicComment2Adapter extends CommonAdapter<TopicComment, TopicComment2Adapter.TopicCommentViewHolder> {
 
-    public TopicCommentAdapter(Context context, List<TopicComment> data){
+    public TopicComment2Adapter(Context context, List<TopicComment> data){
         super(context, data);
     }
 
@@ -32,20 +33,20 @@ public class TopicCommentAdapter extends CommonAdapter<TopicComment, TopicCommen
     public static class TopicCommentViewHolder extends ViewHolder<TopicComment> {
 
         public TopicAdapter.TopicContentViewHolder mTopic;
-        public TopicAdapter.TopicTitleViewHolder mTopicTitle;
+        public TopicCommentAdapter.TopicCommentTitleViewHolder mTopicTitle;
         public View mTopicItem;
 
         public TopicCommentViewHolder(View v) {
             super(v);
             if (mTopicTitle == null) {
-                mTopicTitle = new TopicAdapter.TopicTitleViewHolder(v);
+                mTopicTitle = new TopicCommentAdapter.TopicCommentTitleViewHolder(v, false);
             }
             if (mTopic == null) {
                 mTopic = new TopicAdapter.TopicContentViewHolder(findViewById(R.id.ll_topic_content));
             }
-            findViewById(R.id.ll_topic_retweeted_content).setVisibility(View.GONE);
+            findViewById(R.id.item_topic_retweeted_content).setVisibility(View.GONE);
 
-            mTopicItem = findViewById(R.id.ll_topic);
+            mTopicItem = findViewById(R.id.item_topic);
 //            mTopic.mContent = (TextView) findViewById(R.id.tv_topic_content);
 //            mTopic.mGallery = (GridGalleryView) findViewById(R.id.gl_topic_gallery);
 

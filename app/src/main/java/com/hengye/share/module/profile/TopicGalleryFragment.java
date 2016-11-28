@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.hengye.share.R;
 import com.hengye.share.model.Topic;
-import com.hengye.share.module.topicdetail.TopicDetailActivity;
+import com.hengye.share.module.topicdetail.TopicDetail2Activity;
 import com.hengye.share.module.util.image.GalleryFragment;
 import com.hengye.share.ui.support.AnimationRect;
 
@@ -62,7 +62,7 @@ public class TopicGalleryFragment extends GalleryFragment {
                 }
                 Topic topic = getTopic(getCurrentPosition());
                 if (topic != null) {
-                    startActivity(TopicDetailActivity.getStartIntent(getContext(), topic, false));
+                    startActivity(TopicDetail2Activity.getStartIntent(getContext(), topic, false));
                 }
             }
         });

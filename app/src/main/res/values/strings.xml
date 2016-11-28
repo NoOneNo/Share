@@ -143,6 +143,7 @@
     <!-- Strings related to TopicDetail-->
     <string name="label_topic_repost_number">转发 (%s)</string>
     <string name="label_topic_comment_number">评论 (%s)</string>
+    <string name="label_topic_comment_hot_label">以上为热门评论，点击查看更多</string>
     <!-- Strings related to TopicDetail-->
 
     <!-- Strings related to PersonalHomePage -->

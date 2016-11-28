@@ -46,6 +46,12 @@ public interface WBService {
     @GET(UrlFactory.WB_COMMENT_SHOW)
     Observable<WBTopicComments> listComment(@QueryMap Map<String, String> options);
 
+    @GET(UrlFactory.WB_COMMENT_SHOW_WITH_LIKE)
+    Observable<WBTopicComments> listCommentWithLike(@QueryMap Map<String, String> options);
+
+    @GET(UrlFactory.WB_HOT_COMMENT_SHOW_WITH_LIKE)
+    Observable<WBTopicComments> listHotCommentWithLike(@QueryMap Map<String, String> options);
+
     @GET(UrlFactory.WB_REPOST_SHOW)
     Observable<WBTopicReposts> listRepost(@QueryMap Map<String, String> options);
 

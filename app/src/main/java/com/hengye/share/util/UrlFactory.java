@@ -47,6 +47,10 @@ public class UrlFactory {
     public static final String WB_USER_INFO = "users/show.json";
     //获取某个微博的评论列表
     public static final String WB_COMMENT_SHOW = "comments/show.json";
+    //获取某个微博的评论列表，带点赞数量，需要高级授权
+    public static final String WB_COMMENT_SHOW_WITH_LIKE = "https://api.weibo.cn/2/comments/show";
+    //获取某个微博的热门评论列表，带点赞数量，需要高级授权
+    public static final String WB_HOT_COMMENT_SHOW_WITH_LIKE = "http://api.weibo.cn/2/comments/hot_timeline";
     //获取某个微博的转发列表
     public static final String WB_REPOST_SHOW = "statuses/repost_timeline.json";
     //我发出的评论列表

@@ -113,7 +113,7 @@ public class TopicDraftActivity extends BaseActivity implements DialogInterface.
 //                    TopicDraftHelper.saveTopicDraft(topicDraft, TopicDraft.SENDING);
                     mAdapter.removeItem(position);
                     TopicPublishService.publish(TopicDraftActivity.this, topicDraft, UserUtil.getToken());
-                } else if (id == R.id.tv_topic_content || id == R.id.gl_topic_gallery || id == R.id.rl_topic_title || id == R.id.ll_topic_content || id == R.id.ll_topic_retweeted_content) {
+                } else if (id == R.id.tv_topic_content || id == R.id.gl_topic_gallery || id == R.id.rl_topic_title || id == R.id.ll_topic_content || id == R.id.item_topic_retweeted_content) {
                     final boolean isRetweeted = (Boolean) view.getTag();
                     if (!isRetweeted) {
                         startTopicPublish(position);

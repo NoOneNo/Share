@@ -6,10 +6,13 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.hengye.floatingactionbutton.FloatingActionsMenu;
 import com.hengye.share.R;
+import com.hengye.share.util.L;
+import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.handler.TopicAdapterIdPager;
 import com.hengye.share.util.handler.TopicIdHandler;
 import com.hengye.share.module.util.encapsulation.base.DataHandler;
@@ -53,17 +56,17 @@ public class TopicCommentFragment extends StatusFragment<TopicComment> implement
 
 
     @Override
-    public int getLoadingResId(){
+    public int getLoadingResId() {
         return R.layout.state_loading_top;
     }
 
     @Override
-    public int getEmptyResId(){
+    public int getEmptyResId() {
         return R.layout.state_empty_top;
     }
 
     @Override
-    public int getNoNetworkResId(){
+    public int getNoNetworkResId() {
         return R.layout.state_no_network_top;
     }
 
@@ -83,12 +86,13 @@ public class TopicCommentFragment extends StatusFragment<TopicComment> implement
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
         super.onViewCreated(view, savedInstanceState);
-        setAdapter(mAdapter = new TopicCommentAdapter(getContext(), new ArrayList<TopicComment>()));
+        boolean isLikeMode = mIsComment && !UserUtil.isAdTokenEmpty();
+        setAdapter(mAdapter = new TopicCommentAdapter(getContext(), new ArrayList<TopicComment>(), isLikeMode));
         mTopicPager = new TopicAdapterIdPager(mAdapter);
         mTopicPager.setForceRefresh(true);
         mHandler = new TopicIdHandler<>(mAdapter);
 
-        addPresenter(mPresenter = new TopicCommentPresenter(this));
+        addPresenter(mPresenter = new TopicCommentPresenter(this, isLikeMode));
 
         onRefresh();
 
@@ -100,38 +104,52 @@ public class TopicCommentFragment extends StatusFragment<TopicComment> implement
         setRefreshEnable(false);
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(View view, final int position) {
+            public void onItemClick(final View view, final int position) {
+                int viewType = mAdapter.getBasicItemType(position);
+
                 final int id = view.getId();
 
+                if(viewType == R.layout.item_topic_comment_hot_label){
+                    //热门评论
+                    L.debug("热门评论 click");
+                }else {
 //                为了显示波纹效果再启动
-                getHandler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (id == R.id.iv_topic_avatar || id == R.id.tv_topic_username || id == R.id.tv_topic_description) {
-                            TopicComment tc = mAdapter.getItem(position);
-                            int childPosition = mAdapter.getActualItemPosition(position);
-                            View startView = null;
-                            View convertView = getRecyclerView().getChildAt(childPosition);
-                            if (convertView != null && convertView.getTag() != null) {
-                                TopicCommentAdapter.TopicCommentViewHolder tcv = (TopicCommentAdapter.TopicCommentViewHolder) convertView.getTag();
-                                if (tcv != null) {
-                                    startView = tcv.mTopicTitle.mAvatar;
+                    getHandler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (id == R.id.iv_topic_avatar || id == R.id.tv_topic_username || id == R.id.tv_topic_description) {
+                                TopicComment tc = mAdapter.getItem(position);
+                                int childPosition = mAdapter.getActualItemPosition(position);
+                                View startView = null;
+                                if (id == R.id.iv_topic_avatar) {
+                                    //如果点击的是头像
+                                    startView = view;
+                                } else {
+                                    RecyclerView.ViewHolder viewHolder = getRecyclerView().findViewHolderForLayoutPosition(childPosition);
+                                    if (viewHolder != null && viewHolder instanceof TopicCommentAdapter.TopicCommentViewHolder) {
+                                        TopicCommentAdapter.TopicCommentViewHolder tcv = (TopicCommentAdapter.TopicCommentViewHolder) viewHolder;
+                                        startView = tcv.mTopicTitle.mAvatar;
+                                    }
                                 }
-                            }
-                            if (startView == null) {
-                                PersonalHomepageActivity.start(getActivity(), tc.getUserInfo());
-                            } else {
-                                PersonalHomepageActivity.start(getActivity(), startView, tc.getUserInfo());
-                            }
+                                if (startView == null) {
+                                    PersonalHomepageActivity.start(getActivity(), tc.getUserInfo());
+                                } else {
+                                    PersonalHomepageActivity.start(getActivity(), startView, tc.getUserInfo());
+                                }
 
 
-                        } else {
-                            mCurrentPosition = position;
-                            mTopicCommentDialog.show();
+                            } else if (id == R.id.layout_like) {
+                                L.debug("like btn click");
+                            } else if (id != R.id.item_topic_total) {
+                                // 为了点击头像有item的波纹效果，点击头像等区域的时候会触发item的触摸事件
+                                // 为了防止同时显示对话框和点击头像，判断id不等于item的id时才显示对话框
+                                mCurrentPosition = position;
+                                mTopicCommentDialog.show();
+                            }
+
                         }
-
-                    }
-                }, 100);
+                    }, 100);
+                }
             }
         });
 
@@ -216,7 +234,7 @@ public class TopicCommentFragment extends StatusFragment<TopicComment> implement
                     ClipboardUtil.copyWBContent(topicComment.getContent());
                     break;
                 case DialogBuilder.REPOST_DETAIL:
-                    startActivity(TopicDetailActivity.getStartIntent(getContext(), topicComment.toTopic(), true));
+                    startActivity(TopicDetail2Activity.getStartIntent(getContext(), topicComment.toTopic(), true));
                     break;
                 case DialogBuilder.REPOST_REPOST:
                     startActivity(TopicPublishActivity.getStartIntent(getContext(), TopicDraftHelper.getWBTopicDraftByRepostRepost(topicComment)));

@@ -17,6 +17,9 @@ public class WBTopicComment {
 
     private int floor_num;
 
+    private boolean liked;//是否已经点赞;
+    private long like_counts;//点赞数
+
     public void setCreated_at(String created_at) {
         this.created_at = created_at;
     }
@@ -113,6 +116,22 @@ public class WBTopicComment {
         return floor_num;
     }
 
+    public boolean isLiked() {
+        return liked;
+    }
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
+    }
+
+    public long getLike_counts() {
+        return like_counts;
+    }
+
+    public void setLike_counts(long like_counts) {
+        this.like_counts = like_counts;
+    }
+
     @Override
     public String toString() {
         return "WBTopicComment{" +
@@ -128,6 +147,8 @@ public class WBTopicComment {
                 ", status=" + status +
                 ", reply_comment=" + reply_comment +
                 ", floor_num=" + floor_num +
+                ", liked=" + liked +
+                ", like_counts=" + like_counts +
                 '}';
     }
 }

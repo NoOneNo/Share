@@ -202,7 +202,7 @@ public abstract class HeaderAdapter<VH extends RecyclerView.ViewHolder> extends 
     }
 
     /**
-     * 如果要获取的数量不包括头和尾的，使用{@link HeaderAdapter#getBasicItemCount()}
+     * 如果要获取的数量不包括头和尾的，使用{@link #getBasicItemCount()}
      *
      * @return
      */
@@ -219,6 +219,12 @@ public abstract class HeaderAdapter<VH extends RecyclerView.ViewHolder> extends 
         return itemCount;
     }
 
+    /**
+     * You should use{@link #getBasicItemType(int)}
+     * @param position
+     * @return
+     */
+    @Deprecated
     @Override
     public int getItemViewType(int position) {
         if (position == 0 && isAddHeaderView()) {
@@ -228,12 +234,13 @@ public abstract class HeaderAdapter<VH extends RecyclerView.ViewHolder> extends 
             return TYPE_FOOTER;
         }
 
-        int type = getBasicItemType(getBasicItemPosition(position));
-        if (type <= TYPE_OFFSET_MIN) {
-            throw new IllegalStateException("HeaderRecyclerViewAdapter offsets your BasicItemType by " + TYPE_OFFSET_MIN + ".");
-        }
-
-        return type;
+        return getBasicItemType(getBasicItemPosition(position));
+//        int type = getBasicItemType(getBasicItemPosition(position));
+//        if (type <= TYPE_OFFSET_MIN) {
+//            throw new IllegalStateException("HeaderRecyclerViewAdapter offsets your BasicItemType by " + TYPE_OFFSET_MIN + ".");
+//        }
+//
+//        return type;
     }
 
     @Override

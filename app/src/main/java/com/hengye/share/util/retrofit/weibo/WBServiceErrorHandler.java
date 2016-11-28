@@ -13,6 +13,7 @@ import com.hengye.share.util.GsonUtil;
 import com.hengye.share.util.HandlerUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.ToastUtil;
+import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.intercept.AdTokenInterceptor;
 import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
 
@@ -96,6 +97,7 @@ public class WBServiceErrorHandler {
             HandlerUtil.getInstance().post(new Runnable() {
                 @Override
                 public void run() {
+                    UserUtil.resetToken();
                     if (BaseActivity.getCurrentActivity() != null) {
                         getTokenExpireDialog(BaseActivity.getCurrentActivity()).show();
                     }else{

@@ -3,7 +3,9 @@ package com.hengye.share.util.thirdparty;
 import android.text.TextUtils;
 import android.util.SparseArray;
 
+import com.android.volley.toolbox.Util;
 import com.hengye.share.module.setting.SettingHelper;
+import com.hengye.share.util.ImageUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +19,9 @@ public class WBUtil {
 
     public static String IMAGE_TYPE_THUMBNAIL = "thumbnail";//缩略图
     public static String IMAGE_TYPE_BMIDDLE = "bmiddle";//高清
+    public static String IMAGE_TYPE_OR_480 = "or480";//高清不支持gif动图，只有一帧如果是gif的话
     public static String IMAGE_TYPE_LARGE = "large";//原图
+    public static String IMAGE_TYPE_ORIGINAL = "woriginal";//原图, 新浪微博gif用这个，
 
     public static int getWBTopicRequestCount() {
 //        return 2;
@@ -29,21 +33,43 @@ public class WBUtil {
     //中的thumbnail换成对应的bmiddle(高清)或者large(原图)
     public static String getWBTopicImgUrl(String url){
         String value = SettingHelper.getPhotoDownloadQuality();
-        if("1".equals(value)){
+        if(url == null || "1".equals(value)){
             //无图
             return null;
         }
-        String toType = IMAGE_TYPE_BMIDDLE;
-        if("2".equals(value)){
+        String toType;
+        if(url.endsWith("gif")) {
+            toType = IMAGE_TYPE_OR_480;
+        }else if("2".equals(value)){
             toType = IMAGE_TYPE_THUMBNAIL;
         }else if("3".equals(value)){
-            toType = IMAGE_TYPE_BMIDDLE;
+            toType = IMAGE_TYPE_OR_480;
         }else if("4".equals(value)){
             toType = IMAGE_TYPE_LARGE;
         }else if("5".equals(value)){
-            toType = IMAGE_TYPE_BMIDDLE;
+            toType = IMAGE_TYPE_OR_480;
+        }else{
+            toType = IMAGE_TYPE_OR_480;
         }
         return getWBTopicImgUrl(url, toType);
+    }
+
+    public static String getWBGifUrl(String url){
+        if(url != null && url.endsWith("gif")){
+            return url.replaceFirst(IMAGE_TYPE_OR_480, IMAGE_TYPE_ORIGINAL);
+        }
+        return url;
+    }
+
+    public static boolean isWBGifUrl(String url){
+        if(ImageUtil.isThisPictureGif(url)){
+            if(Util.isHttpUrl(url)){
+                return url.contains(IMAGE_TYPE_ORIGINAL);
+            }else{
+                return true;
+            }
+        }
+        return false;
     }
 
     public static String getWBTopicImgUrl(String url, String toType) {

@@ -16,6 +16,7 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.ImageRequest;
 import com.android.volley.toolbox.Util;
 import com.hengye.share.R;
+import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.module.util.encapsulation.fragment.BaseFragment;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.util.FileUtil;
@@ -23,6 +24,7 @@ import com.hengye.share.util.ImageUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.ToastUtil;
+import com.hengye.share.util.thirdparty.WBUtil;
 
 public class ImageFragment extends BaseFragment implements View.OnLongClickListener{
 
@@ -67,18 +69,43 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
         mProgress = findViewById(R.id.progress_bar);
         if (mUrl != null) {
             String path;
-            if(!Util.isHttpUrl(mUrl)){
+            boolean isLocalPath = !Util.isHttpUrl(mUrl);
+            if(isLocalPath){
+                //本地图片地址，如果是草稿的话
                 path = mUrl;
             }else {
                 path = ImageDiskLruCache.getInstance().getDiskCachePath(mUrl);
             }
-            if (path != null) {
-                displayImage(mUrl, path, mAnimateIn);
-                mAnimateIn = false;
-                hideProgress();
-            }else {
-                int screenWidth = getResources().getDisplayMetrics().widthPixels;
-                RequestManager.addToRequestQueue(makeImageRequest(mUrl, screenWidth, 0, ImageView.ScaleType.FIT_XY), getRequestTag());
+
+            if(isLocalPath || !mUrl.endsWith("gif")) {
+                //如果是本地路径或者不是gif图片
+                if (path != null) {
+                    displayImage(mUrl, path, mAnimateIn);
+                    mAnimateIn = false;
+                    hideProgress();
+                } else {
+                    int screenWidth = getResources().getDisplayMetrics().widthPixels;
+                    RequestManager.addToRequestQueue(makeImageRequest(mUrl, screenWidth, 0, ImageView.ScaleType.FIT_XY), getRequestTag());
+                }
+            }else{
+                String gifUrl = WBUtil.getWBGifUrl(mUrl);
+                String gifPath = ImageDiskLruCache.getInstance().getDiskCachePath(gifUrl);
+                if(gifPath != null){
+                    //本地有gif缓存，直接显示
+                    displayImage(gifUrl, gifPath, mAnimateIn);
+                    mAnimateIn = false;
+                    hideProgress();
+                }else{
+                    //本地没有gif缓存
+                    if(path != null){
+                        //先显示gif的第一帧图片
+                        displayImage(mUrl, path, mAnimateIn);
+                        mAnimateIn = false;
+                    }
+                    int screenWidth = getResources().getDisplayMetrics().widthPixels;
+                    RequestManager.addToRequestQueue(makeImageRequest(gifUrl, screenWidth, 0, ImageView.ScaleType.FIT_XY), getRequestTag());
+                }
+
             }
         }
 
@@ -123,7 +150,7 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
 
         Fragment fragment;
         if (!ImageUtil.isThisBitmapTooLargeToRead(path)) {
-            if (ImageUtil.isThisPictureGif(url)) {
+            if (WBUtil.isWBGifUrl(url)) {
                 fragment = ImageGifFragment.newInstance(path, mRect, animateIn);
             } else {
                 fragment = ImageNormalFragment.newInstance(path, mRect, animateIn);
@@ -160,14 +187,14 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
         }
     }
 
-    protected Request<Bitmap> makeImageRequest(String requestUrl, int maxWidth, int maxHeight,
+    protected Request<Bitmap> makeImageRequest(final String requestUrl, int maxWidth, int maxHeight,
                                                ImageView.ScaleType scaleType) {
         return new ImageRequest(requestUrl, new Response.Listener<Bitmap>() {
             @Override
             public void onResponse(Bitmap response) {
-                String path = ImageDiskLruCache.getInstance().getDiskCachePath(mUrl);
+                String path = ImageDiskLruCache.getInstance().getDiskCachePath(requestUrl);
                 if (path != null) {
-                    displayImage(mUrl, path, false);
+                    displayImage(requestUrl, path, false);
                     BitmapCache.getInstance().putBitmap(path, response);
                 }
                 hideProgress();

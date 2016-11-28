@@ -54,7 +54,7 @@ public class CheckableFab extends FloatingActionButton implements Checkable {
         if(isInEditMode()){
             return;
         }
-        setImageDrawable(DrawableLoader.setTintDrawable(R.drawable.btn_fab_follow, R.color.theme_pink_primary_dark));
+        setImageDrawable(DrawableLoader.setTintResource(R.drawable.btn_fab_follow, R.color.theme_pink_primary_dark));
     }
 
     @Override

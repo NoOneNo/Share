@@ -6,7 +6,7 @@
     android:descendantFocusability="blocksDescendants"
     android:orientation="vertical">
 
-    <include layout="@layout/item_topic_basic" />
+    <include layout="@layout/item_topic_draft_basic" />
 
     <include
         layout="@layout/item_topic_content"

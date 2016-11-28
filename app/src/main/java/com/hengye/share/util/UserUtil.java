@@ -57,7 +57,7 @@ public class UserUtil {
         return getCurrentUser().getToken();
     }
 
-    protected static String getAdToken() {
+    public static String getAdToken() {
         return getCurrentUser().getAdToken();
     }
 
@@ -87,6 +87,13 @@ public class UserUtil {
 
     public static boolean isAdTokenEmpty() {
         return getAdToken() == null;
+    }
+
+    public static void resetToken(){
+        User user = getCurrentUser();
+        user.setToken(null);
+        user.setAdToken(null);
+        updateUser(user);
     }
 
     private static User getDefaultUser() {

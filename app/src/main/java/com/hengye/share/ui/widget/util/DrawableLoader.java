@@ -12,12 +12,15 @@ import com.hengye.share.util.ResUtil;
  */
 public class DrawableLoader {
 
-    public static Drawable setTintDrawable(@DrawableRes int drawableId, @ColorRes int colorId){
+    public static Drawable setTintResource(@DrawableRes int drawableId, @ColorRes int colorId){
         return setTintDrawable(ResUtil.getDrawable(drawableId), ResUtil.getColor(colorId));
     }
 
+    public static Drawable setTintDrawable(@DrawableRes int drawableId, int color){
+        return setTintDrawable(ResUtil.getDrawable(drawableId), color);
+    }
+
     public static Drawable setTintDrawable(Drawable drawable, int color){
-//        Drawable drawable1= DrawableCompat.wrap(drawable);
         DrawableCompat.setTint(drawable, color);
         return drawable;
     }

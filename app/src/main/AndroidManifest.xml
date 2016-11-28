@@ -155,10 +155,10 @@
             android:label="@string/title_activity_topic_draft"/>
 
         <activity
-            android:name=".module.topicdetail.TopicDetailActivity"/>
+            android:name=".module.topicdetail.TopicDetail2Activity"/>
 
         <activity
-            android:name=".module.topicdetail.TopicDetail2Activity"
+            android:name=".module.topicdetail.TopicDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
 
         <activity

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_topic_title"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    tools:showIn="@layout/item_topic_comment">
+
+    <include layout="@layout/item_title_user" />
+
+    <LinearLayout
+        android:id="@+id/layout_like"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/spacing_micro"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageButton
+            android:id="@+id/btn_like"
+            android:layout_width="@dimen/icon_size_tiny"
+            android:layout_height="@dimen/icon_size_tiny"
+            android:src="@drawable/ic_thumb_up_white_48dp"
+            android:scaleType="fitXY"
+            android:background="@null"/>
+
+        <TextView
+            android:id="@+id/tv_like_counts"
+            android:layout_marginStart="@dimen/spacing_micro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_micro"
+            android:textColor="@color/topic_content"
+            tools:text="666"/>
+
+    </LinearLayout>
+</RelativeLayout>
