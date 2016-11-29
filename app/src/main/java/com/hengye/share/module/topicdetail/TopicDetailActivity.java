@@ -50,7 +50,7 @@ public class TopicDetailActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_topic_detail2;
+        return R.layout.activity_topic_detail;
     }
 
     @Override

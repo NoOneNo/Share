@@ -14,6 +14,7 @@ import com.hengye.share.R;
 import com.hengye.share.model.TopicComments;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.module.setting.SettingHelper;
+import com.hengye.share.module.topic.TopicTitleViewHolder;
 import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapter;
 import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemViewHolder;
 import com.hengye.share.model.TopicComment;
@@ -23,6 +24,7 @@ import com.hengye.share.ui.widget.util.DrawableLoader;
 import com.hengye.share.ui.widget.util.SelectorLoader;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.DateUtil;
+import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.ThemeUtil;
 
 import java.util.List;
@@ -39,24 +41,24 @@ public class TopicCommentAdapter extends CommonAdapter<TopicComment> {
     @Override
     public int getBasicItemType(int position) {
         TopicComment topicComment = getItem(position);
-        if(TopicComments.getTopicHotCommentLabel() == topicComment){
+        if (TopicComments.getTopicHotCommentLabel() == topicComment) {
             return R.layout.item_topic_comment_hot_label;
-        }else{
+        } else {
             return R.layout.item_topic_comment;
         }
     }
 
     @Override
     public ItemViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
-        if(viewType == R.layout.item_topic_comment_hot_label) {
+        if (viewType == R.layout.item_topic_comment_hot_label) {
             return new ItemViewHolder(inflate(R.layout.item_topic_comment_hot_label, parent));
-        }else{
+        } else {
             return new TopicCommentViewHolder(inflate(R.layout.item_topic_comment, parent), mIsLikeMode);
         }
     }
 
 
-    public static class TopicCommentViewHolder extends ItemViewHolder<TopicComment> {
+    public static class TopicCommentViewHolder extends ItemViewHolder<TopicComment> implements TopicTitleViewHolder.TopicTitle {
 
         public TopicAdapter.TopicContentViewHolder mTopic;
         public TopicCommentTitleViewHolder mTopicTitle;
@@ -64,17 +66,13 @@ public class TopicCommentAdapter extends CommonAdapter<TopicComment> {
 
         public TopicCommentViewHolder(View v, boolean isLikeMode) {
             super(v);
-            if (mTopicTitle == null) {
-                mTopicTitle = new TopicCommentTitleViewHolder(v, isLikeMode);
-                registerOnClickListener(mTopicTitle.mLikeLayout);
-            }
-            if (mTopic == null) {
-                mTopic = new TopicAdapter.TopicContentViewHolder(findViewById(R.id.ll_topic_content));
-            }
+            mTopicTitle = new TopicCommentTitleViewHolder(v, isLikeMode);
+            mTopic = new TopicAdapter.TopicContentViewHolder(findViewById(R.id.ll_topic_content));
 
             mTopicTotalItem = findViewById(R.id.item_topic_total);
 
             //不设置的话会被名字内容的点击事件覆盖，无法触发ItemView的onClick
+            registerOnClickListener(mTopicTitle.mLikeLayout);
             registerOnClickListener(mTopicTitle.mAvatar);
             registerOnClickListener(mTopicTitle.mUsername);
             registerOnClickListener(mTopicTitle.mDescription);
@@ -129,9 +127,14 @@ public class TopicCommentAdapter extends CommonAdapter<TopicComment> {
         public void initCommentContent(final Context context, final TopicCommentViewHolder holder, TopicComment topicComment) {
             holder.mTopic.mContent.setText(topicComment.getUrlSpannableString());
         }
+
+        @Override
+        public TopicTitleViewHolder getTopicTitleViewHolder() {
+            return mTopicTitle;
+        }
     }
 
-    public static class TopicCommentTitleViewHolder extends TopicAdapter.TopicTitleViewHolder {
+    public static class TopicCommentTitleViewHolder extends TopicTitleViewHolder {
 
         public View mLikeLayout;
         public ImageButton mLikeBtn;
@@ -170,9 +173,12 @@ public class TopicCommentAdapter extends CommonAdapter<TopicComment> {
             }
 
             if (mIsLikeMode) {
-                Drawable drawable = DrawableLoader.setTintDrawable(R.drawable.ic_thumb_up_white_48dp, ThemeUtil.getTintColor(topicComment.isLiked()));
+                int color = topicComment.isLiked() ? ThemeUtil.getColor() : ResUtil.getColor(R.color.grey_850);
+                Drawable drawable = DrawableLoader.setTintDrawable(R.drawable.ic_thumb_up_white_48dp, color);
                 mLikeBtn.setImageDrawable(drawable);
                 mLikeCounts.setText(DataUtil.getCounter(topicComment.getLikeCounts()));
+
+                mLikeCounts.setVisibility(topicComment.getLikeCounts() < 1 ? View.INVISIBLE : View.VISIBLE);
             }
         }
     }

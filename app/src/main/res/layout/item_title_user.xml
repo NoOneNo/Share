@@ -3,16 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="@layout/item_title_topic">
 
-
     <com.hengye.share.ui.widget.image.AvatarImageView
         android:id="@+id/iv_topic_avatar"
         android:layout_width="@dimen/topic_avatar"
         android:layout_height="@dimen/topic_avatar"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin" />
+        tools:src="@drawable/ic_user_avatar"/>
+
+    <!-- 这里如果用margin作间距会引起过渡绘制 -->
+
+    <Space
+        android:id="@+id/space_avatar_to_name"
+        android:layout_toEndOf="@id/iv_topic_avatar"
+        android:layout_width="@dimen/activity_horizontal_margin"
+        android:layout_height="0dp"/>
 
     <TextView
         android:id="@+id/tv_topic_username"
-        android:layout_toEndOf="@id/iv_topic_avatar"
+        android:layout_toEndOf="@id/space_avatar_to_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="我是一只小小小鸡仔"

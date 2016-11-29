@@ -17,7 +17,7 @@
     <!-- 悬浮框权限 -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
-    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
 
     <!-- Tencent Bugly -->
@@ -43,19 +43,20 @@
         <!-- 定时发布广播 -->
         <receiver android:name="com.hengye.share.service.TopicPublishTimingBroadcastReceiver">
             <intent-filter>
-                <action android:name="com.hengye.share.ACTION_TIMING_PUBLISH"/>
+                <action android:name="com.hengye.share.ACTION_TIMING_PUBLISH" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
 
         <activity
             android:name=".module.other.GuidanceActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name">
             <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
+            <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--<category android:name="android.intent.category.LAUNCHER" />-->
             <!--</intent-filter>-->
         </activity>
 
@@ -73,12 +74,13 @@
 
         <activity
             android:name=".module.topic.TopicActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.Main"
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
+            android:theme="@style/AppTheme.Main" />
 
         <activity
             android:name=".module.sso.LoginActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:parentActivityName=".module.topic.TopicActivity"
             android:windowSoftInputMode="adjustResize|stateVisible">
             <meta-data
@@ -88,22 +90,26 @@
 
         <activity
             android:name=".module.sso.ThirdPartyLoginActivity"
-            android:theme="@style/FullScreenTheme.HasStatusBar"/>
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/FullScreenTheme.HasStatusBar" />
 
         <activity
-            android:name=".module.sso.WeiboWebLoginActivity"/>
+            android:name=".module.sso.WeiboWebLoginActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation" />
 
 
         <activity
             android:name=".module.util.image.GalleryActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
-            android:theme="@style/FullScreenTheme"/>
+            android:theme="@style/FullScreenTheme" />
 
         <activity
-            android:name=".module.util.FragmentActivity"/>
+            android:name=".module.util.FragmentActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation" />
 
         <activity
             android:name=".module.setting.SettingActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
             android:label="@string/title_activity_setting">
             <intent-filter>
                 <action android:name="android.intent.action.MANAGE_NETWORK_USAGE" />
@@ -125,6 +131,7 @@
 
         <activity
             android:name=".module.topic.TopicThemeActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
             android:label="@string/title_activity_topic_theme">
 
             <intent-filter>
@@ -137,6 +144,7 @@
 
         <activity
             android:name=".module.util.WebViewActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
             android:label="@string/title_activity_web_view">
 
             <intent-filter>
@@ -148,49 +156,58 @@
         </activity>
 
         <activity
-            android:name=".module.publish.TopicPublishActivity"/>
+            android:name=".module.publish.TopicPublishActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation" />
 
         <activity
             android:name=".module.draft.TopicDraftActivity"
-            android:label="@string/title_activity_topic_draft"/>
+            android:label="@string/title_activity_topic_draft" />
 
         <activity
-            android:name=".module.topicdetail.TopicDetail2Activity"/>
+            android:name=".module.topicdetail.TopicDetail2Activity"
+            android:configChanges="screenSize|keyboardHidden|orientation" />
 
         <activity
             android:name=".module.topicdetail.TopicDetailActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
+            android:label="@string/title_activity_topic_body"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
 
         <activity
-            android:name=".module.topic.TopicMentionActivity"/>
+            android:name=".module.topic.TopicMentionActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation" />
 
         <activity
-            android:name=".module.topic.TopicCommentActivity"/>
+            android:name=".module.topic.TopicCommentActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation" />
 
         <activity
             android:name=".module.topic.TopicFavoriteActivity"
-            android:label="@string/title_activity_favorite"/>
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:label="@string/title_activity_favorite" />
 
         <activity
             android:name=".module.publish.AtUserActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:label="@string/title_activity_at_user"/>
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:label="@string/title_activity_at_user"
+            android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".module.search.SearchActivity"/>
-
-        <activity
-            android:name=".module.test.SetTokenActivity"/>
+            android:name=".module.search.SearchActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation" />
 
         <activity
             android:name="com.hengye.share.module.groupmanage.GroupManageActivity"
-            android:label="@string/title_activity_group_manage"/>
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:label="@string/title_activity_group_manage" />
 
         <activity
             android:name=".module.accountmanage.AccountManageActivity"
-            android:label="@string/title_activity_account_manage"/>
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:label="@string/title_activity_account_manage" />
 
         <activity android:name=".module.test.TestActivity" />
+
+        <activity android:name=".module.test.SetTokenActivity" />
     </application>
 
 </manifest>

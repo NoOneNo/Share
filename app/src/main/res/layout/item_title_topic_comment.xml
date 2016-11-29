@@ -13,30 +13,39 @@
 
     <LinearLayout
         android:id="@+id/layout_like"
+        android:background="@drawable/selector_ripple_transparent"
+
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/spacing_micro"
+        android:paddingTop="@dimen/spacing_normal"
+        android:paddingBottom="@dimen/spacing_normal"
+        android:paddingStart="@dimen/spacing_big"
+        android:paddingEnd="@dimen/spacing_big"
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
-        <ImageButton
-            android:id="@+id/btn_like"
-            android:layout_width="@dimen/icon_size_tiny"
-            android:layout_height="@dimen/icon_size_tiny"
-            android:src="@drawable/ic_thumb_up_white_48dp"
-            android:scaleType="fitXY"
-            android:background="@null"/>
-
         <TextView
             android:id="@+id/tv_like_counts"
-            android:layout_marginStart="@dimen/spacing_micro"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_micro"
             android:textColor="@color/topic_content"
             tools:text="666"/>
+
+        <Space
+            android:layout_width="@dimen/spacing_micro"
+            android:layout_height="0dp" />
+
+        <ImageButton
+            android:id="@+id/btn_like"
+            android:layout_width="@dimen/icon_size_tiny"
+            android:layout_height="@dimen/icon_size_tiny"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_thumb_up_white_48dp"
+            android:scaleType="fitXY"
+            android:background="@null"/>
 
     </LinearLayout>
 </RelativeLayout>

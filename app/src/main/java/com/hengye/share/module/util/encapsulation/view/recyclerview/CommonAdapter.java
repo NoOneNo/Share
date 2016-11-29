@@ -3,6 +3,7 @@ package com.hengye.share.module.util.encapsulation.view.recyclerview;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,7 +102,7 @@ public abstract class CommonAdapter<T> extends HeaderAdapter<ItemViewHolder>
     }
 
     public T getItem(int position) {
-        position = getActualItemPosition(position);
+//        position = getActualItemPosition(position);
         if (!isIndexOutOfBounds(position)) {
             return mData.get(position);
         }
@@ -128,6 +129,14 @@ public abstract class CommonAdapter<T> extends HeaderAdapter<ItemViewHolder>
         return basicItemPosition + (isAddHeaderView() ? 1 : 0);
     }
 
+    /**
+     * @param basicItemPosition 在{@link #mData}中的位置
+     * @return 返回在RecyclerView里的RecyclerView.ViewHolder
+     */
+    public RecyclerView.ViewHolder findViewHolderForLayoutPosition(int basicItemPosition) {
+        return getRecyclerView().findViewHolderForLayoutPosition(getActualItemPosition(basicItemPosition));
+    }
+
     public T getLastItem() {
         if (mData.isEmpty()) {
             return null;
@@ -147,6 +156,10 @@ public abstract class CommonAdapter<T> extends HeaderAdapter<ItemViewHolder>
     public void addItem(T item) {
         mData.add(item);
         notifyItemInserted(getActualItemPosition(mData.size() - 1));
+    }
+
+    public void updateItem(int position) {
+        notifyItemChanged(getActualItemPosition(position));
     }
 
     public void updateItem(int position, T item) {

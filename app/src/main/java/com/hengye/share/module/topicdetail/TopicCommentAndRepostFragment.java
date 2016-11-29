@@ -67,6 +67,11 @@ public class TopicCommentAndRepostFragment extends TabLayoutFragment{
     }
 
     @Override
+    protected int getOffscreenPageLimit() {
+        return super.getOffscreenPageLimit();
+    }
+
+    @Override
     protected ArrayList<TabItem> generateTabs() {
         ArrayList<TabItem> tabItems = new ArrayList<>();
         TabItem tabItem1 = new TabItem(0, ResUtil.getString(R.string.label_topic_comment));

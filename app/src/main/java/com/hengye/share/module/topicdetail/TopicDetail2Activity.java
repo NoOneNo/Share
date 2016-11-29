@@ -75,7 +75,7 @@ public class TopicDetail2Activity extends BaseActivity implements TopicDetailMvp
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_topic_detail;
+        return R.layout.activity_topic_detail2;
     }
 
     @Override

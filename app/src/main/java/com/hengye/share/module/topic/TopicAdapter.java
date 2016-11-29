@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,13 +19,10 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
 import com.hengye.share.R;
 import com.hengye.share.model.Topic;
-import com.hengye.share.model.TopicComment;
-import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.module.profile.PersonalHomepageActivity;
 import com.hengye.share.module.publish.TopicPublishActivity;
-import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.module.topicdetail.TopicDetail2Activity;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemLongClickListener;
@@ -37,13 +32,11 @@ import com.hengye.share.module.util.image.GalleryActivity;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.ui.support.textspan.TopicUrlOnTouchListener;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
-import com.hengye.share.ui.widget.image.AvatarImageView;
 import com.hengye.share.ui.widget.image.GridGalleryView;
 import com.hengye.share.ui.widget.image.SuperImageView;
 import com.hengye.share.ui.widget.util.SelectorLoader;
 import com.hengye.share.util.ClipboardUtil;
 import com.hengye.share.util.CommonUtil;
-import com.hengye.share.util.DateUtil;
 import com.hengye.share.util.IntentUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
@@ -138,31 +131,40 @@ public class TopicAdapter extends CommonAdapter<Topic>
     private Handler mHandler = new Handler();
 
     @Override
-    public void onItemClick(View view, final int position) {
-        int id = view.getId();
-        if (id == R.id.iv_topic_avatar || id == R.id.tv_topic_username || id == R.id.tv_topic_description) {
-            //为了显示波纹效果再启动
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    startPersonHomePage(position);
-                }
-            }, 100);
-//            IntentUtil.startActivity(getContext(), PersonalHomepageActivity.getStartIntent(getContext(), getItem(position).getUserInfo()));
-        } else if (id == R.id.tv_topic_content || id == R.id.gl_topic_gallery || id == R.id.rl_topic_title || id == R.id.ll_topic_content || id == R.id.item_topic_retweeted_content) {
-            final boolean isRetweeted = (Boolean) view.getTag();
-            //为了显示波纹效果再启动
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
+    public void onItemClick(final View view, final int position) {
+        final int id = view.getId();
+
+        //为了显示波纹效果再启动
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (TopicTitleViewHolder.isClickTopicTitle(id)) {
+                    TopicTitleViewHolder.onClickTopicTitle(getContext(), TopicAdapter.this, view, position, getItem(position).getUserInfo());
+                } else if (id == R.id.tv_topic_content || id == R.id.gl_topic_gallery || id == R.id.rl_topic_title || id == R.id.ll_topic_content || id == R.id.item_topic_retweeted_content) {
+                    final boolean isRetweeted = (Boolean) view.getTag();
                     startTopicDetail(isRetweeted, position);
                 }
-            }, 200);
-//            startTopicDetail(isRetweeted, position);
-        }
 
-//        else if (id == R.id.tv_topic_retweeted_content || id == R.id.gl_topic_retweeted_gallery || id == R.id.ll_topic_retweeted_content) {
-//            startTopicDetail(true, position);
+            }
+        }, 150);
+
+//        if (id == R.id.iv_topic_avatar || id == R.id.tv_topic_username || id == R.id.tv_topic_description) {
+//            //为了显示波纹效果再启动
+//            mHandler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    startPersonHomePage(position);
+//                }
+//            }, 100);
+//        } else if (id == R.id.tv_topic_content || id == R.id.gl_topic_gallery || id == R.id.rl_topic_title || id == R.id.ll_topic_content || id == R.id.item_topic_retweeted_content) {
+//            final boolean isRetweeted = (Boolean) view.getTag();
+//            //为了显示波纹效果再启动
+//            mHandler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    startTopicDetail(isRetweeted, position);
+//                }
+//            }, 200);
 //        }
     }
 
@@ -205,7 +207,7 @@ public class TopicAdapter extends CommonAdapter<Topic>
         }
     }
 
-    public static class TopicViewHolder<T> extends ItemViewHolder<T> {
+    public static class TopicViewHolder<T> extends ItemViewHolder<T> implements TopicTitleViewHolder.TopicTitle {
 
         public TopicTitleViewHolder mTopicTitle;
         public TopicContentViewHolder mTopic, mRetweetTopic;
@@ -213,15 +215,12 @@ public class TopicAdapter extends CommonAdapter<Topic>
 
         public TopicViewHolder(View v) {
             super(v);
-            if (mTopicTitle == null) {
-                mTopicTitle = new TopicTitleViewHolder(v);
-            }
-            if (mTopic == null) {
-                mTopic = new TopicContentViewHolder(findViewById(R.id.ll_topic_content));
-            }
-            if (mRetweetTopic == null) {
-                mRetweetTopic = new TopicContentViewHolder(findViewById(R.id.item_topic_retweeted_content), true);
-            }
+            mTopicTitle = new TopicTitleViewHolder(v);
+            mTopic = new TopicContentViewHolder(findViewById(R.id.ll_topic_content));
+            mRetweetTopic = new TopicContentViewHolder(findViewById(R.id.item_topic_retweeted_content), true);
+
+            //布尔值，如果false则表示点击的不是转发的微博
+            mTopicTitle.mTitle.setTag(false);
 
             mTopicItem = findViewById(R.id.item_topic);
             mTopicTotalItem = findViewById(R.id.item_topic_total);
@@ -323,43 +322,10 @@ public class TopicAdapter extends CommonAdapter<Topic>
                     topic,
                     isRetweet);
         }
-    }
 
-    public static class TopicTitleViewHolder {
-
-        public AvatarImageView mAvatar;
-        public TextView mUsername, mDescription;
-        public View mTitle;
-
-        public TopicTitleViewHolder() {
-        }
-
-        public TopicTitleViewHolder(View v) {
-            mTitle = v.findViewById(R.id.rl_topic_title);
-            mAvatar = (AvatarImageView) v.findViewById(R.id.iv_topic_avatar);
-            mUsername = (TextView) v.findViewById(R.id.tv_topic_username);
-            mDescription = (TextView) v.findViewById(R.id.tv_topic_description);
-
-//            mTitle.setTag(false);
-        }
-
-        public void initTopicTitle(final Context context, Topic topic) {
-            if (TextUtils.isEmpty(topic.getChannel())) {
-                mDescription.setText(topic.getFormatDate());
-            } else {
-                String str = String.format(context.getString(R.string.label_time_and_from), topic.getFormatDate(), Html.fromHtml(topic.getChannel()));
-                mDescription.setText(str);
-            }
-
-            UserInfo userInfo = topic.getUserInfo();
-            if (userInfo != null) {
-                mUsername.setText(userInfo.getName());
-                if (SettingHelper.isShowTopicAvatar()) {
-                    mAvatar.setImageUrl(userInfo.getAvatar());
-                } else {
-                    mAvatar.setImageResource(R.drawable.ic_user_avatar);
-                }
-            }
+        @Override
+        public TopicTitleViewHolder getTopicTitleViewHolder() {
+            return mTopicTitle;
         }
     }
 

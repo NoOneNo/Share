@@ -47,10 +47,6 @@ public class UrlFactory {
     public static final String WB_USER_INFO = "users/show.json";
     //获取某个微博的评论列表
     public static final String WB_COMMENT_SHOW = "comments/show.json";
-    //获取某个微博的评论列表，带点赞数量，需要高级授权
-    public static final String WB_COMMENT_SHOW_WITH_LIKE = "https://api.weibo.cn/2/comments/show";
-    //获取某个微博的热门评论列表，带点赞数量，需要高级授权
-    public static final String WB_HOT_COMMENT_SHOW_WITH_LIKE = "http://api.weibo.cn/2/comments/hot_timeline";
     //获取某个微博的转发列表
     public static final String WB_REPOST_SHOW = "statuses/repost_timeline.json";
     //我发出的评论列表
@@ -85,9 +81,6 @@ public class UrlFactory {
     //搜索用户
     public static final String WB_SEARCH_USER = "search/users.json";
     //    https://api.weibo.com/2/search/users.json?q=uu&user_id=2207519004&count=20&page=1&filter_ori=0&filter_pic=0&access_token=2.00OXW56C06XASOc5a146b1b0pVluLB
-    //联想用户
-    public static final String WB_SEARCH_USER_SUGGESTION = "http://s.weibo.com/ajax/suggestion";
-    //    http://s.weibo.com/ajax/suggestion?where=gs_weibo&type=gs_weibo&key=uue&access_token=2.00OXW56C06XASOc5a146b1b0pVluLB
     //搜索微博
     public static final String WB_SEARCH_PUBLIC = "search/public.json";
     //    https://api.weibo.com/2/search/public.json?q=uu&sid=o_weico&sort=social&source=211160679&user_id=2207519004&count=20&page=1&access_token=2.00OXW56C06XASOc5a146b1b0pVluLB
@@ -99,7 +92,6 @@ public class UrlFactory {
     public static final String WB_FAVORITES_DESTROY = "favorites/destroy.json";
 
     //--- 以下都没写方法
-    public static final String WB_OAUTH_TOKEN = "https://api.weibo.com/oauth2/access_token";
     //    获取好友的相册列表
 //    public static final String WB_USER_ALBUM = "friendships/groups.json";
     //获取好友的分组信息
@@ -124,6 +116,26 @@ public class UrlFactory {
     public static final String WB_FOLLOW_DESTROY = "friendships/destroy.json";
     //短链转长链
     public static final String WB_EXPAND_URL = "short_url/info.json";
+    //微博点赞
+    public static final String WB_STATUS_LIKE = "attitudes/create.json";
+    //微博取消点赞
+    public static final String WB_STATUS_DISLIKE = "attitudes/destroy.json";
+
+
+    //以下接口前缀不一样的
+    //token验证
+    public static final String WB_OAUTH_TOKEN = "https://api.weibo.com/oauth2/access_token";
+    //联想用户
+    public static final String WB_SEARCH_USER_SUGGESTION = "http://s.weibo.com/ajax/suggestion";
+    //    http://s.weibo.com/ajax/suggestion?where=gs_weibo&type=gs_weibo&key=uue&access_token=2.00OXW56C06XASOc5a146b1b0pVluLB
+    //获取某个微博的评论列表，带点赞数量，需要高级授权
+    public static final String WB_COMMENT_SHOW_WITH_LIKE = "https://api.weibo.cn/2/comments/show";
+    //获取某个微博的热门评论列表，带点赞数量，需要高级授权
+    public static final String WB_HOT_COMMENT_SHOW_WITH_LIKE = "http://api.weibo.cn/2/comments/hot_timeline";
+    //评论点赞
+    public static final String WB_LIKE_UPDATE = "http://api.weibo.cn/2/like/update";
+    //评论取消点赞
+    public static final String WB_LIKE_DESTROY = "http://api.weibo.cn/2/like/destroy";
 
     /**
      * 微博接口

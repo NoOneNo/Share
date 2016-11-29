@@ -6,12 +6,15 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.hengye.floatingactionbutton.FloatingActionsMenu;
 import com.hengye.share.R;
+import com.hengye.share.model.TopicComments;
+import com.hengye.share.module.topic.TopicTitleViewHolder;
+import com.hengye.share.module.util.encapsulation.base.TaskState;
 import com.hengye.share.util.L;
+import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.handler.TopicAdapterIdPager;
 import com.hengye.share.util.handler.TopicIdHandler;
@@ -20,7 +23,6 @@ import com.hengye.share.module.util.encapsulation.base.Pager;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
-import com.hengye.share.module.profile.PersonalHomepageActivity;
 import com.hengye.share.module.publish.TopicPublishActivity;
 import com.hengye.share.module.topic.StatusFragment;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
@@ -33,7 +35,7 @@ import java.util.ArrayList;
 
 public class TopicCommentFragment extends StatusFragment<TopicComment> implements TopicCommentMvpView, DialogInterface.OnClickListener {
 
-    public static Bundle getBundle(Topic topic, boolean isComment) {
+    public static Bundle getStartBundle(Topic topic, boolean isComment) {
         Bundle bundle = new Bundle();
         bundle.putSerializable("topic", topic);
         bundle.putBoolean("isComment", isComment);
@@ -42,7 +44,7 @@ public class TopicCommentFragment extends StatusFragment<TopicComment> implement
 
     public static TopicCommentFragment newInstance(Topic topic, boolean isComment) {
         TopicCommentFragment fragment = new TopicCommentFragment();
-        fragment.setArguments(getBundle(topic, isComment));
+        fragment.setArguments(getStartBundle(topic, isComment));
         return fragment;
     }
 
@@ -108,52 +110,33 @@ public class TopicCommentFragment extends StatusFragment<TopicComment> implement
                 int viewType = mAdapter.getBasicItemType(position);
 
                 final int id = view.getId();
-
                 if(viewType == R.layout.item_topic_comment_hot_label){
                     //热门评论
-                    L.debug("热门评论 click");
+                    TopicHotCommentFragment.start(getContext(), mTopic);
                 }else {
-//                为了显示波纹效果再启动
-                    getHandler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (id == R.id.iv_topic_avatar || id == R.id.tv_topic_username || id == R.id.tv_topic_description) {
-                                TopicComment tc = mAdapter.getItem(position);
-                                int childPosition = mAdapter.getActualItemPosition(position);
-                                View startView = null;
-                                if (id == R.id.iv_topic_avatar) {
-                                    //如果点击的是头像
-                                    startView = view;
-                                } else {
-                                    RecyclerView.ViewHolder viewHolder = getRecyclerView().findViewHolderForLayoutPosition(childPosition);
-                                    if (viewHolder != null && viewHolder instanceof TopicCommentAdapter.TopicCommentViewHolder) {
-                                        TopicCommentAdapter.TopicCommentViewHolder tcv = (TopicCommentAdapter.TopicCommentViewHolder) viewHolder;
-                                        startView = tcv.mTopicTitle.mAvatar;
-                                    }
-                                }
-                                if (startView == null) {
-                                    PersonalHomepageActivity.start(getActivity(), tc.getUserInfo());
-                                } else {
-                                    PersonalHomepageActivity.start(getActivity(), startView, tc.getUserInfo());
-                                }
+                    if(TopicTitleViewHolder.isClickTopicTitle(id)){
+                        //点击头像标题
+                        TopicTitleViewHolder.onClickTopicTitle(getActivity(), mAdapter, view, position, mAdapter.getItem(position).getUserInfo());
+                    } else if (id == R.id.layout_like) {
+                        //点赞
+                        TopicComment topicComment = mAdapter.getItem(position);
+                        mPresenter.likeComment(topicComment);
 
-
-                            } else if (id == R.id.layout_like) {
-                                L.debug("like btn click");
-                            } else if (id != R.id.item_topic_total) {
-                                // 为了点击头像有item的波纹效果，点击头像等区域的时候会触发item的触摸事件
-                                // 为了防止同时显示对话框和点击头像，判断id不等于item的id时才显示对话框
-                                mCurrentPosition = position;
-                                mTopicCommentDialog.show();
-                            }
-
-                        }
-                    }, 100);
+                        boolean isLiked = !topicComment.isLiked();
+                        topicComment.setLiked(isLiked);
+                        topicComment.setLikeCounts(topicComment.getLikeCounts() + (isLiked ? 1 : -1));
+                        mAdapter.updateItem(position);
+                    } else if (id != R.id.item_topic_total) {
+                        //其他部位
+                        // 为了点击头像有item的波纹效果，点击头像等区域的时候会触发item的触摸事件
+                        // 为了防止同时显示对话框和点击头像，判断id不等于item的id时才显示对话框
+                        mCurrentPosition = position;
+                        mTopicCommentDialog.show();
+                    }
                 }
             }
         });
 
-//        final AppBarLayout appBarLayout = (AppBarLayout) getActivity().findViewById(R.id.appbar);
         final TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tab);
         if (tabLayout != null) {
             mTab = tabLayout.getTabAt(mIsComment ? 0 : 1);
@@ -187,12 +170,23 @@ public class TopicCommentFragment extends StatusFragment<TopicComment> implement
     }
 
     @Override
-    public void updateTotalCount(long totalCount) {
+    public void onLoadTopicComments(TopicComments topicComments) {
         if (mTab != null) {
             String str = String.format
                     (getString(mIsComment ? R.string.label_topic_comment_number : R.string.label_topic_repost_number)
-                            , DataUtil.getCounter(totalCount));
+                            , DataUtil.getCounter(topicComments.getTotalNumber()));
             mTab.setText(str);
+        }
+    }
+
+    @Override
+    public void onTopicCommentLike(TopicComment topicComment, int taskState) {
+        if(!TaskState.isSuccess(taskState)) {
+            boolean isLiked = !topicComment.isLiked();
+            topicComment.setLiked(isLiked);
+            topicComment.setLikeCounts(topicComment.getLikeCounts() + (isLiked ? 1 : -1));
+            mAdapter.notifyDataSetChanged();
+            ToastUtil.showToast(TaskState.toTaskStateString(taskState));
         }
     }
 

@@ -1,17 +1,15 @@
 package com.hengye.share.module.util.encapsulation.mvp;
 
-import com.hengye.share.module.util.encapsulation.base.TaskCallBack;
+import com.hengye.share.module.util.encapsulation.base.ListTaskCallBack;
 import com.hengye.share.module.util.encapsulation.base.TaskState;
-
-import java.net.UnknownHostException;
 
 /**
  * Created by yuhy on 2016/10/20.
  */
 
-public class TaskPresenter<V extends MvpView & TaskCallBack> extends RxPresenter<V> {
+public class ListTaskPresenter<V extends MvpView & ListTaskCallBack> extends RxPresenter<V> {
 
-    public TaskPresenter(V mvpView){
+    public ListTaskPresenter(V mvpView){
         super(mvpView);
     }
 

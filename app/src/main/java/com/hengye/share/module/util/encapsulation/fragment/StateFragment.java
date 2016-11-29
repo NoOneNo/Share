@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import com.hengye.share.R;
 import com.hengye.share.module.util.encapsulation.base.StateLayoutManager;
-import com.hengye.share.module.util.encapsulation.base.TaskCallBack;
 
 import static com.hengye.share.module.util.encapsulation.base.StateLayoutManager.OnFindStateViewListener;
 import static com.hengye.share.module.util.encapsulation.base.StateLayoutManager.STATE_CONTENT;
@@ -15,8 +14,6 @@ import static com.hengye.share.module.util.encapsulation.base.StateLayoutManager
 import static com.hengye.share.module.util.encapsulation.base.StateLayoutManager.STATE_LOADING;
 import static com.hengye.share.module.util.encapsulation.base.StateLayoutManager.STATE_NO_NETWORK;
 import static com.hengye.share.module.util.encapsulation.base.StateLayoutManager.STATE_SERVICE_ERROR;
-import static com.hengye.share.module.util.encapsulation.base.TaskState.isFailByNetwork;
-import static com.hengye.share.module.util.encapsulation.base.TaskState.isFailByServer;
 
 /**
  * Created by yuhy on 16/7/18.

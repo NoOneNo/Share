@@ -71,7 +71,7 @@ public abstract class ViewPagerFragment extends BaseFragment implements ViewPage
     }
 
     protected int getOffscreenPageLimit() {
-        return 0;
+        return 1;
     }
 
     protected int getDefaultSelectPosition() {

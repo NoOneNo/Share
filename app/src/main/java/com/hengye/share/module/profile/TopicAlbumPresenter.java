@@ -7,8 +7,7 @@ import com.hengye.share.model.KeyValue;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.greenrobot.ShareJson;
 import com.hengye.share.model.sina.WBTopics;
-import com.hengye.share.module.topic.TopicPresenter;
-import com.hengye.share.module.util.encapsulation.mvp.TaskPresenter;
+import com.hengye.share.module.util.encapsulation.mvp.ListTaskPresenter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
@@ -24,7 +23,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 
-public class TopicAlbumPresenter extends TaskPresenter<TopicAlbumMvpView> {
+public class TopicAlbumPresenter extends ListTaskPresenter<TopicAlbumMvpView> {
 
     private String uid, name;
 

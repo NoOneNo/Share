@@ -1,10 +1,12 @@
 package com.hengye.share.module.topicdetail;
 
+import com.hengye.share.model.Result;
 import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.TopicComments;
 import com.hengye.share.model.sina.WBTopicComments;
 import com.hengye.share.model.sina.WBTopicReposts;
-import com.hengye.share.module.util.encapsulation.mvp.TaskPresenter;
+import com.hengye.share.module.util.encapsulation.base.TaskState;
+import com.hengye.share.module.util.encapsulation.mvp.ListTaskPresenter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
@@ -22,7 +24,7 @@ import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.functions.Function;
 
-public class TopicCommentPresenter extends TaskPresenter<TopicCommentMvpView> {
+public class TopicCommentPresenter extends ListTaskPresenter<TopicCommentMvpView> {
 
     private boolean mIsLikeMode;
 
@@ -43,6 +45,18 @@ public class TopicCommentPresenter extends TaskPresenter<TopicCommentMvpView> {
                 .subscribe(getTopicCommentsSubscriber(isRefresh));
     }
 
+    @SuppressWarnings("unchecked")
+    public void loadWBHotComment(boolean isRefresh, String topicId, int page, int count) {
+        if (isRefresh) {
+            getMvpView().onTaskStart();
+        }
+
+        getHotComment(topicId, page, count)
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
+                .subscribe(getTopicCommentsSubscriber(isRefresh));
+    }
+
     public Map<String, String> getParameter(String token, String topicId, String id, final boolean isRefresh) {
         final UrlBuilder ub = new UrlBuilder();
         ub.addParameter("access_token", token);
@@ -54,16 +68,6 @@ public class TopicCommentPresenter extends TaskPresenter<TopicCommentMvpView> {
         }
         ub.addParameter("count", WBUtil.getWBTopicRequestCount());
         return ub.getParameters();
-    }
-
-    private Observer<TopicComments> getTopicCommentsSubscriber(boolean isRefresh) {
-        return new TaskSubscriber<TopicComments>(isRefresh) {
-            @Override
-            public void onNext(TopicCommentMvpView mvpView, TopicComments list) {
-                mvpView.updateTotalCount(list.getTotalNumber());
-                mvpView.onLoadListData(isRefresh, list.getComments());
-            }
-        };
     }
 
     private Observable<TopicComments> getComment(final String topicId, String id, final boolean isRefresh, final boolean isComment) {
@@ -94,15 +98,7 @@ public class TopicCommentPresenter extends TaskPresenter<TopicCommentMvpView> {
                                 public ObservableSource<TopicComments> apply(final TopicComments topicComments) throws Exception {
                                     if (topicComments != null && topicComments.getTotalNumber() > WBUtil.getWBTopicRequestCount()) {
                                         //尝试获取热门评论
-                                        final UrlBuilder ub = new UrlBuilder();
-                                        ub.addParameter("source", ThirdPartyUtils.getAppKeyForWeibo(ThirdPartyUtils.WeiboApp.WEICO));
-                                        ub.addParameter("access_token", UserUtil.getPriorToken());
-                                        ub.addParameter("id", topicId);
-                                        ub.addParameter("page", 1);
-                                        ub.addParameter("count", 10);
-                                        return service
-                                                .listHotCommentWithLike(ub.getParameters())
-                                                .flatMap(flatWBTopicComments())
+                                        return getHotComment(topicId, 1, 10)
                                                 .flatMap(new Function<TopicComments, ObservableSource<TopicComments>>() {
                                                     @Override
                                                     public ObservableSource<TopicComments> apply(TopicComments topicHotComments) throws Exception {
@@ -125,6 +121,38 @@ public class TopicCommentPresenter extends TaskPresenter<TopicCommentMvpView> {
 
             }
         }
+    }
+
+    /**
+     * 获取热门评论
+     *
+     * @param topicId
+     * @param page
+     * @param count
+     * @return
+     */
+    public Observable<TopicComments> getHotComment(String topicId, int page, int count) {
+        final UrlBuilder ub = new UrlBuilder();
+        ub.addParameter("source", ThirdPartyUtils.getAppKeyForWeibo(ThirdPartyUtils.WeiboApp.WEICO));
+        ub.addParameter("access_token", UserUtil.getPriorToken());
+        ub.addParameter("id", topicId);
+        ub.addParameter("page", page);
+        ub.addParameter("count", count);
+        return RetrofitManager
+                .getWBService()
+                .listHotCommentWithLike(ub.getParameters())
+                .flatMap(flatWBTopicComments());
+
+    }
+
+    private Observer<TopicComments> getTopicCommentsSubscriber(boolean isRefresh) {
+        return new TaskSubscriber<TopicComments>(isRefresh) {
+            @Override
+            public void onNext(TopicCommentMvpView mvpView, TopicComments list) {
+                mvpView.onLoadTopicComments(list);
+                mvpView.onLoadListData(isRefresh, list.getComments());
+            }
+        };
     }
 
     Function<WBTopicReposts, ObservableSource<TopicComments>> mFlatWBTopicReposts;
@@ -155,32 +183,45 @@ public class TopicCommentPresenter extends TaskPresenter<TopicCommentMvpView> {
         return mFlatWBTopicComments;
     }
 
-//    @SuppressWarnings("unchecked")
-//    public void loadWBCommentOrRepost(String topicId, String id, final boolean isRefresh, final boolean isComment) {
-//        if (isRefresh) {
-//            getMvpView().onTaskStart();
-//        }
-//
-//        WBService service = RetrofitManager.getWBService();
-//        Map<String, String> params = getParameter(isComment ? UserUtil.getToken() : UserUtil.getPriorToken(), topicId, id, isRefresh);
-//
-//        Observable observable = isComment ? service.listComment(params) : service.listRepost(params);
-//
-//        observable
-//                .flatMap(new Function() {
-//                    @Override
-//                    public Observable<TopicComments> apply(Object o) {
-//                        TopicComments result;
-//                        if (isComment) {
-//                            result = TopicComment.getComments((WBTopicComments) o);
-//                        } else {
-//                            result = TopicComment.getComments((WBTopicReposts) o);
-//                        }
-//                        return ObservableHelper.just(result);
-//                    }
-//                })
-//                .subscribeOn(SchedulerProvider.io())
-//                .observeOn(SchedulerProvider.ui())
-//                .subscribe(getTopicCommentsSubscriber(isRefresh));
-//    }
+    public void likeComment(final TopicComment topicComment) {
+
+        if (topicComment == null) {
+            return;
+        }
+
+        final boolean isLike = !topicComment.isLiked();
+
+        final UrlBuilder ub = new UrlBuilder();
+        ub.addParameter("source", ThirdPartyUtils.getAppKeyForWeibo(ThirdPartyUtils.WeiboApp.WEICO));
+        ub.addParameter("access_token", UserUtil.getPriorToken());
+        ub.addParameter("object_id", topicComment.getId());
+        ub.addParameter("object_type", "comment");
+        Map<String, String> params = ub.getParameters();
+
+        WBService service = RetrofitManager.getWBService();
+        Observable<Result> observable = isLike ? service.likeUpdate(params) : service.likeDestroy(params);
+
+        observable
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
+                .subscribe(new BaseSubscriber<Result>() {
+                    @Override
+                    public void onNext(TopicCommentMvpView topicCommentMvpView, Result result) {
+                        int taskState;
+
+                        if (result != null && result.isSuccess()) {
+                            taskState = TaskState.STATE_SUCCESS;
+                            topicComment.setLiked(isLike);
+                        } else {
+                            taskState = TaskState.STATE_FAIL_BY_SERVER;
+                        }
+                        topicCommentMvpView.onTopicCommentLike(topicComment, taskState);
+                    }
+
+                    @Override
+                    public void onError(TopicCommentMvpView topicCommentMvpView, Throwable e) {
+                        topicCommentMvpView.onTopicCommentLike(topicComment, TaskState.getTaskFailState(e));
+                    }
+                });
+    }
 }

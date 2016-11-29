@@ -19,9 +19,12 @@
         android:textSize="17sp"
         android:textColor="@color/topic_content" />
 
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="@dimen/content_margin_5dp"/>
+
     <com.hengye.share.ui.widget.image.GridGalleryView
         android:id="@+id/gl_topic_gallery"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/content_margin_5dp"/>
+        android:layout_height="wrap_content"/>
 </LinearLayout>

@@ -3,6 +3,7 @@ package com.hengye.share.module.util.encapsulation.base;
 import com.hengye.share.R;
 import com.hengye.share.util.ResUtil;
 
+import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
@@ -34,7 +35,9 @@ public class TaskState {
 
     public static boolean isNetworkException(Throwable throwable){
         if(throwable instanceof UnknownHostException
-                || throwable instanceof SocketTimeoutException){
+                || throwable instanceof SocketTimeoutException
+                || throwable instanceof ConnectException){
+            //// TODO: 2016/11/29 ConnectException可能要去掉
             return true;
         }
         return false;

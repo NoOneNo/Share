@@ -8,7 +8,7 @@ import java.util.List;
  * Created by yuhy on 2016/10/20.
  */
 
-public class ListDataPresenter<D, V extends MvpView & ListDataCallBack<D>> extends TaskPresenter<V> {
+public class ListDataPresenter<D, V extends MvpView & ListDataCallBack<D>> extends ListTaskPresenter<V> {
 
     public ListDataPresenter(V mvpView){
         super(mvpView);

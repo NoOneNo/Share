@@ -1,5 +1,7 @@
 package com.hengye.share.util.retrofit.api;
 
+import com.hengye.share.model.Result;
+import com.hengye.share.model.Topic;
 import com.hengye.share.model.sina.WBGroups;
 import com.hengye.share.model.sina.WBShortUrls;
 import com.hengye.share.model.sina.WBTopic;
@@ -212,4 +214,10 @@ public interface WBService {
     @FormUrlEncoded
     @POST("http://weicoapi.weico.cc/portal.php?a=get_video&c=default")
     Observable<Object> getMediaPlayUrl(@Field("weibo_id") String weiboId);
+
+    @GET(UrlFactory.WB_LIKE_UPDATE)
+    Observable<Result> likeUpdate(@QueryMap Map<String, String> options);
+
+    @GET(UrlFactory.WB_LIKE_DESTROY)
+    Observable<Result> likeDestroy(@QueryMap Map<String, String> options);
 }

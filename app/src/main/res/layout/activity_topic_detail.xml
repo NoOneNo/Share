@@ -1,91 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.hengye.share.ui.widget.pulltorefresh.PullToRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/pull_to_refresh"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <com.hengye.share.ui.widget.pulltorefresh.PullToRefreshLayout
-        android:id="@+id/pull_to_refresh"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <com.hengye.share.ui.widget.common.CommonListView
-            android:id="@+id/list_view"
+
+        <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:cacheColorHint="@color/transparent"
-            android:divider="@drawable/list_divider_margin"
-            android:headerDividersEnabled="false"
-            android:listSelector="@android:color/transparent"
-            android:scrollbars="vertical" />
+            android:fitsSystemWindows="true">
 
-    </com.hengye.share.ui.widget.pulltorefresh.PullToRefreshLayout>
+            <android.support.design.widget.AppBarLayout
+                android:id="@+id/appbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary"
+                android:fitsSystemWindows="true"
+                android:minHeight="?attr/actionBarSize"
+                app:layout_behavior="@string/fling_behavior">
 
-    <com.hengye.share.ui.widget.common.CommonTabLayout
-        android:id="@+id/tab"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/tab_layout_height"
-        android:background="@android:color/white"
-        android:theme="@style/Platform.V14.AppCompat.Light"
-        android:visibility="gone" />
-
-
-    <!--<android.support.design.widget.FloatingActionButton-->
-    <!--android:id="@+id/fab"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_gravity="bottom|end"-->
-    <!--android:layout_margin="@dimen/fab_margin"-->
-    <!--android:src="@drawable/ic_mode_edit_white_48dp" />-->
-
-    <com.hengye.share.ui.widget.OverLayView
-        android:id="@+id/over_lay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
-
-    <com.hengye.floatingactionbutton.FloatingActionsMenu
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:layout_anchor="@id/pull_to_refresh"
-        app:layout_anchorGravity="bottom|end"
-        fab:fab_addButtonColorNormal="?attr/theme_color"
-        fab:fab_addButtonColorPressed="?attr/theme_dark_color"
-        fab:fab_labelStyle="@style/menu_labels_style">
+                <include
+                    layout="@layout/item_topic_total"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_scrollFlags="scroll" />
 
 
-        <com.hengye.floatingactionbutton.FloatingActionButton
-            android:id="@+id/action_copy"
+                <com.hengye.share.ui.widget.common.CommonTabLayout
+                    android:id="@+id/tab"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:theme="@style/Platform.V14.AppCompat.Light"
+                    android:visibility="visible"
+                    app:tabMode="scrollable" />
+            </android.support.design.widget.AppBarLayout>
+
+            <FrameLayout
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        </android.support.design.widget.CoordinatorLayout>
+
+
+        <com.hengye.share.ui.widget.OverLayView
+            android:id="@+id/over_lay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+        <com.hengye.floatingactionbutton.FloatingActionsMenu
+            android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_colorNormal="?attr/theme_color"
-            fab:fab_colorPressed="?attr/theme_dark_color"
-            fab:fab_icon="@drawable/ic_content_copy_white_48dp"
-            fab:fab_title="@string/label_topic_copy" />
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/fab_margin"
+            android:layout_marginBottom="@dimen/fab_margin"
+            fab:fab_addButtonColorNormal="?attr/theme_color"
+            fab:fab_addButtonColorPressed="?attr/theme_dark_color"
+            fab:fab_labelStyle="@style/menu_labels_style">
 
 
-        <com.hengye.floatingactionbutton.FloatingActionButton
-            android:id="@+id/action_repost"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="?attr/theme_color"
-            fab:fab_colorPressed="?attr/theme_dark_color"
-            fab:fab_icon="@drawable/ic_repost_white_48dp"
-            fab:fab_title="@string/label_topic_repost"/>
+            <com.hengye.floatingactionbutton.FloatingActionButton
+                android:id="@+id/action_copy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_colorNormal="?attr/theme_color"
+                fab:fab_colorPressed="?attr/theme_dark_color"
+                fab:fab_icon="@drawable/ic_content_copy_white_48dp"
+                fab:fab_title="@string/label_topic_copy" />
 
-        <com.hengye.floatingactionbutton.FloatingActionButton
-            android:id="@+id/action_comment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="?attr/theme_color"
-            fab:fab_colorPressed="?attr/theme_dark_color"
-            fab:fab_icon="@drawable/ic_comment_white_48dp"
-            fab:fab_title="@string/label_topic_comment" />
 
-    </com.hengye.floatingactionbutton.FloatingActionsMenu>
+            <com.hengye.floatingactionbutton.FloatingActionButton
+                android:id="@+id/action_repost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_colorNormal="?attr/theme_color"
+                fab:fab_colorPressed="?attr/theme_dark_color"
+                fab:fab_icon="@drawable/ic_repost_white_48dp"
+                fab:fab_title="@string/label_topic_repost" />
 
-</android.support.design.widget.CoordinatorLayout>
+            <com.hengye.floatingactionbutton.FloatingActionButton
+                android:id="@+id/action_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_colorNormal="?attr/theme_color"
+                fab:fab_colorPressed="?attr/theme_dark_color"
+                fab:fab_icon="@drawable/ic_comment_white_48dp"
+                fab:fab_title="@string/label_topic_comment" />
+
+        </com.hengye.floatingactionbutton.FloatingActionsMenu>
+
+    </FrameLayout>
+</com.hengye.share.ui.widget.pulltorefresh.PullToRefreshLayout>
