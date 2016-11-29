@@ -21,22 +21,6 @@ import java.util.List;
 
 public class Topic extends ParentInherit implements TopicId, TopicShortUrl, Serializable{
 
-    private static final long serialVersionUID = 971288752432928272L;
-
-    private String date;//创建日期
-    private String channel;//渠道，通过什么发表
-    private String content;//内容
-    private String id;//主题的唯一id
-    private List<String> imageUrls;//缩略图
-    private List<String> imageLargeUrls;//原图
-    private Topic retweetedTopic;//被转发的主题
-
-    private UserInfo userInfo;//用户信息
-
-    private HashMap<String, TopicUrl> urlMap;
-    private transient SpannableString urlSpannableString;
-    private transient String formatDate;
-
     public static ArrayList<Topic> getTopics(WBTopics wbTopics){
         if(wbTopics == null || CommonUtil.isEmpty(wbTopics.getStatuses())){
             return null;
@@ -63,6 +47,8 @@ public class Topic extends ParentInherit implements TopicId, TopicShortUrl, Seri
         topic.setChannel(entity.getSource());
         topic.setContent(entity.getText());
         topic.setId(entity.getIdstr());
+        topic.setRepostsCount(entity.getReposts_count());
+        topic.setCommentsCount(entity.getComments_count());
         if(!CommonUtil.isEmpty(entity.getPic_urls())){
             List<String> imageUrls = new ArrayList<>();
             List<String> imageLargeUrls = new ArrayList<>();
@@ -159,6 +145,24 @@ public class Topic extends ParentInherit implements TopicId, TopicShortUrl, Seri
         }
         return set;
     }
+
+    private static final long serialVersionUID = 971288752432928272L;
+
+    private String date;//创建日期
+    private String channel;//渠道，通过什么发表
+    private String content;//内容
+    private String id;//主题的唯一id
+    private List<String> imageUrls;//缩略图
+    private List<String> imageLargeUrls;//原图
+    private int repostsCount;
+    private int commentsCount;
+
+    private Topic retweetedTopic;//被转发的主题
+    private UserInfo userInfo;//用户信息
+
+    private HashMap<String, TopicUrl> urlMap;
+    private transient SpannableString urlSpannableString;
+    private transient String formatDate;
 
     public String toJson(){
         return GsonUtil.toJson(this);
@@ -269,6 +273,22 @@ public class Topic extends ParentInherit implements TopicId, TopicShortUrl, Seri
 
     public void setUrlMap(HashMap<String, TopicUrl> urlMap) {
         this.urlMap = urlMap;
+    }
+
+    public int getRepostsCount() {
+        return repostsCount;
+    }
+
+    public void setRepostsCount(int repostsCount) {
+        this.repostsCount = repostsCount;
+    }
+
+    public int getCommentsCount() {
+        return commentsCount;
+    }
+
+    public void setCommentsCount(int commentsCount) {
+        this.commentsCount = commentsCount;
     }
 
     public SpannableString getUrlSpannableString() {

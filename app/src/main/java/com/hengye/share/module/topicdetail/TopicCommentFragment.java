@@ -96,13 +96,31 @@ public class TopicCommentFragment extends StatusFragment<TopicComment> implement
 
         addPresenter(mPresenter = new TopicCommentPresenter(this, isLikeMode));
 
-        onRefresh();
-
         initView();
-        mTopicCommentDialog = mIsComment ? DialogBuilder.getTopicCommentDialog(getContext(), this) : DialogBuilder.getTopicRepostDialog(getContext(), this);
+        showLoading();
+        mPrepared = true;
+        onLazyLoad();
+    }
+
+    boolean mPrepared = false;
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        onLazyLoad();
+        L.debug("mPrepared : {}, isVisibleToUser : {}, this : {}", mPrepared, isVisibleToUser, this);
+    }
+
+    private void onLazyLoad(){
+        L.debug("onLazyLoad invoke");
+        if(mPrepared && getUserVisibleHint()){
+            L.debug("onLazyLoad onRefresh");
+            onRefresh();
+        }
     }
 
     private void initView() {
+        mTopicCommentDialog = mIsComment ? DialogBuilder.getTopicCommentDialog(getContext(), this) : DialogBuilder.getTopicRepostDialog(getContext(), this);
         setRefreshEnable(false);
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -121,10 +139,7 @@ public class TopicCommentFragment extends StatusFragment<TopicComment> implement
                         //点赞
                         TopicComment topicComment = mAdapter.getItem(position);
                         mPresenter.likeComment(topicComment);
-
-                        boolean isLiked = !topicComment.isLiked();
-                        topicComment.setLiked(isLiked);
-                        topicComment.setLikeCounts(topicComment.getLikeCounts() + (isLiked ? 1 : -1));
+                        topicComment.updateLiked(!topicComment.isLiked());
                         mAdapter.updateItem(position);
                     } else if (id != R.id.item_topic_total) {
                         //其他部位
@@ -182,9 +197,7 @@ public class TopicCommentFragment extends StatusFragment<TopicComment> implement
     @Override
     public void onTopicCommentLike(TopicComment topicComment, int taskState) {
         if(!TaskState.isSuccess(taskState)) {
-            boolean isLiked = !topicComment.isLiked();
-            topicComment.setLiked(isLiked);
-            topicComment.setLikeCounts(topicComment.getLikeCounts() + (isLiked ? 1 : -1));
+            topicComment.updateLiked(!topicComment.isLiked());
             mAdapter.notifyDataSetChanged();
             ToastUtil.showToast(TaskState.toTaskStateString(taskState));
         }

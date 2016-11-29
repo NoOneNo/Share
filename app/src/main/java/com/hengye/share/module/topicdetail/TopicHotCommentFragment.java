@@ -94,10 +94,7 @@ public class TopicHotCommentFragment extends StatusFragment<TopicComment> implem
                     //点赞
                     TopicComment topicComment = mAdapter.getItem(position);
                     mPresenter.likeComment(topicComment);
-
-                    boolean isLiked = !topicComment.isLiked();
-                    topicComment.setLiked(isLiked);
-                    topicComment.setLikeCounts(topicComment.getLikeCounts() + (isLiked ? 1 : -1));
+                    topicComment.updateLiked(!topicComment.isLiked());
                     mAdapter.updateItem(position);
                 } else if (id != R.id.item_topic_total) {
                     // 为了点击头像有item的波纹效果，点击头像等区域的时候会触发item的触摸事件
@@ -146,9 +143,7 @@ public class TopicHotCommentFragment extends StatusFragment<TopicComment> implem
     @Override
     public void onTopicCommentLike(TopicComment topicComment, int taskState) {
         if(!TaskState.isSuccess(taskState)) {
-            boolean isLiked = !topicComment.isLiked();
-            topicComment.setLiked(isLiked);
-            topicComment.setLikeCounts(topicComment.getLikeCounts() + (isLiked ? 1 : -1));
+            topicComment.updateLiked(!topicComment.isLiked());
             mAdapter.notifyDataSetChanged();
             ToastUtil.showToast(TaskState.toTaskStateString(taskState));
         }

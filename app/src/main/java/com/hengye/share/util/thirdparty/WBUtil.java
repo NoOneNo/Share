@@ -20,6 +20,7 @@ public class WBUtil {
     public static String IMAGE_TYPE_THUMBNAIL = "thumbnail";//缩略图
     public static String IMAGE_TYPE_BMIDDLE = "bmiddle";//高清
     public static String IMAGE_TYPE_OR_480 = "or480";//高清不支持gif动图，只有一帧如果是gif的话
+    public static String IMAGE_TYPE_WAP_720 = "wap720";//高清不支持gif动图，只有一帧如果是gif的话
     public static String IMAGE_TYPE_LARGE = "large";//原图
     public static String IMAGE_TYPE_ORIGINAL = "woriginal";//原图, 新浪微博gif用这个，
 
@@ -39,24 +40,24 @@ public class WBUtil {
         }
         String toType;
         if(url.endsWith("gif")) {
-            toType = IMAGE_TYPE_OR_480;
+            toType = IMAGE_TYPE_BMIDDLE;
         }else if("2".equals(value)){
             toType = IMAGE_TYPE_THUMBNAIL;
         }else if("3".equals(value)){
-            toType = IMAGE_TYPE_OR_480;
+            toType = IMAGE_TYPE_BMIDDLE;
         }else if("4".equals(value)){
             toType = IMAGE_TYPE_LARGE;
         }else if("5".equals(value)){
-            toType = IMAGE_TYPE_OR_480;
+            toType = IMAGE_TYPE_BMIDDLE;
         }else{
-            toType = IMAGE_TYPE_OR_480;
+            toType = IMAGE_TYPE_BMIDDLE;
         }
         return getWBTopicImgUrl(url, toType);
     }
 
     public static String getWBGifUrl(String url){
         if(url != null && url.endsWith("gif")){
-            return url.replaceFirst(IMAGE_TYPE_OR_480, IMAGE_TYPE_ORIGINAL);
+            return url.replaceFirst(IMAGE_TYPE_BMIDDLE, IMAGE_TYPE_ORIGINAL);
         }
         return url;
     }

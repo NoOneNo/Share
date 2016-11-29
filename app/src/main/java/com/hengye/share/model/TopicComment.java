@@ -117,6 +117,11 @@ public class TopicComment implements TopicId, TopicShortUrl, Serializable{
         return topicComment;
     }
 
+    public void updateLiked(boolean isLiked){
+        setLiked(isLiked);
+        setLikeCounts(getLikeCounts() + (isLiked ? 1 : -1));
+    }
+
     @Override
     public String toString() {
         return "TopicComment{" +

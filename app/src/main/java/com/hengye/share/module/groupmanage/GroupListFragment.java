@@ -58,7 +58,7 @@ public class GroupListFragment extends RecyclerRefreshFragment<TopicGroup>{
     }
 
     private void adjustSize(){
-        if(getParent() == null){
+        if(getView() == null){
             return;
         }
 
@@ -69,9 +69,9 @@ public class GroupListFragment extends RecyclerRefreshFragment<TopicGroup>{
         }
 
         if (mAdapter.getItemCount() > 7) {
-            getParent().setLayoutParams(new FrameLayout.LayoutParams(width, mMaxHeight));
+            getView().setLayoutParams(new FrameLayout.LayoutParams(width, mMaxHeight));
         }else {
-            getParent().setLayoutParams(new FrameLayout.LayoutParams(width, FrameLayout.LayoutParams.WRAP_CONTENT));
+            getView().setLayoutParams(new FrameLayout.LayoutParams(width, FrameLayout.LayoutParams.WRAP_CONTENT));
         }
     }
 

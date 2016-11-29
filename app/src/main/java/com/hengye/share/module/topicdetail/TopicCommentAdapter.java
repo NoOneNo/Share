@@ -91,6 +91,9 @@ public class TopicCommentAdapter extends CommonAdapter<TopicComment> {
 
             SelectorLoader.getInstance().setDefaultRippleBackground(mTopicTotalItem);
 
+            //扩大点赞按钮触摸区域
+            mTopicTitle.mLikeAssist.setOnTouchListener(mOnTouchLikeAssistListener);
+
             mTopicTitle.mAvatar.setOnTouchListener(mTopicOnTouchListener);
             mTopicTitle.mUsername.setOnTouchListener(mTopicOnTouchListener);
             mTopicTitle.mDescription.setOnTouchListener(mTopicOnTouchListener);
@@ -118,6 +121,13 @@ public class TopicCommentAdapter extends CommonAdapter<TopicComment> {
             }
         };
 
+        private View.OnTouchListener mOnTouchLikeAssistListener = new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return mTopicTitle.mLikeLayout.onTouchEvent(event);
+            }
+        };
+
         @Override
         public void bindData(Context context, TopicComment topicComment, int position) {
             mTopicTitle.initTopicTitle(context, topicComment);
@@ -136,7 +146,7 @@ public class TopicCommentAdapter extends CommonAdapter<TopicComment> {
 
     public static class TopicCommentTitleViewHolder extends TopicTitleViewHolder {
 
-        public View mLikeLayout;
+        public View mLikeLayout, mLikeAssist;
         public ImageButton mLikeBtn;
         public TextView mLikeCounts;
         public boolean mIsLikeMode;
@@ -144,6 +154,7 @@ public class TopicCommentAdapter extends CommonAdapter<TopicComment> {
         public TopicCommentTitleViewHolder(View v, boolean isLikeMode) {
             super(v);
             mIsLikeMode = isLikeMode;
+            mLikeAssist = v.findViewById(R.id.layout_like_assist);
             mLikeLayout = v.findViewById(R.id.layout_like);
             mLikeBtn = (ImageButton) v.findViewById(R.id.btn_like);
             mLikeCounts = (TextView) v.findViewById(R.id.tv_like_counts);

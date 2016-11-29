@@ -216,8 +216,10 @@ public class GalleryFragment extends ViewPagerFragment implements View.OnLongCli
             mHideBackgroundAnimation.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    getActivity().finish();
-                    getActivity().overridePendingTransition(0, 0);
+                    if(getActivity() != null) {
+                        getActivity().finish();
+                        getActivity().overridePendingTransition(0, 0);
+                    }
                 }
             });
         }

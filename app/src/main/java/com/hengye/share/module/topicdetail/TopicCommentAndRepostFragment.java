@@ -74,8 +74,8 @@ public class TopicCommentAndRepostFragment extends TabLayoutFragment{
     @Override
     protected ArrayList<TabItem> generateTabs() {
         ArrayList<TabItem> tabItems = new ArrayList<>();
-        TabItem tabItem1 = new TabItem(0, ResUtil.getString(R.string.label_topic_comment));
-        TabItem tabItem2 = new TabItem(1, ResUtil.getString(R.string.label_topic_repost));
+        TabItem tabItem1 = new TabItem(0, ResUtil.getString(R.string.label_topic_comment_number, mTopic.getCommentsCount()));
+        TabItem tabItem2 = new TabItem(1, ResUtil.getString(R.string.label_topic_repost_number, mTopic.getRepostsCount()));
         tabItems.add(tabItem1);
         tabItems.add(tabItem2);
         return tabItems;
