@@ -133,8 +133,13 @@ public class TopicAlbumFragment extends RecyclerRefreshFragment<String> implemen
                 GalleryActivity.startWithIntent(getActivity(), null, position, null, null);
             }
         });
-        mPresenter.loadCacheData();
 
+        showLoading();
+        markLazyLoadPreparedAndLazyLoadIfCan();
+    }
+
+    protected void onLazyLoad() {
+        mPresenter.loadCacheData();
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.hengye.share.model;
 
 import android.text.SpannableString;
 
-import com.hengye.share.model.sina.WBShortUrl;
 import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.model.sina.WBTopicComment;
 import com.hengye.share.model.sina.WBTopicComments;
@@ -53,8 +52,8 @@ public class Topic extends ParentInherit implements TopicId, TopicShortUrl, Seri
             List<String> imageUrls = new ArrayList<>();
             List<String> imageLargeUrls = new ArrayList<>();
             for(WBTopic.Pic_urlsEntity urlsEntity : entity.getPic_urls()){
-                imageUrls.add(WBUtil.getWBTopicImgUrl(urlsEntity.getThumbnail_pic()));
-                imageLargeUrls.add(WBUtil.getWBTopicLargeImgUrl(urlsEntity.getThumbnail_pic()));
+                imageUrls.add(WBUtil.getWBImgUrl(urlsEntity.getThumbnail_pic()));
+                imageLargeUrls.add(WBUtil.getWBLargeImgUrl(urlsEntity.getThumbnail_pic()));
             }
             topic.setImageUrls(imageUrls);
             topic.setImageLargeUrls(imageLargeUrls);
@@ -98,8 +97,8 @@ public class Topic extends ParentInherit implements TopicId, TopicShortUrl, Seri
 //            List<String> imageUrls = new ArrayList<>();
 //            List<String> imageLargeUrls = new ArrayList<>();
 //            for(WBTopic.Pic_urlsEntity urlsEntity : entity.getPic_urls()){
-//                imageUrls.add(WBUtil.getWBTopicImgUrl(urlsEntity.getThumbnail_pic(), WBUtil.IMAGE_TYPE_BMIDDLE));
-//                imageLargeUrls.add(WBUtil.getWBTopicImgUrl(urlsEntity.getThumbnail_pic(), WBUtil.IMAGE_TYPE_LARGE));
+//                imageUrls.add(WBUtil.getWBImgUrl(urlsEntity.getThumbnail_pic(), WBUtil.IMAGE_TYPE_BMIDDLE));
+//                imageLargeUrls.add(WBUtil.getWBImgUrl(urlsEntity.getThumbnail_pic(), WBUtil.IMAGE_TYPE_LARGE));
 //            }
 //            topic.setImageUrls(imageUrls);
 //            topic.setImageLargeUrls(imageLargeUrls);

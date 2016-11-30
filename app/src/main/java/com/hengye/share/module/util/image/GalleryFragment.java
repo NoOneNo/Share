@@ -27,7 +27,7 @@ import com.hengye.share.util.ViewUtil;
 
 import java.util.ArrayList;
 
-public class GalleryFragment extends ViewPagerFragment implements View.OnLongClickListener{
+public class GalleryFragment extends ViewPagerFragment implements View.OnLongClickListener {
 
     public final static String IMG_URLS = "img_paths";
     public final static String IMG_INDEX = "img_index";
@@ -72,7 +72,7 @@ public class GalleryFragment extends ViewPagerFragment implements View.OnLongCli
         }
     }
 
-    protected int getImageSize(){
+    protected int getImageSize() {
         return mUrls.size();
     }
 
@@ -112,15 +112,23 @@ public class GalleryFragment extends ViewPagerFragment implements View.OnLongCli
         }
     }
 
-    private Dialog getLongClickDialog(){
-        if(mLongClickDialog == null) {
+    private Dialog getLongClickDialog() {
+        if (mLongClickDialog == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
-                    .setItems(new CharSequence[]{ResUtil.getString(R.string.label_gallery_save_to_local)}, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            mAdapter.getItem(getCurrentPosition()).saveImage();
-                        }
-                    });
+                    .setItems(new CharSequence[]{
+                                    ResUtil.getString(R.string.label_gallery_image_large),
+                                    ResUtil.getString(R.string.label_gallery_save_to_local)},
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ImageFragment imageFragment = mAdapter.getItem(getCurrentPosition());
+                                    if(which == 0){
+                                        imageFragment.loadLargeImage();
+                                    }else {
+                                        imageFragment.saveImage();
+                                    }
+                                }
+                            });
             mLongClickDialog = builder.create();
         }
         return mLongClickDialog;
@@ -216,7 +224,7 @@ public class GalleryFragment extends ViewPagerFragment implements View.OnLongCli
             mHideBackgroundAnimation.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    if(getActivity() != null) {
+                    if (getActivity() != null) {
                         getActivity().finish();
                         getActivity().overridePendingTransition(0, 0);
                     }

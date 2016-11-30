@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
+import android.webkit.CookieManager;
 
 import com.android.volley.cache.BitmapCache;
 import com.hengye.share.R;
@@ -15,6 +16,7 @@ import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.module.publish.TopicPublishActivity;
 import com.hengye.share.module.sso.ThirdPartyLoginActivity;
 import com.hengye.share.module.util.FragmentActivity;
+import com.hengye.share.module.util.WebViewActivity;
 import com.hengye.share.ui.widget.dialog.ListDialog;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
@@ -88,12 +90,16 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
                 mLoading.start();
             }
         } else if (v.getId() == R.id.btn_test5) {
-            mListDialog.show();
+//            mListDialog.show();
+
+            CookieManager.getInstance().removeAllCookie();
         } else if (v.getId() == R.id.btn_test6) {
 //            testInterceptor();
 
 //            testAnimation();
-            startActivity(FragmentActivity.getStartIntent(this, TestWindowManagerFragment.class));
+//            startActivity(FragmentActivity.getStartIntent(this, TestWindowManagerFragment.class));
+
+            startActivity(WebViewActivity.getStartIntent(this, "https://passport.weibo.cn/signin/login"));
 //            startActivity(WebViewActivity.getStartIntent(this, "http://www.baidu.com"));
         } else if (v.getId() == R.id.btn_test7) {
             startActivity(SetTokenActivity.class);

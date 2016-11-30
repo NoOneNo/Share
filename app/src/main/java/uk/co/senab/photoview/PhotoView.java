@@ -34,7 +34,7 @@ public class PhotoView extends ClipImageView implements IPhotoView {
 
     private final PhotoViewAttacher mAttacher;
 
-    private ScaleType mPendingScaleType;
+    private uk.co.senab.photoview.ScaleType mPendingScaleType;
 
     public PhotoView(Context context) {
         this(context, null);
@@ -50,7 +50,7 @@ public class PhotoView extends ClipImageView implements IPhotoView {
         mAttacher = new PhotoViewAttacher(this);
 
         if (null != mPendingScaleType) {
-            setScaleType(mPendingScaleType);
+            setCustomScaleType(mPendingScaleType);
             mPendingScaleType = null;
         }
     }
@@ -118,9 +118,14 @@ public class PhotoView extends ClipImageView implements IPhotoView {
         return mAttacher.getScale();
     }
 
+//    @Override
+//    public ScaleType getScaleType() {
+//        return mAttacher.getScaleType();
+//    }
+
     @Override
-    public ScaleType getScaleType() {
-        return mAttacher.getScaleType();
+    public uk.co.senab.photoview.ScaleType getCustomScaleType() {
+        return mAttacher.getCustomScaleType();
     }
 
     @Override
@@ -231,10 +236,19 @@ public class PhotoView extends ClipImageView implements IPhotoView {
         mAttacher.setScale(scale, focalX, focalY, animate);
     }
 
+//    @Override
+//    public void setScaleType(ScaleType scaleType) {
+//        if (null != mAttacher) {
+//            mAttacher.setScaleType(scaleType);
+//        } else {
+//            mPendingScaleType = scaleType;
+//        }
+//    }
+
     @Override
-    public void setScaleType(ScaleType scaleType) {
+    public void setCustomScaleType(uk.co.senab.photoview.ScaleType scaleType) {
         if (null != mAttacher) {
-            mAttacher.setScaleType(scaleType);
+            mAttacher.setCustomScaleType(scaleType);
         } else {
             mPendingScaleType = scaleType;
         }

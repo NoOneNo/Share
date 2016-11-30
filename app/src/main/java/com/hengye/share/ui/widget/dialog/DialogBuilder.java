@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 
 import com.hengye.share.R;
+import com.hengye.share.util.DataUtil;
 
 public class DialogBuilder {
 
@@ -68,6 +69,38 @@ public class DialogBuilder {
         cs[REPOST_REPOST] = context.getString(R.string.label_topic_repost);
         cs[REPOST_COMMENT] = context.getString(R.string.label_topic_comment);
         cs[REPOST_COPY] = context.getString(R.string.label_topic_copy);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context)
+                .setItems(cs, onClickListener);
+        return builder.create();
+    }
+
+    public static Dialog getOnLongClickTopicContentUrlSpanDialog(Context context, String scheme, DialogInterface.OnClickListener onClickListener){
+
+        if(scheme == null){
+            return null;
+        }
+
+        CharSequence[] cs;
+        if (scheme.startsWith(DataUtil.MENTION_SCHEME)) {
+            //@name
+            cs = new String[3];
+            cs[0] = context.getString(R.string.label_url_at_user);
+            cs[1] = context.getString(R.string.label_url_copy_content);
+            cs[2] = context.getString(R.string.label_url_open_current_topic);
+        }else if(scheme.startsWith(DataUtil.TOPIC_SCHEME)){
+            //话题
+            cs = new String[3];
+            cs[0] = context.getString(R.string.label_url_search_topic);
+            cs[1] = context.getString(R.string.label_url_copy_content);
+            cs[2] = context.getString(R.string.label_url_open_current_topic);
+        }else{
+            //超链接
+            cs = new String[3];
+            cs[0] = context.getString(R.string.label_url_open_link);
+            cs[1] = context.getString(R.string.label_url_copy_link);
+            cs[2] = context.getString(R.string.label_url_open_current_topic);
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context)
                 .setItems(cs, onClickListener);

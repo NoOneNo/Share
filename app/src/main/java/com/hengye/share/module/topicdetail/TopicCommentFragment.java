@@ -98,25 +98,12 @@ public class TopicCommentFragment extends StatusFragment<TopicComment> implement
 
         initView();
         showLoading();
-        mPrepared = true;
-        onLazyLoad();
+
+        markLazyLoadPreparedAndLazyLoadIfCan();
     }
 
-    boolean mPrepared = false;
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        onLazyLoad();
-        L.debug("mPrepared : {}, isVisibleToUser : {}, this : {}", mPrepared, isVisibleToUser, this);
-    }
-
-    private void onLazyLoad(){
-        L.debug("onLazyLoad invoke");
-        if(mPrepared && getUserVisibleHint()){
-            L.debug("onLazyLoad onRefresh");
-            onRefresh();
-        }
+    protected void onLazyLoad() {
+        onRefresh();
     }
 
     private void initView() {
@@ -128,11 +115,11 @@ public class TopicCommentFragment extends StatusFragment<TopicComment> implement
                 int viewType = mAdapter.getBasicItemType(position);
 
                 final int id = view.getId();
-                if(viewType == R.layout.item_topic_comment_hot_label){
+                if (viewType == R.layout.item_topic_comment_hot_label) {
                     //热门评论
                     TopicHotCommentFragment.start(getContext(), mTopic);
-                }else {
-                    if(TopicTitleViewHolder.isClickTopicTitle(id)){
+                } else {
+                    if (TopicTitleViewHolder.isClickTopicTitle(id)) {
                         //点击头像标题
                         TopicTitleViewHolder.onClickTopicTitle(getActivity(), mAdapter, view, position, mAdapter.getItem(position).getUserInfo());
                     } else if (id == R.id.layout_like) {
@@ -196,7 +183,7 @@ public class TopicCommentFragment extends StatusFragment<TopicComment> implement
 
     @Override
     public void onTopicCommentLike(TopicComment topicComment, int taskState) {
-        if(!TaskState.isSuccess(taskState)) {
+        if (!TaskState.isSuccess(taskState)) {
             topicComment.updateLiked(!topicComment.isLiked());
             mAdapter.notifyDataSetChanged();
             ToastUtil.showToast(TaskState.toTaskStateString(taskState));

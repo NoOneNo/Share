@@ -7,8 +7,6 @@ import com.android.volley.toolbox.Util;
 import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.util.ImageUtil;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,7 +30,7 @@ public class WBUtil {
     //默认返回缩略图
     //要得到高清图或者原图，把地址"http://ww1.sinaimg.cn/thumbnail/6dab804cjw1exv392snomj21kw23ukjl.jpg"
     //中的thumbnail换成对应的bmiddle(高清)或者large(原图)
-    public static String getWBTopicImgUrl(String url){
+    public static String getWBImgUrl(String url){
         String value = SettingHelper.getPhotoDownloadQuality();
         if(url == null || "1".equals(value)){
             //无图
@@ -52,7 +50,7 @@ public class WBUtil {
         }else{
             toType = IMAGE_TYPE_BMIDDLE;
         }
-        return getWBTopicImgUrl(url, toType);
+        return getWBImgUrl(url, toType);
     }
 
     public static String getWBGifUrl(String url){
@@ -73,15 +71,26 @@ public class WBUtil {
         return false;
     }
 
-    public static String getWBTopicImgUrl(String url, String toType) {
-        return getWBTopicImgUrl(url, IMAGE_TYPE_THUMBNAIL, toType);
+    public static boolean isWBLargeUrl(String url){
+        if(url != null && url.contains(IMAGE_TYPE_ORIGINAL)){
+            return true;
+        }
+        return false;
     }
 
-    public static String getWBTopicLargeImgUrl(String url) {
-        return getWBTopicImgUrl(url, IMAGE_TYPE_THUMBNAIL, IMAGE_TYPE_LARGE);
+    public static String getWBImgUrl(String url, String toType) {
+        return getWBImgUrl(url, IMAGE_TYPE_THUMBNAIL, toType);
     }
 
-    public static String getWBTopicImgUrl(String url, String fromType, String toType) {
+//    public static String getWBLargeImgUrl(String url) {
+//        return getWBImgUrl(url, IMAGE_TYPE_THUMBNAIL, IMAGE_TYPE_LARGE);
+//    }
+
+    public static String getWBLargeImgUrl(String url) {
+        return getWBImgUrl(url, IMAGE_TYPE_BMIDDLE, IMAGE_TYPE_ORIGINAL);
+    }
+
+    public static String getWBImgUrl(String url, String fromType, String toType) {
         if (TextUtils.isEmpty(url)) {
             return null;
         }

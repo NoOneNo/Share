@@ -81,8 +81,8 @@ public class TopicComment implements TopicId, TopicShortUrl, Serializable{
 //            List<String> imageUrls = new ArrayList<>();
 //            List<String> imageLargeUrls = new ArrayList<>();
 //            for(WBTopic.Pic_urlsEntity urlsEntity : entity.getPic_urls()){
-//                imageUrls.add(WBUtil.getWBTopicImgUrl(urlsEntity.getThumbnail_pic(), WBUtil.IMAGE_TYPE_BMIDDLE));
-//                imageLargeUrls.add(WBUtil.getWBTopicImgUrl(urlsEntity.getThumbnail_pic(), WBUtil.IMAGE_TYPE_LARGE));
+//                imageUrls.add(WBUtil.getWBImgUrl(urlsEntity.getThumbnail_pic(), WBUtil.IMAGE_TYPE_BMIDDLE));
+//                imageLargeUrls.add(WBUtil.getWBImgUrl(urlsEntity.getThumbnail_pic(), WBUtil.IMAGE_TYPE_LARGE));
 //            }
 //            topicComment.setImageUrls(imageUrls);
 //            topicComment.setImageLargeUrls(imageLargeUrls);

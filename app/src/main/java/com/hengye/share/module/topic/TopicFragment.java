@@ -63,10 +63,15 @@ public class TopicFragment extends StatusFragment<Topic> implements TopicMvpView
         mPresenter.setUid(uid);
         mPresenter.setName(name);
 
+        showLoading();
+        markLazyLoadPreparedAndLazyLoadIfCan();
+    }
+
+    @Override
+    protected void onLazyLoad() {
         if(!UserUtil.isUserEmpty()) {
             loadTopic();
         }
-
     }
 
     @Override

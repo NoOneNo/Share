@@ -1,16 +1,22 @@
 package com.hengye.share.module.util;
 
 import android.annotation.SuppressLint;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Browser;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.DownloadListener;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -22,10 +28,14 @@ import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListe
 import com.hengye.share.ui.widget.dialog.DialogStyleHelper;
 import com.hengye.share.ui.widget.dialog.ListDialog;
 import com.hengye.share.util.ClipboardUtil;
+import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.IntentUtil;
 import com.hengye.share.module.setting.SettingHelper;
+import com.hengye.share.util.L;
 import com.hengye.share.util.ToastUtil;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class WebViewActivity extends BaseActivity {
@@ -155,19 +165,40 @@ public class WebViewActivity extends BaseActivity {
 
     @SuppressLint("SetJavaScriptEnabled")
     private void initWebView() {
+//        enablecrossdomain41();
         mWebView.setHapticFeedbackEnabled(true);
-        WebSettings settings = mWebView.getSettings();
+        final WebSettings settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setAllowFileAccess(true);
+        settings.setAllowFileAccessFromFileURLs(true);
         settings.setAllowUniversalAccessFromFileURLs(true);
         settings.setLoadWithOverviewMode(true);
         settings.setUseWideViewPort(true);
 
         mWebView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
+                if (url != null) {
+                    Uri uri = Uri.parse(url);
+                    if (!DataUtil.isHttpUrl(url)) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        ComponentName componentName = intent.resolveActivity(view.getContext().getPackageManager());
+                        if (componentName != null) {
+                            L.debug("find url which is not http : {}", url);
+                            view.getContext().startActivity(intent);
+                            return true;
+                        } else {
+                            L.debug("find url which is not http , no app can open it: {}", url);
+                        }
+                    }
+                }
+
                 return false;
+            }
+
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+                return super.shouldInterceptRequest(view, request);
             }
 
             @Override
@@ -219,6 +250,28 @@ public class WebViewActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    public void enablecrossdomain41() {
+        try {
+            Field webviewclassic_field = WebView.class.getDeclaredField("mProvider");
+            webviewclassic_field.setAccessible(true);
+            Object webviewclassic = webviewclassic_field.get(mWebView);
+            Field webviewcore_field = webviewclassic.getClass().getDeclaredField("mWebViewCore");
+            webviewcore_field.setAccessible(true);
+            Object mWebViewCore = webviewcore_field.get(webviewclassic);
+            Field nativeclass_field = webviewclassic.getClass().getDeclaredField("mNativeClass");
+            nativeclass_field.setAccessible(true);
+            Object mNativeClass = nativeclass_field.get(webviewclassic);
+
+            Method method = mWebViewCore.getClass().getDeclaredMethod("nativeRegisterURLSchemeAsLocal", new Class[]{int.class, String.class});
+            method.setAccessible(true);
+            method.invoke(mWebViewCore, mNativeClass, "http");
+            method.invoke(mWebViewCore, mNativeClass, "https");
+        } catch (Exception e) {
+            L.debug("wokao", "enablecrossdomain error");
+            e.printStackTrace();
+        }
     }
 
     @Override

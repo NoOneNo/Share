@@ -236,6 +236,14 @@ public class AnimationRect implements Parcelable {
     }
 
     public static Rect getBitmapRectFromImageView(ImageView imageView) {
+//        if(imageView instanceof PhotoView){
+//            RectF rectF =  ((PhotoView)imageView).getDisplayRect();
+//            if(rectF != null){
+//                L.debug("getBitmapRectFromPhotoView, width : {}, height : {}", rectF.right - rectF.left, rectF.bottom - rectF.top);
+//                return new Rect((int)rectF.left, (int)rectF.top, (int)rectF.right, (int)rectF.bottom);
+//            }
+//        }
+
         Drawable drawable = imageView.getDrawable();
         Bitmap bitmap = null;
         if (drawable instanceof BitmapDrawable) {

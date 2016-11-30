@@ -35,8 +35,13 @@ public class ClipboardUtil extends ApplicationUtil{
         return null;
     }
 
+    public static void copyContent(String content){
+        copy(content);
+        ToastUtil.showToast(R.string.tip_copy_content_to_clipboard_success);
+    }
+
     public static void copyWBContent(String content){
         copy(content);
-        ToastUtil.showToast(R.string.label_topic_copy_to_clipboard_success);
+        ToastUtil.showToast(R.string.tip_copy_topic_to_clipboard_success);
     }
 }

@@ -16,12 +16,10 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.ImageRequest;
 import com.android.volley.toolbox.Util;
 import com.hengye.share.R;
-import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.module.util.encapsulation.fragment.BaseFragment;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.util.FileUtil;
 import com.hengye.share.util.ImageUtil;
-import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
@@ -79,6 +77,11 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
 
             if(isLocalPath || !mUrl.endsWith("gif")) {
                 //如果是本地路径或者不是gif图片
+                String largeUrlPath = ImageDiskLruCache.getInstance().getDiskCachePath(WBUtil.getWBLargeImgUrl(mUrl));
+                if(largeUrlPath != null){
+                    path = largeUrlPath;
+                }
+
                 if (path != null) {
                     displayImage(mUrl, path, mAnimateIn);
                     mAnimateIn = false;
@@ -128,9 +131,33 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
             String path;
             if((path = FileUtil.saveImage(mPath, mUrl.endsWith("gif"))) != null){
                 FileUtil.sendMediaScanIntent(getContext(), path);
-                ToastUtil.showToast(getString(R.string.topic_gallery_image_save_success, path));
+                ToastUtil.showToast(getString(R.string.tip_gallery_image_save_success, path));
             }
         }
+    }
+
+    public void loadLargeImage(){
+        if(mUrl != null){
+            if(!WBUtil.isWBLargeUrl(mUrl)){
+                String largeUrl = WBUtil.getWBLargeImgUrl(mUrl);
+                String path = ImageDiskLruCache.getInstance().getDiskCachePath(largeUrl);
+                if(path != null){
+                    //本地有原图缓存，直接显示
+                    displayImage(largeUrl, path, false);
+                    mAnimateIn = false;
+                    hideProgress();
+                }else{
+                    //本地没有原图缓存
+                    showProgress();
+                    int screenWidth = getResources().getDisplayMetrics().widthPixels;
+                    RequestManager.addToRequestQueue(makeImageRequest(largeUrl, screenWidth, 0, ImageView.ScaleType.FIT_XY), getRequestTag());
+                }
+            }
+        }
+    }
+
+    private void showProgress(){
+        mProgress.setVisibility(View.VISIBLE);
     }
 
     private void hideProgress(){
@@ -179,7 +206,7 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
         }
         Fragment fragment = getChildFragmentManager().findFragmentById(R.id.content);
         if (fragment instanceof ImageNormalFragment) {
-            return true;
+            return ((ImageNormalFragment)fragment).canAnimatedOut();
         } else if (fragment instanceof ImageGifFragment) {
             return true;
         } else {

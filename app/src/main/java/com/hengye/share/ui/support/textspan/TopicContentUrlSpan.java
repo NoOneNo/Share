@@ -2,6 +2,7 @@ package com.hengye.share.ui.support.textspan;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Parcel;
@@ -15,7 +16,10 @@ import android.view.View;
 import com.hengye.share.R;
 import com.hengye.share.model.TopicUrl;
 import com.hengye.share.module.profile.PersonalHomepageActivity;
+import com.hengye.share.module.publish.TopicPublishActivity;
 import com.hengye.share.service.VideoPlayService;
+import com.hengye.share.ui.widget.dialog.DialogBuilder;
+import com.hengye.share.util.ClipboardUtil;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.ResUtil;
@@ -62,14 +66,14 @@ public class TopicContentUrlSpan extends CharacterStyle implements ParcelableSpa
     }
 
     public String getURL() {
-        if(topicUrl != null){
+        if (topicUrl != null) {
             //长链地址
             return topicUrl.getLinkUrl();
         }
         return url;
     }
 
-    public String getPath(){
+    public String getPath() {
         return Uri.parse(url).getSchemeSpecificPart();
     }
 
@@ -102,15 +106,15 @@ public class TopicContentUrlSpan extends CharacterStyle implements ParcelableSpa
             intent.putExtra("id", WBUtil.getIdFromWBAccountLink(url));
             context.startActivity(intent);
         } else {
-            if(topicUrl != null){
-                if(topicUrl.getType() == TopicUrl.VIDEO) {
+            if (topicUrl != null) {
+                if (topicUrl.getType() == TopicUrl.VIDEO) {
                     VideoPlayService.start(context, topicUrl.getTopicId(), getURL());
-                }else{
+                } else {
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
                     context.startActivity(intent);
                 }
-            }else {
+            } else {
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
                 context.startActivity(intent);
@@ -119,21 +123,37 @@ public class TopicContentUrlSpan extends CharacterStyle implements ParcelableSpa
     }
 
     @Override
-    public void onLongClick(View widget) {
-        Uri data = Uri.parse(getURL());
-        if (data != null) {
-            String value = data.toString();
-            String newValue = "";
-            if (value.startsWith(DataUtil.MENTION_SCHEME)) {
-//                int index = value.lastIndexOf("/");
-//                newValue = value.substring(index + 1);
-                newValue = value.substring(DataUtil.MENTION_SCHEME.length());
-            } else if (value.startsWith("http")) {
-                newValue = value;
-            }
-
-            L.debug("long click value : {}", newValue);
+    public void onLongClick(final View widget) {
+        final String scheme = getURL();
+        if (scheme != null) {
+            final String path = getPath();
+            final Context context = widget.getContext();
+            DialogBuilder.getOnLongClickTopicContentUrlSpanDialog(context, scheme, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (which == 0) {
+                        if (scheme.startsWith(DataUtil.MENTION_SCHEME)) {
+                            //@name
+                            context.startActivity(TopicPublishActivity.getAtTaStartIntent(context, path, true));
+                        } else {
+                            //话题
+                            //超链接
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getURL()));
+                            intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
+                            context.startActivity(intent);
+                        }
+                    } else if (which == 1) {
+                        //复制内容
+                        ClipboardUtil.copyContent(path);
+                    } else {
+                        //查看微博
+                        widget.callOnClick();
+                    }
+                }
+            }).show();
+            L.debug("long click value : {}", path);
         }
+
     }
 
     @Override
@@ -161,4 +181,5 @@ public class TopicContentUrlSpan extends CharacterStyle implements ParcelableSpa
             return new TopicContentUrlSpan(in);
         }
     };
+
 }

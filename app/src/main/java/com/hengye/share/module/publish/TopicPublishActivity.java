@@ -67,8 +67,16 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         return intent;
     }
 
+
     public static Intent getAtTaStartIntent(Context context, String name) {
-        return getStartIntent(context, "@" + name + " ");
+        return getAtTaStartIntent(context, name, false);
+    }
+
+    public static Intent getAtTaStartIntent(Context context, String name, boolean isWithAtChar) {
+        if(!isWithAtChar){
+            name = "@" + name;
+        }
+        return getStartIntent(context, name + " ");
     }
 
     /**

@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011, 2012 Chris Banes.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,7 +31,6 @@ import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 
 import java.lang.ref.WeakReference;
 
@@ -74,7 +73,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private boolean mAllowParentInterceptOnEdge = true;
 
     private static void checkZoomLevels(float minZoom, float midZoom,
-            float maxZoom) {
+                                        float maxZoom) {
         if (minZoom >= midZoom) {
             throw new IllegalArgumentException(
                     "MinZoom has to be less than MidZoom");
@@ -119,7 +118,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
          */
         if (null != imageView && !(imageView instanceof IPhotoView)) {
             if (!ScaleType.MATRIX.equals(imageView.getScaleType())) {
-                imageView.setScaleType(ScaleType.MATRIX);
+                imageView.setScaleType(ImageView.ScaleType.MATRIX);
             }
         }
     }
@@ -342,7 +341,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     @Override
     public final float getScale() {
-        return (float)Math
+        return (float) Math
                 .sqrt((float) Math.pow(getValue(mSuppMatrix, Matrix.MSCALE_X), 2) + (float) Math
                         .pow(getValue(mSuppMatrix, Matrix.MSKEW_Y), 2));
 //        return FloatMath
@@ -351,7 +350,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
-    public final ScaleType getScaleType() {
+    public final ScaleType getCustomScaleType() {
         return mScaleType;
     }
 
@@ -397,7 +396,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     @Override
     public final void onFling(float startX, float startY, float velocityX,
-            float velocityY) {
+                              float velocityY) {
         if (DEBUG) {
             LogManager.getLogger().d(
                     LOG_TAG,
@@ -601,7 +600,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     @Override
     public void setScale(float scale, float focalX, float focalY,
-            boolean animate) {
+                         boolean animate) {
         ImageView imageView = getImageView();
 
         if (null != imageView) {
@@ -625,7 +624,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
-    public final void setScaleType(ScaleType scaleType) {
+    public final void setCustomScaleType(ScaleType scaleType) {
         if (isSupportedScaleType(scaleType) && scaleType != mScaleType) {
             mScaleType = scaleType;
 
@@ -884,6 +883,9 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
                     mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.FILL);
                     break;
 
+                case FIT_TOP:
+                    float mutiple = (float) getImageViewWidth(imageView) / ((float) drawableWidth);
+                    mBaseMatrix.postScale(mutiple, mutiple, 0, 0);
                 default:
                     break;
             }
@@ -971,7 +973,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         private final float mZoomStart, mZoomEnd;
 
         public AnimatedZoomRunnable(final float currentZoom, final float targetZoom,
-                final float focalX, final float focalY) {
+                                    final float focalX, final float focalY) {
             mFocalX = focalX;
             mFocalY = focalY;
             mStartTime = System.currentTimeMillis();
@@ -1024,7 +1026,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
 
         public void fling(int viewWidth, int viewHeight, int velocityX,
-                int velocityY) {
+                          int velocityY) {
             final RectF rect = getDisplayRect();
             if (null == rect) {
                 return;

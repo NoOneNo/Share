@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.hengye.share.module.base.ActivityHelper;
 import com.hengye.share.module.util.encapsulation.mvp.BasePresenter;
 import com.hengye.share.module.util.encapsulation.mvp.RxPresenter;
+import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
 
 import java.util.HashSet;
@@ -98,6 +99,37 @@ public class BaseFragment extends Fragment implements ActivityHelper.ActivityAct
         }
         cancelPendingRequestsIfNeeded();
         detachMvpView();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        onLazyLoadIfNeed();
+    }
+
+    private boolean mPrepared = false;
+    private boolean mLazyLoaded = false;
+    private void onLazyLoadIfNeed(){
+        if(!mLazyLoaded && mPrepared && getUserVisibleHint()){
+            mLazyLoaded = true;
+            onLazyLoad();
+        }
+    }
+
+    /**
+     * 当真的可见的时候并且没有懒加载过的时候会调用；
+     */
+    protected void onLazyLoad(){
+
+    }
+
+    public void markLazyLoadPrepared(){
+        mPrepared = true;
+    }
+
+    public void markLazyLoadPreparedAndLazyLoadIfCan(){
+        markLazyLoadPrepared();
+        onLazyLoadIfNeed();
     }
 
     protected void cancelPendingRequestsIfNeeded(){
