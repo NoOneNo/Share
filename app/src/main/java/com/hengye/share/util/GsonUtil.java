@@ -17,13 +17,13 @@ public class GsonUtil {
         return mGson;
     }
 
-    public static JsonObject toJsonObject(Object obj){
+    public static JsonObject toJsonObject(Object obj) throws Exception{
         try {
             return mJsonParser.parse(toJson(obj)).getAsJsonObject();
         }catch (Exception e){
             e.printStackTrace();
+            throw new IllegalArgumentException();
         }
-        return null;
     }
 
     public static String toJson(Object obj) {

@@ -1,9 +1,12 @@
 package com.hengye.share.module.topic;
 
 import com.hengye.share.model.Topic;
+import com.hengye.share.model.TopicComments;
+import com.hengye.share.model.TopicShortUrl;
 import com.hengye.share.model.TopicUrl;
 import com.hengye.share.model.sina.WBShortUrl;
 import com.hengye.share.model.sina.WBShortUrls;
+import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.UserUtil;
@@ -33,125 +36,140 @@ import static com.hengye.share.util.DataUtil.WEB_URL;
 public class TopicRxUtil {
 
 
-    static Function<ArrayList<Topic>, Observable<ArrayList<Topic>>> mFlatShortUrl;
+    static Function<ArrayList<Topic>, Observable<ArrayList<Topic>>> mFlatTopicShortUrl;
 
     /**
      * 把微博的短链转换成长链
      */
     public static Function<ArrayList<Topic>, Observable<ArrayList<Topic>>> flatShortUrl() {
-        if (mFlatShortUrl == null) {
-            mFlatShortUrl = new Function<ArrayList<Topic>, Observable<ArrayList<Topic>>>() {
+        if (mFlatTopicShortUrl == null) {
+            mFlatTopicShortUrl = new Function<ArrayList<Topic>, Observable<ArrayList<Topic>>>() {
                 @Override
                 public Observable<ArrayList<Topic>> apply(ArrayList<Topic> topics) {
-
-                    if (topics != null) {
-                        Map<Topic, Set<String>> contents = new HashMap<>();
-
-                        //获得所有微博
-                        Set<Topic> topicSet = Topic.getAllTopic(topics);
-                        if (topicSet != null) {
-
-                            //解析微博的url
-                            for (Topic topic : topicSet) {
-
-                                Matcher matcher = WEB_URL.matcher(topic.getContent());
-                                Set<String> set = contents.get(topic);
-                                while (matcher.find()) {
-                                    if (set == null) {
-                                        set = new HashSet<>();
-                                        contents.put(topic, set);
-                                    }
-                                    set.add(matcher.group());
-                                }
-                            }
-
-                            if (!contents.isEmpty()) {
-                                Collection<Set<String>> contentValues = contents.values();
-
-                                List<String> shortUrls = new ArrayList<>();
-                                //把所有短链放到集合里
-                                for (Set<String> stringSet : contentValues) {
-                                    shortUrls.addAll(stringSet);
-                                }
-
-                                HashMap<String, WBShortUrl> shortExpandUrlMap = new HashMap<>();
-                                boolean isFinish = false;
-
-                                //因为每次解析短链数量限制，循环获取长链
-                                while (!isFinish) {
-
-                                    if (shortUrls.size() <= 20) {
-                                        isFinish = true;
-                                    }
-                                    int end = isFinish ? shortUrls.size() : 20;
-
-                                    final List<String> shortUrlPart = shortUrls.subList(0, end);
-                                    if (!isFinish) {
-                                        shortUrls = shortUrls.subList(end, shortUrls.size());
-                                    }
-
-
-                                    //因为url_short有多个，请求参数用map拼接的话不能重复，所以手动拼接字符串；
-                                    StringBuilder shortUrlRequest = new StringBuilder(UrlFactory.WB_EXPAND_URL);
-                                    shortUrlRequest.append("?access_token=");
-                                    shortUrlRequest.append(UserUtil.getToken());
-                                    for (String shortUrl : shortUrlPart) {
-                                        shortUrlRequest.append("&url_short=");
-                                        shortUrlRequest.append(shortUrl);
-                                    }
-                                    Call<WBShortUrls> expandUrlCall = RetrofitManager.getWBService().expandUrl(shortUrlRequest.toString());
-                                    try {
-                                        Response<WBShortUrls> response = expandUrlCall.execute();
-                                        WBShortUrls wbShortUrls = response.body();
-
-                                        if (wbShortUrls != null && wbShortUrls.getUrls() != null) {
-                                            List<WBShortUrl> urls = wbShortUrls.getUrls();
-
-                                            for (WBShortUrl wbShortUrl : urls) {
-                                                shortExpandUrlMap.put(wbShortUrl.getUrl_short(), wbShortUrl);
-                                            }
-                                        }
-
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-
-                                if (!shortExpandUrlMap.isEmpty()) {
-                                    //把微博的短链换成长链
-                                    Set<Map.Entry<Topic, Set<String>>> entrySet = contents.entrySet();
-                                    for (Map.Entry<Topic, Set<String>> entry : entrySet) {
-                                        Topic topic = entry.getKey();
-
-                                        if (topic.getContent() == null) {
-                                            continue;
-                                        }
-
-                                        HashMap<String, TopicUrl> topicUrlMap = new HashMap<>();
-                                        for (String shortUrl : entry.getValue()) {
-                                            WBShortUrl wbShortUrl = shortExpandUrlMap.get(shortUrl);
-                                            if (wbShortUrl != null && wbShortUrl.getUrl_long() != null) {
-                                                //保留短链内容
-//                                                topic.setContent(topic.getContent().replace(shortUrl, wbShortUrl.getUrl_long()));
-                                                topicUrlMap.put(wbShortUrl.getUrl_short(), TopicUrl.getTopicUrl(topic.getId(), wbShortUrl));
-//                                                L.debug("shortUrl : {}", shortUrl);
-//                                                L.debug("convert to");
-//                                                L.debug("longUrl : {}", longUrl);
-                                            }
-                                        }
-                                        topic.setUrlMap(topicUrlMap);
-                                    }
-                                    L.debug("convert shortUrl to longUrl, total count : {}", shortExpandUrlMap.size());
-                                }
-
-                            }
-                        }
-                    }
-
+                    //获得所有微博，再转换短链，因为微博可能包含转发的微博
+                    flatShortUrl(Topic.getAllTopic(topics));
                     return ObservableHelper.justArrayList(topics);
                 }
             };
         }
-        return mFlatShortUrl;
+        return mFlatTopicShortUrl;
+    }
+
+    static Function<TopicComments, Observable<TopicComments>> mFlatTopicCommentsShortUrl;
+
+    /**
+     * 把微博的短链转换成长链
+     */
+    public static Function<TopicComments, Observable<TopicComments>> flatTopicCommentsShortUrl() {
+        if (mFlatTopicCommentsShortUrl == null) {
+            mFlatTopicCommentsShortUrl = new Function<TopicComments, Observable<TopicComments>>() {
+                @Override
+                public Observable<TopicComments> apply(TopicComments topicComments) {
+                    //获得所有微博，再转换短链，因为微博可能包含转发的微博
+                    if(topicComments != null && !CommonUtil.isEmpty(topicComments.getComments()))
+                    flatShortUrl(topicComments.getComments());
+                    return ObservableHelper.just(topicComments);
+                }
+            };
+        }
+        return mFlatTopicCommentsShortUrl;
+    }
+
+
+    public static void flatShortUrl(Collection<? extends TopicShortUrl> topics) {
+        if (topics != null) {
+            Map<TopicShortUrl, Set<String>> contents = new HashMap<>();
+
+            //解析微博的url
+            for (TopicShortUrl topicShortUrl : topics) {
+
+                Matcher matcher = WEB_URL.matcher(topicShortUrl.getContent());
+                Set<String> set = contents.get(topicShortUrl);
+                while (matcher.find()) {
+                    if (set == null) {
+                        set = new HashSet<>();
+                        contents.put(topicShortUrl, set);
+                    }
+                    set.add(matcher.group());
+                }
+            }
+
+            if (!contents.isEmpty()) {
+                Collection<Set<String>> contentValues = contents.values();
+
+                List<String> shortUrls = new ArrayList<>();
+                //把所有短链放到集合里
+                for (Set<String> stringSet : contentValues) {
+                    shortUrls.addAll(stringSet);
+                }
+
+                HashMap<String, WBShortUrl> shortExpandUrlMap = new HashMap<>();
+                boolean isFinish = false;
+
+                //因为每次解析短链数量限制，循环获取长链
+                while (!isFinish) {
+
+                    if (shortUrls.size() <= 20) {
+                        isFinish = true;
+                    }
+                    int end = isFinish ? shortUrls.size() : 20;
+
+                    final List<String> shortUrlPart = shortUrls.subList(0, end);
+                    if (!isFinish) {
+                        shortUrls = shortUrls.subList(end, shortUrls.size());
+                    }
+
+                    //因为url_short有多个，请求参数用map拼接的话不能重复，所以手动拼接字符串；
+                    StringBuilder shortUrlRequest = new StringBuilder(UrlFactory.WB_EXPAND_URL);
+                    shortUrlRequest.append("?access_token=");
+                    shortUrlRequest.append(UserUtil.getToken());
+                    for (String shortUrl : shortUrlPart) {
+                        shortUrlRequest.append("&url_short=");
+                        shortUrlRequest.append(shortUrl);
+                    }
+                    Call<WBShortUrls> expandUrlCall = RetrofitManager.getWBService().expandUrl(shortUrlRequest.toString());
+                    try {
+                        Response<WBShortUrls> response = expandUrlCall.execute();
+                        WBShortUrls wbShortUrls = response.body();
+
+                        if (wbShortUrls != null && wbShortUrls.getUrls() != null) {
+                            List<WBShortUrl> urls = wbShortUrls.getUrls();
+
+                            for (WBShortUrl wbShortUrl : urls) {
+                                shortExpandUrlMap.put(wbShortUrl.getUrl_short(), wbShortUrl);
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (!shortExpandUrlMap.isEmpty()) {
+                    //把微博的短链换成长链
+                    Set<Map.Entry<TopicShortUrl, Set<String>>> entrySet = contents.entrySet();
+                    for (Map.Entry<TopicShortUrl, Set<String>> entry : entrySet) {
+                        TopicShortUrl topic = entry.getKey();
+
+                        if (topic.getContent() == null) {
+                            continue;
+                        }
+
+                        HashMap<String, TopicUrl> topicUrlMap = new HashMap<>();
+                        for (String shortUrl : entry.getValue()) {
+                            WBShortUrl wbShortUrl = shortExpandUrlMap.get(shortUrl);
+                            if (wbShortUrl != null && wbShortUrl.getUrl_long() != null) {
+                                //保留短链内容
+                                topicUrlMap.put(wbShortUrl.getUrl_short(), TopicUrl.create(topic.getId(), wbShortUrl));
+//                                L.debug("shortUrl : {} convert to longUrl : {}", wbShortUrl.getUrl_short(), wbShortUrl.getUrl_long());
+                            }
+                        }
+                        topic.setUrlMap(topicUrlMap);
+                    }
+                    L.debug("convert shortUrl to longUrl, total count : {}", shortExpandUrlMap.size());
+                }
+
+            }
+        }
     }
 }

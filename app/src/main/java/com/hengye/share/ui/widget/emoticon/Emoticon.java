@@ -112,7 +112,7 @@ public class Emoticon {
 
         //哆啦A梦
         mWeiBoEmoticon.put("[哆啦A梦吃惊]", "dora_chijing.png");
-        mWeiBoEmoticon.put("[哆啦A梦好色]", "dora_haose.png");
+        mWeiBoEmoticon.put("[哆啦A梦花心]", "dora_huaxin.png");
         mWeiBoEmoticon.put("[哆啦A梦微笑]", "dora_weixiao.png");
         //---
         mWeiBoEmoticon.put("[最右]", "d_zuiyou.png");

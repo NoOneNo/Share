@@ -8,22 +8,23 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
-import android.webkit.CookieManager;
 
 import com.android.volley.cache.BitmapCache;
 import com.hengye.share.R;
+import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.module.publish.TopicPublishActivity;
 import com.hengye.share.module.sso.ThirdPartyLoginActivity;
-import com.hengye.share.module.util.FragmentActivity;
 import com.hengye.share.module.util.WebViewActivity;
 import com.hengye.share.ui.widget.dialog.ListDialog;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
 import com.hengye.share.ui.widget.loading.FramesLoadingView;
 import com.hengye.share.util.L;
+import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.intercept.Action;
 import com.hengye.share.util.intercept.AdTokenInterceptor;
+import com.tencent.smtt.sdk.CookieManager;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -73,16 +74,11 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
             BitmapCache.getInstance().clearCacheFromMemory();
 //            onRunSchedulerExampleButtonClicked();
         } else if (v.getId() == R.id.btn_test2) {
-            onRunSchedulerExampleButtonClicked2();
+            User user = UserUtil.getCurrentUser();
+            user.setCookie(null);
+            UserUtil.updateUser(user);
         } else if (v.getId() == R.id.btn_test3) {
-            if (mLoadingDialog == null) {
-                mLoadingDialog = new LoadingDialog(this, "正在加载中...", false);
-            }
-            if (mLoadingDialog.isShowing()) {
-                mLoadingDialog.dismiss();
-            } else {
-                mLoadingDialog.show();
-            }
+            CookieManager.getInstance().removeAllCookie();
         } else if (v.getId() == R.id.btn_test4) {
             if (mLoading.isRunning()) {
                 mLoading.stop();
@@ -92,110 +88,20 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
         } else if (v.getId() == R.id.btn_test5) {
 //            mListDialog.show();
 
-            CookieManager.getInstance().removeAllCookie();
         } else if (v.getId() == R.id.btn_test6) {
 //            testInterceptor();
 
 //            testAnimation();
 //            startActivity(FragmentActivity.getStartIntent(this, TestWindowManagerFragment.class));
 
-            startActivity(WebViewActivity.getStartIntent(this, "https://passport.weibo.cn/signin/login"));
+//            startActivity(WebViewActivity.getStartIntent(this, "https://passport.weibo.cn/signin/login"));
+            startActivity(WebViewActivity.getStartIntent(this, "https://m.weibo.cn"));
 //            startActivity(WebViewActivity.getStartIntent(this, "http://www.baidu.com"));
         } else if (v.getId() == R.id.btn_test7) {
             startActivity(SetTokenActivity.class);
         }
 
     }
-
-    void onRunSchedulerExampleButtonClicked2() {
-//        Observable.create(new Observable.OnSubscribe<String>() {
-//            @Override
-//            public void call(Observer<? super String> subscriber) {
-//                subscriber.onNext("hi");
-//            }
-//        }).flatMap(new Function<String, Observable<Float>>() {
-//            @Override
-//            public Observable<Float> call(String integer) {
-//                return ObservableHelper.just(1.0f, 2.0f, 3.0f);
-//            }
-//        })
-//
-////                // Run on a background thread
-//                .subscribeOn(HandlerScheduler.from(backgroundHandler))
-//                // Be notified on the main thread
-//                .observeOn(SchedulerProvider.ui())
-//                .subscribe(new Observer<Float>() {
-//                    @Override
-//                    public void onComplete() {
-//                        Log.d(TAG, "onCompleted()");
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        Log.e(TAG, "onError()", e);
-//                    }
-//
-//                    @Override
-//                    public void onNext(Float number) {
-//                        Log.d(TAG, "onNext(" + number + ")");
-//                    }
-//                });
-    }
-
-    void onRunSchedulerExampleButtonClicked() {
-//        sampleObservable()
-//                // Run on a background thread
-//                .subscribeOn(Schedulers.computation())
-//                // Be notified on the main thread
-//                .observeOn(SchedulerProvider.ui())
-//                .subscribe(new Observer<String>() {
-//                    @Override
-//                    public void onComplete() {
-//                        Log.d(TAG, "onCompleted()");
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        Log.e(TAG, "onError()", e);
-//                    }
-//
-//                    @Override
-//                    public void onNext(String string) {
-//                        Log.d(TAG, "onNext(" + string + ")");
-//                    }
-//                });
-
-
-//        Observable
-//                .from(new String[]{"1", "2", "3"})
-//                .map(new Function<String, Observable<String>>() {
-//                    @Override
-//                    public Observable<String> call(String s) {
-//                        return ObservableHelper.just(s + "end");
-//                    }
-//                }).flatMap(new Function<Observable<String>, Observable<?>>() {
-//            @Override
-//            public Observable<?> call(Observable<String> stringObservable) {
-//                return null;
-//            }
-//        })
-
-    }
-
-//    static Observable<String> sampleObservable() {
-//        return Observable.defer(new Func0<Observable<String>>() {
-//            @Override
-//            public Observable<String> call() {
-//                try {
-//                    // Do some long running operation
-//                    Thread.sleep(TimeUnit.SECONDS.toMillis(5));
-//                } catch (InterruptedException e) {
-//                    throw OnErrorThrowable.from(e);
-//                }
-//                return ObservableHelper.just("one", "two", "three", "four", "five");
-//            }
-//        });
-//    }
 
     static class BackgroundThread extends HandlerThread {
         BackgroundThread() {

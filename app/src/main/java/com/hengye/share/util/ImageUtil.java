@@ -22,6 +22,13 @@ public class ImageUtil {
         }
     }
 
+    public static boolean isThisBitmapTooLargeToRead(Bitmap bitmap){
+        if(bitmap == null){
+            return false;
+        }
+        return bitmap.getWidth() > getBitmapMaxSize() || bitmap.getHeight() > getBitmapMaxSize();
+    }
+
     public static boolean isThisPictureGif(String url) {
         return !TextUtils.isEmpty(url) && url.endsWith(".gif");
     }

@@ -211,10 +211,6 @@ public class VideoPlayService extends Service implements View.OnClickListener {
         int id = v.getId();
         if (id == R.id.btn_close) {
             handleFail();
-        } else if (id == R.id.btn_full_screen) {
-
-        } else {
-//            showControlLayout();
         }
     }
 

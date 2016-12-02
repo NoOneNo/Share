@@ -12,6 +12,25 @@ import java.util.regex.Pattern;
 
 public class WBUtil {
 
+    public static final String SLASH = "/";
+
+    public static final String HTTP = "http://";
+    public static final String HTTPS = "https://";
+
+    public static final String URL_IMG_1 = "http://ww1.sinaimg.cn/";
+
+    public static final String URL_MOBILE_HOST = "m.weibo.cn";
+    public static final String URL_LOGIN_HOST = "passport.weibo.cn/signin/login";
+    public static final String URL_PHOTO = "photo.weibo.com";
+
+    public static final String URL_HTTP_MOBILE = HTTP + URL_MOBILE_HOST;
+    public static final String URL_HTTP_LOGIN = HTTP + URL_LOGIN_HOST;
+    public static final String URL_HTTP_PHOTO = HTTP + URL_PHOTO;
+
+    public static final String URL_HTTPS_MOBILE = HTTPS + URL_MOBILE_HOST;
+    public static final String URL_HTTPS_LOGIN = HTTPS + URL_LOGIN_HOST;
+    public static final String URL_HTTPS_PHOTO = HTTPS + URL_PHOTO;
+
     public final static int MAX_COUNT_REQUEST = 30;
     public final static int START_PAGE = 1;
 
@@ -30,49 +49,49 @@ public class WBUtil {
     //默认返回缩略图
     //要得到高清图或者原图，把地址"http://ww1.sinaimg.cn/thumbnail/6dab804cjw1exv392snomj21kw23ukjl.jpg"
     //中的thumbnail换成对应的bmiddle(高清)或者large(原图)
-    public static String getWBImgUrl(String url){
+    public static String getWBImgUrl(String url) {
         String value = SettingHelper.getPhotoDownloadQuality();
-        if(url == null || "1".equals(value)){
+        if (url == null || "1".equals(value)) {
             //无图
             return null;
         }
         String toType;
-        if(url.endsWith("gif")) {
+        if (url.endsWith("gif")) {
             toType = IMAGE_TYPE_BMIDDLE;
-        }else if("2".equals(value)){
+        } else if ("2".equals(value)) {
             toType = IMAGE_TYPE_THUMBNAIL;
-        }else if("3".equals(value)){
+        } else if ("3".equals(value)) {
             toType = IMAGE_TYPE_BMIDDLE;
-        }else if("4".equals(value)){
+        } else if ("4".equals(value)) {
             toType = IMAGE_TYPE_LARGE;
-        }else if("5".equals(value)){
+        } else if ("5".equals(value)) {
             toType = IMAGE_TYPE_BMIDDLE;
-        }else{
+        } else {
             toType = IMAGE_TYPE_BMIDDLE;
         }
         return getWBImgUrl(url, toType);
     }
 
-    public static String getWBGifUrl(String url){
-        if(url != null && url.endsWith("gif")){
+    public static String getWBGifUrl(String url) {
+        if (url != null && url.endsWith("gif")) {
             return url.replaceFirst(IMAGE_TYPE_BMIDDLE, IMAGE_TYPE_ORIGINAL);
         }
         return url;
     }
 
-    public static boolean isWBGifUrl(String url){
-        if(ImageUtil.isThisPictureGif(url)){
-            if(Util.isHttpUrl(url)){
+    public static boolean isWBGifUrl(String url) {
+        if (ImageUtil.isThisPictureGif(url)) {
+            if (Util.isHttpUrl(url)) {
                 return url.contains(IMAGE_TYPE_ORIGINAL);
-            }else{
+            } else {
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean isWBLargeUrl(String url){
-        if(url != null && url.contains(IMAGE_TYPE_ORIGINAL)){
+    public static boolean isWBLargeUrl(String url) {
+        if (url != null && url.contains(IMAGE_TYPE_ORIGINAL)) {
             return true;
         }
         return false;
@@ -80,6 +99,10 @@ public class WBUtil {
 
     public static String getWBImgUrl(String url, String toType) {
         return getWBImgUrl(url, IMAGE_TYPE_THUMBNAIL, toType);
+    }
+
+    public static String getWBImgUrlById(String picId){
+        return URL_IMG_1 + IMAGE_TYPE_ORIGINAL + SLASH + picId;
     }
 
 //    public static String getWBLargeImgUrl(String url) {
@@ -142,6 +165,21 @@ public class WBUtil {
         }
 
         return result;
+    }
+
+    //http://weibo.com/login.php?url=http://photo.weibo.com/h5/repost/reppic_id/1022:23079681893d3893bca4a76d240398067f10c4
+    public static boolean isRequestWBResourceUrl(String url) {
+        if (url == null) {
+            return false;
+        }
+
+        if (url.contains(URL_HTTP_PHOTO)
+                || url.contains(URL_HTTPS_PHOTO)
+                || url.contains(URL_HTTP_MOBILE)
+                || url.contains(URL_HTTPS_MOBILE)) {
+            return true;
+        }
+        return false;
     }
 
 }

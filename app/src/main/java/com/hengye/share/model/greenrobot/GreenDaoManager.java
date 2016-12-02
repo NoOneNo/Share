@@ -15,31 +15,28 @@ public class GreenDaoManager {
 
     private static DaoMaster daoMaster;
     private static DaoSession daoSession;
+
     /**
      * 取得DaoMaster
      *
      * @return
      */
-    public static DaoMaster getDaoMaster()
-    {
-        if (daoMaster == null)
-        {
+    public static DaoMaster getDaoMaster() {
+        if (daoMaster == null) {
             DaoMaster.OpenHelper helper = new UpgradeHelper(BaseApplication.getInstance(), DB_NAME, null);
             daoMaster = new DaoMaster(helper.getWritableDatabase());
         }
         return daoMaster;
     }
+
     /**
      * 取得DaoSession
      *
      * @return
      */
-    public static DaoSession getDaoSession()
-    {
-        if (daoSession == null)
-        {
-            if (daoMaster == null)
-            {
+    public static DaoSession getDaoSession() {
+        if (daoSession == null) {
+            if (daoMaster == null) {
                 daoMaster = getDaoMaster();
             }
             daoSession = daoMaster.newSession();
@@ -86,7 +83,6 @@ public class GreenDaoManager {
             }
         }
     }
-
 
 
 }

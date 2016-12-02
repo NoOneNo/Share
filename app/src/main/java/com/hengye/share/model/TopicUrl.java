@@ -2,11 +2,14 @@ package com.hengye.share.model;
 
 import android.support.annotation.NonNull;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.hengye.share.model.sina.WBShortUrl;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.GsonUtil;
 import com.hengye.share.util.L;
+import com.hengye.share.util.thirdparty.WBUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,31 +36,43 @@ public class TopicUrl implements Serializable {
                 switch (type) {
                     case WBShortUrl.TYPE_VIDEO:
                         return VIDEO;
+                    case WBShortUrl.TYPE_COLLECTION:
+                        return PHOTO;
                 }
             }
         }
         return COMMON;
     }
 
-    public static String getDisplayName(WBShortUrl wbShortUrl){
+    public static void setupTopicUrl(TopicUrl topicUrl, WBShortUrl wbShortUrl){
         if (wbShortUrl != null && !CommonUtil.isEmpty(wbShortUrl.getAnnotations())) {
             WBShortUrl.AnnotationsBean annotationsBean = wbShortUrl.getAnnotations().get(0);
-            String json = GsonUtil.toJson(annotationsBean.getObject());
             try {
-                JSONObject jsonObject = new JSONObject(json);
-                String displayName = jsonObject.getString("display_name");
-                L.debug("url : {}, displayName : {}", wbShortUrl.getUrl_long(), displayName);
-                return displayName;
+                JsonObject jsonObject = GsonUtil.toJsonObject(annotationsBean.getObject());
+//                String json = GsonUtil.toJson(annotationsBean.getObject());
+//                JSONObject jsonObject = new JSONObject(json);
+                String displayName = jsonObject.get("display_name").getAsString();
+                topicUrl.setDisplayName(displayName);
+
+
+                if(topicUrl.getType() == PHOTO){
+                    JsonArray jsonArray = jsonObject.get("pic_ids").getAsJsonArray();
+                    String picId = jsonArray.get(0).getAsString();
+                    if(picId != null){
+                        topicUrl.setPicUrl(WBUtil.getWBImgUrlById(picId));
+                    }
+                }
+
             }catch (Exception e){
                 e.printStackTrace();
             }
         }
-        return null;
     }
 
-    public static TopicUrl getTopicUrl(String topicId, @NonNull WBShortUrl wbShortUrl) {
+
+    public static TopicUrl create(String topicId, @NonNull WBShortUrl wbShortUrl) {
         TopicUrl topicUrl = new TopicUrl(topicId, wbShortUrl.getUrl_long(), getUrlType(wbShortUrl));
-        topicUrl.setDisplayName(getDisplayName(wbShortUrl));
+        setupTopicUrl(topicUrl, wbShortUrl);
         return topicUrl;
     }
 
@@ -70,7 +85,8 @@ public class TopicUrl implements Serializable {
     }
 
     String topicId;//微博Id
-    String url;//url
+    String url;//长链地址
+    String picUrl;//图片地址，可能跟长链地址不一样
     String displayName;//url类型显示的名字
     int type;//url类型
 
@@ -86,12 +102,16 @@ public class TopicUrl implements Serializable {
         return url;
     }
 
-    public String getLinkUrl(){
-        return DataUtil.WEB_SCHEME + url;
-    }
-
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getPicUrl() {
+        return picUrl;
+    }
+
+    public void setPicUrl(String picUrl) {
+        this.picUrl = picUrl;
     }
 
     public String getDisplayName() {
@@ -108,5 +128,16 @@ public class TopicUrl implements Serializable {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return "TopicUrl{" +
+                "topicId='" + topicId + '\'' +
+                ", url='" + url + '\'' +
+                ", picUrl='" + picUrl + '\'' +
+                ", displayName='" + displayName + '\'' +
+                ", type=" + type +
+                '}';
     }
 }

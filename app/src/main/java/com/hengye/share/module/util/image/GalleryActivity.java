@@ -26,6 +26,12 @@ public class GalleryActivity extends FragmentActivity {
         return false;
     }
 
+    public static void startWithIntent(Context context, String url) {
+        ArrayList<String> urls = new ArrayList<>();
+        urls.add(url);
+        startWithIntent(context, urls, 0);
+    }
+
     public static void startWithIntent(Context context, ArrayList<String> urls,
                                        int index) {
         startWithIntent(context, urls, index, null);

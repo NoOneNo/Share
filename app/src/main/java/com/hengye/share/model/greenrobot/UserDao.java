@@ -37,6 +37,8 @@ public class UserDao extends AbstractDao<User, Long> {
         public final static Property Account = new Property(12, String.class, "account", false, "ACCOUNT");
         public final static Property Password = new Property(13, String.class, "password", false, "PASSWORD");
         public final static Property AdToken = new Property(14, String.class, "adToken", false, "AD_TOKEN");
+        public final static Property Cookie = new Property(15, String.class, "cookie", false, "COOKIE");
+        public final static Property Extra = new Property(16, String.class, "extra", false, "EXTRA");
     }
 
     private DaoSession daoSession;
@@ -69,7 +71,9 @@ public class UserDao extends AbstractDao<User, Long> {
                 "\"COVER\" TEXT," + // 11: cover
                 "\"ACCOUNT\" TEXT," + // 12: account
                 "\"PASSWORD\" TEXT," + // 13: password
-                "\"AD_TOKEN\" TEXT);"); // 14: adToken
+                "\"AD_TOKEN\" TEXT," + // 14: adToken
+                "\"COOKIE\" TEXT," + // 15: cookie
+                "\"EXTRA\" TEXT);"); // 16: extra
     }
 
     /** Drops the underlying database table. */
@@ -144,6 +148,16 @@ public class UserDao extends AbstractDao<User, Long> {
         if (adToken != null) {
             stmt.bindString(15, adToken);
         }
+ 
+        String cookie = entity.getCookie();
+        if (cookie != null) {
+            stmt.bindString(16, cookie);
+        }
+ 
+        String extra = entity.getExtra();
+        if (extra != null) {
+            stmt.bindString(17, extra);
+        }
     }
 
     @Override
@@ -212,6 +226,16 @@ public class UserDao extends AbstractDao<User, Long> {
         if (adToken != null) {
             stmt.bindString(15, adToken);
         }
+ 
+        String cookie = entity.getCookie();
+        if (cookie != null) {
+            stmt.bindString(16, cookie);
+        }
+ 
+        String extra = entity.getExtra();
+        if (extra != null) {
+            stmt.bindString(17, extra);
+        }
     }
 
     @Override
@@ -242,7 +266,9 @@ public class UserDao extends AbstractDao<User, Long> {
             cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // cover
             cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // account
             cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // password
-            cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14) // adToken
+            cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14), // adToken
+            cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15), // cookie
+            cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16) // extra
         );
         return entity;
     }
@@ -264,6 +290,8 @@ public class UserDao extends AbstractDao<User, Long> {
         entity.setAccount(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
         entity.setPassword(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
         entity.setAdToken(cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14));
+        entity.setCookie(cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15));
+        entity.setExtra(cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16));
      }
     
     @Override

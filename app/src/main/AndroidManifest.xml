@@ -14,11 +14,12 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <!-- 悬浮框权限 -->
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+
+    <!-- 悬浮框权限 -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <!-- Tencent Bugly -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -27,6 +28,10 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_LOGS" />
     <!-- Tencent Bugly -->
+
+    <!-- 定位 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:name=".module.base.BaseApplication"
@@ -94,9 +99,13 @@
             android:theme="@style/FullScreenTheme.HasStatusBar" />
 
         <activity
-            android:name=".module.sso.WeiboWebLoginActivity"
+            android:name=".module.sso.WeiboWebAuthorizeActivity"
             android:configChanges="screenSize|keyboardHidden|orientation" />
 
+        <activity
+            android:name=".module.sso.WeiboWebLoginActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:label="@string/title_activity_wb_web_login"/>
 
         <activity
             android:name=".module.util.image.GalleryActivity"
@@ -120,39 +129,48 @@
         <activity
             android:name=".module.profile.PersonalHomepageActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">
-
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="android.intent.action.VIEW" />
                 <data android:scheme="${applicationId}.mention" />
             </intent-filter>
-
         </activity>
 
         <activity
             android:name=".module.topic.TopicThemeActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:label="@string/title_activity_topic_theme">
-
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="android.intent.action.VIEW" />
                 <data android:scheme="${applicationId}.topic" />
             </intent-filter>
-
         </activity>
 
+        <!--<activity-->
+        <!--android:name=".module.util.WebViewActivity"-->
+        <!--android:configChanges="screenSize|keyboardHidden|orientation"-->
+        <!--android:label="@string/title_activity_web_view">-->
+        <!--<intent-filter>-->
+        <!--<category android:name="android.intent.category.DEFAULT" />-->
+        <!--<action android:name="android.intent.action.VIEW" />-->
+        <!--<data android:scheme="${applicationId}.http" />-->
+        <!--</intent-filter>-->
+        <!--</activity>-->
         <activity
             android:name=".module.util.WebViewActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
-            android:label="@string/title_activity_web_view">
+            android:label="@string/title_activity_web_view" />
 
+        <activity
+            android:name=".module.util.X5WebViewActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:label="@string/title_activity_web_view">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="android.intent.action.VIEW" />
                 <data android:scheme="${applicationId}.http" />
             </intent-filter>
-
         </activity>
 
         <activity
@@ -169,8 +187,8 @@
 
         <activity
             android:name=".module.topicdetail.TopicDetailActivity"
-            android:label="@string/title_activity_topic_body"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_topic_body" />
 
         <activity
             android:name=".module.topic.TopicMentionActivity"

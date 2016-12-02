@@ -96,6 +96,12 @@ public class UserUtil {
         updateUser(user);
     }
 
+    public static void clearCookie(){
+        User user = getCurrentUser();
+        user.setCookie(null);
+        UserUtil.updateUser(user);
+    }
+
     private static User getDefaultUser() {
         User user = null;
         String uid = SPUtil.getUid();

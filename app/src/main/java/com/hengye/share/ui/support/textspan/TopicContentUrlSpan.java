@@ -17,6 +17,7 @@ import com.hengye.share.R;
 import com.hengye.share.model.TopicUrl;
 import com.hengye.share.module.profile.PersonalHomepageActivity;
 import com.hengye.share.module.publish.TopicPublishActivity;
+import com.hengye.share.module.util.image.GalleryActivity;
 import com.hengye.share.service.VideoPlayService;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
 import com.hengye.share.util.ClipboardUtil;
@@ -68,7 +69,7 @@ public class TopicContentUrlSpan extends CharacterStyle implements ParcelableSpa
     public String getURL() {
         if (topicUrl != null) {
             //长链地址
-            return topicUrl.getLinkUrl();
+            return DataUtil.WEB_SCHEME + topicUrl.getUrl();
         }
         return url;
     }
@@ -109,7 +110,9 @@ public class TopicContentUrlSpan extends CharacterStyle implements ParcelableSpa
             if (topicUrl != null) {
                 if (topicUrl.getType() == TopicUrl.VIDEO) {
                     VideoPlayService.start(context, topicUrl.getTopicId(), getURL());
-                } else {
+                } else if(topicUrl.getType() == TopicUrl.PHOTO){
+                    GalleryActivity.startWithIntent(context, topicUrl.getPicUrl());
+                }else {
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
                     context.startActivity(intent);
@@ -151,7 +154,10 @@ public class TopicContentUrlSpan extends CharacterStyle implements ParcelableSpa
                     }
                 }
             }).show();
-            L.debug("long click value : {}", path);
+            L.debug("long click path : {}", path);
+            if(topicUrl != null){
+                L.debug("long click topicUrl : {}", topicUrl);
+            }
         }
 
     }

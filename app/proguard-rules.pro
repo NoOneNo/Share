@@ -42,10 +42,12 @@
 -dontwarn okio.**
 ## okio
 
+## rx
 #-keep class rx.**
 -dontwarn rx.internal.util.unsafe.**
+## rx
 
-# greendao
+## greendao
 -keep class org.greenrobot.greendao.** {*;}
 -keepclassmembers class * extends org.greenrobot.greendao.AbstractDao {
 public static java.lang.String TABLENAME;
@@ -54,9 +56,26 @@ public static java.lang.String TABLENAME;
 # If you do not use SQLCipher:
 -dontwarn org.greenrobot.greendao.database.**
 -dontwarn org.greenrobot.greendao.**
-# greendao
+## greendao
+
+## tencent x5
+-libraryjars libs/tbs_sdk_thirdapp_v2.5.0.1031.jar
+## tencent x5
+
+## me
+-libraryjars libs/weibosdkcore.jar
+-libraryjars libs/volleyplus-release.aar
+-libraryjars libs/skinloader-release.aar
+## me
 
 -keep class com.hengye.share.model.** {*;}
+
+## -------------- 通用混淆规则 --------------
+
+## 移除在build的时候因为引入jar包出现
+## Ignoring InnerClasses attribute for an anonymous inner class
+## 这样的警告
+-keepattributes EnclosingMethod
 
 #指定代码的压缩级别
 -optimizationpasses 5

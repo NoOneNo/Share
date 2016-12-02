@@ -5,6 +5,7 @@ import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.TopicComments;
 import com.hengye.share.model.sina.WBTopicComments;
 import com.hengye.share.model.sina.WBTopicReposts;
+import com.hengye.share.module.topic.TopicRxUtil;
 import com.hengye.share.module.util.encapsulation.base.TaskState;
 import com.hengye.share.module.util.encapsulation.mvp.ListTaskPresenter;
 import com.hengye.share.util.CommonUtil;
@@ -162,7 +163,9 @@ public class TopicCommentPresenter extends ListTaskPresenter<TopicCommentMvpView
             mFlatWBTopicReposts = new Function<WBTopicReposts, ObservableSource<TopicComments>>() {
                 @Override
                 public ObservableSource<TopicComments> apply(WBTopicReposts wbTopicReposts) throws Exception {
-                    return ObservableHelper.just(TopicComment.getComments(wbTopicReposts));
+                    return ObservableHelper
+                            .just(TopicComment.getComments(wbTopicReposts))
+                            .flatMap(TopicRxUtil.flatTopicCommentsShortUrl());
                 }
             };
         }
@@ -176,7 +179,9 @@ public class TopicCommentPresenter extends ListTaskPresenter<TopicCommentMvpView
             mFlatWBTopicComments = new Function<WBTopicComments, ObservableSource<TopicComments>>() {
                 @Override
                 public ObservableSource<TopicComments> apply(WBTopicComments wbTopicComments) throws Exception {
-                    return ObservableHelper.just(TopicComment.getComments(wbTopicComments));
+                    return ObservableHelper
+                            .just(TopicComment.getComments(wbTopicComments))
+                            .flatMap(TopicRxUtil.flatTopicCommentsShortUrl());
                 }
             };
         }

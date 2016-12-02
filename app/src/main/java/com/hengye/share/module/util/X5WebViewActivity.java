@@ -1,44 +1,42 @@
 package com.hengye.share.module.util;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Browser;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
-import android.webkit.DownloadListener;
-import android.webkit.WebChromeClient;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import com.hengye.share.R;
 import com.hengye.share.module.base.BaseActivity;
+import com.hengye.share.module.setting.SettingHelper;
+import com.hengye.share.module.sso.WeiboWebLoginActivity;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
+import com.hengye.share.ui.widget.X5WebView;
 import com.hengye.share.ui.widget.dialog.DialogStyleHelper;
 import com.hengye.share.ui.widget.dialog.ListDialog;
 import com.hengye.share.util.ClipboardUtil;
+import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.IntentUtil;
-import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.util.L;
 import com.hengye.share.util.ToastUtil;
+import com.hengye.share.util.UserUtil;
+import com.tencent.smtt.sdk.CookieManager;
+import com.tencent.smtt.sdk.DownloadListener;
+import com.tencent.smtt.sdk.WebChromeClient;
+import com.tencent.smtt.sdk.WebView;
+import com.tencent.smtt.sdk.WebViewClient;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-public class WebViewActivity extends BaseActivity {
+public class X5WebViewActivity extends BaseActivity {
 
     @Override
     protected void handleBundleExtra(Intent intent) {
@@ -52,10 +50,9 @@ public class WebViewActivity extends BaseActivity {
 
 
     public static Intent getStartIntent(Context context, String url) {
-        return X5WebViewActivity.getStartIntent(context, url);
-//        Intent intent = new Intent(context, WebViewActivity.class);
-//        intent.putExtra("url", url);
-//        return intent;
+        Intent intent = new Intent(context, X5WebViewActivity.class);
+        intent.putExtra("url", url);
+        return intent;
     }
 
     @Override
@@ -65,7 +62,7 @@ public class WebViewActivity extends BaseActivity {
 
     @Override
     public int getLayoutResId() {
-        return R.layout.activity_webview;
+        return R.layout.activity_webview_x5;
     }
 
     @Override
@@ -93,8 +90,9 @@ public class WebViewActivity extends BaseActivity {
     }
 
     private String mUrl;
-
-    private WebView mWebView;
+//    private boolean mIsWBUrl;
+    private X5WebView mWebView;
+    private CookieManager mCookieManager;
     private ProgressBar mProgressBar;
     private ListDialog mListDialog;
 
@@ -108,13 +106,17 @@ public class WebViewActivity extends BaseActivity {
 
     private void initView() {
 
-        mWebView = (WebView) findViewById(R.id.web_view);
+        mWebView = (X5WebView) findViewById(R.id.web_view);
         mProgressBar = (ProgressBar) findViewById(R.id.loading);
-
+        mCookieManager = CookieManager.getInstance();
         initToolbar();
         initListDialog();
         initWebView();
 
+//        mIsWBUrl = WBUtil.isRequestWBResourceUrl(mUrl);
+//        if(mIsWBUrl) {
+//            updateWBCookie(mUrl);
+//        }
         mWebView.loadUrl(mUrl);
     }
 
@@ -153,19 +155,10 @@ public class WebViewActivity extends BaseActivity {
 
     @SuppressLint("SetJavaScriptEnabled")
     private void initWebView() {
-        mWebView.setHapticFeedbackEnabled(true);
-        final WebSettings settings = mWebView.getSettings();
-        settings.setJavaScriptEnabled(true);
-        settings.setDomStorageEnabled(true);
-        settings.setAllowFileAccess(true);
-        settings.setAllowFileAccessFromFileURLs(true);
-        settings.setAllowUniversalAccessFromFileURLs(true);
-        settings.setLoadWithOverviewMode(true);
-        settings.setUseWideViewPort(true);
-        settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
 
         mWebView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                L.debug("shouldOverrideUrlLoading url : {}", url);
                 if (url != null) {
                     Uri uri = Uri.parse(url);
                     if (!DataUtil.isHttpUrl(url)) {
@@ -178,6 +171,12 @@ public class WebViewActivity extends BaseActivity {
                         } else {
                             L.debug("find url which is not http , no app can open it: {}", url);
                         }
+                    }else{
+//                        if(mIsWBUrl){
+//                            //发生重定向
+//                            L.debug("微博url发生重定向跳转: {}, 当做cookie失效处理", url);
+//                            UserUtil.clearCookie();
+//                        }
                     }
                 }
 
@@ -185,14 +184,14 @@ public class WebViewActivity extends BaseActivity {
             }
 
             @Override
-            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-                return super.shouldInterceptRequest(view, request);
-            }
-
-            @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
                 mProgressBar.setVisibility(View.VISIBLE);
+
+//                if(mIsWBUrl){
+//                    updateWBCookie(url);
+//                }
+                L.debug("find cookies url : {}, values is {}", url, mCookieManager.getCookie(url));
             }
 
             @Override
@@ -213,16 +212,6 @@ public class WebViewActivity extends BaseActivity {
                     startActivity(intent);
                 }
 
-//				DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-//				Uri uri = Uri.parse(url);
-//				DownloadManager.Request request = new DownloadManager.Request(uri);
-//				//设置允许使用的网络类型，这里是移动网络和wifi都可以
-////				request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE| DownloadManager.Request.NETWORK_WIFI);
-//				request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-//				//不显示下载界面
-////				long id = downloadManager.enqueue(request);
-//				downloadManager.enqueue(request);
-//                ToastUtil.showToast("已经开始下载，详情查看通知栏");
             }
         });
 
@@ -293,6 +282,68 @@ public class WebViewActivity extends BaseActivity {
         if (mWebView != null) {
             mWebView.destroy();
             mWebView = null;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == 2) {
+                if (mWebView != null && !CommonUtil.isEmpty(mUrl)) {
+                    mWebView.loadUrl(mUrl);
+                }
+            }
+        }
+    }
+
+    private boolean mIsFirstTime = true;
+    private int mUpdateWBCookieCount = 0;
+
+    private void updateWBCookie(String url) {
+
+        if(++mUpdateWBCookieCount > 3){
+            return;
+        }
+
+        mCookieManager.removeAllCookie();
+
+        String cookie = UserUtil.getCurrentUser().getCookie();
+
+        if (CommonUtil.isEmpty(cookie)) {
+            //请求登录
+            if (mIsFirstTime) {
+                mIsFirstTime = false;
+                startActivityForResult(new Intent(X5WebViewActivity.this, WeiboWebLoginActivity.class), 2);
+            }
+        } else {
+//            String currentCookie = mCookieManager.getCookie(url);
+//
+//            if (!cookie.equals(currentCookie)) {
+//
+//                //先清除之前的cookie
+//                if (!CommonUtil.isEmpty(currentCookie)) {
+//                    String[] currentCookies = currentCookie.split(";");
+//                    for (String c : currentCookies) {
+//                        if(c != null ){
+//                            int index = c.indexOf("=");
+//                            if(index != -1) {
+//                                c = c.substring(0, index + 1);
+//                            }
+//                        }
+//                        L.debug("clear cookie : {}", c);
+//                        mCookieManager.setCookie(url, c);
+//                    }
+//                }
+//            }
+
+            String[] cookies = cookie.split(";");
+            for(String c : cookies){
+                L.debug("apply cookie : {}", c);
+                mCookieManager.setCookie(url, c);
+            }
+
+            mCookieManager.flush();
         }
     }
 }

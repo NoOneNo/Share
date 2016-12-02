@@ -110,6 +110,10 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
                 }
 
             }
+
+            if(!mAnimateIn){
+
+            }
         }
 
     }
@@ -136,6 +140,9 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
         }
     }
 
+    /**
+     * 加载原图
+     */
     public void loadLargeImage(){
         if(mUrl != null){
             if(!WBUtil.isWBLargeUrl(mUrl)){

@@ -49,9 +49,9 @@ public class ThirdPartyLoginActivity extends BaseActivity implements UserMvpView
         String appName = getIntent().getStringExtra("appKey");
         boolean isCurrentUser = getIntent().getBooleanExtra("isCurrentUser", true);
         if(appName != null && appName.equals(ThirdPartyUtils.WeiboApp.WEICO.name())){
-            startActivityForResult(WeiboWebLoginActivity.getAdTokenStartIntent(this), WEIBO_WEB_LOGIN);
+            startActivityForResult(WeiboWebAuthorizeActivity.getAdTokenStartIntent(this), WEIBO_WEB_LOGIN);
         }else {
-            startActivityForResult(WeiboWebLoginActivity.getStartIntent(this, ThirdPartyUtils.WeiboApp.SHARE, isCurrentUser), WEIBO_WEB_LOGIN);
+            startActivityForResult(WeiboWebAuthorizeActivity.getStartIntent(this, ThirdPartyUtils.WeiboApp.SHARE, isCurrentUser), WEIBO_WEB_LOGIN);
         }
 //        try {
 //            mSsoHandler.authorize(ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO, mWeiboAuthListener, null);

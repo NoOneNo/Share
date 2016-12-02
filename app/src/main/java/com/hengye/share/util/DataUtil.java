@@ -220,9 +220,6 @@ public class DataUtil {
 //            }
             TopicUrl topicUrl = topicShortUrl.getUrlMap().get(url);
             topicContentUrlSpan.setTopicUrl(topicUrl);
-            if(topicUrl != null) {
-                L.debug("wbShortUrl type : {}, url : {}", topicUrl.getType(), url);
-            }
         }
     }
 

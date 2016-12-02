@@ -22,14 +22,14 @@
         android:id="@+id/btn_test2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="test RXJAVA"
+        android:text="clear user cookie"
         android:layout_centerInParent="true"/>
 
     <Button
         android:id="@+id/btn_test3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="create loading dialog"
+        android:text="clear webview cookie"
         android:layout_centerInParent="true"/>
 
     <Button

@@ -16,6 +16,7 @@ import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.ToastUtil;
 import com.tencent.bugly.crashreport.CrashReport;
+import com.tencent.smtt.sdk.QbSdk;
 
 public class BaseApplication extends Application{
 
@@ -37,20 +38,18 @@ public class BaseApplication extends Application{
 		L.debug("application onCreate consume : {}", end - start);
 	}
 
+	@Override
+	protected void attachBaseContext(Context base) {
+		super.attachBaseContext(base);
+		MultiDex.install(this);
+	}
+
+
 	private void init() {
-
 //		startService(new Intent(this, ShareService.class));
-
 		ourInstance = this;
 
-//		SkinManager.setup(this);
-		RequestManager.init(this, null, MAX_NETWORK_CACHE_SIZE);
-
-		CrashReport.initCrashReport(getApplicationContext(), "900019432", false);
-
-
 		registerActivityLifecycleCallbacks(new DefaultActivityLifecycleCallback(){
-
 			boolean isForeground = false;
 
 			@Override
@@ -74,11 +73,14 @@ public class BaseApplication extends Application{
 			}
 		});
 
-	}
 
-	@Override
-	protected void attachBaseContext(Context base) {
-		super.attachBaseContext(base);
-		MultiDex.install(this);
+//		SkinManager.setup(this);
+		//放到GuidanceActivity初始化
+		//初始化volley
+		RequestManager.init(this, null, MAX_NETWORK_CACHE_SIZE);
+//		//初始化腾讯bugly
+//		CrashReport.initCrashReport(BaseApplication.getInstance(), "900019432", false);
+//		//初始化腾讯x5
+//		QbSdk.initX5Environment(BaseApplication.getInstance(), null);
 	}
 }

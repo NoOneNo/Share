@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Share</string>
-
+    <string name="app_launcher">com.hengye.share.Launcher</string>
     <!--XML5个转义符:<，>，&，”，©;的转义字符分别如下： &lt; &gt;&amp; &quot; &apos;-->
     <!--@等字符需要在前面加\-->
 
@@ -112,6 +112,7 @@
     <string name="title_activity_attention_list">关注列表</string>
     <string name="title_activity_topic_body">微博正文</string>
     <string name="title_activity_hot_comment">热门评论</string>
+    <string name="title_activity_wb_web_login">微博登录</string>
     <!-- Strings related to activity title-->
 
     <!-- Strings related to TopicGroup-->

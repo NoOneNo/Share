@@ -67,7 +67,7 @@ public class GalleryFragment extends ViewPagerFragment implements View.OnLongCli
         mIndexStart = bundle.getInt(IMG_INDEX, 0);
         mRectList = (ArrayList<AnimationRect>) bundle.getSerializable(IMG_RECT_LIST);
 
-        if (getImageSize() == 0) {
+        if (mUrls == null || mUrls.isEmpty()) {
             getActivity().finish();
         }
     }

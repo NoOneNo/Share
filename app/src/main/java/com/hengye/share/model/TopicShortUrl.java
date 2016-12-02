@@ -7,5 +7,27 @@ import java.util.HashMap;
 
 public interface TopicShortUrl {
 
+    /**
+     * 当前微博id
+     * @return
+     */
+    String getId();
+
+    /**
+     * 当前微博内容
+     * @return
+     */
+    String getContent();
+
+    /**
+     * 设置短链
+     * @param urlMap
+     */
+    void setUrlMap(HashMap<String, TopicUrl> urlMap);
+
+    /**
+     * 得到短链
+     * @return
+     */
     HashMap<String, TopicUrl> getUrlMap();
 }

@@ -8,8 +8,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
-import com.hengye.share.util.L;
-
 public class SimpleLinkOnTouchListener implements View.OnTouchListener {
 
     private boolean find = false;
@@ -83,7 +81,6 @@ public class SimpleLinkOnTouchListener implements View.OnTouchListener {
                     tv.setText(value);
                     find = false;
                 }
-                L.debug("result : {}", result);
                 return result;
         }
 
