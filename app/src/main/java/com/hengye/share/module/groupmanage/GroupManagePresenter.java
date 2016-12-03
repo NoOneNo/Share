@@ -150,6 +150,57 @@ public class GroupManagePresenter extends RxPresenter<GroupManageMvpView> {
                 });
     }
 
+    public void updateGroup(String gid, String name, String description){
+        final UrlBuilder ub = new UrlBuilder();
+        final String uid = UserUtil.getUid();
+        ub.addParameter("access_token", UserUtil.getPriorToken());
+        ub.addParameter("list_id", gid);
+        ub.addParameter("name", name);
+        if(description == null){
+            description = "";
+        }
+        ub.addParameter("description", description);
+        RetrofitManager
+                .getWBService()
+                .updateGroup(ub.getParameters())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
+                .subscribe(new BaseSubscriber<WBGroup>() {
+                    @Override
+                    public void onNext(GroupManageMvpView v, WBGroup wbGroup) {
+                        v.updateGroupResult(TaskState.STATE_SUCCESS, GroupList.getGroupList(wbGroup, uid));
+                    }
+
+                    @Override
+                    public void onError(GroupManageMvpView v, Throwable e) {
+                        v.updateGroupResult(TaskState.getFailState(e), null);
+                    }
+                });
+    }
+
+    public void deleteGroup(String gid){
+        final UrlBuilder ub = new UrlBuilder();
+        final String uid = UserUtil.getUid();
+        ub.addParameter("access_token", UserUtil.getPriorToken());
+        ub.addParameter("list_id", gid);
+        RetrofitManager
+                .getWBService()
+                .destroyGroup(ub.getParameters())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
+                .subscribe(new BaseSubscriber<WBGroup>() {
+                    @Override
+                    public void onNext(GroupManageMvpView v, WBGroup wbGroup) {
+                        v.deleteGroupResult(TaskState.STATE_SUCCESS, GroupList.getGroupList(wbGroup, uid));
+                    }
+
+                    @Override
+                    public void onError(GroupManageMvpView v, Throwable e) {
+                        v.deleteGroupResult(TaskState.getFailState(e), null);
+                    }
+                });
+    }
+
     private boolean mIsGroupUpdate = false;
 
     public void setIsGroupUpdate(boolean isGroupUpdate) {

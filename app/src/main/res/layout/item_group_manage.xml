@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="49dp"
     android:background="@drawable/ripple_white"
     android:paddingStart="@dimen/content_margin_10dp"
     android:paddingEnd="@dimen/content_margin_10dp">
@@ -29,11 +29,12 @@
         android:textSize="@dimen/text_small"
         android:textColor="@color/grey_850"
         android:lines="1"
+        android:ellipsize="end"
         tools:text="特别关注"/>
 
     <TextView
         android:id="@+id/tv_group_count"
-        android:layout_alignParentEnd="true"
+        android:layout_toStartOf="@+id/btn_edit"
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/content_margin_10dp"
         android:layout_width="wrap_content"
@@ -42,6 +43,32 @@
         android:textColor="@color/grey_600"
         android:lines="1"
         tools:text="5人"/>
+
+    <ImageButton
+        android:id="@id/btn_edit"
+        android:layout_toStartOf="@+id/btn_delete"
+        android:layout_width="@dimen/icon_size_normal"
+        android:layout_height="@dimen/icon_size_normal"
+        android:padding="@dimen/spacing_micro"
+        android:layout_centerVertical="true"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_mode_edit_white_48dp"
+        android:tint="?attr/colorPrimaryDark"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:scaleType="fitXY"/>
+
+    <ImageView
+        android:id="@id/btn_delete"
+        android:layout_width="@dimen/icon_size_normal"
+        android:layout_height="@dimen/icon_size_normal"
+        android:padding="@dimen/spacing_micro"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_delete_white_48dp"
+        android:tint="?attr/colorPrimaryDark"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:scaleType="fitXY"/>
 
     <View
         style="@style/horizontal_line"

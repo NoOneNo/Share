@@ -44,12 +44,18 @@ public class GroupManageAdapter extends CommonAdapter<GroupList>
     public static class GroupManageViewHolder extends ItemViewHolder<GroupList> {
 
         TextView mGroupName, mGroupCount;
+        View mEditBtn, mDeleteBtn;
 
         public GroupManageViewHolder(View v) {
             super(v);
 
             mGroupName = (TextView) findViewById(R.id.tv_group_name);
             mGroupCount = (TextView) findViewById(R.id.tv_group_count);
+            mEditBtn = findViewById(R.id.btn_edit);
+            mDeleteBtn = findViewById(R.id.btn_delete);
+
+            registerOnClickListener(mEditBtn);
+            registerOnClickListener(mDeleteBtn);
         }
 
 

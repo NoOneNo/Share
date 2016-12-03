@@ -167,6 +167,13 @@ public abstract class CommonAdapter<T> extends HeaderAdapter<ItemViewHolder>
         notifyItemChanged(getActualItemPosition(position));
     }
 
+    public void updateItem(T item) {
+        int index = mData.indexOf(item);
+        if (index != -1) {
+            updateItem(index, item);
+        }
+    }
+
     public T removeItem(int position) {
         T t = mData.remove(position);
         notifyItemRemoved(getActualItemPosition(position));

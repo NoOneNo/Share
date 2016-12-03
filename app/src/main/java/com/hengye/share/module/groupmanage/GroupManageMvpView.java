@@ -19,4 +19,8 @@ public interface GroupManageMvpView extends MvpView{
     void checkGroupOrder(boolean isChange);
 
     void createGroupResult(int taskState, GroupList groupList);
+
+    void updateGroupResult(int taskState, GroupList groupList);
+
+    void deleteGroupResult(int taskState, GroupList groupList);
 }

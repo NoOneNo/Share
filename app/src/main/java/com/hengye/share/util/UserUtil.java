@@ -61,9 +61,9 @@ public class UserUtil {
         return getCurrentUser().getAdToken();
     }
 
-    public static String getPriorToken(){
+    public static String getPriorToken() {
         String token = getAdToken();
-        if(token != null){
+        if (token != null) {
             return token;
         }
         return getToken();
@@ -89,14 +89,14 @@ public class UserUtil {
         return getAdToken() == null;
     }
 
-    public static void resetToken(){
+    public static void resetToken() {
         User user = getCurrentUser();
         user.setToken(null);
         user.setAdToken(null);
         updateUser(user);
     }
 
-    public static void clearCookie(){
+    public static void clearCookie() {
         User user = getCurrentUser();
         user.setCookie(null);
         UserUtil.updateUser(user);
@@ -197,13 +197,12 @@ public class UserUtil {
         User user;
         UserDao ud = GreenDaoManager.getDaoSession().getUserDao();
         List<User> users = ud.queryBuilder().where(UserDao.Properties.Uid.eq(targetUser.getUid())).list();
-//        List<User> users = ud.queryRaw("where UID = ?", targetUser.getUid());
         if (!CommonUtil.isEmpty(users)) {
             user = users.get(0);
             targetUser.setId(user.getId());
             ud.update(targetUser);
 
-            if(getCurrentUser().equals(targetUser)){
+            if (getCurrentUser().equals(targetUser)) {
                 updateCurrentUser();
             }
         }
@@ -242,6 +241,21 @@ public class UserUtil {
                 .getDaoSession()
                 .getGroupListDao()
                 .insertInTx(groupLists);
+    }
+
+    public static void updateGroupList(GroupList groupList) {
+        GroupListDao groupListDao = GreenDaoManager
+                .getDaoSession()
+                .getGroupListDao();
+        List<GroupList> gls = groupListDao
+                .queryBuilder()
+                .where(GroupListDao.Properties.Gid.eq(groupList.getGid()))
+                .where(GroupListDao.Properties.Uid.eq(groupList.getUid()))
+                .list();
+        if(!CommonUtil.isEmpty(gls)){
+            groupList.setId(gls.get(0).getId());
+            groupListDao.update(groupList);
+        }
     }
 
     public static void updateGroupList(List<GroupList> groupLists) {
@@ -293,9 +307,9 @@ public class UserUtil {
                     , GroupListDao.Properties.Visible.notEq("-1"));
         }
 
-        try{
+        try {
             return qb.list();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;

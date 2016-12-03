@@ -19,7 +19,7 @@
             android:maxLength="50"
             android:inputType="text"
             android:imeOptions="actionNext"
-            android:textColor="@color/text_grey"
+            android:textColor="@color/text_dark"
             android:textSize="@dimen/text_normal"
             android:hint="@string/hint_group_name"
             tools:text="名字" />
@@ -39,8 +39,8 @@
             android:maxLines="1"
             android:maxLength="50"
             android:inputType="text"
-            android:imeOptions="actionNext"
-            android:textColor="@color/text_grey"
+            android:imeOptions="actionDone"
+            android:textColor="@color/text_dark"
             android:textSize="@dimen/text_normal"
             android:hint="@string/hint_group_desc"
             tools:text="描述" />

@@ -128,11 +128,13 @@
     <!-- Strings related to TopicGroup-->
 
     <!-- Strings related to GroupManager-->
-    <string name="label_update_group_order">是否更新分组顺序？</string>
+    <string name="tip_update_group_order">是否更新分组顺序？</string>
     <string name="label_create_group">新建分组</string>
     <string name="label_group_count">%s人</string>
-    <string name="label_update_group_success">更新成功</string>
-    <string name="label_update_group_fail">更新失败</string>
+    <string name="tip_delete_group_confirm">是否删除该分组？</string>
+    <string name="tip_update_group_success">更新成功</string>
+    <string name="tip_update_group_fail">更新失败</string>
+    <string name="tip_create_group_success">成功创建分组</string>
     <string name="hint_group_name">分组名字</string>
     <string name="hint_group_desc">分组描述(可不填)</string>
     <string name="error_group_name_null">分组名字不能为空</string>

@@ -17,6 +17,7 @@ import com.hengye.share.model.greenrobot.GroupList;
 import com.hengye.share.module.groupmanage.data.GroupManageRepository;
 import com.hengye.share.module.util.encapsulation.base.TaskState;
 import com.hengye.share.module.util.encapsulation.fragment.RecyclerRefreshFragment;
+import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
 import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemTouchUtil;
@@ -49,6 +50,9 @@ public class GroupManageFragment extends RecyclerRefreshFragment implements Grou
     private GroupManagePresenter mPresenter;
 
     private EditText mCreateGroupName, mCreateGroupDesc;
+    private EditText mEditGroupName, mEditGroupDesc;
+
+    private GroupList mCurrentGroupList;
 
     private void initView() {
         setHasOptionsMenu(true);
@@ -56,32 +60,46 @@ public class GroupManageFragment extends RecyclerRefreshFragment implements Grou
 
         ItemTouchUtil.attachByDrag(getRecyclerView(), mAdapter);
 
-        initUpdateGroupOrderDialog();
+        mAdapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                mCurrentGroupList = mAdapter.getItem(position);
+                int id = view.getId();
+                if(id == R.id.btn_delete){
+                    getDeleteGroupDialog().show();
+                }else if(id == R.id.btn_edit){
+                    getEditGroupDialog().show();
+                }
+            }
+        });
     }
 
-    public void initUpdateGroupOrderDialog() {
-        mLoadingDialog = new LoadingDialog(getContext());
+    public Dialog getUpdateGroupOrderDialog() {
+        if(mConfirmDialog == null) {
+            mLoadingDialog = new LoadingDialog(getContext());
 
-        SimpleTwoBtnDialog builder = new SimpleTwoBtnDialog();
+            SimpleTwoBtnDialog builder = new SimpleTwoBtnDialog();
 
-        builder.setContent(getString(R.string.label_update_group_order));
+            builder.setContent(getString(R.string.tip_update_group_order));
 
-        builder.setNegativeButtonClickListener(new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mPresenter.setIsGroupUpdate(false);
-                dialog.dismiss();
-                finish();
-            }
-        });
-        builder.setPositiveButtonClickListener(new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mLoadingDialog.show();
-                mPresenter.updateGroupOrder(new ArrayList<>(mAdapter.getData()));
-            }
-        });
-        mConfirmDialog = builder.create(getContext());
+            builder.setNegativeButtonClickListener(new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    mPresenter.setIsGroupUpdate(false);
+                    dialog.dismiss();
+                    finish();
+                }
+            });
+            builder.setPositiveButtonClickListener(new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    mLoadingDialog.show();
+                    mPresenter.updateGroupOrder(new ArrayList<>(mAdapter.getData()));
+                }
+            });
+            mConfirmDialog = builder.create(getContext());
+        }
+        return mConfirmDialog;
     }
 
     @Override
@@ -109,7 +127,7 @@ public class GroupManageFragment extends RecyclerRefreshFragment implements Grou
     @Override
     public void checkGroupOrder(boolean isChange) {
         if (isChange) {
-            mConfirmDialog.show();
+            getUpdateGroupOrderDialog().show();
         } else {
             finish();
         }
@@ -158,47 +176,73 @@ public class GroupManageFragment extends RecyclerRefreshFragment implements Grou
     public void updateGroupOrderCallBack(boolean isSuccess) {
         mLoadingDialog.dismiss();
         if (isSuccess) {
-            ToastUtil.showToast(R.string.label_update_group_success);
+            ToastUtil.showToast(R.string.tip_update_group_success);
             setResult(Activity.RESULT_OK);
             finish();
         } else {
-            ToastUtil.showToast(R.string.label_update_group_fail);
+            ToastUtil.showToast(R.string.tip_update_group_fail);
         }
     }
 
     @Override
     public void createGroupResult(int taskState, GroupList groupList) {
-        if(TaskState.STATE_SUCCESS == taskState){
+        if (TaskState.STATE_SUCCESS == taskState) {
             mAdapter.addItem(groupList);
             UserUtil.insertGroupList(groupList);
-        }else{
+            ToastUtil.showToast(R.string.tip_create_group_success);
+        } else {
+            ToastUtil.showToast(TaskState.toString(taskState));
+        }
+    }
+
+//    private int findPosition(GroupList groupList){
+//        if(groupList != null){
+//            List<GroupList> groupLists = mAdapter.getData();
+//            for(int i = 0; i < groupLists.size(); i++){
+//                GroupList gl = groupLists.get(i);
+//                if(gl.equals(groupList)){
+//                    return i;
+//                }
+//            }
+//        }
+//        return -1;
+//    }
+
+    @Override
+    public void updateGroupResult(int taskState, GroupList groupList) {
+        if (TaskState.STATE_SUCCESS == taskState) {
+            mAdapter.updateItem(groupList);
+            UserUtil.updateGroupList(groupList);
+            ToastUtil.showToast(R.string.tip_update_group_success);
+        } else {
+            ToastUtil.showToast(TaskState.toString(taskState));
+        }
+    }
+
+    @Override
+    public void deleteGroupResult(int taskState, GroupList groupList) {
+        if (TaskState.STATE_SUCCESS == taskState) {
+            mAdapter.removeItem(groupList);
+            UserUtil.updateGroupList(groupList);
+            ToastUtil.showToast(R.string.tip_update_group_success);
+        } else {
             ToastUtil.showToast(TaskState.toString(taskState));
         }
     }
 
     AlertDialog mCreateGroupDialog;
-
     public AlertDialog getCreateGroupDialog() {
         if (mCreateGroupDialog == null) {
             mCreateGroupDialog = new AlertDialog.Builder(getContext())
                     .setTitle(R.string.label_create_group)
-                    .setNegativeButton(R.string.tip_cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    })
-                    .setPositiveButton(R.string.tip_confirm, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //如果这里设置确定会对话框会自动取消，如果内容为空时应该提示不能为空，不自动取消对话框
-                        }
-                    })
+                    .setNegativeButton(R.string.tip_cancel, null)
+                    .setPositiveButton(R.string.tip_confirm, null)//如果这里设置确定会对话框会自动取消，如果内容为空时应该提示不能为空，不自动取消对话框
                     .setView(R.layout.dialog_item_edit_group)
                     .create();
             mCreateGroupDialog.setOnShowListener(new DialogInterface.OnShowListener() {
                 @Override
                 public void onShow(DialogInterface d) {
-                    if(mCreateGroupName != null){
+                    if (mCreateGroupName != null) {
                         //已经初始化
                         return;
                     }
@@ -212,7 +256,7 @@ public class GroupManageFragment extends RecyclerRefreshFragment implements Grou
                                     String desc = mCreateGroupDesc.getText().toString();
                                     if (TextUtils.isEmpty(name)) {
                                         ToastUtil.showToast(R.string.error_group_name_null);
-                                    }else{
+                                    } else {
                                         mPresenter.createGroup(name, desc);
                                         mCreateGroupDialog.dismiss();
                                     }
@@ -223,4 +267,76 @@ public class GroupManageFragment extends RecyclerRefreshFragment implements Grou
         }
         return mCreateGroupDialog;
     }
+
+    AlertDialog mEditGroupDialog;
+    public AlertDialog getEditGroupDialog() {
+        if (mEditGroupDialog == null) {
+            mEditGroupDialog = new AlertDialog.Builder(getContext())
+                    .setTitle(R.string.label_create_group)
+                    .setNegativeButton(R.string.dialog_text_cancel, null)
+                    .setPositiveButton(R.string.dialog_text_confirm, null)//如果这里设置确定会对话框会自动取消，如果内容为空时应该提示不能为空，不自动取消对话框
+                    .setView(R.layout.dialog_item_edit_group)
+                    .create();
+            mEditGroupDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface d) {
+                    if (mCreateGroupName == null) {
+                        //还没初始化
+                        mEditGroupName = (EditText) mEditGroupDialog.findViewById(R.id.et_name);
+                        mEditGroupDesc = (EditText) mEditGroupDialog.findViewById(R.id.et_desc);
+                        mEditGroupDialog.getButton(DialogInterface.BUTTON_POSITIVE)
+                                .setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        String name = mEditGroupName.getText().toString();
+                                        String desc = mEditGroupDesc.getText().toString();
+                                        if (TextUtils.isEmpty(name)) {
+                                            ToastUtil.showToast(R.string.error_group_name_null);
+                                        } else {
+                                            if(mCurrentGroupList != null) {
+                                                mPresenter.updateGroup(mCurrentGroupList.getGid(), name, desc);
+                                            }
+                                            mEditGroupDialog.dismiss();
+                                        }
+                                    }
+                                });
+                    }
+
+                    if(mCurrentGroupList != null) {
+                        mEditGroupName.setText(mCurrentGroupList.getName());
+                        mEditGroupDesc.setText(mCurrentGroupList.getDescription());
+                    }
+
+                }
+            });
+        }
+        return mEditGroupDialog;
+    }
+
+    AlertDialog mDeleteGroupDialog;
+    private AlertDialog getDeleteGroupDialog() {
+        if (mDeleteGroupDialog == null) {
+            mDeleteGroupDialog = new AlertDialog.Builder(getContext())
+                    .setTitle(R.string.dialog_text_tip)
+                    .setMessage(R.string.tip_delete_group_confirm)
+                    .setNegativeButton(R.string.dialog_text_cancel, null)
+                    .setPositiveButton(R.string.dialog_text_confirm, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if(mCurrentGroupList != null) {
+                                mPresenter.deleteGroup(mCurrentGroupList.getGid());
+                            }
+                        }
+                    })
+                    .create();
+        }
+        return mDeleteGroupDialog;
+    }
 }
+
+
+
+
+
+
+
