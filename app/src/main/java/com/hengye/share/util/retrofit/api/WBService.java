@@ -2,6 +2,7 @@ package com.hengye.share.util.retrofit.api;
 
 import com.hengye.share.model.Result;
 import com.hengye.share.model.Topic;
+import com.hengye.share.model.sina.WBGroup;
 import com.hengye.share.model.sina.WBGroups;
 import com.hengye.share.model.sina.WBShortUrls;
 import com.hengye.share.model.sina.WBTopic;
@@ -176,6 +177,18 @@ public interface WBService {
     Observable<WBGroups> listGroups(@QueryMap Map<String, String> options);
 
     @FormUrlEncoded
+    @POST(UrlFactory.WB_GROUP_CREATE)
+    Observable<WBGroup> createGroup(@FieldMap Map<String, String> options);
+
+    @FormUrlEncoded
+    @POST(UrlFactory.WB_GROUP_DESTROY)
+    Observable<WBGroup> destroyGroup(@FieldMap Map<String, String> options);
+
+    @FormUrlEncoded
+    @POST(UrlFactory.WB_GROUP_UPDATE)
+    Observable<WBGroup> updateGroup(@FieldMap Map<String, String> options);
+
+    @FormUrlEncoded
     @POST(UrlFactory.WB_GROUP_ORDER)
     Observable<WBGroups.WBGroupUpdateOrder> updateGroupOrder(
             @Field("access_token") String token,
@@ -184,13 +197,13 @@ public interface WBService {
 
     @FormUrlEncoded
     @POST(UrlFactory.WB_FOLLOW_CREATE)
-    Observable<WBUserInfo> followCreate(
+    Observable<WBUserInfo> createFollow(
             @Field("access_token") String token,
             @Field("uid") String count);
 
     @FormUrlEncoded
     @POST(UrlFactory.WB_FOLLOW_DESTROY)
-    Observable<WBUserInfo> followDestroy(
+    Observable<WBUserInfo> destroyFollow(
             @Field("access_token") String token,
             @Field("uid") String count);
 

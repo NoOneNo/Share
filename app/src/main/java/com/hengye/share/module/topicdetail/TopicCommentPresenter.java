@@ -147,7 +147,7 @@ public class TopicCommentPresenter extends ListTaskPresenter<TopicCommentMvpView
     }
 
     private Observer<TopicComments> getTopicCommentsSubscriber(boolean isRefresh) {
-        return new TaskSubscriber<TopicComments>(isRefresh) {
+        return new ListTaskSubscriber<TopicComments>(isRefresh) {
             @Override
             public void onNext(TopicCommentMvpView mvpView, TopicComments list) {
                 mvpView.onLoadTopicComments(list);
@@ -225,7 +225,7 @@ public class TopicCommentPresenter extends ListTaskPresenter<TopicCommentMvpView
 
                     @Override
                     public void onError(TopicCommentMvpView topicCommentMvpView, Throwable e) {
-                        topicCommentMvpView.onTopicCommentLike(topicComment, TaskState.getTaskFailState(e));
+                        topicCommentMvpView.onTopicCommentLike(topicComment, TaskState.getFailState(e));
                     }
                 });
     }

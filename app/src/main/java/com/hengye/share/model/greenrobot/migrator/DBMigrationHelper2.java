@@ -6,7 +6,7 @@ import org.greenrobot.greendao.database.Database;
 /**
  * Created by yuhy on 16/8/23.
  */
-public class DBMigrationHelper1 extends AbstractMigratorHelper {
+public class DBMigrationHelper2 extends AbstractMigratorHelper {
 
 /* Upgrade from DB schema x to schema x+1 */
 
@@ -15,7 +15,6 @@ public class DBMigrationHelper1 extends AbstractMigratorHelper {
      * @param db
      */
     public void onUpgrade(Database db) {
-        db.execSQL("ALTER TABLE USER ADD COLUMN COOKIE TEXT");
-        db.execSQL("ALTER TABLE USER ADD COLUMN EXTRA TEXT");
+        db.execSQL("ALTER TABLE GROUP_LIST ADD COLUMN DESCRIPTION TEXT");
     }
 }

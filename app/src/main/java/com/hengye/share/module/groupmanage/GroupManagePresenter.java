@@ -1,11 +1,16 @@
 package com.hengye.share.module.groupmanage;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.hengye.share.model.greenrobot.GroupList;
+import com.hengye.share.model.sina.WBGroup;
 import com.hengye.share.module.groupmanage.data.GroupManageDataSource;
+import com.hengye.share.module.util.encapsulation.base.TaskState;
 import com.hengye.share.module.util.encapsulation.mvp.RxPresenter;
+import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
+import com.hengye.share.util.retrofit.RetrofitManager;
 import com.hengye.share.util.rxjava.datasource.ObservableHelper;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
@@ -63,7 +68,7 @@ public class GroupManagePresenter extends RxPresenter<GroupManageMvpView> {
                         if (getMvpView() != null) {
                             setIsGroupUpdate(true);
                             getMvpView().loadSuccess();
-                            getMvpView().handleGroupList(true, groupLists);
+                            getMvpView().handleGroupList(false, groupLists);
                         }
                     }
                 }, new Consumer<Throwable>() {
@@ -115,6 +120,32 @@ public class GroupManagePresenter extends RxPresenter<GroupManageMvpView> {
                     @Override
                     public void onError(GroupManageMvpView v, Throwable e) {
                         v.checkGroupOrder(false);
+                    }
+                });
+    }
+
+    public void createGroup(String name, String description){
+        final UrlBuilder ub = new UrlBuilder();
+        final String uid = UserUtil.getUid();
+        ub.addParameter("access_token", UserUtil.getPriorToken());
+        ub.addParameter("name", name);
+        if(!TextUtils.isEmpty(description)){
+            ub.addParameter("description", description);
+        }
+        RetrofitManager
+                .getWBService()
+                .createGroup(ub.getParameters())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
+                .subscribe(new BaseSubscriber<WBGroup>() {
+                    @Override
+                    public void onNext(GroupManageMvpView v, WBGroup wbGroup) {
+                        v.createGroupResult(TaskState.STATE_SUCCESS, GroupList.getGroupList(wbGroup, uid));
+                    }
+
+                    @Override
+                    public void onError(GroupManageMvpView v, Throwable e) {
+                        v.createGroupResult(TaskState.getFailState(e), null);
                     }
                 });
     }

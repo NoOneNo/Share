@@ -14,9 +14,9 @@ public class ListDataPresenter<D, V extends MvpView & ListDataCallBack<D>> exten
         super(mvpView);
     }
 
-    public class ListDataSubscriber extends TaskSubscriber<List<D>>{
+    public class ListDataSubscriberList extends ListTaskSubscriber<List<D>> {
 
-        public ListDataSubscriber(boolean isRefresh){
+        public ListDataSubscriberList(boolean isRefresh){
             super(isRefresh);
         }
 

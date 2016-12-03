@@ -64,7 +64,7 @@ public class CheckUpdatePresenter extends RxPresenter<CheckUpdateMvpView> {
                     @Override
                     public void onError(CheckUpdateMvpView checkUpdateMvpView, Throwable e) {
                         if(mIsForce) {
-                            checkUpdateMvpView.onCheckUpdateFail(TaskState.getTaskFailState(e));
+                            checkUpdateMvpView.onCheckUpdateFail(TaskState.getFailState(e));
                         }
                     }
                 });

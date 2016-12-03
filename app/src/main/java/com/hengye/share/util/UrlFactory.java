@@ -100,12 +100,12 @@ public class UrlFactory {
     public static final String WB_GROUP_CREATE = "friendships/groups/create.json";
     //删除好友分组
     public static final String WB_GROUP_DESTROY = "friendships/groups/destroy.json";
+    //更新好友分组
+    public static final String WB_GROUP_UPDATE = "friendships/groups/update.json";
     //添加关注用户到好友分组
     public static final String WB_GROUP_MEMBER_ADD = "friendships/groups/members/add.json";
     //删除好友分组内的关注用户
     public static final String WB_GROUP_MEMBER_DESTROY = "friendships/groups/members/destroy.json";
-    //更新好友分组
-    public static final String WB_GROUP_UPDATE = "friendships/groups/update.json";
     //获取某一好友分组下的成员列表
     public static final String WB_GROUP_MEMBER = "friendships/groups/members.json";
     //调整当前登录用户的好友分组顺序

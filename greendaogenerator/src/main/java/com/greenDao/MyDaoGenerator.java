@@ -11,7 +11,7 @@ import org.greenrobot.greendao.generator.Schema;
 public class MyDaoGenerator {
 
     public static void main(String[] args) throws Exception {
-        Schema schema = new Schema(2, "com.hengye.share.model.greenrobot");
+        Schema schema = new Schema(3, "com.hengye.share.model.greenrobot");
 
         schema.enableKeepSectionsByDefault();
         schema.enableActiveEntitiesByDefault();
@@ -76,6 +76,7 @@ public class MyDaoGenerator {
         entity.addStringProperty("gid").notNull();
         entity.addStringProperty("title").notNull();
         entity.addStringProperty("name").notNull();
+        entity.addStringProperty("description");
         entity.addIntProperty("count");
         entity.addIntProperty("type");
         entity.addIntProperty("visible");

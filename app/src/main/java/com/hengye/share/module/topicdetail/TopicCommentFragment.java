@@ -13,7 +13,6 @@ import com.hengye.share.R;
 import com.hengye.share.model.TopicComments;
 import com.hengye.share.module.topic.TopicTitleViewHolder;
 import com.hengye.share.module.util.encapsulation.base.TaskState;
-import com.hengye.share.util.L;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.handler.TopicAdapterIdPager;
@@ -186,7 +185,7 @@ public class TopicCommentFragment extends StatusFragment<TopicComment> implement
         if (!TaskState.isSuccess(taskState)) {
             topicComment.updateLiked(!topicComment.isLiked());
             mAdapter.notifyDataSetChanged();
-            ToastUtil.showToast(TaskState.toTaskStateString(taskState));
+            ToastUtil.showToast(TaskState.toString(taskState));
         }
     }
 

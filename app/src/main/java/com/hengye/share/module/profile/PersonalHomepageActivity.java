@@ -45,8 +45,6 @@ import com.hengye.share.util.retrofit.RetrofitManager;
 import com.hengye.share.util.rxjava.DefaultSubscriber;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
-import org.reactivestreams.Subscription;
-
 import io.reactivex.Observable;
 
 public class PersonalHomepageActivity extends BaseActivity implements View.OnClickListener, AppBarLayout.OnOffsetChangedListener, UserMvpView {
@@ -464,10 +462,10 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         flowable = isFollow ?
                 RetrofitManager
                         .getWBService()
-                        .followCreate(UserUtil.getPriorToken(), uid) :
+                        .createFollow(UserUtil.getPriorToken(), uid) :
                 RetrofitManager
                         .getWBService()
-                        .followDestroy(UserUtil.getPriorToken(), uid);
+                        .destroyFollow(UserUtil.getPriorToken(), uid);
 
         flowable.subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())

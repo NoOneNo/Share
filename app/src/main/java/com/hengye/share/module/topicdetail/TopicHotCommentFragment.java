@@ -24,7 +24,6 @@ import com.hengye.share.module.util.encapsulation.base.TaskState;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
 import com.hengye.share.util.ClipboardUtil;
-import com.hengye.share.util.L;
 import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.handler.TopicNumberPager;
@@ -145,7 +144,7 @@ public class TopicHotCommentFragment extends StatusFragment<TopicComment> implem
         if(!TaskState.isSuccess(taskState)) {
             topicComment.updateLiked(!topicComment.isLiked());
             mAdapter.notifyDataSetChanged();
-            ToastUtil.showToast(TaskState.toTaskStateString(taskState));
+            ToastUtil.showToast(TaskState.toString(taskState));
         }
     }
 

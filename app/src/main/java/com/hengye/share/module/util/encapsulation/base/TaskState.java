@@ -17,7 +17,7 @@ public class TaskState {
     public static final int STATE_FAIL_BY_NETWORK = 2;
     public static final int STATE_FAIL_BY_SERVER = 3;
 
-    public static int getTaskFailState(Throwable throwable){
+    public static int getFailState(Throwable throwable){
         return isNetworkException(throwable) ? TaskState.STATE_FAIL_BY_NETWORK : TaskState.STATE_FAIL_BY_SERVER;
     }
 
@@ -43,7 +43,7 @@ public class TaskState {
         return false;
     }
 
-    public static String toTaskStateString(int taskState){
+    public static String toString(int taskState){
         int resId;
         switch (taskState){
             case STATE_SUCCESS:

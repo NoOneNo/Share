@@ -13,7 +13,7 @@
     <string name="tip_unpredictable_error">出现不可预知的错误</string>
     <string name="tip_loading">加载中</string>
     <string name="tip_empty">当前内容为空</string>
-    <string name="tip_service_error">当前请求不可用，请稍后尝试</string>
+    <string name="tip_service_error">请求失败，请稍后尝试</string>
     <string name="tip_try_refresh">刷新试试</string>
     <string name="tip_exit_on_back_pressed">再按一次退出应用</string>
     <string name="tip_no_app_store">找不到可用的应用市场</string>
@@ -129,10 +129,13 @@
 
     <!-- Strings related to GroupManager-->
     <string name="label_update_group_order">是否更新分组顺序？</string>
-    <string name="label_update_group">从服务器同步</string>
+    <string name="label_create_group">新建分组</string>
     <string name="label_group_count">%s人</string>
     <string name="label_update_group_success">更新成功</string>
     <string name="label_update_group_fail">更新失败</string>
+    <string name="hint_group_name">分组名字</string>
+    <string name="hint_group_desc">分组描述(可不填)</string>
+    <string name="error_group_name_null">分组名字不能为空</string>
     <!-- Strings related to GroupManager-->
 
     <!-- Strings related to Topic-->

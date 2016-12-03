@@ -13,11 +13,11 @@ public class ListTaskPresenter<V extends MvpView & ListTaskCallBack> extends RxP
         super(mvpView);
     }
 
-    public class TaskSubscriber<T> extends BaseSubscriber<T>{
+    public class ListTaskSubscriber<T> extends BaseSubscriber<T>{
 
         protected boolean isRefresh;
 
-        public TaskSubscriber(boolean isRefresh){
+        public ListTaskSubscriber(boolean isRefresh){
             this.isRefresh = isRefresh;
         }
 
@@ -25,7 +25,7 @@ public class ListTaskPresenter<V extends MvpView & ListTaskCallBack> extends RxP
         public void onError(V v, Throwable e) {
             super.onError(v, e);
             //根据e来判断是网络异常还是服务器异常;
-            v.onTaskComplete(isRefresh, TaskState.getTaskFailState(e));
+            v.onTaskComplete(isRefresh, TaskState.getFailState(e));
         }
 
         @Override
@@ -35,7 +35,7 @@ public class ListTaskPresenter<V extends MvpView & ListTaskCallBack> extends RxP
         }
 
         @Override
-        public void onNext(V v, T list) {
+        public void onNext(V v, T t) {
         }
     }
 }

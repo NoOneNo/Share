@@ -77,6 +77,6 @@ public class CheckUpdateMvpImpl implements CheckUpdateMvpView {
 
     @Override
     public void onCheckUpdateFail(int taskState) {
-        ToastUtil.showToast(TaskState.toTaskStateString(taskState));
+        ToastUtil.showToast(TaskState.toString(taskState));
     }
 }

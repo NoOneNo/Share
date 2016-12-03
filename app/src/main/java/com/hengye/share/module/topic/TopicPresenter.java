@@ -153,7 +153,13 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
                         .flatMap(flatWBTopicComments());
             case HOMEPAGE:
                 Map<String, String> params = getWBAllTopicParameter(id, isRefresh);
-                params.put("access_token", UserUtil.getPriorToken());
+                String token;
+                if(uid != null && uid.equals(UserUtil.getUid())){
+                    token = UserUtil.getToken();
+                }else{
+                    token = UserUtil.getPriorToken();
+                }
+                params.put("access_token", token);
                 return RetrofitManager
                         .getWBService()
                         .listUserTopic(params)
@@ -183,7 +189,7 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
     }
 
     private DisposableObserver<List<Topic>> getTopicsSubscriber(final boolean isRefresh) {
-        return new ListDataSubscriber(isRefresh);
+        return new ListDataSubscriberList(isRefresh);
     }
 
     Function<WBTopics, Observable<ArrayList<Topic>>> mFlatWBTopics;

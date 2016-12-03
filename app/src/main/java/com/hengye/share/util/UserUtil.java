@@ -230,6 +230,13 @@ public class UserUtil {
         qb.buildDelete().executeDeleteWithoutDetachingEntities();
     }
 
+    public static void insertGroupList(GroupList groupList) {
+        GreenDaoManager
+                .getDaoSession()
+                .getGroupListDao()
+                .insert(groupList);
+    }
+
     public static void insertGroupList(List<GroupList> groupLists) {
         GreenDaoManager
                 .getDaoSession()

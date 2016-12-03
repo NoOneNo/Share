@@ -37,6 +37,7 @@ public class GroupList implements java.io.Serializable {
 
     @NotNull
     private String name;
+    private String description;
     private Integer count;
     private Integer type;
     private Integer visible;
@@ -63,13 +64,14 @@ public class GroupList implements java.io.Serializable {
     }
 
     @Generated
-    public GroupList(Long id, int insertNumber, String uid, String gid, String title, String name, Integer count, Integer type, Integer visible, Integer remind) {
+    public GroupList(Long id, int insertNumber, String uid, String gid, String title, String name, String description, Integer count, Integer type, Integer visible, Integer remind) {
         this.id = id;
         this.insertNumber = insertNumber;
         this.uid = uid;
         this.gid = gid;
         this.title = title;
         this.name = name;
+        this.description = description;
         this.count = count;
         this.type = type;
         this.visible = visible;
@@ -137,6 +139,14 @@ public class GroupList implements java.io.Serializable {
     /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setName(@NotNull String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Integer getCount() {
@@ -233,6 +243,10 @@ public class GroupList implements java.io.Serializable {
         return groupLists;
     }
 
+    public static GroupList getGroupList(WBGroup wbGroup, String uid){
+        return getGroupList(wbGroup, uid, -1);
+    }
+
     public static GroupList getGroupList(WBGroup wbGroup, String uid, int insertNumber){
         GroupList gl = new GroupList();
         gl.setInsertNumber(insertNumber);
@@ -240,6 +254,7 @@ public class GroupList implements java.io.Serializable {
         gl.setGid(wbGroup.getIdstr());
         gl.setTitle("我的分组");
         gl.setName(wbGroup.getName());
+        gl.setDescription(wbGroup.getDescription());
         gl.setCount(wbGroup.getMember_count());
         gl.setType(wbGroup.getGroypType());
         gl.setVisible(wbGroup.getVisible());

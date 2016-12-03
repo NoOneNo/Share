@@ -37,7 +37,7 @@ public class TopicAlbumPresenter extends ListTaskPresenter<TopicAlbumMvpView> {
                 .listUserTopic(getParameter(id, isRefresh))
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(new TaskSubscriber<WBTopics>(isRefresh) {
+                .subscribe(new ListTaskSubscriber<WBTopics>(isRefresh) {
                     @Override
                     public void onNext(TopicAlbumMvpView v, WBTopics wbTopics) {
 
@@ -72,7 +72,13 @@ public class TopicAlbumPresenter extends ListTaskPresenter<TopicAlbumMvpView> {
 
     public Map<String, String> getParameter(String id, final boolean isRefresh) {
         final UrlBuilder ub = new UrlBuilder();
-        String token = UserUtil.getPriorToken();
+        String token;
+        if(uid != null && uid.equals(UserUtil.getUid())){
+            token = UserUtil.getToken();
+        }else{
+            token = UserUtil.getPriorToken();
+        }
+
         ub.addParameter("access_token", token);
         if (isRefresh) {
             ub.addParameter("since_id", id);

@@ -15,15 +15,7 @@ import com.hengye.share.util.retrofit.RetrofitManager;
 import com.hengye.share.util.retrofit.api.WBService;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
-import io.reactivex.BackpressureStrategy;
 import io.reactivex.Observable;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.SingleObserver;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.internal.operators.flowable.FlowableOnBackpressureLatest;
-import io.reactivex.subscribers.ResourceSubscriber;
 
 public class SearchPresenter extends RxPresenter<SearchMvpView> {
 
@@ -50,7 +42,7 @@ public class SearchPresenter extends RxPresenter<SearchMvpView> {
                     @Override
                     public void onError(SearchMvpView v, Throwable e) {
                         v.loadFail();
-                        ToastUtil.showToast(TaskState.toTaskStateString(TaskState.getTaskFailState(e)));
+                        ToastUtil.showToast(TaskState.toString(TaskState.getFailState(e)));
                     }
 
                     @Override
