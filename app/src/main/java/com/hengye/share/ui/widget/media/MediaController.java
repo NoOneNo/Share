@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -38,17 +39,17 @@ import java.util.Locale;
  * <p>
  * Functions like show() and hide() have no effect when MediaController
  * is created in an xml layout.
- *
+ * <p>
  * MediaController will hide and
  * show the buttons according to these rules:
  * <ul>
  * <li> The "previous" and "next" buttons are hidden until setPrevNextListeners()
- *   has been called
+ * has been called
  * <li> The "previous" and "next" buttons are visible but disabled if
- *   setPrevNextListeners() was called with null listeners
+ * setPrevNextListeners() was called with null listeners
  * <li> The "rewind" and "fastforward" buttons are shown unless requested
- *   otherwise by using the MediaController(Context, boolean) constructor
- *   with the boolean set to false
+ * otherwise by using the MediaController(Context, boolean) constructor
+ * with the boolean set to false
  * </ul>
  */
 public class MediaController extends FrameLayout {
@@ -57,10 +58,10 @@ public class MediaController extends FrameLayout {
     private final Context mContext;
     private View mAnchor;
     private View mRoot;
-//    private WindowManager mWindowManager;
+    //    private WindowManager mWindowManager;
 //    private Window mWindow;
     private View mDecor;
-//    private WindowManager.LayoutParams mDecorLayoutParams;
+    //    private WindowManager.LayoutParams mDecorLayoutParams;
     private SeekBar mProgress;
     private TextView mEndTime, mCurrentTime;
     private boolean mShowing;
@@ -199,6 +200,7 @@ public class MediaController extends FrameLayout {
      * This can for example be a VideoView, or your Activity's main view.
      * When VideoView calls this method, it will use the VideoView's parent
      * as the anchor.
+     *
      * @param view The view to which to anchor the controller when it is visible.
      */
     public void setAnchorView(View view) {
@@ -232,6 +234,7 @@ public class MediaController extends FrameLayout {
     /**
      * Create the view that holds the widgets that control playback.
      * Derived classes can override this to create their own.
+     *
      * @return The controller view.
      * @hide This doesn't work as advertised
      */
@@ -244,7 +247,8 @@ public class MediaController extends FrameLayout {
         return mRoot;
     }
 
-    ImageButton mPauseBtn, mCloseBtn, mFullScreenBtn;
+    ImageButton mPauseBtn, mCloseBtn;
+    ImageView mFullScreenBtn;
 
     private void initControllerView(View v) {
         Resources res = mContext.getResources();
@@ -254,18 +258,18 @@ public class MediaController extends FrameLayout {
                 .getText(R.string.lockscreen_transport_pause_description);
 
         mPauseBtn = (ImageButton) v.findViewById(R.id.btn_pause);
-        if(mPauseBtn != null) {
+        if (mPauseBtn != null) {
             mPauseBtn.setVisibility(View.GONE);
             mPauseBtn.setOnClickListener(mPauseListener);
         }
 
         mCloseBtn = (ImageButton) v.findViewById(R.id.btn_close);
-        if(mCloseBtn != null){
+        if (mCloseBtn != null) {
             mCloseBtn.setOnClickListener(mCloseListener);
         }
 
-        mFullScreenBtn = (ImageButton) v.findViewById(R.id.btn_full_screen);
-        if(mFullScreenBtn != null) {
+        mFullScreenBtn = (ImageView) v.findViewById(R.id.btn_full_screen);
+        if (mFullScreenBtn != null) {
             mFullScreenBtn.setOnClickListener(mFullscreenListener);
         }
 //        mPauseButton = (ImageButton) v.findViewById(R.id.pause);
@@ -322,7 +326,7 @@ public class MediaController extends FrameLayout {
         show(sDefaultTimeout);
     }
 
-    public void toggleMediaControlsVisibility(){
+    public void toggleMediaControlsVisibility() {
         if (isShowing()) {
             doPauseResume();
 //            hide();
@@ -367,8 +371,9 @@ public class MediaController extends FrameLayout {
     /**
      * Show the controller on screen. It will go away
      * automatically after 'timeout' milliseconds of inactivity.
+     *
      * @param timeout The timeout in milliseconds. Use 0 to show
-     * the controller until hide() is called.
+     *                the controller until hide() is called.
      */
     public void show(int timeout) {
         if (!mShowing && mAnchor != null) {
@@ -443,7 +448,7 @@ public class MediaController extends FrameLayout {
 
         int seconds = totalSeconds % 60;
         int minutes = (totalSeconds / 60) % 60;
-        int hours   = totalSeconds / 3600;
+        int hours = totalSeconds / 3600;
 
         mFormatBuilder.setLength(0);
         if (hours > 0) {
@@ -463,7 +468,7 @@ public class MediaController extends FrameLayout {
             if (duration > 0) {
                 // use long to avoid overflow
                 long pos = 1000L * position / duration;
-                mProgress.setProgress( (int) pos);
+                mProgress.setProgress((int) pos);
             }
             int percent = mPlayer.getBufferPercentage();
             mProgress.setSecondaryProgress(percent * 10);
@@ -496,7 +501,7 @@ public class MediaController extends FrameLayout {
         }
     };
 
-    public OnTouchListener getTouchHelperListener(){
+    public OnTouchListener getTouchHelperListener() {
         return mTouchHelperListener;
     }
 
@@ -533,7 +538,7 @@ public class MediaController extends FrameLayout {
         int keyCode = event.getKeyCode();
         final boolean uniqueDown = event.getRepeatCount() == 0
                 && event.getAction() == KeyEvent.ACTION_DOWN;
-        if (keyCode ==  KeyEvent.KEYCODE_HEADSETHOOK
+        if (keyCode == KeyEvent.KEYCODE_HEADSETHOOK
                 || keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE
                 || keyCode == KeyEvent.KEYCODE_SPACE) {
             if (uniqueDown) {
@@ -593,7 +598,7 @@ public class MediaController extends FrameLayout {
 
     boolean mIsFullScreen = false;
 
-    public boolean isFullscreen(){
+    public boolean isFullscreen() {
         return mIsFullScreen;
     }
 
@@ -663,9 +668,9 @@ public class MediaController extends FrameLayout {
 
             long duration = mPlayer.getDuration();
             long newposition = (duration * progress) / 1000L;
-            mPlayer.seekTo( (int) newposition);
+            mPlayer.seekTo((int) newposition);
             if (mCurrentTime != null)
-                mCurrentTime.setText(stringForTime( (int) newposition));
+                mCurrentTime.setText(stringForTime((int) newposition));
         }
 
         @Override

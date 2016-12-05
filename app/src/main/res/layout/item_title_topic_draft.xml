@@ -18,7 +18,8 @@
         android:layout_alignParentTop="true"
         android:layout_width="60dp"
         android:layout_height="35dp"
-        android:text="重发"
+        android:text="@string/label_send_again"
         android:textSize="12sp"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        style="@style/Widget.Material.Button"/>
 </RelativeLayout>

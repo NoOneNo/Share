@@ -132,6 +132,7 @@
     <string name="label_create_group">新建分组</string>
     <string name="label_group_count">%s人</string>
     <string name="tip_delete_group_confirm">是否删除该分组？</string>
+    <string name="tip_delete_group_success">成功删除分组</string>
     <string name="tip_update_group_success">更新成功</string>
     <string name="tip_update_group_fail">更新失败</string>
     <string name="tip_create_group_success">成功创建分组</string>
@@ -217,6 +218,7 @@
     <string name="label_delete_all_drafts">是否清空所有草稿？</string>
     <string name="label_title_delete_all_drafts">清空草稿箱</string>
     <string name="label_delete_draft">删除</string>
+    <string name="label_send_again">重发</string>
     <string name="label_edit_when">编辑于 %s</string>
     <string name="label_publish_when">将于%s发送</string>
     <string name="label_timing_expire">定时发送已过期</string>

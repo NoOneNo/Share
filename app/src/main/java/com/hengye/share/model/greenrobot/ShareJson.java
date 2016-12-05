@@ -125,6 +125,10 @@ public class ShareJson implements java.io.Serializable {
     // KEEP METHODS - put your custom methods here
 
     public static void saveListData(final String modelName, List data) {
+        saveListData(modelName, data, true);
+    }
+
+    public static void saveListData(final String modelName, List data, boolean limitData) {
         if (data == null) {
             data = new ArrayList();
         }

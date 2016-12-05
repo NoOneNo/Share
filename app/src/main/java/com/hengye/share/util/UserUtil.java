@@ -229,6 +229,17 @@ public class UserUtil {
         qb.buildDelete().executeDeleteWithoutDetachingEntities();
     }
 
+    public static void deleteGroupList(GroupList groupList) {
+        QueryBuilder<GroupList> qb = GreenDaoManager
+                .getDaoSession()
+                .getGroupListDao()
+                .queryBuilder()
+                .where(GroupListDao.Properties.Gid.eq(groupList.getGid()))
+                .where(GroupListDao.Properties.Uid.eq(groupList.getUid()));
+
+        qb.buildDelete().executeDeleteWithoutDetachingEntities();
+    }
+
     public static void insertGroupList(GroupList groupList) {
         GreenDaoManager
                 .getDaoSession()

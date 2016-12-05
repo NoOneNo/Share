@@ -142,9 +142,11 @@ public class RequestManager {
 	}
 
 	public static void clearImageCache(){
-		if(mDiskBasedCache != null){
-			mDiskBasedCache.clear();
-		}
+		ImageDiskLruCache.getInstance().clearCache();
+	}
+
+	public static long getImageCacheSize(){
+		return ImageDiskLruCache.getInstance().getCacheSize();
 	}
 }
 

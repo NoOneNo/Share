@@ -408,7 +408,7 @@ public class AtUserActivity extends BaseActivity implements UserListMvpView {
     public void showUserListSuccess(List<UserInfo> data, boolean isRefresh) {
         mSearchResultData = AtUser.getAtUser(data);
 
-        ShareJson.saveListData(AtUser.class.getSimpleName() + UserUtil.getUid(), mSearchResultData);
+        ShareJson.saveListData(AtUser.class.getSimpleName() + UserUtil.getUid(), mSearchResultData, false);
         mAtUserSearchAdapter.refresh(convertUserList(mSearchResultData));
     }
 

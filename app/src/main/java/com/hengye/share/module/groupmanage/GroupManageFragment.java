@@ -223,8 +223,8 @@ public class GroupManageFragment extends RecyclerRefreshFragment implements Grou
     public void deleteGroupResult(int taskState, GroupList groupList) {
         if (TaskState.STATE_SUCCESS == taskState) {
             mAdapter.removeItem(groupList);
-            UserUtil.updateGroupList(groupList);
-            ToastUtil.showToast(R.string.tip_update_group_success);
+            UserUtil.deleteGroupList(groupList);
+            ToastUtil.showToast(R.string.tip_delete_group_success);
         } else {
             ToastUtil.showToast(TaskState.toString(taskState));
         }

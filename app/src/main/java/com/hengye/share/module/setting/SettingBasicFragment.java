@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.text.format.Formatter;
 
 import com.hengye.share.module.base.BaseApplication;
 import com.hengye.share.R;
@@ -13,6 +14,8 @@ import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.ToastUtil;
 
 public class SettingBasicFragment extends BasePreferenceFragment{
+
+    Preference mClearPhotoCache;
 
     @Override
     public String getTitle(){
@@ -24,9 +27,9 @@ public class SettingBasicFragment extends BasePreferenceFragment{
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref_setting_basic);
 
-        Preference clearPhotoCache = findPreference(SettingHelper.KEY_BASIC_CLEAR_PHOTO_CACHE);
-
-        clearPhotoCache.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        mClearPhotoCache = findPreference(SettingHelper.KEY_BASIC_CLEAR_PHOTO_CACHE);
+        updatePhotoCacheSize();
+        mClearPhotoCache.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 showDialog();
@@ -35,6 +38,8 @@ public class SettingBasicFragment extends BasePreferenceFragment{
         });
 
 
+
+        //功能暂未实现
         Preference.OnPreferenceClickListener onClickListener = new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -43,6 +48,10 @@ public class SettingBasicFragment extends BasePreferenceFragment{
             }
         };
         findPreference(SettingHelper.KEY_BASIC_PHOTO_SAVE_PATH).setOnPreferenceClickListener(onClickListener);
+    }
+
+    private void updatePhotoCacheSize(){
+        mClearPhotoCache.setSummary(Formatter.formatShortFileSize(getActivity(), RequestManager.getImageCacheSize()));
     }
 
     private Dialog mDialog;
@@ -54,7 +63,13 @@ public class SettingBasicFragment extends BasePreferenceFragment{
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     RequestManager.clearImageCache();
-                    ToastUtil.showToast("清楚图片缓存成功");
+                    getView().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            updatePhotoCacheSize();
+                            ToastUtil.showToast("清楚图片缓存成功");
+                        }
+                    }, 500);
                 }
             });
             mDialog = stbd.create(getActivity());

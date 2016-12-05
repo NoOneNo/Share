@@ -68,6 +68,13 @@ android {
             dirs 'libs'
         }
     }
+
+    //修改生成的apk名字 --> com.hengye.share-release-1.0.apk
+    applicationVariants.all { variant ->
+        def file = variant.outputs[0].outputFile
+        def releaseApkName = defaultConfig.applicationId + '-' + variant.buildType.name + '-' + defaultConfig.versionName + '.apk'
+        variant.outputs[0].outputFile = new File(file.parent, releaseApkName)
+    }
 }
 
 

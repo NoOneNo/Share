@@ -98,13 +98,14 @@
                 android:textStyle="bold"
                 tools:text="00:00" />
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/btn_full_screen"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:contentDescription="@null"
-                android:padding="@dimen/content_margin_10dp"
-                android:src="@drawable/ic_media_play"/>
+                android:padding="@dimen/spacing_micro"
+                android:background="@drawable/selector_ripple_transparent"
+                android:src="@drawable/ic_full_screen_white"/>
         </LinearLayout>
 
     </LinearLayout>
