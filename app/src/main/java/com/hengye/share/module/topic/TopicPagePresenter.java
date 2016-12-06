@@ -88,7 +88,7 @@ public class TopicPagePresenter extends ListDataPresenter<Topic, TopicPageMvpVie
     }
 
     private Observer<List<Topic>> getTopicsSubscriber(final boolean isRefresh) {
-        return new ListDataSubscriberList(isRefresh);
+        return new ListDataSubscriber(isRefresh);
     }
 
     Function<WBTopics, Observable<ArrayList<Topic>>> mFlatWBTopics;

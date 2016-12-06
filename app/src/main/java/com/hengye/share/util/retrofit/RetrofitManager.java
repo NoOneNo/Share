@@ -72,7 +72,7 @@ public class RetrofitManager {
         return mWBService;
     }
 
-    public static WBService getWBServiceProxy(){
+    private static WBService getWBServiceProxy(){
         WBService wbService = getWBRetrofit().create(WBService.class);
         WBServiceProxyHandler mProxyHandler = new WBServiceProxyHandler(wbService);
         return (WBService) Proxy.newProxyInstance(WBService.class.getClassLoader(), new Class<?>[]{WBService.class}, mProxyHandler);

@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
-import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -31,7 +30,6 @@ import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.module.topic.TopicPresenter;
 import com.hengye.share.service.TopicPublishService;
 import com.hengye.share.ui.support.textspan.SimpleContentSpan;
-import com.hengye.share.ui.support.textspan.TopicContentUrlSpan;
 import com.hengye.share.ui.widget.TopicEditText;
 import com.hengye.share.ui.widget.dialog.DateAndTimePickerDialog;
 import com.hengye.share.ui.widget.emoticon.EmoticonPicker;
@@ -525,10 +523,10 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         mCurrentContentLength = EncodeUtil.getChineseLength(mContent.getText().toString());
         int differLength = Math.abs(MAX_CHINESE_CONTENT_LENGTH - mCurrentContentLength);
         if (mCurrentContentLength <= MAX_CHINESE_CONTENT_LENGTH) {
-            mContentLength.setTextColor(ResUtil.getColor(R.color.font_grey));
+            mContentLength.setTextColor(ResUtil.getColor(R.color.text_grey));
             mContentLength.setText(ResUtil.getString(R.string.label_topic_publish_content_length_less, differLength));
         } else {
-            mContentLength.setTextColor(ResUtil.getColor(R.color.font_red_warn));
+            mContentLength.setTextColor(ResUtil.getColor(R.color.text_red_warn));
             mContentLength.setText(ResUtil.getString(R.string.label_topic_publish_content_length_more, differLength));
         }
     }

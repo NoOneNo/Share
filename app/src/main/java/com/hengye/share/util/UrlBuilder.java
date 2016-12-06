@@ -12,6 +12,14 @@ import java.util.Set;
 
 public class UrlBuilder {
 
+    public static UrlBuilder build(){
+        return new UrlBuilder();
+    }
+
+    public static UrlBuilder build(String url){
+        return new UrlBuilder(url);
+    }
+
     private static final String DEFAULT_PARAMS_ENCODING = "UTF-8";
 
     private Map<String, String> mParameters;
@@ -19,6 +27,7 @@ public class UrlBuilder {
     private String mUrl;
 
     private String mEncoding = DEFAULT_PARAMS_ENCODING;
+
 
     public UrlBuilder(){
         mParameters = new HashMap<>();
@@ -55,40 +64,52 @@ public class UrlBuilder {
         return getRequestUrl();
     }
 
-    public void addParameter(String key, String value){
+    public UrlBuilder addParameter(String key, String value){
         mParameters.put(key, String.valueOf(value));
+        return this;
     }
 
-    public void addParameter(String key, Object value){
+    public UrlBuilder addParameter(String key, Object value){
         mParameters.put(key, value.toString());
+        return this;
     }
 
-    public void addParameter(String key, int value){
+    public UrlBuilder addParameter(String key, int value){
         mParameters.put(key, String.valueOf(value));
+        return this;
     }
 
-    public void addParameter(String key, float value) {
+    public UrlBuilder addParameter(String key, long value){
         mParameters.put(key, String.valueOf(value));
+        return this;
     }
 
-    public void addParameter(String key, double value) {
+    public UrlBuilder addParameter(String key, float value) {
         mParameters.put(key, String.valueOf(value));
+        return this;
+    }
+
+    public UrlBuilder addParameter(String key, double value) {
+        mParameters.put(key, String.valueOf(value));
+        return this;
     }
 
     public String getUrl() {
         return mUrl;
     }
 
-    public void setUrl(String url) {
+    public UrlBuilder setUrl(String url) {
         this.mUrl = url;
+        return this;
     }
 
     public Map<String, String> getParameters() {
         return mParameters;
     }
 
-    public void setParameters(Map<String, String> parameters) {
+    public UrlBuilder setParameters(Map<String, String> parameters) {
         this.mParameters = parameters;
+        return this;
     }
 
     public byte[] getBody(){
@@ -118,8 +139,9 @@ public class UrlBuilder {
         }
     }
 
-    protected void setParamsEncoding(String encoding){
+    protected UrlBuilder setParamsEncoding(String encoding){
         mEncoding = encoding;
+        return this;
     }
 
     protected String getParamsEncoding() {

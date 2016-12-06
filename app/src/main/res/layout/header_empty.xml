@@ -21,6 +21,6 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/tip_empty"
-            android:textColor="@color/font_grey"/>
+            android:textColor="@color/text_grey"/>
 
 </LinearLayout>

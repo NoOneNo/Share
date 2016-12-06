@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Vibrator;
 import android.support.annotation.DimenRes;
+import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.HapticFeedbackConstants;
 import android.view.SoundEffectConstants;
@@ -73,6 +74,18 @@ public class ViewUtil extends ResUtil {
     public static void hideKeyBoard(View paramEditText) {
         ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE))
                 .hideSoftInputFromWindow(paramEditText.getWindowToken(), 0);
+    }
+
+    public static void hideKeyBoardOnScroll(RecyclerView recyclerView, final View paramEditText) {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (RecyclerView.SCROLL_STATE_DRAGGING == newState) {
+                    ViewUtil.hideKeyBoard(paramEditText);
+                }
+            }
+        });
     }
 
     public static void showKeyBoard(final View paramEditText) {

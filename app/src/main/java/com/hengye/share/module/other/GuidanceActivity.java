@@ -17,6 +17,7 @@ import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.UserUtil;
+import com.hengye.share.util.thirdparty.ThirdPartyUtils;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.smtt.sdk.QbSdk;
 
@@ -81,7 +82,7 @@ public class GuidanceActivity extends BaseActivity {
 
 
         //初始化腾讯bugly
-        CrashReport.initCrashReport(BaseApplication.getInstance(), "900019432", false);
+        CrashReport.initCrashReport(BaseApplication.getInstance(), ThirdPartyUtils.getAppKeyForBugly(), false);
         //初始化腾讯x5
         QbSdk.initX5Environment(BaseApplication.getInstance(), null);
     }

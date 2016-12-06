@@ -110,7 +110,14 @@ public class WBUtil {
 //    }
 
     public static String getWBLargeImgUrl(String url) {
-        return getWBImgUrl(url, IMAGE_TYPE_BMIDDLE, IMAGE_TYPE_ORIGINAL);
+        if(url != null){
+            if(url.contains(IMAGE_TYPE_BMIDDLE)) {
+                return getWBImgUrl(url, IMAGE_TYPE_BMIDDLE, IMAGE_TYPE_ORIGINAL);
+            }else{
+                return getWBImgUrl(url, IMAGE_TYPE_THUMBNAIL, IMAGE_TYPE_ORIGINAL);
+            }
+        }
+        return null;
     }
 
     public static String getWBImgUrl(String url, String fromType, String toType) {

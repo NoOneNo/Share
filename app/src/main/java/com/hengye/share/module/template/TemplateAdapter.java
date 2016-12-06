@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.hengye.share.R;
 import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapter;
 import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemViewHolder;
 
@@ -16,7 +17,7 @@ public class TemplateAdapter extends CommonAdapter<String> {
 
     @Override
     public MainViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
-        return new MainViewHolder(LayoutInflater.from(getContext()).inflate(null, parent, false));
+        return new MainViewHolder(inflate(R.layout.item_user_list, parent));
     }
 
     public static class MainViewHolder extends ItemViewHolder<String> {

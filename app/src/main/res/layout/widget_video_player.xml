@@ -7,7 +7,7 @@
         android:id="@+id/surface_video"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="@color/font_grey" />
+        android:background="@color/text_grey" />
 
     <ImageView
         android:id="@+id/btn_close"

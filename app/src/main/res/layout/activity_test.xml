@@ -60,6 +60,13 @@
         android:text="setToken"
         android:layout_centerInParent="true"/>
 
+    <Button
+        android:id="@+id/btn_test8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="testLocation"
+        android:layout_centerInParent="true"/>
+
     <com.hengye.share.ui.widget.loading.FramesLoadingView
         android:id="@+id/loading"
         android:layout_width="35dp"

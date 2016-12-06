@@ -189,7 +189,7 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
     }
 
     private DisposableObserver<List<Topic>> getTopicsSubscriber(final boolean isRefresh) {
-        return new ListDataSubscriberList(isRefresh);
+        return new ListDataSubscriber(isRefresh);
     }
 
     Function<WBTopics, Observable<ArrayList<Topic>>> mFlatWBTopics;

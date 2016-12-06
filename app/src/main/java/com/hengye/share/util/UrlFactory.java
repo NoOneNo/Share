@@ -137,6 +137,8 @@ public class UrlFactory {
     //评论取消点赞
     public static final String WB_LIKE_DESTROY = "http://api.weibo.cn/2/like/destroy";
 
+    //获取附近地点
+    public static final String WB_PLACE_NEARBY= "place/nearby/pois.json";
     /**
      * 微博接口
      */

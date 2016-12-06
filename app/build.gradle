@@ -129,6 +129,7 @@ dependencies {
     compile(name: 'skinloader-release', ext: 'aar')
 //    compile(name: 'photopicker-release', ext: 'aar')
     compile files('libs/tbs_sdk_thirdapp_v2.5.0.1031.jar')
+    compile files('libs/AMap_Location_V3.2.0_20161205.jar')
 
     compile project(':datetimerpicker')
     compile project(':floatingactionbutton')

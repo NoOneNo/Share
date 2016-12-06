@@ -58,12 +58,12 @@ public class TopicCommentAndRepostFragment extends TabLayoutFragment{
 
     @ColorRes
     public int getTabTextNormalColor(){
-        return R.color.font_grey_light;
+        return R.color.text_grey_light;
     }
 
     @ColorRes
     public int getTabTextSelectColor(){
-        return R.color.font_grey;
+        return R.color.text_grey;
     }
 
     @Override

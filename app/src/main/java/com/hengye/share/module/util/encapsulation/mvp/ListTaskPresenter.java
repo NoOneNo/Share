@@ -1,6 +1,7 @@
 package com.hengye.share.module.util.encapsulation.mvp;
 
 import com.hengye.share.module.util.encapsulation.base.ListTaskCallBack;
+import com.hengye.share.module.util.encapsulation.base.Pager;
 import com.hengye.share.module.util.encapsulation.base.TaskState;
 
 /**
@@ -37,5 +38,15 @@ public class ListTaskPresenter<V extends MvpView & ListTaskCallBack> extends RxP
         @Override
         public void onNext(V v, T t) {
         }
+    }
+
+    private Pager pager;
+
+    public Pager getPager() {
+        return pager;
+    }
+
+    public void setPager(Pager pager) {
+        this.pager = pager;
     }
 }

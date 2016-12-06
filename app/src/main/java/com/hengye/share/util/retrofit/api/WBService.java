@@ -1,9 +1,10 @@
 package com.hengye.share.util.retrofit.api;
 
 import com.hengye.share.model.Result;
-import com.hengye.share.model.Topic;
+import com.hengye.share.model.sina.WBAddresses;
 import com.hengye.share.model.sina.WBGroup;
 import com.hengye.share.model.sina.WBGroups;
+import com.hengye.share.model.sina.WBResult;
 import com.hengye.share.model.sina.WBShortUrls;
 import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.model.sina.WBTopicComment;
@@ -32,10 +33,8 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
-import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 import retrofit2.http.Url;
-import io.reactivex.Observable;
 
 public interface WBService {
 
@@ -229,8 +228,11 @@ public interface WBService {
     Observable<Object> getMediaPlayUrl(@Field("weibo_id") String weiboId);
 
     @GET(UrlFactory.WB_LIKE_UPDATE)
-    Observable<Result> likeUpdate(@QueryMap Map<String, String> options);
+    Observable<WBResult> likeUpdate(@QueryMap Map<String, String> options);
 
     @GET(UrlFactory.WB_LIKE_DESTROY)
-    Observable<Result> likeDestroy(@QueryMap Map<String, String> options);
+    Observable<WBResult> likeDestroy(@QueryMap Map<String, String> options);
+
+    @GET(UrlFactory.WB_PLACE_NEARBY)
+    Observable<WBAddresses> getPlaceNearBy(@QueryMap Map<String, String> options);
 }

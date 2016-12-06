@@ -13,6 +13,7 @@ import com.android.volley.cache.BitmapCache;
 import com.hengye.share.R;
 import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.module.base.BaseActivity;
+import com.hengye.share.module.map.AroundAddressFragment;
 import com.hengye.share.module.publish.TopicPublishActivity;
 import com.hengye.share.module.sso.ThirdPartyLoginActivity;
 import com.hengye.share.module.util.WebViewActivity;
@@ -59,6 +60,7 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
         findViewById(R.id.btn_test5).setOnClickListener(this);
         findViewById(R.id.btn_test6).setOnClickListener(this);
         findViewById(R.id.btn_test7).setOnClickListener(this);
+        findViewById(R.id.btn_test8).setOnClickListener(this);
         mLoading = (FramesLoadingView) findViewById(R.id.loading);
         mLoading.stop();
         mListDialog = new ListDialog(this, new ArrayList<ListDialog.KeyValue>());
@@ -99,6 +101,9 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
 //            startActivity(WebViewActivity.getStartIntent(this, "http://www.baidu.com"));
         } else if (v.getId() == R.id.btn_test7) {
             startActivity(SetTokenActivity.class);
+        }else if (v.getId() == R.id.btn_test8) {
+//            startActivity(TestLocationActivity.class);
+            AroundAddressFragment.start(this, 1);
         }
 
     }

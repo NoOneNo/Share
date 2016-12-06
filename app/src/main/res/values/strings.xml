@@ -113,6 +113,7 @@
     <string name="title_activity_topic_body">微博正文</string>
     <string name="title_activity_hot_comment">热门评论</string>
     <string name="title_activity_wb_web_login">微博登录</string>
+    <string name="title_activity_around_address">选择附近地点</string>
     <!-- Strings related to activity title-->
 
     <!-- Strings related to TopicGroup-->
@@ -265,15 +266,20 @@
     <string name="label_title_tool_bar">工具栏</string>
     <!-- Strings related to WebView-->
 
-    <!-- Strings related to ServiceError-->
+    <!-- Strings related to ServiceError -->
     <string name="tip_error_service_unavailable">服务暂停，请稍后尝试</string>
-    <!-- Strings related to ServiceError-->
+    <!-- Strings related to ServiceError -->
 
-    <!-- Strings related to CheckUpdate-->
+    <!-- Strings related to CheckUpdate -->
     <string name="title_find_update">发现新的版本</string>
     <string name="tip_update_now">现在更新</string>
     <string name="tip_new_version">当前app版本为%1$s，是否更新到%2$s版本？</string>
-    <!-- Strings related to CheckUpdate-->
+    <!-- Strings related to CheckUpdate -->
+
+    <!-- Strings related to activity around address -->
+    <string name="label_current_address">当前位置：%s</string>
+    <string name="label_space_between">距离%s米</string>
+    <!-- Strings related to activity around address -->
 
     <!-- Strings related to setting -->
     <string name="title_setting_common">常规设置</string>

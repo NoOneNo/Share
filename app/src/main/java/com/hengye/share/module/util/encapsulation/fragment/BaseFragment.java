@@ -1,5 +1,6 @@
 package com.hengye.share.module.util.encapsulation.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -166,6 +167,10 @@ public class BaseFragment extends Fragment implements ActivityHelper.ActivityAct
 
     public final void setResult(int resultCode) {
         getActivity().setResult(resultCode);
+    }
+
+    public final void setResult(int resultCode, Intent data) {
+        getActivity().setResult(resultCode, data);
     }
 
     public void finish() {

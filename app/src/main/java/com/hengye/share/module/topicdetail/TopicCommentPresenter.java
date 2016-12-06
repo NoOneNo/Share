@@ -3,6 +3,7 @@ package com.hengye.share.module.topicdetail;
 import com.hengye.share.model.Result;
 import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.TopicComments;
+import com.hengye.share.model.sina.WBResult;
 import com.hengye.share.model.sina.WBTopicComments;
 import com.hengye.share.model.sina.WBTopicReposts;
 import com.hengye.share.module.topic.TopicRxUtil;
@@ -204,14 +205,14 @@ public class TopicCommentPresenter extends ListTaskPresenter<TopicCommentMvpView
         Map<String, String> params = ub.getParameters();
 
         WBService service = RetrofitManager.getWBService();
-        Observable<Result> observable = isLike ? service.likeUpdate(params) : service.likeDestroy(params);
+        Observable<WBResult> observable = isLike ? service.likeUpdate(params) : service.likeDestroy(params);
 
         observable
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(new BaseSubscriber<Result>() {
+                .subscribe(new BaseSubscriber<WBResult>() {
                     @Override
-                    public void onNext(TopicCommentMvpView topicCommentMvpView, Result result) {
+                    public void onNext(TopicCommentMvpView topicCommentMvpView, WBResult result) {
                         int taskState;
 
                         if (result != null && result.isSuccess()) {

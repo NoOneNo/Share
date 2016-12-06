@@ -64,6 +64,12 @@ public static java.lang.String TABLENAME;
 #-libraryjars libs/tbs_sdk_thirdapp_v2.5.0.1031.jar
 ## tencent x5
 
+## 高德地图-定位
+-keep class com.amap.api.location.**{*;}
+-keep class com.amap.api.fence.**{*;}
+-keep class com.autonavi.aps.amapapi.model.**{*;}
+## 高德地图
+
 ## me
 #-libraryjars libs/weibosdkcore.jar
 #-libraryjars libs/volleyplus-release.aar

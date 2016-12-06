@@ -2,7 +2,6 @@ package com.hengye.share.module.publish;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -253,15 +252,7 @@ public class AtUserActivity extends BaseActivity implements UserListMvpView {
             }
         });
 
-        mRVSearchResult.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (RecyclerView.SCROLL_STATE_DRAGGING == newState) {
-                    ViewUtil.hideKeyBoard(mSearch);
-                }
-            }
-        });
+        ViewUtil.hideKeyBoardOnScroll(mRVSearchResult, mSearch);
 
         mPullToRefreshLayout.setOnRefreshListener(new SwipeListener.OnRefreshListener() {
             @Override

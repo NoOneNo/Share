@@ -1,11 +1,15 @@
 package com.hengye.share.util.retrofit.api;
 
+import com.hengye.share.model.other.AMapAddresses;
 import com.hengye.share.module.update.UpdateBean;
 import com.hengye.share.module.update.UpdateBombBean;
+
+import java.util.Map;
 
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import io.reactivex.Observable;
+import retrofit2.http.QueryMap;
 
 /**
  * Created by yuhy on 2016/11/21.
@@ -19,4 +23,7 @@ public interface ShareService {
     })
     @GET("https://api.bmob.cn/1/classes/Android_Version?order=-versionCode&limit=1")
     Observable<UpdateBombBean> checkUpdate();
+
+    @GET("https://restapi.amap.com/v3/place/around")
+    Observable<AMapAddresses> getPlaceRoundByAMap(@QueryMap Map<String, String> options);
 }
