@@ -33,7 +33,7 @@ public class TopicGalleryFragment extends GalleryFragment {
 
     @Override
     protected String getImageUrl(int position) {
-        if (urls != null && 0 <= position && position < urls.size()) {
+        if (0 <= position && position < urls.size()) {
             return urls.get(position);
         }
         return null;

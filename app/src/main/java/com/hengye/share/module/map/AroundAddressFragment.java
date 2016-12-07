@@ -3,7 +3,6 @@ package com.hengye.share.module.map;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.view.KeyEvent;
 import android.view.View;
@@ -12,11 +11,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
-import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationListener;
 import com.hengye.share.R;
 import com.hengye.share.model.Address;
-import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.module.groupmanage.AroundAddressAdapter;
 import com.hengye.share.module.test.TestLocationActivity;
 import com.hengye.share.module.util.FragmentActivity;
@@ -26,9 +23,9 @@ import com.hengye.share.module.util.encapsulation.base.NumberPager;
 import com.hengye.share.module.util.encapsulation.base.Pager;
 import com.hengye.share.module.util.encapsulation.fragment.RecyclerRefreshFragment;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
-import com.hengye.share.util.ApplicationUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.ResUtil;
+import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.thirdparty.AMapUtil;
 
@@ -54,6 +51,11 @@ public class AroundAddressFragment extends RecyclerRefreshFragment<Address> impl
     @Override
     public int getLayoutResId() {
         return R.layout.fragment_around_address;
+    }
+
+    @Override
+    public int getContentResId() {
+        return R.layout.fragment_recycler_refresh_vertical;
     }
 
     @Override
@@ -99,6 +101,7 @@ public class AroundAddressFragment extends RecyclerRefreshFragment<Address> impl
             }
         });
 
+        showLoading();
         initLocation();
     }
 
@@ -126,10 +129,11 @@ public class AroundAddressFragment extends RecyclerRefreshFragment<Address> impl
         AMapUtil.initLocationClient(getActivity(), new AMapLocationListener() {
             @Override
             public void onLocationChanged(AMapLocation loc) {
-                if (null != loc) {
+                if (null != loc && mLocation == null) {
                     mLocation = loc;
                     mPresenter.setLocation((float) loc.getLongitude(), (float) loc.getLatitude());
-                    mCurrentAddress.setText(ResUtil.getString(R.string.label_current_address, loc.getAddress()));
+                    mCurrentAddress.setText(loc.getAddress());
+                    mPresenter.loadAroundAddress(true);
                     //解析定位结果
                     String result = TestLocationActivity.Utils.getLocationStr(loc);
                     L.debug("定位结果 : {}", result);
@@ -146,12 +150,30 @@ public class AroundAddressFragment extends RecyclerRefreshFragment<Address> impl
 
     @Override
     public void onRefresh() {
-        mPresenter.loadAroundAddress(true);
+        if(isLocationSuccess()){
+            mPresenter.loadAroundAddress(true);
+        }else{
+            setRefreshing(false);
+        }
     }
 
     @Override
     public void onLoad() {
         mPresenter.loadAroundAddress(false);
+    }
+
+    private boolean isLocationSuccess(){
+        if(mLocation == null){
+            ToastUtil.showToast(R.string.tip_locating);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onTaskComplete(boolean isRefresh, int taskState) {
+        super.onTaskComplete(isRefresh, taskState);
+        ViewUtil.hideKeyBoard(mKeywordsTxt);
     }
 }
 

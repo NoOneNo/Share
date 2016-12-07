@@ -1,6 +1,7 @@
 package com.hengye.share.ui.widget.common;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
@@ -49,12 +50,24 @@ public class CommonToolBar extends Toolbar {
         setTitleTextColor(ThemeUtil.getTextColor());
         setSubtitleTextColor(ThemeUtil.getTextColor());
         if (getNavigation() != null) {
-            int actionBarHeight = ViewUtil.getActionBarHeight();
             int size = getResources().getDimensionPixelSize(R.dimen.icon_size_small);
-            int padding = (actionBarHeight - size) / 2;
-            getNavigation().setPadding(0, padding, 0, padding);
+            adjustNavigationPadding(size);
             getNavigation().setScaleType(ImageView.ScaleType.FIT_CENTER);
         }
+    }
+
+    public void setNavigationIcon(@Nullable Drawable icon, boolean autoPadding) {
+        super.setNavigationIcon(icon);
+        if(autoPadding && icon != null){
+            int height = icon.getIntrinsicHeight();
+            adjustNavigationPadding(height);
+        }
+    }
+
+    private void adjustNavigationPadding(int size){
+        int actionBarHeight = ViewUtil.getActionBarHeight();
+        int padding = (actionBarHeight - size) / 2;
+        getNavigation().setPadding(0, padding, 0, padding);
     }
 
     private static final int DOUBLE_TAP_TIMEOUT = ViewConfiguration.getDoubleTapTimeout();

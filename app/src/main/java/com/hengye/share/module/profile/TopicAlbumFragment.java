@@ -10,17 +10,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.hengye.share.R;
-import com.hengye.share.util.handler.TopicIdHandler;
-import com.hengye.share.util.handler.TopicIdPager;
-import com.hengye.share.module.util.encapsulation.base.DataHandler;
-import com.hengye.share.module.util.encapsulation.base.Pager;
 import com.hengye.share.model.Topic;
 import com.hengye.share.module.topic.StatusFragment;
+import com.hengye.share.module.util.encapsulation.base.DataHandler;
+import com.hengye.share.module.util.encapsulation.base.Pager;
 import com.hengye.share.module.util.encapsulation.fragment.RecyclerRefreshFragment;
-import com.hengye.share.module.util.image.GalleryActivity;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
-import com.hengye.share.util.CommonUtil;
+import com.hengye.share.module.util.image.GalleryActivity;
 import com.hengye.share.util.L;
+import com.hengye.share.util.handler.TopicIdHandler;
+import com.hengye.share.util.handler.TopicIdPager;
+import com.hengye.share.util.handler.TopicRefreshIdHandler;
 import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.swiperefresh.listener.SwipeListener;
 
@@ -46,7 +46,7 @@ public class TopicAlbumFragment extends RecyclerRefreshFragment<String> implemen
     String uid, name;
 
     TopicIdPager mTopicPager;
-    TopicIdHandler<String> mHandler;
+    TopicRefreshIdHandler<String> mHandler;
 
     @Override
     public int getLayoutResId() {
@@ -118,7 +118,7 @@ public class TopicAlbumFragment extends RecyclerRefreshFragment<String> implemen
 
         setAdapter(mAdapter = new TopicAlbumAdapter(getContext(), new ArrayList<String>()));
         mTopicPager = new TopicIdPager(mTopics);
-        mHandler = new TopicIdHandler<>(mAdapter);
+        mHandler = new TopicRefreshIdHandler<>(mAdapter);
 
         addPresenter(mPresenter = new TopicAlbumPresenter(this));
         mPresenter.setUid(uid);
@@ -165,16 +165,6 @@ public class TopicAlbumFragment extends RecyclerRefreshFragment<String> implemen
     @Override
     public DataHandler<String> getDataHandler() {
         return mHandler;
-    }
-
-    @Override
-    public void handleCache(ArrayList<Topic> topics, ArrayList<String> urls) {
-        if(CommonUtil.isEmpty(urls)){
-            showLoading();
-            onRefresh();
-        }else{
-            handleAlbumData(topics, urls, true);
-        }
     }
 
     @Override

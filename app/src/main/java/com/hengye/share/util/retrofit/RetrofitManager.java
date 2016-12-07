@@ -1,5 +1,8 @@
 package com.hengye.share.util.retrofit;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.hengye.share.model.other.AMapAddress;
 import com.hengye.share.util.L;
 import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.retrofit.api.ShareService;
@@ -25,8 +28,8 @@ public class RetrofitManager {
 
     public static OkHttpClient mOkHttpClient;
 
-    private static OkHttpClient getOkHttpClient(){
-        if(mOkHttpClient == null) {
+    private static OkHttpClient getOkHttpClient() {
+        if (mOkHttpClient == null) {
 //            CustomLoggingInterceptor logging = new CustomLoggingInterceptor();
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new OkHttpLog());
             logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
@@ -38,8 +41,8 @@ public class RetrofitManager {
         return mOkHttpClient;
     }
 
-    private static Retrofit getWBRetrofit(){
-        if(mWBRetrofit == null) {
+    private static Retrofit getWBRetrofit() {
+        if (mWBRetrofit == null) {
             mWBRetrofit = new Retrofit.Builder()
                     .baseUrl(UrlFactory.getWBUrlPrefix())
                     .addConverterFactory(WBGsonConverterFactory.create())
@@ -51,11 +54,14 @@ public class RetrofitManager {
         return mWBRetrofit;
     }
 
-    public static ShareService getShareService(){
-        if(mShareService == null){
+    public static ShareService getShareService() {
+        if (mShareService == null) {
             mShareService = new Retrofit.Builder()
                     .baseUrl("https://api.yuhy.com")
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(
+                            GsonConverterFactory.create(
+                                    new GsonBuilder()
+                                            .registerTypeAdapter(AMapAddress.class, new AMapAddress.AMapAddressDeserialier()).create()))
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .client(getOkHttpClient())
                     .build()
@@ -64,21 +70,21 @@ public class RetrofitManager {
         return mShareService;
     }
 
-    public static WBService getWBService(){
-        if(mWBService == null) {
+    public static WBService getWBService() {
+        if (mWBService == null) {
 //            WBService wbService = getWBRetrofit().create(WBService.class);
             mWBService = getWBServiceProxy();
         }
         return mWBService;
     }
 
-    private static WBService getWBServiceProxy(){
+    private static WBService getWBServiceProxy() {
         WBService wbService = getWBRetrofit().create(WBService.class);
         WBServiceProxyHandler mProxyHandler = new WBServiceProxyHandler(wbService);
         return (WBService) Proxy.newProxyInstance(WBService.class.getClassLoader(), new Class<?>[]{WBService.class}, mProxyHandler);
     }
 
-    public static class OkHttpLog implements HttpLoggingInterceptor.Logger{
+    public static class OkHttpLog implements HttpLoggingInterceptor.Logger {
 
         @Override
         public void log(String message) {

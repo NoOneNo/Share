@@ -26,6 +26,10 @@ public abstract class StateFragment extends BaseFragment
         return R.layout.fragment_content;
     }
 
+    public int getContainerViewId(){
+        return R.id.content;
+    }
+
     abstract public int getContentResId();
 
     public int getLoadingResId(){
@@ -57,7 +61,7 @@ public abstract class StateFragment extends BaseFragment
         super.onViewCreated(view, savedInstanceState);
 
         ViewGroup viewGroup;
-        View content = view.findViewById(R.id.content);
+        View content = view.findViewById(getContainerViewId());
         if(content != null && content instanceof ViewGroup) {
             viewGroup = (ViewGroup) content;
         }else if(view instanceof ViewGroup){

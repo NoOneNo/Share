@@ -1,12 +1,58 @@
 package com.hengye.share.model.other;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.hengye.share.model.Address;
+import com.hengye.share.util.GsonUtil;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by yuhy on 2016/12/6.
  */
 
 public class AMapAddress {
+
+    /**
+     * 高德地图sdk字段返回空的时候会是一个空的数组，而不是对应类型的空值；所以需要判断如果是一个空的数组，则去除这个json字段，就会默认空值了；
+     */
+    public static class AMapAddressDeserialier implements JsonDeserializer<AMapAddress> {
+        @Override
+        public AMapAddress deserialize(JsonElement je, Type type,
+                                       JsonDeserializationContext jdc)
+                throws JsonParseException {
+            JsonObject obj = je.getAsJsonObject();
+            Set<Map.Entry<String, JsonElement>> set = obj.entrySet();
+            List<String> emptyArrayKeys = new ArrayList<>();
+            for(Map.Entry<String, JsonElement> entry : set){
+                JsonElement jsonElement = entry.getValue();
+                if(jsonElement.isJsonArray()){
+                    JsonArray jsonArray2 = jsonElement.getAsJsonArray();
+                    if(jsonArray2.size() == 0){
+                        //遍历的时候不能删除这个Map，不然会发生ConcurrentModificationException
+                        emptyArrayKeys.add(entry.getKey());
+                    }
+                }
+            }
+
+            if(!emptyArrayKeys.isEmpty()){
+                for(String key : emptyArrayKeys){
+                    obj.remove(key);
+                }
+            }
+            return GsonUtil.getInstance().fromJson(obj, AMapAddress.class);
+        }
+    }
 
     /**
      * id : B00140UF12
@@ -67,18 +113,18 @@ public class AMapAddress {
     private Object navi_poiid;
     private Object entr_location;
 
-    public Address convert(){
+    public Address convert() {
         Address address = new Address();
         address.setId(getId());
         address.setName(getName());
         address.setAddress(getAddress());
-        if(getLocation() != null){
+        if (getLocation() != null) {
             String[] locations = getLocation().split(",");
-            if(locations.length >= 2){
+            if (locations.length >= 2) {
                 try {
                     address.setLongitude(Float.valueOf(locations[0]));
                     address.setLatitude(Float.valueOf(locations[1]));
-                }catch (NumberFormatException e){
+                } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
             }
@@ -89,7 +135,7 @@ public class AMapAddress {
 
         try {
             address.setDistance(Long.valueOf(getDistance()));
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             e.printStackTrace();
         }
         return address;

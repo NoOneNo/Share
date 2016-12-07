@@ -45,16 +45,32 @@
             android:paddingStart="@dimen/content_margin_5dp" />
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/tv_current_address"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
-        android:padding="@dimen/content_margin_default"
-        android:textSize="@dimen/text_small"
-        android:textColor="@color/text_grey"
-        tools:text="当前位置"/>
+        android:padding="@dimen/content_margin_default">
 
-    <include
-        layout="@layout/fragment_recycler_refresh_vertical"/>
+        <com.hengye.share.ui.widget.theme.CustomThemeTintImageButton
+            android:id="@+id/ic_location"
+            android:layout_centerVertical="true"
+            android:layout_width="@dimen/icon_size_tiny"
+            android:layout_height="@dimen/icon_size_tiny"
+            android:src="@drawable/ic_location_on_white_48dp"
+            android:contentDescription="@null"/>
+
+        <TextView
+            android:id="@+id/tv_current_address"
+            android:layout_toEndOf="@id/ic_location"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_small"
+            android:textColor="@color/text_grey"
+            tools:text="当前位置"/>
+
+    </RelativeLayout>
+
+
+    <include layout="@layout/fragment_content"/>
 </LinearLayout>

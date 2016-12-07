@@ -11,6 +11,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.util.TypedValue;
+import android.view.ViewConfiguration;
 
 import com.hengye.share.module.base.BaseActivity;
 
@@ -18,6 +19,15 @@ import com.hengye.share.module.base.BaseActivity;
  * Created by yuhy on 16/6/14.
  */
 public class ResUtil extends ApplicationUtil {
+
+    private static ViewConfiguration mViewConfiguration;
+
+    public static ViewConfiguration getViewConfiguration(){
+        if(mViewConfiguration == null){
+            mViewConfiguration = ViewConfiguration.get(getContext());
+        }
+        return mViewConfiguration;
+    }
 
     public static Resources getResources(){
         return getContext().getResources();

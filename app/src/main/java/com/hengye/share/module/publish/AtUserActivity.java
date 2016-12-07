@@ -73,8 +73,6 @@ public class AtUserActivity extends BaseActivity implements UserListMvpView {
         initListener();
     }
 
-    public final static int REQUEST_AT_USER = 1;
-
     private PullToRefreshLayout mPullToRefreshLayout;
     private RecyclerView mRVSelectResult, mRVSearchResult;
     private EditText mSearch;

@@ -394,7 +394,7 @@ public class TopicActivity extends BaseActivity
             startActivity(SettingActivity.class);
         } else if (id == R.id.nav_group_manage) {
             getAdTokenInterceptor().setAction(mStartGroup).start();
-//            startActivityForResult(GroupManageActivity.class, GroupManageActivity.GROUP_UPDATE);
+//            startActivityForResult(GroupManageActivity.class, GroupManageActivity.REQUEST_GROUP_UPDATE);
         } else if (id == R.id.nav_draft) {
             startActivity(TopicDraftActivity.class);
         } else if (id == R.id.nav_share) {
@@ -445,14 +445,18 @@ public class TopicActivity extends BaseActivity
 
     }
 
+    public final static int REQUEST_GROUP_UPDATE = 11;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == AccountManageActivity.ACCOUNT_CHANGE && resultCode == Activity.RESULT_OK) {
             updateView();
-        } else if (requestCode == GroupManageActivity.GROUP_UPDATE && resultCode == Activity.RESULT_OK) {
-            mGroupsFragment.load(true, true);
+        } else if (requestCode == REQUEST_GROUP_UPDATE) {
+//            忽略resultCode == Activity.RESULT_OK，只要打开分组管理返回后都刷新
+            boolean isUpdate = resultCode == Activity.RESULT_OK;
+            mGroupsFragment.load(true, isUpdate);
         }
     }
 
@@ -477,7 +481,7 @@ public class TopicActivity extends BaseActivity
             mStartGroup = new Action() {
                 @Override
                 public void run() {
-                    startActivityForResult(GroupManageActivity.class, GroupManageActivity.GROUP_UPDATE);
+                    startActivityForResult(GroupManageActivity.class, REQUEST_GROUP_UPDATE);
                 }
             };
             mStartSearch = new Action() {

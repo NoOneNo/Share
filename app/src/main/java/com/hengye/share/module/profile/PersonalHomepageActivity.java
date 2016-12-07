@@ -36,6 +36,7 @@ import com.hengye.share.ui.widget.ScrollChildSwipeRefreshLayout;
 import com.hengye.share.ui.widget.image.AvatarImageView;
 import com.hengye.share.ui.widget.image.SuperImageView;
 import com.hengye.share.util.DataUtil;
+import com.hengye.share.util.L;
 import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.TransitionHelper;
@@ -119,6 +120,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         }
     }
 
+    private View mAssistNavigationBtn;
     private TextView mDivision, mAttention, mFans;
     //    private TextView mSign;
     private SuperImageView mCover;
@@ -149,17 +151,18 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     private void initView() {
 
         initToolbar();
-        updateToolbarTitle(" ");
+        updateToolbarTitle("");
         if (getToolbar() != null) {
             getToolbar().setBackground(null);
         }
 
-
+        mAssistNavigationBtn = findViewById(R.id.btn_navigation_assist);
+        mAssistNavigationBtn.setOnClickListener(this);
         mFollowButton = (TextView) findViewById(R.id.btn_attention);
         mFollowButton.setOnClickListener(this);
         mCollapsingToolbarLayout =
                 (PersonalHomePageToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        mCollapsingToolbarLayout.setTitle(" ");
+        mCollapsingToolbarLayout.setTitle("");
         mUserDescription = findViewById(R.id.ll_user_desc);
         mCover = (SuperImageView) findViewById(R.id.iv_cover);
         mCover.setFadeInImage(false);
@@ -192,17 +195,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         mAttention = (TextView) findViewById(R.id.tv_attention);
         mFans = (TextView) findViewById(R.id.tv_fans);
 
-        mUserInfoLayout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (mCollapsingToolbarLayout.isShowScrims()) {
-                    //当是闭合的时候，模拟toolbar的触摸事件
-                    return getToolbar().onTouchEvent(event);
-                } else {
-                    return false;
-                }
-            }
-        });
+        mUserInfoLayout.setOnTouchListener(mOnAssistToolbarTouchListener);
 //        mSign = (TextView) findViewById(R.id.tv_sign);
 
         mAttention.setOnClickListener(this);
@@ -232,6 +225,18 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         setUpAvatar();
     }
 
+    private View.OnTouchListener mOnAssistToolbarTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            if (mCollapsingToolbarLayout.isShowScrims()) {
+                //当是闭合的时候，模拟toolbar的触摸事件
+                return getToolbar().onTouchEvent(event);
+            } else {
+                return false;
+            }
+        }
+    };
+
     private void initStatusBar() {
 //        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 //        Window window = getWindow();
@@ -251,8 +256,13 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
             public void onGlobalLayout() {
                 mUserInfoLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 int height = mUserInfoLayout.getHeight();
-                ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mAvatar.getLayoutParams();
 
+                //调整辅助导航按钮点击的高度
+                mAssistNavigationBtn.getLayoutParams().height = height;
+                mAssistNavigationBtn.requestLayout();
+
+                //调整头像位置
+                ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) mAvatar.getLayoutParams();
                 int targetHeight = height - mAvatar.getHeight() / 2;
                 if (targetHeight != lp.bottomMargin) {
                     lp.bottomMargin = targetHeight;
@@ -299,16 +309,20 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         if (verticalOffset >= -50) {
-            mSwipeRefresh.setRefreshEnable(true);
 
+            mAssistNavigationBtn.setVisibility(View.GONE);
+
+            mSwipeRefresh.setRefreshEnable(true);
             if (!mHasSetSelection && mFragment != null) {
                 mHasSetSelection = true;
                 mFragment.setOtherTabScrollToTop();
             }
 
         } else {
-            mHasSetSelection = false;
 
+            mAssistNavigationBtn.setVisibility(View.VISIBLE);
+
+            mHasSetSelection = false;
             mSwipeRefresh.setRefreshEnable(false);
         }
 
@@ -419,7 +433,12 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     public void onClick(View v) {
         int id = v.getId();
 
-        if (mWBUserInfo != null) {
+        if (id == R.id.btn_navigation_assist) {
+            if (mCollapsingToolbarLayout.isShowScrims()) {
+                //当时闭合的时候，模拟点击toolbar的导航按钮
+                onNavigationClick(getToolbar());
+            }
+        } else if (mWBUserInfo != null) {
             if (id == R.id.btn_attention) {
                 mFollowButton.setEnabled(false);
                 follow(!mWBUserInfo.isFollowing(), mWBUserInfo.getIdstr());
@@ -433,6 +452,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                 }
             }
         }
+
 
     }
 
@@ -477,6 +497,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 
                     @Override
                     public void onError(Throwable e) {
+                        mFollowButton.setEnabled(true);
                         if (TaskState.isNetworkException(e)) {
                             ToastUtil.showNetWorkErrorToast();
                         }

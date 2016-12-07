@@ -8,6 +8,4 @@ import java.util.ArrayList;
 public interface TopicAlbumMvpView extends ListTaskMvpView {
 
     void handleAlbumData(ArrayList<Topic> topics, ArrayList<String> urls, boolean isRefresh);
-
-    void handleCache(ArrayList<Topic> topics, ArrayList<String> urls);
 }

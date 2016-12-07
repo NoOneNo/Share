@@ -4,17 +4,22 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Vibrator;
 import android.support.annotation.DimenRes;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.HapticFeedbackConstants;
+import android.view.MotionEvent;
 import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 
 import com.hengye.share.R;
+import com.hengye.share.module.util.encapsulation.view.listener.OnScrollChangeCompatListener;
+import com.hengye.share.ui.widget.scrollview.ObservableScrollView;
 
 import java.lang.reflect.Field;
 
@@ -76,13 +81,37 @@ public class ViewUtil extends ResUtil {
                 .hideSoftInputFromWindow(paramEditText.getWindowToken(), 0);
     }
 
+    public static void hideKeyBoardOnTouch(View view, final View paramEditText) {
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+//                if(event.getActionMasked() == MotionEvent.ACTION_DOWN){
+                    hideKeyBoard(paramEditText);
+//                }
+                return false;
+            }
+        });
+
+    }
+//    public static void hideKeyBoardOnScroll(ObservableScrollView scrollView, final View paramEditText) {
+//        scrollView.addOnScrollChangeListener(new OnScrollChangeCompatListener() {
+//            @Override
+//            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+//                if(Math.abs(scrollY - oldScrollY) > getViewConfiguration().getScaledTouchSlop()){
+//                    //onScroll Y
+//                    hideKeyBoard(paramEditText);
+//                }
+//            }
+//        });
+//    }
+
     public static void hideKeyBoardOnScroll(RecyclerView recyclerView, final View paramEditText) {
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (RecyclerView.SCROLL_STATE_DRAGGING == newState) {
-                    ViewUtil.hideKeyBoard(paramEditText);
+                    hideKeyBoard(paramEditText);
                 }
             }
         });
