@@ -48,6 +48,12 @@ public class ResUtil extends ApplicationUtil {
         return getResources().getColor(id);
     }
 
+    /**
+     * 要想获得当前主题的颜色，必须根据当前Activity上下文所设置的theme来决定;
+     * @param attr
+     * @param defaultValue
+     * @return
+     */
     public static int getAttrColor(@AttrRes int attr, int defaultValue){
         Context context = BaseActivity.getCurrentActivity();
         if(context == null){

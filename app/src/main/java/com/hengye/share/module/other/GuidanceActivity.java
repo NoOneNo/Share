@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.hengye.share.R;
@@ -15,6 +17,7 @@ import com.hengye.share.module.update.CheckUpdateMvpImpl;
 import com.hengye.share.module.update.CheckUpdatePresenter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
+import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.thirdparty.ThirdPartyUtils;
@@ -28,44 +31,49 @@ public class GuidanceActivity extends BaseActivity {
         return false;
     }
 
-    @Override
-    protected boolean setFinishPendingTransition() {
-        return false;
-    }
+//    @Override
+//    protected boolean setFinishPendingTransition() {
+//        return false;
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        int themeColor = SettingHelper.getAppThemeColorPrimary();
+//        int themeColor = ResUtil.getColor(R.color.text_red_warn);
+        getWindow().setStatusBarColor(themeColor);
+        getWindow().setNavigationBarColor(themeColor);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guidance);
-        TextView welcomeTV = (TextView) findViewById(R.id.tv_welcome);
-        String name = UserUtil.getName();
-        if(CommonUtil.isEmpty(name)){
-            name = "world";
-        }
-        welcomeTV.setText(getString(R.string.tip_welcome, name));
+
+        showUsername();
     }
+
+    boolean isInit = false;
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        start = System.currentTimeMillis();
-        init();
-        end = System.currentTimeMillis();
-        long consume = end - start;
-        long waitTime = DEFAULT_WAIT_DURATION - consume;
-        if(waitTime < 0 || waitTime > DEFAULT_WAIT_DURATION){
-            waitTime = 0;
-        }
-        L.debug("GuidanceActivity init consume : {}, waitTime : {}", consume, waitTime);
-        getHandler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                setHideAnimationOnStart();
-                startActivity(TopicActivity.class);
-                finish();
+        if(!isInit) {
+            isInit = true;
+            start = System.currentTimeMillis();
+            init();
+            end = System.currentTimeMillis();
+            long consume = end - start;
+            long waitTime = DEFAULT_WAIT_DURATION - consume;
+            if (waitTime < 0 || waitTime > DEFAULT_WAIT_DURATION) {
+                waitTime = 0;
             }
-        }, waitTime);
+            L.debug("GuidanceActivity init consume : {}, waitTime : {}", consume, waitTime);
+            getHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+//                    setHideAnimationOnStart();
+                    startActivity(TopicActivity.class);
+                    finish();
+                }
+            }, waitTime);
+        }
     }
 
     @Override
@@ -77,6 +85,7 @@ public class GuidanceActivity extends BaseActivity {
     private long start, end;
 
     private void init(){
+
         createShortcutIfNeed();
         checkUpdateIfNeed();
 
@@ -87,6 +96,14 @@ public class GuidanceActivity extends BaseActivity {
         QbSdk.initX5Environment(BaseApplication.getInstance(), null);
     }
 
+    private void showUsername(){
+        TextView welcomeTV = (TextView) findViewById(R.id.tv_welcome);
+        String name = UserUtil.getName();
+        if(CommonUtil.isEmpty(name)){
+            name = "world";
+        }
+        welcomeTV.setText(getString(R.string.tip_welcome, name));
+    }
 
     public static final String ACTION_ADD_SHORTCUT = "com.android.launcher.action.INSTALL_SHORTCUT";
     public static final String ACTION_REMOVE_SHORTCUT = "com.android.launcher.action.UNINSTALL_SHORTCUT";

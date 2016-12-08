@@ -2,10 +2,12 @@ package com.hengye.share.module.setting;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.StyleRes;
 import android.text.TextUtils;
 
 import com.hengye.share.module.base.BaseApplication;
 import com.hengye.share.R;
+import com.hengye.share.util.ResUtil;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -104,6 +106,30 @@ public class SettingHelper {
         }else{
             return THEME_RES_ID_DEFAULT;
         }
+    }
+
+    public static int getAppThemeColorPrimary(){
+        return getAppThemeColorPrimary(getAppThemeResId());
+    }
+
+    public static int getAppThemeColorPrimary(@StyleRes int themeStyle){
+        int colorResId;
+        switch (themeStyle){
+            default:
+            case R.style.ShareAppTheme_Green:
+                colorResId = R.color.theme_green_primary;
+                break;
+            case R.style.ShareAppTheme_Blue:
+                colorResId = R.color.theme_blue_primary;
+                break;
+            case R.style.ShareAppTheme_Pink:
+                colorResId = R.color.theme_pink_primary;
+                break;
+            case R.style.ShareAppTheme_DayNight:
+                colorResId = R.color.theme_night_primary;
+                break;
+        }
+        return ResUtil.getColor(colorResId);
     }
 
     public static boolean isLaunchCheckUpdate(){

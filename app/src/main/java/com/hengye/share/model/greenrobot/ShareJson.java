@@ -1,6 +1,5 @@
 package com.hengye.share.model.greenrobot;
 
-
 import org.greenrobot.greendao.annotation.*;
 
 import com.hengye.share.model.greenrobot.DaoSession;

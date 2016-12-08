@@ -34,8 +34,8 @@ public class WBUtil {
     public final static int MAX_COUNT_REQUEST = 30;
     public final static int START_PAGE = 1;
 
-    public static String IMAGE_TYPE_THUMBNAIL = "thumbnail";//缩略图
-    public static String IMAGE_TYPE_BMIDDLE = "bmiddle";//高清
+    public static String IMAGE_TYPE_THUMBNAIL = "thumbnail";//缩略图，模糊，不建议使用
+    public static String IMAGE_TYPE_BMIDDLE = "bmiddle";//高清，部分gif也不支持显示，缩略图建议用or480
     public static String IMAGE_TYPE_OR_480 = "or480";//高清不支持gif动图，只有一帧如果是gif的话
     public static String IMAGE_TYPE_WAP_720 = "wap720";//高清不支持gif动图，只有一帧如果是gif的话
     public static String IMAGE_TYPE_LARGE = "large";//原图
@@ -57,9 +57,9 @@ public class WBUtil {
         }
         String toType;
         if (url.endsWith("gif")) {
-            toType = IMAGE_TYPE_BMIDDLE;
+            toType = IMAGE_TYPE_OR_480;
         } else if ("2".equals(value)) {
-            toType = IMAGE_TYPE_THUMBNAIL;
+            toType = IMAGE_TYPE_OR_480;
         } else if ("3".equals(value)) {
             toType = IMAGE_TYPE_BMIDDLE;
         } else if ("4".equals(value)) {
@@ -74,7 +74,13 @@ public class WBUtil {
 
     public static String getWBGifUrl(String url) {
         if (url != null && url.endsWith("gif")) {
-            return url.replaceFirst(IMAGE_TYPE_BMIDDLE, IMAGE_TYPE_ORIGINAL);
+            if(url.contains(IMAGE_TYPE_BMIDDLE)) {
+                return url.replaceFirst(IMAGE_TYPE_BMIDDLE, IMAGE_TYPE_ORIGINAL);
+            }else if(url.contains(IMAGE_TYPE_OR_480)) {
+                return url.replaceFirst(IMAGE_TYPE_OR_480, IMAGE_TYPE_ORIGINAL);
+            }else if(url.contains(IMAGE_TYPE_THUMBNAIL)) {
+                return url.replaceFirst(IMAGE_TYPE_THUMBNAIL, IMAGE_TYPE_ORIGINAL);
+            }
         }
         return url;
     }
@@ -97,6 +103,17 @@ public class WBUtil {
         return false;
     }
 
+    public static boolean isWBThumbnailUrl(String url) {
+        if (url != null) {
+            if(url.contains(IMAGE_TYPE_BMIDDLE)){
+                return false;
+            }else if(url.contains(IMAGE_TYPE_ORIGINAL)){
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static String getWBImgUrl(String url, String toType) {
         return getWBImgUrl(url, IMAGE_TYPE_THUMBNAIL, toType);
     }
@@ -113,8 +130,12 @@ public class WBUtil {
         if(url != null){
             if(url.contains(IMAGE_TYPE_BMIDDLE)) {
                 return getWBImgUrl(url, IMAGE_TYPE_BMIDDLE, IMAGE_TYPE_ORIGINAL);
-            }else{
+            }else if(url.contains(IMAGE_TYPE_OR_480)) {
+                return getWBImgUrl(url, IMAGE_TYPE_OR_480, IMAGE_TYPE_ORIGINAL);
+            }else if(url.contains(IMAGE_TYPE_THUMBNAIL)) {
                 return getWBImgUrl(url, IMAGE_TYPE_THUMBNAIL, IMAGE_TYPE_ORIGINAL);
+            }else{
+                return url;
             }
         }
         return null;

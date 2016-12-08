@@ -10,10 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
-        android:paddingBottom="5dp"
+        android:paddingBottom="@dimen/content_margin_5dp"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
+        android:paddingTop="@dimen/content_margin_10dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -35,7 +35,7 @@
                 android:src="@drawable/ic_search_white_48dp" />
 
             <View
-                style="@style/horizontal_line"
+                style="@style/horizontal_theme_line"
                 android:layout_alignParentBottom="true" />
         </RelativeLayout>
 
@@ -47,6 +47,8 @@
             android:layout_marginBottom="@dimen/content_margin_1dp"
             android:layout_marginStart="@dimen/at_user_et_search_margin_start"
             android:background="@null"
+            android:inputType="text"
+            android:imeOptions="actionSearch"
             android:hint="@string/label_search"
             android:paddingEnd="@dimen/content_margin_5dp"
             android:paddingStart="@dimen/content_margin_5dp"

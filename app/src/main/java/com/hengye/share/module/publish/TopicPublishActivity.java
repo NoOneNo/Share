@@ -447,7 +447,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
                 mGroupVisibleStatus.setVisibility(View.VISIBLE);
                 updateGroupVisibleStatus();
                 mLocation.setVisibility(View.GONE);
-                updateLocation(null);
+                updateLocation(mTopicDraft.getAddressBean());
                 mPhotoPickerBtn.setVisibility(View.GONE);
                 break;
             case TopicDraftHelper.PUBLISH_TOPIC:
@@ -455,7 +455,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
                 mGroupVisibleStatus.setVisibility(View.VISIBLE);
                 updateGroupVisibleStatus();
                 mLocation.setVisibility(View.VISIBLE);
-                updateLocation(null);
+                updateLocation(mTopicDraft.getAddressBean());
                 mPhotoPickerBtn.setVisibility(View.VISIBLE);
             default:
                 break;
@@ -566,7 +566,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         td.setTargetCommentContent(mTopicDraft.getTargetCommentContent());
         td.setAssignGroupIdStr(mTopicDraft.getAssignGroupIdStr());
         td.setPublishTiming(mTopicDraft.getPublishTiming());
-
+        td.setAddressBean(mAddress);
 
         if (mPublishCB.isChecked()) {
             td.setIsCommentOrRepostConcurrently(true);

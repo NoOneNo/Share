@@ -47,8 +47,8 @@
                     android:background="#fff"
                     android:gravity="center_vertical"
                     android:hint="@string/label_search_hint"
+                    android:inputType="text"
                     android:imeOptions="actionSearch"
-                    android:inputType="textCapWords"
                     android:paddingEnd="8dp"
                     android:paddingStart="12dp"
                     android:maxLines="1" />

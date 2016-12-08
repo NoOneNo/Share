@@ -1,5 +1,6 @@
 package com.hengye.share.util;
 
+import com.hengye.share.model.Address;
 import com.hengye.share.model.TopicPublish;
 import com.hengye.share.model.greenrobot.TopicDraft;
 
@@ -163,6 +164,12 @@ public class UrlFactory {
         }
         if(picUrls != null){
             map.put("pic_id", picUrls);
+        }
+
+        Address address = td.getAddressBean();
+        if(address != null){
+            map.put("long", address.getLongitude());
+            map.put("lat", address.getLatitude());
         }
         return map;
     }

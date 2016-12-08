@@ -10,6 +10,7 @@ import com.hengye.share.R;
 import com.hengye.share.model.Address;
 import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapter;
 import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemViewHolder;
+import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.ResUtil;
 
@@ -45,7 +46,11 @@ public class AroundAddressAdapter extends CommonAdapter<Address>{
         @Override
         public void bindData(Context context, Address address, int position) {
             title.setText(address.getName());
-            desc.setText(address.getAddress());
+            if(CommonUtil.isEmpty(address.getAddress())){
+                desc.setText(R.string.tip_null);
+            }else{
+                desc.setText(address.getAddress());
+            }
             distance.setText(ResUtil.getString(R.string.label_space_between, DataUtil.getCounter(address.getDistance())));
         }
     }

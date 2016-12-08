@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationListener;
 import com.hengye.share.R;
 import com.hengye.share.model.Address;
@@ -35,7 +36,7 @@ import java.util.ArrayList;
  * Created by yuhy on 2016/12/6.
  */
 
-public class AroundAddressFragment extends RecyclerRefreshFragment<Address> implements AroundAddressMvpView {
+public class AroundAddressFragment extends RecyclerRefreshFragment<Address> implements AroundAddressMvpView, View.OnClickListener {
 
     public static void start(Activity activity, int requestCode) {
         activity.startActivityForResult(FragmentActivity.getStartIntent(activity, AroundAddressFragment.class), requestCode);
@@ -63,8 +64,11 @@ public class AroundAddressFragment extends RecyclerRefreshFragment<Address> impl
         super.onViewCreated(view, savedInstanceState);
 
         mKeywordsTxt = (EditText) findViewById(R.id.et_keywords);
-        mCurrentAddress = (TextView) findViewById(R.id.tv_current_address);
+        mCurrentLocationTxt = (TextView) findViewById(R.id.tv_current_address);
+        mCurrentLocation = findViewById(R.id.layout_current_location);
+        mCurrentLocation.setOnClickListener(this);
         mSearchBtn = findViewById(R.id.ic_search);
+        mSearchBtn.setOnClickListener(this);
 
         mKeywordsTxt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -73,12 +77,6 @@ public class AroundAddressFragment extends RecyclerRefreshFragment<Address> impl
                     searchAroundAddress();
                 }
                 return false;
-            }
-        });
-        mSearchBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                searchAroundAddress();
             }
         });
 
@@ -102,6 +100,7 @@ public class AroundAddressFragment extends RecyclerRefreshFragment<Address> impl
         });
 
         showLoading();
+        mCurrentLocationTxt.setText(R.string.tip_locating);
         initLocation();
     }
 
@@ -117,28 +116,34 @@ public class AroundAddressFragment extends RecyclerRefreshFragment<Address> impl
 
     AroundAddressPresenter mPresenter;
     EditText mKeywordsTxt;
-    TextView mCurrentAddress;
-    View mSearchBtn;
+    TextView mCurrentLocationTxt;
+    View mSearchBtn, mCurrentLocation;
     AroundAddressAdapter mAdapter;
     DefaultDataHandler<Address> mDataHandler;
     NumberPager mNumberPager;
 
     AMapLocation mLocation;
+    AMapLocationClient mAMapLocationClient;
 
     private void initLocation() {
-        AMapUtil.initLocationClient(getActivity(), new AMapLocationListener() {
+        mAMapLocationClient = AMapUtil.initLocationClient(getActivity(), new AMapLocationListener() {
             @Override
             public void onLocationChanged(AMapLocation loc) {
-                if (null != loc && mLocation == null) {
+                if (null != loc && loc.getErrorCode() == AMapLocation.LOCATION_SUCCESS) {
                     mLocation = loc;
                     mPresenter.setLocation((float) loc.getLongitude(), (float) loc.getLatitude());
-                    mCurrentAddress.setText(loc.getAddress());
+                    mCurrentLocationTxt.setText(loc.getAddress());
                     mPresenter.loadAroundAddress(true);
                     //解析定位结果
                     String result = TestLocationActivity.Utils.getLocationStr(loc);
-                    L.debug("定位结果 : {}", result);
+                    L.debug("定位成功 : {}", result);
+                } else {
+                    mCurrentLocationTxt.setText(R.string.tip_location_fail);
+                    L.debug("定位失败");
+                    if(loc != null){
+                        L.debug("错误信息 : {}", loc);
+                    }
                 }
-                L.debug("定位失败");
             }
         });
     }
@@ -149,10 +154,23 @@ public class AroundAddressFragment extends RecyclerRefreshFragment<Address> impl
     }
 
     @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.layout_current_location) {
+            if (mLocation == null && mAMapLocationClient != null) {
+                mCurrentLocationTxt.setText(R.string.tip_locating);
+                mAMapLocationClient.startLocation();
+            }
+        } else if (id == R.id.ic_search) {
+            searchAroundAddress();
+        }
+    }
+
+    @Override
     public void onRefresh() {
-        if(isLocationSuccess()){
+        if (isLocationSuccess()) {
             mPresenter.loadAroundAddress(true);
-        }else{
+        } else {
             setRefreshing(false);
         }
     }
@@ -162,8 +180,8 @@ public class AroundAddressFragment extends RecyclerRefreshFragment<Address> impl
         mPresenter.loadAroundAddress(false);
     }
 
-    private boolean isLocationSuccess(){
-        if(mLocation == null){
+    private boolean isLocationSuccess() {
+        if (mLocation == null) {
             ToastUtil.showToast(R.string.tip_locating);
             return false;
         }

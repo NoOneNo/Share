@@ -2,6 +2,7 @@ package com.hengye.share.model.greenrobot;
 
 import org.greenrobot.greendao.annotation.*;
 
+import com.hengye.share.model.Address;
 import com.hengye.share.model.greenrobot.DaoSession;
 import org.greenrobot.greendao.DaoException;
 
@@ -37,6 +38,7 @@ public class TopicDraft implements java.io.Serializable {
     private String targetCommentUserName;
     private String targetCommentContent;
     private String assignGroupIdStr;
+    private String address;
     private Long publishTiming;
     private Integer isCommentOrigin;
     private int status;
@@ -67,7 +69,7 @@ public class TopicDraft implements java.io.Serializable {
     }
 
     @Generated
-    public TopicDraft(Long id, String content, java.util.Date date, String urls, String uid, String targetTopicJson, String targetTopicId, String targetCommentId, String targetCommentUserName, String targetCommentContent, String assignGroupIdStr, Long publishTiming, Integer isCommentOrigin, int status, Integer isMention, Integer type, Integer parentType) {
+    public TopicDraft(Long id, String content, java.util.Date date, String urls, String uid, String targetTopicJson, String targetTopicId, String targetCommentId, String targetCommentUserName, String targetCommentContent, String assignGroupIdStr, String address, Long publishTiming, Integer isCommentOrigin, int status, Integer isMention, Integer type, Integer parentType) {
         this.id = id;
         this.content = content;
         this.date = date;
@@ -79,6 +81,7 @@ public class TopicDraft implements java.io.Serializable {
         this.targetCommentUserName = targetCommentUserName;
         this.targetCommentContent = targetCommentContent;
         this.assignGroupIdStr = assignGroupIdStr;
+        this.address = address;
         this.publishTiming = publishTiming;
         this.isCommentOrigin = isCommentOrigin;
         this.status = status;
@@ -182,6 +185,14 @@ public class TopicDraft implements java.io.Serializable {
 
     public void setAssignGroupIdStr(String assignGroupIdStr) {
         this.assignGroupIdStr = assignGroupIdStr;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public Long getPublishTiming() {
@@ -444,6 +455,14 @@ public class TopicDraft implements java.io.Serializable {
 
     public void mark(int status){
         setStatus(status);
+    }
+
+    public void setAddressBean(Address address){
+        setAddress(GsonUtil.toJson(address));
+    }
+
+    public Address getAddressBean(){
+        return GsonUtil.fromJson(address, Address.class);
     }
 
     /**

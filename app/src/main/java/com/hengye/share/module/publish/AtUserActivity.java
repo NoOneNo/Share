@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -122,6 +123,15 @@ public class AtUserActivity extends BaseActivity implements UserListMvpView {
         mSearchResultData = mPresenter.getSearchResultData();
         mAtUserSearchAdapter.refresh(convertUserList(mSearchResultData));
         mSearch = (EditText) findViewById(R.id.et_username);
+        mSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_SEARCH){
+                    search();
+                }
+                return false;
+            }
+        });
         mSearchIcon = findViewById(R.id.ic_search);
 
         if (UserUtil.isUserEmpty()) {
@@ -218,8 +228,7 @@ public class AtUserActivity extends BaseActivity implements UserListMvpView {
 
             @Override
             public void afterTextChanged(Editable s) {
-                mAtUserSelectAdapter.setLastItemPrepareDelete(false);
-                mAtUserSearchAdapter.showSearchResult(mSearch.getText().toString(), mSearchResultTotalData, mSearchResultData);
+                search();
             }
         });
 
@@ -281,6 +290,11 @@ public class AtUserActivity extends BaseActivity implements UserListMvpView {
                 mLetter.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void search(){
+        mAtUserSelectAdapter.setLastItemPrepareDelete(false);
+        mAtUserSearchAdapter.showSearchResult(mSearch.getText().toString(), mSearchResultTotalData, mSearchResultData);
     }
 
     private void notifySelectResultFirstItem() {

@@ -33,12 +33,13 @@ public class TopicDraftDao extends AbstractDao<TopicDraft, Long> {
         public final static Property TargetCommentUserName = new Property(8, String.class, "targetCommentUserName", false, "TARGET_COMMENT_USER_NAME");
         public final static Property TargetCommentContent = new Property(9, String.class, "targetCommentContent", false, "TARGET_COMMENT_CONTENT");
         public final static Property AssignGroupIdStr = new Property(10, String.class, "assignGroupIdStr", false, "ASSIGN_GROUP_ID_STR");
-        public final static Property PublishTiming = new Property(11, Long.class, "publishTiming", false, "PUBLISH_TIMING");
-        public final static Property IsCommentOrigin = new Property(12, Integer.class, "isCommentOrigin", false, "IS_COMMENT_ORIGIN");
-        public final static Property Status = new Property(13, int.class, "status", false, "STATUS");
-        public final static Property IsMention = new Property(14, Integer.class, "isMention", false, "IS_MENTION");
-        public final static Property Type = new Property(15, Integer.class, "type", false, "TYPE");
-        public final static Property ParentType = new Property(16, Integer.class, "parentType", false, "PARENT_TYPE");
+        public final static Property Address = new Property(11, String.class, "address", false, "ADDRESS");
+        public final static Property PublishTiming = new Property(12, Long.class, "publishTiming", false, "PUBLISH_TIMING");
+        public final static Property IsCommentOrigin = new Property(13, Integer.class, "isCommentOrigin", false, "IS_COMMENT_ORIGIN");
+        public final static Property Status = new Property(14, int.class, "status", false, "STATUS");
+        public final static Property IsMention = new Property(15, Integer.class, "isMention", false, "IS_MENTION");
+        public final static Property Type = new Property(16, Integer.class, "type", false, "TYPE");
+        public final static Property ParentType = new Property(17, Integer.class, "parentType", false, "PARENT_TYPE");
     }
 
     private DaoSession daoSession;
@@ -68,12 +69,13 @@ public class TopicDraftDao extends AbstractDao<TopicDraft, Long> {
                 "\"TARGET_COMMENT_USER_NAME\" TEXT," + // 8: targetCommentUserName
                 "\"TARGET_COMMENT_CONTENT\" TEXT," + // 9: targetCommentContent
                 "\"ASSIGN_GROUP_ID_STR\" TEXT," + // 10: assignGroupIdStr
-                "\"PUBLISH_TIMING\" INTEGER," + // 11: publishTiming
-                "\"IS_COMMENT_ORIGIN\" INTEGER," + // 12: isCommentOrigin
-                "\"STATUS\" INTEGER NOT NULL ," + // 13: status
-                "\"IS_MENTION\" INTEGER," + // 14: isMention
-                "\"TYPE\" INTEGER," + // 15: type
-                "\"PARENT_TYPE\" INTEGER);"); // 16: parentType
+                "\"ADDRESS\" TEXT," + // 11: address
+                "\"PUBLISH_TIMING\" INTEGER," + // 12: publishTiming
+                "\"IS_COMMENT_ORIGIN\" INTEGER," + // 13: isCommentOrigin
+                "\"STATUS\" INTEGER NOT NULL ," + // 14: status
+                "\"IS_MENTION\" INTEGER," + // 15: isMention
+                "\"TYPE\" INTEGER," + // 16: type
+                "\"PARENT_TYPE\" INTEGER);"); // 17: parentType
     }
 
     /** Drops the underlying database table. */
@@ -137,30 +139,35 @@ public class TopicDraftDao extends AbstractDao<TopicDraft, Long> {
             stmt.bindString(11, assignGroupIdStr);
         }
  
+        String address = entity.getAddress();
+        if (address != null) {
+            stmt.bindString(12, address);
+        }
+ 
         Long publishTiming = entity.getPublishTiming();
         if (publishTiming != null) {
-            stmt.bindLong(12, publishTiming);
+            stmt.bindLong(13, publishTiming);
         }
  
         Integer isCommentOrigin = entity.getIsCommentOrigin();
         if (isCommentOrigin != null) {
-            stmt.bindLong(13, isCommentOrigin);
+            stmt.bindLong(14, isCommentOrigin);
         }
-        stmt.bindLong(14, entity.getStatus());
+        stmt.bindLong(15, entity.getStatus());
  
         Integer isMention = entity.getIsMention();
         if (isMention != null) {
-            stmt.bindLong(15, isMention);
+            stmt.bindLong(16, isMention);
         }
  
         Integer type = entity.getType();
         if (type != null) {
-            stmt.bindLong(16, type);
+            stmt.bindLong(17, type);
         }
  
         Integer parentType = entity.getParentType();
         if (parentType != null) {
-            stmt.bindLong(17, parentType);
+            stmt.bindLong(18, parentType);
         }
     }
 
@@ -219,30 +226,35 @@ public class TopicDraftDao extends AbstractDao<TopicDraft, Long> {
             stmt.bindString(11, assignGroupIdStr);
         }
  
+        String address = entity.getAddress();
+        if (address != null) {
+            stmt.bindString(12, address);
+        }
+ 
         Long publishTiming = entity.getPublishTiming();
         if (publishTiming != null) {
-            stmt.bindLong(12, publishTiming);
+            stmt.bindLong(13, publishTiming);
         }
  
         Integer isCommentOrigin = entity.getIsCommentOrigin();
         if (isCommentOrigin != null) {
-            stmt.bindLong(13, isCommentOrigin);
+            stmt.bindLong(14, isCommentOrigin);
         }
-        stmt.bindLong(14, entity.getStatus());
+        stmt.bindLong(15, entity.getStatus());
  
         Integer isMention = entity.getIsMention();
         if (isMention != null) {
-            stmt.bindLong(15, isMention);
+            stmt.bindLong(16, isMention);
         }
  
         Integer type = entity.getType();
         if (type != null) {
-            stmt.bindLong(16, type);
+            stmt.bindLong(17, type);
         }
  
         Integer parentType = entity.getParentType();
         if (parentType != null) {
-            stmt.bindLong(17, parentType);
+            stmt.bindLong(18, parentType);
         }
     }
 
@@ -271,12 +283,13 @@ public class TopicDraftDao extends AbstractDao<TopicDraft, Long> {
             cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // targetCommentUserName
             cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // targetCommentContent
             cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // assignGroupIdStr
-            cursor.isNull(offset + 11) ? null : cursor.getLong(offset + 11), // publishTiming
-            cursor.isNull(offset + 12) ? null : cursor.getInt(offset + 12), // isCommentOrigin
-            cursor.getInt(offset + 13), // status
-            cursor.isNull(offset + 14) ? null : cursor.getInt(offset + 14), // isMention
-            cursor.isNull(offset + 15) ? null : cursor.getInt(offset + 15), // type
-            cursor.isNull(offset + 16) ? null : cursor.getInt(offset + 16) // parentType
+            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // address
+            cursor.isNull(offset + 12) ? null : cursor.getLong(offset + 12), // publishTiming
+            cursor.isNull(offset + 13) ? null : cursor.getInt(offset + 13), // isCommentOrigin
+            cursor.getInt(offset + 14), // status
+            cursor.isNull(offset + 15) ? null : cursor.getInt(offset + 15), // isMention
+            cursor.isNull(offset + 16) ? null : cursor.getInt(offset + 16), // type
+            cursor.isNull(offset + 17) ? null : cursor.getInt(offset + 17) // parentType
         );
         return entity;
     }
@@ -294,12 +307,13 @@ public class TopicDraftDao extends AbstractDao<TopicDraft, Long> {
         entity.setTargetCommentUserName(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
         entity.setTargetCommentContent(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
         entity.setAssignGroupIdStr(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
-        entity.setPublishTiming(cursor.isNull(offset + 11) ? null : cursor.getLong(offset + 11));
-        entity.setIsCommentOrigin(cursor.isNull(offset + 12) ? null : cursor.getInt(offset + 12));
-        entity.setStatus(cursor.getInt(offset + 13));
-        entity.setIsMention(cursor.isNull(offset + 14) ? null : cursor.getInt(offset + 14));
-        entity.setType(cursor.isNull(offset + 15) ? null : cursor.getInt(offset + 15));
-        entity.setParentType(cursor.isNull(offset + 16) ? null : cursor.getInt(offset + 16));
+        entity.setAddress(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
+        entity.setPublishTiming(cursor.isNull(offset + 12) ? null : cursor.getLong(offset + 12));
+        entity.setIsCommentOrigin(cursor.isNull(offset + 13) ? null : cursor.getInt(offset + 13));
+        entity.setStatus(cursor.getInt(offset + 14));
+        entity.setIsMention(cursor.isNull(offset + 15) ? null : cursor.getInt(offset + 15));
+        entity.setType(cursor.isNull(offset + 16) ? null : cursor.getInt(offset + 16));
+        entity.setParentType(cursor.isNull(offset + 17) ? null : cursor.getInt(offset + 17));
      }
     
     @Override

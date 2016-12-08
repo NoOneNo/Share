@@ -22,8 +22,8 @@
     <string name="tip_confirm">确定</string>
     <string name="tip_copy_content_to_clipboard_success">内容已复制到剪切板</string>
     <string name="tip_copy_topic_to_clipboard_success">微博内容已复制到剪切板</string>
-
     <string name="label_no_network">无法连接到服务器，请检查你的网络设置。</string>
+    <string name="tip_null">无</string>
     <!-- Strings related to Tip-->
 
     <!-- Strings related to separator-->
@@ -280,6 +280,7 @@
     <!-- Strings related to activity around address -->
     <string name="label_space_between">距离%s米</string>
     <string name="tip_locating">定位中</string>
+    <string name="tip_location_fail">定位失败，点击重试</string>
     <!-- Strings related to activity around address -->
 
     <!-- Strings related to setting -->

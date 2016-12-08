@@ -32,6 +32,12 @@ public class AroundAddressPresenter extends ListDataPresenter<Address, AroundAdd
     public void loadAroundAddress(boolean isRefresh) {
 
         getMvpView().onTaskStart();
+
+
+//        RetrofitManager
+//                .getWBService()
+//                .getPlaceNearBy(getWBAddressParams(isRefresh))
+//                .flatMap(flatWBAddresses())
         RetrofitManager
                 .getShareService()
                 .getPlaceRoundByAMap(getAMapAddressParams(isRefresh))
