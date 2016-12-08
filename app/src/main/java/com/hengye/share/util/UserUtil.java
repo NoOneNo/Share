@@ -23,6 +23,7 @@ public class UserUtil {
         }
         if (mCurrentUser == null) {
             mCurrentUser = new User();
+            mCurrentUser.setUid("");
         }
         return mCurrentUser;
     }

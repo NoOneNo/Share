@@ -11,6 +11,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -49,6 +50,7 @@ import com.hengye.share.ui.widget.util.SelectorLoader;
 import com.hengye.share.util.L;
 import com.hengye.share.util.NetworkUtil;
 import com.hengye.share.util.ResUtil;
+import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.ThemeUtil;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
@@ -92,7 +94,7 @@ public class TopicActivity extends BaseActivity
         initView();
 
         if (UserUtil.isUserEmpty()) {
-            startActivity(AccountManageActivity.class);
+            startActivityForResult(AccountManageActivity.class, AccountManageActivity.ACCOUNT_CHANGE);
         } else if (UserUtil.isUserNameEmpty()) {
             mPresenter.loadWBUserInfo();
         } else {
@@ -110,7 +112,26 @@ public class TopicActivity extends BaseActivity
     protected void onPause() {
         super.onPause();
         mAppBar.removeOnOffsetChangedListener(this);
+        saveLastPosition();
     }
+
+    protected void saveLastPosition() {
+        if(mCurrentTopicFragment != null){
+            mCurrentTopicFragment.getLayoutManager().onSaveInstanceState();
+            int top = 0;
+            int position = mCurrentTopicFragment.getLayoutManager().findFirstVisibleItemPosition();
+            View View = mCurrentTopicFragment.getLayoutManager().findViewByPosition(position);
+
+            if(View != null){
+                top = View.getTop();
+            }
+            SPUtil.putInt("lastTopicPosition", position);
+            SPUtil.putInt("lastTopicOffset", top);
+
+//            L.debug("save lastPosition : {}, offset : {}", position, top);
+        }
+    }
+
 
     AvatarImageView mAvatar;
     AppBarLayout mAppBar;
@@ -153,18 +174,18 @@ public class TopicActivity extends BaseActivity
     }
 
     private void initToolBarButton() {
-        if (getToolbar().getNavigation() != null) {
-            int actionBarHeight = ViewUtil.getActionBarHeight();
-            final TypedArray a = getTheme().obtainStyledAttributes(null,
-                    android.support.v7.appcompat.R.styleable.DrawerArrowToggle, android.support.v7.appcompat.R.attr.drawerArrowStyle,
-                    android.support.v7.appcompat.R.style.Base_Widget_AppCompat_DrawerArrowToggle);
-            int size = a.getDimensionPixelSize(android.support.v7.appcompat.R.styleable.DrawerArrowToggle_drawableSize, 0);
-            a.recycle();
-//            int size = getResources().getDimensionPixelSize(R.dimen.icon_size_normal);
-            int padding = (actionBarHeight - size) / 2;
-            getToolbar().getNavigation().setPadding(padding, padding, padding, padding);
-            getToolbar().getNavigation().setScaleType(ImageView.ScaleType.MATRIX);
-        }
+//        if (getToolbar().getNavigation() != null) {
+//            int actionBarHeight = ViewUtil.getActionBarHeight();
+//            final TypedArray a = getTheme().obtainStyledAttributes(null,
+//                    android.support.v7.appcompat.R.styleable.DrawerArrowToggle, android.support.v7.appcompat.R.attr.drawerArrowStyle,
+//                    android.support.v7.appcompat.R.style.Base_Widget_AppCompat_DrawerArrowToggle);
+//            int size = a.getDimensionPixelSize(android.support.v7.appcompat.R.styleable.DrawerArrowToggle_drawableSize, 0);
+//            a.recycle();
+////            int size = getResources().getDimensionPixelSize(R.dimen.icon_size_normal);
+//            int padding = (actionBarHeight - size) / 2;
+//            getToolbar().getNavigation().setPadding(padding, padding, padding, padding);
+//            getToolbar().getNavigation().setScaleType(ImageView.ScaleType.MATRIX);
+//        }
 
         ActionBarDrawerToggleCustom toggle = new ActionBarDrawerToggleCustom(
                 this, mDrawer, getToolbar(), R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -242,12 +263,14 @@ public class TopicActivity extends BaseActivity
         }
     }
 
+    boolean mIsFirstTime = true;
     public void onGroupSelected(int position, TopicPresenter.TopicGroup topicGroup) {
 
         if (topicGroup.getTopicType() == TopicPresenter.TopicType.NONE) {
             getAdTokenInterceptor().setAction(mStartGroup).start();
         } else {
-            setFragment(TopicFragment.newInstance(topicGroup), topicGroup.getName());
+            setFragment(TopicFragment.newInstance(topicGroup, mIsFirstTime), topicGroup.getName());
+            mIsFirstTime = false;
         }
         if (mMaterialSheetFab.isSheetVisible()) {
             mMaterialSheetFab.hideSheet();

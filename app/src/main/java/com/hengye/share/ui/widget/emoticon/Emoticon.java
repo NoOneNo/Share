@@ -141,7 +141,7 @@ public class Emoticon {
         mWeiBoEmoticon.put("[衰]", "d_shuai.png");
         mWeiBoEmoticon.put("[闭嘴]", "d_bizui.png");
         mWeiBoEmoticon.put("[鄙视]", "d_bishi.png");
-        mWeiBoEmoticon.put("[花心]", "d_huaxin.png");
+        mWeiBoEmoticon.put("[色]", "d_huaxin.png");//花心->色
         mWeiBoEmoticon.put("[鼓掌]", "d_guzhang.png");
         mWeiBoEmoticon.put("[悲伤]", "d_beishang.png");
         mWeiBoEmoticon.put("[思考]", "d_sikao.png");

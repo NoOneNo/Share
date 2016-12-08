@@ -42,18 +42,20 @@ public class CommonToolBar extends Toolbar {
     }
 
     public void init() {
-        this.setNavigationIcon(R.drawable.ic_arrow_back_white_48dp);
+        this.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         if (getNavigationIcon() != null) {
             getNavigationIcon().setTint(ThemeUtil.getUntingedColor());
         }
         setBackgroundColor(ThemeUtil.getColor());
         setTitleTextColor(ThemeUtil.getTextColor());
         setSubtitleTextColor(ThemeUtil.getTextColor());
-        if (getNavigation() != null) {
-            int size = getResources().getDimensionPixelSize(R.dimen.icon_size_small);
-            adjustNavigationPadding(size);
-            getNavigation().setScaleType(ImageView.ScaleType.FIT_CENTER);
-        }
+
+        //navigation的图标默认为24dp大小，因为toolbar高度一般在56dp；
+//        if (getNavigation() != null) {
+//            int size = getResources().getDimensionPixelSize(R.dimen.icon_size_small);
+//            adjustNavigationPadding(size);
+//            getNavigation().setScaleType(ImageView.ScaleType.FIT_CENTER);
+//        }
     }
 
     public void setNavigationIcon(@Nullable Drawable icon, boolean autoPadding) {

@@ -118,10 +118,6 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
                 }
 
             }
-
-            if (!mAnimateIn) {
-
-            }
         }
 
     }

@@ -47,15 +47,18 @@ public class GroupListFragment extends RecyclerRefreshFragment<TopicGroup>{
         mMaxHeight = ViewUtil.dp2px(340f);
         mHalfScreenWidth = ViewUtil.getScreenWidth(getActivity()) / 2;
 
-        mLastSelectPosition = SPUtil.getInt("GroupListSelectPosition@" + UserUtil.getUid(), 0);
+        //只保存最后一个用户的selectPosition;
+        mLastSelectPosition = SPUtil.getInt("GroupListSelectPosition", 0);
 
     }
 
     @Override
     public void onPause() {
-        SPUtil.putInt("GroupListSelectPosition@" + UserUtil.getUid(), mAdapter.getSelectPosition());
         super.onPause();
+        //不在onPause保存preference会失败；
+        SPUtil.putInt("GroupListSelectPosition", mAdapter.getSelectPosition());
     }
+
 
     private void adjustSize(){
         if(getView() == null){

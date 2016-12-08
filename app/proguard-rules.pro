@@ -61,6 +61,7 @@ public static java.lang.String TABLENAME;
 
 ## tencent x5
 -keep class com.tencent.**
+-dontwarn com.tencent.**
 #-libraryjars libs/tbs_sdk_thirdapp_v2.5.0.1031.jar
 ## tencent x5
 
@@ -72,8 +73,10 @@ public static java.lang.String TABLENAME;
 
 ## me
 #-libraryjars libs/weibosdkcore.jar
-#-libraryjars libs/volleyplus-release.aar
-#-libraryjars libs/skinloader-release.aar
+-libraryjars libs/volleyplus-release.aar
+-libraryjars libs/skinloader-release.aar
+
+-keep class com.android.volley.** { *; }
 ## me
 
 -keep class com.hengye.share.model.** {*;}
@@ -84,6 +87,7 @@ public static java.lang.String TABLENAME;
 ## Ignoring InnerClasses attribute for an anonymous inner class
 ## 这样的警告
 -keepattributes EnclosingMethod
+-keepattributes InnerClasses
 
 #指定代码的压缩级别
 -optimizationpasses 5
@@ -110,6 +114,7 @@ public static java.lang.String TABLENAME;
 -keepattributes *Annotation*
 
 # 保持哪些类不被混淆
+-keep public class * extends android.support.v4.app.Fragment
 -keep public class * extends android.app.Fragment
 -keep public class * extends android.app.Activity
 -keep public class * extends android.app.Application

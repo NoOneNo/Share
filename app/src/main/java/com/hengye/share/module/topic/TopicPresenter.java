@@ -47,6 +47,7 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
     }
 
     public void loadWBTopic(String id, final boolean isRefresh, boolean isLoadId) {
+        getMvpView().onTaskStart();
         addDisposable(getTopics(id, isRefresh, isLoadId)
                 .flatMap(TopicRxUtil.flatShortUrl())
                 .subscribeOn(SchedulerProvider.io())

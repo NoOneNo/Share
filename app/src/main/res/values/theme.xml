@@ -76,13 +76,15 @@
     </style>
 
     <style name="GuidanceTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <!--<item name="windowNoTitle">true</item>-->
+        <item name="android:windowFullscreen">true</item>
         <item name="android:windowIsTranslucent">false</item>
         <item name="android:colorBackground">@color/white</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@null</item>
         <item name="android:navigationBarColor">@null</item>
-        <item name="android:windowTranslucentStatus">false</item>
         <item name="android:windowTranslucentNavigation">false</item>
+        <!--<item name="android:statusBarColor">@null</item>-->
+        <!--<item name="android:windowTranslucentStatus">false</item>-->
     </style>
 
     <style name="ShareAppTheme" parent="AppTheme">

@@ -109,7 +109,7 @@ public class GuidanceActivity extends BaseActivity {
     public static final String ACTION_REMOVE_SHORTCUT = "com.android.launcher.action.UNINSTALL_SHORTCUT";
     private void createShortcutIfNeed() {
 
-        if(SPUtil.getBoolean("isShortcutCreate1.0", false)){
+        if(SPUtil.getBoolean("isShortcutCreate2.0", false)){
             L.debug("shortcut is exist");
             return;
         }
@@ -119,15 +119,20 @@ public class GuidanceActivity extends BaseActivity {
         Intent shortcut = new Intent(ACTION_ADD_SHORTCUT);
         //快捷方式的名称
         shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, getString(R.string.app_name));
+
+        Intent launcherIntent = new Intent();
+        launcherIntent.setClassName(this, getString(R.string.app_launcher));
+        launcherIntent.setAction(Intent.ACTION_MAIN);
+        launcherIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         //快捷方式的指向action
-        shortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT, new Intent().setClassName(this, getString(R.string.app_launcher)));
+        shortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT, launcherIntent);
         //快捷方式的图标
         shortcut.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(this, R.mipmap.ic_launcher));
         //不允许重复创建
         shortcut.putExtra("duplicate", false);
         sendBroadcast(shortcut);
 
-        SPUtil.putBoolean("isShortcutCreate1.0", true);
+        SPUtil.putBoolean("isShortcutCreate2.0", true);
     }
 
     private void checkUpdateIfNeed(){

@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.L;
+import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.handler.TopicAdapterIdPager;
 import com.hengye.share.util.handler.TopicIdHandler;
 import com.hengye.share.module.util.encapsulation.base.DataHandler;
@@ -17,36 +20,47 @@ import java.util.ArrayList;
 
 public class TopicFragment extends StatusFragment<Topic> implements TopicMvpView {
 
-    public static Bundle getBundle(TopicPresenter.TopicGroup topicGroup, String uid, String name){
+    public static Bundle getBundle(TopicPresenter.TopicGroup topicGroup, String uid, String name) {
+        return getBundle(topicGroup, false, uid, name);
+    }
+
+    public static Bundle getBundle(TopicPresenter.TopicGroup topicGroup, boolean isRestore, String uid, String name) {
         Bundle bundle = new Bundle();
         bundle.putSerializable("topicGroup", topicGroup);
-        bundle.putSerializable("uid", uid);
-        bundle.putSerializable("name", name);
+        bundle.putBoolean("isRestore", isRestore);
+        bundle.putString("uid", uid);
+        bundle.putString("name", name);
         return bundle;
     }
 
-    public static TopicFragment newInstance(TopicPresenter.TopicGroup topicGroup, String uid, String name) {
+    public static TopicFragment newInstance(TopicPresenter.TopicGroup topicGroup, String uid, String name, boolean isRestore) {
         TopicFragment fragment = new TopicFragment();
-        fragment.setArguments(getBundle(topicGroup, uid, name));
+        fragment.setArguments(getBundle(topicGroup, isRestore, uid, name));
         return fragment;
     }
 
     public static TopicFragment newInstance(TopicPresenter.TopicGroup topicGroup) {
-        return newInstance(topicGroup, null, null);
+        return newInstance(topicGroup, false);
     }
 
-    public static TopicFragment newInstance(TopicPresenter.TopicType topicType, String uid, String name) {
-        return newInstance(new TopicPresenter.TopicGroup(topicType), uid, name);
+    public static TopicFragment newInstance(TopicPresenter.TopicGroup topicGroup, boolean isRestore) {
+        return newInstance(topicGroup, null, null, isRestore);
     }
+
+//    public static TopicFragment newInstance(TopicPresenter.TopicType topicType, String uid, String name) {
+//        return newInstance(new TopicPresenter.TopicGroup(topicType), uid, name, false);
+//    }
 
     TopicAdapter mAdapter;
     TopicPresenter mPresenter;
     TopicPresenter.TopicGroup topicGroup;
     String uid, name;
+    boolean isRestore;
 
     @Override
     protected void handleBundleExtra(Bundle bundle) {
         topicGroup = (TopicPresenter.TopicGroup) bundle.getSerializable("topicGroup");
+        isRestore = bundle.getBoolean("isRestore");
         uid = bundle.getString("uid");
         name = bundle.getString("name");
     }
@@ -63,15 +77,39 @@ public class TopicFragment extends StatusFragment<Topic> implements TopicMvpView
         mPresenter.setUid(uid);
         mPresenter.setName(name);
 
-        showLoading();
-        markLazyLoadPreparedAndLazyLoadIfCan();
+        if (isRestore && !UserUtil.isUserEmpty()) {
+            onRestore();
+        } else {
+            showLoading();
+            markLazyLoadPreparedAndLazyLoadIfCan();
+        }
+    }
+
+    private void onRestore() {
+        ArrayList<Topic> topic = mPresenter.findData();
+        if (!CommonUtil.isEmpty(topic)) {
+            int position = SPUtil.getInt("lastTopicPosition", 0);
+            int offset = SPUtil.getInt("lastTopicOffset", 0);
+            onLoadListData(true, topic);
+            if (!mAdapter.isIndexOutOfBounds(position)) {
+                getLayoutManager().scrollToPositionWithOffset(position, offset);
+//                L.debug("onRestore Success, lastPosition : {}, offset : {}", position, offset);
+            }
+        } else {
+            onRefresh();
+        }
     }
 
     @Override
     protected void onLazyLoad() {
-        if(!UserUtil.isUserEmpty()) {
+        if (!UserUtil.isUserEmpty()) {
             loadTopic();
         }
+    }
+
+    @Override
+    public void onTaskStart() {
+        super.onTaskStart();
     }
 
     @Override
@@ -109,7 +147,7 @@ public class TopicFragment extends StatusFragment<Topic> implements TopicMvpView
     @Override
     public void handleDataType(int type) {
         super.handleDataType(type);
-        if(DataType.hasNewData(type)){
+        if (DataType.hasNewData(type)) {
             mPresenter.saveData(mAdapter.getData());
         }
     }
