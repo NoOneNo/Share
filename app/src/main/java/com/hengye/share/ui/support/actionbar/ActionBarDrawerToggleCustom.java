@@ -534,11 +534,11 @@ public class ActionBarDrawerToggleCustom implements DrawerLayout.DrawerListener 
     /**
      * Interface for toggle drawables. Can be public in the future
      */
-    static interface DrawerToggle {
+    interface DrawerToggle {
 
-        public void setPosition(float position);
+        void setPosition(float position);
 
-        public float getPosition();
+        float getPosition();
     }
 
     /**

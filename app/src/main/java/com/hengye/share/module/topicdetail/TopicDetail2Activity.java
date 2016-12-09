@@ -557,8 +557,8 @@ public class TopicDetail2Activity extends BaseActivity implements TopicDetailMvp
         return mTabLayout.getSelectedTabPosition() == 1;
     }
 
-    List<TopicComment> mCommentData = new ArrayList<TopicComment>();
-    List<TopicComment> mRepostData = new ArrayList<TopicComment>();
+    List<TopicComment> mCommentData = new ArrayList<>();
+    List<TopicComment> mRepostData = new ArrayList<>();
 
     private void startloading() {
         mListView.addHeaderView(mLoadingView);

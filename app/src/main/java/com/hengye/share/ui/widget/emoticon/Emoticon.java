@@ -70,7 +70,7 @@ public class Emoticon {
     private LinkedHashMap<String, Bitmap> generateEmoticonBitmap(Map<String, String> emoticon, String directory) {
         List<String> index = new ArrayList<>();
         index.addAll(emoticon.keySet());
-        LinkedHashMap<String, Bitmap> emotionBitmap = new LinkedHashMap<String, Bitmap>();
+        LinkedHashMap<String, Bitmap> emotionBitmap = new LinkedHashMap<>();
         for (String str : index) {
             String name = emoticon.get(str);
             AssetManager assetManager = BaseApplication.getInstance().getAssets();

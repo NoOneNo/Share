@@ -271,6 +271,6 @@ public interface IPhotoView {
      *
      * @return currently visible area as bitmap or null
      */
-    public Bitmap getVisibleRectangleBitmap();
+    Bitmap getVisibleRectangleBitmap();
 
 }

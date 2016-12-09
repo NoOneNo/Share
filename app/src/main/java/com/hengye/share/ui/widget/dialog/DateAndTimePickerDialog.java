@@ -245,7 +245,7 @@ public class DateAndTimePickerDialog extends AlertDialog {
     }
 
     public interface OnSetListener {
-        public void onSet(Calendar calendar, long timeInMillis);
+        void onSet(Calendar calendar, long timeInMillis);
     }
 
     public interface onTimeUpdateListener{
@@ -255,6 +255,6 @@ public class DateAndTimePickerDialog extends AlertDialog {
          * @param isSelectDate 是否是选择日期
          * @return
          */
-        public boolean onTimeUpdate(boolean isSelectDate, long timeInMillis);
+        boolean onTimeUpdate(boolean isSelectDate, long timeInMillis);
     }
 }

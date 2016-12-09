@@ -5,5 +5,5 @@ package com.hengye.share.util.intercept;
  */
 public interface Action {
 
-    public void run();
+    void run();
 }

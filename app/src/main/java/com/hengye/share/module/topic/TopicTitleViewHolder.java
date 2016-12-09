@@ -82,7 +82,7 @@ public class TopicTitleViewHolder {
     /**
      * Created by yuhy on 2016/11/29.
      */
-    public static interface TopicTitle {
+    public interface TopicTitle {
         TopicTitleViewHolder getTopicTitleViewHolder();
     }
 }
