@@ -14,8 +14,6 @@ import android.view.ViewGroup;
 
 import com.hengye.share.module.base.ActivityHelper;
 import com.hengye.share.module.util.encapsulation.mvp.BasePresenter;
-import com.hengye.share.module.util.encapsulation.mvp.RxPresenter;
-import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
 
 import java.util.HashSet;

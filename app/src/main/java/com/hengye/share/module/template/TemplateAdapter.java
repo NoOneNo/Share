@@ -1,7 +1,6 @@
 package com.hengye.share.module.template;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 

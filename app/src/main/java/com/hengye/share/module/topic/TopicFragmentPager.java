@@ -11,9 +11,7 @@ import com.hengye.share.model.greenrobot.GroupList;
 import com.hengye.share.module.topic.TopicFragment;
 import com.hengye.share.module.topic.TopicPresenter;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class TopicFragmentPager extends FragmentPagerAdapter {
 

@@ -1,6 +1,5 @@
 package com.hengye.share.util.retrofit;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hengye.share.model.other.AMapAddress;
 import com.hengye.share.util.L;

@@ -6,13 +6,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.hengye.share.model.sina.WBShortUrl;
 import com.hengye.share.util.CommonUtil;
-import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.GsonUtil;
-import com.hengye.share.util.L;
 import com.hengye.share.util.thirdparty.WBUtil;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.Serializable;
 

@@ -12,8 +12,6 @@ import com.hengye.share.module.util.encapsulation.base.DataHandler;
 import com.hengye.share.module.util.encapsulation.base.DataType;
 import com.hengye.share.module.util.encapsulation.base.Pager;
 import com.hengye.share.model.Topic;
-import com.hengye.share.module.util.encapsulation.fragment.RecyclerRefreshFragment;
-import com.hengye.share.util.UserUtil;
 
 import java.util.ArrayList;
 import java.util.List;

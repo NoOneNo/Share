@@ -3,7 +3,6 @@ package com.hengye.share.model;
 import android.text.SpannableString;
 import android.text.TextUtils;
 
-import com.hengye.share.model.sina.WBShortUrl;
 import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.model.sina.WBTopicComment;
 import com.hengye.share.model.sina.WBTopicComments;

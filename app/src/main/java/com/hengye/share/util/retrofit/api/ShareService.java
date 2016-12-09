@@ -1,7 +1,6 @@
 package com.hengye.share.util.retrofit.api;
 
 import com.hengye.share.model.other.AMapAddresses;
-import com.hengye.share.module.update.UpdateBean;
 import com.hengye.share.module.update.UpdateBombBean;
 
 import java.util.Map;

@@ -18,7 +18,6 @@ import com.hengye.share.module.util.encapsulation.fragment.RecyclerRefreshFragme
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.module.util.image.GalleryActivity;
 import com.hengye.share.util.L;
-import com.hengye.share.util.handler.TopicIdHandler;
 import com.hengye.share.util.handler.TopicIdPager;
 import com.hengye.share.util.handler.TopicRefreshIdHandler;
 import com.hengye.share.util.thirdparty.WBUtil;

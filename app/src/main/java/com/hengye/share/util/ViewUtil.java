@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Vibrator;
 import android.support.annotation.DimenRes;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.HapticFeedbackConstants;
@@ -15,11 +14,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 
 import com.hengye.share.R;
-import com.hengye.share.module.util.encapsulation.view.listener.OnScrollChangeCompatListener;
-import com.hengye.share.ui.widget.scrollview.ObservableScrollView;
 
 import java.lang.reflect.Field;
 

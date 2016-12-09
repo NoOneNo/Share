@@ -17,7 +17,6 @@ import com.hengye.share.module.topic.TopicPresenter.TopicGroup;
 import com.hengye.share.module.topic.TopicPresenter.TopicType;
 import com.hengye.share.module.util.encapsulation.fragment.RecyclerRefreshFragment;
 import com.hengye.share.util.SPUtil;
-import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
 
 import java.util.ArrayList;

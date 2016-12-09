@@ -1,6 +1,5 @@
 package com.hengye.share.util.retrofit.api;
 
-import com.hengye.share.model.Result;
 import com.hengye.share.model.sina.WBAddresses;
 import com.hengye.share.model.sina.WBGroup;
 import com.hengye.share.model.sina.WBGroups;

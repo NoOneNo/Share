@@ -15,7 +15,6 @@ import android.widget.EditText;
 
 import com.hengye.share.ui.support.textspan.CustomContentSpan;
 import com.hengye.share.ui.support.textspan.SimpleContentSpan;
-import com.hengye.share.ui.support.textspan.TopicContentUrlSpan;
 
 import java.util.ArrayList;
 import java.util.List;

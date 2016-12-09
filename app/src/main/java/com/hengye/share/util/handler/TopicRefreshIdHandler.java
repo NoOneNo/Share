@@ -1,6 +1,5 @@
 package com.hengye.share.util.handler;
 
-import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.module.util.encapsulation.base.DataAdapter;
 import com.hengye.share.module.util.encapsulation.base.DataHandler;
 

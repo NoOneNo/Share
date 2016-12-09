@@ -1,6 +1,5 @@
 package com.hengye.share.module.topicdetail;
 
-import com.hengye.share.model.Result;
 import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.TopicComments;
 import com.hengye.share.model.sina.WBResult;

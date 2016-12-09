@@ -1,7 +1,6 @@
 package com.hengye.share.util.rxjava.datasource;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Single;

@@ -1,15 +1,5 @@
 package com.hengye.share.util.retrofit.weibo;
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-
-import com.hengye.share.R;
-import com.hengye.share.module.base.BaseActivityHelper;
-import com.hengye.share.module.sso.ThirdPartyLoginActivity;
-import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
-
 import java.util.HashMap;
 import java.util.Map;
 

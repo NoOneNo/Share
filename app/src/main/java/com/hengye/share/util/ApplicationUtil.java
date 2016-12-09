@@ -1,7 +1,6 @@
 package com.hengye.share.util;
 
 import android.app.Application;
-import android.content.res.Resources;
 
 import com.hengye.share.module.base.BaseApplication;
 

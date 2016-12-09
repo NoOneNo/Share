@@ -1,11 +1,7 @@
 package com.hengye.share.module.other;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.hengye.share.R;
@@ -17,7 +13,6 @@ import com.hengye.share.module.update.CheckUpdateMvpImpl;
 import com.hengye.share.module.update.CheckUpdatePresenter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
-import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.thirdparty.ThirdPartyUtils;

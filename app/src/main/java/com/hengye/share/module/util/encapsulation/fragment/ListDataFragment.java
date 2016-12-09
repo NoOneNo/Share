@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.hengye.share.module.util.encapsulation.base.DataHandler;
-import com.hengye.share.module.util.encapsulation.base.DataType;
 import com.hengye.share.module.util.encapsulation.base.ListDataCallBack;
 import com.hengye.share.module.util.encapsulation.base.Pager;
 import com.hengye.share.module.util.encapsulation.base.PagingConfig;

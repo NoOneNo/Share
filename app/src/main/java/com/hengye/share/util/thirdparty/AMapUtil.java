@@ -1,19 +1,13 @@
 package com.hengye.share.util.thirdparty;
 
 import android.app.Activity;
-import android.text.TextUtils;
 
-import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.hengye.share.R;
 import com.hengye.share.module.base.ActivityHelper;
 import com.hengye.share.module.base.BaseActivity;
-import com.hengye.share.module.test.TestLocationActivity;
 import com.hengye.share.util.ApplicationUtil;
-import com.hengye.share.util.L;
-import com.hengye.share.util.ResUtil;
 
 /**
  * Created by yuhy on 2016/12/6.

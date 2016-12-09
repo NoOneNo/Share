@@ -28,9 +28,6 @@ import com.hengye.share.util.retrofit.RetrofitManager;
 import com.hengye.share.util.rxjava.DefaultSubscriber;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
-import io.reactivex.Observer;
-import org.reactivestreams.Subscription;
-
 /**
  * Created by yuhy on 2016/11/8.
  */

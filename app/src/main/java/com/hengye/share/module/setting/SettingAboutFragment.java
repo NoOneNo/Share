@@ -16,7 +16,6 @@ import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
 import com.hengye.share.util.ApplicationUtil;
 import com.hengye.share.util.ClipboardUtil;
 import com.hengye.share.util.IntentUtil;
-import com.hengye.share.util.SystemUtil;
 import com.hengye.share.util.ToastUtil;
 
 public class SettingAboutFragment extends BasePreferenceFragment {

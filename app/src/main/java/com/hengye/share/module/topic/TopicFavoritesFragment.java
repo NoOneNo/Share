@@ -23,7 +23,6 @@ import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.UserUtil;
-import com.hengye.share.util.thirdparty.WBUtil;
 
 import java.util.ArrayList;
 import java.util.List;
