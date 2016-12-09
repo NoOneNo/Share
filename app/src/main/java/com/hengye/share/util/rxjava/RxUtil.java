@@ -22,19 +22,19 @@ import io.reactivex.internal.functions.Functions;
 
 public class RxUtil {
 
-    public static <T> ObservableTransformer<Optional<T>, T> deoptionalize() {
-        return new ObservableTransformer<Optional<T>, T>() {
-            @Override
-            public ObservableSource<T> apply(Observable<Optional<T>> upstream) {
-                return upstream.flatMap(new Function<Optional<T>, ObservableSource<T>>() {
-                    @Override
-                    public ObservableSource<T> apply(Optional<T> t) throws Exception {
-                        return t.isPresent() ? ObservableHelper.just(t.get()) : (Observable<T>)Observable.empty();
-                    }
-                });
-            }
-        };
-    }
+//    public static <T> ObservableTransformer<Optional<T>, T> deoptionalize() {
+//        return new ObservableTransformer<Optional<T>, T>() {
+//            @Override
+//            public ObservableSource<T> apply(Observable<Optional<T>> upstream) {
+//                return upstream.flatMap(new Function<Optional<T>, ObservableSource<T>>() {
+//                    @Override
+//                    public ObservableSource<T> apply(Optional<T> t) throws Exception {
+//                        return t.isPresent() ? ObservableHelper.just(t.get()) : (Observable<T>)Observable.empty();
+//                    }
+//                });
+//            }
+//        };
+//    }
 
     public static final ObservableTransformer netSchedulersTransformer = new ObservableTransformer() {
         @Override public Observable apply(Observable upstream) {

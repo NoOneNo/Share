@@ -446,11 +446,7 @@ public class TopicDraft implements java.io.Serializable {
         }
         long duration = getPublishTiming() - System.currentTimeMillis();
 
-        if(duration < 60 * 1000){
-            //小于1分钟则判断为失效;
-            return true;
-        }
-        return false;
+        return duration < 60 * 1000;
     }
 
     public void mark(int status){

@@ -12,6 +12,7 @@ import com.hengye.share.util.retrofit.api.WBService;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 import com.hengye.share.util.thirdparty.WBUtil;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import io.reactivex.Observable;
@@ -83,11 +84,9 @@ public class TopicDetailPresenter extends RxPresenter<TopicDetailMvpView> {
 
                     @Override
                     public void onNext(TopicDetailMvpView v, Object o) {
-                        if (isComment) {
-                            v.handleCommentData(isComment, TopicComment.getCommentArrayList((WBTopicComments) o), isRefresh, 0);
-                        } else {
-                            v.handleCommentData(isComment, TopicComment.getCommentArrayList((WBTopicReposts) o), isRefresh, 0);
-                        }
+                        v.handleCommentData(isComment, isComment
+                                ? TopicComment.getCommentArrayList((WBTopicComments) o)
+                                : TopicComment.getCommentArrayList((WBTopicReposts) o), isRefresh, 0);
                         v.onTaskComplete(isRefresh, true);
                     }
 

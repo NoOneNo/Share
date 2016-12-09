@@ -56,11 +56,12 @@ public class FragmentActivity extends BaseActivity {
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected Class<? extends BaseFragment> getBaseFragmentClass() {
         try {
-            Class clazz = (Class) getIntent().getSerializableExtra(FRAGMENT_CLASS);
+            return (Class) getIntent().getSerializableExtra(FRAGMENT_CLASS);
 //            if (clazz.getSuperclass().getSimpleName().equals(BaseFragment.BASE_FRAGMENT)) {
-                return clazz;
+//                return clazz;
 //            }
         } catch (Exception e) {
             e.printStackTrace();

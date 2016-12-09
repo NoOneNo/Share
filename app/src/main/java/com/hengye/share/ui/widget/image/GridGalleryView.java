@@ -133,7 +133,7 @@ public class GridGalleryView extends GridLayout implements View.OnClickListener 
     }
 
     public interface HandleData {
-        <T extends ImageView> T getImageView();
+        ImageView getImageView();
 
         void handleChildItem(ImageView imageView, int position);
     }

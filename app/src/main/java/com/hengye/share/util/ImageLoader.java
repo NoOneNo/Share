@@ -127,8 +127,7 @@ public class ImageLoader {
 		int inSampleSize = 1;
 		if (width > reqWidth) {
 			// 计算出实际宽度和目标宽度的比率
-			final int widthRatio = Math.round((float) width / (float) reqWidth);
-			inSampleSize = widthRatio;
+			inSampleSize = Math.round((float) width / (float) reqWidth);
 		}
 		return inSampleSize;
 	}

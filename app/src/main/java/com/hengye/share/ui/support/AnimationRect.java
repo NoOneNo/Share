@@ -316,9 +316,9 @@ public class AnimationRect implements Parcelable {
         float serverClipThumbnailRightSizePercent = (float) thumbnailAndOriDeltaRightSize
                 / (float) oriBitmapScaledWidth;
 
-        float deltaH = (float) (oriBitmapScaledWidth
+        float deltaH = oriBitmapScaledWidth
                 - oriBitmapScaledWidth * serverClipThumbnailRightSizePercent
-                - animationRect.widgetWidth);
+                - animationRect.widgetWidth;
 
         float deltaLeft = deltaH / 2;
 
@@ -355,9 +355,9 @@ public class AnimationRect implements Parcelable {
         float serverClipThumbnailBottomSizePercent = (float) thumbnailAndOriDeltaBottomSize
                 / (float) oriBitmapScaledHeight;
 
-        float deltaV = (float) (oriBitmapScaledHeight
+        float deltaV = oriBitmapScaledHeight
                 - oriBitmapScaledHeight * serverClipThumbnailBottomSizePercent
-                - animationRect.widgetHeight);
+                - animationRect.widgetHeight;
 
         float deltaTop = deltaV / 2;
 
@@ -396,9 +396,9 @@ public class AnimationRect implements Parcelable {
         float serverClipThumbnailRightSizePercent = (float) thumbnailAndOriDeltaRightSize
                 / (float) oriBitmapScaledWidth;
 
-        float deltaH = (float) (oriBitmapScaledWidth
+        float deltaH = oriBitmapScaledWidth
                 - oriBitmapScaledWidth * serverClipThumbnailRightSizePercent
-                - animationRect.widgetWidth);
+                - animationRect.widgetWidth;
 
         float deltaRight = deltaH / 2;
 
@@ -435,9 +435,9 @@ public class AnimationRect implements Parcelable {
         float serverClipThumbnailBottomSizePercent = (float) thumbnailAndOriDeltaBottomSize
                 / (float) oriBitmapScaledHeight;
 
-        float deltaV = (float) (oriBitmapScaledHeight
+        float deltaV = oriBitmapScaledHeight
                 - oriBitmapScaledHeight * serverClipThumbnailBottomSizePercent
-                - animationRect.widgetHeight);
+                - animationRect.widgetHeight;
 
         float deltaBottom = deltaV / 2;
 

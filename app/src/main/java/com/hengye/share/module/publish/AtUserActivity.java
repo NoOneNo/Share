@@ -386,11 +386,7 @@ public class AtUserActivity extends BaseActivity implements UserListMvpView {
 
 
     private boolean canSearchMoveRight() {
-        if (mRVSelectResult.getWidth() > mSearchMarginStart) {
-            return true;
-        } else {
-            return false;
-        }
+        return mRVSelectResult.getWidth() > mSearchMarginStart;
     }
 
     private boolean canSearchMoveLeft() {

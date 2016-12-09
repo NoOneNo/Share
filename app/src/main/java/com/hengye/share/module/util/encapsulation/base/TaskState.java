@@ -34,13 +34,10 @@ public class TaskState {
     }
 
     public static boolean isNetworkException(Throwable throwable){
-        if(throwable instanceof UnknownHostException
+        return throwable instanceof UnknownHostException
                 || throwable instanceof SocketTimeoutException
-                || throwable instanceof ConnectException){
-            //// TODO: 2016/11/29 ConnectException可能要去掉
-            return true;
-        }
-        return false;
+                || throwable instanceof ConnectException;
+        //// TODO: 2016/11/29 ConnectException可能要去掉
     }
 
     public static String toString(int taskState){

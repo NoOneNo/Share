@@ -43,8 +43,7 @@ public class ToastCustom {
     }
 
     public static ToastCustom makeText(Context context, String text, double time){
-        ToastCustom toastCustom = new ToastCustom(context, text, time);
-        return toastCustom;
+        return new ToastCustom(context, text, time);
     }
 
     public void show(){

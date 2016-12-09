@@ -52,6 +52,7 @@ public abstract class TabsFragment extends ViewPagerFragment {
         L.debug("onSaveInstanceState invoke()");
     }
 
+    @SuppressWarnings("unchecked")
     protected void setUpTabs(Bundle savedInstanceState) {
 
         L.debug("setUpTabs invoke()");

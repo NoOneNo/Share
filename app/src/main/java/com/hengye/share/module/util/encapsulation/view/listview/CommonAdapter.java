@@ -32,6 +32,7 @@ public abstract class CommonAdapter<T, V extends ViewHolder<T>> extends BaseAdap
         this.mData = data;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         V viewHolder;
@@ -164,7 +165,7 @@ public abstract class CommonAdapter<T, V extends ViewHolder<T>> extends BaseAdap
         return mOnChildViewItemLongClickListener;
     }
 
-    public void setmOnChildViewItemLongClickListener(OnItemLongClickListener onChildViewItemLongClickListener) {
+    public void setOnChildViewItemLongClickListener(OnItemLongClickListener onChildViewItemLongClickListener) {
         this.mOnChildViewItemLongClickListener = onChildViewItemLongClickListener;
     }
 }

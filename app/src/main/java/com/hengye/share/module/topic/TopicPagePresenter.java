@@ -160,10 +160,7 @@ public class TopicPagePresenter extends ListDataPresenter<Topic, TopicPageMvpVie
     }
 
     public boolean isNeedCache() {
-        if (mTopicGroup.topicType == TopicType.THEME) {
-            return false;
-        }
-        return true;
+        return mTopicGroup.topicType != TopicType.THEME;
     }
 
     private String mModuleName;

@@ -23,10 +23,7 @@ public class UpdateBean {
 
         }
 
-        if(BuildConfig.VERSION_CODE < versionCode){
-            return true;
-        }
-        return false;
+        return BuildConfig.VERSION_CODE < versionCode;
     }
 
     private int versionCode;

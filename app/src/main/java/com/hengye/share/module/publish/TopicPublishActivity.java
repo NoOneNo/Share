@@ -405,6 +405,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_AT_USER && data != null) {
                 //@用户
+                //noinspection unchecked
                 ArrayList<String> result = (ArrayList<String>) data.getSerializableExtra("atUser");
                 String userNames = AtUser.getFormatAtUserName(result);
                 if (mContent.getText().toString().endsWith("@") && !CommonUtil.isEmpty(userNames)) {
@@ -540,10 +541,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
 
     private boolean hasChangeContent() {
         String str = mContent.getText().toString();
-        if (CommonUtil.isEquals(mTopicDraftContent, str) && CommonUtil.isEquals(mTopicDraftImages, getPhotoPickerUrls())) {
-            return false;
-        }
-        return true;
+        return !(CommonUtil.isEquals(mTopicDraftContent, str) && CommonUtil.isEquals(mTopicDraftImages, getPhotoPickerUrls()));
     }
 
     private String getPhotoPickerUrls() {

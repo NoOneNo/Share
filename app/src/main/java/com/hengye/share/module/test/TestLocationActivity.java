@@ -394,6 +394,7 @@ public class TestLocationActivity extends BaseActivity
                 try {
                     sdf = new SimpleDateFormat(strPattern, Locale.CHINA);
                 } catch (Throwable e) {
+                    e.printStackTrace();
                 }
             } else {
                 sdf.applyPattern(strPattern);

@@ -336,6 +336,7 @@ public class SettingHelper {
         return getStringSet(key, null);
     }
 
+    @SuppressWarnings("unchecked")
     public static Set<String> getStringSet(String key, Set<String> defaultValue){
         Set<String> value = (Set<String>)mCache.get(key);
 

@@ -389,6 +389,7 @@ public class TopicAdapter extends CommonAdapter<Topic>
                         int id = view.getId();
                         if (id == View.NO_ID) {
                             GridLayout gridLayout = (GridLayout) view.getTag();
+                            //noinspection unchecked
                             ArrayList<String> urls = (ArrayList<String>) gridLayout.getTag(View.NO_ID);
                             ArrayList<AnimationRect> animationRectArrayList
                                     = new ArrayList<>();

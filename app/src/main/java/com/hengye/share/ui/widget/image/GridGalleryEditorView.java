@@ -226,6 +226,7 @@ public class GridGalleryEditorView extends RecyclerView implements OnItemClickLi
         return paths;
     }
 
+    @SuppressWarnings("unchecked")
     private boolean handleResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
 //            mIsPrimitive = data.getBooleanExtra(PhotoPickerActivity.PICK_PHOTO_PRIMITIVE, false);

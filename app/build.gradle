@@ -75,6 +75,8 @@ android {
         def releaseApkName = defaultConfig.applicationId + '-' + variant.buildType.name + '-' + defaultConfig.versionName + '.apk'
         variant.outputs[0].outputFile = new File(file.parent, releaseApkName)
     }
+
+    return void//fix warning Not all execution paths return a value
 }
 
 

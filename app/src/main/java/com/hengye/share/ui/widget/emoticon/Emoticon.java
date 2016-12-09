@@ -64,8 +64,7 @@ public class Emoticon {
 
     private String getEmoticonDirectoryName(String emoticonType){
         String prefix = EMOTICON_DIRECTORY_NAME;
-        String suffix = emoticonType;
-        return prefix + File.separator + suffix + File.separator;
+        return prefix + File.separator + emoticonType + File.separator;
     }
 
     private LinkedHashMap<String, Bitmap> generateEmoticonBitmap(Map<String, String> emoticon, String directory) {

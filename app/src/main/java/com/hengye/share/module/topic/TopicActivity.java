@@ -240,6 +240,7 @@ public class TopicActivity extends BaseActivity
     private void initFab() {
         View sheetView = findViewById(R.id.fab_sheet);
         View overlay = findViewById(R.id.overlay);
+        //noinspection unchecked
         mMaterialSheetFab = new MaterialSheetFab(mFab, sheetView, overlay, ResUtil.getColor(R.color.white), ThemeUtil.getColor());
         mMaterialSheetFab.setEventListener(new MaterialSheetFabEventListener() {
             @Override

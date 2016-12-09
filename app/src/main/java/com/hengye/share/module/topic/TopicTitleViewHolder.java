@@ -56,10 +56,7 @@ public class TopicTitleViewHolder {
     }
 
     public static boolean isClickTopicTitle(int id){
-        if (id == R.id.iv_topic_avatar || id == R.id.tv_topic_username || id == R.id.tv_topic_description) {
-            return true;
-        }
-        return false;
+        return id == R.id.iv_topic_avatar || id == R.id.tv_topic_username || id == R.id.tv_topic_description;
     }
 
     public static boolean onClickTopicTitle(Context context, CommonAdapter adapter, View view, int position, UserInfo userInfo) {

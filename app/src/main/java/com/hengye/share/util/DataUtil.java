@@ -86,6 +86,7 @@ public class DataUtil {
     public static boolean isHttpUrl(String url) {
         if (!TextUtils.isEmpty(url)) {
             Matcher m = WEB_URL.matcher(url);
+            //noinspection LoopStatementThatDoesntLoop
             while (m.find()) {
                 return true;
             }

@@ -13,7 +13,7 @@ buildscript {
     dependencies {
         //greenDao生成器用不了的时候改成2.1.3(com.android.tools.build:gradle)
 //        classpath 'com.android.tools.build:gradle:2.1.3'
-        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.android.tools.build:gradle:2.2.3'
 
 //        classpath 'com.google.gms:google-services:3.0.0'
         // NOTE: Do not place your application dependencies here; they belong
@@ -32,7 +32,7 @@ task clean(type: Delete) {
 
 ext {
     compileSdkVersion = 24
-    buildToolsVersion = "23.0.2"
+    buildToolsVersion = "25.0.1"
     minSdkVersion = 21
     targetSdkVersion = 22
     versionCode = 10
@@ -42,7 +42,7 @@ ext {
 
     final ANDROID_SUPPORT_VERSION = '25.0.1'
     dep = [
-            androidPlugin  : 'com.android.tools.build:gradle:2.2.0',
+            androidPlugin  : 'com.android.tools.build:gradle:2.2.2',
             junit          : 'junit:junit:4.12',
             gson           : 'com.google.code.gson:gson:2.7',
             design         : "com.android.support:design:$ANDROID_SUPPORT_VERSION",

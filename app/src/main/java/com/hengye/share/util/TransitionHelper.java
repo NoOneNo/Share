@@ -95,6 +95,7 @@ public class TransitionHelper {
 //        activity.getWindow().setAllowReturnTransitionOverlap(false);
         final Pair[] pairs = TransitionHelper.createSafeTransitionParticipants(activity, false,
                 new Pair<>(startView, transitionName));
+        //noinspection unchecked
         ActivityOptionsCompat activityOptions = ActivityOptionsCompat
                 .makeSceneTransitionAnimation(activity, pairs);
         ActivityCompat.startActivity(activity, intent, activityOptions.toBundle());

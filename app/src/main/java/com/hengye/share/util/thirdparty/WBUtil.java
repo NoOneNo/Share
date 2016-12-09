@@ -97,10 +97,7 @@ public class WBUtil {
     }
 
     public static boolean isWBLargeUrl(String url) {
-        if (url != null && url.contains(IMAGE_TYPE_ORIGINAL)) {
-            return true;
-        }
-        return false;
+        return url != null && url.contains(IMAGE_TYPE_ORIGINAL);
     }
 
     public static boolean isWBThumbnailUrl(String url) {

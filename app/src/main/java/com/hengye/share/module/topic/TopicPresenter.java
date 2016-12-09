@@ -285,10 +285,7 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
     }
 
     public boolean isNeedCache() {
-        if (mTopicGroup.topicType == TopicType.HOMEPAGE && uid != null && !uid.equals(UserUtil.getUid())) {
-            return false;
-        }
-        return true;
+        return !(mTopicGroup.topicType == TopicType.HOMEPAGE && uid != null && !uid.equals(UserUtil.getUid()));
     }
 
     private String mModuleName;

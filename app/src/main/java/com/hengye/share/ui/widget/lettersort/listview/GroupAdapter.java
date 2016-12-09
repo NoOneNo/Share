@@ -102,6 +102,7 @@ public abstract class GroupAdapter<K extends GroupAdapter.SortKey, V, VH_G exten
         return 2;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -120,6 +121,7 @@ public abstract class GroupAdapter<K extends GroupAdapter.SortKey, V, VH_G exten
         return view;
     }
 
+    @SuppressWarnings("unchecked")
     public View getGroupView(K key, int position, View convertView, ViewGroup parent){
         VH_G vh;
         if(convertView == null){
@@ -134,6 +136,7 @@ public abstract class GroupAdapter<K extends GroupAdapter.SortKey, V, VH_G exten
         return convertView;
     }
 
+    @SuppressWarnings("unchecked")
     public View getChildView(V value, int position, View convertView, ViewGroup parent){
         VH_C vh;
         if(convertView == null){
