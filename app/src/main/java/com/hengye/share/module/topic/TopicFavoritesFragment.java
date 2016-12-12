@@ -8,14 +8,11 @@ import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.GsonRequest;
 import com.google.gson.reflect.TypeToken;
-import com.hengye.share.module.util.encapsulation.base.DefaultDataHandler;
-import com.hengye.share.util.handler.TopicNumberPager;
-import com.hengye.share.module.util.encapsulation.base.DataHandler;
-import com.hengye.share.module.util.encapsulation.base.DataType;
-import com.hengye.share.module.util.encapsulation.base.Pager;
 import com.hengye.share.model.TopicFavorites;
 import com.hengye.share.model.greenrobot.ShareJson;
 import com.hengye.share.model.sina.WBTopicFavorites;
+import com.hengye.share.module.util.encapsulation.base.DataType;
+import com.hengye.share.module.util.encapsulation.base.DefaultDataHandler;
 import com.hengye.share.module.util.encapsulation.fragment.RecyclerRefreshFragment;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
@@ -23,6 +20,7 @@ import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.UserUtil;
+import com.hengye.share.util.handler.TopicNumberPager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,14 +34,13 @@ public class TopicFavoritesFragment extends RecyclerRefreshFragment<TopicFavorit
 
     private TopicFavoritesAdapter mAdapter;
     private TopicNumberPager mPager;
-    DefaultDataHandler<TopicFavorites.TopicFavorite> mHandler;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setAdapter(mAdapter = new TopicFavoritesAdapter(getActivity(), getData()));
-        mPager = new TopicNumberPager();
-        mHandler = new DefaultDataHandler<>(mAdapter);
+        setPager(mPager = new TopicNumberPager());
+        setDataHandler(new DefaultDataHandler<>(mAdapter));
 
         if(mAdapter.getData().isEmpty()) {
             setRefreshing(true);
@@ -79,16 +76,6 @@ public class TopicFavoritesFragment extends RecyclerRefreshFragment<TopicFavorit
         if (!CommonUtil.isEmpty(mAdapter.getData())) {
             RequestManager.addToRequestQueue(getWBTopicFavoritesRequest(UserUtil.getToken(), false), getRequestTag());
         }
-    }
-
-    @Override
-    public Pager getPager() {
-        return mPager;
-    }
-
-    @Override
-    public DataHandler<TopicFavorites.TopicFavorite> getDataHandler() {
-        return mHandler;
     }
 
     private void handleData(List<TopicFavorites.TopicFavorite> data, boolean isRefresh){

@@ -162,7 +162,7 @@ public class TopicAlbumPresenter extends ListTaskPresenter<TopicAlbumMvpView> {
     }
 
     public boolean isNeedCache() {
-        return !(uid != null && !uid.equals(UserUtil.getUid()));
+        return UserUtil.isCurrentUser(uid);
     }
 
 

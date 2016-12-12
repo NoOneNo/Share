@@ -18,6 +18,10 @@ public class WBApiException extends RuntimeException{
         return wbApiException;
     }
 
+    public boolean isServicePause(){
+        return errorCode == 10002;
+    }
+
     /**
      * @return 如果返回true, 则表示需要高级授权;
      */
@@ -78,7 +82,7 @@ public class WBApiException extends RuntimeException{
         return errorCode;
     }
 
-    public String getErrorcodeStr(){
+    public String getErrorCodeStr(){
         return String.valueOf(errorCode);
     }
 

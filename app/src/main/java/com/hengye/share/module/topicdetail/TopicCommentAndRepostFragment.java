@@ -134,7 +134,6 @@ public class TopicCommentAndRepostFragment extends TabLayoutFragment{
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                mPullToRefresh.setRefreshEnable(state != ViewPager.SCROLL_STATE_DRAGGING);
             }
         });
 

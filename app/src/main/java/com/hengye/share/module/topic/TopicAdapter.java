@@ -52,8 +52,9 @@ public class TopicAdapter extends CommonAdapter<Topic>
         implements OnItemClickListener, OnItemLongClickListener, DialogInterface.OnClickListener {
 
     public static int mGalleryMaxWidth;
-    private Dialog mLongClickDialog;
-    private int mLongClickPosition;
+    private Callback mCallback;
+    private boolean mShowDeleteTopicOption;
+    private Topic mLongClickTopic;
     private boolean mIsRetweetedLongClick;
     private RecyclerView mRecyclerView;
 
@@ -64,7 +65,6 @@ public class TopicAdapter extends CommonAdapter<Topic>
         int galleryMargin = context.getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin);
         mGalleryMaxWidth = context.getResources().getDisplayMetrics().widthPixels - 2 * galleryMargin;
 
-        mLongClickDialog = DialogBuilder.getOnLongClickTopicDialog(getContext(), this);
         setOnItemClickListener(this);
         setOnItemLongClickListener(this);
 
@@ -81,17 +81,11 @@ public class TopicAdapter extends CommonAdapter<Topic>
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
-        Topic topic = getItem(mLongClickPosition);
+        Topic topic = mLongClickTopic;
         if (topic == null) {
             return;
         }
-        if (mIsRetweetedLongClick) {
-            if (topic.getRetweetedTopic() == null) {
-                return;
-            } else {
-                topic = topic.getRetweetedTopic();
-            }
-        }
+
         switch (which) {
             case DialogBuilder.LONG_CLICK_TOPIC_REPOST:
                 IntentUtil.startActivity(getContext(),
@@ -110,9 +104,25 @@ public class TopicAdapter extends CommonAdapter<Topic>
             case DialogBuilder.LONG_CLICK_TOPIC_COPY:
                 ClipboardUtil.copyWBContent(topic.getContent());
                 break;
+            case DialogBuilder.LONG_CLICK_TOPIC_DESTROY:
+                if(mCallback != null){
+                    mCallback.onDeleteTopic(topic);
+                }
             default:
                 break;
         }
+    }
+
+    public void setShowDeleteTopicOption(boolean show){
+        mShowDeleteTopicOption = show;
+    }
+
+    public void setCallback(Callback callback){
+        mCallback = callback;
+    }
+
+    interface Callback{
+        void onDeleteTopic(Topic topic);
     }
 
     @Override
@@ -122,10 +132,28 @@ public class TopicAdapter extends CommonAdapter<Topic>
             isRetweeted = (Boolean) view.getTag();
         }
 
-        mLongClickPosition = position;
+        mLongClickTopic = getItem(position);
         mIsRetweetedLongClick = isRetweeted;
-        mLongClickDialog.show();
+
+        if (mLongClickTopic != null) {
+            if (mIsRetweetedLongClick) {
+                if (mLongClickTopic.getRetweetedTopic() != null) {
+                    mLongClickTopic = mLongClickTopic.getRetweetedTopic();
+                }
+            }
+            getLongClickDialog().show();
+        }
+
         return true;
+    }
+
+    private Dialog getLongClickDialog() {
+        boolean showDeleteTopicOption = mShowDeleteTopicOption;
+        boolean isMine = false;
+        if(showDeleteTopicOption && !mIsRetweetedLongClick){
+            isMine = mLongClickTopic != null && mLongClickTopic.getUserInfo() != null && UserUtil.isCurrentUser(mLongClickTopic.getUserInfo().getUid());
+        }
+        return DialogBuilder.getOnLongClickTopicDialog(getContext(), this, isMine);
     }
 
     private Handler mHandler = new Handler();
@@ -239,15 +267,18 @@ public class TopicAdapter extends CommonAdapter<Topic>
             registerOnClickListener(mRetweetTopic.mTopicLayout);
 
             //不设置长按没法解决点击效果
-            registerOnLongClickListener(mTopicTitle.mTitle);
-            registerOnLongClickListener(mTopic.mContent);
-            registerOnLongClickListener(mTopic.mGallery);
-            registerOnLongClickListener(mTopic.mTopicLayout);
+            //如果设置多个点击事件，则会造成重复点击；
+//            registerOnLongClickListener(mTopicTitle.mTitle);
+//            registerOnLongClickListener(mTopic.mContent);
+//            registerOnLongClickListener(mTopic.mGallery);
+//            registerOnLongClickListener(mTopic.mTopicLayout);
 
+            //如果其他部位也设置长按会导致发生两次长按
             registerOnLongClickListener(mTopicItem);
 
-            registerOnLongClickListener(mRetweetTopic.mContent);
-            registerOnLongClickListener(mRetweetTopic.mGallery);
+//            registerOnLongClickListener(mRetweetTopic.mContent);
+//            registerOnLongClickListener(mRetweetTopic.mGallery);
+            //如果其他部位也设置长按会导致发生两次长按
             registerOnLongClickListener(mRetweetTopic.mTopicLayout);
 
             mTopicTitle.mAvatar.setOnTouchListener(mTopicOnTouchListener);

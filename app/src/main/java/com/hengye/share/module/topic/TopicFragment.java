@@ -5,8 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.hengye.share.R;
+import com.hengye.share.module.util.encapsulation.base.TaskState;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.SPUtil;
+import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.handler.TopicAdapterIdPager;
 import com.hengye.share.util.handler.TopicIdHandler;
 import com.hengye.share.module.util.encapsulation.base.DataHandler;
@@ -17,7 +21,7 @@ import com.hengye.share.util.UserUtil;
 
 import java.util.ArrayList;
 
-public class TopicFragment extends StatusFragment<Topic> implements TopicMvpView {
+public class TopicFragment extends StatusFragment<Topic> implements TopicMvpView, TopicAdapter.Callback {
 
     public static Bundle getBundle(TopicPresenter.TopicGroup topicGroup, String uid, String name) {
         return getBundle(topicGroup, false, uid, name);
@@ -56,6 +60,13 @@ public class TopicFragment extends StatusFragment<Topic> implements TopicMvpView
     String uid, name;
     boolean isRestore;
 
+    TopicAdapterIdPager mTopicPager;
+
+    @Override
+    public TopicAdapter getAdapter() {
+        return mAdapter;
+    }
+
     @Override
     protected void handleBundleExtra(Bundle bundle) {
         topicGroup = (TopicPresenter.TopicGroup) bundle.getSerializable("topicGroup");
@@ -69,8 +80,10 @@ public class TopicFragment extends StatusFragment<Topic> implements TopicMvpView
 
         super.onViewCreated(view, savedInstanceState);
         setAdapter(mAdapter = new TopicAdapter(getContext(), new ArrayList<Topic>(), getRecyclerView()));
-        mTopicPager = new TopicAdapterIdPager(mAdapter);
-        mHandler = new TopicIdHandler<>(mAdapter);
+        setPager(mTopicPager = new TopicAdapterIdPager(mAdapter));
+        setDataHandler();
+        mAdapter.setShowDeleteTopicOption(true);
+        mAdapter.setCallback(this);
 
         addPresenter(mPresenter = new TopicPresenter(this, topicGroup));
         mPresenter.setUid(uid);
@@ -82,6 +95,10 @@ public class TopicFragment extends StatusFragment<Topic> implements TopicMvpView
             showLoading();
             markLazyLoadPreparedAndLazyLoadIfCan();
         }
+    }
+
+    public void setDataHandler(){
+        setDataHandler(new TopicIdHandler<>(mAdapter));
     }
 
     private void onRestore() {
@@ -123,19 +140,6 @@ public class TopicFragment extends StatusFragment<Topic> implements TopicMvpView
         mPresenter.loadWBTopic(mTopicPager.getNextPage(), false);
     }
 
-    TopicAdapterIdPager mTopicPager;
-    TopicIdHandler<Topic> mHandler;
-
-    @Override
-    public DataHandler<Topic> getDataHandler() {
-        return mHandler;
-    }
-
-    @Override
-    public Pager getPager() {
-        return mTopicPager;
-    }
-
     /**
      * 先检测有没有缓存，没有再请求服务器
      */
@@ -151,4 +155,19 @@ public class TopicFragment extends StatusFragment<Topic> implements TopicMvpView
         }
     }
 
+    @Override
+    public void onDeleteTopic(Topic topic) {
+        mPresenter.deleteTopic(topic);
+    }
+
+    @Override
+    public void deleteTopicResult(int taskState, Topic topic) {
+        if (TaskState.isSuccess(taskState)) {
+            mAdapter.removeItem(topic);
+            ToastUtil.showToast(R.string.label_topic_destroy_success);
+            mPresenter.clearCache();
+        } else {
+            ToastUtil.showToast(TaskState.toString(taskState));
+        }
+    }
 }

@@ -1,8 +1,14 @@
 package com.hengye.share.module.profile;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.View;
+
 import com.hengye.share.R;
+import com.hengye.share.model.Topic;
 import com.hengye.share.module.topic.TopicFragment;
 import com.hengye.share.module.topic.TopicPresenter;
+import com.hengye.share.util.handler.TopicRefreshIdHandler;
 
 /**
  * Created by yuhy on 2016/10/19.
@@ -14,6 +20,12 @@ public class PersonalTopicFragment extends TopicFragment {
         PersonalTopicFragment fragment = new PersonalTopicFragment();
         fragment.setArguments(getBundle(new TopicPresenter.TopicGroup(topicType), uid, name));
         return fragment;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setDataHandler(new TopicRefreshIdHandler<>(getAdapter()));
     }
 
     @Override

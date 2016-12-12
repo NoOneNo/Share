@@ -31,6 +31,12 @@ public class GuidanceActivity extends BaseActivity {
 //        return false;
 //    }
 
+
+    @Override
+    protected boolean setCustomTheme() {
+        return false;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         int themeColor = SettingHelper.getAppThemeColorPrimary();

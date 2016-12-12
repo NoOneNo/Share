@@ -68,6 +68,11 @@ public interface WBService {
     Observable<WBTopic> publishTopic
             (@FieldMap Map<String, Object> fieldMap);
 
+    @FormUrlEncoded
+    @POST(UrlFactory.WB_DESTROY_TOPIC)
+    Observable<WBTopic> destroyTopic
+            (@Field("access_token") String token,
+             @Field("id") String id);
 //    @Multipart
 //    @POST(UrlFactory.WB_PUBLISH_TOPIC_UPLOAD)
 //    Observable<WBTopic> publishTopicWithSinglePhoto
@@ -226,11 +231,11 @@ public interface WBService {
     @POST("http://weicoapi.weico.cc/portal.php?a=get_video&c=default")
     Observable<Object> getMediaPlayUrl(@Field("weibo_id") String weiboId);
 
-    @GET(UrlFactory.WB_LIKE_UPDATE)
-    Observable<WBResult> likeUpdate(@QueryMap Map<String, String> options);
+    @GET(UrlFactory.WB_UPDATE_LIKE)
+    Observable<WBResult> updateLike(@QueryMap Map<String, String> options);
 
-    @GET(UrlFactory.WB_LIKE_DESTROY)
-    Observable<WBResult> likeDestroy(@QueryMap Map<String, String> options);
+    @GET(UrlFactory.WB_DESTROY_LIKE)
+    Observable<WBResult> destroyLike(@QueryMap Map<String, String> options);
 
     @GET(UrlFactory.WB_PLACE_NEARBY)
     Observable<WBAddresses> getPlaceNearBy(@QueryMap Map<String, String> options);

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.hengye.floatingactionbutton.FloatingActionButton;
 import com.hengye.floatingactionbutton.FloatingActionsMenu;
 import com.hengye.share.R;
+import com.hengye.share.util.L;
 import com.hengye.share.util.TransitionHelper;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
@@ -168,10 +169,10 @@ public class TopicDetailActivity extends BaseActivity implements View.OnClickLis
     boolean mHasSetSelection;
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-        if (verticalOffset >= 0) {
-            mPullToRefresh.setEnabled(true);
+        if (verticalOffset >= -50) {
+            mPullToRefresh.setRefreshEnable(true);
         } else {
-            mPullToRefresh.setEnabled(false);
+            mPullToRefresh.setRefreshEnable(false);
         }
 
         if(!mHasSetSelection && Math.abs(verticalOffset) < mHeaderView.getHeight()){

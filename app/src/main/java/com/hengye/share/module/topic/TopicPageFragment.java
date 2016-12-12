@@ -36,7 +36,6 @@ public class TopicPageFragment extends StatusFragment<Topic> implements TopicPag
     private TopicPagePresenter.TopicGroup topicGroup;
 
     private TopicNumberPager mPager;
-    private DefaultDataHandler<Topic> mHandler;
     private String mKeyword;
 
     @Override
@@ -49,8 +48,8 @@ public class TopicPageFragment extends StatusFragment<Topic> implements TopicPag
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setAdapter(mAdapter = new TopicAdapter(getContext(), new ArrayList<Topic>(), getRecyclerView()));
-        mPager = new TopicNumberPager();
-        mHandler = new DefaultDataHandler<>(mAdapter);
+        setPager(mPager = new TopicNumberPager());
+        setDataHandler(new DefaultDataHandler<>(mAdapter));
         addPresenter(mPresenter = new TopicPagePresenter(this, topicGroup, mPager));
         mPresenter.setKeyword(mKeyword);
         showLoading();
@@ -67,16 +66,6 @@ public class TopicPageFragment extends StatusFragment<Topic> implements TopicPag
     public void onLoad() {
         super.onLoad();
         mPresenter.loadRemoteWBTopic(false);
-    }
-
-    @Override
-    public Pager getPager() {
-        return mPager;
-    }
-
-    @Override
-    public DataHandler<Topic> getDataHandler() {
-        return mHandler;
     }
 
     public void refresh(String keyword) {

@@ -13,6 +13,9 @@ import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
 import java.util.Map;
 
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Predicate;
+
 public class UserPresenter extends RxPresenter<UserMvpView> {
 
     public UserPresenter(UserMvpView mvpView){
@@ -31,6 +34,13 @@ public class UserPresenter extends RxPresenter<UserMvpView> {
         RetrofitManager
                 .getWBService()
                 .listUserInfo(getWBUserInfoParameter(uid, name))
+                .filter(new Predicate<WBUserInfo>() {
+                    @Override
+                    public boolean test(WBUserInfo wbUserInfo) throws Exception {
+                        UserUtil.updateUserInfo(wbUserInfo);
+                        return true;
+                    }
+                })
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
                 .subscribe(new BaseSubscriber<WBUserInfo>() {
@@ -47,7 +57,6 @@ public class UserPresenter extends RxPresenter<UserMvpView> {
 
                     @Override
                     public void onNext(WBUserInfo wbUserInfo) {
-                        UserUtil.updateUserInfo(wbUserInfo);
                         super.onNext(wbUserInfo);
                     }
                 });

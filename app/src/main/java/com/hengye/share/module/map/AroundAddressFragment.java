@@ -18,10 +18,8 @@ import com.hengye.share.model.Address;
 import com.hengye.share.module.groupmanage.AroundAddressAdapter;
 import com.hengye.share.module.test.TestLocationActivity;
 import com.hengye.share.module.util.FragmentActivity;
-import com.hengye.share.module.util.encapsulation.base.DataHandler;
 import com.hengye.share.module.util.encapsulation.base.DefaultDataHandler;
 import com.hengye.share.module.util.encapsulation.base.NumberPager;
-import com.hengye.share.module.util.encapsulation.base.Pager;
 import com.hengye.share.module.util.encapsulation.fragment.RecyclerRefreshFragment;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.util.L;
@@ -81,8 +79,8 @@ public class AroundAddressFragment extends RecyclerRefreshFragment<Address> impl
         });
 
         setAdapter(mAdapter = new AroundAddressAdapter(getContext(), new ArrayList<Address>()));
-        mNumberPager = new NumberPager();
-        mDataHandler = new DefaultDataHandler<>(mAdapter);
+        setPager(mNumberPager = new NumberPager());
+        setDataHandler(new DefaultDataHandler<>(mAdapter));
         addPresenter(mPresenter = new AroundAddressPresenter(this));
         mPresenter.setPager(mNumberPager);
         ViewUtil.hideKeyBoardOnScroll(getRecyclerView(), mKeywordsTxt);
@@ -104,22 +102,11 @@ public class AroundAddressFragment extends RecyclerRefreshFragment<Address> impl
         initLocation();
     }
 
-    @Override
-    public Pager getPager() {
-        return mNumberPager;
-    }
-
-    @Override
-    public DataHandler<Address> getDataHandler() {
-        return mDataHandler;
-    }
-
     AroundAddressPresenter mPresenter;
     EditText mKeywordsTxt;
     TextView mCurrentLocationTxt;
     View mSearchBtn, mCurrentLocation;
     AroundAddressAdapter mAdapter;
-    DefaultDataHandler<Address> mDataHandler;
     NumberPager mNumberPager;
 
     AMapLocation mLocation;

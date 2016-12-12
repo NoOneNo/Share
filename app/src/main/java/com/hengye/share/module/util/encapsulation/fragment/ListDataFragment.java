@@ -32,6 +32,8 @@ public abstract class ListDataFragment<T> extends StateFragment implements ListD
     }
 
     PagingConfig mPagingConfig;
+    Pager mPager;
+    DataHandler mDataHandler;
 
     public int handleData(boolean isRefresh, List<T> data){
         if(getPager() != null) {
@@ -57,12 +59,20 @@ public abstract class ListDataFragment<T> extends StateFragment implements ListD
 //        }
     }
 
-    public Pager getPager(){
-        return null;
+    private Pager getPager() {
+        return mPager;
     }
 
-    public DataHandler<T> getDataHandler(){
-        return null;
+    public void setPager(Pager pager) {
+        this.mPager = pager;
+    }
+
+    private DataHandler getDataHandler() {
+        return mDataHandler;
+    }
+
+    public void setDataHandler(DataHandler dataHandler) {
+        this.mDataHandler = dataHandler;
     }
 
     public void updatePagingConfig(PagingConfig pagingConfig){}

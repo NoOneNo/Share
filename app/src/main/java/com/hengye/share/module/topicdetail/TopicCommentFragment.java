@@ -55,6 +55,7 @@ public class TopicCommentFragment extends StatusFragment<TopicComment> implement
     int mCurrentPosition;
     TabLayout.Tab mTab;
 
+    TopicAdapterIdPager mTopicPager;
 
     @Override
     public int getLoadingResId() {
@@ -88,10 +89,10 @@ public class TopicCommentFragment extends StatusFragment<TopicComment> implement
 
         super.onViewCreated(view, savedInstanceState);
         boolean isLikeMode = mIsComment && !UserUtil.isAdTokenEmpty();
-        setAdapter(mAdapter = new TopicCommentAdapter(getContext(), new ArrayList<TopicComment>(), isLikeMode));
-        mTopicPager = new TopicAdapterIdPager(mAdapter);
+        setAdapter(mAdapter = new TopicCommentAdapter(getContext(), new ArrayList<TopicComment>(), isLikeMode), true);
+        setPager(mTopicPager = new TopicAdapterIdPager(mAdapter));
+        setDataHandler(new TopicIdHandler<>(mAdapter));
         mTopicPager.setForceRefresh(true);
-        mHandler = new TopicIdHandler<>(mAdapter);
 
         addPresenter(mPresenter = new TopicCommentPresenter(this, isLikeMode));
 
@@ -108,36 +109,6 @@ public class TopicCommentFragment extends StatusFragment<TopicComment> implement
     private void initView() {
         mTopicCommentDialog = mIsComment ? DialogBuilder.getTopicCommentDialog(getContext(), this) : DialogBuilder.getTopicRepostDialog(getContext(), this);
         setRefreshEnable(false);
-        mAdapter.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(final View view, final int position) {
-                int viewType = mAdapter.getBasicItemType(position);
-
-                final int id = view.getId();
-                if (viewType == R.layout.item_topic_comment_hot_label) {
-                    //热门评论
-                    TopicHotCommentFragment.start(getContext(), mTopic);
-                } else {
-                    if (TopicTitleViewHolder.isClickTopicTitle(id)) {
-                        //点击头像标题
-                        TopicTitleViewHolder.onClickTopicTitle(getActivity(), mAdapter, view, position, mAdapter.getItem(position).getUserInfo());
-                    } else if (id == R.id.layout_like) {
-                        //点赞
-                        TopicComment topicComment = mAdapter.getItem(position);
-                        mPresenter.likeComment(topicComment);
-                        topicComment.updateLiked(!topicComment.isLiked());
-                        mAdapter.updateItem(position);
-                    } else if (id != R.id.item_topic_total) {
-                        //其他部位
-                        // 为了点击头像有item的波纹效果，点击头像等区域的时候会触发item的触摸事件
-                        // 为了防止同时显示对话框和点击头像，判断id不等于item的id时才显示对话框
-                        mCurrentPosition = position;
-                        mTopicCommentDialog.show();
-                    }
-                }
-            }
-        });
-
         final TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tab);
         if (tabLayout != null) {
             mTab = tabLayout.getTabAt(mIsComment ? 0 : 1);
@@ -156,6 +127,46 @@ public class TopicCommentFragment extends StatusFragment<TopicComment> implement
                     });
         }
 
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        super.onItemClick(view, position);
+        performItemClick(view, position, false);
+    }
+
+    @Override
+    public boolean onItemLongClick(View view, int position) {
+        super.onItemLongClick(view, position);
+        performItemClick(view, position, true);
+        return true;
+    }
+
+    private void performItemClick(final View view, final int position, boolean isLongClick){
+        int viewType = mAdapter.getBasicItemType(position);
+
+        final int id = view.getId();
+        if (viewType == R.layout.item_topic_comment_hot_label) {
+            //热门评论
+            TopicHotCommentFragment.start(getContext(), mTopic);
+        } else {
+            if (TopicTitleViewHolder.isClickTopicTitle(id)) {
+                //点击头像标题
+                TopicTitleViewHolder.onClickTopicTitle(getActivity(), mAdapter, view, position, mAdapter.getItem(position).getUserInfo());
+            } else if (id == R.id.layout_like) {
+                //点赞
+                TopicComment topicComment = mAdapter.getItem(position);
+                mPresenter.likeComment(topicComment);
+                topicComment.updateLiked(!topicComment.isLiked());
+                mAdapter.updateItem(position);
+            } else if (isLongClick || id != R.id.item_topic_total) {
+                //其他部位
+                // 为了点击头像有item的波纹效果，点击头像等区域的时候会触发item的触摸事件(触发两次click)
+                // 为了防止同时显示对话框和点击头像，判断id不等于item的id时才显示对话框，如果是长按就不用判断
+                mCurrentPosition = position;
+                mTopicCommentDialog.show();
+            }
+        }
     }
 
     @Override
@@ -187,19 +198,6 @@ public class TopicCommentFragment extends StatusFragment<TopicComment> implement
             mAdapter.notifyDataSetChanged();
             ToastUtil.showToast(TaskState.toString(taskState));
         }
-    }
-
-    TopicAdapterIdPager mTopicPager;
-    TopicIdHandler<TopicComment> mHandler;
-
-    @Override
-    public DataHandler<TopicComment> getDataHandler() {
-        return mHandler;
-    }
-
-    @Override
-    public Pager getPager() {
-        return mTopicPager;
     }
 
     @Override

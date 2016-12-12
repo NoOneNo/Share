@@ -113,6 +113,12 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
         mSwipeRefresh = swipeRefresh;
     }
 
+    public void updateUserInfo(WBUserInfo wbUserInfo){
+        if(mPersonalHomepageAboutFragment != null){
+            mPersonalHomepageAboutFragment.updateUserInfo(wbUserInfo);
+        }
+    }
+
     @Override
     public void onToolbarDoubleClick(Toolbar toolbar) {
         if(getCurrentFragment() != null){
@@ -149,7 +155,9 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
             public void onRefresh() {
                 switch (getCurrentPosition()){
                     case 0:
-                        mSwipeRefresh.setRefreshing(false);
+                        if(getActivity() != null && getActivity() instanceof PersonalHomepageActivity){
+                            ((PersonalHomepageActivity)getActivity()).updateUserInfo();
+                        }
                         break;
                     case 1:
                         if(mTopicFragment != null) {

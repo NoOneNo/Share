@@ -124,6 +124,10 @@ public static java.lang.String TABLENAME;
 -keep public class * extends android.app.backup.BackupAgentHelper
 -keep public class * extends android.preference.Preference
 -keep public class com.android.vending.licensing.ILicensingService
+
+#fix Attempt to invoke virtual method 'void android.view.ViewGroup.transformMatrixToGlobal(android.graphics.Matrix)' on a null object reference
+-keep public class android.app.ActivityTransitionCoordinator
+
 #如果有引用v4包可以添加下面这行
 #-keep public class * extends android.support.v4.app.Fragment
 

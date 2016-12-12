@@ -61,7 +61,7 @@ public class TopicTitleViewHolder {
 
     public static boolean onClickTopicTitle(Context context, CommonAdapter adapter, View view, int position, UserInfo userInfo) {
         int id = view.getId();
-        if (id == R.id.iv_topic_avatar || id == R.id.tv_topic_username || id == R.id.tv_topic_description) {
+        if (isClickTopicTitle(id)) {
             View startView = null;
             if (id == R.id.iv_topic_avatar) {
                 //如果点击的是头像

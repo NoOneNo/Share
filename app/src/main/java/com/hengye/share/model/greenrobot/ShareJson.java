@@ -17,6 +17,7 @@ import com.hengye.share.util.thirdparty.WBUtil;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -129,7 +130,7 @@ public class ShareJson implements java.io.Serializable {
 
     public static void saveListData(final String modelName, List data, boolean limitData) {
         if (data == null) {
-            data = new ArrayList();
+            data = Collections.emptyList();
         }
         ObservableHelper
                 .just(data)
@@ -138,7 +139,7 @@ public class ShareJson implements java.io.Serializable {
                     public Observable<List> apply(@NonNull List data) {
                         int requestCount = WBUtil.getWBTopicRequestCount();
                         int maxCacheCount = requestCount * 2;
-                        if (requestCount > 0 && data.size() > maxCacheCount) {
+                        if (requestCount > 0 && !data.isEmpty() && data.size() > maxCacheCount) {
                             data = data.subList(0, maxCacheCount);
                         }
                         return ObservableHelper.just(data);

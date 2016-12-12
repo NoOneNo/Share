@@ -62,6 +62,8 @@ public class UrlFactory {
     public static final String WB_FAVORITES_TOPIC = "favorites.json";
     //发表微博
     public static final String WB_PUBLISH_TOPIC = "statuses/update.json";
+    //发表微博
+    public static final String WB_DESTROY_TOPIC = "statuses/destroy.json";
     //发表微博,并且上传一张图片
     public static final String WB_PUBLISH_TOPIC_UPLOAD = "statuses/upload.json";
     //上传一张图片
@@ -92,7 +94,6 @@ public class UrlFactory {
     //删除收藏微博
     public static final String WB_FAVORITES_DESTROY = "favorites/destroy.json";
 
-    //--- 以下都没写方法
     //    获取好友的相册列表
 //    public static final String WB_USER_ALBUM = "friendships/groups.json";
     //获取好友的分组信息
@@ -134,12 +135,12 @@ public class UrlFactory {
     //获取某个微博的热门评论列表，带点赞数量，需要高级授权
     public static final String WB_HOT_COMMENT_SHOW_WITH_LIKE = "http://api.weibo.cn/2/comments/hot_timeline";
     //评论点赞
-    public static final String WB_LIKE_UPDATE = "http://api.weibo.cn/2/like/update";
+    public static final String WB_UPDATE_LIKE = "http://api.weibo.cn/2/like/update";
     //评论取消点赞
-    public static final String WB_LIKE_DESTROY = "http://api.weibo.cn/2/like/destroy";
+    public static final String WB_DESTROY_LIKE = "http://api.weibo.cn/2/like/destroy";
 
     //获取附近地点
-    public static final String WB_PLACE_NEARBY= "place/nearby/pois.json";
+    public static final String WB_PLACE_NEARBY = "place/nearby/pois.json";
     /**
      * 微博接口
      */

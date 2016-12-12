@@ -216,8 +216,14 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                 initUserInfo(wbUserInfo);
             } else {
                 mSwipeRefresh.setRefreshing(true);
-                mPresenter.loadWBUserInfo(mUserInfo.getUid(), mUserInfo.getName());
+                updateUserInfo();
             }
+
+            //如果在刷新中代表前面自己信息是空的，已经在更新信息了；
+            if(!mSwipeRefresh.isRefreshing() && UserUtil.isCurrentUser(mUserInfo.getUid())){
+                updateUserInfo();
+            }
+
         }
         postponeEnterTransition();
         mAvatar.setVisibility(View.INVISIBLE);
@@ -362,13 +368,16 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         if (isDestroyed() || isFinishing()) {
             return;
         }
-
-        mFragment = PersonalHomepageFragment.newInstance(wbUserInfo);
-        mFragment.setSwipeRefresh(mSwipeRefresh);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.content, mFragment)
-                .commit();
+        if(mFragment != null){
+            mFragment.updateUserInfo(wbUserInfo);
+        }else{
+            mFragment = PersonalHomepageFragment.newInstance(wbUserInfo);
+            mFragment.setSwipeRefresh(mSwipeRefresh);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.content, mFragment)
+                    .commit();
+        }
     }
 
     private void initUserInfo(WBUserInfo wbUserInfo) {
@@ -404,6 +413,10 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         });
 
         loadData(wbUserInfo);
+    }
+
+    public void updateUserInfo(){
+        mPresenter.loadWBUserInfo(mUserInfo.getUid(), mUserInfo.getName());
     }
 
     private void updateFollowButton(boolean isFollowing) {

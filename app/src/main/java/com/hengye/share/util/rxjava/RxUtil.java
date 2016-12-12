@@ -1,18 +1,16 @@
 package com.hengye.share.util.rxjava;
 
-import com.hengye.share.util.rxjava.datasource.ObservableHelper;
+import com.hengye.share.module.util.encapsulation.base.TaskState;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.internal.functions.Functions;
 
@@ -35,6 +33,18 @@ public class RxUtil {
 //            }
 //        };
 //    }
+
+    static final Predicate<? super Throwable> RETRY_IF_NOT_NETWORK_EXCEPTION = new Predicate<Throwable>() {
+        @Override
+        public boolean test(Throwable throwable) throws Exception {
+            return !TaskState.isNetworkException(throwable);
+        }
+    };
+
+    public static Predicate<? super Throwable> retryIfNotNetworkException() {
+        return RETRY_IF_NOT_NETWORK_EXCEPTION;
+    }
+
 
     public static final ObservableTransformer netSchedulersTransformer = new ObservableTransformer() {
         @Override public Observable apply(Observable upstream) {

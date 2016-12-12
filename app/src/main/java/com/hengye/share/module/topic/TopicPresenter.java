@@ -8,9 +8,13 @@ import com.hengye.share.R;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.greenrobot.GroupList;
 import com.hengye.share.model.greenrobot.ShareJson;
+import com.hengye.share.model.sina.WBGroup;
+import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.model.sina.WBTopicComments;
 import com.hengye.share.model.sina.WBTopicIds;
 import com.hengye.share.model.sina.WBTopics;
+import com.hengye.share.module.groupmanage.GroupManageMvpView;
+import com.hengye.share.module.util.encapsulation.base.TaskState;
 import com.hengye.share.module.util.encapsulation.mvp.ListDataPresenter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
@@ -18,6 +22,7 @@ import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.retrofit.RetrofitManager;
+import com.hengye.share.util.rxjava.RxUtil;
 import com.hengye.share.util.rxjava.datasource.ObservableHelper;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 import com.hengye.share.util.thirdparty.WBUtil;
@@ -29,6 +34,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 
@@ -153,6 +159,7 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
                         .listCommentByMeTopic(getWBAllTopicParameter(id, isRefresh))
                         .flatMap(flatWBTopicComments());
             case HOMEPAGE:
+                id = "0";
                 Map<String, String> params = getWBAllTopicParameter(id, isRefresh);
                 String token;
                 if(uid != null && uid.equals(UserUtil.getUid())){
@@ -164,7 +171,8 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
                 return RetrofitManager
                         .getWBService()
                         .listUserTopic(params)
-                        .flatMap(flatWBTopics());
+                        .flatMap(flatWBTopics())
+                        .retry(8, RxUtil.retryIfNotNetworkException());
         }
     }
 
@@ -273,9 +281,31 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
                 .subscribeWith(getTopicsSubscriber(true));
     }
 
+    public void deleteTopic(final Topic topic){
+        RetrofitManager
+                .getWBService()
+                .destroyTopic(UserUtil.getToken(), topic.getId())
+                .subscribeOn(SchedulerProvider.io())
+                .observeOn(SchedulerProvider.ui())
+                .subscribe(new BaseSubscriber<WBTopic>() {
+                    @Override
+                    public void onNext(TopicMvpView v, WBTopic wbTopic) {
+                        v.deleteTopicResult(TaskState.STATE_SUCCESS, topic);
+                    }
+
+                    @Override
+                    public void onError(TopicMvpView v, Throwable e) {
+                        v.deleteTopicResult(TaskState.getFailState(e), null);
+                    }
+                });
+    }
+
     public ArrayList<Topic> findData() {
-        return ShareJson.findData(getModelName(), new TypeToken<ArrayList<Topic>>() {
-        }.getType());
+        if(isNeedCache()) {
+            return ShareJson.findData(getModelName(), new TypeToken<ArrayList<Topic>>() {
+            }.getType());
+        }
+        return null;
     }
 
     public void saveData(List<Topic> data) {
@@ -284,8 +314,12 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
         }
     }
 
+    public void clearCache(){
+        ShareJson.saveListData(getModelName(), null);
+    }
+
     public boolean isNeedCache() {
-        return !(mTopicGroup.topicType == TopicType.HOMEPAGE && uid != null && !uid.equals(UserUtil.getUid()));
+        return mTopicGroup.topicType != TopicType.HOMEPAGE || UserUtil.isCurrentUser(uid);
     }
 
     private String mModuleName;

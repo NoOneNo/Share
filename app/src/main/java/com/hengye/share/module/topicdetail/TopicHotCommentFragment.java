@@ -54,6 +54,8 @@ public class TopicHotCommentFragment extends StatusFragment<TopicComment> implem
     Dialog mTopicCommentDialog;
     int mCurrentPosition;
 
+    TopicNumberPager mTopicPager;
+
     @Override
     public String getTitle() {
         return ResUtil.getString(R.string.title_activity_hot_comment);
@@ -69,8 +71,8 @@ public class TopicHotCommentFragment extends StatusFragment<TopicComment> implem
 
         super.onViewCreated(view, savedInstanceState);
         setAdapter(mAdapter = new TopicCommentAdapter(getContext(), new ArrayList<TopicComment>(), true));
-        mTopicPager = new TopicNumberPager();
-        mHandler = new DefaultDataHandler<>(mAdapter);
+        setPager(mTopicPager = new TopicNumberPager());
+        setDataHandler(new DefaultDataHandler<>(mAdapter));
 
         addPresenter(mPresenter = new TopicCommentPresenter(this, true));
 
@@ -146,19 +148,6 @@ public class TopicHotCommentFragment extends StatusFragment<TopicComment> implem
             mAdapter.notifyDataSetChanged();
             ToastUtil.showToast(TaskState.toString(taskState));
         }
-    }
-
-    TopicNumberPager mTopicPager;
-    DefaultDataHandler<TopicComment> mHandler;
-
-    @Override
-    public DataHandler<TopicComment> getDataHandler() {
-        return mHandler;
-    }
-
-    @Override
-    public Pager getPager() {
-        return mTopicPager;
     }
 
     @Override

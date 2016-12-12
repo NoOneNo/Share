@@ -26,7 +26,6 @@ public class UserListFragment extends RecyclerRefreshFragment<Select<UserInfo>> 
     }
 
     UserListPresenter mPresenter;
-    DefaultDataHandler<Select<UserInfo>> mDataHandler;
     UserListAdapter mAdapter;
 
     @Override
@@ -42,10 +41,9 @@ public class UserListFragment extends RecyclerRefreshFragment<Select<UserInfo>> 
         if(uid == null){
             uid = UserUtil.getUid();
         }
-        mPresenter = new UserListPresenter(this, uid);
-        addPresenter(mPresenter);
-        mDataHandler = new DefaultDataHandler<>(mAdapter = new UserListAdapter(getContext()));
-        setAdapter(mAdapter);
+        addPresenter(mPresenter = new UserListPresenter(this, uid));
+        setAdapter(mAdapter = new UserListAdapter(getContext()));
+        setDataHandler(new DefaultDataHandler<>(mAdapter));
 
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -55,11 +53,6 @@ public class UserListFragment extends RecyclerRefreshFragment<Select<UserInfo>> 
                 PersonalHomepageActivity.start(getContext(), avatar, userInfo);
             }
         });
-    }
-
-    @Override
-    public DataHandler<Select<UserInfo>> getDataHandler() {
-        return mDataHandler;
     }
 
     @Override

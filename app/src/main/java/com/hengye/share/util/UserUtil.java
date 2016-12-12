@@ -23,7 +23,7 @@ public class UserUtil {
         }
         if (mCurrentUser == null) {
             mCurrentUser = new User();
-            mCurrentUser.setUid("");
+            mCurrentUser.setUid("");//如果为NULL插入数据库会报错
         }
         return mCurrentUser;
     }
@@ -75,7 +75,7 @@ public class UserUtil {
     }
 
     public static boolean isUidEmpty() {
-        return getUid() == null;
+        return CommonUtil.isEmpty(getUid());
     }
 
     public static boolean isUserNameEmpty() {
@@ -88,6 +88,10 @@ public class UserUtil {
 
     public static boolean isAdTokenEmpty() {
         return getAdToken() == null;
+    }
+
+    public static boolean isCurrentUser(String uid){
+        return !isUidEmpty() && getUid().equals(uid);
     }
 
     public static void resetToken() {

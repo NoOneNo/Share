@@ -79,7 +79,7 @@ public abstract class HeaderAdapter<VH extends RecyclerView.ViewHolder> extends 
                 //新增footer
                 notifyItemInserted(lastPosition + 1);
             } else {
-                //改变header
+                //改变footer
                 notifyItemChanged(lastPosition);
             }
         }

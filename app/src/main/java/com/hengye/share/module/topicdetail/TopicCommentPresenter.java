@@ -204,7 +204,7 @@ public class TopicCommentPresenter extends ListTaskPresenter<TopicCommentMvpView
         Map<String, String> params = ub.getParameters();
 
         WBService service = RetrofitManager.getWBService();
-        Observable<WBResult> observable = isLike ? service.likeUpdate(params) : service.likeDestroy(params);
+        Observable<WBResult> observable = isLike ? service.updateLike(params) : service.destroyLike(params);
 
         observable
                 .subscribeOn(SchedulerProvider.io())

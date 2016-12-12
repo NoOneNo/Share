@@ -20,6 +20,22 @@ public class WBServiceProxyHandler implements InvocationHandler {
         this.mObject = obj;
     }
 
+    public Function<Observable<? extends Throwable>, Observable<?>> mCheckException = new Function<Observable<? extends Throwable>, Observable<?>>() {
+        @Override
+        public Observable<?> apply(Observable<? extends Throwable> observable) {
+            return observable.
+                    flatMap(new Function<Throwable, Observable<?>>() {
+                                @Override
+                                public Observable<?> apply(Throwable throwable) {
+                                    WBServiceErrorHandler.getInstance().checkError(throwable);
+
+                                    return Observable.error(throwable);
+                                }
+                            }
+                    );
+        }
+    };
+
     @Override
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 //        return method.invoke(mObject, args);
@@ -30,21 +46,7 @@ public class WBServiceProxyHandler implements InvocationHandler {
 
         try {
             return ((Observable<?>) method.invoke(mObject, args))
-                    .retryWhen(new Function<Observable<? extends Throwable>, Observable<?>>() {
-                        @Override
-                        public Observable<?> apply(Observable<? extends Throwable> observable) {
-                            return observable.
-                                    flatMap(new Function<Throwable, Observable<?>>() {
-                                                @Override
-                                                public Observable<?> apply(Throwable throwable) {
-                                                    WBServiceErrorHandler.getInstance().checkError(throwable);
-
-                                                    return Observable.error(throwable);
-                                                }
-                                            }
-                                    );
-                        }
-                    });
+                    .retryWhen(mCheckException);
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }

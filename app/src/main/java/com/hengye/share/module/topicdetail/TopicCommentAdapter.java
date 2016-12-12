@@ -83,11 +83,12 @@ public class TopicCommentAdapter extends CommonAdapter<TopicComment> {
             registerOnClickListener(mTopic.mTopicLayout);
 
             //不设置长按没法解决点击效果
-            registerOnLongClickListener(mTopicTitle.mTitle);
-            registerOnLongClickListener(mTopic.mContent);
-            registerOnLongClickListener(mTopic.mGallery);
-            registerOnLongClickListener(mTopic.mTopicLayout);
-//            registerOnLongClickListener(mTopicTotalItem);
+//            registerOnLongClickListener(mTopicTitle.mTitle);
+//            registerOnLongClickListener(mTopic.mContent);
+//            registerOnLongClickListener(mTopic.mGallery);
+//            registerOnLongClickListener(mTopic.mTopicLayout);
+            //如果其他部位也设置长按会导致发生两次长按
+            registerOnLongClickListener(mTopicTotalItem);
 
             SelectorLoader.getInstance().setDefaultRippleBackground(mTopicTotalItem);
 

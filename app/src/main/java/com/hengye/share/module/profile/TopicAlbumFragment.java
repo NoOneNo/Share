@@ -45,7 +45,6 @@ public class TopicAlbumFragment extends RecyclerRefreshFragment<String> implemen
     String uid, name;
 
     TopicIdPager mTopicPager;
-    TopicRefreshIdHandler<String> mHandler;
 
     @Override
     public int getLayoutResId() {
@@ -116,8 +115,8 @@ public class TopicAlbumFragment extends RecyclerRefreshFragment<String> implemen
         super.onViewCreated(view, savedInstanceState);
 
         setAdapter(mAdapter = new TopicAlbumAdapter(getContext(), new ArrayList<String>()));
-        mTopicPager = new TopicIdPager(mTopics);
-        mHandler = new TopicRefreshIdHandler<>(mAdapter);
+        setPager(mTopicPager = new TopicIdPager(mTopics));
+        setDataHandler(new TopicRefreshIdHandler<>(mAdapter));
 
         addPresenter(mPresenter = new TopicAlbumPresenter(this));
         mPresenter.setUid(uid);
@@ -154,16 +153,6 @@ public class TopicAlbumFragment extends RecyclerRefreshFragment<String> implemen
     @Override
     public void onLoad() {
         mPresenter.loadTopicAlbum(mTopicPager.getNextPage(), false);
-    }
-
-    @Override
-    public Pager getPager() {
-        return mTopicPager;
-    }
-
-    @Override
-    public DataHandler<String> getDataHandler() {
-        return mHandler;
     }
 
     @Override

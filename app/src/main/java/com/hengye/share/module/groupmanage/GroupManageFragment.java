@@ -186,7 +186,7 @@ public class GroupManageFragment extends RecyclerRefreshFragment implements Grou
 
     @Override
     public void createGroupResult(int taskState, GroupList groupList) {
-        if (TaskState.STATE_SUCCESS == taskState) {
+        if (TaskState.isSuccess(taskState)) {
             mAdapter.addItem(groupList);
             UserUtil.insertGroupList(groupList);
             ToastUtil.showToast(R.string.tip_create_group_success);
@@ -210,7 +210,7 @@ public class GroupManageFragment extends RecyclerRefreshFragment implements Grou
 
     @Override
     public void updateGroupResult(int taskState, GroupList groupList) {
-        if (TaskState.STATE_SUCCESS == taskState) {
+        if (TaskState.isSuccess(taskState)) {
             mAdapter.updateItem(groupList);
             UserUtil.updateGroupList(groupList);
             ToastUtil.showToast(R.string.tip_update_group_success);
@@ -221,7 +221,7 @@ public class GroupManageFragment extends RecyclerRefreshFragment implements Grou
 
     @Override
     public void deleteGroupResult(int taskState, GroupList groupList) {
-        if (TaskState.STATE_SUCCESS == taskState) {
+        if (TaskState.isSuccess(taskState)) {
             mAdapter.removeItem(groupList);
             UserUtil.deleteGroupList(groupList);
             ToastUtil.showToast(R.string.tip_delete_group_success);

@@ -104,6 +104,14 @@ public class TopicActivity extends BaseActivity
     protected void onResume() {
         super.onResume();
         mAppBar.addOnOffsetChangedListener(this);
+        if(mUpdateUserInfo){
+            mUpdateUserInfo = false;
+            if (UserUtil.isUserNameEmpty()) {
+                mPresenter.loadWBUserInfo();
+            } else {
+                loadSuccess(UserUtil.getCurrentUser());
+            }
+        }
     }
 
     @Override
@@ -391,6 +399,8 @@ public class TopicActivity extends BaseActivity
         return super.onOptionsItemSelected(item);
     }
 
+    boolean mUpdateUserInfo;
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -403,6 +413,7 @@ public class TopicActivity extends BaseActivity
                 Toast.makeText(this, "请先登录", Toast.LENGTH_SHORT).show();
                 return false;
             }
+            mUpdateUserInfo = true;
             PersonalHomepageActivity.start(this, mAvatar, UserInfo.getUserInfo(UserUtil.getCurrentUser()));
         } else if (id == R.id.nav_at_me) {
             startActivity(TopicMentionActivity.class);
@@ -459,7 +470,7 @@ public class TopicActivity extends BaseActivity
 
     @Override
     public void handleUserInfo(WBUserInfo wbUserInfo) {
-
+        loadSuccess(User.getUser(wbUserInfo));
     }
 
     @Override
