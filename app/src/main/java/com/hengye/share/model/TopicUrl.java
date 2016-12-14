@@ -22,6 +22,7 @@ public class TopicUrl implements Serializable {
     public static final int MUSIC = 2;
     public static final int VIDEO = 3;
     public static final int ARTICLE = 4;
+    public static final int LOCATION= 5;
 
     public static int getUrlType(WBShortUrl wbShortUrl) {
         if (wbShortUrl != null && !CommonUtil.isEmpty(wbShortUrl.getAnnotations())) {
@@ -33,6 +34,8 @@ public class TopicUrl implements Serializable {
                         return VIDEO;
                     case WBShortUrl.TYPE_COLLECTION:
                         return PHOTO;
+                    case WBShortUrl.TYPE_PLACE:
+                        return LOCATION;
                 }
             }
         }
@@ -49,13 +52,16 @@ public class TopicUrl implements Serializable {
                 String displayName = jsonObject.get("display_name").getAsString();
                 topicUrl.setDisplayName(displayName);
 
-
                 if(topicUrl.getType() == PHOTO){
                     JsonArray jsonArray = jsonObject.get("pic_ids").getAsJsonArray();
                     String picId = jsonArray.get(0).getAsString();
                     if(picId != null){
-                        topicUrl.setPicUrl(WBUtil.getWBImgUrlById(picId));
+                        topicUrl.setAnnotation(WBUtil.getWBImgUrlById(picId));
                     }
+                }else if(topicUrl.getType() == LOCATION){
+                    //经纬度:23.33441 113.38426，空格隔开
+                    String position = jsonObject.get("position").getAsString();
+                    topicUrl.setAnnotation(position);
                 }
 
             }catch (Exception e){
@@ -81,9 +87,18 @@ public class TopicUrl implements Serializable {
 
     String topicId;//微博Id
     String url;//长链地址
-    String picUrl;//图片地址，可能跟长链地址不一样
+//    String picUrl;//图片地址，可能跟长链地址不一样
     String displayName;//url类型显示的名字
     int type;//url类型
+
+    /**
+     *  url的详情数据
+     *  如果是{@link #PHOTO} 这是一个图片的id地址，需要拼接
+     *
+     *
+     *
+     */
+    Object annotation;
 
     public String getTopicId() {
         return topicId;
@@ -101,12 +116,12 @@ public class TopicUrl implements Serializable {
         this.url = url;
     }
 
-    public String getPicUrl() {
-        return picUrl;
+    public Object getAnnotation() {
+        return annotation;
     }
 
-    public void setPicUrl(String picUrl) {
-        this.picUrl = picUrl;
+    public void setAnnotation(Object annotation) {
+        this.annotation = annotation;
     }
 
     public String getDisplayName() {
@@ -130,9 +145,9 @@ public class TopicUrl implements Serializable {
         return "TopicUrl{" +
                 "topicId='" + topicId + '\'' +
                 ", url='" + url + '\'' +
-                ", picUrl='" + picUrl + '\'' +
                 ", displayName='" + displayName + '\'' +
                 ", type=" + type +
+                ", annotation=" + annotation +
                 '}';
     }
 }

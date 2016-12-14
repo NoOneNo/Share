@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 
+import java.io.File;
+
 public class ImageUtil {
 
     public static int getBitmapMaxSize() {
@@ -20,6 +22,17 @@ public class ImageUtil {
         } else {
             return false;
         }
+    }
+
+    public static boolean isNoSuffixImg(String url){
+        if(url != null){
+            if(url.endsWith(".gif")
+                    || url.endsWith(".jpg")
+                    || url.endsWith(".jpeg")){
+                return false;
+            }
+        }
+        return true;
     }
 
     public static boolean isThisBitmapTooLargeToRead(Bitmap bitmap){

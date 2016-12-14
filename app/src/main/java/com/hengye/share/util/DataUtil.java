@@ -55,7 +55,7 @@ public class DataUtil {
             .compile("#[\\p{Print}\\p{InCJKUnifiedIdeographs}&&[^#]]+#");
     public static final Pattern MENTION_URL = Pattern
             .compile("@[\\w\\p{InCJKUnifiedIdeographs}-]{1,26}");
-//    public static final Pattern EMOTION_URL = Pattern
+    //    public static final Pattern EMOTION_URL = Pattern
 //            .compile("\\[[\\p{Print}\\p{InCJKUnifiedIdeographs}&&[^]+\\]");
     public static final Pattern EMOTION_URL = Pattern.compile("\\[(\\S+?)\\]");
 
@@ -119,7 +119,7 @@ public class DataUtil {
     public static <T extends TopicShortUrl & TopicId> SpannableString convertNormalStringToSpannableString(@Nullable T topic, CharSequence source, boolean isReplaceWebUrl) {
         //hack to fix android imagespan bug,see http://stackoverflow.com/questions/3253148/imagespan-is-cut-off-incorrectly-aligned
         //if string only contains emotion tags,add a empty char to the end
-        if(source == null){
+        if (source == null) {
             return null;
         }
 
@@ -166,7 +166,7 @@ public class DataUtil {
         return value;
     }
 
-    public static  <T extends TopicShortUrl & TopicId> SpannableString replaceWebUrl(T topic, SpannableString value) {
+    public static <T extends TopicShortUrl & TopicId> SpannableString replaceWebUrl(T topic, SpannableString value) {
         URLSpan[] urlSpans = value.getSpans(0, value.length(), URLSpan.class);
         if (urlSpans != null && urlSpans.length != 0) {
             List<CustomContentSpan> sps = new ArrayList<>();
@@ -213,8 +213,8 @@ public class DataUtil {
         return value;
     }
 
-    private static void setTopicContentUrl(TopicShortUrl topicShortUrl, TopicContentUrlSpan topicContentUrlSpan){
-        if(topicShortUrl != null && topicShortUrl.getUrlMap() != null){
+    private static void setTopicContentUrl(TopicShortUrl topicShortUrl, TopicContentUrlSpan topicContentUrlSpan) {
+        if (topicShortUrl != null && topicShortUrl.getUrlMap() != null) {
             String url = topicContentUrlSpan.getPath();
 //            if(url != null && url.startsWith(WEB_SCHEME) && url.length() > WEB_SCHEME.length()){
 //                url = url.substring(WEB_SCHEME.length());
@@ -224,20 +224,34 @@ public class DataUtil {
         }
     }
 
-    private static String getReplaceUrlContent(TopicShortUrl topicShortUrl, String url){
-        if(topicShortUrl != null && topicShortUrl.getUrlMap() != null){
+    private static String getReplaceUrlContent(TopicShortUrl topicShortUrl, String url) {
+        if (topicShortUrl != null && topicShortUrl.getUrlMap() != null) {
             TopicUrl topicUrl = topicShortUrl.getUrlMap().get(url);
-            if(topicUrl != null){
-                if(topicUrl.getDisplayName() != null){
-                    return "➢" + topicUrl.getDisplayName();
-                }else{
-                    switch (topicUrl.getType()){
+            if (topicUrl != null) {
+                String prefix, suffix;
+                switch (topicUrl.getType()) {
+                    case TopicUrl.LOCATION:
+                        prefix = "➷地点:";
+                        break;
+                    default:
+                        prefix = "➢";
+                }
+
+                if (topicUrl.getDisplayName() != null) {
+                    suffix = topicUrl.getDisplayName();
+                } else {
+                    switch (topicUrl.getType()) {
                         case TopicUrl.VIDEO:
-                            return "➢视频";
+                            suffix = "视频";
+                            break;
                         case TopicUrl.MUSIC:
-                            return "➢音乐";
+                            suffix = "音乐";
+                            break;
+                        default:
+                            suffix = "链接";
                     }
                 }
+                return prefix + suffix;
             }
         }
         return WEB_URL_REPLACE;
@@ -289,7 +303,7 @@ public class DataUtil {
 
     public static List<SimpleContentSpan> convertNormalStringToSimpleContentUrlSpans(CharSequence source) {
 
-        if(source == null){
+        if (source == null) {
             return null;
         }
 

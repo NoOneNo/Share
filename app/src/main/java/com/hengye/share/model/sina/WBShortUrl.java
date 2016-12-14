@@ -20,6 +20,7 @@ public class WBShortUrl implements Serializable{
     public static final String TYPE_WEBPAGE = "webpage";//网页
     public static final String TYPE_VIDEO = "video";//视频
     public static final String TYPE_COLLECTION = "collection";//评论图片
+    public static final String TYPE_PLACE = "place";//位置
 
     private static final long serialVersionUID = 9001551206789189699L;
 

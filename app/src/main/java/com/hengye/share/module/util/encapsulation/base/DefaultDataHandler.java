@@ -6,6 +6,7 @@ import static com.hengye.share.module.util.encapsulation.base.DataType.LOAD_DATA
 import static com.hengye.share.module.util.encapsulation.base.DataType.LOAD_NO_MORE_DATA;
 import static com.hengye.share.module.util.encapsulation.base.DataType.REFRESH_DATA_SIZE_EQUAL;
 import static com.hengye.share.module.util.encapsulation.base.DataType.REFRESH_DATA_SIZE_LESS;
+import static com.hengye.share.module.util.encapsulation.base.DataType.REFRESH_NO_MORE_DATA;
 import static com.hengye.share.module.util.encapsulation.base.DataType.getType;
 
 /**
@@ -28,6 +29,7 @@ public class DefaultDataHandler<T> implements DataHandler<T> {
 
     public static <T> void handleAdapter(int type, List<T> data, DataAdapter<T> adapter){
         switch (type) {
+            case REFRESH_NO_MORE_DATA:
             case REFRESH_DATA_SIZE_LESS:
             case REFRESH_DATA_SIZE_EQUAL:
                 adapter.refresh(data);

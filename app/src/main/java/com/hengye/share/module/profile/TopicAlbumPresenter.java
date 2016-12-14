@@ -151,8 +151,11 @@ public class TopicAlbumPresenter extends ListTaskPresenter<TopicAlbumMvpView> {
     }
 
     public ArrayList<Topic> findData() {
-        return ShareJson.findData(getModelName(), new TypeToken<ArrayList<Topic>>() {
-        }.getType());
+        if(isNeedCache()) {
+            return ShareJson.findData(getModelName(), new TypeToken<ArrayList<Topic>>() {
+            }.getType());
+        }
+        return null;
     }
 
     public void saveData(List<Topic> data) {

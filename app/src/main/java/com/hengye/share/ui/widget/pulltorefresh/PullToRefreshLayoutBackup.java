@@ -9,22 +9,21 @@ import android.widget.AbsListView;
 
 import com.hengye.share.R;
 import com.hengye.share.module.util.encapsulation.view.recyclerview.HeaderAdapter;
-import com.hengye.share.ui.widget.FooterLoadStateView;
 import com.hengye.share.ui.widget.common.CommonListView;
 
 /**
  * Created by yuhy on 2016/10/12.
  */
 
-public class PullToRefreshLayout extends com.hengye.swiperefresh.PullToRefreshLayout
+public class PullToRefreshLayoutBackup extends com.hengye.swiperefresh.PullToRefreshLayout
         implements com.hengye.swiperefresh.PullToRefreshLayout.AutoLoadingListener, com.hengye.swiperefresh.PullToRefreshLayout.OnLoadMoreCallBack {
 
 
-    public PullToRefreshLayout(Context context) {
+    public PullToRefreshLayoutBackup(Context context) {
         this(context, null);
     }
 
-    public PullToRefreshLayout(Context context, AttributeSet attrs) {
+    public PullToRefreshLayoutBackup(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         setOnLoadMoreCallBack(this);
@@ -35,7 +34,7 @@ public class PullToRefreshLayout extends com.hengye.swiperefresh.PullToRefreshLa
     private HeaderAdapter mHeaderAdapter;
     private RecyclerView mRecyclerView;
     private CommonListView mListView;
-    private FooterLoadStateView mFooterLoadStateView;
+    private View mLoading, mLoadEnd, mLoadFail;
 
     private boolean canCustomFooter() {
         if (mRecyclerView != null) {
@@ -101,12 +100,10 @@ public class PullToRefreshLayout extends com.hengye.swiperefresh.PullToRefreshLa
     public void showLoading() {
         if(canCustomFooter()) {
             if (mHeaderAdapter != null) {
-                getFooterLoadStateView().showLoading();
-                mHeaderAdapter.setFooter(getFooterLoadStateView());
+                mHeaderAdapter.setFooter(getLoading());
             }else if(mListView != null){
                 removeListViewFooters();
-                getFooterLoadStateView().showLoading();
-                addListViewFooters();
+                mListView.addFooterView(getLoading(), null, false);
             }
         }
     }
@@ -115,12 +112,10 @@ public class PullToRefreshLayout extends com.hengye.swiperefresh.PullToRefreshLa
     public void showLoadFail() {
         if(canCustomFooter()) {
             if (mHeaderAdapter != null) {
-                getFooterLoadStateView().showLoadFail();
-                mHeaderAdapter.setFooter(getFooterLoadStateView());
+                mHeaderAdapter.setFooter(getLoadFail());
             }else if(mListView != null){
                 removeListViewFooters();
-                getFooterLoadStateView().showLoadFail();
-                addListViewFooters();
+                mListView.addFooterView(getLoadFail(), null, false);
             }
         }
     }
@@ -130,8 +125,7 @@ public class PullToRefreshLayout extends com.hengye.swiperefresh.PullToRefreshLa
         if(canCustomFooter()) {
             if (mHeaderAdapter != null) {
                 if(mHeaderAdapter.getBasicItemCount() != 0) {
-                    getFooterLoadStateView().showEnding();
-                    mHeaderAdapter.setFooter(getFooterLoadStateView());
+                    mHeaderAdapter.setFooter(getLoadEnd());
                 }else{
                     mHeaderAdapter.removeFooter();
                 }
@@ -139,41 +133,50 @@ public class PullToRefreshLayout extends com.hengye.swiperefresh.PullToRefreshLa
                 removeListViewFooters();
                 int actualChildCount = mListView.getCount() - mListView.getHeaderViewsCount() - mListView.getFooterViewsCount();
                 if(actualChildCount > 0){
-                    getFooterLoadStateView().showEnding();
-                    addListViewFooters();
+                    mListView.addFooterView(getLoadEnd(), null, false);
                 }
             }
         }
     }
 
     private void removeListViewFooters(){
-        mListView.removeFooterView(getFooterLoadStateView());
+        mListView.removeFooterView(getLoading());
+        mListView.removeFooterView(getLoadFail());
+        mListView.removeFooterView(getLoadEnd());
     }
 
-    private void addListViewFooters(){
-        mListView.addFooterView(getFooterLoadStateView(), null, false);
+    private View getLoading() {
+        if (mLoading == null) {
+            mLoading = View.inflate(getContext(), R.layout.footer_loading, null);
+        }
+        return mLoading;
     }
 
-    private FooterLoadStateView getFooterLoadStateView(){
-        if(mFooterLoadStateView == null){
-            mFooterLoadStateView = new FooterLoadStateView(getContext());
-            mFooterLoadStateView.setOnLoadStateClickListener(new FooterLoadStateView.onLoadStateClickListener() {
+    private View getLoadEnd() {
+        if (mLoadEnd == null) {
+            mLoadEnd = View.inflate(getContext(), R.layout.footer_ending, null);
+        }
+        return mLoadEnd;
+    }
+
+    private View getLoadFail() {
+        if (mLoadFail == null) {
+            mLoadFail = View.inflate(getContext(), R.layout.footer_load_fail, null);
+            mLoadFail.setOnClickListener(new OnClickListener() {
                 @Override
-                public void onLoadStateClick(View v, int state) {
-                    if(state == FooterLoadStateView.STATE_LOAD_FAIL ||
-                            state == FooterLoadStateView.STATE_LOAD_MORE){
-                        onShowLoading();
-                        postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                startLoading();
-                            }
-                        }, 1000);
-                    }
+                public void onClick(View v) {
+                    onShowLoading();
+                    postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            startLoading();
+                        }
+                    }, 1000);
+
                 }
             });
         }
-        return mFooterLoadStateView;
+        return mLoadFail;
     }
 
 }

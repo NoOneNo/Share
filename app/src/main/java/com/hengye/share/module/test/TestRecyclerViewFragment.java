@@ -84,7 +84,7 @@ public class TestRecyclerViewFragment extends RecyclerFragment<String>{
         findViewById(R.id.btn_add_header).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                View header = LayoutInflater.from(getContext()).inflate(R.layout.footer_load_more, null);
+                View header = LayoutInflater.from(getContext()).inflate(R.layout.footer_loading, null);
                 mAdapter.setHeader(header);
 //                mLayoutManager.scrollToPosition(0);
 
@@ -97,7 +97,7 @@ public class TestRecyclerViewFragment extends RecyclerFragment<String>{
 
 //                mAdapter.addItem(2, "haha");
 //
-                View header = LayoutInflater.from(getContext()).inflate(R.layout.footer_load_more, null);
+                View header = LayoutInflater.from(getContext()).inflate(R.layout.footer_loading, null);
 
 //                mAdapter.setFooter(header);
 

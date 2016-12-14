@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:text="已经到底了！(ಥ_ಥ)"
         android:textSize="14sp"
+        android:textColor="@color/text_grey"
         android:layout_gravity="center"/>
 
 </FrameLayout>

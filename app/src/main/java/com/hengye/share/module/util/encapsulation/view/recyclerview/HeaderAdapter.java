@@ -167,7 +167,7 @@ public abstract class HeaderAdapter<VH extends RecyclerView.ViewHolder> extends 
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (position == 0 && holder.getItemViewType() == TYPE_HEADER) {
             onBindHeaderView((ContainerViewHolder) holder, position);
-        } else if (position == getItemCount() - 1 && holder.getItemViewType() == TYPE_FOOTER) {
+        } else if (position == getFooterPosition() && holder.getItemViewType() == TYPE_FOOTER) {
             onBindFooterView((ContainerViewHolder) holder, position);
         } else {
             onBindBasicItemViewByType(holder, position);

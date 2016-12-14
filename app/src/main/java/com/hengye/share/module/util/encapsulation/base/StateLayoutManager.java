@@ -156,6 +156,10 @@ public class StateLayoutManager {
         setView(mCurrentState);
     }
 
+    public int getCurrentState(){
+        return mCurrentState;
+    }
+
     private void animateViewChange(final View previousView, final View currentStateView) {
 
         previousView.setAnimation(getOnAnimateViewChangeHelper().getDisappearAnimation());

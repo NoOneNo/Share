@@ -111,7 +111,9 @@ public class TopicContentUrlSpan extends CharacterStyle implements ParcelableSpa
                 if (topicUrl.getType() == TopicUrl.VIDEO) {
                     VideoPlayService.start(context, topicUrl.getTopicId(), getURL());
                 } else if(topicUrl.getType() == TopicUrl.PHOTO){
-                    GalleryActivity.startWithIntent(context, topicUrl.getPicUrl());
+                    if(topicUrl.getAnnotation() != null && topicUrl.getAnnotation() instanceof String) {
+                        GalleryActivity.startWithIntent(context, (String) topicUrl.getAnnotation());
+                    }
                 }else {
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
