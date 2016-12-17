@@ -1,28 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="@layout/activity_topic">
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_homepage" android:icon="@drawable/nav_home"
+        <item android:id="@+id/nav_homepage" android:icon="@drawable/ic_home_white_48dp"
             android:title="@string/title_drawer_homepage" />
-        <item android:id="@+id/nav_at_me" android:icon="@drawable/nav_mention"
+        <item android:id="@+id/nav_private_message" android:icon="@drawable/ic_mail_white_48dp"
+            android:title="@string/title_drawer_private_message" />
+        <item android:id="@+id/nav_at_me" android:icon="@drawable/ic_message_white_48dp"
             android:title="@string/title_drawer_at_me" />
-        <item android:id="@+id/nav_comment" android:icon="@drawable/nav_comment"
+        <item android:id="@+id/nav_comment" android:icon="@drawable/ic_textsms_white_48dp"
             android:title="@string/title_drawer_comment" />
-        <item android:id="@+id/nav_favorites" android:icon="@drawable/nav_favorite"
+        <item android:id="@+id/nav_favorites" android:icon="@drawable/ic_favorite_white_48dp"
             android:title="@string/title_drawer_favorites" />
-        <item android:id="@+id/nav_group_manage" android:icon="@drawable/nav_group"
+        <item android:id="@+id/nav_group_manage" android:icon="@drawable/ic_group_white_48dp"
             android:title="@string/title_drawer_group_manage" />
-        <item android:id="@+id/nav_draft" android:icon="@drawable/nav_draft"
+        <item android:id="@+id/nav_draft" android:icon="@drawable/ic_drafts_white_48dp"
             android:title="@string/title_drawer_draft" />
     </group>
 
     <item android:title="@string/title_drawer_others">
         <menu>
             <group android:checkableBehavior="single">
-                <item android:id="@+id/nav_setting" android:icon="@drawable/nav_setting"
+                <item android:id="@+id/nav_setting" android:icon="@drawable/ic_settings_white_48dp"
                     android:title="@string/title_drawer_setting" />
 
-                <item android:id="@+id/nav_share" android:icon="@drawable/nav_share"
+                <item android:id="@+id/nav_share" android:icon="@drawable/ic_share_white_48dp"
                     android:title="@string/title_drawer_share" />
             </group>
         </menu>

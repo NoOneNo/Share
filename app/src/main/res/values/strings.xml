@@ -89,6 +89,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="title_drawer_homepage">个人主页</string>
+    <string name="title_drawer_private_message">私信</string>
     <string name="title_drawer_at_me">提及</string>
     <string name="title_drawer_comment">评论</string>
     <string name="title_drawer_favorites">收藏</string>

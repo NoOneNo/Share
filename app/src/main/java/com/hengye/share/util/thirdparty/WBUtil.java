@@ -19,6 +19,7 @@ public class WBUtil {
 
     public static final String URL_IMG_1 = "http://ww1.sinaimg.cn/";
 
+    //私信入口
     public static final String URL_MOBILE_HOST = "m.weibo.cn";
     public static final String URL_LOGIN_HOST = "passport.weibo.cn/signin/login";
     public static final String URL_PHOTO = "photo.weibo.com";

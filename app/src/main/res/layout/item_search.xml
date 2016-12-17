@@ -37,7 +37,7 @@
                     android:contentDescription="@null"
                     android:padding="8dp"
                     android:src="@drawable/ic_arrow_back_white_48dp"
-                    android:tint="@color/grey_600"/>
+                    android:tint="@color/icon_grey"/>
 
                 <EditText
                     android:id="@+id/et_search_content"
@@ -62,7 +62,8 @@
                     android:clickable="true"
                     android:contentDescription="@null"
                     android:padding="6dp"
-                    android:src="@drawable/compose_emotion_delete_highlighted"
+                    android:src="@drawable/ic_backspace_white_48dp"
+                    android:tint="@color/icon_grey"
                     android:visibility="gone"
                     tools:visibility="visible" />
             </LinearLayout>

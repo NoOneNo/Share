@@ -38,6 +38,7 @@ import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.module.sso.UserMvpView;
 import com.hengye.share.module.sso.UserPresenter;
 import com.hengye.share.module.test.TestActivity;
+import com.hengye.share.module.util.WebViewActivity;
 import com.hengye.share.ui.support.actionbar.ActionBarDrawerToggleCustom;
 import com.hengye.share.ui.widget.SearchView;
 import com.hengye.share.ui.widget.fab.AnimatedFloatingActionButton;
@@ -55,6 +56,7 @@ import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.intercept.Action;
 import com.hengye.share.util.intercept.AdTokenInterceptor;
+import com.hengye.share.util.thirdparty.WBUtil;
 
 public class TopicActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -104,7 +106,7 @@ public class TopicActivity extends BaseActivity
     protected void onResume() {
         super.onResume();
         mAppBar.addOnOffsetChangedListener(this);
-        if(mUpdateUserInfo){
+        if (mUpdateUserInfo) {
             mUpdateUserInfo = false;
             if (UserUtil.isUserNameEmpty()) {
                 mPresenter.loadWBUserInfo();
@@ -122,13 +124,13 @@ public class TopicActivity extends BaseActivity
     }
 
     protected void saveLastPosition() {
-        if(mCurrentTopicFragment != null){
+        if (mCurrentTopicFragment != null) {
             mCurrentTopicFragment.getLayoutManager().onSaveInstanceState();
             int top = 0;
             int position = mCurrentTopicFragment.getLayoutManager().findFirstVisibleItemPosition();
             View View = mCurrentTopicFragment.getLayoutManager().findViewByPosition(position);
 
-            if(View != null){
+            if (View != null) {
                 top = View.getTop();
             }
             SPUtil.putInt("lastTopicPosition", position);
@@ -271,6 +273,7 @@ public class TopicActivity extends BaseActivity
     }
 
     boolean mIsFirstTime = true;
+
     public void onGroupSelected(int position, TopicPresenter.TopicGroup topicGroup) {
 
         if (topicGroup.getTopicType() == TopicPresenter.TopicType.NONE) {
@@ -415,6 +418,8 @@ public class TopicActivity extends BaseActivity
             }
             mUpdateUserInfo = true;
             PersonalHomepageActivity.start(this, mAvatar, UserInfo.getUserInfo(UserUtil.getCurrentUser()));
+        } else if (id == R.id.nav_private_message) {
+            startActivity(WebViewActivity.getStartIntent(this, WBUtil.URL_HTTP_MOBILE));
         } else if (id == R.id.nav_at_me) {
             startActivity(TopicMentionActivity.class);
         } else if (id == R.id.nav_comment) {
@@ -433,7 +438,6 @@ public class TopicActivity extends BaseActivity
         } else if (id == R.id.nav_share) {
             startActivity(TopicPublishActivity.getStartIntent(this, "#Share#Share微博客户端, 非常好用[赞]"));
         }
-
 //        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 //        drawer.closeDrawer(GravityCompat.END);
         return false;
