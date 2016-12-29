@@ -11,8 +11,8 @@ import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.rxjava.ObjectConverter;
-import com.hengye.share.util.retrofit.RetrofitManager;
-import com.hengye.share.util.retrofit.api.WBService;
+import com.hengye.share.util.http.retrofit.RetrofitManager;
+import com.hengye.share.util.http.retrofit.api.WBService;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
 import io.reactivex.Observable;

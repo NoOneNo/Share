@@ -23,7 +23,7 @@ import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.Utility;
-import com.hengye.share.util.retrofit.RetrofitManager;
+import com.hengye.share.util.http.retrofit.RetrofitManager;
 import com.hengye.share.util.rxjava.DefaultSubscriber;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 import com.hengye.share.util.thirdparty.ThirdPartyUtils;

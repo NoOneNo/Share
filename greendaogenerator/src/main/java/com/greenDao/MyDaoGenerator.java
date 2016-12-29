@@ -126,6 +126,15 @@ public class MyDaoGenerator {
         entity.addStringProperty("json");
     }
 
+    private static void addTest(Schema schema) {
+        Entity entity = schema.addEntity("Test");
+        entity.implementsSerializable();
+        entity.addStringProperty("_id").primaryKey().notNull();
+        entity.addStringProperty("json");
+        entity.addByteProperty("ss");
+        entity.addContentProvider();
+    }
+
     private static void addEntity(Schema schema){
         addTopicDraft(schema);
         addUser(schema);

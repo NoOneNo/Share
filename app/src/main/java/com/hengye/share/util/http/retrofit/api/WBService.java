@@ -1,4 +1,4 @@
-package com.hengye.share.util.retrofit.api;
+package com.hengye.share.util.http.retrofit.api;
 
 import com.hengye.share.model.sina.WBAddresses;
 import com.hengye.share.model.sina.WBGroup;

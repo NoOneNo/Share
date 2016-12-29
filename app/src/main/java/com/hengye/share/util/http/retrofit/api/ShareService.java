@@ -1,20 +1,27 @@
-package com.hengye.share.util.retrofit.api;
+package com.hengye.share.util.http.retrofit.api;
 
 import com.hengye.share.model.other.AMapAddresses;
 import com.hengye.share.module.update.UpdateBombBean;
 
 import java.util.Map;
 
+import okhttp3.ResponseBody;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import io.reactivex.Observable;
 import retrofit2.http.QueryMap;
+import retrofit2.http.Streaming;
+import retrofit2.http.Url;
 
 /**
  * Created by yuhy on 2016/11/21.
  */
 
 public interface ShareService {
+
+    @Streaming
+    @GET
+    Observable<ResponseBody> download(@Url String url);
 
     @Headers({
         "X-Bmob-Application-Id: 49c7853c8483552c1ce7c0490092f83d",

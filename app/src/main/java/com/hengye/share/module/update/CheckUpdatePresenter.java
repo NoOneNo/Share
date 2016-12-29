@@ -3,7 +3,7 @@ package com.hengye.share.module.update;
 import com.hengye.share.module.util.encapsulation.base.TaskState;
 import com.hengye.share.module.util.encapsulation.mvp.RxPresenter;
 import com.hengye.share.util.CommonUtil;
-import com.hengye.share.util.retrofit.RetrofitManager;
+import com.hengye.share.util.http.retrofit.RetrofitManager;
 import com.hengye.share.util.rxjava.datasource.ObservableHelper;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 

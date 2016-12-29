@@ -4,7 +4,7 @@ import com.hengye.share.model.greenrobot.GroupList;
 import com.hengye.share.model.sina.WBGroups;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
-import com.hengye.share.util.retrofit.RetrofitManager;
+import com.hengye.share.util.http.retrofit.RetrofitManager;
 import com.hengye.share.util.rxjava.datasource.ObservableHelper;
 
 import java.util.ArrayList;

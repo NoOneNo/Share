@@ -22,6 +22,7 @@ import com.android.volley.toolbox.ImageKey;
 
 import java.util.ArrayList;
 // KEEP INCLUDES END
+
 /**
  * Entity mapped to table "USER".
  */

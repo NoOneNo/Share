@@ -10,7 +10,7 @@ import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.UserUtil;
-import com.hengye.share.util.retrofit.RetrofitManager;
+import com.hengye.share.util.http.retrofit.RetrofitManager;
 import com.hengye.share.util.rxjava.datasource.ObservableHelper;
 
 import java.util.ArrayList;

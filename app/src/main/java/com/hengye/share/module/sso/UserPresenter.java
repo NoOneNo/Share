@@ -8,12 +8,11 @@ import com.hengye.share.module.util.encapsulation.mvp.RxPresenter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
-import com.hengye.share.util.retrofit.RetrofitManager;
+import com.hengye.share.util.http.retrofit.RetrofitManager;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
 import java.util.Map;
 
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
 
 public class UserPresenter extends RxPresenter<UserMvpView> {

@@ -16,6 +16,7 @@ import com.hengye.share.util.CommonUtil;
 import java.util.ArrayList;
 import java.util.List;
 // KEEP INCLUDES END
+
 /**
  * Entity mapped to table "GROUP_LIST".
  */

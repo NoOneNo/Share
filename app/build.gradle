@@ -86,7 +86,7 @@ dependencies {
 //    compile "com.android.support:design:$ANDROID_SUPPORT_VERSION"
 //    compile "com.android.support:recyclerview-v7:$ANDROID_SUPPORT_VERSION"
 //    final OKHTTP_VERSION = '3.0.0-RC1'
-    final OKHTTP_VERSION = '3.4.1'
+    final OKHTTP_VERSION = '3.5.0'
     final RETROFIT_VERSION = '2.1.0'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile dep.design
@@ -108,7 +108,8 @@ dependencies {
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 
     compile 'org.slf4j:slf4j-android:1.7.12'
-    compile 'org.greenrobot:greendao:3.1.1'
+//    compile 'org.greenrobot:greendao:3.1.1'
+    compile 'org.greenrobot:greendao:3.2.0'
     compile 'org.jsoup:jsoup:1.8.2'
 
     compile 'io.reactivex.rxjava2:rxjava:2.0.1'

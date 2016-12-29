@@ -1,4 +1,4 @@
-package com.hengye.share.util.retrofit.weibo;
+package com.hengye.share.util.http.retrofit.weibo;
 
 import java.util.HashMap;
 import java.util.Map;

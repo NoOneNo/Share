@@ -24,6 +24,7 @@ import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 // KEEP INCLUDES END
+
 /**
  * Entity mapped to table "SHARE_JSON".
  */

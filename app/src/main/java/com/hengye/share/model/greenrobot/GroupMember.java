@@ -9,6 +9,7 @@ import org.greenrobot.greendao.DaoException;
 
 // KEEP INCLUDES - put your custom includes here
 // KEEP INCLUDES END
+
 /**
  * Entity mapped to table "GROUP_MEMBER".
  */

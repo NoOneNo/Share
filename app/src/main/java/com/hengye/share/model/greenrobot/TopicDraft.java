@@ -2,7 +2,6 @@ package com.hengye.share.model.greenrobot;
 
 import org.greenrobot.greendao.annotation.*;
 
-import com.hengye.share.model.Address;
 import com.hengye.share.model.greenrobot.DaoSession;
 import org.greenrobot.greendao.DaoException;
 
@@ -10,6 +9,7 @@ import org.greenrobot.greendao.DaoException;
 
 // KEEP INCLUDES - put your custom includes here
 import com.hengye.share.model.Topic;
+import com.hengye.share.model.Address;
 import com.hengye.share.module.topic.TopicPresenter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.GsonUtil;
@@ -18,6 +18,7 @@ import com.hengye.share.R;
 
 import java.util.ArrayList;
 // KEEP INCLUDES END
+
 /**
  * Entity mapped to table "TOPIC_DRAFT".
  */

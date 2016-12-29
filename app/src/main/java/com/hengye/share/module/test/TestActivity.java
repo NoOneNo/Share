@@ -16,6 +16,7 @@ import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.module.map.AroundAddressFragment;
 import com.hengye.share.module.publish.TopicPublishActivity;
 import com.hengye.share.module.sso.ThirdPartyLoginActivity;
+import com.hengye.share.module.util.FragmentActivity;
 import com.hengye.share.module.util.WebViewActivity;
 import com.hengye.share.ui.widget.dialog.ListDialog;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
@@ -102,8 +103,9 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
         } else if (v.getId() == R.id.btn_test7) {
             startActivity(SetTokenActivity.class);
         }else if (v.getId() == R.id.btn_test8) {
+            startActivity(FragmentActivity.getStartIntent(this, TestDownloadFragment.class));
 //            startActivity(TestLocationActivity.class);
-            AroundAddressFragment.start(this, 1);
+//            AroundAddressFragment.start(this, 1);
         }
 
     }

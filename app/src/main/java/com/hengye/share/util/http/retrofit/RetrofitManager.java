@@ -1,14 +1,14 @@
-package com.hengye.share.util.retrofit;
+package com.hengye.share.util.http.retrofit;
 
 import com.google.gson.GsonBuilder;
 import com.hengye.share.model.other.AMapAddress;
 import com.hengye.share.util.L;
 import com.hengye.share.util.UrlFactory;
-import com.hengye.share.util.retrofit.api.ShareService;
-import com.hengye.share.util.retrofit.api.WBService;
-import com.hengye.share.util.retrofit.weibo.WBGsonConverterFactory;
-import com.hengye.share.util.retrofit.weibo.WBNetworkInterceptor;
-import com.hengye.share.util.retrofit.weibo.WBServiceProxyHandler;
+import com.hengye.share.util.http.retrofit.api.ShareService;
+import com.hengye.share.util.http.retrofit.api.WBService;
+import com.hengye.share.util.http.retrofit.weibo.WBGsonConverterFactory;
+import com.hengye.share.util.http.retrofit.weibo.WBNetworkInterceptor;
+import com.hengye.share.util.http.retrofit.weibo.WBServiceProxyHandler;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.lang.reflect.Proxy;

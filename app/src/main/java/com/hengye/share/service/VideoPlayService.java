@@ -24,7 +24,7 @@ import com.hengye.share.ui.widget.media.VideoView;
 import com.hengye.share.util.GsonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.ViewUtil;
-import com.hengye.share.util.retrofit.RetrofitManager;
+import com.hengye.share.util.http.retrofit.RetrofitManager;
 import com.hengye.share.util.rxjava.DefaultSubscriber;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
