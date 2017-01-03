@@ -18,6 +18,7 @@ import com.android.volley.toolbox.Util;
 import com.hengye.share.R;
 import com.hengye.share.module.util.encapsulation.fragment.BaseFragment;
 import com.hengye.share.ui.support.AnimationRect;
+import com.hengye.share.util.AnimationUtil;
 import com.hengye.share.util.FileUtil;
 import com.hengye.share.util.ImageUtil;
 import com.hengye.share.util.RequestManager;
@@ -78,9 +79,9 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
             if (isLocalPath || !mUrl.endsWith("gif")) {
                 //如果是本地路径或者不是gif图片
 
-                boolean isThumbnailUrl = WBUtil.isWBThumbnailUrl(mUrl);
                 String largeUrl = WBUtil.getWBLargeImgUrl(mUrl);
                 String largeUrlPath = ImageDiskLruCache.getInstance().getDiskCachePath(largeUrl);
+                boolean isThumbnail = largeUrlPath == null && WBUtil.isWBThumbnailUrl(mUrl);
                 if (largeUrlPath != null) {
                     path = largeUrlPath;
                 }
@@ -91,10 +92,10 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
                     mAnimateIn = false;
                 }
 
-                if(path == null || isThumbnailUrl) {
-                    String url = isThumbnailUrl ? largeUrl : mUrl;
+                if(path == null || isThumbnail) {
+                    String url = isThumbnail ? largeUrl : mUrl;
                     int screenWidth = getResources().getDisplayMetrics().widthPixels;
-                    RequestManager.addToRequestQueue(makeImageRequest(url, screenWidth, 0, ImageView.ScaleType.FIT_XY), getRequestTag());
+                    RequestManager.addToRequestQueue(makeImageRequest(path != null, url, screenWidth, 0, ImageView.ScaleType.FIT_XY), getRequestTag());
                 }else{
                     hideProgress();
                 }
@@ -114,7 +115,7 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
                         mAnimateIn = false;
                     }
                     int screenWidth = getResources().getDisplayMetrics().widthPixels;
-                    RequestManager.addToRequestQueue(makeImageRequest(gifUrl, screenWidth, 0, ImageView.ScaleType.FIT_XY), getRequestTag());
+                    RequestManager.addToRequestQueue(makeImageRequest(path != null, gifUrl, screenWidth, 0, ImageView.ScaleType.FIT_XY), getRequestTag());
                 }
 
             }
@@ -152,7 +153,12 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
             if (!WBUtil.isWBLargeUrl(mUrl)) {
                 String largeUrl = WBUtil.getWBLargeImgUrl(mUrl);
                 String path = ImageDiskLruCache.getInstance().getDiskCachePath(largeUrl);
+
                 if (path != null) {
+                    if(path.equals(mPath)){
+                        //已经是原图
+                        return;
+                    }
                     //本地有原图缓存，直接显示
                     displayImage(largeUrl, path, false);
                     mAnimateIn = false;
@@ -161,7 +167,7 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
                     //本地没有原图缓存
                     showProgress();
                     int screenWidth = getResources().getDisplayMetrics().widthPixels;
-                    RequestManager.addToRequestQueue(makeImageRequest(largeUrl, screenWidth, 0, ImageView.ScaleType.FIT_XY), getRequestTag());
+                    RequestManager.addToRequestQueue(makeImageRequest(false, largeUrl, screenWidth, 0, ImageView.ScaleType.FIT_XY), getRequestTag());
                 }
             }
         }
@@ -227,14 +233,32 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
         }
     }
 
-    protected Request<Bitmap> makeImageRequest(final String requestUrl, int maxWidth, int maxHeight,
+    /**
+     * 如果本地已经有缩略图显示，因为在进行缩放的动画中，所以延迟显示
+     * @param isDelay
+     * @param requestUrl
+     * @param maxWidth
+     * @param maxHeight
+     * @param scaleType
+     * @return
+     */
+    protected Request<Bitmap> makeImageRequest(final boolean isDelay, final String requestUrl, int maxWidth, int maxHeight,
                                                ImageView.ScaleType scaleType) {
         return new ImageRequest(requestUrl, new Response.Listener<Bitmap>() {
             @Override
             public void onResponse(Bitmap response) {
-                String path = ImageDiskLruCache.getInstance().getDiskCachePath(requestUrl);
+                final String path = ImageDiskLruCache.getInstance().getDiskCachePath(requestUrl);
                 if (path != null) {
-                    displayImage(requestUrl, path, false);
+                    if(isDelay){
+                        getHandler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                displayImage(requestUrl, path, false);
+                            }
+                        }, AnimationUtil.GALLERY_ANIMATION_DURATION);
+                    }else {
+                        displayImage(requestUrl, path, false);
+                    }
                     BitmapCache.getInstance().putBitmap(path, response);
                 }
                 hideProgress();

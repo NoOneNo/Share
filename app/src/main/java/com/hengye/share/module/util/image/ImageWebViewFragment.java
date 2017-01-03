@@ -12,14 +12,18 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.hengye.share.R;
 import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.util.AnimationUtil;
+import com.hengye.share.util.L;
 
 import java.io.File;
 
 public class ImageWebViewFragment extends ImageBaseFragment {
+
+    private static final float MAX_SCALE = 10.0f;
 
     public static ImageWebViewFragment newInstance(String path, boolean animationIn) {
         ImageWebViewFragment fragment = new ImageWebViewFragment();
@@ -32,6 +36,9 @@ public class ImageWebViewFragment extends ImageBaseFragment {
 
     String mPath;
     boolean mAnimateIn;
+    float mCurrentScale;
+    boolean mZoomIn = true;
+    float mMinScale;
 
     @Override
     protected void handleBundleExtra(Bundle bundle) {
@@ -70,11 +77,23 @@ public class ImageWebViewFragment extends ImageBaseFragment {
         mWebView.setVerticalScrollBarEnabled(false);
         mWebView.setHorizontalScrollBarEnabled(false);
         mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-
         mWebView.setOnLongClickListener(this);
         if(SettingHelper.isClickToCloseGallery()) {
             mWebView.setOnTouchListener(new LargeOnTouchListener(mWebView));
         }
+
+        mWebView.setWebViewClient(new WebViewClient(){
+
+            @Override
+            public void onScaleChanged(WebView view, float oldScale, float newScale) {
+                super.onScaleChanged(view, oldScale, newScale);
+                L.debug("oldScale : {}, newScale : {}", oldScale, newScale);
+                if(mMinScale == 0){
+                    mMinScale = newScale + 0.05f;//精度
+                }
+                mCurrentScale = newScale;
+            }
+        });
 
         if (mAnimateIn) {
             showContent(mPath, mWebView);
@@ -143,9 +162,31 @@ public class ImageWebViewFragment extends ImageBaseFragment {
         public LargeOnTouchListener(final View view) {
             gestureDetector = new GestureDetector(view.getContext(),
                     new GestureDetector.SimpleOnGestureListener() {
+
                         @Override
-                        public boolean onSingleTapUp(MotionEvent e) {
+                        public boolean onSingleTapConfirmed(MotionEvent e) {
                             getActivity().onBackPressed();
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onDoubleTapEvent(MotionEvent e) {
+
+                            if(mZoomIn){
+                                if(mCurrentScale > MAX_SCALE){
+                                    mZoomIn = false;
+                                }
+                            }else{
+                                if(mCurrentScale <= mMinScale){
+                                    mZoomIn = true;
+                                }
+                            }
+
+                            if(mZoomIn){
+                                mWebView.zoomIn();
+                            }else{
+                                mWebView.zoomOut();
+                            }
                             return true;
                         }
                     });
@@ -153,8 +194,8 @@ public class ImageWebViewFragment extends ImageBaseFragment {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            gestureDetector.onTouchEvent(event);
-            return false;
+            return gestureDetector.onTouchEvent(event);
+//            return false;
         }
     }
 }
