@@ -628,6 +628,7 @@ public class MediaController extends FrameLayout {
             mPauseBtn.setVisibility(View.VISIBLE);
         } else {
             mPlayer.start();
+            show();
             mPauseBtn.setVisibility(View.GONE);
         }
     }

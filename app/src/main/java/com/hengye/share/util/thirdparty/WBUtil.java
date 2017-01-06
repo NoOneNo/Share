@@ -6,6 +6,7 @@ import android.util.SparseArray;
 import com.android.volley.toolbox.Util;
 import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.util.ImageUtil;
+import com.hengye.share.util.NetworkUtil;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,7 +36,7 @@ public class WBUtil {
     public final static int MAX_COUNT_REQUEST = 30;
     public final static int START_PAGE = 1;
 
-    public static String IMAGE_TYPE_THUMBNAIL = "thumbnail";//缩略图，模糊，不建议使用
+    public static String IMAGE_TYPE_THUMBNAIL = "thumbnail";//缩略图，模糊，不建议使用，新浪微博默认返回这个
     public static String IMAGE_TYPE_BMIDDLE = "bmiddle";//高清，部分gif也不支持显示，缩略图建议用or480
     public static String IMAGE_TYPE_OR_480 = "or480";//高清不支持gif动图，只有一帧如果是gif的话
     public static String IMAGE_TYPE_WAP_720 = "wap720";//高清不支持gif动图，只有一帧如果是gif的话
@@ -50,36 +51,40 @@ public class WBUtil {
     //默认返回缩略图
     //要得到高清图或者原图，把地址"http://ww1.sinaimg.cn/thumbnail/6dab804cjw1exv392snomj21kw23ukjl.jpg"
     //中的thumbnail换成对应的bmiddle(高清)或者large(原图)
-    public static String getWBImgUrl(String url) {
+
+    public static String getWBImgType() {
         String value = SettingHelper.getPhotoDownloadQuality();
-        if (url == null || "1".equals(value)) {
-            //无图
-            return null;
-        }
         String toType;
-        if (url.endsWith("gif")) {
-            toType = IMAGE_TYPE_OR_480;
+        if ("1".equals(value)) {
+            //无图
+            toType = null;
         } else if ("2".equals(value)) {
+            //缩略图
             toType = IMAGE_TYPE_OR_480;
         } else if ("3".equals(value)) {
+            //高清图
             toType = IMAGE_TYPE_BMIDDLE;
         } else if ("4".equals(value)) {
+            //原图
             toType = IMAGE_TYPE_LARGE;
         } else if ("5".equals(value)) {
-            toType = IMAGE_TYPE_BMIDDLE;
+            //自动
+            toType = NetworkUtil.isWifiType() ?
+                    IMAGE_TYPE_BMIDDLE :
+                    IMAGE_TYPE_OR_480;
         } else {
             toType = IMAGE_TYPE_BMIDDLE;
         }
-        return getWBImgUrl(url, toType);
+        return toType;
     }
 
     public static String getWBGifUrl(String url) {
         if (url != null && url.endsWith("gif")) {
-            if(url.contains(IMAGE_TYPE_BMIDDLE)) {
+            if (url.contains(IMAGE_TYPE_BMIDDLE)) {
                 return url.replaceFirst(IMAGE_TYPE_BMIDDLE, IMAGE_TYPE_ORIGINAL);
-            }else if(url.contains(IMAGE_TYPE_OR_480)) {
+            } else if (url.contains(IMAGE_TYPE_OR_480)) {
                 return url.replaceFirst(IMAGE_TYPE_OR_480, IMAGE_TYPE_ORIGINAL);
-            }else if(url.contains(IMAGE_TYPE_THUMBNAIL)) {
+            } else if (url.contains(IMAGE_TYPE_THUMBNAIL)) {
                 return url.replaceFirst(IMAGE_TYPE_THUMBNAIL, IMAGE_TYPE_ORIGINAL);
             }
         }
@@ -103,36 +108,40 @@ public class WBUtil {
 
     public static boolean isWBThumbnailUrl(String url) {
         if (url != null) {
-            if(url.contains(IMAGE_TYPE_BMIDDLE)){
+            if (url.contains(IMAGE_TYPE_BMIDDLE)) {
                 return false;
-            }else if(url.contains(IMAGE_TYPE_ORIGINAL)){
+            } else if (url.contains(IMAGE_TYPE_ORIGINAL)) {
                 return false;
             }
         }
         return true;
     }
 
-    public static String getWBImgUrl(String url, String toType) {
-        return getWBImgUrl(url, IMAGE_TYPE_THUMBNAIL, toType);
-    }
-
-    public static String getWBImgUrlById(String picId){
+    public static String getWBImgUrlById(String picId) {
         return URL_IMG_1 + IMAGE_TYPE_ORIGINAL + SLASH + picId;
     }
 
-//    public static String getWBLargeImgUrl(String url) {
-//        return getWBImgUrl(url, IMAGE_TYPE_THUMBNAIL, IMAGE_TYPE_LARGE);
-//    }
+    public static String getWBMiddleImgUrl(String url) {
+        return getWBImgUrl(url, IMAGE_TYPE_BMIDDLE);
+    }
 
     public static String getWBLargeImgUrl(String url) {
-        if(url != null){
-            if(url.contains(IMAGE_TYPE_BMIDDLE)) {
-                return getWBImgUrl(url, IMAGE_TYPE_BMIDDLE, IMAGE_TYPE_ORIGINAL);
-            }else if(url.contains(IMAGE_TYPE_OR_480)) {
-                return getWBImgUrl(url, IMAGE_TYPE_OR_480, IMAGE_TYPE_ORIGINAL);
-            }else if(url.contains(IMAGE_TYPE_THUMBNAIL)) {
-                return getWBImgUrl(url, IMAGE_TYPE_THUMBNAIL, IMAGE_TYPE_ORIGINAL);
-            }else{
+        return getWBImgUrl(url, IMAGE_TYPE_ORIGINAL);
+    }
+
+    public static String getWBImgUrl(String url) {
+        return getWBImgUrl(url, getWBImgType());
+    }
+
+    public static String getWBImgUrl(String url, String toType) {
+        if (url != null) {
+            if (url.contains(IMAGE_TYPE_THUMBNAIL)) {
+                return getWBImgUrl(url, IMAGE_TYPE_THUMBNAIL, toType);
+            } else if (url.contains(IMAGE_TYPE_OR_480)) {
+                return getWBImgUrl(url, IMAGE_TYPE_OR_480, toType);
+            } else if (url.contains(IMAGE_TYPE_BMIDDLE)) {
+                return getWBImgUrl(url, IMAGE_TYPE_BMIDDLE, toType);
+            } else {
                 return url;
             }
         }

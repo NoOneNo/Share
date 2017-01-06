@@ -281,6 +281,7 @@ public class SettingHelper {
         return value == null || !value.contains("1");
     }
 
+    //显示评论转发的头像
     public static boolean isShowCommentAndRepostAvatar(){
         Set<String> value = isShowAvatar();
         return value == null || !value.contains("2");

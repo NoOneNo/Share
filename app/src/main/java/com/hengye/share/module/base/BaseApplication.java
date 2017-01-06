@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.support.multidex.MultiDex;
 
 import com.hengye.share.module.setting.SettingHelper;
@@ -13,6 +15,7 @@ import com.hengye.share.service.VideoPlayService;
 import com.hengye.share.support.DefaultActivityLifecycleCallback;
 import com.hengye.share.util.AppUtils;
 import com.hengye.share.util.L;
+import com.hengye.share.util.NetworkUtil;
 import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.ToastUtil;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -44,7 +47,6 @@ public class BaseApplication extends Application{
 		MultiDex.install(this);
 	}
 
-
 	private void init() {
 //		startService(new Intent(this, ShareService.class));
 		ourInstance = this;
@@ -73,11 +75,13 @@ public class BaseApplication extends Application{
 			}
 		});
 
+		IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+		registerReceiver(new NetworkUtil.ObserveNetworkReceiver(), intentFilter);
 
 //		SkinManager.setup(this);
 		//放到GuidanceActivity初始化
 		//初始化volley
-		RequestManager.init(this, null, MAX_NETWORK_CACHE_SIZE);
+//		RequestManager.init(this, null, MAX_NETWORK_CACHE_SIZE);
 //		//初始化腾讯bugly
 //		CrashReport.initCrashReport(BaseApplication.getInstance(), "900019432", false);
 //		//初始化腾讯x5

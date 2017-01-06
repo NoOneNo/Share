@@ -52,7 +52,8 @@ public class Topic extends ParentInherit implements TopicId, TopicShortUrl, Seri
             List<String> imageUrls = new ArrayList<>();
             List<String> imageLargeUrls = new ArrayList<>();
             for(WBTopic.Pic_urlsEntity urlsEntity : entity.getPic_urls()){
-                imageUrls.add(WBUtil.getWBImgUrl(urlsEntity.getThumbnail_pic()));
+                String wbImgType = WBUtil.getWBImgType();
+                imageUrls.add(WBUtil.getWBImgUrl(urlsEntity.getThumbnail_pic(), wbImgType));
                 imageLargeUrls.add(WBUtil.getWBLargeImgUrl(urlsEntity.getThumbnail_pic()));
             }
             topic.setImageUrls(imageUrls);

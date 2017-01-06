@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 
 import com.google.gson.JsonObject;
 import com.hengye.share.R;
@@ -72,6 +73,7 @@ public class VideoPlayService extends Service implements View.OnClickListener {
         if (topicId == null) {
             handleFail();
         } else {
+            mLoading.setVisibility(View.VISIBLE);
             requestMediaPlay(topicId);
         }
         return START_NOT_STICKY;
@@ -141,6 +143,7 @@ public class VideoPlayService extends Service implements View.OnClickListener {
     }
 
     View mParent;
+    View mLoading;
     WindowManager.LayoutParams mParentParams;
 
     private void initView() {
@@ -149,12 +152,14 @@ public class VideoPlayService extends Service implements View.OnClickListener {
         mLayoutInflater = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE));
 
         mParent = mLayoutInflater.inflate(R.layout.window_video_play, null, false);
-
+        mLoading = mParent.findViewById(R.id.tv_loading);
         adjustParentParams(getResources().getConfiguration());
+        initVideoView();
+//        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(mParentParams.width, mParentParams.height);
+//        mVideoView.setLayoutParams(lp);
         mWindowManager.addView(mParent, mParentParams);
         mParent.setOnClickListener(this);
 
-        initVideoView();
     }
 
     VideoView mVideoView;
@@ -258,6 +263,7 @@ public class VideoPlayService extends Service implements View.OnClickListener {
     }
 
     private void playMedia(String url) {
+        mLoading.setVisibility(View.GONE);
         mVideoView.setVideoURI(Uri.parse(url));
         mVideoView.start();
     }

@@ -95,6 +95,9 @@ public class UserUtil {
     }
 
     public static void resetToken() {
+        if(isUidEmpty()){
+            return;
+        }
         User user = getCurrentUser();
         user.setToken(null);
         user.setAdToken(null);
@@ -199,6 +202,9 @@ public class UserUtil {
     }
 
     public static void updateUser(User targetUser) {
+        if(targetUser.getUid() == null){
+            return;
+        }
         User user;
         UserDao ud = GreenDaoManager.getDaoSession().getUserDao();
         List<User> users = ud.queryBuilder().where(UserDao.Properties.Uid.eq(targetUser.getUid())).list();

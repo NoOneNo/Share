@@ -79,11 +79,20 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
             if (isLocalPath || !mUrl.endsWith("gif")) {
                 //如果是本地路径或者不是gif图片
 
-                String largeUrl = WBUtil.getWBLargeImgUrl(mUrl);
-                String largeUrlPath = ImageDiskLruCache.getInstance().getDiskCachePath(largeUrl);
-                boolean isThumbnail = largeUrlPath == null && WBUtil.isWBThumbnailUrl(mUrl);
-                if (largeUrlPath != null) {
-                    path = largeUrlPath;
+                boolean isThumbnail = false;
+                String middleUrl = null;
+                if (!isLocalPath) {
+                    String largeUrl = WBUtil.getWBLargeImgUrl(mUrl);
+
+                    String largeUrlPath = ImageDiskLruCache.getInstance().getDiskCachePath(largeUrl);
+                    if (largeUrlPath == null) {
+                        middleUrl = WBUtil.getWBMiddleImgUrl(mUrl);
+                        largeUrlPath = ImageDiskLruCache.getInstance().getDiskCachePath(middleUrl);
+                    }
+                    isThumbnail = largeUrlPath == null && WBUtil.isWBThumbnailUrl(mUrl);
+                    if (largeUrlPath != null) {
+                        path = largeUrlPath;
+                    }
                 }
 
                 //不管大图还是缩略图，先显示第一张图片
@@ -92,11 +101,11 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
                     mAnimateIn = false;
                 }
 
-                if(path == null || isThumbnail) {
-                    String url = isThumbnail ? largeUrl : mUrl;
+                if (path == null || isThumbnail) {
+                    String url = isThumbnail ? middleUrl : mUrl;
                     int screenWidth = getResources().getDisplayMetrics().widthPixels;
                     RequestManager.addToRequestQueue(makeImageRequest(path != null, url, screenWidth, 0, ImageView.ScaleType.FIT_XY), getRequestTag());
-                }else{
+                } else {
                     hideProgress();
                 }
             } else {
@@ -155,7 +164,7 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
                 String path = ImageDiskLruCache.getInstance().getDiskCachePath(largeUrl);
 
                 if (path != null) {
-                    if(path.equals(mPath)){
+                    if (path.equals(mPath)) {
                         //已经是原图
                         return;
                     }
@@ -235,6 +244,7 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
 
     /**
      * 如果本地已经有缩略图显示，因为在进行缩放的动画中，所以延迟显示
+     *
      * @param isDelay
      * @param requestUrl
      * @param maxWidth
@@ -249,14 +259,14 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
             public void onResponse(Bitmap response) {
                 final String path = ImageDiskLruCache.getInstance().getDiskCachePath(requestUrl);
                 if (path != null) {
-                    if(isDelay){
+                    if (isDelay) {
                         getHandler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 displayImage(requestUrl, path, false);
                             }
                         }, AnimationUtil.GALLERY_ANIMATION_DURATION);
-                    }else {
+                    } else {
                         displayImage(requestUrl, path, false);
                     }
                     BitmapCache.getInstance().putBitmap(path, response);

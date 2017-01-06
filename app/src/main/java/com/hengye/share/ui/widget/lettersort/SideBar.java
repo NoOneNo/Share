@@ -84,6 +84,7 @@ public class SideBar extends View {
         return mPosition;
     }
 
+    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         // 获取焦点改变背景颜色.

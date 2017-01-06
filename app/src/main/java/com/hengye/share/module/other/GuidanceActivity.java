@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.hengye.share.BuildConfig;
 import com.hengye.share.R;
 import com.hengye.share.module.base.BaseApplication;
 import com.hengye.share.module.setting.SettingHelper;
@@ -13,11 +14,14 @@ import com.hengye.share.module.update.CheckUpdateMvpImpl;
 import com.hengye.share.module.update.CheckUpdatePresenter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
+import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.thirdparty.ThirdPartyUtils;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.smtt.sdk.QbSdk;
+
+import static com.hengye.share.module.base.BaseApplication.MAX_NETWORK_CACHE_SIZE;
 
 public class GuidanceActivity extends BaseActivity {
 
@@ -90,9 +94,12 @@ public class GuidanceActivity extends BaseActivity {
         createShortcutIfNeed();
         checkUpdateIfNeed();
 
-
+        //初始化volley
+		RequestManager.init(this, null, MAX_NETWORK_CACHE_SIZE);
         //初始化腾讯bugly
-        CrashReport.initCrashReport(BaseApplication.getInstance(), ThirdPartyUtils.getAppKeyForBugly(), false);
+        if(!BuildConfig.DEBUG) {
+            CrashReport.initCrashReport(BaseApplication.getInstance(), ThirdPartyUtils.getAppKeyForBugly(), false);
+        }
         //初始化腾讯x5
         QbSdk.initX5Environment(BaseApplication.getInstance(), null);
     }

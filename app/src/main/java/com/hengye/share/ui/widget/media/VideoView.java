@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PixelFormat;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -176,6 +179,9 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
             // no size yet, just adopt the given spec sizes
         }
         setMeasuredDimension(width, height);
+//        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+//        L.debug("measured width : {}, height : {}", width, height);
+//        L.debug("measured widthS : {}, heightS : {}", widthMeasureSpec, heightMeasureSpec);
     }
 
     @Override
@@ -248,6 +254,16 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
         }
     }
 
+    private void resetHolderBackground(){
+        if(mSurfaceHolder != null) {
+            Canvas canvas = mSurfaceHolder.lockCanvas();
+            if(canvas != null) {
+                canvas.drawColor(Color.BLACK);
+                mSurfaceHolder.unlockCanvasAndPost(canvas);
+            }
+        }
+    }
+
     private void openVideo() {
         if (mUri == null || mSurfaceHolder == null) {
             // not ready for playback just yet, will try again later
@@ -264,7 +280,7 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
             mMediaPlayer = new MediaPlayer();
             // TODO: create SubtitleController in MediaPlayer, but we need
             // a context for the subtitle renderers
-            final Context context = getContext();
+//            final Context context = getContext();
 //            final SubtitleController controller = new SubtitleController(
 //                    context, mMediaPlayer.getMediaTimeProvider(), mMediaPlayer);
 //            controller.registerRenderer(new WebVttRenderer(context));
@@ -303,7 +319,7 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
             // target state that was there before.
             mCurrentState = STATE_PREPARING;
             attachMediaController();
-        } catch (IOException | IllegalArgumentException ex) {
+        } catch (IOException | IllegalStateException | IllegalArgumentException ex) {
             Log.w(TAG, "Unable to open content: " + mUri, ex);
             mCurrentState = STATE_ERROR;
             mTargetState = STATE_ERROR;
@@ -377,6 +393,7 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
             }
             if (mVideoWidth != 0 && mVideoHeight != 0) {
                 //Log.i("@@@@", "video size: " + mVideoWidth +"/"+ mVideoHeight);
+                //如果固定大小后切换全屏高度不会变，需优化
 //                getHolder().setFixedSize(mVideoWidth, mVideoHeight);
                 if (mSurfaceWidth == mVideoWidth && mSurfaceHeight == mVideoHeight) {
                     // We didn't actually change the size (it was already at the size
@@ -389,10 +406,10 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
                         }
                     } else if (!isPlaying() &&
                             (seekToPosition != 0 || getCurrentPosition() > 0)) {
-//                        if (mMediaController != null) {
+                        if (mMediaController != null) {
 //                            // Show the media controls when we're paused into a video and make 'em stick.
-//                            mMediaController.show(0);
-//                        }
+                            mMediaController.show(0);
+                        }
                     }
                 }
             } else {
@@ -468,21 +485,26 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
                             messageId = R.string.VideoView_error_text_unknown;
                         }
 
-                        new AlertDialog.Builder(getContext())
-                                .setMessage(messageId)
-                                .setPositiveButton(R.string.VideoView_error_button,
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int whichButton) {
+                        try {
+                            new AlertDialog.Builder(getContext())
+                                    .setMessage(messageId)
+                                    .setPositiveButton(R.string.VideoView_error_button,
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int whichButton) {
                                         /* If we get here, there is no onError listener, so
                                          * at least inform them that the video is over.
                                          */
-                                                if (mOnCompletionListener != null) {
-                                                    mOnCompletionListener.onCompletion(mMediaPlayer);
+                                                    if (mOnCompletionListener != null) {
+                                                        mOnCompletionListener.onCompletion(mMediaPlayer);
+                                                    }
                                                 }
-                                            }
-                                        })
-                                .setCancelable(false)
-                                .show();
+                                            })
+                                    .setCancelable(false)
+                                    .show();
+                        }catch (Exception e){
+//                            WindowManager$BadTokenException: Unable to add window -- token null is not for an application
+                            e.printStackTrace();
+                        }
                     }
                     return true;
                 }
@@ -572,6 +594,7 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
 
         public void surfaceCreated(SurfaceHolder holder) {
             mSurfaceHolder = holder;
+            resetHolderBackground();
             openVideo();
         }
 

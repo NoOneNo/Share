@@ -34,7 +34,8 @@ public class TopicDraftHelper {
         List<String> img = topicDraft.getUrlList();
         if (!CommonUtil.isEmpty(img)) {
             for (String url : img) {
-                imageUrls.add(WBUtil.getWBImgUrl(url));
+                String wbImgType = WBUtil.getWBImgType();
+                imageUrls.add(WBUtil.getWBImgUrl(url, wbImgType));
                 imageLargeUrls.add(WBUtil.getWBLargeImgUrl(url));
             }
             topic.setImageUrls(imageUrls);
