@@ -408,7 +408,7 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
                             (seekToPosition != 0 || getCurrentPosition() > 0)) {
                         if (mMediaController != null) {
 //                            // Show the media controls when we're paused into a video and make 'em stick.
-                            mMediaController.show(0);
+                            mMediaController.show();
                         }
                     }
                 }
@@ -422,7 +422,7 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
 
             if (mMediaController != null) {
                 // Show the media controls when we're paused into a video and make 'em stick.
-                mMediaController.show(0);
+                mMediaController.show();
             }
 
             setBackground(null);
