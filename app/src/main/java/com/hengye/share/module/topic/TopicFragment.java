@@ -120,6 +120,8 @@ public class TopicFragment extends StatusFragment<Topic> implements TopicMvpView
     protected void onLazyLoad() {
         if (!UserUtil.isUserEmpty()) {
             loadTopic();
+        }else{
+            showEmpty();
         }
     }
 

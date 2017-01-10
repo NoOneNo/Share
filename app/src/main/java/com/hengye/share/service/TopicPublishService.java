@@ -181,7 +181,7 @@ public class TopicPublishService extends Service {
     }
 
     protected void handlePublishFinish() {
-        if (SettingHelper.isVibrationOn()) {
+        if (SettingHelper.isVibrationFeedBack()) {
             ViewUtil.vibrate();
         }
     }

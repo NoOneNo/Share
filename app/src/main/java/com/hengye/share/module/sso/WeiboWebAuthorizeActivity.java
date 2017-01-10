@@ -73,6 +73,7 @@ public class WeiboWebAuthorizeActivity extends BaseActivity {
     LoadingDialog mLoadingDialog;
     WebView mWebView;
     WeiboApp mApp;
+    View mLoading;
     String mAccount, mPassword;
     boolean mHasAutoFillAccount = false;
 
@@ -103,6 +104,7 @@ public class WeiboWebAuthorizeActivity extends BaseActivity {
 
         mLoadingDialog = new LoadingDialog(this, getString(R.string.tip_loading));
 
+        mLoading = findViewById(R.id.loading);
         mWebView = (WebView) findViewById(R.id.web_view);
 
         mWebView.setWebViewClient(new WeiboWebViewClient());
@@ -152,6 +154,7 @@ public class WeiboWebAuthorizeActivity extends BaseActivity {
                         }else {
                             ToastUtil.showToast(R.string.tip_unpredictable_error);
                         }
+                        mLoading.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -189,9 +192,17 @@ public class WeiboWebAuthorizeActivity extends BaseActivity {
             return true;
         }
 
+        @Override
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
             super.onReceivedError(view, request, error);
             ToastUtil.showToast("出现错误");
+            mLoading.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            mLoading.setVisibility(View.GONE);
         }
     }
 
@@ -217,8 +228,8 @@ public class WeiboWebAuthorizeActivity extends BaseActivity {
                         mHasAutoFillAccount = true;
                     }
                 }
+                mLoading.setVisibility(View.GONE);
             }
-            super.onProgressChanged(view, newProgress);
         }
     }
 

@@ -169,7 +169,7 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
                         .getWBService()
                         .listUserTopic(params)
                         .flatMap(flatWBTopics())
-                        .retry(8, RxUtil.retryIfNotNetworkException());
+                        .retry(8, RxUtil.retryIfWBServicePauseException());
         }
     }
 

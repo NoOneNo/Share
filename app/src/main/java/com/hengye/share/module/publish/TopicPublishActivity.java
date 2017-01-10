@@ -141,17 +141,18 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     private void initView() {
         changeTitleStyle(mTopicDraft.getType());
 
-        getToolbar().setNavigationIcon(null);
         Bitmap avatarBitmap = UserUtil.getCurrentUser().getUserAvatarBitmap();
         if (avatarBitmap != null) {
             int size = ResUtil.getDimensionPixelSize(R.dimen.icon_size_normal);
 //            int sample = BitmapUtil.findBestSampleSize(avatarBitmap.getWidth(), avatarBitmap.getHeight(), size, size);
             avatarBitmap = Bitmap.createScaledBitmap(avatarBitmap, size, size, true);
-            if (avatarBitmap != null) {
-                BitmapDrawable bd = new BitmapDrawable(getResources(), avatarBitmap);
-                getToolbar().setContentInsetStartWithNavigation(ViewUtil.dp2px(10.0f));
-                getToolbar().setNavigationIcon(bd, true);
-            }
+        }
+        if (avatarBitmap != null) {
+            Drawable bd = new BitmapDrawable(getResources(), avatarBitmap);
+            getToolbar().setContentInsetStartWithNavigation(ViewUtil.dp2px(10.0f));
+            getToolbar().setNavigationIcon(bd, true);
+        }else{
+            getToolbar().setNavigationIcon(null);
         }
 
         String space = "";

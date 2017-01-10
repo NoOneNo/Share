@@ -2,15 +2,18 @@ package com.hengye.share.ui.widget.pulltorefresh;
 
 import android.content.Context;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AbsListView;
 
 import com.hengye.share.R;
+import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.module.util.encapsulation.view.recyclerview.HeaderAdapter;
 import com.hengye.share.ui.widget.FooterLoadStateView;
 import com.hengye.share.ui.widget.common.CommonListView;
+import com.hengye.share.util.L;
 
 /**
  * Created by yuhy on 2016/10/12.
@@ -48,10 +51,35 @@ public class PullToRefreshLayout extends com.hengye.swiperefresh.PullToRefreshLa
             } else {
                 return false;
             }
-        }else if(mListView != null){
+        } else if (mListView != null) {
             return true;
         } else {
             return false;
+        }
+    }
+
+    private boolean needLoading(RecyclerView recyclerView) {
+        if (SettingHelper.isPreRead() && recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
+
+            LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+
+            int totalItemCount = layoutManager.getItemCount();
+
+            if (totalItemCount > 6) {
+                //预加载，提前5个位置就加载更多
+                int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+                int childCount = layoutManager.getChildCount();
+//                int state = recyclerView.getScrollState();
+                return childCount > 0 &&
+                        lastVisibleItemPosition >= totalItemCount - 6;
+//                &&
+//                        state == RecyclerView.SCROLL_STATE_IDLE;
+            } else {
+                return !ViewCompat.canScrollVertically(recyclerView, 1);
+            }
+
+        } else {
+            return !ViewCompat.canScrollVertically(recyclerView, 1);
         }
     }
 
@@ -63,16 +91,14 @@ public class PullToRefreshLayout extends com.hengye.swiperefresh.PullToRefreshLa
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     super.onScrolled(recyclerView, dx, dy);
-
-                    boolean canScrollDown = ViewCompat.canScrollVertically(recyclerView, 1);
-
-                    if (canLoadMore() && !canScrollDown && dy > 0) {
+                    if (canLoadMore() && needLoading(recyclerView) && dy > 0) {
+//                        L.debug("auto loading start");
                         startLoading();
                     }
                 }
             });
             return true;
-        } else if (getTarget() instanceof CommonListView) {
+        } else if (target instanceof CommonListView) {
             mListView = (CommonListView) target;
             mListView.addOnScrollListener(new AbsListView.OnScrollListener() {
                 @Override
@@ -80,10 +106,17 @@ public class PullToRefreshLayout extends com.hengye.swiperefresh.PullToRefreshLa
                     // 当不滚动时
                     if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
                         // 判断是否滚动到底部
-                        if (view.getLastVisiblePosition() == view.getCount() - 1) {
-                            if (!isLoadFail() && !isLoading() && isLoadEnable()) {
-                                startLoading();
-                            }
+                        //增加预加载
+                        boolean needLoading;
+                        if (SettingHelper.isPreRead()) {
+                            needLoading = view.getLastVisiblePosition() >= view.getCount() - 6;
+                        } else {
+                            needLoading = view.getLastVisiblePosition() == view.getCount() - 1;
+                        }
+
+                        if (needLoading && canLoadMore()) {
+//                            L.debug("auto loading start");
+                            startLoading();
                         }
                     }
                 }
@@ -99,11 +132,11 @@ public class PullToRefreshLayout extends com.hengye.swiperefresh.PullToRefreshLa
 
     @Override
     public void showLoading() {
-        if(canCustomFooter()) {
+        if (canCustomFooter()) {
             if (mHeaderAdapter != null) {
                 getFooterLoadStateView().showLoading();
                 mHeaderAdapter.setFooter(getFooterLoadStateView());
-            }else if(mListView != null){
+            } else if (mListView != null) {
                 removeListViewFooters();
                 getFooterLoadStateView().showLoading();
                 addListViewFooters();
@@ -113,11 +146,11 @@ public class PullToRefreshLayout extends com.hengye.swiperefresh.PullToRefreshLa
 
     @Override
     public void showLoadFail() {
-        if(canCustomFooter()) {
+        if (canCustomFooter()) {
             if (mHeaderAdapter != null) {
                 getFooterLoadStateView().showLoadFail();
                 mHeaderAdapter.setFooter(getFooterLoadStateView());
-            }else if(mListView != null){
+            } else if (mListView != null) {
                 removeListViewFooters();
                 getFooterLoadStateView().showLoadFail();
                 addListViewFooters();
@@ -127,18 +160,18 @@ public class PullToRefreshLayout extends com.hengye.swiperefresh.PullToRefreshLa
 
     @Override
     public void showEnd() {
-        if(canCustomFooter()) {
+        if (canCustomFooter()) {
             if (mHeaderAdapter != null) {
-                if(mHeaderAdapter.getBasicItemCount() != 0) {
+                if (mHeaderAdapter.getBasicItemCount() != 0) {
                     getFooterLoadStateView().showEnding();
                     mHeaderAdapter.setFooter(getFooterLoadStateView());
-                }else{
+                } else {
                     mHeaderAdapter.removeFooter();
                 }
-            }else if(mListView != null){
+            } else if (mListView != null) {
                 removeListViewFooters();
                 int actualChildCount = mListView.getCount() - mListView.getHeaderViewsCount() - mListView.getFooterViewsCount();
-                if(actualChildCount > 0){
+                if (actualChildCount > 0) {
                     getFooterLoadStateView().showEnding();
                     addListViewFooters();
                 }
@@ -146,22 +179,22 @@ public class PullToRefreshLayout extends com.hengye.swiperefresh.PullToRefreshLa
         }
     }
 
-    private void removeListViewFooters(){
+    private void removeListViewFooters() {
         mListView.removeFooterView(getFooterLoadStateView());
     }
 
-    private void addListViewFooters(){
+    private void addListViewFooters() {
         mListView.addFooterView(getFooterLoadStateView(), null, false);
     }
 
-    private FooterLoadStateView getFooterLoadStateView(){
-        if(mFooterLoadStateView == null){
+    private FooterLoadStateView getFooterLoadStateView() {
+        if (mFooterLoadStateView == null) {
             mFooterLoadStateView = new FooterLoadStateView(getContext());
             mFooterLoadStateView.setOnLoadStateClickListener(new FooterLoadStateView.onLoadStateClickListener() {
                 @Override
                 public void onLoadStateClick(View v, int state) {
-                    if(state == FooterLoadStateView.STATE_LOAD_FAIL ||
-                            state == FooterLoadStateView.STATE_LOAD_MORE){
+                    if (state == FooterLoadStateView.STATE_LOAD_FAIL ||
+                            state == FooterLoadStateView.STATE_LOAD_MORE) {
                         onShowLoading();
                         postDelayed(new Runnable() {
                             @Override

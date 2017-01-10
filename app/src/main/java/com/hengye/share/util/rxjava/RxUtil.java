@@ -1,6 +1,7 @@
 package com.hengye.share.util.rxjava;
 
 import com.hengye.share.module.util.encapsulation.base.TaskState;
+import com.hengye.share.util.http.retrofit.weibo.WBApiException;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
 import java.util.ArrayList;
@@ -41,8 +42,22 @@ public class RxUtil {
         }
     };
 
+    static final Predicate<? super Throwable> RETRY_SERVICE_PAUSE_EXCEPTION = new Predicate<Throwable>() {
+        @Override
+        public boolean test(Throwable throwable) throws Exception {
+            if(throwable instanceof WBApiException){
+                return ((WBApiException)throwable).isServicePause();
+            }
+            return false;
+        }
+    };
+
     public static Predicate<? super Throwable> retryIfNotNetworkException() {
         return RETRY_IF_NOT_NETWORK_EXCEPTION;
+    }
+
+    public static Predicate<? super Throwable> retryIfWBServicePauseException() {
+        return RETRY_SERVICE_PAUSE_EXCEPTION;
     }
 
 

@@ -27,9 +27,9 @@ public class WBServiceProxyHandler implements InvocationHandler {
                     flatMap(new Function<Throwable, Observable<?>>() {
                                 @Override
                                 public Observable<?> apply(Throwable throwable) {
-                                    WBServiceErrorHandler.getInstance().checkError(throwable);
+                                    WBApiException wbApiException = WBServiceErrorHandler.getInstance().checkError(throwable);
 
-                                    return Observable.error(throwable);
+                                    return Observable.error(wbApiException != null ? wbApiException : throwable);
                                 }
                             }
                     );

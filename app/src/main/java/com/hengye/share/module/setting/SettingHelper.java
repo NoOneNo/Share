@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import com.hengye.share.module.base.BaseApplication;
 import com.hengye.share.R;
+import com.hengye.share.util.NetworkUtil;
 import com.hengye.share.util.ResUtil;
 
 import java.util.HashMap;
@@ -178,7 +179,11 @@ public class SettingHelper {
         }else if("3".equals(value)){
             return 70;
         }else if("4".equals(value)){
-            return 50;
+            if(NetworkUtil.isWifiType()){
+                return 50;
+            }else{
+                return 30;
+            }
         }else{
             return 30;
         }
@@ -272,7 +277,7 @@ public class SettingHelper {
     }
 
     //显示头像
-    public static Set<String> isShowAvatar(){
+    private static Set<String> isShowAvatar(){
         return getStringSet(KEY_HABIT_SHOW_AVATAR);
     }
 

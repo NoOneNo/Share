@@ -21,6 +21,11 @@ import java.util.List;
 
 public abstract class StatusFragment<T> extends RecyclerRefreshFragment<T> {
 
+    @Override
+    public int getContentResId() {
+        return R.layout.fragment_recycler_refresh_vertical;
+    }
+
     private LinearLayoutManager mLinearLayoutManager;
 
     @Override

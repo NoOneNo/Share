@@ -68,7 +68,9 @@ public class CommonToolBar extends Toolbar {
     private void adjustNavigationPadding(int size){
         int actionBarHeight = ViewUtil.getActionBarHeight();
         int padding = (actionBarHeight - size) / 2;
-        getNavigation().setPadding(0, padding, 0, padding);
+        if(getNavigation() != null) {
+            getNavigation().setPadding(0, padding, 0, padding);
+        }
     }
 
     private static final int DOUBLE_TAP_TIMEOUT = ViewConfiguration.getDoubleTapTimeout();

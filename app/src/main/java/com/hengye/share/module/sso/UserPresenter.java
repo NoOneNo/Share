@@ -27,6 +27,7 @@ public class UserPresenter extends RxPresenter<UserMvpView> {
 
     public void loadWBUserInfo(String uid, String name){
         if(CommonUtil.isEmpty(uid, name)){
+            getMvpView().loadSuccess(null);
             return;
         }
 

@@ -29,11 +29,9 @@ public class WBServiceErrorHandler {
         return ourInstance;
     }
 
-    private WBServiceErrorHandler() {
-    }
+    private WBServiceErrorHandler() {}
 
-
-    public void checkError(Throwable throwable) {
+    public WBApiException checkError(Throwable throwable) {
         WBApiException apiException = null;
         if (throwable instanceof HttpException) {
             HttpException httpException = (HttpException) throwable;
@@ -43,6 +41,7 @@ public class WBServiceErrorHandler {
         }
 
         handleApiException(apiException);
+        return apiException;
     }
 
     private WBApiException checkErrorFromResponse(Response response) {
