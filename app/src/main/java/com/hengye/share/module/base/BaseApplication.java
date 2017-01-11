@@ -70,7 +70,7 @@ public class BaseApplication extends Application{
 					L.debug("app切到后台");
 					isForeground = false;
 					//如果开启了视频播放，关闭；
-					stopService(new Intent(BaseApplication.this, VideoPlayService.class));
+					VideoPlayService.stop();
 				}
 			}
 		});
@@ -79,9 +79,10 @@ public class BaseApplication extends Application{
 		registerReceiver(new NetworkUtil.ObserveNetworkReceiver(), intentFilter);
 
 //		SkinManager.setup(this);
+		//如果程序是从被销毁恢复，栈中GuidanceActivity已不存在，所以不是所有初始化都可以放到GuidanceActivity
 		//放到GuidanceActivity初始化
 		//初始化volley
-//		RequestManager.init(this, null, MAX_NETWORK_CACHE_SIZE);
+		RequestManager.init(this, null, MAX_NETWORK_CACHE_SIZE);
 //		//初始化腾讯bugly
 //		CrashReport.initCrashReport(BaseApplication.getInstance(), "900019432", false);
 //		//初始化腾讯x5

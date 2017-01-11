@@ -95,7 +95,7 @@ public class GuidanceActivity extends BaseActivity {
         checkUpdateIfNeed();
 
         //初始化volley
-		RequestManager.init(this, null, MAX_NETWORK_CACHE_SIZE);
+//		RequestManager.init(this, null, MAX_NETWORK_CACHE_SIZE);
         //初始化腾讯bugly
         if(!BuildConfig.DEBUG) {
             CrashReport.initCrashReport(BaseApplication.getInstance(), ThirdPartyUtils.getAppKeyForBugly(), false);

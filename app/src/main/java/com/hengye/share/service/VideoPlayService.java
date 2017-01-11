@@ -21,8 +21,10 @@ import android.widget.FrameLayout;
 
 import com.google.gson.JsonObject;
 import com.hengye.share.R;
+import com.hengye.share.module.base.BaseApplication;
 import com.hengye.share.ui.widget.media.MediaController;
 import com.hengye.share.ui.widget.media.VideoView;
+import com.hengye.share.util.ApplicationUtil;
 import com.hengye.share.util.GsonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.ViewUtil;
@@ -43,6 +45,14 @@ public class VideoPlayService extends Service implements View.OnClickListener {
         context.startService(intent);
     }
 
+    public static void stop(){
+        if(RUNNING){
+            ApplicationUtil.getContext().stopService(new Intent(ApplicationUtil.getContext(), VideoPlayService.class));
+        }
+    }
+
+    public static boolean RUNNING = false;
+
     WindowManager mWindowManager;
     LayoutInflater mLayoutInflater;
     Handler mHandler = new Handler();
@@ -57,6 +67,8 @@ public class VideoPlayService extends Service implements View.OnClickListener {
     @Override
     public void onCreate() {
         super.onCreate();
+        RUNNING = true;
+
         L.debug("VideoPlayService onCreate()");
 
         initView();
@@ -83,6 +95,7 @@ public class VideoPlayService extends Service implements View.OnClickListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        RUNNING = false;
         mWindowManager.removeView(mParent);
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
