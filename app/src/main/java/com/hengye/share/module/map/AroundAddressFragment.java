@@ -93,7 +93,7 @@ public class AroundAddressFragment extends RecyclerRefreshFragment<Address> impl
                 intent.putExtra(EXTRA_ADDRESS, address);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
-                L.debug("onClick Address : {}", address);
+                L.debug("onClick Address : %s", address);
             }
         });
 
@@ -123,12 +123,12 @@ public class AroundAddressFragment extends RecyclerRefreshFragment<Address> impl
                     mPresenter.loadAroundAddress(true);
                     //解析定位结果
                     String result = TestLocationActivity.Utils.getLocationStr(loc);
-                    L.debug("定位成功 : {}", result);
+                    L.debug("定位成功 : %s", result);
                 } else {
                     mCurrentLocationTxt.setText(R.string.tip_location_fail);
                     L.debug("定位失败");
                     if(loc != null){
-                        L.debug("错误信息 : {}", loc);
+                        L.debug("错误信息 : %s", loc);
                     }
                 }
             }

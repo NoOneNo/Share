@@ -65,11 +65,11 @@ public class GuidanceActivity extends BaseActivity {
             init();
             end = System.currentTimeMillis();
             long consume = end - start;
-            long waitTime = DEFAULT_WAIT_DURATION - consume;
-            if (waitTime < 0 || waitTime > DEFAULT_WAIT_DURATION) {
-                waitTime = 0;
-            }
-            L.debug("GuidanceActivity init consume : {}, waitTime : {}", consume, waitTime);
+//            long waitTime = DEFAULT_WAIT_DURATION - consume;
+//            if (waitTime < 0 || waitTime > DEFAULT_WAIT_DURATION) {
+//                waitTime = 0;
+//            }
+            L.debug("GuidanceActivity init consume : %s", consume);
             getHandler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -77,7 +77,7 @@ public class GuidanceActivity extends BaseActivity {
                     startActivity(TopicActivity.class);
                     finish();
                 }
-            }, waitTime);
+            }, DEFAULT_WAIT_DURATION);
         }
     }
 
@@ -86,7 +86,7 @@ public class GuidanceActivity extends BaseActivity {
         super.onDestroy();
     }
 
-    private final long DEFAULT_WAIT_DURATION = 1000;
+    private final long DEFAULT_WAIT_DURATION = 200;
     private long start, end;
 
     private void init(){

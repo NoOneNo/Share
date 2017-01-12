@@ -42,7 +42,7 @@ public class TopicDraftAdapter extends CommonAdapter<TopicDraft> {
 
         @Override
         public void bindData(Context context, TopicDraft topicDraft, int position) {
-            L.debug("topicDraft id : {}", topicDraft.getId());
+            L.debug("topicDraft id : %s", topicDraft.getId());
             registerOnClickListener(mSendAgain);
             Topic topic = topicDraft.getTopic();
             if (topic != null) {

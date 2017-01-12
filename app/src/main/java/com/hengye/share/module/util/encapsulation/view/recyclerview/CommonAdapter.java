@@ -248,7 +248,7 @@ public abstract class CommonAdapter<T> extends HeaderAdapter<ItemViewHolder>
                     mData.addAll(0, data.subList(0, position - 1));
                     notifyItemRangeInserted(getActualItemPosition(0), position);
 //                    scrollToPosition(getActualItemPosition(0));
-                    L.debug("notifyItemRangeInserted from : {} to : {}", 0, position);
+                    L.debug("notifyItemRangeInserted from : %s to : %s", 0, position);
                 }else{
                     L.debug("find equals at 0 not change");
                 }

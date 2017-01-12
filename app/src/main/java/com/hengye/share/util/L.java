@@ -1,7 +1,8 @@
 package com.hengye.share.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.hengye.share.BuildConfig;
+
+import timber.log.Timber;
 
 public class L {
 
@@ -9,38 +10,38 @@ public class L {
      * 手机Debug开关命令 adb shell setprop log.tag.com.hengye.share.util.L VERBOSE
      */
 
-    public final static Logger L = LoggerFactory.getLogger(L.class);
+//    public final static Logger L = LoggerFactory.getLogger(L.class);
 
-    public static void debug(String msg) {
-        L.info(msg);
+    public static void init(){
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        } else {
+            Timber.plant(new CrashReportingTree());
+        }
     }
 
-    public static void debug(String format, Object arg) {
-        L.info(format, arg);
+    public static void debug(String message, Object... args) {
+//        L.debug(message, args);
+        Timber.d(message, args);
     }
 
-    public static void debug(String format, Object arg1, Object arg2) {
-        L.info(format, arg1, arg2);
+    public static void i(String message, Object... args) {
+        Timber.i(message, args);
     }
 
-    public static void debug(String format, Object... argArray) {
-        L.info(format, argArray);
+    public static void w(String message, Object... args) {
+        Timber.w(message, args);
     }
 
-    public static void info(String msg) {
-        L.info(msg);
-    }
-
-    public static void info(String format, Object arg) {
-        L.info(format, arg);
+    public static void e(String message, Object... args) {
+        Timber.e(message, args);
     }
 
 
-    public static void info(String format, Object arg1, Object arg2) {
-        L.info(format, arg1, arg2);
-    }
-
-    public static void info(String format, Object... argArray) {
-        L.info(format, argArray);
+    /** A tree which logs important information for crash reporting. */
+    private static class CrashReportingTree extends Timber.Tree {
+        @Override protected void log(int priority, String tag, String message, Throwable t) {
+            //nothing
+        }
     }
 }

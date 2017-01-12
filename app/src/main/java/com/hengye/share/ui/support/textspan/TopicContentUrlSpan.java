@@ -101,7 +101,7 @@ public class TopicContentUrlSpan extends CharacterStyle implements ParcelableSpa
         //如果是网页已经替换成DataUtil.WEB_SCHEME
         String url = uri.toString();
 
-        L.debug("onClick url : {}", url);
+        L.debug("onClick url : %s", url);
         if (WBUtil.isWBAccountIdLink(url)) {
             Intent intent = new Intent(context, PersonalHomepageActivity.class);
             intent.putExtra("id", WBUtil.getIdFromWBAccountLink(url));
@@ -156,9 +156,9 @@ public class TopicContentUrlSpan extends CharacterStyle implements ParcelableSpa
                     }
                 }
             }).show();
-            L.debug("long click path : {}", path);
+            L.debug("long click path : %s", path);
             if(topicUrl != null){
-                L.debug("long click topicUrl : {}", topicUrl);
+                L.debug("long click topicUrl : %s", topicUrl);
             }
         }
 

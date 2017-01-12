@@ -37,7 +37,7 @@ public class RequestFactory {
                 new Response.Listener<WBUserInfo>() {
             @Override
             public void onResponse(WBUserInfo response) {
-                L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
+                L.debug("request success , url : %s, data : %s", ub.getRequestUrl(), response);
 
                 UserUtil.updateUserInfo(response);
             }
@@ -45,7 +45,7 @@ public class RequestFactory {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                L.debug("request fail , url : {}, error : {}", ub.getRequestUrl(), error);
+                L.debug("request fail , url : %s, error : %s", ub.getRequestUrl(), error);
             }
 
         });

@@ -128,7 +128,7 @@ public class StretchLoadingView extends LinearLayout {
 //        int margin = width / (targetCount * targetCount);
         int margin = (int)(imageSize * 0.4);
 
-        L.debug("imageSize is {}", imageSize);
+        L.debug("imageSize is %s", imageSize);
 
         mTargets.clear();
         int middleIndex = targetCount / 2;
@@ -156,7 +156,7 @@ public class StretchLoadingView extends LinearLayout {
             lp.height = (int)Math.ceil(imageSize * scaleE);
 
             requestLayout();
-            L.debug("change height : {}", lp.height);
+            L.debug("change height : %s", lp.height);
         }
     }
 
@@ -218,7 +218,7 @@ public class StretchLoadingView extends LinearLayout {
         View middleView = getMiddleView();
         float middleX = middleView == null ? 0 : middleView.getX();
 
-        L.debug("middlex : {}", middleX);
+        L.debug("middlex : %s", middleX);
         for (View target : mTargets) {
             float fromX = isStretch ? middleX :target.getX();
             float toX = isStretch ? target.getX() : middleX;

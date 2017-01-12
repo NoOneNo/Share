@@ -82,7 +82,7 @@ public class VideoPlayService extends Service implements View.OnClickListener {
 
         String topicId = intent.getStringExtra("topicId");
         String url = intent.getStringExtra("url");
-        L.debug("onStartCommand, topicId : {}, url : {}", topicId, url);
+        L.debug("onStartCommand, topicId : %s, url : %s", topicId, url);
         if (topicId == null) {
             handleFail();
         } else {

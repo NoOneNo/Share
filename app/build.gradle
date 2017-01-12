@@ -107,7 +107,9 @@ dependencies {
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 
-    compile 'org.slf4j:slf4j-android:1.7.12'
+    compile 'com.jakewharton.timber:timber:4.5.0'
+//    compile 'org.slf4j:slf4j-android:1.7.12'
+
 //    compile 'org.greenrobot:greendao:3.1.1'
     compile 'org.greenrobot:greendao:3.2.0'
     compile 'org.jsoup:jsoup:1.8.2'

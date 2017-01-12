@@ -464,14 +464,14 @@ public class TopicAdapter extends CommonAdapter<Topic>
                 , new Response.Listener<WBTopic>() {
             @Override
             public void onResponse(WBTopic response) {
-                L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
+                L.debug("request success , url : %s, data : %s", ub.getRequestUrl(), response);
                 ToastUtil.showToast(response != null ? "收藏成功" : "收藏失败");
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 ToastUtil.showToast("收藏失败");
-                L.debug("request fail , url : {}, error : {}", ub.getRequestUrl(), volleyError);
+                L.debug("request fail , url : %s, error : %s", ub.getRequestUrl(), volleyError);
             }
         }) {
             @Override

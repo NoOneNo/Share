@@ -156,7 +156,7 @@ public class SearchActivity extends BaseActivity implements SearchMvpView{
 
     @Override
     public void handleSearchUserData(List<UserInfo> userInfos) {
-        L.debug("handleSearchUserData invoke, userInfos : {}", userInfos);
+        L.debug("handleSearchUserData invoke, userInfos : %s", userInfos);
         mUserAdapter.refresh(userInfos);
     }
 

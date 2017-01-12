@@ -37,7 +37,7 @@ public class ParseTokenWeiboAuthListener implements WeiboAuthListener {
 
     @Override
     public void onWeiboException(WeiboException e) {
-        L.debug("sso : login by weibo occur exception : {}", e.toString());
+        L.debug("sso : login by weibo occur exception : %s", e.toString());
     }
 
 

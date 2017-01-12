@@ -116,7 +116,7 @@ public class WeiboWebLoginActivity extends BaseActivity {
 
             mUrl = url;
             view.loadUrl(url);
-            L.debug("overriderUrlLoading = {}", url);
+            L.debug("overriderUrlLoading = %s", url);
 
             return true;
         }

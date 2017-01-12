@@ -87,7 +87,7 @@ public class ImageWebViewFragment extends ImageBaseFragment {
             @Override
             public void onScaleChanged(WebView view, float oldScale, float newScale) {
                 super.onScaleChanged(view, oldScale, newScale);
-                L.debug("oldScale : {}, newScale : {}", oldScale, newScale);
+                L.debug("oldScale : %s, newScale : %s", oldScale, newScale);
                 if(mMinScale == 0){
                     mMinScale = newScale + 0.05f;//精度
                 }

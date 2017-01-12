@@ -54,7 +54,7 @@ public class WBServiceErrorHandler {
             String error = response.errorBody().string();
 
             wbApiException = GsonUtil.fromJson(error, WBApiException.class);
-            L.debug("checkErrorFromResponse : {}", error);
+            L.debug("checkErrorFromResponse : %s", error);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

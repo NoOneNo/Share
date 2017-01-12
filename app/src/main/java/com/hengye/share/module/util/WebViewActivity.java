@@ -167,11 +167,11 @@ public class WebViewActivity extends BaseActivity {
                         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                         ComponentName componentName = intent.resolveActivity(view.getContext().getPackageManager());
                         if (componentName != null) {
-                            L.debug("find url which is not http : {}", url);
+                            L.debug("find url which is not http : %s", url);
                             view.getContext().startActivity(intent);
                             return true;
                         } else {
-                            L.debug("find url which is not http , no app can open it: {}", url);
+                            L.debug("find url which is not http , no app can open it: %s", url);
                         }
                     }
                 }

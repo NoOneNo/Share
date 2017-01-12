@@ -97,7 +97,7 @@ public class TopicFavoritesFragment extends RecyclerRefreshFragment<TopicFavorit
                 new Response.Listener<WBTopicFavorites>() {
             @Override
             public void onResponse(WBTopicFavorites response) {
-                L.debug("request success , url : {}, data : {}", ub, response);
+                L.debug("request success , url : %s, data : %s", ub, response);
                 handleData(TopicFavorites.getTopicFavorites(response), isRefresh);
                 setTaskComplete(true);
             }
@@ -106,7 +106,7 @@ public class TopicFavoritesFragment extends RecyclerRefreshFragment<TopicFavorit
             @Override
             public void onErrorResponse(VolleyError error) {
                 setTaskComplete(false);
-                L.debug("request fail , url : {}, error : {}", ub, error);
+                L.debug("request fail , url : %s, error : %s", ub, error);
             }
 
         });

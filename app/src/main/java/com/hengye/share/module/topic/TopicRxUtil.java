@@ -166,7 +166,7 @@ public class TopicRxUtil {
                         }
                         topic.setUrlMap(topicUrlMap);
                     }
-                    L.debug("convert shortUrl to longUrl, total count : {}", shortExpandUrlMap.size());
+                    L.debug("convert shortUrl to longUrl, total count : %s", shortExpandUrlMap.size());
                 }
 
             }

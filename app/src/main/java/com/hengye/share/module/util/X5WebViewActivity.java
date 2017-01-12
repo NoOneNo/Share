@@ -158,18 +158,18 @@ public class X5WebViewActivity extends BaseActivity {
 
         mWebView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                L.debug("shouldOverrideUrlLoading url : {}", url);
+                L.debug("shouldOverrideUrlLoading url : %s", url);
                 if (url != null) {
                     Uri uri = Uri.parse(url);
                     if (!DataUtil.isHttpUrl(url)) {
                         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                         ComponentName componentName = intent.resolveActivity(view.getContext().getPackageManager());
                         if (componentName != null) {
-                            L.debug("find url which is not http : {}", url);
+                            L.debug("find url which is not http : %s", url);
                             view.getContext().startActivity(intent);
                             return true;
                         } else {
-                            L.debug("find url which is not http , no app can open it: {}", url);
+                            L.debug("find url which is not http , no app can open it: %s", url);
                         }
                     }else{
 //                        if(mIsWBUrl){
@@ -191,7 +191,7 @@ public class X5WebViewActivity extends BaseActivity {
 //                if(mIsWBUrl){
 //                    updateWBCookie(url);
 //                }
-                L.debug("find cookies url : {}, values is {}", url, mCookieManager.getCookie(url));
+                L.debug("find cookies url : %s, values is %s", url, mCookieManager.getCookie(url));
             }
 
             @Override
@@ -339,7 +339,7 @@ public class X5WebViewActivity extends BaseActivity {
 
             String[] cookies = cookie.split(";");
             for(String c : cookies){
-                L.debug("apply cookie : {}", c);
+                L.debug("apply cookie : %s", c);
                 mCookieManager.setCookie(url, c);
             }
 

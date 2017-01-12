@@ -409,7 +409,7 @@ public class TopicPublishService extends Service {
 
         @Override
         public void onError(Throwable e) {
-            L.debug("request fail, error : {}", e);
+            L.debug("request fail, error : %s", e);
             handlePublishFail(tp);
         }
 
@@ -423,7 +423,7 @@ public class TopicPublishService extends Service {
 
         @Override
         public void onNext(WBTopic wbTopic) {
-            L.debug("request success , data : {}", wbTopic);
+            L.debug("request success , data : %s", wbTopic);
             if (wbTopic != null) {
                 handlePublishSuccess(tp, Topic.getTopic(wbTopic));
             }
@@ -438,7 +438,7 @@ public class TopicPublishService extends Service {
 
         @Override
         public void onNext(WBTopic wbTopic) {
-            L.debug("request success , data : {}", wbTopic);
+            L.debug("request success , data : %s", wbTopic);
             if (wbTopic != null) {
                 handlePublishSuccess(tp, TopicComment.getComment(wbTopic));
             }
@@ -453,7 +453,7 @@ public class TopicPublishService extends Service {
 
         @Override
         public void onNext(WBTopicComment wbTopicComment) {
-            L.debug("request success , data : {}", wbTopicComment);
+            L.debug("request success , data : %s", wbTopicComment);
             if (wbTopicComment != null) {
                 handlePublishSuccess(tp, TopicComment.getComment(wbTopicComment));
             }
@@ -481,7 +481,7 @@ public class TopicPublishService extends Service {
             if (wbTopicComment != null && wbTopic != null) {
                 handlePublishSuccess(tp, TopicComment.getComment(wbTopicComment));
             } else {
-                L.debug("request fail , wbTopicComment : {}, wbTopic : {}", wbTopicComment, wbTopic);
+                L.debug("request fail , wbTopicComment : %s, wbTopic : %s", wbTopicComment, wbTopic);
                 throw new IllegalStateException("publish error");
             }
         }

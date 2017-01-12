@@ -357,7 +357,7 @@ public class WeiboWebAuthorizeActivity extends BaseActivity {
                     e.printStackTrace();
                 }
 
-                L.debug("封装后的url : \n{}",html);
+                L.debug("封装后的url : \n%s",html);
 
                 return html;
             } catch (Exception e) {

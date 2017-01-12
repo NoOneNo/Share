@@ -3,23 +3,16 @@ package com.hengye.share.module.base;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.support.multidex.MultiDex;
 
-import com.hengye.share.module.setting.SettingHelper;
-import com.hengye.share.module.update.CheckUpdateMvpImpl;
-import com.hengye.share.module.update.CheckUpdatePresenter;
 import com.hengye.share.service.VideoPlayService;
 import com.hengye.share.support.DefaultActivityLifecycleCallback;
 import com.hengye.share.util.AppUtils;
 import com.hengye.share.util.L;
 import com.hengye.share.util.NetworkUtil;
 import com.hengye.share.util.RequestManager;
-import com.hengye.share.util.ToastUtil;
-import com.tencent.bugly.crashreport.CrashReport;
-import com.tencent.smtt.sdk.QbSdk;
 
 public class BaseApplication extends Application{
 
@@ -38,7 +31,7 @@ public class BaseApplication extends Application{
 		init();
 		long end = System.currentTimeMillis();
 
-		L.debug("application onCreate consume : {}", end - start);
+		L.debug("application onCreate consume : %s", end - start);
 	}
 
 	@Override
@@ -50,7 +43,7 @@ public class BaseApplication extends Application{
 	private void init() {
 //		startService(new Intent(this, ShareService.class));
 		ourInstance = this;
-
+		L.init();
 		registerActivityLifecycleCallbacks(new DefaultActivityLifecycleCallback(){
 			boolean isForeground = false;
 

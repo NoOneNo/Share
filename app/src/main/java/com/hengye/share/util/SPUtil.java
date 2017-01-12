@@ -66,35 +66,35 @@ public class SPUtil extends ApplicationUtil{
         editor.apply();
     }
 
-    public static synchronized <T> T getModule(Type type, String name){
-        String json = getSharedPreferences().getString(name, null);
-        if(!TextUtils.isEmpty(json)){
-            try{
-                return GsonUtil.fromJson(json, type);
-            }catch (JsonParseException e){
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
-    public static synchronized <T> T getModule(Class<T> clazz, String name){
-        String json = getSharedPreferences().getString(name, null);
-        if(!TextUtils.isEmpty(json)){
-            try{
-                return GsonUtil.fromJson(json, clazz);
-            }catch (JsonSyntaxException e){
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
-
-    public static synchronized <T> void setModule(T t, String name){
-        SharedPreferences.Editor editor = getSharedPreferences().edit();
-        editor.putString(name, GsonUtil.toJson(t));
-        L.debug("save module, name : {}, json : {}", t.getClass().getSimpleName(), GsonUtil.toJson(t));
-        editor.apply();
-    }
+//    public static synchronized <T> T getModule(Type type, String name){
+//        String json = getSharedPreferences().getString(name, null);
+//        if(!TextUtils.isEmpty(json)){
+//            try{
+//                return GsonUtil.fromJson(json, type);
+//            }catch (JsonParseException e){
+//                e.printStackTrace();
+//            }
+//        }
+//        return null;
+//    }
+//
+//    public static synchronized <T> T getModule(Class<T> clazz, String name){
+//        String json = getSharedPreferences().getString(name, null);
+//        if(!TextUtils.isEmpty(json)){
+//            try{
+//                return GsonUtil.fromJson(json, clazz);
+//            }catch (JsonSyntaxException e){
+//                e.printStackTrace();
+//            }
+//        }
+//        return null;
+//    }
+//
+//
+//    public static synchronized <T> void setModule(T t, String name){
+//        SharedPreferences.Editor editor = getSharedPreferences().edit();
+//        editor.putString(name, GsonUtil.toJson(t));
+//        L.debug("save module, name : %s, json : %s", t.getClass().getSimpleName(), GsonUtil.toJson(t));
+//        editor.apply();
+//    }
 }

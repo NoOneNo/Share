@@ -73,7 +73,7 @@ public abstract class TabsFragment extends ViewPagerFragment {
         }
         getViewPager().setAdapter(mAdapter = new TabsAdapter(getFragmentManager()));
         int currentPosition = savedInstanceState == null ? getDefaultSelectPosition() : savedInstanceState.getInt("position");
-        L.debug("currentPosition : {}, savedInstanceState == null is : {}", currentPosition, savedInstanceState == null);
+        L.debug("currentPosition : %s, savedInstanceState == null is : %s", currentPosition, savedInstanceState == null);
         getViewPager().setCurrentItem(currentPosition);
     }
 

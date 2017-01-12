@@ -69,7 +69,7 @@ public class UserListPresenter extends RxPresenter<UserListMvpView> {
                 new Response.Listener<WBUserInfos>() {
                     @Override
                     public void onResponse(WBUserInfos response) {
-                        L.debug("request success , url : {}, data : {}", ub.getRequestUrl(), response);
+                        L.debug("request success , url : %s, data : %s", ub.getRequestUrl(), response);
                         if (getMvpView() != null) {
                             getMvpView().onTaskComplete(true, true);
 
@@ -86,7 +86,7 @@ public class UserListPresenter extends RxPresenter<UserListMvpView> {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                L.debug("request fail , url : {}, error : {}", ub.getRequestUrl(), error);
+                L.debug("request fail , url : %s, error : %s", ub.getRequestUrl(), error);
                 if (getMvpView() != null) {
                     getMvpView().onTaskComplete(true, true);
                 }
