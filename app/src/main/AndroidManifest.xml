@@ -90,6 +90,7 @@
 
         <activity
             android:name=".module.other.GuidanceActivity"
+            android:launchMode="singleTop"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:theme="@style/GuidanceTheme">

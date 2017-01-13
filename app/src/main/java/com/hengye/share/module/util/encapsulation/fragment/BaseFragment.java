@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hengye.share.module.base.ActivityHelper;
+import com.hengye.share.module.base.BaseApplication;
 import com.hengye.share.module.util.encapsulation.mvp.BasePresenter;
 import com.hengye.share.util.RequestManager;
 
@@ -98,6 +99,8 @@ public class BaseFragment extends Fragment implements ActivityHelper.ActivityAct
         }
         cancelPendingRequestsIfNeeded();
         detachMvpView();
+        //监控内存泄漏
+        BaseApplication.getRefWatcher(getContext()).watch(this);
     }
 
     @Override

@@ -16,6 +16,8 @@ import com.hengye.share.util.thirdparty.ThirdPartyUtils;
 import java.util.ArrayList;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import io.reactivex.ObservableSource;
 import io.reactivex.functions.Function;
 

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.support.multidex.MultiDex;
+import android.support.v4.app.Fragment;
 
 import com.hengye.share.service.VideoPlayService;
 import com.hengye.share.support.DefaultActivityLifecycleCallback;
@@ -13,6 +14,8 @@ import com.hengye.share.util.AppUtils;
 import com.hengye.share.util.L;
 import com.hengye.share.util.NetworkUtil;
 import com.hengye.share.util.RequestManager;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 
 public class BaseApplication extends Application{
 
@@ -43,6 +46,7 @@ public class BaseApplication extends Application{
 	private void init() {
 //		startService(new Intent(this, ShareService.class));
 		ourInstance = this;
+		refWatcher = LeakCanary.install(this);
 		L.init();
 		registerActivityLifecycleCallbacks(new DefaultActivityLifecycleCallback(){
 			boolean isForeground = false;
@@ -80,5 +84,11 @@ public class BaseApplication extends Application{
 //		CrashReport.initCrashReport(BaseApplication.getInstance(), "900019432", false);
 //		//初始化腾讯x5
 //		QbSdk.initX5Environment(BaseApplication.getInstance(), null);
+	}
+
+	private RefWatcher refWatcher;
+	public static RefWatcher getRefWatcher(Context context){
+		BaseApplication baseApplication = (BaseApplication) context.getApplicationContext();
+		return baseApplication.refWatcher;
 	}
 }

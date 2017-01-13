@@ -30,6 +30,8 @@ import com.hengye.share.util.thirdparty.AMapUtil;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 /**
  * Created by yuhy on 2016/12/6.
  */
@@ -78,10 +80,17 @@ public class AroundAddressFragment extends RecyclerRefreshFragment<Address> impl
             }
         });
 
+        DaggerAroundAddressComponent
+                .builder()
+                .aroundAddressPresenterModule(new AroundAddressPresenterModule(this))
+                .build()
+                .inject(this);
+
+        addPresenter(mPresenter);
         setAdapter(mAdapter = new AroundAddressAdapter(getContext(), new ArrayList<Address>()));
         setPager(mNumberPager = new NumberPager());
         setDataHandler(new DefaultDataHandler<>(mAdapter));
-        addPresenter(mPresenter = new AroundAddressPresenter(this));
+//        addPresenter(mPresenter = new AroundAddressPresenter(this));
         mPresenter.setPager(mNumberPager);
         ViewUtil.hideKeyBoardOnScroll(getRecyclerView(), mKeywordsTxt);
 
@@ -102,6 +111,7 @@ public class AroundAddressFragment extends RecyclerRefreshFragment<Address> impl
         initLocation();
     }
 
+    @Inject
     AroundAddressPresenter mPresenter;
     EditText mKeywordsTxt;
     TextView mCurrentLocationTxt;
