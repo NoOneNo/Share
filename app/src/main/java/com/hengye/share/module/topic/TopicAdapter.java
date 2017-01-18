@@ -52,7 +52,8 @@ public class TopicAdapter extends CommonAdapter<Topic>
         implements OnItemClickListener, OnItemLongClickListener, DialogInterface.OnClickListener {
 
     public static int mGalleryMaxWidth;
-    private Callback mCallback;
+//    private Callback mCallback;
+    private TopicPresenter mPresenter;
     private boolean mShowDeleteTopicOption;
     private Topic mLongClickTopic;
     private boolean mIsRetweetedLongClick;
@@ -105,8 +106,8 @@ public class TopicAdapter extends CommonAdapter<Topic>
                 ClipboardUtil.copyWBContent(topic.getContent());
                 break;
             case DialogBuilder.LONG_CLICK_TOPIC_DESTROY:
-                if(mCallback != null){
-                    mCallback.onDeleteTopic(topic);
+                if(mPresenter != null){
+                    mPresenter.deleteTopic(topic);
                 }
             default:
                 break;
@@ -117,13 +118,17 @@ public class TopicAdapter extends CommonAdapter<Topic>
         mShowDeleteTopicOption = show;
     }
 
-    public void setCallback(Callback callback){
-        mCallback = callback;
+    public void setPresenter(TopicPresenter topicPresenter){
+        mPresenter = topicPresenter;
     }
 
-    interface Callback{
-        void onDeleteTopic(Topic topic);
-    }
+//    public void setCallback(Callback callback){
+//        mCallback = callback;
+//    }
+//
+//    interface Callback{
+//        void onDeleteTopic(Topic topic);
+//    }
 
     @Override
     public boolean onItemLongClick(View view, int position) {
