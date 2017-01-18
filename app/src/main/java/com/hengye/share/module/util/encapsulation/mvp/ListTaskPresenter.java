@@ -1,7 +1,6 @@
 package com.hengye.share.module.util.encapsulation.mvp;
 
 import com.hengye.share.module.util.encapsulation.base.ListTaskCallBack;
-import com.hengye.share.module.util.encapsulation.base.Pager;
 import com.hengye.share.module.util.encapsulation.base.TaskState;
 
 /**
@@ -14,11 +13,11 @@ public class ListTaskPresenter<V extends MvpView & ListTaskCallBack> extends RxP
         super(mvpView);
     }
 
-    public class ListTaskSubscriber<T> extends BaseSubscriber<T>{
+    public class ListTaskObserver<T> extends BaseObserver<T> {
 
         protected boolean isRefresh;
 
-        public ListTaskSubscriber(boolean isRefresh){
+        public ListTaskObserver(boolean isRefresh){
             this.isRefresh = isRefresh;
         }
 
@@ -40,13 +39,22 @@ public class ListTaskPresenter<V extends MvpView & ListTaskCallBack> extends RxP
         }
     }
 
-    private Pager pager;
+    public class ListTaskSingleObserver<T> extends BaseSingleObserver<T>{
 
-    public Pager getPager() {
-        return pager;
-    }
+        protected boolean isRefresh;
 
-    public void setPager(Pager pager) {
-        this.pager = pager;
+        public ListTaskSingleObserver(boolean isRefresh){
+            this.isRefresh = isRefresh;
+        }
+
+        @Override
+        public void onSuccess(V v, T t) {
+            v.onTaskComplete(isRefresh, TaskState.STATE_SUCCESS);
+        }
+
+        @Override
+        public void onError(V v, Throwable e) {
+            v.onTaskComplete(isRefresh, TaskState.getFailState(e));
+        }
     }
 }

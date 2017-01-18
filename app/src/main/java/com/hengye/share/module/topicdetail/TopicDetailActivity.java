@@ -65,7 +65,6 @@ public class TopicDetailActivity extends BaseActivity implements View.OnClickLis
             finish();
             return;
         }
-//        addPresenter(mPresenter = new TopicDetailPresenter(this));
         initView();
     }
 

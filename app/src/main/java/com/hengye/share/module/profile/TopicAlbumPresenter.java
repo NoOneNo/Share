@@ -13,6 +13,7 @@ import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.http.retrofit.RetrofitManager;
 import com.hengye.share.util.rxjava.datasource.ObservableHelper;
+import com.hengye.share.util.rxjava.datasource.SingleHelper;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 import com.hengye.share.util.thirdparty.WBUtil;
 
@@ -23,13 +24,15 @@ import java.util.Map;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
+import io.reactivex.SingleObserver;
+import io.reactivex.SingleSource;
 import io.reactivex.functions.Function;
 
-public class TopicAlbumPresenter extends ListTaskPresenter<TopicAlbumMvpView> {
+public class TopicAlbumPresenter extends ListTaskPresenter<TopicAlbumContract.View> {
 
     private String uid, name;
 
-    public TopicAlbumPresenter(TopicAlbumMvpView mvpView) {
+    public TopicAlbumPresenter(TopicAlbumContract.View mvpView) {
         super(mvpView);
     }
 
@@ -102,18 +105,18 @@ public class TopicAlbumPresenter extends ListTaskPresenter<TopicAlbumMvpView> {
 //                    }
 //                })
 
-        ObservableHelper
+        SingleHelper
                 .justArrayList(findData())
-                .flatMap(new Function<ArrayList<Topic>, ObservableSource<ArrayList<Topic>>>() {
+                .flatMap(new Function<ArrayList<Topic>, SingleSource<ArrayList<Topic>>>() {
                     @Override
-                    public ObservableSource<ArrayList<Topic>> apply(ArrayList<Topic> topics) throws Exception {
+                    public SingleSource<ArrayList<Topic>> apply(ArrayList<Topic> topics) throws Exception {
                         if (topics == null || topics.isEmpty()) {
                             return RetrofitManager
                                     .getWBService()
                                     .listUserTopic(getParameter("0", true))
                                     .flatMap(flatWBTopics());
                         } else {
-                            return ObservableHelper.justArrayList(topics);
+                            return SingleHelper.justArrayList(topics);
                         }
                     }
                 })
@@ -122,10 +125,10 @@ public class TopicAlbumPresenter extends ListTaskPresenter<TopicAlbumMvpView> {
                 .subscribe(getTopicSubscriber(true));
     }
 
-    private Observer<ArrayList<Topic>> getTopicSubscriber(boolean isRefresh) {
-        return new ListTaskSubscriber<ArrayList<Topic>>(isRefresh) {
+    private SingleObserver<ArrayList<Topic>> getTopicSubscriber(boolean isRefresh) {
+        return new ListTaskSingleObserver<ArrayList<Topic>>(isRefresh) {
             @Override
-            public void onNext(TopicAlbumMvpView v, ArrayList<Topic> topics) {
+            public void onSuccess(TopicAlbumContract.View v, ArrayList<Topic> topics) {
 
                 if (isRefresh) {
                     saveData(topics);
@@ -136,21 +139,21 @@ public class TopicAlbumPresenter extends ListTaskPresenter<TopicAlbumMvpView> {
         };
     }
 
-    private Function<WBTopics, Observable<ArrayList<Topic>>> mFlatWBTopics;
+    private Function<WBTopics, SingleSource<ArrayList<Topic>>> mFlatWBTopics;
 
-    private Function<WBTopics, Observable<ArrayList<Topic>>> flatWBTopics() {
+    private Function<WBTopics, SingleSource<ArrayList<Topic>>> flatWBTopics() {
         if (mFlatWBTopics == null) {
-            mFlatWBTopics = new Function<WBTopics, Observable<ArrayList<Topic>>>() {
+            mFlatWBTopics = new Function<WBTopics, SingleSource<ArrayList<Topic>>>() {
                 @Override
-                public Observable<ArrayList<Topic>> apply(WBTopics wbTopics) throws Exception {
-                    return ObservableHelper.justArrayList(Topic.getTopics(wbTopics));
+                public SingleSource<ArrayList<Topic>> apply(WBTopics wbTopics) throws Exception {
+                    return SingleHelper.justArrayList(Topic.getTopics(wbTopics));
                 }
             };
         }
         return mFlatWBTopics;
     }
 
-    public ArrayList<Topic> findData() {
+    private ArrayList<Topic> findData() {
         if(isNeedCache()) {
             return ShareJson.findData(getModelName(), new TypeToken<ArrayList<Topic>>() {
             }.getType());
@@ -158,20 +161,20 @@ public class TopicAlbumPresenter extends ListTaskPresenter<TopicAlbumMvpView> {
         return null;
     }
 
-    public void saveData(List<Topic> data) {
+    private void saveData(List<Topic> data) {
         if (isNeedCache()) {
             ShareJson.saveListData(getModelName(), data);
         }
     }
 
-    public boolean isNeedCache() {
+    private boolean isNeedCache() {
         return UserUtil.isCurrentUser(uid);
     }
 
 
     private String mModuleName;
 
-    public String getModelName() {
+    private String getModelName() {
         if (mModuleName == null) {
             mModuleName = TopicAlbumPresenter.class.getSimpleName()
                     + uid

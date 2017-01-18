@@ -5,10 +5,9 @@ package com.hengye.share.module.util.encapsulation.mvp;
  * attachView() and detachView(). It also handles keeping a reference to the mvpView that
  * can be accessed from the children classes by calling getMvpView().
  */
-public class BasePresenter<V extends MvpView> implements Presenter<V> {
+public class BasePresenter<V extends MvpView> implements MvpPresenter<V> {
 
     private V mMvpView;
-
 
     public BasePresenter(V mvpView){
         attachView(mvpView);
@@ -16,6 +15,7 @@ public class BasePresenter<V extends MvpView> implements Presenter<V> {
 
     @Override
     public void attachView(V mvpView) {
+        mvpView.setPresenter(this);
         mMvpView = mvpView;
     }
 

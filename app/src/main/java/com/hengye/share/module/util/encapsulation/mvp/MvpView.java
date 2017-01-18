@@ -8,4 +8,5 @@ package com.hengye.share.module.util.encapsulation.mvp;
  */
 public interface MvpView {
 
+    void setPresenter(MvpPresenter presenter);
 }

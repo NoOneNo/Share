@@ -10,6 +10,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import io.reactivex.SingleSource;
 import io.reactivex.functions.Function;
 
 /**
@@ -25,12 +26,12 @@ public class GroupManageLocalDataSource implements GroupManageDataSource {
     }
 
     @Override
-    public Observable<Boolean> updateGroupList(List<GroupList> groupLists) {
-        return ObservableHelper
+    public Single<Boolean> updateGroupList(List<GroupList> groupLists) {
+        return SingleHelper
                 .justArrayList(groupLists)
-                .flatMap(new Function<List<GroupList>, Observable<Boolean>>() {
+                .flatMap(new Function<ArrayList<GroupList>, SingleSource<Boolean>>() {
                     @Override
-                    public Observable<Boolean> apply(List<GroupList> groupLists) {
+                    public SingleSource<Boolean> apply(ArrayList<GroupList> groupLists) throws Exception {
                         boolean isSuccess = true;
                         try {
                             UserUtil.updateGroupList(groupLists, false);
@@ -38,7 +39,7 @@ public class GroupManageLocalDataSource implements GroupManageDataSource {
                             e.printStackTrace();
                             isSuccess = false;
                         }
-                        return ObservableHelper.just(isSuccess);
+                        return Single.just(isSuccess);
                     }
                 });
     }

@@ -22,6 +22,7 @@ import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.http.retrofit.RetrofitManager;
 import com.hengye.share.util.rxjava.RxUtil;
 import com.hengye.share.util.rxjava.datasource.ObservableHelper;
+import com.hengye.share.util.rxjava.datasource.SingleHelper;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 import com.hengye.share.util.thirdparty.WBUtil;
 
@@ -32,15 +33,18 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.SingleSource;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 
-public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
+public class TopicPresenter extends ListDataPresenter<Topic, TopicContract.View> {
 
     private TopicGroup mTopicGroup;
     private String uid, name;
 
-    public TopicPresenter(TopicMvpView mvpView, TopicGroup topicGroup) {
+    public TopicPresenter(TopicContract.View mvpView, TopicGroup topicGroup) {
         super(mvpView);
         mTopicGroup = topicGroup;
     }
@@ -51,14 +55,14 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
 
     public void loadWBTopic(String id, final boolean isRefresh, boolean isLoadId) {
         getMvpView().onTaskStart();
-        addDisposable(getTopics(id, isRefresh, isLoadId)
+        getTopics(id, isRefresh, isLoadId)
                 .flatMap(TopicRxUtil.flatShortUrl())
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribeWith(getTopicsSubscriber(isRefresh)));
+                .subscribeWith(getTopicsSubscriber(isRefresh));
     }
 
-    private Observable<WBTopicIds> getWBTopicIds(String id) {
+    private Single<WBTopicIds> getWBTopicIds(String id) {
         switch (mTopicGroup.topicType) {
             case ALL:
             default:
@@ -76,7 +80,7 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
         }
     }
 
-    private Observable<WBTopics> getWBTopics(String id, final boolean isRefresh) {
+    private Single<WBTopics> getWBTopics(String id, final boolean isRefresh) {
         switch (mTopicGroup.topicType) {
             case ALL:
             default:
@@ -94,7 +98,7 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
         }
     }
 
-    private Observable<ArrayList<Topic>> getTopics(String id, final boolean isRefresh, boolean isLoadId) {
+    private Single<ArrayList<Topic>> getTopics(String id, final boolean isRefresh, boolean isLoadId) {
         switch (mTopicGroup.topicType) {
             case ALL:
             case BILATERAL:
@@ -168,8 +172,9 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
                 return RetrofitManager
                         .getWBService()
                         .listUserTopic(params)
-                        .flatMap(flatWBTopics())
-                        .retry(8, RxUtil.retryIfWBServicePauseException());
+                        .flatMap(flatWBTopics());
+            //// TODO: 2017/1/18 add retry
+//                        .retry(8, RxUtil.retryIfWBServicePauseException());
         }
     }
 
@@ -194,18 +199,18 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
         return ub.getParameters();
     }
 
-    private DisposableObserver<List<Topic>> getTopicsSubscriber(final boolean isRefresh) {
-        return new ListDataSubscriber(isRefresh);
+    private SingleObserver <List<Topic>> getTopicsSubscriber(final boolean isRefresh) {
+        return new ListDataSingleObserver(isRefresh);
     }
 
-    Function<WBTopics, Observable<ArrayList<Topic>>> mFlatWBTopics;
+    Function<WBTopics, SingleSource<ArrayList<Topic>>> mFlatWBTopics;
 
-    private Function<WBTopics, Observable<ArrayList<Topic>>> flatWBTopics() {
+    private Function<WBTopics, SingleSource<ArrayList<Topic>>> flatWBTopics() {
         if (mFlatWBTopics == null) {
-            mFlatWBTopics = new Function<WBTopics, Observable<ArrayList<Topic>>>() {
+            mFlatWBTopics = new Function<WBTopics, SingleSource<ArrayList<Topic>>>() {
                 @Override
-                public Observable<ArrayList<Topic>> apply(WBTopics wbTopics) {
-                    return ObservableHelper.justArrayList(Topic.getTopics(wbTopics));
+                public SingleSource<ArrayList<Topic>> apply(WBTopics wbTopics) {
+                    return SingleHelper.justArrayList(Topic.getTopics(wbTopics));
 //                    return ObservableHelper.just(Topic.getTopics(wbTopics));
                 }
             };
@@ -213,30 +218,30 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
         return mFlatWBTopics;
     }
 
-    Function<WBTopicComments, Observable<ArrayList<Topic>>> mFlatWBTopicComments;
+    Function<WBTopicComments, SingleSource<ArrayList<Topic>>> mFlatWBTopicComments;
 
-    private Function<WBTopicComments, Observable<ArrayList<Topic>>> flatWBTopicComments() {
+    private Function<WBTopicComments, SingleSource<ArrayList<Topic>>> flatWBTopicComments() {
         if (mFlatWBTopicComments == null) {
-            mFlatWBTopicComments = new Function<WBTopicComments, Observable<ArrayList<Topic>>>() {
+            mFlatWBTopicComments = new Function<WBTopicComments, SingleSource<ArrayList<Topic>>>() {
                 @Override
-                public Observable<ArrayList<Topic>> apply(WBTopicComments wbComments) {
-                    return ObservableHelper.justArrayList(Topic.getTopics(wbComments));
+                public SingleSource<ArrayList<Topic>> apply(WBTopicComments wbComments) {
+                    return SingleHelper.justArrayList(Topic.getTopics(wbComments));
                 }
             };
         }
         return mFlatWBTopicComments;
     }
 
-    private Function<WBTopicIds, Observable<WBTopics>> flatWBTopicId(final String since_id) {
-        return new Function<WBTopicIds, Observable<WBTopics>>() {
+    private Function<WBTopicIds, SingleSource<WBTopics>> flatWBTopicId(final String since_id) {
+        return new Function<WBTopicIds, SingleSource<WBTopics>>() {
             @Override
-            public Observable<WBTopics> apply(WBTopicIds wbTopicIds) {
+            public SingleSource<WBTopics> apply(WBTopicIds wbTopicIds) {
 
-                Observable<WBTopics> observable;
+                SingleSource<WBTopics> observable;
                 if (wbTopicIds == null || CommonUtil.isEmpty(wbTopicIds.getStatuses())) {
                     //没有新的微博
                     L.debug("no topic update");
-                    observable = Observable.empty();
+                    observable = Single.just(new WBTopics());
                 } else {
                     if (wbTopicIds.getStatuses().size() >= WBUtil.getWBTopicRequestCount()) {
                         //还有更新的微博，重新请求刷新
@@ -260,14 +265,14 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
      */
     public void loadWBTopic(final String firstPage) {
         getMvpView().onTaskStart();
-        ObservableHelper.justArrayList(findData())
-                .flatMap(new Function<ArrayList<Topic>, Observable<ArrayList<Topic>>>() {
+        SingleHelper.justArrayList(findData())
+                .flatMap(new Function<ArrayList<Topic>, SingleSource<ArrayList<Topic>>>() {
                     @Override
-                    public Observable<ArrayList<Topic>> apply(ArrayList<Topic> topics) {
+                    public SingleSource<ArrayList<Topic>> apply(ArrayList<Topic> topics) {
                         if (CommonUtil.isEmpty(topics)) {
                             return getTopics(firstPage, true, false);
                         } else {
-                            return Observable
+                            return Single
                                     .just(topics)
                                     .delay(500, TimeUnit.MILLISECONDS);
                         }
@@ -284,15 +289,15 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicMvpView> {
                 .destroyTopic(UserUtil.getToken(), topic.getId())
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(new BaseSubscriber<WBTopic>() {
+                .subscribe(new BaseSingleObserver<WBTopic>() {
                     @Override
-                    public void onNext(TopicMvpView v, WBTopic wbTopic) {
-                        v.deleteTopicResult(TaskState.STATE_SUCCESS, topic);
+                    public void onSuccess(TopicContract.View view, WBTopic wbTopic) {
+                        view.deleteTopicResult(TaskState.STATE_SUCCESS, topic);
                     }
 
                     @Override
-                    public void onError(TopicMvpView v, Throwable e) {
-                        v.deleteTopicResult(TaskState.getFailState(e), null);
+                    public void onError(TopicContract.View view, Throwable e) {
+                        view.deleteTopicResult(TaskState.getFailState(e), null);
                     }
                 });
     }

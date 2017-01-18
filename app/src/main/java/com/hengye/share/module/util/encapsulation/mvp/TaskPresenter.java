@@ -13,10 +13,9 @@ public class TaskPresenter<V extends MvpView & TaskCallBack> extends RxPresenter
         super(mvpView);
     }
 
-    public class TaskSubscriber<T> extends BaseSubscriber<T>{
+    public class TaskObserver<T> extends BaseObserver<T> {
 
-
-        public TaskSubscriber(){
+        public TaskObserver(){
         }
 
         @Override
@@ -34,6 +33,19 @@ public class TaskPresenter<V extends MvpView & TaskCallBack> extends RxPresenter
 
         @Override
         public void onNext(V v, T list) {
+        }
+    }
+
+    public class TaskSingleObserver<T> extends BaseSingleObserver<T>{
+
+        @Override
+        public void onSuccess(V v, T t) {
+            v.onTaskComplete(TaskState.STATE_SUCCESS);
+        }
+
+        @Override
+        public void onError(V v, Throwable e) {
+            v.onTaskComplete(TaskState.getFailState(e));
         }
     }
 }

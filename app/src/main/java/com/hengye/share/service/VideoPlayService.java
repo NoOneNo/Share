@@ -32,6 +32,9 @@ import com.hengye.share.util.http.retrofit.RetrofitManager;
 import com.hengye.share.util.rxjava.DefaultSubscriber;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
+import io.reactivex.SingleObserver;
+import io.reactivex.disposables.Disposable;
+
 /**
  * Created by yuhy on 2016/11/8.
  */
@@ -263,9 +266,10 @@ public class VideoPlayService extends Service implements View.OnClickListener {
                 .getMediaPlayUrl(topicId)
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(new DefaultSubscriber<Object>() {
+                .subscribe(new SingleObserver<Object>() {
+
                     @Override
-                    public void onComplete() {
+                    public void onSubscribe(Disposable d) {
 
                     }
 
@@ -276,7 +280,7 @@ public class VideoPlayService extends Service implements View.OnClickListener {
                     }
 
                     @Override
-                    public void onNext(Object object) {
+                    public void onSuccess(Object object) {
                         String url = null;
                         try {
                             JsonObject jsonObject = GsonUtil.toJsonObject(object);

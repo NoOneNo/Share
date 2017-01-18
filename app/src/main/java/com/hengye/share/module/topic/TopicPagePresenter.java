@@ -17,6 +17,7 @@ import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.handler.TopicNumberPager;
 import com.hengye.share.util.http.retrofit.RetrofitManager;
 import com.hengye.share.util.rxjava.datasource.ObservableHelper;
+import com.hengye.share.util.rxjava.datasource.SingleHelper;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
 import java.io.Serializable;
@@ -27,16 +28,19 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.SingleSource;
 import io.reactivex.functions.Function;
 
-public class TopicPagePresenter extends ListDataPresenter<Topic, TopicPageMvpView> {
+public class TopicPagePresenter extends ListDataPresenter<Topic, TopicPageContract.View> {
 
     private TopicGroup mTopicGroup;
     private String mKeyword;
     private String uid, name;
     private TopicNumberPager mPager;
 
-    public TopicPagePresenter(TopicPageMvpView mvpView, TopicGroup topicGroup, TopicNumberPager pager) {
+    public TopicPagePresenter(TopicPageContract.View mvpView, TopicGroup topicGroup, TopicNumberPager pager) {
         super(mvpView);
         mTopicGroup = topicGroup;
         mPager = pager;
@@ -50,7 +54,7 @@ public class TopicPagePresenter extends ListDataPresenter<Topic, TopicPageMvpVie
                 .subscribe(getTopicsSubscriber(isRefresh));
     }
 
-    private Observable<ArrayList<Topic>> getTopics(final boolean isRefresh) {
+    private Single<ArrayList<Topic>> getTopics(final boolean isRefresh) {
         switch (mTopicGroup.topicType) {
             case THEME:
                 return RetrofitManager
@@ -87,32 +91,32 @@ public class TopicPagePresenter extends ListDataPresenter<Topic, TopicPageMvpVie
         return ub.getParameters();
     }
 
-    private Observer<List<Topic>> getTopicsSubscriber(final boolean isRefresh) {
-        return new ListDataSubscriber(isRefresh);
+    private SingleObserver<List<Topic>> getTopicsSubscriber(final boolean isRefresh) {
+        return new ListDataSingleObserver(isRefresh);
     }
 
-    Function<WBTopics, Observable<ArrayList<Topic>>> mFlatWBTopics;
+    Function<WBTopics, SingleSource<ArrayList<Topic>>> mFlatWBTopics;
 
-    private Function<WBTopics, Observable<ArrayList<Topic>>> flatWBTopics() {
+    private Function<WBTopics, SingleSource<ArrayList<Topic>>> flatWBTopics() {
         if (mFlatWBTopics == null) {
-            mFlatWBTopics = new Function<WBTopics, Observable<ArrayList<Topic>>>() {
+            mFlatWBTopics = new Function<WBTopics, SingleSource<ArrayList<Topic>>>() {
                 @Override
-                public Observable<ArrayList<Topic>> apply(WBTopics wbTopics) {
-                    return ObservableHelper.justArrayList(Topic.getTopics(wbTopics));
+                public SingleSource<ArrayList<Topic>> apply(WBTopics wbTopics) {
+                    return SingleHelper.justArrayList(Topic.getTopics(wbTopics));
                 }
             };
         }
         return mFlatWBTopics;
     }
 
-    Function<WBTopicFavorites, Observable<ArrayList<Topic>>> mFlatWBTopicFavorites;
+    Function<WBTopicFavorites, SingleSource<ArrayList<Topic>>> mFlatWBTopicFavorites;
 
-    private Function<WBTopicFavorites, Observable<ArrayList<Topic>>> flatWBTopicFavorites() {
+    private Function<WBTopicFavorites, SingleSource<ArrayList<Topic>>> flatWBTopicFavorites() {
         if (mFlatWBTopicFavorites == null) {
-            mFlatWBTopicFavorites = new Function<WBTopicFavorites, Observable<ArrayList<Topic>>>() {
+            mFlatWBTopicFavorites = new Function<WBTopicFavorites, SingleSource<ArrayList<Topic>>>() {
                 @Override
-                public Observable<ArrayList<Topic>> apply(WBTopicFavorites wbTopicFavorites) {
-                    return ObservableHelper.justArrayList(TopicFavorites.getTopics(wbTopicFavorites));
+                public SingleSource<ArrayList<Topic>> apply(WBTopicFavorites wbTopicFavorites) {
+                    return SingleHelper.justArrayList(TopicFavorites.getTopics(wbTopicFavorites));
                 }
             };
         }
@@ -126,14 +130,15 @@ public class TopicPagePresenter extends ListDataPresenter<Topic, TopicPageMvpVie
         getMvpView().onTaskStart();
 
 
-        ObservableHelper.justArrayList(findData())
-                .flatMap(new Function<ArrayList<Topic>, Observable<ArrayList<Topic>>>() {
+        SingleHelper
+                .justArrayList(findData())
+                .flatMap(new Function<ArrayList<Topic>, SingleSource<ArrayList<Topic>>>() {
                     @Override
-                    public Observable<ArrayList<Topic>> apply(ArrayList<Topic> topics) {
+                    public SingleSource<ArrayList<Topic>> apply(ArrayList<Topic> topics) {
                         if (CommonUtil.isEmpty(topics)) {
                             return getTopics(true);
                         } else {
-                            return Observable
+                            return Single
                                     .just(topics)
                                     .delay(400, TimeUnit.MILLISECONDS);
                         }

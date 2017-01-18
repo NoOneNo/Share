@@ -91,6 +91,10 @@ public class RxUtil {
                 Functions.EMPTY_ACTION);
     }
 
+    public static <T> Disposable subscribeIgnoreAll(Single<T> observable) {
+        return observable.subscribe(Functions.emptyConsumer(), ERROR_NOT_THROW);
+    }
+
     /**
      * Igonre an Exception when called.
      */

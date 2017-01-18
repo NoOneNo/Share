@@ -7,21 +7,18 @@ import android.view.View;
 
 import com.hengye.share.R;
 import com.hengye.share.module.util.encapsulation.base.TaskState;
-import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.handler.TopicAdapterIdPager;
 import com.hengye.share.util.handler.TopicIdHandler;
-import com.hengye.share.module.util.encapsulation.base.DataHandler;
 import com.hengye.share.module.util.encapsulation.base.DataType;
-import com.hengye.share.module.util.encapsulation.base.Pager;
 import com.hengye.share.model.Topic;
 import com.hengye.share.util.UserUtil;
 
 import java.util.ArrayList;
 
-public class TopicFragment extends StatusFragment<Topic> implements TopicMvpView, TopicAdapter.Callback {
+public class TopicFragment extends StatusFragment<Topic> implements TopicContract.View, TopicAdapter.Callback {
 
     public static Bundle getBundle(TopicPresenter.TopicGroup topicGroup, String uid, String name) {
         return getBundle(topicGroup, false, uid, name);
@@ -85,7 +82,7 @@ public class TopicFragment extends StatusFragment<Topic> implements TopicMvpView
         mAdapter.setShowDeleteTopicOption(true);
         mAdapter.setCallback(this);
 
-        addPresenter(mPresenter = new TopicPresenter(this, topicGroup));
+        mPresenter = new TopicPresenter(this, topicGroup);
         mPresenter.setUid(uid);
         mPresenter.setName(name);
 

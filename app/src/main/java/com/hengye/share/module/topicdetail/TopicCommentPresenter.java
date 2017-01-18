@@ -14,6 +14,7 @@ import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.http.retrofit.RetrofitManager;
 import com.hengye.share.util.http.retrofit.api.WBService;
 import com.hengye.share.util.rxjava.datasource.ObservableHelper;
+import com.hengye.share.util.rxjava.datasource.SingleHelper;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 import com.hengye.share.util.thirdparty.ThirdPartyUtils;
 import com.hengye.share.util.thirdparty.WBUtil;
@@ -23,17 +24,21 @@ import java.util.Map;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.SingleSource;
 import io.reactivex.functions.Function;
 
-public class TopicCommentPresenter extends ListTaskPresenter<TopicCommentMvpView> {
+public class TopicCommentPresenter extends ListTaskPresenter<TopicCommentContract.View> implements TopicCommentContract.Presenter{
 
     private boolean mIsLikeMode;
 
-    public TopicCommentPresenter(TopicCommentMvpView mvpView, boolean isLikeMode) {
+    public TopicCommentPresenter(TopicCommentContract.View mvpView, boolean isLikeMode) {
         super(mvpView);
         mIsLikeMode = isLikeMode;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void loadWBCommentOrRepost(String topicId, String id, final boolean isRefresh, final boolean isComment) {
         if (isRefresh) {
@@ -46,6 +51,7 @@ public class TopicCommentPresenter extends ListTaskPresenter<TopicCommentMvpView
                 .subscribe(getTopicCommentsSubscriber(isRefresh));
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void loadWBHotComment(boolean isRefresh, String topicId, int page, int count) {
         if (isRefresh) {
@@ -58,7 +64,7 @@ public class TopicCommentPresenter extends ListTaskPresenter<TopicCommentMvpView
                 .subscribe(getTopicCommentsSubscriber(isRefresh));
     }
 
-    public Map<String, String> getParameter(String token, String topicId, String id, final boolean isRefresh) {
+    private Map<String, String> getParameter(String token, String topicId, String id, final boolean isRefresh) {
         final UrlBuilder ub = new UrlBuilder();
         ub.addParameter("access_token", token);
         ub.addParameter("id", topicId);
@@ -71,7 +77,7 @@ public class TopicCommentPresenter extends ListTaskPresenter<TopicCommentMvpView
         return ub.getParameters();
     }
 
-    private Observable<TopicComments> getComment(final String topicId, String id, final boolean isRefresh, final boolean isComment) {
+    private Single<TopicComments> getComment(final String topicId, String id, final boolean isRefresh, final boolean isComment) {
         final WBService service = RetrofitManager.getWBService();
         if (!isComment) {
             //转发
@@ -88,21 +94,21 @@ public class TopicCommentPresenter extends ListTaskPresenter<TopicCommentMvpView
             } else {
                 Map<String, String> params = getParameter(UserUtil.getPriorToken(), topicId, id, isRefresh);
                 params.put("source", ThirdPartyUtils.getAppKeyForWeibo(ThirdPartyUtils.WeiboApp.WEICO));
-                Observable<TopicComments> topicCommentsObservable = service.listCommentWithLike(params).flatMap(flatWBTopicComments());
+                Single<TopicComments> topicCommentsObservable = service.listCommentWithLike(params).flatMap(flatWBTopicComments());
 
                 if (!isRefresh) {
                     return topicCommentsObservable;
                 } else {
                     return topicCommentsObservable
-                            .flatMap(new Function<TopicComments, ObservableSource<TopicComments>>() {
+                            .flatMap(new Function<TopicComments, SingleSource<TopicComments>>() {
                                 @Override
-                                public ObservableSource<TopicComments> apply(final TopicComments topicComments) throws Exception {
+                                public SingleSource<TopicComments> apply(final TopicComments topicComments) throws Exception {
                                     if (topicComments != null && topicComments.getTotalNumber() > WBUtil.getWBTopicRequestCount()) {
                                         //尝试获取热门评论
                                         return getHotComment(topicId, 1, 10)
-                                                .flatMap(new Function<TopicComments, ObservableSource<TopicComments>>() {
+                                                .flatMap(new Function<TopicComments, SingleSource<TopicComments>>() {
                                                     @Override
-                                                    public ObservableSource<TopicComments> apply(TopicComments topicHotComments) throws Exception {
+                                                    public SingleSource<TopicComments> apply(TopicComments topicHotComments) throws Exception {
                                                         if (topicHotComments != null && !CommonUtil.isEmpty(topicHotComments.getComments())) {
                                                             if (topicComments.getComments() != null) {
                                                                 topicComments.getComments().add(0, TopicComments.getTopicHotCommentLabel());
@@ -110,11 +116,11 @@ public class TopicCommentPresenter extends ListTaskPresenter<TopicCommentMvpView
                                                                 topicComments.setHotTotalNumber(topicHotComments.getHotTotalNumber());
                                                             }
                                                         }
-                                                        return ObservableHelper.just(topicComments);
+                                                        return Single.just(topicComments);
                                                     }
                                                 });
                                     }
-                                    return ObservableHelper.just(topicComments);
+                                    return Single.just(topicComments == null ? new TopicComments() : topicComments);
                                 }
                             });
                 }
@@ -132,7 +138,7 @@ public class TopicCommentPresenter extends ListTaskPresenter<TopicCommentMvpView
      * @param count
      * @return
      */
-    public Observable<TopicComments> getHotComment(String topicId, int page, int count) {
+    private Single<TopicComments> getHotComment(String topicId, int page, int count) {
         final UrlBuilder ub = new UrlBuilder();
         ub.addParameter("source", ThirdPartyUtils.getAppKeyForWeibo(ThirdPartyUtils.WeiboApp.WEICO));
         ub.addParameter("access_token", UserUtil.getPriorToken());
@@ -146,24 +152,30 @@ public class TopicCommentPresenter extends ListTaskPresenter<TopicCommentMvpView
 
     }
 
-    private Observer<TopicComments> getTopicCommentsSubscriber(boolean isRefresh) {
-        return new ListTaskSubscriber<TopicComments>(isRefresh) {
+    private SingleObserver<TopicComments> getTopicCommentsSubscriber(boolean isRefresh) {
+        return new ListTaskSingleObserver<TopicComments>(isRefresh){
             @Override
-            public void onNext(TopicCommentMvpView mvpView, TopicComments list) {
-                mvpView.onLoadTopicComments(list);
-                mvpView.onLoadListData(isRefresh, list.getComments());
+            public void onSuccess(TopicCommentContract.View view, TopicComments topicComments) {
+                super.onSuccess(view, topicComments);
+                view.onLoadTopicComments(topicComments);
+                view.onLoadListData(isRefresh, topicComments.getComments());
+            }
+
+            @Override
+            public void onError(TopicCommentContract.View view, Throwable e) {
+                super.onError(view, e);
             }
         };
     }
 
-    Function<WBTopicReposts, ObservableSource<TopicComments>> mFlatWBTopicReposts;
+    Function<WBTopicReposts, SingleSource<TopicComments>> mFlatWBTopicReposts;
 
-    private Function<WBTopicReposts, ObservableSource<TopicComments>> flatWBTopicReposts() {
+    private Function<WBTopicReposts, SingleSource<TopicComments>> flatWBTopicReposts() {
         if (mFlatWBTopicReposts == null) {
-            mFlatWBTopicReposts = new Function<WBTopicReposts, ObservableSource<TopicComments>>() {
+            mFlatWBTopicReposts = new Function<WBTopicReposts, SingleSource<TopicComments>>() {
                 @Override
-                public ObservableSource<TopicComments> apply(WBTopicReposts wbTopicReposts) throws Exception {
-                    return ObservableHelper
+                public SingleSource<TopicComments> apply(WBTopicReposts wbTopicReposts) throws Exception {
+                    return Single
                             .just(TopicComment.getComments(wbTopicReposts))
                             .flatMap(TopicRxUtil.flatTopicCommentsShortUrl());
                 }
@@ -172,14 +184,14 @@ public class TopicCommentPresenter extends ListTaskPresenter<TopicCommentMvpView
         return mFlatWBTopicReposts;
     }
 
-    Function<WBTopicComments, ObservableSource<TopicComments>> mFlatWBTopicComments;
+    Function<WBTopicComments, SingleSource<TopicComments>> mFlatWBTopicComments;
 
-    private Function<WBTopicComments, ObservableSource<TopicComments>> flatWBTopicComments() {
+    private Function<WBTopicComments, SingleSource<TopicComments>> flatWBTopicComments() {
         if (mFlatWBTopicComments == null) {
-            mFlatWBTopicComments = new Function<WBTopicComments, ObservableSource<TopicComments>>() {
+            mFlatWBTopicComments = new Function<WBTopicComments, SingleSource<TopicComments>>() {
                 @Override
-                public ObservableSource<TopicComments> apply(WBTopicComments wbTopicComments) throws Exception {
-                    return ObservableHelper
+                public SingleSource<TopicComments> apply(WBTopicComments wbTopicComments) throws Exception {
+                    return Single
                             .just(TopicComment.getComments(wbTopicComments))
                             .flatMap(TopicRxUtil.flatTopicCommentsShortUrl());
                 }
@@ -188,6 +200,7 @@ public class TopicCommentPresenter extends ListTaskPresenter<TopicCommentMvpView
         return mFlatWBTopicComments;
     }
 
+    @Override
     public void likeComment(final TopicComment topicComment) {
 
         if (topicComment == null) {
@@ -204,14 +217,14 @@ public class TopicCommentPresenter extends ListTaskPresenter<TopicCommentMvpView
         Map<String, String> params = ub.getParameters();
 
         WBService service = RetrofitManager.getWBService();
-        Observable<WBResult> observable = isLike ? service.updateLike(params) : service.destroyLike(params);
+        Single<WBResult> observable = isLike ? service.updateLike(params) : service.destroyLike(params);
 
         observable
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(new BaseSubscriber<WBResult>() {
+                .subscribe(new BaseSingleObserver<WBResult>() {
                     @Override
-                    public void onNext(TopicCommentMvpView topicCommentMvpView, WBResult result) {
+                    public void onSuccess(TopicCommentContract.View topicCommentMvpView, WBResult result) {
                         int taskState;
 
                         if (result != null && result.isSuccess()) {
@@ -224,7 +237,7 @@ public class TopicCommentPresenter extends ListTaskPresenter<TopicCommentMvpView
                     }
 
                     @Override
-                    public void onError(TopicCommentMvpView topicCommentMvpView, Throwable e) {
+                    public void onError(TopicCommentContract.View topicCommentMvpView, Throwable e) {
                         topicCommentMvpView.onTopicCommentLike(topicComment, TaskState.getFailState(e));
                     }
                 });

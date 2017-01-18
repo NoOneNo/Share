@@ -6,12 +6,14 @@ import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.http.retrofit.RetrofitManager;
 import com.hengye.share.util.rxjava.datasource.ObservableHelper;
+import com.hengye.share.util.rxjava.datasource.SingleHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import io.reactivex.SingleSource;
 import io.reactivex.functions.Function;
 
 /**
@@ -29,33 +31,31 @@ public class GroupManageRemoteDataSource implements GroupManageDataSource {
         return RetrofitManager
                 .getWBService()
                 .listGroups(ub.getParameters())
-                .flatMap(new Function<WBGroups, Observable<ArrayList<GroupList>>>() {
+                .flatMap(new Function<WBGroups, SingleSource<ArrayList<GroupList>>>() {
                     @Override
-                    public Observable<ArrayList<GroupList>> apply(WBGroups wbGroups) {
+                    public SingleSource<ArrayList<GroupList>> apply(WBGroups wbGroups) {
 
                         ArrayList<GroupList> list = GroupList.getGroupLists(wbGroups, UserUtil.getUid());
-
                         UserUtil.updateGroupList(list);
-                        return ObservableHelper.justArrayList(list);
+                        return SingleHelper.justArrayList(list);
                     }
-                })
-                .firstOrError();
+                });
     }
 
     @Override
-    public Observable<Boolean> updateGroupList(final List<GroupList> groupLists) {
+    public Single<Boolean> updateGroupList(final List<GroupList> groupLists) {
         return RetrofitManager
                 .getWBService()
                 .updateGroupOrder(UserUtil.getPriorToken(), groupLists.size() + "", GroupList.getGroupIds(groupLists))
-                .flatMap(new Function<WBGroups.WBGroupUpdateOrder, Observable<Boolean>>() {
+                .flatMap(new Function<WBGroups.WBGroupUpdateOrder, SingleSource<? extends Boolean>>() {
                     @Override
-                    public Observable<Boolean> apply(WBGroups.WBGroupUpdateOrder result) {
+                    public SingleSource<? extends Boolean> apply(WBGroups.WBGroupUpdateOrder result) throws Exception {
 //                        {"result":true}
                         boolean isSuccess = false;
                         if (result != null && "true".equals(result.getResult())) {
                             isSuccess = true;
                         }
-                        return ObservableHelper.just(isSuccess);
+                        return Single.just(isSuccess);
                     }
                 });
     }

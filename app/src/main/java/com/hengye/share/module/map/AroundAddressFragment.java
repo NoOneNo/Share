@@ -15,12 +15,11 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationListener;
 import com.hengye.share.R;
 import com.hengye.share.model.Address;
-import com.hengye.share.module.groupmanage.AroundAddressAdapter;
 import com.hengye.share.module.test.TestLocationActivity;
 import com.hengye.share.module.util.FragmentActivity;
 import com.hengye.share.module.util.encapsulation.base.DefaultDataHandler;
 import com.hengye.share.module.util.encapsulation.base.NumberPager;
-import com.hengye.share.module.util.encapsulation.fragment.RecyclerRefreshFragment;
+import com.hengye.share.module.base.ShareRecyclerFragment;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.util.L;
 import com.hengye.share.util.ResUtil;
@@ -36,7 +35,7 @@ import javax.inject.Inject;
  * Created by yuhy on 2016/12/6.
  */
 
-public class AroundAddressFragment extends RecyclerRefreshFragment<Address> implements AroundAddressMvpView, View.OnClickListener {
+public class AroundAddressFragment extends ShareRecyclerFragment<Address> implements AroundAddressContract.View, View.OnClickListener {
 
     public static void start(Activity activity, int requestCode) {
         activity.startActivityForResult(FragmentActivity.getStartIntent(activity, AroundAddressFragment.class), requestCode);
@@ -86,11 +85,10 @@ public class AroundAddressFragment extends RecyclerRefreshFragment<Address> impl
                 .build()
                 .inject(this);
 
-        addPresenter(mPresenter);
         setAdapter(mAdapter = new AroundAddressAdapter(getContext(), new ArrayList<Address>()));
         setPager(mNumberPager = new NumberPager());
         setDataHandler(new DefaultDataHandler<>(mAdapter));
-//        addPresenter(mPresenter = new AroundAddressPresenter(this));
+//        setPresenter(mPresenter = new AroundAddressPresenter(this));
         mPresenter.setPager(mNumberPager);
         ViewUtil.hideKeyBoardOnScroll(getRecyclerView(), mKeywordsTxt);
 
@@ -112,7 +110,7 @@ public class AroundAddressFragment extends RecyclerRefreshFragment<Address> impl
     }
 
     @Inject
-    AroundAddressPresenter mPresenter;
+    AroundAddressContract.Presenter mPresenter;
     EditText mKeywordsTxt;
     TextView mCurrentLocationTxt;
     View mSearchBtn, mCurrentLocation;

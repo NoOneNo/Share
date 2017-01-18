@@ -54,6 +54,8 @@ import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
+import com.hengye.share.util.intercept.Action;
+import com.hengye.share.util.intercept.AdTokenInterceptor;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -290,7 +292,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         } else if (id == R.id.et_topic_publish) {
             hideEmoticonPicker(true);
         } else if (id == R.id.btn_publish) {
-            publishTopic();
+            publishTopicIfCan();
         } else if (id == R.id.btn_camera) {
             mGalleryEditor.startPhotoPicker();
         } else if (id == R.id.layout_location) {
@@ -579,12 +581,13 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         return td;
     }
 
-    private void publishTopic() {
-
-        if (!checkCanPublishTopic()) {
-            return;
+    private void publishTopicIfCan() {
+        if (checkCanPublishTopic()) {
+            publicTopic();
         }
+    }
 
+    private void publicTopic(){
         TopicPublishService.publish(this, generateTopicDraft(), UserUtil.getToken());
 
         if (mTopicDraft.isSaved()) {
@@ -618,9 +621,27 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         } else if (TextUtils.isEmpty(UserUtil.getToken())) {
             result = false;
             showSkipToLoginDialog();
+        }else if(mGalleryEditor.getPaths() != null && mGalleryEditor.getPaths().size() > 1){
+            //发多张图片需要高级授权
+            getAdTokenInterceptor().start();
+            return false;
         }
 
         return result;
+    }
+
+    AdTokenInterceptor mAdTokenInterceptor;
+    public AdTokenInterceptor getAdTokenInterceptor() {
+        if(mAdTokenInterceptor == null){
+            mAdTokenInterceptor = new AdTokenInterceptor(this);
+            mAdTokenInterceptor.setAction(new Action() {
+                @Override
+                public void run() {
+                    publicTopic();
+                }
+            });
+        }
+        return mAdTokenInterceptor;
     }
 
     private void showSkipToLoginDialog() {

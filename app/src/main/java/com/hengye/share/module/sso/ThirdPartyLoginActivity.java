@@ -17,7 +17,7 @@ import com.hengye.share.util.thirdparty.ThirdPartyUtils;
 import com.sina.weibo.sdk.auth.WeiboAuth;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
 
-public class ThirdPartyLoginActivity extends BaseActivity implements UserMvpView {
+public class ThirdPartyLoginActivity extends BaseActivity implements UserContract.View {
 
     public static Intent getStartIntent(Context context, boolean isCurrentUser){
         Intent intent = new Intent(context, ThirdPartyLoginActivity.class);
@@ -43,7 +43,7 @@ public class ThirdPartyLoginActivity extends BaseActivity implements UserMvpView
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        addPresenter(mPresenter = new UserPresenter(this));
+        mPresenter = new UserPresenter(this);
 
         initData();
         String appName = getIntent().getStringExtra("appKey");
@@ -64,7 +64,7 @@ public class ThirdPartyLoginActivity extends BaseActivity implements UserMvpView
 
     private final static int WEIBO_WEB_LOGIN = 3;
     private LoadingDialog mLoadingDialog;
-    private UserPresenter mPresenter;
+    private UserContract.Presenter mPresenter;
     private WBAuthListener mWeiboAuthListener;
 
     private void initData() {

@@ -16,13 +16,15 @@ import com.hengye.share.util.http.retrofit.api.WBService;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 
-public class SearchPresenter extends RxPresenter<SearchMvpView> {
+public class SearchPresenter extends RxPresenter<SearchContract.View> implements SearchContract.Presenter{
 
-    public SearchPresenter(SearchMvpView mvpView) {
+    public SearchPresenter(SearchContract.View mvpView) {
         super(mvpView);
     }
 
+    @Override
     public void loadWBSearchContent(String content) {
         final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBSearchUserUrl());
         ub.addParameter("access_token", UserUtil.getPriorToken());
@@ -31,25 +33,24 @@ public class SearchPresenter extends RxPresenter<SearchMvpView> {
 
         WBService service = RetrofitManager.getWBService();
 
-        Observable.zip(
+        Single.zip(
                 service.searchUser(ub.getParameters()),
                 service.searchPublic(ub.getParameters()),
                 ObjectConverter.getObjectConverter2())
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(new BaseSubscriber<Object[]>() {
-
+                .subscribe(new BaseSingleObserver<Object[]>() {
                     @Override
-                    public void onError(SearchMvpView v, Throwable e) {
-                        v.loadFail();
-                        ToastUtil.showToast(TaskState.toString(TaskState.getFailState(e)));
+                    public void onSuccess(SearchContract.View view, Object[] objects) {
+                        view.handleSearchUserData(UserInfo.getUserInfos((WBUserInfos) objects[0]));
+                        view.handleSearchPublicData(Topic.getTopics((WBTopics) objects[1]));
+                        view.loadSuccess();
                     }
 
                     @Override
-                    public void onNext(SearchMvpView v, Object[] objects) {
-                        v.handleSearchUserData(UserInfo.getUserInfos((WBUserInfos) objects[0]));
-                        v.handleSearchPublicData(Topic.getTopics((WBTopics) objects[1]));
-                        v.loadSuccess();
+                    public void onError(SearchContract.View view, Throwable e) {
+                        ToastUtil.showToast(TaskState.toString(TaskState.getFailState(e)));
+                        view.loadFail();
                     }
                 });
     }

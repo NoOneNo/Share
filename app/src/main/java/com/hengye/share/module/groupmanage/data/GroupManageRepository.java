@@ -53,17 +53,17 @@ public class GroupManageRepository implements GroupManageDataSource {
     }
 
     @Override
-    public Observable<Boolean> updateGroupList(List<GroupList> groupLists) {
-        final Observable<Boolean> localResult = mGroupManageLocalDataSource.updateGroupList(groupLists);
-        Observable<Boolean> remoteResult = mGroupManageRemoteDataSource.updateGroupList(groupLists);
+    public Single<Boolean> updateGroupList(List<GroupList> groupLists) {
+        final Single<Boolean> localResult = mGroupManageLocalDataSource.updateGroupList(groupLists);
+        Single<Boolean> remoteResult = mGroupManageRemoteDataSource.updateGroupList(groupLists);
 
-        return remoteResult.flatMap(new Function<Boolean, Observable<Boolean>>() {
+        return remoteResult.flatMap(new Function<Boolean, Single<Boolean>>() {
             @Override
-            public Observable<Boolean> apply(Boolean isSuccess) {
+            public Single<Boolean> apply(Boolean isSuccess) {
                 if (isSuccess) {
                     return localResult;
                 }
-                return ObservableHelper.just(false);
+                return Single.just(false);
             }
         });
     }

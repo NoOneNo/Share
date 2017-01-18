@@ -1,4 +1,4 @@
-package com.hengye.share.module.groupmanage;
+package com.hengye.share.module.map;
 
 import android.content.Context;
 import android.view.View;

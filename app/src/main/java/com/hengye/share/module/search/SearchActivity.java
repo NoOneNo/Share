@@ -25,7 +25,7 @@ import com.hengye.share.util.ViewUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchActivity extends BaseActivity implements SearchMvpView{
+public class SearchActivity extends BaseActivity implements SearchContract.View{
 
     @Override
     protected String getRequestTag() {
@@ -79,7 +79,7 @@ public class SearchActivity extends BaseActivity implements SearchMvpView{
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        addPresenter(mPresenter = new SearchPresenter(this));
+        mPresenter = new SearchPresenter(this);
         initView();
 
         if(!TextUtils.isEmpty(mKeywords)){
@@ -95,7 +95,7 @@ public class SearchActivity extends BaseActivity implements SearchMvpView{
     private SearchUserAdapter mUserAdapter;
     private TopicAdapter mTopicAdapter;
 
-    private SearchPresenter mPresenter;
+    private SearchContract.Presenter mPresenter;
 
     private void initView(){
         mUserRV = (RecyclerView) findViewById(R.id.recycler_view_user);

@@ -17,9 +17,7 @@ import com.hengye.share.module.publish.TopicPublishActivity;
 import com.hengye.share.module.topic.StatusFragment;
 import com.hengye.share.module.topic.TopicTitleViewHolder;
 import com.hengye.share.module.util.FragmentActivity;
-import com.hengye.share.module.util.encapsulation.base.DataHandler;
 import com.hengye.share.module.util.encapsulation.base.DefaultDataHandler;
-import com.hengye.share.module.util.encapsulation.base.Pager;
 import com.hengye.share.module.util.encapsulation.base.TaskState;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
@@ -30,7 +28,7 @@ import com.hengye.share.util.handler.TopicNumberPager;
 
 import java.util.ArrayList;
 
-public class TopicHotCommentFragment extends StatusFragment<TopicComment> implements TopicCommentMvpView, DialogInterface.OnClickListener {
+public class TopicHotCommentFragment extends StatusFragment<TopicComment> implements TopicCommentContract.View, DialogInterface.OnClickListener {
 
     public static Bundle getStartBundle(Topic topic) {
         Bundle bundle = new Bundle();
@@ -49,7 +47,7 @@ public class TopicHotCommentFragment extends StatusFragment<TopicComment> implem
     }
 
     TopicCommentAdapter mAdapter;
-    TopicCommentPresenter mPresenter;
+    TopicCommentContract.Presenter mPresenter;
     Topic mTopic;
     Dialog mTopicCommentDialog;
     int mCurrentPosition;
@@ -74,7 +72,7 @@ public class TopicHotCommentFragment extends StatusFragment<TopicComment> implem
         setPager(mTopicPager = new TopicNumberPager());
         setDataHandler(new DefaultDataHandler<>(mAdapter));
 
-        addPresenter(mPresenter = new TopicCommentPresenter(this, true));
+        mPresenter = new TopicCommentPresenter(this, true);
 
         onRefresh();
 

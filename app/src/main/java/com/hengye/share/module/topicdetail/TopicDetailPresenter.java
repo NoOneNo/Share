@@ -15,6 +15,7 @@ import com.hengye.share.util.thirdparty.WBUtil;
 import java.util.Map;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 
 public class TopicDetailPresenter extends RxPresenter<TopicDetailMvpView> {
 
@@ -41,20 +42,20 @@ public class TopicDetailPresenter extends RxPresenter<TopicDetailMvpView> {
 //        Map<String, String> repostParams = getParameter(UserUtil.getToken(), topicId, id, isRefresh);
         Map<String, String> repostParams = getParameter(UserUtil.getPriorToken(), topicId, id, isRefresh);
 
-        Observable.zip(
+        Single.zip(
                 service.listComment(params),
                 service.listRepost(repostParams),
                 ObjectConverter.getObjectConverter2())
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(new BaseSubscriber<Object[]>() {
+                .subscribe(new BaseSingleObserver<Object[]>() {
                     @Override
                     public void onError(TopicDetailMvpView v, Throwable e) {
                         v.onTaskComplete(isRefresh, false);
                     }
 
                     @Override
-                    public void onNext(TopicDetailMvpView v, Object[] objects) {
+                    public void onSuccess(TopicDetailMvpView v, Object[] objects) {
                         WBTopicComments obj1 = (WBTopicComments) objects[0];
                         WBTopicReposts obj2 = (WBTopicReposts) objects[1];
                         v.handleCommentData(true, TopicComment.getCommentArrayList(obj1), isRefresh, obj1.getTotal_number());
@@ -69,12 +70,12 @@ public class TopicDetailPresenter extends RxPresenter<TopicDetailMvpView> {
         WBService service = RetrofitManager.getWBService();
         Map<String, String> params = getParameter(isComment ? UserUtil.getToken() : UserUtil.getPriorToken(), topicId, id, isRefresh);
 
-        Observable observable = isComment ? service.listComment(params) : service.listRepost(params);
+        Single observable = isComment ? service.listComment(params) : service.listRepost(params);
 
         observable
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(new BaseSubscriber<Object>() {
+                .subscribe(new BaseSingleObserver<Object>() {
 
                     @Override
                     public void onError(TopicDetailMvpView v, Throwable e) {
@@ -82,7 +83,7 @@ public class TopicDetailPresenter extends RxPresenter<TopicDetailMvpView> {
                     }
 
                     @Override
-                    public void onNext(TopicDetailMvpView v, Object o) {
+                    public void onSuccess(TopicDetailMvpView v, Object o) {
                         v.handleCommentData(isComment, isComment
                                 ? TopicComment.getCommentArrayList((WBTopicComments) o)
                                 : TopicComment.getCommentArrayList((WBTopicReposts) o), isRefresh, 0);

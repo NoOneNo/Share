@@ -8,15 +8,13 @@ import android.view.View;
 
 import com.hengye.share.module.util.encapsulation.base.DefaultDataHandler;
 import com.hengye.share.util.handler.TopicNumberPager;
-import com.hengye.share.module.util.encapsulation.base.DataHandler;
 import com.hengye.share.module.util.encapsulation.base.DataType;
-import com.hengye.share.module.util.encapsulation.base.Pager;
 import com.hengye.share.model.Topic;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopicPageFragment extends StatusFragment<Topic> implements TopicPageMvpView {
+public class TopicPageFragment extends StatusFragment<Topic> implements TopicPageContract.View {
 
     public static TopicPageFragment newInstance(TopicPagePresenter.TopicGroup topicGroup, String keyword) {
         TopicPageFragment fragment = new TopicPageFragment();
@@ -50,7 +48,7 @@ public class TopicPageFragment extends StatusFragment<Topic> implements TopicPag
         setAdapter(mAdapter = new TopicAdapter(getContext(), new ArrayList<Topic>(), getRecyclerView()));
         setPager(mPager = new TopicNumberPager());
         setDataHandler(new DefaultDataHandler<>(mAdapter));
-        addPresenter(mPresenter = new TopicPagePresenter(this, topicGroup, mPager));
+        mPresenter = new TopicPagePresenter(this, topicGroup, mPager);
         mPresenter.setKeyword(mKeyword);
         showLoading();
         mPresenter.loadWBTopic();

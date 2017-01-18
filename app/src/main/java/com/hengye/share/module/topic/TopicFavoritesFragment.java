@@ -13,7 +13,7 @@ import com.hengye.share.model.greenrobot.ShareJson;
 import com.hengye.share.model.sina.WBTopicFavorites;
 import com.hengye.share.module.util.encapsulation.base.DataType;
 import com.hengye.share.module.util.encapsulation.base.DefaultDataHandler;
-import com.hengye.share.module.util.encapsulation.fragment.RecyclerRefreshFragment;
+import com.hengye.share.module.base.ShareRecyclerFragment;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.RequestManager;
@@ -25,7 +25,7 @@ import com.hengye.share.util.handler.TopicNumberPager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopicFavoritesFragment extends RecyclerRefreshFragment<TopicFavorites.TopicFavorite> {
+public class TopicFavoritesFragment extends ShareRecyclerFragment<TopicFavorites.TopicFavorite> {
 
     @Override
     public String getTitle() {

@@ -8,31 +8,34 @@ import java.util.List;
  * Created by yuhy on 2016/10/20.
  */
 
-public class ListDataPresenter<D, V extends MvpView & ListDataCallBack<D>> extends ListTaskPresenter<V> {
+public class ListDataPresenter<T, V extends MvpView & ListDataCallBack<T>> extends ListTaskPresenter<V> {
 
     public ListDataPresenter(V mvpView){
         super(mvpView);
     }
 
-    public class ListDataSubscriber extends ListTaskSubscriber<List<D>> {
+    public class ListDataObserver extends ListTaskObserver<List<T>> {
 
-        public ListDataSubscriber(boolean isRefresh){
+        public ListDataObserver(boolean isRefresh){
             super(isRefresh);
         }
 
         @Override
-        public void onError(V v, Throwable e) {
-            super.onError(v, e);
-        }
-
-        @Override
-        public void onComplete(V v) {
-            super.onComplete(v);
-        }
-
-        @Override
-        public void onNext(V v, List<D> listData) {
+        public void onNext(V v, List<T> listData) {
             v.onLoadListData(isRefresh, listData);
+        }
+    }
+
+    public class ListDataSingleObserver extends ListTaskSingleObserver<List<T>>{
+
+        public ListDataSingleObserver(boolean isRefresh){
+            super(isRefresh);
+        }
+
+        @Override
+        public void onSuccess(V v, List<T> listData) {
+            v.onLoadListData(isRefresh, listData);
+            super.onSuccess(v, listData);
         }
     }
 }

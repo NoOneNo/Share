@@ -10,6 +10,9 @@ import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.SingleSource;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 
@@ -17,9 +20,9 @@ import io.reactivex.functions.Predicate;
  * Created by yuhy on 2016/11/21.
  */
 
-public class CheckUpdatePresenter extends RxPresenter<CheckUpdateMvpView> {
+public class CheckUpdatePresenter extends RxPresenter<CheckUpdateContract.View> implements CheckUpdateContract.Presenter{
 
-    public CheckUpdatePresenter(CheckUpdateMvpView mvpView, boolean isForce) {
+    public CheckUpdatePresenter(CheckUpdateContract.View mvpView, boolean isForce) {
         super(mvpView);
         this.mIsForce = isForce;
     }
@@ -29,40 +32,40 @@ public class CheckUpdatePresenter extends RxPresenter<CheckUpdateMvpView> {
      */
     boolean mIsForce;
 
+    @Override
     public void checkUpdate() {
         getMvpView().onCheckUpdateStart();
         RetrofitManager
                 .getShareService()
                 .checkUpdate()
                 .delay(5000, TimeUnit.MILLISECONDS)
-                .flatMap(new Function<UpdateBombBean, Observable<UpdateBean>>() {
+                .flatMap(new Function<UpdateBombBean, SingleSource<UpdateBean>>() {
                     @Override
-                    public Observable<UpdateBean> apply(UpdateBombBean updateBombBean) {
+                    public SingleSource<UpdateBean> apply(UpdateBombBean updateBombBean) {
                         UpdateBean updateBean = null;
                         if (updateBombBean != null && !CommonUtil.isEmpty(updateBombBean.getResults())) {
                             updateBean = updateBombBean.getResults().get(0);
                         }
-                        return ObservableHelper.just(updateBean);
-                    }
-                })
-                .filter(new Predicate<UpdateBean>() {
-                    @Override
-                    public boolean test(UpdateBean updateBean) {
-                        return updateBean != null && updateBean.isNeedUpdate(mIsForce);
+
+                        if(updateBean != null && updateBean.isNeedUpdate(mIsForce)){
+                            return Single.just(updateBean);
+                        }else{
+                            return Single.just(new UpdateBean());
+                        }
                     }
                 })
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(new BaseSubscriber<UpdateBean>() {
+                .subscribe(new BaseSingleObserver<UpdateBean>() {
                     @Override
-                    public void onNext(CheckUpdateMvpView checkUpdateMvpView, UpdateBean updateBean) {
-                        if (updateBean != null) {
+                    public void onSuccess(CheckUpdateContract.View checkUpdateMvpView, UpdateBean updateBean) {
+                        if (updateBean != null && updateBean.getAppUrl() != null) {
                             checkUpdateMvpView.onCheckUpdateComplete(updateBean);
                         }
                     }
 
                     @Override
-                    public void onError(CheckUpdateMvpView checkUpdateMvpView, Throwable e) {
+                    public void onError(CheckUpdateContract.View checkUpdateMvpView, Throwable e) {
                         if(mIsForce) {
                             checkUpdateMvpView.onCheckUpdateFail(TaskState.getFailState(e));
                         }

@@ -18,8 +18,6 @@ public interface GroupManageDataSource {
 
     Single<ArrayList<GroupList>> refreshGroupList();
 
-    Observable<Boolean> updateGroupList(List<GroupList> groupLists);
-//    List<GroupList>
-
+    Single<Boolean> updateGroupList(List<GroupList> groupLists);
 
 }

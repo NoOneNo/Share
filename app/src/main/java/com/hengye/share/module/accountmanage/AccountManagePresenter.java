@@ -7,12 +7,14 @@ import com.hengye.share.util.UserUtil;
 
 import java.util.List;
 
-public class AccountManagePresenter extends RxPresenter<AccountManageMvpView> {
+public class AccountManagePresenter extends RxPresenter<AccountManageContract.View>
+        implements AccountManageContract.Presenter{
 
-    public AccountManagePresenter(AccountManageMvpView mvpView){
+    public AccountManagePresenter(AccountManageContract.View mvpView){
         super(mvpView);
     }
 
+    @Override
     public void loadUsers(){
         List<User> users = UserUtil.queryUsers();
         if(!CommonUtil.isEmpty(users)){

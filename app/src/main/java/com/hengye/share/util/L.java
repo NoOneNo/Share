@@ -25,15 +25,15 @@ public class L {
         Timber.d(message, args);
     }
 
-    public static void i(String message, Object... args) {
+    public static void info(String message, Object... args) {
         Timber.i(message, args);
     }
 
-    public static void w(String message, Object... args) {
+    public static void warn(String message, Object... args) {
         Timber.w(message, args);
     }
 
-    public static void e(String message, Object... args) {
+    public static void error(String message, Object... args) {
         Timber.e(message, args);
     }
 

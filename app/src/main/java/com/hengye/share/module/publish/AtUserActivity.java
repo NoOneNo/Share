@@ -21,15 +21,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.hengye.share.R;
-import com.hengye.share.model.greenrobot.ShareJson;
-import com.hengye.share.module.publish.AtUserSortAdapter.Letter;
 import com.hengye.share.model.AtUser;
 import com.hengye.share.model.UserInfo;
+import com.hengye.share.model.greenrobot.ShareJson;
 import com.hengye.share.module.base.BaseActivity;
-import com.hengye.share.module.profile.UserListMvpView;
+import com.hengye.share.module.profile.UserListContract;
 import com.hengye.share.module.profile.UserListPresenter;
-import com.hengye.share.ui.widget.lettersort.SideBar;
+import com.hengye.share.module.publish.AtUserSortAdapter.Letter;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
+import com.hengye.share.ui.widget.lettersort.SideBar;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.ThemeUtil;
@@ -44,7 +44,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AtUserActivity extends BaseActivity implements UserListMvpView {
+import static com.hengye.share.module.util.encapsulation.base.TaskState.isSuccess;
+
+public class AtUserActivity extends BaseActivity implements UserListContract.View  {
 
     @Override
     protected String getRequestTag() {
@@ -68,7 +70,7 @@ public class AtUserActivity extends BaseActivity implements UserListMvpView {
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        addPresenter(mPresenter = new UserListPresenter(this, UserUtil.getUid()));
+        mPresenter = new UserListPresenter(this, UserUtil.getUid());
         initView();
         initViewSize();
         initListener();
@@ -264,7 +266,7 @@ public class AtUserActivity extends BaseActivity implements UserListMvpView {
         mPullToRefreshLayout.setOnRefreshListener(new SwipeListener.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mPresenter.loadWBAttention();
+                mPresenter.loadWBAttentions(true, true);
             }
         });
         mPullToRefreshLayout.setLoadEnable(false);
@@ -404,21 +406,22 @@ public class AtUserActivity extends BaseActivity implements UserListMvpView {
     }
 
     @Override
-    public void showUserListSuccess(List<UserInfo> data, boolean isRefresh) {
+    public void onLoadListData(boolean isRefresh, List<UserInfo> data) {
         mSearchResultData = AtUser.getAtUser(data);
 
         ShareJson.saveListData(AtUser.class.getSimpleName() + UserUtil.getUid(), mSearchResultData, false);
         mAtUserSearchAdapter.refresh(convertUserList(mSearchResultData));
+        if(!isRefresh && CommonUtil.isEmpty(data)){
+            mPullToRefreshLayout.setLoadEnable(false);
+        }
     }
 
     @Override
-    public void onTaskComplete(boolean isRefresh, boolean isSuccess) {
-        mPullToRefreshLayout.setTaskComplete(isSuccess);
-    }
+    public void onTaskStart() {}
 
     @Override
-    public void canLoadMore(boolean loadEnable) {
-        mPullToRefreshLayout.setLoadEnable(loadEnable);
+    public void onTaskComplete(boolean isRefresh, int taskState) {
+        mPullToRefreshLayout.setTaskComplete(isSuccess(taskState));
     }
 
     public List<Object> convertUserList(List<AtUser> userInfos) {

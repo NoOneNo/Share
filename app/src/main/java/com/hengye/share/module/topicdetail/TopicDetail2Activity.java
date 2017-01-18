@@ -90,7 +90,7 @@ public class TopicDetail2Activity extends BaseActivity implements TopicDetailMvp
             finish();
             return;
         }
-        addPresenter(mPresenter = new TopicDetailPresenter(this));
+        mPresenter = new TopicDetailPresenter(this);
         initView();
         initBroadcastReceiver();
         LocalBroadcastManager.getInstance(this).registerReceiver(mPublishResultBroadcastReceiver, new IntentFilter(TopicPublishService.ACTION_PUBLISH + CommonUtil.UNDERLINE + mTopic.getId()));

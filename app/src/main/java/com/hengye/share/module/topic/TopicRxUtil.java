@@ -12,6 +12,7 @@ import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.http.retrofit.RetrofitManager;
 import com.hengye.share.util.rxjava.datasource.ObservableHelper;
+import com.hengye.share.util.rxjava.datasource.SingleHelper;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,6 +23,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 
+import io.reactivex.Single;
+import io.reactivex.SingleSource;
 import retrofit2.Call;
 import retrofit2.Response;
 import io.reactivex.Observable;
@@ -36,39 +39,43 @@ import static com.hengye.share.util.DataUtil.WEB_URL;
 public class TopicRxUtil {
 
 
-    static Function<ArrayList<Topic>, Observable<ArrayList<Topic>>> mFlatTopicShortUrl;
+    static Function<ArrayList<Topic>, SingleSource<ArrayList<Topic>>> mFlatTopicShortUrl;
 
     /**
      * 把微博的短链转换成长链
      */
-    public static Function<ArrayList<Topic>, Observable<ArrayList<Topic>>> flatShortUrl() {
+    public static Function<ArrayList<Topic>, SingleSource<ArrayList<Topic>>> flatShortUrl() {
         if (mFlatTopicShortUrl == null) {
-            mFlatTopicShortUrl = new Function<ArrayList<Topic>, Observable<ArrayList<Topic>>>() {
+            mFlatTopicShortUrl = new Function<ArrayList<Topic>, SingleSource<ArrayList<Topic>>>() {
                 @Override
-                public Observable<ArrayList<Topic>> apply(ArrayList<Topic> topics) {
+                public SingleSource<ArrayList<Topic>> apply(ArrayList<Topic> topics) {
                     //获得所有微博，再转换短链，因为微博可能包含转发的微博
                     flatShortUrl(Topic.getAllTopic(topics));
-                    return ObservableHelper.justArrayList(topics);
+                    return SingleHelper.justArrayList(topics);
                 }
             };
         }
         return mFlatTopicShortUrl;
     }
 
-    static Function<TopicComments, Observable<TopicComments>> mFlatTopicCommentsShortUrl;
+    static Function<TopicComments, SingleSource<TopicComments>> mFlatTopicCommentsShortUrl;
 
     /**
      * 把微博的短链转换成长链
      */
-    public static Function<TopicComments, Observable<TopicComments>> flatTopicCommentsShortUrl() {
+    public static Function<TopicComments, SingleSource<TopicComments>> flatTopicCommentsShortUrl() {
         if (mFlatTopicCommentsShortUrl == null) {
-            mFlatTopicCommentsShortUrl = new Function<TopicComments, Observable<TopicComments>>() {
+            mFlatTopicCommentsShortUrl = new Function<TopicComments, SingleSource<TopicComments>>() {
                 @Override
-                public Observable<TopicComments> apply(TopicComments topicComments) {
-                    //获得所有微博，再转换短链，因为微博可能包含转发的微博
-                    if(topicComments != null && !CommonUtil.isEmpty(topicComments.getComments()))
-                    flatShortUrl(topicComments.getComments());
-                    return ObservableHelper.just(topicComments);
+                public SingleSource<TopicComments> apply(TopicComments topicComments) {
+                    if(topicComments != null && !CommonUtil.isEmpty(topicComments.getComments())) {
+                        flatShortUrl(topicComments.getComments());
+                    }
+
+                    if(topicComments == null){
+                        topicComments = new TopicComments();
+                    }
+                    return Single.just(topicComments);
                 }
             };
         }

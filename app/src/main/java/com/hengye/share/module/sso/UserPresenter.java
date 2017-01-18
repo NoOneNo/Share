@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.model.sina.WBUserInfo;
+import com.hengye.share.module.util.encapsulation.mvp.MvpView;
 import com.hengye.share.module.util.encapsulation.mvp.RxPresenter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.UrlBuilder;
@@ -13,18 +14,24 @@ import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
 import java.util.Map;
 
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.SingleSource;
+import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 
-public class UserPresenter extends RxPresenter<UserMvpView> {
+public class UserPresenter extends RxPresenter<UserContract.View> implements UserContract.Presenter{
 
-    public UserPresenter(UserMvpView mvpView){
+    public UserPresenter(UserContract.View mvpView){
         super(mvpView);
     }
 
+    @Override
     public void loadWBUserInfo(){
         loadWBUserInfo(UserUtil.getUid(), null);
     }
 
+    @Override
     public void loadWBUserInfo(String uid, String name){
         if(CommonUtil.isEmpty(uid, name)){
             getMvpView().loadSuccess(null);
@@ -34,35 +41,30 @@ public class UserPresenter extends RxPresenter<UserMvpView> {
         RetrofitManager
                 .getWBService()
                 .listUserInfo(getWBUserInfoParameter(uid, name))
-                .filter(new Predicate<WBUserInfo>() {
+                .flatMap(new Function<WBUserInfo, SingleSource<WBUserInfo>>() {
                     @Override
-                    public boolean test(WBUserInfo wbUserInfo) throws Exception {
+                    public SingleSource<WBUserInfo> apply(WBUserInfo wbUserInfo) throws Exception {
                         UserUtil.updateUserInfo(wbUserInfo);
-                        return true;
+                        return Single.just(wbUserInfo);
                     }
                 })
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(new BaseSubscriber<WBUserInfo>() {
+                .subscribe(new BaseSingleObserver<WBUserInfo>(){
                     @Override
-                    public void onError(UserMvpView v, Throwable e) {
-                        v.loadFail();
+                    public void onSuccess(UserContract.View view, WBUserInfo wbUserInfo) {
+                        view.handleUserInfo(wbUserInfo);
+                        view.loadSuccess(User.getUser(wbUserInfo));
                     }
 
                     @Override
-                    public void onNext(UserMvpView v, WBUserInfo wbUserInfo) {
-                        v.handleUserInfo(wbUserInfo);
-                        v.loadSuccess(User.getUser(wbUserInfo));
-                    }
-
-                    @Override
-                    public void onNext(WBUserInfo wbUserInfo) {
-                        super.onNext(wbUserInfo);
+                    public void onError(UserContract.View view, Throwable e) {
+                        view.loadFail();
                     }
                 });
     }
 
-    public Map<String, String> getWBUserInfoParameter(String uid, String name) {
+    private Map<String, String> getWBUserInfoParameter(String uid, String name) {
         final UrlBuilder ub = new UrlBuilder();
         String token = UserUtil.getPriorToken();
         ub.addParameter("access_token", token);

@@ -7,17 +7,12 @@ import android.view.View;
 
 import com.hengye.share.R;
 import com.hengye.share.module.util.encapsulation.base.DefaultDataHandler;
-import com.hengye.share.module.util.encapsulation.base.DataHandler;
-import com.hengye.share.model.Select;
 import com.hengye.share.model.UserInfo;
-import com.hengye.share.module.util.encapsulation.fragment.RecyclerRefreshFragment;
+import com.hengye.share.module.base.ShareRecyclerFragment;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
-import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
 
-import java.util.List;
-
-public class UserListFragment extends RecyclerRefreshFragment<Select<UserInfo>> implements UserListMvpView {
+public class UserListFragment extends ShareRecyclerFragment<UserInfo> implements UserListContract.View {
 
     public static Bundle getStartBundle(String uid) {
         Bundle bundle = new Bundle();
@@ -41,36 +36,18 @@ public class UserListFragment extends RecyclerRefreshFragment<Select<UserInfo>> 
         if(uid == null){
             uid = UserUtil.getUid();
         }
-        addPresenter(mPresenter = new UserListPresenter(this, uid));
+        mPresenter = new UserListPresenter(this, uid);
         setAdapter(mAdapter = new UserListAdapter(getContext()));
         setDataHandler(new DefaultDataHandler<>(mAdapter));
 
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                UserInfo userInfo = mAdapter.getItem(position).getTarget();
+                UserInfo userInfo = mAdapter.getItem(position);
                 View avatar = view.findViewById(R.id.iv_avatar);
                 PersonalHomepageActivity.start(getContext(), avatar, userInfo);
             }
         });
-    }
-
-    @Override
-    public void showUserListSuccess(List<UserInfo> data, boolean isRefresh) {
-        handleData(isRefresh, Select.get(data));
-    }
-
-    @Override
-    public void onTaskComplete(boolean isRefresh, boolean isSuccess) {
-        if(!isSuccess){
-            ToastUtil.showLoadErrorToast();
-        }
-        setTaskComplete(isSuccess);
-    }
-
-    @Override
-    public void canLoadMore(boolean loadEnable) {
-        setLoadEnable(loadEnable);
     }
 
     public UserListPresenter getPresenter() {

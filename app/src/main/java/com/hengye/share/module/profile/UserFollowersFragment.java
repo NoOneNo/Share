@@ -31,7 +31,7 @@ public class UserFollowersFragment extends UserListFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setRefreshing(true);
+        startRefresh();
     }
 
     @Override

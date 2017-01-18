@@ -4,12 +4,14 @@ import com.hengye.share.model.Address;
 import com.hengye.share.model.other.AMapAddresses;
 import com.hengye.share.model.other.AMapModel;
 import com.hengye.share.model.sina.WBAddresses;
+import com.hengye.share.module.util.encapsulation.base.Pager;
 import com.hengye.share.module.util.encapsulation.mvp.ListDataPresenter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.http.retrofit.RetrofitManager;
 import com.hengye.share.util.rxjava.datasource.ObservableHelper;
+import com.hengye.share.util.rxjava.datasource.SingleHelper;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 import com.hengye.share.util.thirdparty.ThirdPartyUtils;
 
@@ -19,22 +21,25 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import io.reactivex.ObservableSource;
+import io.reactivex.SingleSource;
 import io.reactivex.functions.Function;
 
 /**
  * Created by yuhy on 2016/12/6.
  */
 
-public class AroundAddressPresenter extends ListDataPresenter<Address, AroundAddressMvpView> {
+public class AroundAddressPresenter extends ListDataPresenter<Address, AroundAddressContract.View>
+        implements AroundAddressContract.Presenter{
 
-    public AroundAddressPresenter(AroundAddressMvpView mvpView) {
+    @Inject
+    public AroundAddressPresenter(AroundAddressContract.View mvpView) {
         super(mvpView);
     }
 
+    @Override
     public void loadAroundAddress(boolean isRefresh) {
 
         getMvpView().onTaskStart();
-
 
 //        RetrofitManager
 //                .getWBService()
@@ -46,46 +51,46 @@ public class AroundAddressPresenter extends ListDataPresenter<Address, AroundAdd
                 .flatMap(flatAMapAddresses(isRefresh))
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(new ListDataSubscriber(isRefresh));
+                .subscribe(new ListDataSingleObserver(isRefresh));
     }
 
-    public Map<String, String> getAMapAddressParams(boolean isRefresh) {
+    private Map<String, String> getAMapAddressParams(boolean isRefresh) {
         UrlBuilder urlBuilder = UrlBuilder.build()
                 .addParameter("key", ThirdPartyUtils.getAppKeyForAMapWeb())
-                .addParameter("location", getLongitude() + "," + getLatitude())
+                .addParameter("location", longitude + "," + latitude)
                 .addParameter("offset", 30)
-                .addParameter("page", getPager().getPage(isRefresh))
+                .addParameter("page", pager.getPage(isRefresh))
                 .addParameter("extensions", "all");
 
-        if (!CommonUtil.isEmpty(getKeywords())) {
-            urlBuilder.addParameter("keywords", getKeywords());
+        if (!CommonUtil.isEmpty(keywords)) {
+            urlBuilder.addParameter("keywords", keywords);
         }
         return urlBuilder.getParameters();
     }
 
-    public Map<String, String> getWBAddressParams(boolean isRefresh) {
+    private Map<String, String> getWBAddressParams(boolean isRefresh) {
         UrlBuilder urlBuilder = UrlBuilder.build()
                 .addParameter("access_token", UserUtil.getToken())
-                .addParameter("long", getLongitude())
-                .addParameter("lat", getLatitude())
+                .addParameter("long", longitude)
+                .addParameter("lat", latitude)
                 .addParameter("count", 30)
-                .addParameter("page", getPager().getPage(isRefresh))
+                .addParameter("page", pager.getPage(isRefresh))
                 .addParameter("sort", 1)//按距离排序
                 .addParameter("offset", 1);//传入的经纬度是否是纠偏过，0：没纠偏、1：纠偏过，默认为0。
 
-        if (!CommonUtil.isEmpty(getKeywords())) {
-            urlBuilder.addParameter("q", getKeywords());
+        if (!CommonUtil.isEmpty(keywords)) {
+            urlBuilder.addParameter("q", keywords);
         }
         return urlBuilder.getParameters();
     }
 
 
-    private Function<AMapAddresses, ObservableSource<ArrayList<Address>>> flatAMapAddresses(final boolean isRefresh) {
-        return new Function<AMapAddresses, ObservableSource<ArrayList<Address>>>() {
+    private Function<AMapAddresses, SingleSource<ArrayList<Address>>> flatAMapAddresses(final boolean isRefresh) {
+        return new Function<AMapAddresses, SingleSource<ArrayList<Address>>>() {
             @Override
-            public ObservableSource<ArrayList<Address>> apply(AMapAddresses aMapAddresses) throws Exception {
+            public SingleSource<ArrayList<Address>> apply(AMapAddresses aMapAddresses) throws Exception {
                 if (aMapAddresses != null && AMapModel.isSucess(aMapAddresses.getStatus())) {
-                    return ObservableHelper.justArrayList(aMapAddresses.convert());
+                    return SingleHelper.justArrayList(aMapAddresses.convert());
                 } else {
                     return RetrofitManager
                             .getWBService()
@@ -96,17 +101,17 @@ public class AroundAddressPresenter extends ListDataPresenter<Address, AroundAdd
         };
     }
 
-    Function<WBAddresses, ObservableSource<ArrayList<Address>>> mFlatWBAddresses;
+    Function<WBAddresses, SingleSource<ArrayList<Address>>> mFlatWBAddresses;
 
-    private Function<WBAddresses, ObservableSource<ArrayList<Address>>> flatWBAddresses() {
+    private Function<WBAddresses, SingleSource<ArrayList<Address>>> flatWBAddresses() {
         if (mFlatWBAddresses == null) {
-            mFlatWBAddresses = new Function<WBAddresses, ObservableSource<ArrayList<Address>>>() {
+            mFlatWBAddresses = new Function<WBAddresses, SingleSource<ArrayList<Address>>>() {
                 @Override
-                public ObservableSource<ArrayList<Address>> apply(WBAddresses wbAddresses) throws Exception {
+                public SingleSource<ArrayList<Address>> apply(WBAddresses wbAddresses) throws Exception {
                     if (wbAddresses != null) {
-                        return ObservableHelper.justArrayList(wbAddresses.convert());
+                        return SingleHelper.justArrayList(wbAddresses.convert());
                     } else {
-                        return ObservableHelper.just(null);
+                        return SingleHelper.justArrayList(null);
                     }
                 }
             };
@@ -120,37 +125,29 @@ public class AroundAddressPresenter extends ListDataPresenter<Address, AroundAdd
      * 经纬度
      */
     private float longitude, latitude;
+    private Pager pager;
 
-    public String getKeywords() {
-        return keywords;
-    }
-
+    @Override
     public void setKeywords(String keywords) {
         this.keywords = keywords;
     }
 
-    public float[] getLocation() {
-        return new float[]{longitude, latitude};
-    }
-
+    @Override
     public void setLocation(float longitude, float latitude) {
         setLongitude(longitude);
         setLatitude(latitude);
     }
 
-    public float getLongitude() {
-        return longitude;
+    @Override
+    public void setPager(Pager pager) {
+        this.pager = pager;
     }
 
-    public void setLongitude(float longitude) {
+    private void setLongitude(float longitude) {
         this.longitude = longitude;
     }
 
-    public float getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(float latitude) {
+    private void setLatitude(float latitude) {
         this.latitude = latitude;
     }
 }

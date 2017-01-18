@@ -10,11 +10,13 @@ import android.widget.TextView;
 import com.hengye.share.R;
 import com.hengye.share.model.Select;
 import com.hengye.share.model.UserInfo;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapter;
 import com.hengye.share.module.util.encapsulation.view.recyclerview.EditModeAdapter;
+import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemViewHolder;
 import com.hengye.share.ui.widget.image.AvatarImageView;
 import com.hengye.share.ui.widget.util.SelectorLoader;
 
-public class UserListAdapter extends EditModeAdapter<Select<UserInfo>> {
+public class UserListAdapter extends CommonAdapter<UserInfo> {
 
     public UserListAdapter(Context context) {
         super(context);
@@ -25,7 +27,7 @@ public class UserListAdapter extends EditModeAdapter<Select<UserInfo>> {
         return new MainViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_user_list, parent, false));
     }
 
-    public static class MainViewHolder extends EditModeAdapter.EditModeViewHolder<Select<UserInfo>> {
+    public static class MainViewHolder extends ItemViewHolder<UserInfo> {
 
         ImageButton mCheckBox;
         TextView mUsername;
@@ -45,17 +47,8 @@ public class UserListAdapter extends EditModeAdapter<Select<UserInfo>> {
         }
 
         @Override
-        public void updateEditMode(boolean isEditMode) {
-            mCheckBox.setVisibility(isEditMode ? View.VISIBLE : View.INVISIBLE);
-        }
-
-        @Override
-        public void bindData(Context context, Select<UserInfo> select, int position) {
-            super.bindData(context, select, position);
-
-            mCheckBox.setImageResource(select.isSelected() ? R.drawable.ic_check_select : 0);
-
-            UserInfo userInfo = select.getTarget();
+        public void bindData(Context context, UserInfo userInfo, int position) {
+            super.bindData(context, userInfo, position);
             if (userInfo != null) {
                 mUsername.setText(userInfo.getName());
                 mAvatar.setImageUrl(userInfo.getAvatar());

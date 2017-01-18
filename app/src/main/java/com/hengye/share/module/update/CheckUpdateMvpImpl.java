@@ -11,6 +11,7 @@ import com.hengye.share.BuildConfig;
 import com.hengye.share.R;
 import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.module.util.encapsulation.base.TaskState;
+import com.hengye.share.module.util.encapsulation.mvp.MvpPresenter;
 import com.hengye.share.util.ApplicationUtil;
 import com.hengye.share.util.IntentUtil;
 import com.hengye.share.util.L;
@@ -22,7 +23,12 @@ import com.hengye.share.util.ToastUtil;
  * Created by yuhy on 2016/11/21.
  */
 
-public class CheckUpdateMvpImpl implements CheckUpdateMvpView {
+public class CheckUpdateMvpImpl implements CheckUpdateContract.View {
+
+    @Override
+    public void setPresenter(MvpPresenter presenter) {
+
+    }
 
     @Override
     public void onCheckUpdateStart() {

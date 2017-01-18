@@ -28,7 +28,7 @@ import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.module.base.BaseActivity;
-import com.hengye.share.module.sso.UserMvpView;
+import com.hengye.share.module.sso.UserContract;
 import com.hengye.share.module.sso.UserPresenter;
 import com.hengye.share.module.util.encapsulation.base.TaskState;
 import com.hengye.share.ui.widget.PersonalHomePageToolbarLayout;
@@ -46,8 +46,11 @@ import com.hengye.share.util.rxjava.DefaultSubscriber;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.disposables.Disposable;
 
-public class PersonalHomepageActivity extends BaseActivity implements View.OnClickListener, AppBarLayout.OnOffsetChangedListener, UserMvpView {
+public class PersonalHomepageActivity extends BaseActivity implements View.OnClickListener, AppBarLayout.OnOffsetChangedListener, UserContract.View {
 
     public static void start(Context context, View startView, UserInfo userInfo) {
         if (startView == null) {
@@ -107,7 +110,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         if (mUserInfo == null) {
             PersonalHomepageActivity.this.finish();
         } else {
-            addPresenter(mPresenter = new UserPresenter(this));
+            mPresenter = new UserPresenter(this);
             initView();
         }
     }
@@ -489,7 +492,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 
     public void follow(final boolean isFollow, String uid) {
 
-        Observable<WBUserInfo> flowable;
+        Single<WBUserInfo> flowable;
 
         flowable = isFollow ?
                 RetrofitManager
@@ -501,10 +504,11 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 
         flowable.subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(new DefaultSubscriber<WBUserInfo>() {
+                .subscribe(new SingleObserver<WBUserInfo>() {
+
                     @Override
-                    public void onComplete() {
-                        mFollowButton.setEnabled(true);
+                    public void onSubscribe(Disposable d) {
+
                     }
 
                     @Override
@@ -516,7 +520,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                     }
 
                     @Override
-                    public void onNext(WBUserInfo wbUserInfo) {
+                    public void onSuccess(WBUserInfo wbUserInfo) {
                         if (wbUserInfo != null) {
                             if (isFollow) {
                                 ToastUtil.showToast(R.string.label_follow_create_success);
@@ -528,6 +532,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                                 mWBUserInfo.setFollowing(isFollow);
                             }
                         }
+                        mFollowButton.setEnabled(true);
                     }
                 });
     }

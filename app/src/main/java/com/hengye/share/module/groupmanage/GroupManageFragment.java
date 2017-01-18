@@ -16,7 +16,7 @@ import com.hengye.share.R;
 import com.hengye.share.model.greenrobot.GroupList;
 import com.hengye.share.module.groupmanage.data.GroupManageRepository;
 import com.hengye.share.module.util.encapsulation.base.TaskState;
-import com.hengye.share.module.util.encapsulation.fragment.RecyclerRefreshFragment;
+import com.hengye.share.module.base.ShareRecyclerFragment;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
@@ -31,13 +31,12 @@ import java.util.List;
 /**
  * Created by yuhy on 16/9/19.
  */
-public class GroupManageFragment extends RecyclerRefreshFragment implements GroupManageMvpView {
+public class GroupManageFragment extends ShareRecyclerFragment implements GroupManageContract.View {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        addPresenter(mPresenter = new GroupManagePresenter(this, new GroupManageRepository()));
-
+        mPresenter = new GroupManagePresenter(this, new GroupManageRepository());
         initView();
 
         mPresenter.loadGroupList();
@@ -47,7 +46,7 @@ public class GroupManageFragment extends RecyclerRefreshFragment implements Grou
 
     private Dialog mConfirmDialog, mLoadingDialog;
 
-    private GroupManagePresenter mPresenter;
+    private GroupManageContract.Presenter mPresenter;
 
     private EditText mCreateGroupName, mCreateGroupDesc;
     private EditText mEditGroupName, mEditGroupDesc;
@@ -85,7 +84,6 @@ public class GroupManageFragment extends RecyclerRefreshFragment implements Grou
             builder.setNegativeButtonClickListener(new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    mPresenter.setIsGroupUpdate(false);
                     dialog.dismiss();
                     finish();
                 }
@@ -133,11 +131,12 @@ public class GroupManageFragment extends RecyclerRefreshFragment implements Grou
         }
     }
 
+    private void setIsGroupUpdate(){
+        setResult(Activity.RESULT_OK);
+    }
+
     @Override
     public void finish() {
-        if (mPresenter.isGroupUpdate()) {
-            setResult(Activity.RESULT_OK);
-        }
         super.finish();
     }
 
@@ -147,24 +146,19 @@ public class GroupManageFragment extends RecyclerRefreshFragment implements Grou
     }
 
     @Override
-    public void loadSuccess() {
+    public void onTaskComplete(int taskState) {
 
     }
 
     @Override
-    public void loadFail() {
-
-    }
-
-    @Override
-    public void handleGroupList(boolean isCache, List<GroupList> groupLists) {
+    public void loadGroupList(boolean isCache, List<GroupList> groupLists) {
         if (!CommonUtil.isEmpty(groupLists)) {
             if (groupLists.get(0).getVisible() == -1) {
                 groupLists.remove(0);
             }
 
             if (!isCache) {
-                setResult(Activity.RESULT_OK);
+                setIsGroupUpdate();
             }
         }
         mAdapter.refresh(groupLists);
@@ -177,7 +171,7 @@ public class GroupManageFragment extends RecyclerRefreshFragment implements Grou
         mLoadingDialog.dismiss();
         if (isSuccess) {
             ToastUtil.showToast(R.string.tip_update_group_success);
-            setResult(Activity.RESULT_OK);
+            setIsGroupUpdate();
             finish();
         } else {
             ToastUtil.showToast(R.string.tip_update_group_fail);
@@ -195,25 +189,13 @@ public class GroupManageFragment extends RecyclerRefreshFragment implements Grou
         }
     }
 
-//    private int findPosition(GroupList groupList){
-//        if(groupList != null){
-//            List<GroupList> groupLists = mAdapter.getData();
-//            for(int i = 0; i < groupLists.size(); i++){
-//                GroupList gl = groupLists.get(i);
-//                if(gl.equals(groupList)){
-//                    return i;
-//                }
-//            }
-//        }
-//        return -1;
-//    }
-
     @Override
     public void updateGroupResult(int taskState, GroupList groupList) {
         if (TaskState.isSuccess(taskState)) {
             mAdapter.updateItem(groupList);
             UserUtil.updateGroupList(groupList);
             ToastUtil.showToast(R.string.tip_update_group_success);
+            setIsGroupUpdate();
         } else {
             ToastUtil.showToast(TaskState.toString(taskState));
         }

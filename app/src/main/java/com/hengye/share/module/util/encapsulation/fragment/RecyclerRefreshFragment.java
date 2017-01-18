@@ -13,7 +13,7 @@ import com.hengye.swiperefresh.listener.SwipeListener;
 
 import java.util.List;
 
-import static com.hengye.share.module.util.encapsulation.base.TaskState.*;
+import static com.hengye.share.module.util.encapsulation.base.TaskState.isSuccess;
 
 /**
  * Created by yuhy on 16/7/27.
@@ -58,6 +58,10 @@ public abstract class RecyclerRefreshFragment<T> extends RecyclerFragment<T>{
 
     @Override
     public void onRetry() {
+        startRefresh();
+    }
+
+    public void startRefresh(){
         showLoading();
         onRefresh();
     }

@@ -12,9 +12,7 @@ import android.view.View;
 import com.hengye.share.R;
 import com.hengye.share.model.Topic;
 import com.hengye.share.module.topic.StatusFragment;
-import com.hengye.share.module.util.encapsulation.base.DataHandler;
-import com.hengye.share.module.util.encapsulation.base.Pager;
-import com.hengye.share.module.util.encapsulation.fragment.RecyclerRefreshFragment;
+import com.hengye.share.module.base.ShareRecyclerFragment;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.module.util.image.GalleryActivity;
 import com.hengye.share.util.L;
@@ -25,7 +23,7 @@ import com.hengye.swiperefresh.listener.SwipeListener;
 
 import java.util.ArrayList;
 
-public class TopicAlbumFragment extends RecyclerRefreshFragment<String> implements TopicAlbumMvpView, SwipeListener.OnRefreshListener {
+public class TopicAlbumFragment extends ShareRecyclerFragment<String> implements TopicAlbumContract.View, SwipeListener.OnRefreshListener {
 
     public static TopicAlbumFragment newInstance(String uid, String name) {
         TopicAlbumFragment fragment = new TopicAlbumFragment();
@@ -118,7 +116,7 @@ public class TopicAlbumFragment extends RecyclerRefreshFragment<String> implemen
         setPager(mTopicPager = new TopicIdPager(mTopics));
         setDataHandler(new TopicRefreshIdHandler<>(mAdapter));
 
-        addPresenter(mPresenter = new TopicAlbumPresenter(this));
+        mPresenter = new TopicAlbumPresenter(this);
         mPresenter.setUid(uid);
         mPresenter.setName(name);
 

@@ -24,7 +24,7 @@ import com.hengye.share.util.thirdparty.ThirdPartyUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AccountManageActivity extends BaseActivity implements AccountManageMvpView, DialogInterface.OnClickListener {
+public class AccountManageActivity extends BaseActivity implements AccountManageContract.View, DialogInterface.OnClickListener {
 
     public final static int ACCOUNT_CHANGE = 5;
 
@@ -35,7 +35,7 @@ public class AccountManageActivity extends BaseActivity implements AccountManage
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        addPresenter(mPresenter = new AccountManagePresenter(this));
+        mPresenter = new AccountManagePresenter(this);
         initView();
     }
 

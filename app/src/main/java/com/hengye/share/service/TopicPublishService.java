@@ -24,6 +24,7 @@ import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.model.sina.WBTopicComment;
 import com.hengye.share.model.sina.WBUploadPicture;
+import com.hengye.share.module.draft.TopicDraftActivity;
 import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.util.ApplicationUtil;
 import com.hengye.share.util.CommonUtil;
@@ -47,6 +48,11 @@ import java.util.Random;
 import java.util.Set;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.SingleSource;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -294,12 +300,12 @@ public class TopicPublishService extends Service {
 
     protected void publishWBTopicWithMultiplePhoto(final TopicPublish tp, List<String> urls) throws Exception {
 
-        Observable.zip(
+        Single.zip(
                 Observable
                         .fromIterable(urls)
-                        .map(new Function<String, Observable<WBUploadPicture>>() {
+                        .map(new Function<String, SingleSource<WBUploadPicture>>() {
                             @Override
-                            public Observable<WBUploadPicture> apply(String s) {
+                            public SingleSource<WBUploadPicture> apply(String s) {
 
                                 RequestBody requestFile = RequestBody.create(MediaType.parse("application/otcet-stream"),
                                         new File(s));
@@ -309,6 +315,7 @@ public class TopicPublishService extends Service {
                                         UserUtil.getPriorToken()), body);
                             }
                         })
+                        .blockingIterable()
                 , new Function<Object[], List<String>>() {
                     @Override
                     public List<String> apply(Object[] objects) throws Exception {
@@ -322,9 +329,9 @@ public class TopicPublishService extends Service {
                         return urls;
                     }
                 })
-                .flatMap(new Function<List<String>, Observable<WBTopic>>() {
+                .flatMap(new Function<List<String>, SingleSource<WBTopic>>() {
                     @Override
-                    public Observable<WBTopic> apply(List<String> urls) {
+                    public SingleSource<WBTopic> apply(List<String> urls) {
 
                         tp.setToken(UserUtil.getPriorToken());
                         return RetrofitManager
@@ -346,7 +353,7 @@ public class TopicPublishService extends Service {
         if (tp.getTopicDraft().isCommentOrRepostConcurrently()) {
             WBService service = RetrofitManager.getWBService();
 
-            Observable.zip(
+            Single.zip(
                     service.publishComment(tp.getToken(), tp.getTopicDraft().getContent(), tp.getTopicDraft().getTargetTopicId(), 0),
                     service.repostTopic(tp.getToken(), tp.getTopicDraft().getRepostContent(), tp.getTopicDraft().getTargetTopicId(), 0),
                     ObjectConverter.getObjectConverter2())
@@ -376,7 +383,7 @@ public class TopicPublishService extends Service {
     protected void replyWBComment(final TopicPublish tp) {
         if (tp.getTopicDraft().isCommentOrRepostConcurrently()) {
             WBService service = RetrofitManager.getWBService();
-            Observable.zip(
+            Single.zip(
                     service.replyComment(tp.getToken(), tp.getTopicDraft().getContent(), tp.getTopicDraft().getTargetTopicId(), tp.getTopicDraft().getTargetCommentId(), 0),
                     service.repostTopic(tp.getToken(), tp.getTopicDraft().getRepostContent(), tp.getTopicDraft().getTargetTopicId(), 0),
                     ObjectConverter.getObjectConverter2())
@@ -394,7 +401,7 @@ public class TopicPublishService extends Service {
     }
 
 
-    public abstract class PublishSubscriber<T> extends DefaultSubscriber<T> {
+    public abstract class PublishSubscriber<T> implements SingleObserver<T> {
 
         TopicPublish tp;
 
@@ -403,7 +410,12 @@ public class TopicPublishService extends Service {
         }
 
         @Override
-        public void onComplete() {
+        public void onSubscribe(Disposable d) {
+
+        }
+
+        @Override
+        public void onSuccess(T value) {
             L.debug("onCompleted invoke");
         }
 
@@ -422,7 +434,7 @@ public class TopicPublishService extends Service {
         }
 
         @Override
-        public void onNext(WBTopic wbTopic) {
+        public void onSuccess(WBTopic wbTopic) {
             L.debug("request success , data : %s", wbTopic);
             if (wbTopic != null) {
                 handlePublishSuccess(tp, Topic.getTopic(wbTopic));
@@ -437,7 +449,7 @@ public class TopicPublishService extends Service {
         }
 
         @Override
-        public void onNext(WBTopic wbTopic) {
+        public void onSuccess(WBTopic wbTopic) {
             L.debug("request success , data : %s", wbTopic);
             if (wbTopic != null) {
                 handlePublishSuccess(tp, TopicComment.getComment(wbTopic));
@@ -452,7 +464,7 @@ public class TopicPublishService extends Service {
         }
 
         @Override
-        public void onNext(WBTopicComment wbTopicComment) {
+        public void onSuccess(WBTopicComment wbTopicComment) {
             L.debug("request success , data : %s", wbTopicComment);
             if (wbTopicComment != null) {
                 handlePublishSuccess(tp, TopicComment.getComment(wbTopicComment));
@@ -467,7 +479,7 @@ public class TopicPublishService extends Service {
         }
 
         @Override
-        public void onNext(Object[] objects) {
+        public void onSuccess(Object[] objects) {
             WBTopicComment wbTopicComment = null;
             WBTopic wbTopic = null;
             if (objects[0] instanceof WBTopicComment) {
@@ -526,11 +538,17 @@ public class TopicPublishService extends Service {
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
+        Intent intent = new Intent(this, TopicDraftActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
         Notification.Builder builder = getNotificationBuilder()
                 .setTicker(getString(R.string.label_topic_publish_fail))
                 .setContentTitle(getString(R.string.label_topic_publish_fail))
                 .setContentText(tp.getTopicDraft().getDesc())
-                .setVibrate(new long[0]);
+                .setVibrate(new long[0])
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
 
         NotificationUtil.show(builder.build(), getNotificationId(tp));
         removeNotificationId(tp);

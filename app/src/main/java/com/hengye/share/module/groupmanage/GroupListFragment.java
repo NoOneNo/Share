@@ -15,7 +15,7 @@ import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapte
 import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemViewHolder;
 import com.hengye.share.module.topic.TopicPresenter.TopicGroup;
 import com.hengye.share.module.topic.TopicPresenter.TopicType;
-import com.hengye.share.module.util.encapsulation.fragment.RecyclerRefreshFragment;
+import com.hengye.share.module.base.ShareRecyclerFragment;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.ViewUtil;
 
@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Created by yuhy on 16/9/8.
  */
-public class GroupListFragment extends RecyclerRefreshFragment<TopicGroup>{
+public class GroupListFragment extends ShareRecyclerFragment<TopicGroup> {
 
     @Override
     public int getContentResId() {

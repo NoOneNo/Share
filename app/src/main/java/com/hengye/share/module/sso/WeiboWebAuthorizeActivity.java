@@ -40,6 +40,8 @@ import java.util.Map;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.SingleObserver;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by yuhy on 16/7/11.
@@ -260,21 +262,14 @@ public class WeiboWebAuthorizeActivity extends BaseActivity {
                     .oauthToken(ub.getParameters())
                     .subscribeOn(SchedulerProvider.io())
                     .observeOn(SchedulerProvider.ui())
-                    .subscribe(new DefaultSubscriber<HashMap<String,String>>() {
+                    .subscribe(new SingleObserver<HashMap<String, String>>() {
                         @Override
-                        public void onComplete() {
+                        public void onSubscribe(Disposable d) {
 
                         }
 
                         @Override
-                        public void onError(Throwable e) {
-                            mLoadingDialog.dismiss();
-                            ToastUtil.showNetWorkErrorToast();
-                            finish();
-                        }
-
-                        @Override
-                        public void onNext(HashMap<String, String> map) {
+                        public void onSuccess(HashMap<String, String> map) {
                             mLoadingDialog.dismiss();
                             if (!CommonUtil.isEmpty(map)) {
                                 Bundle bundle = new Bundle();
@@ -290,8 +285,14 @@ public class WeiboWebAuthorizeActivity extends BaseActivity {
                             }
                             finish();
                         }
-                    });
 
+                        @Override
+                        public void onError(Throwable e) {
+                            mLoadingDialog.dismiss();
+                            ToastUtil.showNetWorkErrorToast();
+                            finish();
+                        }
+                    });
         } else {
             ToastUtil.showToast(R.string.tip_cancel_authorize);
             finish();

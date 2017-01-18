@@ -7,123 +7,118 @@ import com.hengye.share.model.greenrobot.GroupList;
 import com.hengye.share.model.sina.WBGroup;
 import com.hengye.share.module.groupmanage.data.GroupManageDataSource;
 import com.hengye.share.module.util.encapsulation.base.TaskState;
-import com.hengye.share.module.util.encapsulation.mvp.RxPresenter;
+import com.hengye.share.module.util.encapsulation.mvp.TaskPresenter;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.http.retrofit.RetrofitManager;
-import com.hengye.share.util.rxjava.datasource.ObservableHelper;
+import com.hengye.share.util.rxjava.datasource.SingleHelper;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.functions.Consumer;
+import io.reactivex.Single;
+import io.reactivex.SingleSource;
 import io.reactivex.functions.Function;
 
-public class GroupManagePresenter extends RxPresenter<GroupManageMvpView> {
+public class GroupManagePresenter extends TaskPresenter<GroupManageContract.View> implements GroupManageContract.Presenter{
 
     @NonNull
     private final GroupManageDataSource mGroupManageRepository;
 
     public GroupManagePresenter(
-            @NonNull GroupManageMvpView mvpView,
+            @NonNull GroupManageContract.View mvpView,
             @NonNull GroupManageDataSource groupManageRepository) {
         super(mvpView);
 
         mGroupManageRepository = groupManageRepository;
     }
 
+    @Override
     public void loadGroupList() {
         mGroupManageRepository
                 .getGroupList()
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(new Consumer<List<GroupList>>() {
+                .subscribe(new BaseSingleObserver<ArrayList<GroupList>>() {
                     @Override
-                    public void accept(List<GroupList> groupLists) throws Exception {
-                        if (getMvpView() != null) {
-                            getMvpView().loadSuccess();
-                            getMvpView().handleGroupList(true, groupLists);
-                        }
+                    public void onSuccess(GroupManageContract.View view, ArrayList<GroupList> groupLists) {
+//                        getMvpView().loadSuccess();
+                        view.loadGroupList(true, groupLists);
                     }
-                }, new Consumer<Throwable>() {
+
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        if (getMvpView() != null) {
-                            getMvpView().loadFail();
-                        }
+                    public void onError(GroupManageContract.View view, Throwable e) {
+//                        getMvpView().loadFail();
                     }
                 });
     }
 
+    @Override
     public void refreshGroupList() {
         mGroupManageRepository
                 .refreshGroupList()
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(new Consumer<List<GroupList>>() {
+                .subscribe(new BaseSingleObserver<ArrayList<GroupList>>() {
                     @Override
-                    public void accept(List<GroupList> groupLists) throws Exception {
-                        if (getMvpView() != null) {
-                            setIsGroupUpdate(true);
-                            getMvpView().loadSuccess();
-                            getMvpView().handleGroupList(false, groupLists);
-                        }
+                    public void onSuccess(GroupManageContract.View view, ArrayList<GroupList> groupLists) {
+//                        getMvpView().loadSuccess();
+                        view.loadGroupList(false, groupLists);
                     }
-                }, new Consumer<Throwable>() {
+
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        if (getMvpView() != null) {
-                            getMvpView().loadFail();
-                        }
+                    public void onError(GroupManageContract.View view, Throwable e) {
+//                        getMvpView().loadFail();
                     }
                 });
     }
 
+    @Override
     public void updateGroupOrder(final ArrayList<GroupList> data) {
         mGroupManageRepository
                 .updateGroupList(data)
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(new BaseSubscriber<Boolean>() {
+                .subscribe(new BaseSingleObserver<Boolean>() {
                     @Override
-                    public void onNext(GroupManageMvpView v, Boolean isSuccess) {
-                        v.updateGroupOrderCallBack(isSuccess);
+                    public void onSuccess(GroupManageContract.View view, Boolean isSuccess) {
+                        view.updateGroupOrderCallBack(isSuccess);
                     }
 
                     @Override
-                    public void onError(GroupManageMvpView v, Throwable e) {
-                        v.updateGroupOrderCallBack(false);
+                    public void onError(GroupManageContract.View view, Throwable e) {
+                        view.updateGroupOrderCallBack(false);
                     }
                 });
     }
 
+    @Override
     public void checkGroupOrderIsChange(@NonNull List<GroupList> groupLists) {
-        ObservableHelper
+        SingleHelper
                 .justArrayList(groupLists)
-                .flatMap(new Function<List<GroupList>, Observable<Boolean>>() {
+                .flatMap(new Function<ArrayList<GroupList>, SingleSource<Boolean>>() {
                     @Override
-                    public Observable<Boolean> apply(List<GroupList> groupLists) {
-                        return ObservableHelper.just(!groupLists.equals(UserUtil.queryGroupList(false)));
+                    public SingleSource<Boolean> apply(ArrayList<GroupList> groupLists) throws Exception {
+                        return Single.just(!groupLists.equals(UserUtil.queryGroupList(false)));
                     }
                 })
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(new BaseSubscriber<Boolean>() {
+                .subscribe(new BaseSingleObserver<Boolean>() {
                     @Override
-                    public void onNext(GroupManageMvpView v, Boolean isChange) {
-                        setIsGroupUpdate(isChange);
-                        v.checkGroupOrder(isChange);
+                    public void onSuccess(GroupManageContract.View view, Boolean isChange) {
+                        view.checkGroupOrder(isChange);
                     }
 
                     @Override
-                    public void onError(GroupManageMvpView v, Throwable e) {
-                        v.checkGroupOrder(false);
+                    public void onError(GroupManageContract.View view, Throwable e) {
+                        view.checkGroupOrder(false);
                     }
                 });
     }
 
+    @Override
     public void createGroup(String name, String description){
         final UrlBuilder ub = new UrlBuilder();
         final String uid = UserUtil.getUid();
@@ -137,19 +132,20 @@ public class GroupManagePresenter extends RxPresenter<GroupManageMvpView> {
                 .createGroup(ub.getParameters())
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(new BaseSubscriber<WBGroup>() {
+                .subscribe(new BaseSingleObserver<WBGroup>() {
                     @Override
-                    public void onNext(GroupManageMvpView v, WBGroup wbGroup) {
-                        v.createGroupResult(TaskState.STATE_SUCCESS, GroupList.getGroupList(wbGroup, uid));
+                    public void onSuccess(GroupManageContract.View view, WBGroup wbGroup) {
+                        view.createGroupResult(TaskState.STATE_SUCCESS, GroupList.getGroupList(wbGroup, uid));
                     }
 
                     @Override
-                    public void onError(GroupManageMvpView v, Throwable e) {
-                        v.createGroupResult(TaskState.getFailState(e), null);
+                    public void onError(GroupManageContract.View view, Throwable e) {
+                        view.createGroupResult(TaskState.getFailState(e), null);
                     }
                 });
     }
 
+    @Override
     public void updateGroup(String gid, String name, String description){
         final UrlBuilder ub = new UrlBuilder();
         final String uid = UserUtil.getUid();
@@ -165,19 +161,20 @@ public class GroupManagePresenter extends RxPresenter<GroupManageMvpView> {
                 .updateGroup(ub.getParameters())
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(new BaseSubscriber<WBGroup>() {
+                .subscribe(new BaseSingleObserver<WBGroup>() {
                     @Override
-                    public void onNext(GroupManageMvpView v, WBGroup wbGroup) {
-                        v.updateGroupResult(TaskState.STATE_SUCCESS, GroupList.getGroupList(wbGroup, uid));
+                    public void onSuccess(GroupManageContract.View view, WBGroup wbGroup) {
+                        view.updateGroupResult(TaskState.STATE_SUCCESS, GroupList.getGroupList(wbGroup, uid));
                     }
 
                     @Override
-                    public void onError(GroupManageMvpView v, Throwable e) {
-                        v.updateGroupResult(TaskState.getFailState(e), null);
+                    public void onError(GroupManageContract.View view, Throwable e) {
+                        view.updateGroupResult(TaskState.getFailState(e), null);
                     }
                 });
     }
 
+    @Override
     public void deleteGroup(String gid){
         final UrlBuilder ub = new UrlBuilder();
         final String uid = UserUtil.getUid();
@@ -188,26 +185,16 @@ public class GroupManagePresenter extends RxPresenter<GroupManageMvpView> {
                 .destroyGroup(ub.getParameters())
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(new BaseSubscriber<WBGroup>() {
+                .subscribe(new BaseSingleObserver<WBGroup>() {
                     @Override
-                    public void onNext(GroupManageMvpView v, WBGroup wbGroup) {
-                        v.deleteGroupResult(TaskState.STATE_SUCCESS, GroupList.getGroupList(wbGroup, uid));
+                    public void onSuccess(GroupManageContract.View view, WBGroup wbGroup) {
+                        view.deleteGroupResult(TaskState.STATE_SUCCESS, GroupList.getGroupList(wbGroup, uid));
                     }
 
                     @Override
-                    public void onError(GroupManageMvpView v, Throwable e) {
-                        v.deleteGroupResult(TaskState.getFailState(e), null);
+                    public void onError(GroupManageContract.View view, Throwable e) {
+                        view.deleteGroupResult(TaskState.getFailState(e), null);
                     }
                 });
-    }
-
-    private boolean mIsGroupUpdate = false;
-
-    public void setIsGroupUpdate(boolean isGroupUpdate) {
-        this.mIsGroupUpdate = isGroupUpdate;
-    }
-
-    public boolean isGroupUpdate() {
-        return mIsGroupUpdate;
     }
 }

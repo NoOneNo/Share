@@ -19,19 +19,21 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.hengye.share.R;
-import com.hengye.share.module.util.encapsulation.mvp.BasePresenter;
+import com.hengye.share.module.setting.SettingHelper;
+import com.hengye.share.module.util.encapsulation.mvp.MvpPresenter;
+import com.hengye.share.module.util.encapsulation.mvp.MvpView;
+import com.hengye.share.module.util.encapsulation.view.listener.OnDoubleTapListener;
 import com.hengye.share.ui.widget.common.CommonToolBar;
 import com.hengye.share.util.NetworkUtil;
 import com.hengye.share.util.RequestManager;
-import com.hengye.share.module.setting.SettingHelper;
-import com.hengye.share.module.util.encapsulation.view.listener.OnDoubleTapListener;
 import com.hengye.skinloader.listener.OnSkinUpdateListener;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @SuppressLint("Registered")
-public class BaseActivity extends AppCompatActivity implements OnSkinUpdateListener {
+public class BaseActivity extends AppCompatActivity
+        implements OnSkinUpdateListener, MvpView {
 
     protected String getRequestTag() {
         return "BaseActivity";
@@ -66,7 +68,7 @@ public class BaseActivity extends AppCompatActivity implements OnSkinUpdateListe
 
     private ActivityHelper mActivityHelper = new ActivityHelper();
 
-    private Set<BasePresenter> mPresenters;
+    private Set<MvpPresenter> mPresenters;
 
     private Handler mHandler;
 
@@ -258,19 +260,21 @@ public class BaseActivity extends AppCompatActivity implements OnSkinUpdateListe
         }
     }
 
-    protected void detachMvpView() {
-        if (mPresenters != null) {
-            for (BasePresenter presenter : mPresenters) {
-                presenter.detachView();
-            }
-        }
-    }
-
-    public void addPresenter(BasePresenter presenter) {
+    @Override
+    public void setPresenter(MvpPresenter presenter) {
         if (mPresenters == null) {
             mPresenters = new HashSet<>();
         }
         mPresenters.add(presenter);
+    }
+
+    protected void detachMvpView() {
+        if (mPresenters != null) {
+            for (MvpPresenter presenter : mPresenters) {
+                presenter.detachView();
+            }
+            mPresenters.clear();
+        }
     }
 
     public void startActivity(Class<?> cls) {

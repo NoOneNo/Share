@@ -14,14 +14,16 @@ import android.view.ViewGroup;
 
 import com.hengye.share.module.base.ActivityHelper;
 import com.hengye.share.module.base.BaseApplication;
-import com.hengye.share.module.util.encapsulation.mvp.BasePresenter;
+import com.hengye.share.module.util.encapsulation.mvp.MvpPresenter;
+import com.hengye.share.module.util.encapsulation.mvp.MvpView;
 import com.hengye.share.util.RequestManager;
 
 import java.util.HashSet;
 import java.util.Set;
 
 
-public class BaseFragment extends Fragment implements ActivityHelper.ActivityActionInterceptListener {
+public class BaseFragment extends Fragment
+        implements ActivityHelper.ActivityActionInterceptListener, MvpView {
 
     public final static String BASE_FRAGMENT = "BaseFragment";
 
@@ -40,7 +42,7 @@ public class BaseFragment extends Fragment implements ActivityHelper.ActivityAct
     private View parent;
 
 //    private BasePresenter mPresenter;
-    private Set<BasePresenter> mPresenters;
+    private Set<MvpPresenter> mPresenters;
 
     private Handler mHandler;
 
@@ -148,7 +150,8 @@ public class BaseFragment extends Fragment implements ActivityHelper.ActivityAct
         return parent.findViewById(id);
     }
 
-    public void addPresenter(BasePresenter presenter) {
+    @Override
+    public void setPresenter(MvpPresenter presenter) {
         if(mPresenters == null){
             mPresenters = new HashSet<>();
         }
@@ -157,9 +160,10 @@ public class BaseFragment extends Fragment implements ActivityHelper.ActivityAct
 
     protected void detachMvpView(){
         if(mPresenters != null){
-            for(BasePresenter presenter : mPresenters){
+            for(MvpPresenter presenter : mPresenters){
                 presenter.detachView();
             }
+            mPresenters.clear();
         }
     }
 

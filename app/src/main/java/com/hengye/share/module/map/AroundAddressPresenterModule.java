@@ -10,19 +10,14 @@ import dagger.Provides;
 @Module
 public class AroundAddressPresenterModule {
 
-    private AroundAddressMvpView aroundAddressMvpView;
+    private AroundAddressContract.View aroundAddressContractView;
 
-    public AroundAddressPresenterModule(AroundAddressMvpView aroundAddressMvpView){
-        this.aroundAddressMvpView = aroundAddressMvpView;
+    public AroundAddressPresenterModule(AroundAddressContract.View aroundAddressContractView){
+        this.aroundAddressContractView = aroundAddressContractView;
     }
 
     @Provides
-    AroundAddressMvpView provideAroundAddressMvpView(){
-        return aroundAddressMvpView;
-    }
-
-    @Provides
-    AroundAddressPresenter provideAroundAddressPresenter(){
-        return new AroundAddressPresenter(aroundAddressMvpView);
+    AroundAddressContract.Presenter providePresenter(){
+        return new AroundAddressPresenter(aroundAddressContractView);
     }
 }

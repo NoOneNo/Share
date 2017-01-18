@@ -35,7 +35,7 @@ import com.hengye.share.module.publish.TopicPublishActivity;
 import com.hengye.share.module.search.SearchActivity;
 import com.hengye.share.module.setting.SettingActivity;
 import com.hengye.share.module.setting.SettingHelper;
-import com.hengye.share.module.sso.UserMvpView;
+import com.hengye.share.module.sso.UserContract;
 import com.hengye.share.module.sso.UserPresenter;
 import com.hengye.share.module.test.TestActivity;
 import com.hengye.share.module.util.WebViewActivity;
@@ -61,7 +61,7 @@ import com.hengye.share.util.thirdparty.WBUtil;
 public class TopicActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         AppBarLayout.OnOffsetChangedListener,
-        UserMvpView, View.OnClickListener, GroupListFragment.OnGroupSelectedCallback {
+        UserContract.View, View.OnClickListener, GroupListFragment.OnGroupSelectedCallback {
 
     @Override
     protected boolean setToolBar() {
@@ -90,7 +90,7 @@ public class TopicActivity extends BaseActivity
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        addPresenter(mPresenter = new UserPresenter(this));
+        mPresenter = new UserPresenter(this);
         initView();
 
         if (UserUtil.isUserEmpty()) {
@@ -299,14 +299,6 @@ public class TopicActivity extends BaseActivity
         anim.setDuration(600);
         anim.start();
         getSupportFragmentManager().beginTransaction().replace(R.id.content, fragment, "MainFragment").commit();
-    }
-
-    @Override
-    public void onToolbarDoubleClick(Toolbar toolbar) {
-        TopicFragment topicFragment = mCurrentTopicFragment;
-        if (topicFragment != null) {
-            topicFragment.onScrollToTop(false);
-        }
     }
 
     private void initSearch() {

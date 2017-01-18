@@ -17,8 +17,6 @@ import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.handler.TopicAdapterIdPager;
 import com.hengye.share.util.handler.TopicIdHandler;
-import com.hengye.share.module.util.encapsulation.base.DataHandler;
-import com.hengye.share.module.util.encapsulation.base.Pager;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
@@ -26,13 +24,12 @@ import com.hengye.share.module.publish.TopicPublishActivity;
 import com.hengye.share.module.topic.StatusFragment;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
 import com.hengye.share.ui.widget.fab.FabAnimator;
-import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.util.ClipboardUtil;
 import com.hengye.share.util.DataUtil;
 
 import java.util.ArrayList;
 
-public class TopicCommentFragment extends StatusFragment<TopicComment> implements TopicCommentMvpView, DialogInterface.OnClickListener {
+public class TopicCommentFragment extends StatusFragment<TopicComment> implements TopicCommentContract.View, DialogInterface.OnClickListener {
 
     public static Bundle getStartBundle(Topic topic, boolean isComment) {
         Bundle bundle = new Bundle();
@@ -48,7 +45,7 @@ public class TopicCommentFragment extends StatusFragment<TopicComment> implement
     }
 
     TopicCommentAdapter mAdapter;
-    TopicCommentPresenter mPresenter;
+    TopicCommentContract.Presenter mPresenter;
     Topic mTopic;
     boolean mIsComment;
     Dialog mTopicCommentDialog;
@@ -94,7 +91,7 @@ public class TopicCommentFragment extends StatusFragment<TopicComment> implement
         setDataHandler(new TopicIdHandler<>(mAdapter));
         mTopicPager.setForceRefresh(true);
 
-        addPresenter(mPresenter = new TopicCommentPresenter(this, isLikeMode));
+        mPresenter = new TopicCommentPresenter(this, isLikeMode);
 
         initView();
         showLoading();

@@ -5,11 +5,10 @@ import android.app.Application;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.os.Bundle;
 import android.support.multidex.MultiDex;
-import android.support.v4.app.Fragment;
 
 import com.hengye.share.service.VideoPlayService;
-import com.hengye.share.support.DefaultActivityLifecycleCallback;
 import com.hengye.share.util.AppUtils;
 import com.hengye.share.util.L;
 import com.hengye.share.util.NetworkUtil;
@@ -46,35 +45,15 @@ public class BaseApplication extends Application{
 	private void init() {
 //		startService(new Intent(this, ShareService.class));
 		ourInstance = this;
-		refWatcher = LeakCanary.install(this);
+		//初始化日志
 		L.init();
-		registerActivityLifecycleCallbacks(new DefaultActivityLifecycleCallback(){
-			boolean isForeground = false;
-
-			@Override
-			public void onActivityResumed(final Activity activity) {
-				super.onActivityResumed(activity);
-				if (!isForeground) {
-					L.debug("app切回到前台");
-					isForeground = true;
-				}
-			}
-
-			@Override
-			public void onActivityStopped(Activity activity) {
-				super.onActivityStopped(activity);
-				if (!AppUtils.isAppOnForeground()) {
-					L.debug("app切到后台");
-					isForeground = false;
-					//如果开启了视频播放，关闭；
-					VideoPlayService.stop();
-				}
-			}
-		});
-
+		//监听activity生命周期
+		registerActivityLifecycleCallbacks();
+		//监听网络变化
 		IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
 		registerReceiver(new NetworkUtil.ObserveNetworkReceiver(), intentFilter);
-
+		//监控内存泄漏
+		refWatcher = LeakCanary.install(this);
 //		SkinManager.setup(this);
 		//如果程序是从被销毁恢复，栈中GuidanceActivity已不存在，所以不是所有初始化都可以放到GuidanceActivity
 		//放到GuidanceActivity初始化
@@ -90,5 +69,54 @@ public class BaseApplication extends Application{
 	public static RefWatcher getRefWatcher(Context context){
 		BaseApplication baseApplication = (BaseApplication) context.getApplicationContext();
 		return baseApplication.refWatcher;
+	}
+
+	private void registerActivityLifecycleCallbacks(){
+		registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks(){
+			boolean isForeground = false;
+
+			@Override
+			public void onActivityResumed(final Activity activity) {
+				if (!isForeground) {
+					L.debug("app切回到前台");
+					isForeground = true;
+				}
+			}
+
+			@Override
+			public void onActivityStopped(Activity activity) {
+				if (!AppUtils.isAppOnForeground()) {
+					L.debug("app切到后台");
+					isForeground = false;
+					//如果开启了视频播放，关闭；
+					VideoPlayService.stop();
+				}
+			}
+
+			@Override
+			public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+			}
+
+			@Override
+			public void onActivityStarted(Activity activity) {
+
+			}
+
+			@Override
+			public void onActivityPaused(Activity activity) {
+
+			}
+
+			@Override
+			public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+			}
+
+			@Override
+			public void onActivityDestroyed(Activity activity) {
+
+			}
+		});
 	}
 }
