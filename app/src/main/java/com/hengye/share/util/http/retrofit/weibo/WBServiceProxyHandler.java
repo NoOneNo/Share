@@ -1,12 +1,14 @@
 package com.hengye.share.util.http.retrofit.weibo;
 
-import com.hengye.share.util.rxjava.datasource.ObservableHelper;
+import org.reactivestreams.Publisher;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.functions.Function;
 
 /**
@@ -20,7 +22,7 @@ public class WBServiceProxyHandler implements InvocationHandler {
         this.mObject = obj;
     }
 
-    public Function<Observable<? extends Throwable>, Observable<?>> mCheckException = new Function<Observable<? extends Throwable>, Observable<?>>() {
+    private Function<Observable<? extends Throwable>, Observable<?>> mRetryObservableException = new Function<Observable<? extends Throwable>, Observable<?>>() {
         @Override
         public Observable<?> apply(Observable<? extends Throwable> observable) {
             return observable.
@@ -36,74 +38,37 @@ public class WBServiceProxyHandler implements InvocationHandler {
         }
     };
 
+    private Function<Flowable<Throwable>, Publisher<Object>> mRetrySingleException = new Function<Flowable<Throwable>, Publisher<Object>>() {
+        @Override
+        public Publisher<Object> apply(Flowable<Throwable> throwableFlowable) throws Exception {
+            return throwableFlowable
+                    .flatMap(new Function<Throwable, Publisher<?>>() {
+                        @Override
+                        public Publisher<?> apply(Throwable throwable) throws Exception {
+                            WBApiException wbApiException = WBServiceErrorHandler.getInstance().checkError(throwable);
+                            return Flowable.error(wbApiException != null ? wbApiException : throwable);
+                        }
+                    });
+        }
+    };
+
     @Override
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 //        return method.invoke(mObject, args);
 
-        if (method.getReturnType() != Observable.class) {
-            return method.invoke(mObject, args);
-        }
+        Class<?> returnType = method.getReturnType();
 
         try {
-            return ((Observable<?>) method.invoke(mObject, args))
-                    .retryWhen(mCheckException);
+            if(returnType == Observable.class) {
+                return ((Observable<?>) method.invoke(mObject, args))
+                        .retryWhen(mRetryObservableException);
+            }else if(returnType == Single.class){
+                return ((Single<?>) method.invoke(mObject, args))
+                        .retryWhen(mRetrySingleException);
+            }
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
-        return ObservableHelper.just(new Exception("method call error"));
-
-//        return Observable.fromCallable(new Callable<Observable<?>>() {
-//            @Override
-//            public Observable<?> call() throws Exception {
-//                try {
-//                    return (Observable<?>) method.invoke(mObject, args);
-//                } catch (IllegalAccessException | InvocationTargetException e) {
-//                    e.printStackTrace();
-//                }
-//                return ObservableHelper.just(new Exception("method call error"));
-//            }
-//        });
-//                .retryWhen(new Function<Observable<? extends Throwable>, Observable<?>>() {
-//            @Override
-//            public Observable<?> apply(Observable<? extends Throwable> observable) {
-//                return observable.
-//                        flatMap(new Function<Throwable, Observable<?>>() {
-//                                    @Override
-//                                    public Observable<?> apply(Throwable throwable) {
-//                                        WBServiceErrorHandler.getInstance().checkError(throwable);
-//
-//                                        return Observable.error(throwable);
-//                                    }
-//                                }
-//                        );
-//            }
-//        });
-
-//        return ObservableHelper.just(null)
-//                .flatMap(new Function<Object, Observable<?>>() {
-//                    @Override
-//                    public Observable<?> apply(Object o) {
-//                        try {
-//                            return (Observable<?>) method.invoke(mObject, args);
-//                        } catch (IllegalAccessException | InvocationTargetException e) {
-//                            e.printStackTrace();
-//                        }
-//                        return ObservableHelper.just(new Exception("method call error"));
-//                    }
-//                }).retryWhen(new Function<Observable<? extends Throwable>, Observable<?>>() {
-//                    @Override
-//                    public Observable<?> apply(Observable<? extends Throwable> observable) {
-//                        return observable.
-//                                flatMap(new Function<Throwable, Observable<?>>() {
-//                                            @Override
-//                                            public Observable<?> apply(Throwable throwable) {
-//                                                WBServiceErrorHandler.getInstance().checkError(throwable);
-//
-//                                                return Observable.error(throwable);
-//                                            }
-//                                        }
-//                                );
-//                    }
-//                });
+        return method.invoke(mObject, args);
     }
 }

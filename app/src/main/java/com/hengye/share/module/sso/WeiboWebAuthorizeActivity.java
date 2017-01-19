@@ -40,7 +40,10 @@ import java.util.Map;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
 import io.reactivex.SingleObserver;
+import io.reactivex.SingleOnSubscribe;
 import io.reactivex.disposables.Disposable;
 
 /**
@@ -48,24 +51,24 @@ import io.reactivex.disposables.Disposable;
  */
 public class WeiboWebAuthorizeActivity extends BaseActivity {
 
-    public static Intent getStartIntent(Context context, WeiboApp app){
+    public static Intent getStartIntent(Context context, WeiboApp app) {
         return getStartIntent(context, app, false);
     }
 
-    public static Intent getStartIntent(Context context, WeiboApp app, boolean isCurrentUser){
+    public static Intent getStartIntent(Context context, WeiboApp app, boolean isCurrentUser) {
         Intent intent = new Intent(context, WeiboWebAuthorizeActivity.class);
-        if(app != null) {
+        if (app != null) {
             intent.putExtra("appKey", app.name());
         }
 
-        if(isCurrentUser && !UserUtil.isUserEmpty()){
+        if (isCurrentUser && !UserUtil.isUserEmpty()) {
             intent.putExtra("account", UserUtil.getCurrentUser().getAccount());
             intent.putExtra("password", UserUtil.getCurrentUser().getPassword());
         }
         return intent;
     }
 
-    public static Intent getAdTokenStartIntent(Context context){
+    public static Intent getAdTokenStartIntent(Context context) {
         return getStartIntent(context, WeiboApp.WEICO, true);
     }
 
@@ -123,44 +126,45 @@ public class WeiboWebAuthorizeActivity extends BaseActivity {
     }
 
     private void loadData() {
-        Observable
-                .create(new ObservableOnSubscribe<String>() {
+        Single
+                .create(new SingleOnSubscribe<String>() {
                     @Override
-                    public void subscribe(ObservableEmitter<String> subscriber) {
+                    public void subscribe(SingleEmitter<String> subscriber) {
                         String url = null;
                         try {
                             url = getEncapsulationLoginUrl();
-                        }catch (UnknownHostException uhe){
+                        } catch (UnknownHostException uhe) {
                             subscriber.onError(uhe);
                             return;
                         }
-                        if(url == null){
+                        if (url == null) {
                             subscriber.onError(new Throwable("get encapsulation login url fail"));
-                        }else{
-                            subscriber.onNext(url);
+                        } else {
+                            subscriber.onSuccess(url);
                         }
                     }
                 })
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(new DefaultSubscriber<String>() {
+                .subscribe(new SingleObserver<String>() {
+
                     @Override
-                    public void onComplete() {
+                    public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        if(e instanceof UnknownHostException){
+                        if (e instanceof UnknownHostException) {
                             ToastUtil.showNetWorkErrorToast();
-                        }else {
+                        } else {
                             ToastUtil.showToast(R.string.tip_unpredictable_error);
                         }
                         mLoading.setVisibility(View.GONE);
                     }
 
                     @Override
-                    public void onNext(String s) {
+                    public void onSuccess(String s) {
                         mWebView.loadDataWithBaseURL(URL_BASE, s, "text/html", "UTF-8", "");
                     }
                 });
@@ -323,12 +327,12 @@ public class WeiboWebAuthorizeActivity extends BaseActivity {
         }
     }
 
-    private String getEncapsulationLoginUrl() throws UnknownHostException{
+    private String getEncapsulationLoginUrl() throws UnknownHostException {
         int count = 3;
         while (count-- >= 0) {
             try {
                 String js = FileUtil.readAssetsFile("oauth.js");
-                if(CommonUtil.noEmpty(mAccount, mPassword)) {
+                if (CommonUtil.noEmpty(mAccount, mPassword)) {
                     js = js.replace("%username%", mAccount).replace("%password%", mPassword);
                 }
 
@@ -358,13 +362,13 @@ public class WeiboWebAuthorizeActivity extends BaseActivity {
                     e.printStackTrace();
                 }
 
-                L.debug("封装后的url : \n%s",html);
+                L.debug("封装后的url : \n%s", html);
 
                 return html;
             } catch (Exception e) {
                 e.printStackTrace();
-                if(e instanceof UnknownHostException){
-                    throw (UnknownHostException)e;
+                if (e instanceof UnknownHostException) {
+                    throw (UnknownHostException) e;
                 }
             }
         }

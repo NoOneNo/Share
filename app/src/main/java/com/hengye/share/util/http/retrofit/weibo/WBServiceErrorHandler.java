@@ -173,6 +173,7 @@ public class WBServiceErrorHandler {
         build.setPositiveButtonClickListener(new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
                 activity.startActivity(ThirdPartyLoginActivity.getStartIntent(activity, true));
             }
         });

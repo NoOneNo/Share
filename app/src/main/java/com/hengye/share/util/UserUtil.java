@@ -99,7 +99,7 @@ public class UserUtil {
             return;
         }
         User user = getCurrentUser();
-        user.setToken(null);
+        user.setToken("");//token不能为空，如果过期则改为空字符串
         user.setAdToken(null);
         updateUser(user);
     }
