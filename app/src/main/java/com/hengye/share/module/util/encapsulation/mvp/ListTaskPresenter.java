@@ -48,8 +48,16 @@ public class ListTaskPresenter<V extends MvpView & ListTaskCallBack> extends RxP
         }
 
         @Override
+        public void onSuccess(T t) {
+            super.onSuccess(t);
+            //分页处理需要在添加完数据后再调用onTaskComplete()方法处理数据切换view的显示
+            if(isViewAttached()){
+                getMvpView().onTaskComplete(isRefresh, TaskState.STATE_SUCCESS);
+            }
+        }
+
+        @Override
         public void onSuccess(V v, T t) {
-            v.onTaskComplete(isRefresh, TaskState.STATE_SUCCESS);
         }
 
         @Override

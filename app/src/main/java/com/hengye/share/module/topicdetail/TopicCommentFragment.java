@@ -10,22 +10,26 @@ import android.view.View;
 
 import com.hengye.floatingactionbutton.FloatingActionsMenu;
 import com.hengye.share.R;
-import com.hengye.share.model.TopicComments;
-import com.hengye.share.module.topic.TopicTitleViewHolder;
-import com.hengye.share.module.util.encapsulation.base.TaskState;
-import com.hengye.share.util.ToastUtil;
-import com.hengye.share.util.UserUtil;
-import com.hengye.share.util.handler.TopicAdapterIdPager;
-import com.hengye.share.util.handler.TopicIdHandler;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
+import com.hengye.share.model.TopicComments;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.module.publish.TopicPublishActivity;
 import com.hengye.share.module.topic.StatusFragment;
+import com.hengye.share.module.topic.TopicTitleViewHolder;
+import com.hengye.share.module.util.encapsulation.base.TaskState;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
 import com.hengye.share.ui.widget.fab.FabAnimator;
 import com.hengye.share.util.ClipboardUtil;
 import com.hengye.share.util.DataUtil;
+import com.hengye.share.util.ToastUtil;
+import com.hengye.share.util.UserUtil;
+import com.hengye.share.util.handler.TopicAdapterIdPager;
+import com.hengye.share.util.handler.TopicRefreshIdHandler;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
@@ -88,7 +92,7 @@ public class TopicCommentFragment extends StatusFragment<TopicComment> implement
         boolean isLikeMode = mIsComment && !UserUtil.isAdTokenEmpty();
         setAdapter(mAdapter = new TopicCommentAdapter(getContext(), new ArrayList<TopicComment>(), isLikeMode), true);
         setPager(mTopicPager = new TopicAdapterIdPager(mAdapter));
-        setDataHandler(new TopicIdHandler<>(mAdapter));
+        setDataHandler(new TopicRefreshIdHandler<>(mAdapter));
         mTopicPager.setForceRefresh(true);
 
         mPresenter = new TopicCommentPresenter(this, isLikeMode);
@@ -99,8 +103,37 @@ public class TopicCommentFragment extends StatusFragment<TopicComment> implement
         markLazyLoadPreparedAndLazyLoadIfCan();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(TopicComment.TopicCommentEvent event) {
+        boolean isComment = event.isComment();
+        String targetTopicCommentId = event.getTargetTopicId();
+        if(mTopic.getId() != null && mTopic.getId().equals(targetTopicCommentId) && isComment == mIsComment){
+            TopicComment topicComment = event.getTopicComment();
+            if(!isShowLoading()){
+                //加载完的情况下才添加刷新
+                mAdapter.addItem(0, topicComment);
+                showContent();
+            }
+        }
+    }
+
     protected void onLazyLoad() {
-        onRefresh();
+        if(isShowLoading()) {
+            //如果调用了下拉刷新就没必要再懒加载了
+            onRefresh();
+        }
     }
 
     private void initView() {

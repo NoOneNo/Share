@@ -373,6 +373,40 @@ public class WBTopic implements Serializable{
         return darwin_tags;
     }
 
+    @Override
+    public String toString() {
+        return "WBTopic{" +
+                "created_at='" + created_at + '\'' +
+                ", id=" + id +
+                ", mid='" + mid + '\'' +
+                ", idstr='" + idstr + '\'' +
+                ", text='" + text + '\'' +
+                ", source_allowclick=" + source_allowclick +
+                ", source_type=" + source_type +
+                ", source='" + source + '\'' +
+                ", favorited=" + favorited +
+                ", truncated=" + truncated +
+                ", in_reply_to_status_id='" + in_reply_to_status_id + '\'' +
+                ", in_reply_to_user_id='" + in_reply_to_user_id + '\'' +
+                ", in_reply_to_screen_name='" + in_reply_to_screen_name + '\'' +
+                ", geo=" + geo +
+                ", user=" + user +
+                ", reposts_count=" + reposts_count +
+                ", comments_count=" + comments_count +
+                ", attitudes_count=" + attitudes_count +
+                ", mlevel=" + mlevel +
+                ", visible=" + visible +
+                ", biz_feature=" + biz_feature +
+                ", rid='" + rid + '\'' +
+                ", userType=" + userType +
+                ", pic_urls=" + pic_urls +
+                ", biz_ids=" + biz_ids +
+                ", darwin_tags=" + darwin_tags +
+                ", retweeted_status=" + retweeted_status +
+                ", deleted='" + deleted + '\'' +
+                '}';
+    }
+
     public static class VisibleEntity implements Serializable{
 
         private static final long serialVersionUID = -5270600301367680541L;

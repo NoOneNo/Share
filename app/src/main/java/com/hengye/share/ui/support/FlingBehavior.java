@@ -1,13 +1,14 @@
 package com.hengye.share.ui.support;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 
-public final class FlingBehavior extends AppBarLayout.Behavior {
+public final class FlingBehavior extends AppBarLayout.Behavior{
     private static final int TOP_CHILD_FLING_THRESHOLD = 3;
     private boolean isPositive;
 
@@ -16,6 +17,18 @@ public final class FlingBehavior extends AppBarLayout.Behavior {
 
     public FlingBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        /**
+         * 解决滑动AppbarLayout的时候，因为子区域内容切换，
+         * AppbarLayout记录的上一个嵌套滑动View, mLastNestedScrollingChildRef
+         * 已经不可见，造成不能通过滑动AppbarLayout区域嵌套滑动子区域的问题
+         */
+        setDragCallback(new DragCallback() {
+            @Override
+            public boolean canDrag(@NonNull AppBarLayout appBarLayout) {
+                return true;
+            }
+        });
     }
 
     @Override

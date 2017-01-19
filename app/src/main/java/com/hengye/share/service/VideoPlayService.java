@@ -1,7 +1,10 @@
 package com.hengye.share.service;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -11,6 +14,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.provider.Browser;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -21,7 +25,9 @@ import android.widget.FrameLayout;
 
 import com.google.gson.JsonObject;
 import com.hengye.share.R;
+import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.module.base.BaseApplication;
+import com.hengye.share.module.util.encapsulation.base.TaskState;
 import com.hengye.share.ui.widget.media.MediaController;
 import com.hengye.share.ui.widget.media.VideoView;
 import com.hengye.share.util.ApplicationUtil;
@@ -59,6 +65,7 @@ public class VideoPlayService extends Service implements View.OnClickListener {
     WindowManager mWindowManager;
     LayoutInflater mLayoutInflater;
     Handler mHandler = new Handler();
+    String mTopicUrl;
 
     public Handler getHandler() {
         if (mHandler == null) {
@@ -84,8 +91,8 @@ public class VideoPlayService extends Service implements View.OnClickListener {
         super.onStartCommand(intent, flags, startId);
 
         String topicId = intent.getStringExtra("topicId");
-        String url = intent.getStringExtra("url");
-        L.debug("onStartCommand, topicId : %s, url : %s", topicId, url);
+        mTopicUrl = intent.getStringExtra("url");
+        L.debug("onStartCommand, topicId : %s, url : %s", topicId, mTopicUrl);
         if (topicId == null) {
             handleFail();
         } else {
@@ -250,12 +257,13 @@ public class VideoPlayService extends Service implements View.OnClickListener {
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.btn_close) {
-            handleFail();
+            stopSelf();
         }
     }
 
     private void handleFail() {
         L.debug("video play service handle fail");
+        showErrorDialog();
         stopSelf();
     }
 
@@ -305,6 +313,33 @@ public class VideoPlayService extends Service implements View.OnClickListener {
         mLoading.setVisibility(View.GONE);
         mVideoView.setVideoURI(Uri.parse(url));
         mVideoView.start();
+    }
+
+    private void showErrorDialog(){
+
+        final Activity activity = BaseActivity.getCurrentActivity();
+        if(activity != null) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(activity)
+                    .setCancelable(true)
+                    .setTitle(R.string.dialog_text_tip)
+                    .setMessage(R.string.tip_load_video_fail)
+                    .setNegativeButton(R.string.dialog_text_cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    })
+                    .setPositiveButton(R.string.dialog_text_confirm, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mTopicUrl));
+                            intent.putExtra(Browser.EXTRA_APPLICATION_ID, activity.getPackageName());
+                            activity.startActivity(intent);
+                        }
+                    });
+
+            builder.create().show();
+        }
     }
 }
 

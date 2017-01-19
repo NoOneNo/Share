@@ -25,6 +25,10 @@ public class PersonalTopicFragment extends TopicFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void setDataHandler() {
         setDataHandler(new TopicRefreshIdHandler<>(getAdapter()));
     }
 

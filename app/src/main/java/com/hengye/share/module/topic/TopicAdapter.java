@@ -51,7 +51,7 @@ import java.util.List;
 public class TopicAdapter extends CommonAdapter<Topic>
         implements OnItemClickListener, OnItemLongClickListener, DialogInterface.OnClickListener {
 
-    public static int mGalleryMaxWidth;
+    private static int mGalleryMaxWidth;
 //    private Callback mCallback;
     private TopicPresenter mPresenter;
     private boolean mShowDeleteTopicOption;

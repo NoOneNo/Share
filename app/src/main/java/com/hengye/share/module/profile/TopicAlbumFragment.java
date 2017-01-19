@@ -80,11 +80,6 @@ public class TopicAlbumFragment extends ShareRecyclerFragment<String> implements
         name = bundle.getString("name");
     }
 
-    @Override
-    public void onToolbarDoubleClick(Toolbar toolbar) {
-        onScrollToTop(false);
-    }
-
     public void handleStaticData(boolean isReset){
         if(isReset){
             topics = null;

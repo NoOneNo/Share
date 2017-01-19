@@ -58,9 +58,4 @@ public class TopicCommentActivity extends BaseActivity{
         topicGroupGroups.add(new TopicPresenter.TopicGroup(TopicPresenter.TopicType.COMMENT_BY_ME));
         return topicGroupGroups;
     }
-
-//    @Override
-//    public void onToolbarDoubleClick(Toolbar toolbar) {
-//        mAdapter.getItem(mViewPager.getCurrentItem()).onToolbarDoubleClick(toolbar);
-//    }
 }

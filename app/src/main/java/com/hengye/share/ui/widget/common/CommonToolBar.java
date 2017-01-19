@@ -40,6 +40,17 @@ public class CommonToolBar extends Toolbar {
         init();
     }
 
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mOnDoubleTapListeners.clear();
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+    }
+
     public void init() {
         this.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         if (getNavigationIcon() != null) {

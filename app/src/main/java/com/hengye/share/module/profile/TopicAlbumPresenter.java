@@ -93,17 +93,6 @@ public class TopicAlbumPresenter extends ListTaskPresenter<TopicAlbumContract.Vi
     }
 
     public void loadCacheData() {
-//        Observable
-//                .create(new ObservableOnSubscribe<ArrayList<Topic>>() {
-//                    @Override
-//                    public void subscribe(ObservableEmitter<ArrayList<Topic>> subscriber) {
-//                        ArrayList<Topic> topics = findData();
-//                        if (topics == null) {
-//                            topics = new ArrayList<>();
-//                        }
-//                        subscriber.onNext(topics);
-//                    }
-//                })
 
         SingleHelper
                 .justArrayList(findData())
@@ -129,7 +118,7 @@ public class TopicAlbumPresenter extends ListTaskPresenter<TopicAlbumContract.Vi
         return new ListTaskSingleObserver<ArrayList<Topic>>(isRefresh) {
             @Override
             public void onSuccess(TopicAlbumContract.View v, ArrayList<Topic> topics) {
-
+                super.onSuccess(v, topics);
                 if (isRefresh) {
                     saveData(topics);
                 }

@@ -161,4 +161,8 @@ public abstract class StateFragment extends BaseFragment
     public void showContent() {
         mStateLayoutManager.showState(STATE_CONTENT);
     }
+
+    public boolean isShowLoading(){
+        return mStateLayoutManager.getCurrentState() == STATE_LOADING;
+    }
 }

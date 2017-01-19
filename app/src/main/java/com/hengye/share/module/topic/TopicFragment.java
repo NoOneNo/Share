@@ -84,6 +84,7 @@ public class TopicFragment extends StatusFragment<Topic> implements TopicContrac
         mPresenter = new TopicPresenter(this, topicGroup);
         mPresenter.setUid(uid);
         mPresenter.setName(name);
+        mAdapter.setPresenter(mPresenter);
 
         if (isRestore && !UserUtil.isUserEmpty()) {
             onRestore();

@@ -34,8 +34,8 @@ public class ListDataPresenter<T, V extends MvpView & ListDataCallBack<T>> exten
 
         @Override
         public void onSuccess(V v, List<T> listData) {
-            v.onLoadListData(isRefresh, listData);
             super.onSuccess(v, listData);
+            v.onLoadListData(isRefresh, listData);
         }
     }
 }

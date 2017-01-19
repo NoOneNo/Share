@@ -32,12 +32,6 @@ public abstract class ShareRecyclerFragment<T> extends RecyclerRefreshFragment<T
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        removeDoubleTabListener();
-    }
-
-    @Override
     public void onToolbarDoubleClick(Toolbar toolbar) {
         onScrollToTop(false);
     }
@@ -56,14 +50,14 @@ public abstract class ShareRecyclerFragment<T> extends RecyclerRefreshFragment<T
         }
     }
 
-    private void removeDoubleTabListener() {
-        if (mOnDoubleTapListener != null) {
-            CommonToolBar toolbar = getShareToolbar();
-            if (toolbar != null) {
-                toolbar.removeOnDoubleTapListener(mOnDoubleTapListener);
-            }
-        }
-    }
+//    private void removeDoubleTabListener() {
+//        if (mOnDoubleTapListener != null) {
+//            CommonToolBar toolbar = getShareToolbar();
+//            if (toolbar != null) {
+//                toolbar.removeOnDoubleTapListener(mOnDoubleTapListener);
+//            }
+//        }
+//    }
 
     private CommonToolBar getShareToolbar() {
         if (getActivity() instanceof BaseActivity) {

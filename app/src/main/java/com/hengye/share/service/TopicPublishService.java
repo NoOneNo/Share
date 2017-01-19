@@ -39,6 +39,8 @@ import com.hengye.share.util.rxjava.DefaultSubscriber;
 import com.hengye.share.util.rxjava.ObjectConverter;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -172,18 +174,18 @@ public class TopicPublishService extends Service {
         mPublishQueue.put(tp, true);
         showTopicPublishSuccessNotification(tp);
         TopicDraftHelper.removeTopicDraft(tp.getTopicDraft());
-        stopServiceIfQueueIsAllFinish();
         sendBroadcast(tp, STATUS_SUCCESS, result);
         handlePublishFinish();
+        stopServiceIfQueueIsAllFinish();
     }
 
     protected void handlePublishFail(TopicPublish tp) {
         mPublishQueue.remove(tp);
         showTopicPublishFailNotification(tp);
         TopicDraftHelper.saveTopicDraft(tp.getTopicDraft(), TopicDraft.ERROR);
-        stopServiceIfQueueIsAllFinish();
         sendBroadcast(tp, STATUS_FAIL, null);
         handlePublishFinish();
+        stopServiceIfQueueIsAllFinish();
     }
 
     protected void handlePublishFinish() {
@@ -452,7 +454,10 @@ public class TopicPublishService extends Service {
         public void onSuccess(WBTopic wbTopic) {
             L.debug("request success , data : %s", wbTopic);
             if (wbTopic != null) {
-                handlePublishSuccess(tp, TopicComment.getComment(wbTopic));
+                TopicComment topicComment = TopicComment.getComment(wbTopic);
+                TopicComment.TopicCommentEvent event = new TopicComment.TopicCommentEvent(topicComment, tp.getTopicDraft().getTargetTopicId(), false);
+                EventBus.getDefault().post(event);
+                handlePublishSuccess(tp, topicComment);
             }
         }
     }
@@ -467,7 +472,10 @@ public class TopicPublishService extends Service {
         public void onSuccess(WBTopicComment wbTopicComment) {
             L.debug("request success , data : %s", wbTopicComment);
             if (wbTopicComment != null) {
-                handlePublishSuccess(tp, TopicComment.getComment(wbTopicComment));
+                TopicComment topicComment = TopicComment.getComment(wbTopicComment);
+                TopicComment.TopicCommentEvent event = new TopicComment.TopicCommentEvent(topicComment, tp.getTopicDraft().getTargetTopicId(), true);
+                EventBus.getDefault().post(event);
+                handlePublishSuccess(tp, topicComment);
             }
         }
     }
@@ -491,7 +499,10 @@ public class TopicPublishService extends Service {
             }
 
             if (wbTopicComment != null && wbTopic != null) {
-                handlePublishSuccess(tp, TopicComment.getComment(wbTopicComment));
+                TopicComment topicComment = TopicComment.getComment(wbTopicComment);
+                TopicComment.TopicCommentEvent event = new TopicComment.TopicCommentEvent(topicComment, tp.getTopicDraft().getTargetTopicId(), true);
+                EventBus.getDefault().post(event);
+                handlePublishSuccess(tp, topicComment);
             } else {
                 L.debug("request fail , wbTopicComment : %s, wbTopic : %s", wbTopicComment, wbTopic);
                 throw new IllegalStateException("publish error");
@@ -570,7 +581,6 @@ public class TopicPublishService extends Service {
             builder.setLargeIcon(bitmap);
         }
         return builder;
-
     }
 
     protected int getNotificationId(TopicPublish tp) {

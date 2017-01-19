@@ -18,25 +18,6 @@ import java.util.List;
 
 public class TopicComment implements TopicId, TopicShortUrl, Serializable{
 
-    private static final long serialVersionUID = -4250789290948278492L;
-
-    private Parent parent;
-
-    private UserInfo userInfo;//用户信息
-    private String date;//创建日期
-    private String channel;//渠道，通过什么发表
-    private String content;//内容
-    private String id;//评论或转发的唯一id
-    private long likeCounts;//评论点赞数
-    private boolean isLiked;//是否已经点赞
-    private Topic topic;//评论或转发的主题
-    private List<String> imageUrls;//缩略图
-    private List<String> imageLargeUrls;//原图
-
-    private HashMap<String, TopicUrl> urlMap;
-
-    private transient SpannableString urlSpannableString;
-
     public static TopicComments getComments(WBTopicComments wbTopicComments){
         TopicComments topicComments = new TopicComments();
         topicComments.setComments(getCommentArrayList(wbTopicComments));
@@ -115,6 +96,50 @@ public class TopicComment implements TopicId, TopicShortUrl, Serializable{
         topicComment.setTopic(Topic.getTopic(entity.getRetweeted_status()));
         return topicComment;
     }
+
+    public static class TopicCommentEvent{
+
+        TopicComment topicComment;
+        String targetTopicId;
+        boolean isComment;
+
+        public TopicCommentEvent(TopicComment topicComment, String targetTopicId, boolean isComment) {
+            this.topicComment = topicComment;
+            this.targetTopicId = targetTopicId;
+            this.isComment = isComment;
+        }
+
+        public TopicComment getTopicComment() {
+            return topicComment;
+        }
+
+        public String getTargetTopicId() {
+            return targetTopicId;
+        }
+
+        public boolean isComment() {
+            return isComment;
+        }
+    }
+
+    private static final long serialVersionUID = -4250789290948278492L;
+
+    private Parent parent;
+
+    private UserInfo userInfo;//用户信息
+    private String date;//创建日期
+    private String channel;//渠道，通过什么发表
+    private String content;//内容
+    private String id;//评论或转发的唯一id
+    private long likeCounts;//评论点赞数
+    private boolean isLiked;//是否已经点赞
+    private Topic topic;//评论或转发的主题
+    private List<String> imageUrls;//缩略图
+    private List<String> imageLargeUrls;//原图
+
+    private HashMap<String, TopicUrl> urlMap;
+
+    private transient SpannableString urlSpannableString;
 
     public void updateLiked(boolean isLiked){
         setLiked(isLiked);

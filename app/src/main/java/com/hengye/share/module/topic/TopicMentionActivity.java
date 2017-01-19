@@ -53,9 +53,4 @@ public class TopicMentionActivity extends BaseActivity{
         topicGroupGroups.add(new TopicPresenter.TopicGroup(TopicPresenter.TopicType.COMMENT_AT_ME));
         return topicGroupGroups;
     }
-
-//    @Override
-//    public void onToolbarDoubleClick(Toolbar toolbar) {
-//        mAdapter.getItem(mViewPager.getCurrentItem()).onToolbarDoubleClick(toolbar);
-//    }
 }

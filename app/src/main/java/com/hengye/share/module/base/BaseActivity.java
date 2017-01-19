@@ -156,6 +156,7 @@ public class BaseActivity extends AppCompatActivity
 
     @Override
     protected void onPause() {
+        mInstance = null;
         mActivityHelper.dispatchActivityPaused(this);
         super.onPause();
         observeNetworkChangeIfNeeded(false);
