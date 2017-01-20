@@ -22,7 +22,6 @@ import com.hengye.share.util.L;
 public class PullToRefreshLayout extends com.hengye.swiperefresh.PullToRefreshLayout
         implements com.hengye.swiperefresh.PullToRefreshLayout.AutoLoadingListener, com.hengye.swiperefresh.PullToRefreshLayout.OnLoadMoreCallBack {
 
-
     public PullToRefreshLayout(Context context) {
         this(context, null);
     }

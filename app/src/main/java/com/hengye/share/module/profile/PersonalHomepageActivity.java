@@ -106,7 +106,9 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     }
 
     @Override
-    protected void afterCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        initStatusBar();
+        super.onCreate(savedInstanceState);
         if (mUserInfo == null) {
             PersonalHomepageActivity.this.finish();
         } else {
@@ -142,12 +144,6 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     private WBUserInfo mWBUserInfo;
 
     private UserPresenter mPresenter;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        initStatusBar();
-        super.onCreate(savedInstanceState);
-    }
 
     @SuppressWarnings("ConstantConditions")
     private void initView() {

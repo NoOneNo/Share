@@ -78,7 +78,8 @@ public class SearchActivity extends BaseActivity implements SearchContract.View{
     }
 
     @Override
-    protected void afterCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         mPresenter = new SearchPresenter(this);
         initView();
 

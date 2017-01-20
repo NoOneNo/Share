@@ -63,7 +63,8 @@ public class TopicDraftActivity extends BaseActivity implements DialogInterface.
     }
 
     @Override
-    protected void afterCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         initView();
         mPublishResultBroadcastReceiver = new BroadcastReceiver() {
             @Override

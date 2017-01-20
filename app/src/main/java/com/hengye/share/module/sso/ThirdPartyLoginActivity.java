@@ -42,7 +42,8 @@ public class ThirdPartyLoginActivity extends BaseActivity implements UserContrac
     }
 
     @Override
-    protected void afterCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         mPresenter = new UserPresenter(this);
 
         initData();

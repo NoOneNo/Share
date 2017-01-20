@@ -60,7 +60,8 @@ public class TopicDetailActivity extends BaseActivity implements View.OnClickLis
     }
 
     @Override
-    protected void afterCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         if (mTopic == null) {
             finish();
             return;

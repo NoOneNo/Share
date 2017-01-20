@@ -104,8 +104,8 @@ public class WeiboWebAuthorizeActivity extends BaseActivity {
     @SuppressLint("SetJavaScriptEnabled")
     @SuppressWarnings("deprecation")
     @Override
-    protected void afterCreate(Bundle savedInstanceState) {
-        super.afterCreate(savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         mLoadingDialog = new LoadingDialog(this, getString(R.string.tip_loading));
 

@@ -105,7 +105,7 @@ public class BaseActivity extends AppCompatActivity
         }
 
         setupContentView();
-        afterCreate(savedInstanceState);
+//        afterCreate(savedInstanceState);
 
 //        final Bitmap cacheBitmap = ViewUtil.getDrawingCacheBitmap();
 //        if(cacheBitmap != null) {
@@ -218,9 +218,6 @@ public class BaseActivity extends AppCompatActivity
     }
 
     protected void handleBundleExtra(Intent intent) {
-    }
-
-    protected void afterCreate(Bundle savedInstanceState) {
     }
 
     protected void setupContentView() {

@@ -17,7 +17,8 @@ public class TopicFavoriteActivity extends BaseActivity {
     }
 
     @Override
-    protected void afterCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content, TopicPageFragment.newInstance(TopicPagePresenter.TopicType.FAVORITES, null))
                 .commit();

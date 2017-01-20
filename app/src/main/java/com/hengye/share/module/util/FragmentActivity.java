@@ -70,18 +70,14 @@ public class FragmentActivity extends BaseActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        ensureFragment();
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public int getLayoutResId() {
         return R.layout.activity_fragment;
     }
 
     @Override
-    protected void afterCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ensureFragment();
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.content, mFragment)

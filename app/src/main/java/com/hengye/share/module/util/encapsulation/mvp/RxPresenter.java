@@ -1,5 +1,7 @@
 package com.hengye.share.module.util.encapsulation.mvp;
 
+import io.reactivex.MaybeObserver;
+import io.reactivex.MaybeSource;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -96,7 +98,7 @@ public class RxPresenter<V extends MvpView> extends BasePresenter<V> {
         abstract public void onError(V v, Throwable e);
     }
 
-    private abstract class DefaultSingleObserver<T> implements SingleObserver<T> {
+    private abstract class DefaultSingleObserver<T> implements SingleObserver<T>, MaybeObserver<T> {
         @Override
         public void onSubscribe(Disposable d) {
 
@@ -109,6 +111,11 @@ public class RxPresenter<V extends MvpView> extends BasePresenter<V> {
 
         @Override
         public void onError(Throwable e) {
+
+        }
+
+        @Override
+        public void onComplete() {
 
         }
     }

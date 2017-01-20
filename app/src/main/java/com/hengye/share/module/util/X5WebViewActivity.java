@@ -66,7 +66,8 @@ public class X5WebViewActivity extends BaseActivity {
     }
 
     @Override
-    protected void afterCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         if (mUrl == null) {
             finish();
         } else {

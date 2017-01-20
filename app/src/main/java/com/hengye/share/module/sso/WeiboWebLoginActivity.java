@@ -83,8 +83,8 @@ public class WeiboWebLoginActivity extends BaseActivity {
     @SuppressLint("SetJavaScriptEnabled")
     @SuppressWarnings("deprecation")
     @Override
-    protected void afterCreate(Bundle savedInstanceState) {
-        super.afterCreate(savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         mLoading = findViewById(R.id.loading);
         mWebView = (X5WebView) findViewById(R.id.web_view);

@@ -85,7 +85,9 @@ public class TopicDetail2Activity extends BaseActivity implements TopicDetailMvp
     }
 
     @Override
-    protected void afterCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
         if (mTopic == null) {
             finish();
             return;
