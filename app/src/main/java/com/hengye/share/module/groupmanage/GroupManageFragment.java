@@ -39,6 +39,7 @@ public class GroupManageFragment extends ShareRecyclerFragment implements GroupM
         mPresenter = new GroupManagePresenter(this, new GroupManageRepository());
         initView();
 
+        showLoading();
         mPresenter.loadGroupList();
     }
 
@@ -146,11 +147,6 @@ public class GroupManageFragment extends ShareRecyclerFragment implements GroupM
     }
 
     @Override
-    public void onTaskComplete(int taskState) {
-
-    }
-
-    @Override
     public void loadGroupList(boolean isCache, List<GroupList> groupLists) {
         if (!CommonUtil.isEmpty(groupLists)) {
             if (groupLists.get(0).getVisible() == -1) {
@@ -167,14 +163,14 @@ public class GroupManageFragment extends ShareRecyclerFragment implements GroupM
     }
 
     @Override
-    public void updateGroupOrderCallBack(boolean isSuccess) {
+    public void updateGroupOrderCallBack(int taskState) {
         mLoadingDialog.dismiss();
-        if (isSuccess) {
-            ToastUtil.showToast(R.string.tip_update_group_success);
+        if (TaskState.isSuccess(taskState)) {
+            ToastUtil.showToastSuccess(R.string.tip_update_group_success);
             setIsGroupUpdate();
             finish();
         } else {
-            ToastUtil.showToast(R.string.tip_update_group_fail);
+            TaskState.toastState(taskState);
         }
     }
 
@@ -183,7 +179,7 @@ public class GroupManageFragment extends ShareRecyclerFragment implements GroupM
         if (TaskState.isSuccess(taskState)) {
             mAdapter.addItem(groupList);
             UserUtil.insertGroupList(groupList);
-            ToastUtil.showToast(R.string.tip_create_group_success);
+            ToastUtil.showToastSuccess(R.string.tip_create_group_success);
         } else {
             ToastUtil.showToast(TaskState.toString(taskState));
         }
@@ -194,10 +190,10 @@ public class GroupManageFragment extends ShareRecyclerFragment implements GroupM
         if (TaskState.isSuccess(taskState)) {
             mAdapter.updateItem(groupList);
             UserUtil.updateGroupList(groupList);
-            ToastUtil.showToast(R.string.tip_update_group_success);
+            ToastUtil.showToastSuccess(R.string.tip_update_group_success);
             setIsGroupUpdate();
         } else {
-            ToastUtil.showToast(TaskState.toString(taskState));
+            TaskState.toastState(taskState);
         }
     }
 
@@ -206,9 +202,9 @@ public class GroupManageFragment extends ShareRecyclerFragment implements GroupM
         if (TaskState.isSuccess(taskState)) {
             mAdapter.removeItem(groupList);
             UserUtil.deleteGroupList(groupList);
-            ToastUtil.showToast(R.string.tip_delete_group_success);
+            ToastUtil.showToastSuccess(R.string.tip_delete_group_success);
         } else {
-            ToastUtil.showToast(TaskState.toString(taskState));
+            TaskState.toastState(taskState);
         }
     }
 

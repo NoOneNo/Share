@@ -15,7 +15,7 @@ public class FragmentActivity extends BaseActivity {
 
     protected BaseFragment mFragment;
 
-    public final static String FRAGMENT_CLASS = "fragment_class";
+    private final static String FRAGMENT_CLASS = "fragment_class";
 
     public static <T extends BaseFragment> Intent getStartIntent(Context context, Class<T> fragmentClazz) {
         return getStartIntent(context, fragmentClazz, null);
@@ -76,9 +76,9 @@ public class FragmentActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         ensureFragment();
-        if (savedInstanceState == null) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState == null && mFragment != null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.content, mFragment)
                     .commit();

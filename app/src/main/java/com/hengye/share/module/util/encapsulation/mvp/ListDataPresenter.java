@@ -14,18 +14,6 @@ public class ListDataPresenter<T, V extends MvpView & ListDataCallBack<T>> exten
         super(mvpView);
     }
 
-    public class ListDataObserver extends ListTaskObserver<List<T>> {
-
-        public ListDataObserver(boolean isRefresh){
-            super(isRefresh);
-        }
-
-        @Override
-        public void onNext(V v, List<T> listData) {
-            v.onLoadListData(isRefresh, listData);
-        }
-    }
-
     public class ListDataSingleObserver extends ListTaskSingleObserver<List<T>>{
 
         public ListDataSingleObserver(boolean isRefresh){

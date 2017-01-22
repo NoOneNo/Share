@@ -158,7 +158,7 @@ public class TopicFragment extends StatusFragment<Topic> implements TopicContrac
     public void deleteTopicResult(int taskState, Topic topic) {
         if (TaskState.isSuccess(taskState)) {
             mAdapter.removeItem(topic);
-            ToastUtil.showToast(R.string.label_topic_destroy_success);
+            ToastUtil.showToastSuccess(R.string.label_topic_destroy_success);
             mPresenter.clearCache();
         } else {
             ToastUtil.showToast(TaskState.toString(taskState));

@@ -7,6 +7,7 @@ import com.hengye.share.model.greenrobot.GroupList;
 import com.hengye.share.model.sina.WBGroup;
 import com.hengye.share.module.groupmanage.data.GroupManageDataSource;
 import com.hengye.share.module.util.encapsulation.base.TaskState;
+import com.hengye.share.module.util.encapsulation.mvp.ListTaskPresenter;
 import com.hengye.share.module.util.encapsulation.mvp.TaskPresenter;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
@@ -19,9 +20,10 @@ import java.util.List;
 
 import io.reactivex.Single;
 import io.reactivex.SingleSource;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 
-public class GroupManagePresenter extends TaskPresenter<GroupManageContract.View> implements GroupManageContract.Presenter{
+public class GroupManagePresenter extends ListTaskPresenter<GroupManageContract.View> implements GroupManageContract.Presenter{
 
     @NonNull
     private final GroupManageDataSource mGroupManageRepository;
@@ -40,16 +42,17 @@ public class GroupManagePresenter extends TaskPresenter<GroupManageContract.View
                 .getGroupList()
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(new BaseSingleObserver<ArrayList<GroupList>>() {
+                .subscribe(new ListTaskSingleObserver<ArrayList<GroupList>>(true) {
+
                     @Override
-                    public void onSuccess(GroupManageContract.View view, ArrayList<GroupList> groupLists) {
-//                        getMvpView().loadSuccess();
-                        view.loadGroupList(true, groupLists);
+                    public void onSubscribe(Disposable d) {
+                        super.onSubscribe(d);
                     }
 
                     @Override
-                    public void onError(GroupManageContract.View view, Throwable e) {
-//                        getMvpView().loadFail();
+                    public void onSuccess(GroupManageContract.View view, ArrayList<GroupList> groupLists) {
+                        super.onSuccess(view, groupLists);
+                        view.loadGroupList(true, groupLists);
                     }
                 });
     }
@@ -60,16 +63,11 @@ public class GroupManagePresenter extends TaskPresenter<GroupManageContract.View
                 .refreshGroupList()
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(new BaseSingleObserver<ArrayList<GroupList>>() {
+                .subscribe(new ListTaskSingleObserver<ArrayList<GroupList>>(true) {
                     @Override
                     public void onSuccess(GroupManageContract.View view, ArrayList<GroupList> groupLists) {
-//                        getMvpView().loadSuccess();
+                        super.onSuccess(view, groupLists);
                         view.loadGroupList(false, groupLists);
-                    }
-
-                    @Override
-                    public void onError(GroupManageContract.View view, Throwable e) {
-//                        getMvpView().loadFail();
                     }
                 });
     }
@@ -83,12 +81,12 @@ public class GroupManagePresenter extends TaskPresenter<GroupManageContract.View
                 .subscribe(new BaseSingleObserver<Boolean>() {
                     @Override
                     public void onSuccess(GroupManageContract.View view, Boolean isSuccess) {
-                        view.updateGroupOrderCallBack(isSuccess);
+                        view.updateGroupOrderCallBack(TaskState.STATE_SUCCESS);
                     }
 
                     @Override
                     public void onError(GroupManageContract.View view, Throwable e) {
-                        view.updateGroupOrderCallBack(false);
+                        view.updateGroupOrderCallBack(TaskState.getFailState(e));
                     }
                 });
     }

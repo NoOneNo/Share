@@ -86,7 +86,7 @@ public class X5WebViewActivity extends BaseActivity {
         if (IntentUtil.resolveActivity(intent)) {
             startActivity(intent);
         } else {
-            ToastUtil.showToast(R.string.label_resolve_url_activity_fail);
+            ToastUtil.showToastError(R.string.label_resolve_url_activity_fail);
         }
     }
 
@@ -134,7 +134,7 @@ public class X5WebViewActivity extends BaseActivity {
                         break;
                     case 1:
                         ClipboardUtil.copy(mWebView.getUrl());
-                        ToastUtil.showToast(R.string.label_copy_url_to_clipboard_success);
+                        ToastUtil.showToastSuccess(R.string.label_copy_url_to_clipboard_success);
                         break;
                     case 2:
                         openExternalBrowser(mWebView.getUrl());

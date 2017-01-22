@@ -301,8 +301,8 @@ public class BaseActivity extends AppCompatActivity
     }
 
     @Override
-    public void setTheme(@StyleRes int resid) {
-        super.setTheme(resid);
+    public void setTheme(@StyleRes int resId) {
+        super.setTheme(resId);
     }
 
     protected void replaceCustomThemeIfNeeded() {

@@ -13,35 +13,19 @@ public class TaskPresenter<V extends MvpView & TaskCallBack> extends RxPresenter
         super(mvpView);
     }
 
-    public class TaskObserver<T> extends BaseObserver<T> {
-
-        public TaskObserver(){
-        }
-
-        @Override
-        public void onError(V v, Throwable e) {
-            super.onError(v, e);
-            //根据e来判断是网络异常还是服务器异常;
-            v.onTaskComplete(TaskState.getFailState(e));
-        }
-
-        @Override
-        public void onComplete(V v) {
-            super.onComplete(v);
-            v.onTaskComplete(TaskState.STATE_SUCCESS);
-        }
-
-        @Override
-        public void onNext(V v, T list) {
-        }
-    }
-
     public class TaskSingleObserver<T> extends BaseSingleObserver<T>{
 
         @Override
-        public void onSuccess(V v, T t) {
-            v.onTaskComplete(TaskState.STATE_SUCCESS);
+        public void onSuccess(T t) {
+            super.onSuccess(t);
+            //在处理完数据后再调用onTaskComplete()方法处理数据切换view的显示
+            if(isViewAttached()){
+                getMvpView().onTaskComplete(TaskState.STATE_SUCCESS);
+            }
         }
+
+        @Override
+        public void onSuccess(V v, T t) {}
 
         @Override
         public void onError(V v, Throwable e) {

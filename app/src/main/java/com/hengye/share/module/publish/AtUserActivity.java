@@ -28,6 +28,7 @@ import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.module.profile.UserListContract;
 import com.hengye.share.module.profile.UserListPresenter;
 import com.hengye.share.module.publish.AtUserSortAdapter.Letter;
+import com.hengye.share.module.util.encapsulation.base.TaskState;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.lettersort.SideBar;
 import com.hengye.share.util.CommonUtil;
@@ -423,6 +424,9 @@ public class AtUserActivity extends BaseActivity implements UserListContract.Vie
     @Override
     public void onTaskComplete(boolean isRefresh, int taskState) {
         mPullToRefreshLayout.setTaskComplete(isSuccess(taskState));
+        if(!TaskState.isSuccess(taskState)) {
+            TaskState.toastState(taskState);
+        }
     }
 
     public List<Object> convertUserList(List<AtUser> userInfos) {

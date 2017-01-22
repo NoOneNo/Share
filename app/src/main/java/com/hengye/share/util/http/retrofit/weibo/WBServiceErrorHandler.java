@@ -87,7 +87,7 @@ public class WBServiceErrorHandler {
                     if (BaseActivity.getCurrentActivity() != null) {
                         new AdTokenInterceptor(BaseActivity.getCurrentActivity()).start();
                     } else {
-                        ToastUtil.showToast(R.string.tip_permission_denied);
+                        ToastUtil.showToastWarning(R.string.tip_permission_denied);
                     }
                 }
             });
@@ -100,7 +100,7 @@ public class WBServiceErrorHandler {
                     if (BaseActivity.getCurrentActivity() != null) {
                         getTokenExpireDialog(BaseActivity.getCurrentActivity()).show();
                     } else {
-                        ToastUtil.showToast(R.string.tip_token_expire);
+                        ToastUtil.showToastWarning(R.string.tip_token_expire_txt);
                     }
                 }
             });
@@ -109,7 +109,7 @@ public class WBServiceErrorHandler {
             HandlerUtil.getInstance().post(new Runnable() {
                 @Override
                 public void run() {
-                    ToastUtil.showToast(R.string.tip_service_pause);
+                    ToastUtil.showToastWarning(R.string.tip_service_pause);
                 }
             });
             return true;

@@ -34,45 +34,7 @@ public class RxPresenter<V extends MvpView> extends BasePresenter<V> {
         mCompositeDisposables.add(disposable);
     }
 
-    public abstract class BaseObserver<T> extends DisposableObserver<T> {
-
-        @Override
-        protected void onStart() {
-            addDisposable(this);
-        }
-
-        @Override
-        public void onComplete() {
-            if (isViewAttached()) {
-                onComplete(getMvpView());
-            }
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            e.printStackTrace();
-            if (isViewAttached()) {
-                onError(getMvpView(), e);
-            }
-        }
-
-        @Override
-        public void onNext(T t) {
-            if (isViewAttached()) {
-                onNext(getMvpView(), t);
-            }
-        }
-
-        public void onError(V v, Throwable e) {
-        }
-
-        public void onComplete(V v) {
-        }
-
-        abstract public void onNext(V v, T t);
-    }
-
-    public abstract class BaseSingleObserver<T> extends DefaultSingleObserver<T> {
+    public abstract class BaseSingleObserver<T> extends DefaultSingleObserver<T> implements SingleCallback<V, T>{
 
         @Override
         public void onSubscribe(Disposable d) {
@@ -93,8 +55,10 @@ public class RxPresenter<V extends MvpView> extends BasePresenter<V> {
             }
         }
 
+        @Override
         abstract public void onSuccess(V v, T t);
 
+        @Override
         abstract public void onError(V v, Throwable e);
     }
 
@@ -118,6 +82,12 @@ public class RxPresenter<V extends MvpView> extends BasePresenter<V> {
         public void onComplete() {
 
         }
+    }
+
+    interface SingleCallback<V, T>{
+        void onSuccess(V v, T t);
+
+        void onError(V v, Throwable e);
     }
 }
 

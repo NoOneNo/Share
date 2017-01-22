@@ -2,6 +2,7 @@ package com.hengye.share.module.util.encapsulation.base;
 
 import com.hengye.share.R;
 import com.hengye.share.util.ResUtil;
+import com.hengye.share.util.ToastUtil;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
@@ -55,5 +56,20 @@ public class TaskState {
                 break;
         }
         return ResUtil.getString(resId);
+    }
+
+    public static void toastState(int taskState){
+        switch (taskState){
+            case STATE_SUCCESS:
+            default:
+                ToastUtil.showToastSuccess(toString(taskState));
+                break;
+            case STATE_FAIL_BY_NETWORK:
+                ToastUtil.showToastWarning(toString(taskState));
+                break;
+            case STATE_FAIL_BY_SERVER:
+                ToastUtil.showToastError(toString(taskState));
+                break;
+        }
     }
 }

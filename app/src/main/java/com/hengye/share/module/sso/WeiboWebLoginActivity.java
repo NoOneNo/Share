@@ -185,7 +185,7 @@ public class WeiboWebLoginActivity extends BaseActivity {
                         if (e instanceof UnknownHostException) {
                             ToastUtil.showNetWorkErrorToast();
                         } else {
-                            ToastUtil.showToast(R.string.tip_unpredictable_error);
+                            ToastUtil.showToastError(R.string.tip_unpredictable_error);
                         }
                         mLoading.setVisibility(View.GONE);
                     }

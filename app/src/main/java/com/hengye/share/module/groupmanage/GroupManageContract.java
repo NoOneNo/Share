@@ -3,6 +3,7 @@ package com.hengye.share.module.groupmanage;
 import android.support.annotation.NonNull;
 
 import com.hengye.share.model.greenrobot.GroupList;
+import com.hengye.share.module.util.encapsulation.mvp.ListTaskMvpView;
 import com.hengye.share.module.util.encapsulation.mvp.MvpPresenter;
 import com.hengye.share.module.util.encapsulation.mvp.MvpView;
 import com.hengye.share.module.util.encapsulation.mvp.TaskMvpView;
@@ -16,11 +17,11 @@ import java.util.List;
 
 public interface GroupManageContract {
 
-    interface View extends TaskMvpView {
+    interface View extends ListTaskMvpView {
 
         void loadGroupList(boolean isCache, List<GroupList> groupLists);
 
-        void updateGroupOrderCallBack(boolean isSuccess);
+        void updateGroupOrderCallBack(int taskState);
 
         void checkGroupOrder(boolean isChange);
 

@@ -85,7 +85,7 @@ public class ThirdPartyLoginActivity extends BaseActivity implements UserContrac
     @Override
     public void loadFail() {
         mLoadingDialog.dismiss();
-        ToastUtil.showToast(R.string.label_get_user_info_fail);
+        ToastUtil.showToastError(R.string.label_get_user_info_fail);
         finish();
     }
 
@@ -140,7 +140,7 @@ public class ThirdPartyLoginActivity extends BaseActivity implements UserContrac
                     user.setPassword(password);
                     user.setAdToken(mAccessToken.getToken());
                     UserUtil.updateUser(user);
-                    ToastUtil.showToast(R.string.tip_authorize_success);
+                    ToastUtil.showToastSuccess(R.string.tip_authorize_success);
                     setResult(Activity.RESULT_OK);
                     finish();
                 }

@@ -519,9 +519,9 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                     public void onSuccess(WBUserInfo wbUserInfo) {
                         if (wbUserInfo != null) {
                             if (isFollow) {
-                                ToastUtil.showToast(R.string.label_follow_create_success);
+                                ToastUtil.showToastSuccess(R.string.label_follow_create_success);
                             } else {
-                                ToastUtil.showToast(R.string.label_follow_destroy_success);
+                                ToastUtil.showToastSuccess(R.string.label_follow_destroy_success);
                             }
                             updateFollowButton(isFollow);
                             if (mWBUserInfo != null) {
