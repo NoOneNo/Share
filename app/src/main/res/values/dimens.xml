@@ -28,6 +28,7 @@
     <dimen name="text_small">14sp</dimen>
     <dimen name="text_normal">16sp</dimen>
     <dimen name="text_large">18sp</dimen>
+    <dimen name="text_large_2">20sp</dimen>
 
     <dimen name="icon_size_tiny">18dp</dimen>
     <dimen name="icon_size_small">24dp</dimen>

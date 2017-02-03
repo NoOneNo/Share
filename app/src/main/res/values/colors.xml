@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Strings related to theme-->
+    <!-- Colors related to theme-->
 
     <color name="theme_untinged">@color/grey_100</color>
     <color name="theme_tint_light_bg">@color/grey_300</color>
@@ -24,7 +24,9 @@
     <color name="theme_pink_primary">#FF4081</color>
     <color name="theme_pink_primary_dark">#DA2562</color>
     <color name="theme_pink_accent">#DA2562</color>
-    <!-- Strings related to theme-->
+    <!-- Colors related to theme-->
+
+    <color name="background_launch">@color/grey_850</color>
 
     <color name="divider_color">#ffdbdbdb</color>
 

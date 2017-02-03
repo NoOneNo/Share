@@ -29,6 +29,10 @@ public class RequestManager {
 	private static RequestQueue mRequestQueue;
 	private static ImageLoader mImageLoader;
 	private static DiskBasedCache mDiskBasedCache;
+	private static boolean mIsInit = false;
+	private static Context mContext;
+	private static String mCacheDirectoryName;
+	private static int mMaxCacheSizeInBytes;
 
 	private RequestManager() {
 		// no instances
@@ -40,12 +44,9 @@ public class RequestManager {
 	 * @param maxCacheSizeInBytes The maximum size of the volley cache in bytes.
 	 */
 	public static void init(Context context, String cacheDirectoryName, int maxCacheSizeInBytes) {
-		
-		DiskLruCacheUtil.init(context);
-		mDiskBasedCache = getVolleyDiskCache(context, cacheDirectoryName, maxCacheSizeInBytes);
-		mRequestQueue = Volley.newRequestQueue(context, null, mDiskBasedCache, ImageDiskLruCache.getInstance());
-		mImageLoader = new ImageLoader(mRequestQueue, BitmapCache.getInstance());
-		VolleyLog.setIsLog(false);
+		mContext = context;
+		mCacheDirectoryName = cacheDirectoryName;
+		mMaxCacheSizeInBytes = maxCacheSizeInBytes;
 	}
 
 	public static void init(Context context) {
@@ -64,7 +65,26 @@ public class RequestManager {
 		return diskBasedCache;
 	}
 
+	private static void initReally(){
+		DiskLruCacheUtil.init(mContext);
+		mDiskBasedCache = getVolleyDiskCache(mContext, mCacheDirectoryName, mMaxCacheSizeInBytes);
+		mRequestQueue = Volley.newRequestQueue(mContext, null, mDiskBasedCache, ImageDiskLruCache.getInstance());
+		mImageLoader = new ImageLoader(mRequestQueue, BitmapCache.getInstance());
+		VolleyLog.setIsLog(false);
+
+		mContext = null;
+		mCacheDirectoryName = null;
+	}
+
+	public synchronized static void ensureInit(){
+		if(!mIsInit){
+			mIsInit = true;
+			initReally();
+		}
+	}
+
 	public static RequestQueue getRequestQueue() {
+		ensureInit();
 		if (mRequestQueue != null) {
 			return mRequestQueue;
 		} else {
@@ -80,6 +100,7 @@ public class RequestManager {
 	 * @return
 	 */
 	public static ImageLoader getImageLoader() {
+		ensureInit();
 		if (mImageLoader != null) {
 			return mImageLoader;
 		} else {
@@ -95,6 +116,7 @@ public class RequestManager {
 	 * @param tag
 	 */
 	public static <T> void addToRequestQueue(Request<T> req, String tag) {
+		ensureInit();
 		// set the default tag if tag is empty
 		req.setTag(TextUtils.isEmpty(tag) ? TAG : tag);
 
@@ -109,6 +131,7 @@ public class RequestManager {
 	 * @param req
 	 */
 	public static <T> void addToRequestQueue(Request<T> req) {
+		ensureInit();
 		// set the default tag if tag is empty
 		req.setTag(TAG);
 
@@ -122,6 +145,7 @@ public class RequestManager {
 	 * @param tag
 	 */
 	public static void cancelPendingRequests(Object tag) {
+		ensureInit();
 		if (mRequestQueue != null) {
 			mRequestQueue.cancelAll(tag);
 		}
@@ -137,15 +161,18 @@ public class RequestManager {
 //	}
 
 	public static boolean isExistCacheAndNotExpired(String cacheKey){
+		ensureInit();
 		Cache.Entry entry = mDiskBasedCache.get(cacheKey);
 		return !(entry == null || entry.isExpired());
 	}
 
 	public static void clearImageCache(){
+		ensureInit();
 		ImageDiskLruCache.getInstance().clearCache();
 	}
 
 	public static long getImageCacheSize(){
+		ensureInit();
 		return ImageDiskLruCache.getInstance().getCacheSize();
 	}
 }

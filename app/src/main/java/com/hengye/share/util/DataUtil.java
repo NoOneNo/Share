@@ -288,7 +288,7 @@ public class DataUtil {
             int end = localMatcher.end();
             if (end - start < 10) {
                 //表情文字描述长度都小于10
-                Bitmap bitmap = Emoticon.getInstance().getEmoticonBitmap().get(str);
+                Bitmap bitmap = Emoticon.getInstance().getEmoticonBitmap(str);
                 if (bitmap != null) {
                     CustomContentSpan customContentSpan = new CustomContentSpan(start, end, str);
 //                    ImageSpan localImageSpan = new ImageSpan(ApplicationUtil.getContext(), bitmap, ImageSpan.ALIGN_BOTTOM);

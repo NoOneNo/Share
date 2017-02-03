@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.hengye.share.ui.widget.ShimmerFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tool="http://schemas.android.com/tools"
+    android:id="@+id/shimmer_view_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white">
+    android:layout_gravity="center"
+    android:background="@color/grey_850">
+    <!--<FrameLayout -->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:orientation="vertical"-->
+    <!--android:background="@color/white">-->
 
     <TextView
         android:id="@+id/tv_welcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_large"
-        tool:text="Hello"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:textSize="@dimen/text_large_2"
+        android:textColor="@color/white"
+        android:fontFamily="sans-serif-thin"
+        tool:text="Hello" />
 
-</FrameLayout>
+    <!--</FrameLayout>-->
+</com.hengye.share.ui.widget.ShimmerFrameLayout>

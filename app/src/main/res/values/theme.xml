@@ -79,7 +79,7 @@
         <!--<item name="windowNoTitle">true</item>-->
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowIsTranslucent">false</item>
-        <item name="android:colorBackground">@color/white</item>
+        <item name="android:colorBackground">@color/background_launch</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:navigationBarColor">@null</item>
         <item name="android:windowTranslucentNavigation">false</item>

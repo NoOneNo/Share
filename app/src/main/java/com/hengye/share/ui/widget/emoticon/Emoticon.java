@@ -33,20 +33,26 @@ public class Emoticon {
     private HashMap<String, LinkedHashMap<String, Bitmap>> mSortedEmoticonBitmap;
     private LinkedHashMap<String, String> mEmojiEmotion, mWeiBoEmoticon, mLXHEmotcion;
 
-    private Emoticon() {
-        getEmoticonBitmap();
+    private Emoticon() {}
+
+    public Bitmap getEmoticonBitmap(String name){
+        Bitmap bitmap = getEmoticonBitmap().get(name);
+        if(bitmap == null){
+            bitmap = generateEmoticonBitmap(name);
+            if(bitmap != null){
+                getEmoticonBitmap().put(name, bitmap);
+            }
+        }
+
+        return bitmap;
     }
 
-    public HashMap<String, Bitmap> getEmoticonBitmap(){
+    private HashMap<String, Bitmap> getEmoticonBitmap(){
         if(mEmoticonBitmap != null){
             return mEmoticonBitmap;
         }
 
         mEmoticonBitmap = new HashMap<>();
-
-        mEmoticonBitmap.putAll(getSortedEmoticonBitmap().get(EMOTICON_TYPE_WEIBO));
-        mEmoticonBitmap.putAll(getSortedEmoticonBitmap().get(EMOTICON_TYPE_LXH));
-
         return mEmoticonBitmap;
     }
 
@@ -67,42 +73,75 @@ public class Emoticon {
         return prefix + File.separator + emoticonType + File.separator;
     }
 
+    private Bitmap generateEmoticonBitmap(String name){
+        String directory = null;
+        String fileName = getWeiBoEmoticon().get(name);
+        if(fileName != null){
+            directory = getEmoticonDirectoryName(EMOTICON_TYPE_WEIBO);
+        }
+
+        if(fileName == null){
+            fileName = getLXHEmoction().get(name);
+            if(fileName != null){
+                directory = getEmoticonDirectoryName(EMOTICON_TYPE_LXH);
+            }
+        }
+
+        if(fileName == null || directory == null){
+            return null;
+        }
+
+        return generateEmoticonBitmap(fileName, directory);
+    }
+
+    private Bitmap generateEmoticonBitmap(String fileName, String directory){
+        AssetManager assetManager = BaseApplication.getInstance().getAssets();
+        InputStream inputStream;
+        try {
+            inputStream = assetManager.open(directory + fileName);
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            if (bitmap != null) {
+                int size = BaseApplication.getInstance().getResources().getDimensionPixelSize(R.dimen.emotion_size);
+                Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, size, size, true);
+                if (bitmap != scaledBitmap) {
+                    bitmap.recycle();
+                    bitmap = scaledBitmap;
+                }
+                return bitmap;
+            }
+        } catch (IOException ignored) {
+
+        }
+        return null;
+    }
+
     private LinkedHashMap<String, Bitmap> generateEmoticonBitmap(Map<String, String> emoticon, String directory) {
         List<String> index = new ArrayList<>();
         index.addAll(emoticon.keySet());
         LinkedHashMap<String, Bitmap> emotionBitmap = new LinkedHashMap<>();
-        for (String str : index) {
-            String name = emoticon.get(str);
-            AssetManager assetManager = BaseApplication.getInstance().getAssets();
-            InputStream inputStream;
-            try {
-                inputStream = assetManager.open(directory + name);
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                if (bitmap != null) {
-                    int size = BaseApplication.getInstance().getResources().getDimensionPixelSize(R.dimen.emotion_size);
-                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, size, size, true);
-                    if (bitmap != scaledBitmap) {
-                        bitmap.recycle();
-                        bitmap = scaledBitmap;
-                    }
-                    emotionBitmap.put(str, bitmap);
-                }
-            } catch (IOException ignored) {
+        for (String key : index) {
+            Bitmap bitmap = getEmoticonBitmap().get(key);
 
+            if(bitmap == null){
+                String fileName = emoticon.get(key);
+                bitmap = generateEmoticonBitmap(fileName, directory);
+            }
+            if(bitmap != null){
+                emotionBitmap.put(key, bitmap);
             }
         }
 
         return emotionBitmap;
     }
 
-    public LinkedHashMap<String, String> getEmojiEmoticon(){
+    private LinkedHashMap<String, String> getEmojiEmoticon(){
         if(mEmojiEmotion != null){
             return mEmojiEmotion;
         }
         return null;
     }
 
-    public LinkedHashMap<String, String> getWeiBoEmoticon(){
+    private LinkedHashMap<String, String> getWeiBoEmoticon(){
         if(mWeiBoEmoticon != null){
             return mWeiBoEmoticon;
         }
@@ -230,7 +269,7 @@ public class Emoticon {
         return mWeiBoEmoticon;
     }
 
-    public LinkedHashMap<String, String> getLXHEmoction(){
+    private LinkedHashMap<String, String> getLXHEmoction(){
         if(mLXHEmotcion != null){
             return mLXHEmotcion;
         }
