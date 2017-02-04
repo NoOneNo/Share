@@ -36,12 +36,12 @@ public abstract class ShareRecyclerFragment<T> extends RecyclerRefreshFragment<T
         onScrollToTop(false);
     }
 
-    OnDoubleTapListener mOnDoubleTapListener;
+//    OnDoubleTapListener mOnDoubleTapListener;
 
     private void addDoubleTabListener() {
         CommonToolBar toolbar = getShareToolbar();
         if (toolbar != null) {
-            toolbar.addOnDoubleTapListener(mOnDoubleTapListener = new OnDoubleTapListener() {
+            toolbar.addOnDoubleTapListener(new OnDoubleTapListener() {
                 @Override
                 public void onDoubleTap(View view) {
                     onToolbarDoubleClick((Toolbar) view);

@@ -153,6 +153,7 @@ public class TopicDetailActivity extends BaseActivity implements View.OnClickLis
         mCommentBtn.setOnClickListener(this);
 
         FabAnimator.adjustFloatingActionsMenuUpdate(mActionsMenu, mOverLay);
+        mFabAnimator = FabAnimator.create(mActionsMenu);
 
         mHeaderView = findViewById(R.id.item_topic_total);
         initHeaderTopic(mHeaderView);
@@ -166,9 +167,17 @@ public class TopicDetailActivity extends BaseActivity implements View.OnClickLis
                 .commit();
     }
 
+    FabAnimator mFabAnimator;
     boolean mHasSetSelection;
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+        L.debug("verticalOffset %s ", verticalOffset);
+        if(verticalOffset >= -200){
+            mFabAnimator.show();
+        }else{
+            mFabAnimator.hide();
+        }
+
         if (verticalOffset >= -50) {
             mPullToRefresh.setRefreshEnable(true);
         } else {

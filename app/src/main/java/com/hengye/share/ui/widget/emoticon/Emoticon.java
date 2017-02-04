@@ -33,22 +33,22 @@ public class Emoticon {
     private HashMap<String, LinkedHashMap<String, Bitmap>> mSortedEmoticonBitmap;
     private LinkedHashMap<String, String> mEmojiEmotion, mWeiBoEmoticon, mLXHEmotcion;
 
-    private Emoticon() {}
+    private Emoticon() {
+    }
 
-    public Bitmap getEmoticonBitmap(String name){
-        Bitmap bitmap = getEmoticonBitmap().get(name);
-        if(bitmap == null){
+    public Bitmap getEmoticonBitmap(String name) {
+        Bitmap bitmap = getEmoticonMap().get(name);
+        if (bitmap == null && !getEmoticonMap().containsKey(name)) {
+            //如果表情不存在则用null保存，避免新表情不存在每次显示都去查找一次
             bitmap = generateEmoticonBitmap(name);
-            if(bitmap != null){
-                getEmoticonBitmap().put(name, bitmap);
-            }
+            getEmoticonMap().put(name, bitmap);
         }
 
         return bitmap;
     }
 
-    private HashMap<String, Bitmap> getEmoticonBitmap(){
-        if(mEmoticonBitmap != null){
+    private HashMap<String, Bitmap> getEmoticonMap() {
+        if (mEmoticonBitmap != null) {
             return mEmoticonBitmap;
         }
 
@@ -56,8 +56,8 @@ public class Emoticon {
         return mEmoticonBitmap;
     }
 
-    public HashMap<String, LinkedHashMap<String, Bitmap>> getSortedEmoticonBitmap(){
-        if(mSortedEmoticonBitmap != null) {
+    public HashMap<String, LinkedHashMap<String, Bitmap>> getSortedEmoticonBitmap() {
+        if (mSortedEmoticonBitmap != null) {
             return mSortedEmoticonBitmap;
         }
         mSortedEmoticonBitmap = new HashMap<>();
@@ -68,33 +68,33 @@ public class Emoticon {
         return mSortedEmoticonBitmap;
     }
 
-    private String getEmoticonDirectoryName(String emoticonType){
+    private String getEmoticonDirectoryName(String emoticonType) {
         String prefix = EMOTICON_DIRECTORY_NAME;
         return prefix + File.separator + emoticonType + File.separator;
     }
 
-    private Bitmap generateEmoticonBitmap(String name){
+    private Bitmap generateEmoticonBitmap(String name) {
         String directory = null;
         String fileName = getWeiBoEmoticon().get(name);
-        if(fileName != null){
+        if (fileName != null) {
             directory = getEmoticonDirectoryName(EMOTICON_TYPE_WEIBO);
         }
 
-        if(fileName == null){
+        if (fileName == null) {
             fileName = getLXHEmoction().get(name);
-            if(fileName != null){
+            if (fileName != null) {
                 directory = getEmoticonDirectoryName(EMOTICON_TYPE_LXH);
             }
         }
 
-        if(fileName == null || directory == null){
+        if (fileName == null || directory == null) {
             return null;
         }
 
         return generateEmoticonBitmap(fileName, directory);
     }
 
-    private Bitmap generateEmoticonBitmap(String fileName, String directory){
+    private Bitmap generateEmoticonBitmap(String fileName, String directory) {
         AssetManager assetManager = BaseApplication.getInstance().getAssets();
         InputStream inputStream;
         try {
@@ -120,13 +120,13 @@ public class Emoticon {
         index.addAll(emoticon.keySet());
         LinkedHashMap<String, Bitmap> emotionBitmap = new LinkedHashMap<>();
         for (String key : index) {
-            Bitmap bitmap = getEmoticonBitmap().get(key);
+            Bitmap bitmap = getEmoticonMap().get(key);
 
-            if(bitmap == null){
+            if (bitmap == null) {
                 String fileName = emoticon.get(key);
                 bitmap = generateEmoticonBitmap(fileName, directory);
             }
-            if(bitmap != null){
+            if (bitmap != null) {
                 emotionBitmap.put(key, bitmap);
             }
         }
@@ -134,15 +134,15 @@ public class Emoticon {
         return emotionBitmap;
     }
 
-    private LinkedHashMap<String, String> getEmojiEmoticon(){
-        if(mEmojiEmotion != null){
+    private LinkedHashMap<String, String> getEmojiEmoticon() {
+        if (mEmojiEmotion != null) {
             return mEmojiEmotion;
         }
         return null;
     }
 
-    private LinkedHashMap<String, String> getWeiBoEmoticon(){
-        if(mWeiBoEmoticon != null){
+    private LinkedHashMap<String, String> getWeiBoEmoticon() {
+        if (mWeiBoEmoticon != null) {
             return mWeiBoEmoticon;
         }
 
@@ -269,8 +269,8 @@ public class Emoticon {
         return mWeiBoEmoticon;
     }
 
-    private LinkedHashMap<String, String> getLXHEmoction(){
-        if(mLXHEmotcion != null){
+    private LinkedHashMap<String, String> getLXHEmoction() {
+        if (mLXHEmotcion != null) {
             return mLXHEmotcion;
         }
 

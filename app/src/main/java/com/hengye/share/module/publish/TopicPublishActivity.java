@@ -269,7 +269,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         if (mTopicDraft.getUrls() != null) {
             mGalleryEditor.setPaths(mTopicDraft.getUrlList());
         }
-        mContent.setFilters(new InputFilter[]{mEmoticonPicker.getEmoticonInputFilter(), mAtUserInputFilter});
+        mContent.setFilters(new InputFilter[]{mEmoticonPicker.getEmoticonInputFilter(), mTopicInputFilter});
 
         ViewUtil.hideKeyBoardOnTouch(mScrollView, mContent);
         ViewUtil.hideKeyBoardOnTouch(mGalleryEditor, mContent);
@@ -419,7 +419,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     /**
      * 直接在afterTextChanged里设置span就好
      */
-    private InputFilter mAtUserInputFilter = new InputFilter() {
+    private InputFilter mTopicInputFilter = new InputFilter() {
         @Override
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
             return DataUtil.convertNormalStringToSpannableString(null, source, false);
@@ -730,7 +730,8 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         mGroupVisibleStatusTxt.setText(mTopicDraft.getGroupName());
         mGroupVisibleStatusIcon.setImageResource(
                 mTopicDraft.isAssignGroupVisible() ?
-                        R.drawable.ic_lock_outline_white_48dp : R.drawable.ic_public_white_48dp);
+                        R.drawable.ic_lock_outline_white_48dp :
+                        R.drawable.ic_public_white_48dp);
     }
 
 

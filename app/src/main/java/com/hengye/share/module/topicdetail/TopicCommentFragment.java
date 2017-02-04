@@ -168,8 +168,12 @@ public class TopicCommentFragment extends StatusFragment<TopicComment> implement
     @Override
     public boolean onItemLongClick(View view, int position) {
         super.onItemLongClick(view, position);
-        performItemClick(view, position, true);
-        return true;
+        int viewType = mAdapter.getBasicItemType(position);
+        if(viewType == R.layout.item_topic_comment) {
+            performItemClick(view, position, true);
+            return true;
+        }
+        return false;
     }
 
     private void performItemClick(final View view, final int position, boolean isLongClick){

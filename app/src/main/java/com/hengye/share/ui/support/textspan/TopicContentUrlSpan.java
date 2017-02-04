@@ -24,6 +24,7 @@ import com.hengye.share.util.ClipboardUtil;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.ResUtil;
+import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
 
 @SuppressLint("ParcelCreator")
@@ -128,6 +129,7 @@ public class TopicContentUrlSpan extends CharacterStyle implements ParcelableSpa
 
     @Override
     public void onLongClick(final View widget) {
+        ViewUtil.vibrate(widget);
         final String scheme = getURL();
         if (scheme != null) {
             final String path = getPath();

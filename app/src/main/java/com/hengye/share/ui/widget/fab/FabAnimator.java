@@ -1,5 +1,6 @@
 package com.hengye.share.ui.widget.fab;
 
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -61,8 +62,8 @@ public class FabAnimator {
     private boolean mVisible = true;
     private CustomAnimator mCustomAnimator;
 
-    public void attachToListView(AbsListView listView) {
-        attachToListView(listView, null);
+    public FabAnimator attachToListView(AbsListView listView) {
+        return attachToListView(listView, null);
     }
 
     public FabAnimator attachToListView(AbsListView listView, AbsListView.OnScrollListener onScrollListener) {
@@ -83,6 +84,21 @@ public class FabAnimator {
         recyclerView.addOnScrollListener(scrollDetector);
 
         return this;
+    }
+
+    public ToggleCallback getToggleCallback(){
+        return new ToggleCallback();
+    }
+
+    public class ToggleCallback{
+
+        public void show(){
+            FabAnimator.this.show();
+        }
+
+        public void hide(){
+            FabAnimator.this.hide();
+        }
     }
 
     private abstract class AbsListViewScrollDetector implements AbsListView.OnScrollListener {
@@ -218,7 +234,7 @@ public class FabAnimator {
                     return;
                 }
             }
-            int translationY = visible ? 0 : height + getMarginBottom();
+            float translationY = visible ? 0 : height + getMarginBottom();
             if (animate) {
                 fabBtn.animate().setInterpolator(mInterpolator)
                         .setDuration(duration)
