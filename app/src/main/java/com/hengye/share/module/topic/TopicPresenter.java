@@ -160,7 +160,9 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicContract.View>
                         .listCommentByMeTopic(getWBAllTopicParameter(id, isRefresh))
                         .flatMap(flatWBTopicComments());
             case HOMEPAGE:
-                id = "0";
+                if(isRefresh){
+                    id = "0";
+                }
                 Map<String, String> params = getWBAllTopicParameter(id, isRefresh);
                 String token;
                 if(uid != null && uid.equals(UserUtil.getUid())){

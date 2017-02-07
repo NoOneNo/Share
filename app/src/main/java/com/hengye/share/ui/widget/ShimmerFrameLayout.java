@@ -133,7 +133,7 @@ public class ShimmerFrameLayout extends FrameLayout {
     private int mMaskOffsetX;
     private int mMaskOffsetY;
 
-    private boolean mKeepStateAfterAnimationStop;
+    private Animator.AnimatorListener mAnimatorListener;
     private boolean mAnimationStarted;
     private ViewTreeObserver.OnGlobalLayoutListener mGlobalLayoutListener;
 
@@ -398,8 +398,8 @@ public class ShimmerFrameLayout extends FrameLayout {
         resetAll();
     }
 
-    public void setKeepStateAfterAnimationStop(boolean keepStateAfterAnimationStop) {
-        mKeepStateAfterAnimationStop = keepStateAfterAnimationStop;
+    public void setAnimatorListener(Animator.AnimatorListener animatorListener) {
+        this.mAnimatorListener = animatorListener;
     }
 
     /**
@@ -934,28 +934,9 @@ public class ShimmerFrameLayout extends FrameLayout {
                 setMaskOffsetY((int) (mMaskTranslation.fromY * (1 - value) + mMaskTranslation.toY * value));
             }
         });
-//        mAnimator.addListener(new Animator.AnimatorListener() {
-//            @Override
-//            public void onAnimationStart(Animator animation) {
-//
-//            }
-//
-//            @Override
-//            public void onAnimationEnd(Animator animation) {
-//                animation.removeListener(this);
-//                stopShimmerAnimation();
-//            }
-//
-//            @Override
-//            public void onAnimationCancel(Animator animation) {
-//
-//            }
-//
-//            @Override
-//            public void onAnimationRepeat(Animator animation) {
-//
-//            }
-//        });
+        if(mAnimatorListener != null) {
+            mAnimator.addListener(mAnimatorListener);
+        }
         return mAnimator;
     }
 

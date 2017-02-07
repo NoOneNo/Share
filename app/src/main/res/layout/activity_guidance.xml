@@ -6,11 +6,6 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:background="@color/grey_850">
-    <!--<FrameLayout -->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:orientation="vertical"-->
-    <!--android:background="@color/white">-->
 
     <TextView
         android:id="@+id/tv_welcome"
@@ -20,7 +15,7 @@
         android:textSize="@dimen/text_large_2"
         android:textColor="@color/white"
         android:fontFamily="sans-serif-thin"
-        tool:text="Hello" />
+        tool:text="Hello world !" />
 
     <!--</FrameLayout>-->
 </com.hengye.share.ui.widget.ShimmerFrameLayout>

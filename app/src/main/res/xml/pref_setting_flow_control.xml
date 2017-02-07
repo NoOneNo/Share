@@ -1,38 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".module.setting.SettingActivity">
     <PreferenceCategory android:title="@string/title_setting_common">
         <SwitchPreference
+            android:defaultValue="true"
             android:key="preread"
-            android:title="@string/title_setting_preread"
             android:summary="@string/title_setting_preread_summary"
-            android:defaultValue="true"/>
+            android:title="@string/title_setting_preread" />
         <ListPreference
-            android:key="load_count"
-            android:title="@string/title_setting_load_count"
-            android:summary="%s"
+            android:defaultValue="4"
             android:entries="@array/load_count_entries"
             android:entryValues="@array/load_count_values"
-            android:defaultValue="4"/>
+            android:key="load_count"
+            android:summary="%s"
+            android:title="@string/title_setting_load_count" />
+        <MultiSelectListPreference
+            android:entries="@array/show_avatar_entries"
+            android:entryValues="@array/show_avatar_values"
+            android:key="show_avatar"
+            android:summary="@string/title_setting_show_avatar_summary"
+            android:title="@string/title_setting_show_avatar_off" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/title_setting_photo">
         <ListPreference
-            android:key="photo_download_quality"
-            android:title="@string/title_setting_photo_download_quality"
-            android:summary="%s"
+            android:defaultValue="5"
             android:entries="@array/photo_download_quality_entries"
             android:entryValues="@array/photo_download_quality_values"
-            android:defaultValue="5"/>
-        <ListPreference
-            android:key="photo_upload_quality"
-            android:title="@string/title_setting_photo_upload_quality"
+            android:key="photo_download_quality"
             android:summary="%s"
+            android:title="@string/title_setting_photo_download_quality" />
+        <ListPreference
+            android:defaultValue="2"
             android:entries="@array/photo_upload_quality_entries"
             android:entryValues="@array/photo_upload_quality_values"
-            android:defaultValue="2"/>
+            android:key="photo_upload_quality"
+            android:summary="%s"
+            android:title="@string/title_setting_photo_upload_quality" />
     </PreferenceCategory>
 
 </PreferenceScreen>

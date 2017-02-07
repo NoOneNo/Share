@@ -46,7 +46,7 @@ android {
 
     buildTypes {
         release {
-            debuggable true
+            debuggable false
             //是否开启混淆
             minifyEnabled true
             zipAlignEnabled true
