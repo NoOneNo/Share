@@ -254,6 +254,8 @@
     <string name="label_add_account">添加账号</string>
     <string name="label_account_now_logout">退出当前账号</string>
     <string name="label_account_logout">退出</string>
+    <string name="label_account_ad_authorize">高级授权</string>
+    <string name="label_account_ad_authorize_again">重新高级授权</string>
     <string name="label_get_user_info_fail">获取用户信息失败</string>
     <string name="label_get_user_info">正在获取用户信息&#8230;</string>
     <string name="label_to_login">未发现已授权的账号，是否跳转到登录页面？</string>

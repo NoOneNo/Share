@@ -1,6 +1,5 @@
 package com.hengye.share.ui.support.textspan;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,7 +7,6 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.Browser;
-import android.text.ParcelableSpan;
 import android.text.TextPaint;
 import android.text.style.CharacterStyle;
 import android.view.View;
@@ -27,8 +25,8 @@ import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
 
-@SuppressLint("ParcelCreator")
-public class TopicContentUrlSpan extends CharacterStyle implements ParcelableSpan, SimpleClickableSpan, SimpleContentSpan {
+public class TopicContentUrlSpan extends CharacterStyle implements
+        SimpleClickableSpan, SimpleContentSpan, Parcelable {
 
     public int start, end;
     public final String url;
@@ -44,7 +42,7 @@ public class TopicContentUrlSpan extends CharacterStyle implements ParcelableSpa
         this.url = url;
     }
 
-    public TopicContentUrlSpan(Parcel src) {
+    private TopicContentUrlSpan(Parcel src) {
         start = src.readInt();
         end = src.readInt();
         url = src.readString();
@@ -52,14 +50,11 @@ public class TopicContentUrlSpan extends CharacterStyle implements ParcelableSpa
     }
 
     @Override
-    public int getSpanTypeId() {
-        return 11;
-    }
-
     public int describeContents() {
         return 0;
     }
 
+    @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(start);
         dest.writeInt(end);
@@ -179,7 +174,7 @@ public class TopicContentUrlSpan extends CharacterStyle implements ParcelableSpa
         this.topicUrl = topicUrl;
     }
 
-    public static final Parcelable.Creator<TopicContentUrlSpan> CREATOR = new Creator<TopicContentUrlSpan>() {
+    public static final Parcelable.Creator<TopicContentUrlSpan> CREATOR = new Parcelable.Creator<TopicContentUrlSpan>() {
         @Override
         public TopicContentUrlSpan[] newArray(int size) {
             return new TopicContentUrlSpan[size];

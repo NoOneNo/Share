@@ -57,7 +57,7 @@ public class AdTokenInterceptor extends Interceptor{
                             mActivity.getActivityHelper().unregisterActivityLifecycleListener(this);
                         }
                     });
-                    mActivity.startActivityForResult(ThirdPartyLoginActivity.getAdTokenStartIntent(mActivity), 33);
+                    mActivity.startActivityForResult(ThirdPartyLoginActivity.getAdTokenStartIntent(mActivity, true), 33);
                 }
             });
             mLoginDialog = build.create(mActivity);

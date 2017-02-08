@@ -14,6 +14,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.hengye.share.R;
+import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
 import com.hengye.share.util.CommonUtil;
@@ -51,25 +52,11 @@ import io.reactivex.disposables.Disposable;
  */
 public class WeiboWebAuthorizeActivity extends BaseActivity {
 
-    public static Intent getStartIntent(Context context, WeiboApp app) {
-        return getStartIntent(context, app, false);
-    }
-
-    public static Intent getStartIntent(Context context, WeiboApp app, boolean isCurrentUser) {
+    public static Intent getStartIntent(Context context, String appKey, String uid){
         Intent intent = new Intent(context, WeiboWebAuthorizeActivity.class);
-        if (app != null) {
-            intent.putExtra("appKey", app.name());
-        }
-
-        if (isCurrentUser && !UserUtil.isUserEmpty()) {
-            intent.putExtra("account", UserUtil.getCurrentUser().getAccount());
-            intent.putExtra("password", UserUtil.getCurrentUser().getPassword());
-        }
+        intent.putExtra("appKey", appKey);
+        intent.putExtra("uid", uid);
         return intent;
-    }
-
-    public static Intent getAdTokenStartIntent(Context context) {
-        return getStartIntent(context, WeiboApp.WEICO, true);
     }
 
     public static final String URL_OAUTH2_ACCESS_AUTHORIZE = "https://api.weibo.com/oauth2/authorize";
@@ -97,8 +84,17 @@ public class WeiboWebAuthorizeActivity extends BaseActivity {
         } else {
             mApp = WeiboApp.SHARE;
         }
-        mAccount = intent.getStringExtra("account");
-        mPassword = intent.getStringExtra("password");
+
+        String uid = getIntent().getStringExtra("uid");
+
+        if(uid != null){
+            User user = uid.equals(UserUtil.getUid()) ?
+                    UserUtil.getCurrentUser() : UserUtil.getUser(uid);
+            if(user != null){
+                mAccount = user.getAccount();
+                mPassword = user.getPassword();
+            }
+        }
     }
 
     @SuppressLint("SetJavaScriptEnabled")

@@ -82,7 +82,10 @@ public class TopicEditText extends AppCompatEditText {
 
         //forbid cursor located in the mention string.
         if (selStart == selEnd) {
-            setSelection(nearbyRange.getAnchorPosition(selStart));
+            int position = nearbyRange.getAnchorPosition(selStart);
+            if(0 <= position && position <= getText().length()){
+                setSelection(position);
+            }
         } else {
             if (selEnd < nearbyRange.end) {
                 setSelection(selStart, nearbyRange.end);

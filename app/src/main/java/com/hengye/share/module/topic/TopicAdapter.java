@@ -387,7 +387,7 @@ public class TopicAdapter extends CommonAdapter<Topic>
         public void initTopicContent(final Context context, Topic topic, boolean isRetweeted) {
 
             //不设置的话会被名字内容的点击事件覆盖，无法触发ItemView的onClick
-            mContent.setText(topic.getUrlSpannableString(isRetweeted));
+            mContent.setText(topic.getUrlSpannableString(mContent, isRetweeted));
 //            mContent.setMovementMethod(SimpleLinkMovementMethod.getInstance());
 //            mContent.setOnTouchListener(TopicUrlOnTouchListener.getInstance());
 

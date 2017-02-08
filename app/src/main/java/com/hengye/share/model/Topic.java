@@ -1,6 +1,7 @@
 package com.hengye.share.model;
 
 import android.text.SpannableString;
+import android.widget.TextView;
 
 import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.model.sina.WBTopicComment;
@@ -291,13 +292,13 @@ public class Topic extends ParentInherit implements TopicId, TopicShortUrl, Seri
         this.commentsCount = commentsCount;
     }
 
-    public SpannableString getUrlSpannableString() {
-        return getUrlSpannableString(false);
-    }
+//    public SpannableString getUrlSpannableString() {
+//        return getUrlSpannableString(false);
+//    }
 
-    public SpannableString getUrlSpannableString(boolean isRetweeted) {
+    public SpannableString getUrlSpannableString(TextView textView, boolean isRetweeted) {
         if (urlSpannableString == null) {
-            DataUtil.addTopicContentHighLightLinks(this, isRetweeted);
+            DataUtil.addTopicContentHighLightLinks((int)textView.getTextSize(), this, isRetweeted);
         }
         return urlSpannableString;
     }

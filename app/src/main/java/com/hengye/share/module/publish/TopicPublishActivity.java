@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -133,6 +134,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     private Dialog mSaveToDraftDialog, mSkipToLoginDialog;
     private boolean mIsWithAtChar;
     private int mCurrentContentLength;
+    private int mContentTextSize;
     private Address mAddress;
 
     @Override
@@ -166,6 +168,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         mContent = (TopicEditText) findViewById(R.id.et_topic_publish);
         mContent.setSelection(0);
         mContent.setOnClickListener(this);
+        mContentTextSize = (int) mContent.getTextSize();
         mContentLengthTxt = (TextView) findViewById(R.id.tv_content_length);
         mGroupVisibleStatusTxt = (TextView) findViewById(R.id.tv_group_visible_status);
         mGroupVisibleStatus = findViewById(R.id.layout_group_visible_status);
@@ -254,14 +257,16 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
 //                mContent.setTextKeepState(ss);
 //                mContent.addTextChangedListener(this);
 
-                List<SimpleContentSpan> simpleContentSpans = DataUtil.convertNormalStringToSimpleContentUrlSpans(s);
-                mContent.ensureRange(simpleContentSpans);
-                if (simpleContentSpans != null) {
-                    mContent.ensureRange(simpleContentSpans);
-                    for (SimpleContentSpan span : simpleContentSpans) {
-                        s.setSpan(span, span.getStart(), span.getEnd(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    }
-                }
+
+
+//                List<SimpleContentSpan> simpleContentSpans = DataUtil.convertNormalStringToSimpleContentUrlSpans(s);
+//                mContent.ensureRange(simpleContentSpans);
+//                if (simpleContentSpans != null) {
+////                    mContent.ensureRange(simpleContentSpans);
+//                    for (SimpleContentSpan span : simpleContentSpans) {
+//                        s.setSpan(span, span.getStart(), span.getEnd(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                    }
+//                }
             }
         });
 
@@ -422,7 +427,21 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     private InputFilter mTopicInputFilter = new InputFilter() {
         @Override
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            return DataUtil.convertNormalStringToSpannableString(null, source, false);
+//            return source;
+            if(dstart >= dend){
+                //只有在输入内容时才设置span，否则删除时设置span没意义，因为此时source为空
+                SpannableString value = SpannableString.valueOf(source);
+                List<SimpleContentSpan> simpleContentSpans = DataUtil.convertNormalStringToSimpleContentUrlSpans(mContentTextSize, value);
+                mContent.ensureRange(simpleContentSpans);
+                if (simpleContentSpans != null) {
+                    for (SimpleContentSpan span : simpleContentSpans) {
+                        value.setSpan(span, span.getStart(), span.getEnd(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                }
+                return value;
+            }
+            return source;
+//            return DataUtil.convertNormalStringToSpannableString(null, source, false);
         }
     };
 

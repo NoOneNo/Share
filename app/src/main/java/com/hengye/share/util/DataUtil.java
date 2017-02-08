@@ -1,13 +1,11 @@
 package com.hengye.share.util;
 
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.util.Patterns;
@@ -19,11 +17,11 @@ import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.TopicId;
 import com.hengye.share.model.TopicShortUrl;
 import com.hengye.share.model.TopicUrl;
+import com.hengye.share.module.base.BaseApplication;
 import com.hengye.share.ui.support.textspan.CustomContentSpan;
-import com.hengye.share.ui.support.textspan.EmotionSpan;
 import com.hengye.share.ui.support.textspan.SimpleContentSpan;
 import com.hengye.share.ui.support.textspan.TopicContentUrlSpan;
-import com.hengye.share.ui.widget.emoticon.Emoticon;
+import com.hengye.share.ui.widget.emoticon.EmoticonUtil;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -103,20 +101,20 @@ public class DataUtil {
 //                Linkify.sUrlMatchFilter, null);
 //    }
 
-    public static void addTopicContentHighLightLinks(TopicComment topicComment) {
-        topicComment.setUrlSpannableString(convertNormalStringToSpannableString(topicComment, topicComment.getContent()));
+    public static void addTopicContentHighLightLinks(int textSize, TopicComment topicComment) {
+        topicComment.setUrlSpannableString(convertNormalStringToSpannableString(textSize, topicComment, topicComment.getContent()));
     }
 
-    public static void addTopicContentHighLightLinks(Topic topic, boolean isRetweeted) {
+    public static void addTopicContentHighLightLinks(int textSize, Topic topic, boolean isRetweeted) {
         String str = isRetweeted ? addRetweetedNamePrefix(topic) : topic.getContent();
-        topic.setUrlSpannableString(convertNormalStringToSpannableString(topic, str));
+        topic.setUrlSpannableString(convertNormalStringToSpannableString(textSize, topic, str));
     }
 
-    public static <T extends TopicShortUrl & TopicId> SpannableString convertNormalStringToSpannableString(@Nullable T topic, CharSequence source) {
-        return convertNormalStringToSpannableString(topic, source, true);
+    public static <T extends TopicShortUrl & TopicId> SpannableString convertNormalStringToSpannableString(int textSize, @Nullable T topic, CharSequence source) {
+        return convertNormalStringToSpannableString(textSize, topic, source, true);
     }
 
-    public static <T extends TopicShortUrl & TopicId> SpannableString convertNormalStringToSpannableString(@Nullable T topic, CharSequence source, boolean isReplaceWebUrl) {
+    public static <T extends TopicShortUrl & TopicId> SpannableString convertNormalStringToSpannableString(int textSize, @Nullable T topic, CharSequence source, boolean isReplaceWebUrl) {
         //hack to fix android imagespan bug,see http://stackoverflow.com/questions/3253148/imagespan-is-cut-off-incorrectly-aligned
         //if string only contains emotion tags,add a empty char to the end
         if (source == null) {
@@ -141,7 +139,7 @@ public class DataUtil {
         }
 
         //添加表情
-        addEmotions(value);
+        addEmotions(textSize, value);
 
         Linkify.addLinks(value, MENTION_URL, MENTION_SCHEME);
         Linkify.addLinks(value, TOPIC_URL, TOPIC_SCHEME);
@@ -279,56 +277,60 @@ public class DataUtil {
         return str;
     }
 
-    private static List<SimpleContentSpan> addEmotions(Spannable value) {
-        List<SimpleContentSpan> simpleContentSpans = new ArrayList<>();
-        Matcher localMatcher = EMOTION_URL.matcher(value);
-        while (localMatcher.find()) {
-            String str = localMatcher.group();
-            int start = localMatcher.start();
-            int end = localMatcher.end();
-            if (end - start < 10) {
-                //表情文字描述长度都小于10
-                Bitmap bitmap = Emoticon.getInstance().getEmoticonBitmap(str);
-                if (bitmap != null) {
-                    CustomContentSpan customContentSpan = new CustomContentSpan(start, end, str);
-//                    ImageSpan localImageSpan = new ImageSpan(ApplicationUtil.getContext(), bitmap, ImageSpan.ALIGN_BOTTOM);
-                    EmotionSpan emotionSpan = new EmotionSpan(customContentSpan, ApplicationUtil.getContext(), bitmap, ImageSpan.ALIGN_BOTTOM);
-                    simpleContentSpans.add(emotionSpan);
-                    value.setSpan(emotionSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                }
-            }
-        }
-        return simpleContentSpans;
+    private static void addEmotions(int textSize, Spannable value) {
+        EmoticonUtil.addEmoticon(BaseApplication.getInstance(), value , textSize);
     }
 
-    public static List<SimpleContentSpan> convertNormalStringToSimpleContentUrlSpans(CharSequence source) {
+//    private static void addCustomEmotions(Spannable value) {
+//        Matcher localMatcher = EMOTION_URL.matcher(value);
+//        while (localMatcher.find()) {
+//            String str = localMatcher.group();
+//            int start = localMatcher.start();
+//            int end = localMatcher.end();
+//            if (end - start < 10) {
+//                //表情文字描述长度都小于10
+//                Bitmap bitmap = Emoticon.getInstance().getEmoticonBitmap(str);
+//                if (bitmap != null) {
+//                    CustomContentSpan customContentSpan = new CustomContentSpan(start, end, str);
+////                    ImageSpan localImageSpan = new ImageSpan(ApplicationUtil.getContext(), bitmap, ImageSpan.ALIGN_BOTTOM);
+//                    EmotionSpan emotionSpan = new EmotionSpan(customContentSpan, ApplicationUtil.getContext(), bitmap, ImageSpan.ALIGN_BOTTOM);
+//                    value.setSpan(emotionSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                }
+//            }
+//        }
+//    }
 
-        if (source == null) {
+    public static List<SimpleContentSpan> convertNormalStringToSimpleContentUrlSpans(int textSize, Spannable value) {
+
+        if (value == null || value.length() == 0) {
             return null;
         }
 
-        SpannableString value = SpannableString.valueOf(source);
+//        SpannableString value = SpannableString.valueOf(source);
 
         Linkify.addLinks(value, WEB_URL, WEB_SCHEME);
 
         //添加表情
-        List<SimpleContentSpan> simpleContentSpans = addEmotions(value);
+        addEmotions(textSize, value);
 
         Linkify.addLinks(value, MENTION_URL, MENTION_SCHEME);
         Linkify.addLinks(value, TOPIC_URL, TOPIC_SCHEME);
 
         URLSpan[] urlSpans = value.getSpans(0, value.length(), URLSpan.class);
         if (urlSpans == null || urlSpans.length == 0) {
-            return simpleContentSpans;
+            return null;
         }
 
+        List<SimpleContentSpan> simpleContentSpans = new ArrayList<>();
         for (URLSpan urlSpan : urlSpans) {
             int start = value.getSpanStart(urlSpan);
             int end = value.getSpanEnd(urlSpan);
 
             if (start >= 0 && end >= 0 && value.length() >= end) {
+                value.removeSpan(urlSpan);
                 TopicContentUrlSpan topicContentUrlSpan = new TopicContentUrlSpan(start, end, urlSpan.getURL());
                 simpleContentSpans.add(topicContentUrlSpan);
+                value.setSpan(topicContentUrlSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
 

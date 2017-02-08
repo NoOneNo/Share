@@ -14,11 +14,13 @@ import android.view.View;
 import com.hengye.share.R;
 import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.module.base.BaseActivity;
+import com.hengye.share.module.sso.ThirdPartyLoginActivity;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemLongClickListener;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
 import com.hengye.share.util.UserUtil;
+import com.hengye.share.util.intercept.AdTokenInterceptor;
 import com.hengye.share.util.thirdparty.ThirdPartyUtils;
 
 import java.util.ArrayList;
@@ -44,12 +46,12 @@ public class AccountManageActivity extends BaseActivity implements AccountManage
     private AccountManagePresenter mPresenter;
     private AccountManageAdapter mAdapter;
     private RecyclerView mRecyclerView;
-    private Dialog mLogoutDialog;
 
     private User mSelectAccountOriginal;
     private boolean mHasSelectOriginalAccount;
     private int mSelectAccountNowIndex, mSelectAccountLongClickIndex;
     private View mSelectAccountBtn, mLogoutButton;
+    private boolean mIsFirstTime = true;
 
     private void initView() {
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -79,7 +81,7 @@ public class AccountManageActivity extends BaseActivity implements AccountManage
             @Override
             public boolean onItemLongClick(View view, int position) {
                 mSelectAccountLongClickIndex = position;
-                mLogoutDialog.show();
+                showLongClickDialog();
                 return false;
             }
         });
@@ -93,12 +95,23 @@ public class AccountManageActivity extends BaseActivity implements AccountManage
                 logout(mAdapter.getItem(mSelectAccountNowIndex));
             }
         });
-
-        mLogoutDialog = DialogBuilder.getItemDialog(this, this, getString(R.string.label_account_logout));
         mPresenter.loadUsers();
     }
 
-    private void updateLogoutBtn(){
+    private void showLongClickDialog() {
+        User user = mAdapter.getItem(mSelectAccountLongClickIndex);
+        String authorize = getString(user.getAdToken() == null ?
+                R.string.label_account_ad_authorize :
+                R.string.label_account_ad_authorize_again);
+
+        DialogBuilder
+                .getItemDialog(this, this,
+                authorize,
+                getString(R.string.label_account_logout))
+                .show();
+    }
+
+    private void updateLogoutBtn() {
         mLogoutButton.setVisibility(UserUtil.isUserEmpty() ? View.GONE : View.VISIBLE);
     }
 
@@ -107,6 +120,10 @@ public class AccountManageActivity extends BaseActivity implements AccountManage
         switch (which) {
             case 0:
             default:
+                User user = mAdapter.getItem(mSelectAccountLongClickIndex);
+                startActivityForResult(ThirdPartyLoginActivity.getAdTokenStartIntent(this, user.getUid()), ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO);
+                break;
+            case 1:
                 logout(mAdapter.getItem(mSelectAccountLongClickIndex));
                 break;
         }
@@ -140,6 +157,12 @@ public class AccountManageActivity extends BaseActivity implements AccountManage
         }
         mSelectAccountNowIndex = currentUserIndex;
         mAdapter.refresh(data);
+
+        if(!mIsFirstTime){
+            new AdTokenInterceptor(this).start();
+        }else{
+            mIsFirstTime = false;
+        }
     }
 
     @Override
@@ -147,6 +170,8 @@ public class AccountManageActivity extends BaseActivity implements AccountManage
         if (!mHasSelectOriginalAccount) {
             mHasSelectOriginalAccount = true;
         }
+
+        mIsFirstTime = false;
     }
 
     private boolean isChangeAccount(User original, User now) {
@@ -186,7 +211,7 @@ public class AccountManageActivity extends BaseActivity implements AccountManage
         }
     }
 
-    public static Dialog getLoginDialog(final Context context){
+    public static Dialog getLoginDialog(final Context context) {
         SimpleTwoBtnDialog stbd = new SimpleTwoBtnDialog();
         stbd.setContent(R.string.label_to_login);
         stbd.setPositiveButtonClickListener(new DialogInterface.OnClickListener() {

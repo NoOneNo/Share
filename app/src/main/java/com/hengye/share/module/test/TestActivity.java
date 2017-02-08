@@ -127,7 +127,7 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
             build.setPositiveButtonClickListener(new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    startActivityForResult(ThirdPartyLoginActivity.getAdTokenStartIntent(TestActivity.this), 3);
+                    startActivityForResult(ThirdPartyLoginActivity.getAdTokenStartIntent(TestActivity.this, true), 3);
                 }
             });
             mLoginDialog = build.create(this);

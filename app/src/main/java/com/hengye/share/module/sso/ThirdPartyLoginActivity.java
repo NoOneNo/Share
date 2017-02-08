@@ -20,14 +20,25 @@ import com.sina.weibo.sdk.auth.sso.SsoHandler;
 public class ThirdPartyLoginActivity extends BaseActivity implements UserContract.View {
 
     public static Intent getStartIntent(Context context, boolean isCurrentUser){
-        Intent intent = new Intent(context, ThirdPartyLoginActivity.class);
-        intent.putExtra("isCurrentUser", isCurrentUser);
-        return intent;
+        return getStartIntent(context, isCurrentUser ? UserUtil.getUid() : null);
     }
 
-    public static Intent getAdTokenStartIntent(Context context){
+    public static Intent getStartIntent(Context context, String uid){
+        return getStartIntent(context, ThirdPartyUtils.WeiboApp.SHARE.name(), uid);
+    }
+
+    public static Intent getAdTokenStartIntent(Context context, boolean isCurrentUser){
+        return getAdTokenStartIntent(context, isCurrentUser ? UserUtil.getUid() : null);
+    }
+
+    public static Intent getAdTokenStartIntent(Context context, String uid){
+        return getStartIntent(context, ThirdPartyUtils.WeiboApp.WEICO.name(), uid);
+    }
+
+    public static Intent getStartIntent(Context context, String appKey, String uid){
         Intent intent = new Intent(context, ThirdPartyLoginActivity.class);
-        intent.putExtra("appKey", ThirdPartyUtils.WeiboApp.WEICO.name());
+        intent.putExtra("appKey", appKey);
+        intent.putExtra("uid", uid);
         return intent;
     }
 
@@ -48,12 +59,9 @@ public class ThirdPartyLoginActivity extends BaseActivity implements UserContrac
 
         initData();
         String appName = getIntent().getStringExtra("appKey");
-        boolean isCurrentUser = getIntent().getBooleanExtra("isCurrentUser", true);
-        if(appName != null && appName.equals(ThirdPartyUtils.WeiboApp.WEICO.name())){
-            startActivityForResult(WeiboWebAuthorizeActivity.getAdTokenStartIntent(this), WEIBO_WEB_LOGIN);
-        }else {
-            startActivityForResult(WeiboWebAuthorizeActivity.getStartIntent(this, ThirdPartyUtils.WeiboApp.SHARE, isCurrentUser), WEIBO_WEB_LOGIN);
-        }
+        String uid = getIntent().getStringExtra("uid");
+
+        startActivityForResult(WeiboWebAuthorizeActivity.getStartIntent(this, appName, uid), WEIBO_WEB_LOGIN);
 //        try {
 //            mSsoHandler.authorize(ThirdPartyUtils.REQUEST_CODE_FOR_WEIBO, mWeiboAuthListener, null);
 //        } catch (Exception e) {
@@ -134,12 +142,14 @@ public class ThirdPartyLoginActivity extends BaseActivity implements UserContrac
                     mLoadingDialog.show();
                     UserUtil.updateUser(mAccessToken, account, password);
                     mPresenter.loadWBUserInfo(mAccessToken.getUid(), null);
-                }else if(mAccessToken.getUid() != null && mAccessToken.getUid().equals(UserUtil.getUid())){
-                    User user = UserUtil.getCurrentUser();
-                    user.setAccount(account);
-                    user.setPassword(password);
-                    user.setAdToken(mAccessToken.getToken());
-                    UserUtil.updateUser(user);
+                }else if(mAccessToken.getUid() != null){
+                    User user = UserUtil.getUser(mAccessToken.getUid());
+                    if(user != null) {
+                        user.setAccount(account);
+                        user.setPassword(password);
+                        user.setAdToken(mAccessToken.getToken());
+                        UserUtil.updateUser(user);
+                    }
                     ToastUtil.showToastSuccess(R.string.tip_authorize_success);
                     setResult(Activity.RESULT_OK);
                     finish();

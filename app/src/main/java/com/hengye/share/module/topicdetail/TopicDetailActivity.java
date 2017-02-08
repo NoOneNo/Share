@@ -81,7 +81,7 @@ public class TopicDetailActivity extends BaseActivity implements View.OnClickLis
         mAppBarLayout.removeOnOffsetChangedListener(this);
     }
 
-//    CollapsingToolbarLayout mCollapsingToolbarLayout;
+    //    CollapsingToolbarLayout mCollapsingToolbarLayout;
     PullToRefreshLayout mPullToRefresh;
     AppBarLayout mAppBarLayout;
     TabLayout mTabLayout;
@@ -169,12 +169,13 @@ public class TopicDetailActivity extends BaseActivity implements View.OnClickLis
 
     FabAnimator mFabAnimator;
     boolean mHasSetSelection;
+
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-        L.debug("verticalOffset %s ", verticalOffset);
-        if(verticalOffset >= -200){
+//        L.debug("verticalOffset %s ", verticalOffset);
+        if (verticalOffset >= -200) {
             mFabAnimator.show();
-        }else{
+        } else {
             mFabAnimator.hide();
         }
 
@@ -184,13 +185,13 @@ public class TopicDetailActivity extends BaseActivity implements View.OnClickLis
             mPullToRefresh.setRefreshEnable(false);
         }
 
-        if(!mHasSetSelection && Math.abs(verticalOffset) < mHeaderView.getHeight()){
+        if (!mHasSetSelection && Math.abs(verticalOffset) < mHeaderView.getHeight()) {
             //看见头部，让viewpager其他tab也选中第一个位置;
-            if(mFragment != null) {
+            if (mFragment != null) {
                 mHasSetSelection = true;
                 mFragment.setOtherTabScrollToTop();
             }
-        }else{
+        } else {
             mHasSetSelection = false;
         }
     }

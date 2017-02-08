@@ -9,6 +9,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -18,6 +19,11 @@ import com.hengye.share.R;
 import com.hengye.share.module.setting.SettingHelper;
 
 public class EmoticonPickerUtil {
+
+    public static void backspace(EditText editText) {
+        KeyEvent event = new KeyEvent(0, 0, 0, KeyEvent.KEYCODE_DEL, 0, 0, 0, 0, KeyEvent.KEYCODE_ENDCALL);
+        editText.dispatchKeyEvent(event);
+    }
 
     public static void addContentToEditTextEnd(EditText editText, CharSequence charSequence){
         Editable editAble = editText.getEditableText();

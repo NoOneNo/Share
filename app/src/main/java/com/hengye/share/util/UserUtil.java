@@ -111,20 +111,7 @@ public class UserUtil {
     }
 
     private static User getDefaultUser() {
-        User user = null;
-        String uid = SPUtil.getUid();
-        if (uid != null) {
-            UserDao ud = GreenDaoManager.getDaoSession().getUserDao();
-            List<User> users = ud
-                    .queryBuilder()
-                    .where(UserDao.Properties.Uid.eq(uid))
-                    .list();
-//            List<User> users = ud.queryRaw("where UID = ?", uid);
-            if (!CommonUtil.isEmpty(users)) {
-                user = users.get(0);
-            }
-        }
-
+        User user = queryUser(SPUtil.getUid());
         if (user == null) {
             UserDao ud = GreenDaoManager.getDaoSession().getUserDao();
             List<User> users = ud
@@ -132,6 +119,30 @@ public class UserUtil {
                     .limit(1)
                     .list();
 //           List<User> users = ud.queryRaw("limit 1");
+            if (!CommonUtil.isEmpty(users)) {
+                user = users.get(0);
+            }
+        }
+        return user;
+    }
+
+    public static User getUser(String uid) {
+        if(uid != null){
+            return uid.equals(UserUtil.getUid()) ?
+                    UserUtil.getCurrentUser() : UserUtil.queryUser(uid);
+        }
+        return null;
+    }
+
+    private static User queryUser(String uid) {
+        User user = null;
+        if (uid != null) {
+            UserDao ud = GreenDaoManager.getDaoSession().getUserDao();
+            List<User> users = ud
+                    .queryBuilder()
+                    .where(UserDao.Properties.Uid.eq(uid))
+                    .list();
+//            List<User> users = ud.queryRaw("where UID = ?", uid);
             if (!CommonUtil.isEmpty(users)) {
                 user = users.get(0);
             }
@@ -176,6 +187,7 @@ public class UserUtil {
             ud.update(user);
         }
 
+        //更改当前用户
         mCurrentUser = user;
         SPUtil.setUid(user.getUid());
     }

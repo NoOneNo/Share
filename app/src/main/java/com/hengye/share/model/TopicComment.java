@@ -2,6 +2,7 @@ package com.hengye.share.model;
 
 import android.text.SpannableString;
 import android.text.TextUtils;
+import android.widget.TextView;
 
 import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.model.sina.WBTopicComment;
@@ -181,11 +182,11 @@ public class TopicComment implements TopicId, TopicShortUrl, Serializable{
         return null;
     }
 
-    public SpannableString getUrlSpannableString() {
+    public SpannableString getUrlSpannableString(TextView textView) {
         if (!TextUtils.isEmpty(urlSpannableString)) {
             return urlSpannableString;
         } else {
-            DataUtil.addTopicContentHighLightLinks(this);
+            DataUtil.addTopicContentHighLightLinks((int)textView.getTextSize(), this);
             return urlSpannableString;
         }
     }

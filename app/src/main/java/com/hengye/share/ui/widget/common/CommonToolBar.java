@@ -3,6 +3,7 @@ package com.hengye.share.ui.widget.common;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -10,6 +11,7 @@ import android.view.ViewConfiguration;
 import android.widget.ImageButton;
 
 import com.hengye.share.R;
+import com.hengye.share.ui.widget.util.DrawableLoader;
 import com.hengye.share.util.ReflectionHelpers;
 import com.hengye.share.module.util.encapsulation.view.listener.OnDoubleTapListener;
 import com.hengye.share.util.ThemeUtil;
@@ -54,7 +56,7 @@ public class CommonToolBar extends Toolbar {
     public void init() {
         this.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         if (getNavigationIcon() != null) {
-            getNavigationIcon().setTint(ThemeUtil.getUntingedColor());
+            DrawableLoader.setTintDrawable(getNavigationIcon(), ThemeUtil.getUntingedColor());
         }
         setBackgroundColor(ThemeUtil.getColor());
         setTitleTextColor(ThemeUtil.getTextColor());
