@@ -16,6 +16,7 @@
             android:summary="%s"
             android:title="@string/title_setting_load_count" />
         <MultiSelectListPreference
+            android:defaultValue="@array/empty_string_array"
             android:entries="@array/show_avatar_entries"
             android:entryValues="@array/show_avatar_values"
             android:key="show_avatar"

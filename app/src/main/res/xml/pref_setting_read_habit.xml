@@ -9,27 +9,28 @@
             android:title="@string/title_setting_font_zoom" />
 
         <!--<ListPreference-->
-            <!--android:key="menu_show_style"-->
-            <!--android:title="@string/title_setting_menu_show_style"-->
-            <!--android:defaultValue="1"-->
-            <!--android:entries="@array/menu_show_style_entries"-->
-            <!--android:entryValues="@array/menu_show_style_values"-->
-            <!--android:summary="%s"/>-->
+        <!--android:key="menu_show_style"-->
+        <!--android:title="@string/title_setting_menu_show_style"-->
+        <!--android:defaultValue="1"-->
+        <!--android:entries="@array/menu_show_style_entries"-->
+        <!--android:entryValues="@array/menu_show_style_values"-->
+        <!--android:summary="%s"/>-->
 
         <MultiSelectListPreference
-            android:key="show_avatar"
-            android:title="@string/title_setting_show_avatar_off"
+            android:defaultValue="@array/empty_string_array"
             android:entries="@array/show_avatar_entries"
             android:entryValues="@array/show_avatar_values"
-            android:summary="@string/title_setting_show_avatar_summary"/>
+            android:key="show_avatar"
+            android:summary="@string/title_setting_show_avatar_summary"
+            android:title="@string/title_setting_show_avatar_off" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/title_setting_browse">
 
         <SwitchPreference
+            android:defaultValue="false"
             android:key="auto_night_mode"
-            android:title="@string/title_setting_auto_night_mode"
-            android:defaultValue="false"/>
+            android:title="@string/title_setting_auto_night_mode" />
 
     </PreferenceCategory>
 
@@ -38,26 +39,26 @@
     <!--</PreferenceCategory>-->
 
     <!--<ListPreference-->
-        <!--android:key="read_order"-->
-        <!--android:title="@string/title_setting_read_order"-->
-        <!--android:defaultValue="1"-->
-        <!--android:entries="@array/reader_order_entries"-->
-        <!--android:entryValues="@array/reader_order_values"-->
-        <!--android:summary="%s" />-->
+    <!--android:key="read_order"-->
+    <!--android:title="@string/title_setting_read_order"-->
+    <!--android:defaultValue="1"-->
+    <!--android:entries="@array/reader_order_entries"-->
+    <!--android:entryValues="@array/reader_order_values"-->
+    <!--android:summary="%s" />-->
 
     <SwitchPreference
-        android:key="preread"
-        android:title="@string/title_setting_preread"
         android:defaultValue="true"
-        android:summary="@string/title_setting_preread_summary"/>
+        android:key="preread"
+        android:summary="@string/title_setting_preread_summary"
+        android:title="@string/title_setting_preread" />
 
     <ListPreference
-        android:key="load_count"
-        android:title="@string/title_setting_load_count"
         android:defaultValue="4"
         android:entries="@array/load_count_entries"
         android:entryValues="@array/load_count_values"
-        android:summary="%s"/>
+        android:key="load_count"
+        android:summary="%s"
+        android:title="@string/title_setting_load_count" />
 
 
 </PreferenceScreen>

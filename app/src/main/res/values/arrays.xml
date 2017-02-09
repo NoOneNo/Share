@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string-array name="empty_string_array">
+
+    </string-array>
+
     <!-- 滑动退出 -->
     <string-array name="swipe_back_entries">
         <item>向右滑动退出</item>

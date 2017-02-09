@@ -24,7 +24,8 @@
             android:key="theme_app"
             android:title="@string/title_setting_show_theme"
             android:entries="@array/theme_app_entries"
-            android:entryValues="@array/theme_app_values"/>
+            android:entryValues="@array/theme_app_values"
+            android:defaultValue="@array/empty_string_array"/>
         <Preference
             android:key="@string/title_setting_show_reading_habit"
             android:title="@string/title_setting_show_reading_habit"/>
