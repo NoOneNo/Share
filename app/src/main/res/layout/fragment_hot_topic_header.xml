@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_hot_topic"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/item_hot_topic_title"
+        layout="@layout/item_hot_title" />
+
+    <View style="@style/horizontal_line" />
+
+    <include
+        android:id="@+id/item_hot_topic_1"
+        layout="@layout/item_hot_topic" />
+
+    <View style="@style/horizontal_line" />
+
+    <include
+        android:id="@+id/item_hot_topic_2"
+        layout="@layout/item_hot_topic" />
+
+    <include
+        android:id="@+id/item_hot_status_title"
+        layout="@layout/item_hot_title" />
+
+    <View style="@style/horizontal_line" />
+</LinearLayout>

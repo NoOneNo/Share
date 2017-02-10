@@ -28,7 +28,7 @@ public class PersonalTopicFragment extends TopicFragment {
     }
 
     @Override
-    public void setDataHandler() {
+    protected void setDataHandler() {
         setDataHandler(new TopicRefreshIdHandler<>(getAdapter()));
     }
 

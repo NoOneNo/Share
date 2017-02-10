@@ -7,7 +7,7 @@ import com.hengye.share.module.base.BaseFragmentActivity;
 public class GroupManageActivity extends BaseFragmentActivity{
 
     @Override
-    protected Fragment getFragment() {
+    protected Fragment createFragment() {
         GroupManageFragment fragment =  new GroupManageFragment();
         getActivityHelper().registerActivityActionInterceptListener(fragment);
         return fragment;

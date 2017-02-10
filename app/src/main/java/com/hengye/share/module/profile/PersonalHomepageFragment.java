@@ -94,13 +94,13 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
                 fragment = mPersonalHomepageAboutFragment;
                 break;
             case 1:
-                mTopicFragment = PersonalTopicFragment.newInstance(TopicPresenter.TopicType.HOMEPAGE, mWbUserInfo.getIdstr(), mWbUserInfo.getName());
+                mTopicFragment = PersonalTopicFragment.newInstance(TopicPresenter.TopicType.HOMEPAGE, mWbUserInfo.getIdstr(), mWbUserInfo.getScreen_name());
                 mTopicFragment.setLoadDataCallBack(getLoadDataCallBack(mTopicFragment));
                 fragment = mTopicFragment;
                 break;
             case 2:
             default:
-                mTopicAlbumFragment = TopicAlbumFragment.newInstance(mWbUserInfo.getIdstr(), mWbUserInfo.getName());
+                mTopicAlbumFragment = TopicAlbumFragment.newInstance(mWbUserInfo.getIdstr(), mWbUserInfo.getScreen_name());
                 mTopicAlbumFragment.setLoadDataCallBack(getLoadDataCallBack(mTopicAlbumFragment));
                 fragment = mTopicAlbumFragment;
                 break;

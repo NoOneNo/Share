@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/selector_ripple_transparent"
+    android:paddingTop="@dimen/content_margin_default_half"
+    android:paddingStart="@dimen/content_margin_default"
+    android:paddingEnd="@dimen/content_margin_default"
+    android:paddingBottom="@dimen/content_margin_default_half"
+    android:orientation="vertical">
+
+    <com.hengye.share.ui.widget.image.SuperImageView
+        android:id="@+id/iv_cover"
+        android:layout_width="@dimen/hot_topic_cover"
+        android:layout_height="@dimen/hot_topic_cover"
+        android:layout_marginEnd="@dimen/content_margin_10dp"
+        tool:src="@drawable/ic_user_avatar"/>
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_toEndOf="@id/iv_cover"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_normal"
+        android:textColor="@color/text_dark"
+        android:lines="1"
+        android:ellipsize="end"
+        tool:text="#中国楼市#"/>
+
+    <TextView
+        android:id="@+id/tv_subtitle"
+        android:layout_toEndOf="@id/iv_cover"
+        android:layout_below="@id/tv_title"
+        android:layout_marginTop="@dimen/content_margin_5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_small"
+        android:textColor="@color/text_grey"
+        android:lines="1"
+        android:ellipsize="end"
+        tool:text="11月下半月一二线城市房地产市场迅速ttt"/>
+
+    <TextView
+        android:id="@+id/tv_description"
+        android:layout_toEndOf="@id/iv_cover"
+        android:layout_below="@id/tv_subtitle"
+        android:layout_marginTop="@dimen/content_margin_5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_micro"
+        android:textColor="@color/text_grey"
+        android:lines="1"
+        android:ellipsize="end"
+        tool:text="2万讨论  3606.2万阅读"/>
+
+</RelativeLayout>

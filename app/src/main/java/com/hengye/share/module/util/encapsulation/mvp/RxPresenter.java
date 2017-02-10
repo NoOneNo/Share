@@ -50,6 +50,7 @@ public class RxPresenter<V extends MvpView> extends BasePresenter<V> {
 
         @Override
         public void onError(Throwable e) {
+            e.printStackTrace();
             if (isViewAttached()) {
                 onError(getMvpView(), e);
             }

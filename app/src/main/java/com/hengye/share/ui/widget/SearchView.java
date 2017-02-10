@@ -18,6 +18,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.hengye.share.R;
+import com.hengye.share.module.base.ActivityHelper;
+import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.util.ViewUtil;
 
 public class SearchView extends FrameLayout implements View.OnClickListener{
@@ -104,6 +106,20 @@ public class SearchView extends FrameLayout implements View.OnClickListener{
         setup(activity);
 
         mSearch.setVisibility(mode == MODE_ANIMATION ? View.GONE : View.VISIBLE);
+
+        if(activity instanceof BaseActivity) {
+            BaseActivity baseActivity = (BaseActivity) activity;
+            baseActivity.getActivityHelper().registerActivityActionInterceptListener(new ActivityHelper.ActivityActionInterceptListener() {
+                @Override
+                public boolean onBackPressed() {
+                    if (isSearchShow()) {
+                        handleSearch(false);
+                        return true;
+                    }
+                    return false;
+                }
+            });
+        }
     }
 
     public int getMode(){
@@ -112,10 +128,6 @@ public class SearchView extends FrameLayout implements View.OnClickListener{
 
     public void setup(Activity activity){
         this.mActivity = activity;
-    }
-
-    public Activity getActivity(){
-        return mActivity;
     }
 
     public onSearchListener getSearchListener() {
@@ -134,9 +146,9 @@ public class SearchView extends FrameLayout implements View.OnClickListener{
             if(getMode() == MODE_ANIMATION){
                 handleSearch();
             }else if(getMode() == MODE_FINISH){
-                getActivity().onBackPressed();
+                mActivity.onBackPressed();
             }
-            getActivity().onBackPressed();
+            mActivity.onBackPressed();
         }else if(id == R.id.iv_clear_content){
             clearSearchContent();
         }

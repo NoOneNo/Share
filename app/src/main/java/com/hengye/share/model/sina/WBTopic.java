@@ -44,10 +44,13 @@ public class WBTopic implements Serializable{
     private String source;
     private boolean favorited;
     private boolean truncated;
+    private boolean isLongText;
     private String in_reply_to_status_id;
     private String in_reply_to_user_id;
     private String in_reply_to_screen_name;
     private Object geo;
+
+    private boolean fromMobile;//如果请求wap端的接口，格式是网页格式需要额外处理；
     /**
      * id : 1713926427
      * idstr : 1713926427
@@ -205,6 +208,10 @@ public class WBTopic implements Serializable{
         this.truncated = truncated;
     }
 
+    public void setLongText(boolean longText) {
+        isLongText = longText;
+    }
+
     public void setIn_reply_to_status_id(String in_reply_to_status_id) {
         this.in_reply_to_status_id = in_reply_to_status_id;
     }
@@ -309,6 +316,10 @@ public class WBTopic implements Serializable{
         return truncated;
     }
 
+    public boolean isLongText() {
+        return isLongText;
+    }
+
     public String getIn_reply_to_status_id() {
         return in_reply_to_status_id;
     }
@@ -371,6 +382,14 @@ public class WBTopic implements Serializable{
 
     public List<?> getDarwin_tags() {
         return darwin_tags;
+    }
+
+    public boolean isFromMobile() {
+        return fromMobile;
+    }
+
+    public void setFromMobile(boolean fromMobile) {
+        this.fromMobile = fromMobile;
     }
 
     @Override

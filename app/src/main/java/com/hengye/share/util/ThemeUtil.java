@@ -10,15 +10,18 @@ import com.hengye.share.R;
 public class ThemeUtil extends ResUtil{
 
     public static int getColor(){
-        return ResUtil.getAttrColor(R.attr.colorPrimary, 0);
+//        return ResUtil.getAttrColor(R.attr.colorPrimary, 0);
+        return ResUtil.getAttrColor(R.attr.theme_color, 0);
     }
 
     public static int getDarkColor(){
-        return ResUtil.getAttrColor(R.attr.colorPrimaryDark, 0);
+//        return ResUtil.getAttrColor(R.attr.colorPrimaryDark, 0);
+        return ResUtil.getAttrColor(R.attr.theme_dark_color, 0);
     }
 
     public static int getAccentColor(){
-        return ResUtil.getAttrColor(R.attr.colorPrimaryDark, 0);
+//        return ResUtil.getAttrColor(R.attr.colorPrimaryDark, 0);
+        return ResUtil.getAttrColor(R.attr.theme_accent_color, 0);
     }
 
     public static int getTextColor(){

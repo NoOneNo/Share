@@ -318,7 +318,7 @@ public class User implements java.io.Serializable {
             return user;
         }
         user.setUid(wbUserInfo.getIdstr());
-        user.setName(wbUserInfo.getName());
+        user.setName(wbUserInfo.getScreen_name());
         user.setAvatar(wbUserInfo.getAvatar_large());
         user.setGender(wbUserInfo.getGender());
         user.setSign(wbUserInfo.getDescription());

@@ -46,23 +46,31 @@ public class LoadingDialog extends Dialog {
 
     @Override
     public void dismiss() {
-        if(getContext() instanceof Activity){
+        if (getContext() instanceof Activity) {
             Activity activity = (Activity) getContext();
-            if(activity.isDestroyed() || activity.isFinishing()){
+            if (activity.isDestroyed() || activity.isFinishing()) {
                 return;
             }
         }
-        super.dismiss();
+        try {
+            super.dismiss();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void show() {
-        if(getContext() instanceof Activity){
+        if (getContext() instanceof Activity) {
             Activity activity = (Activity) getContext();
-            if(activity.isDestroyed() || activity.isFinishing()){
+            if (activity.isDestroyed() || activity.isFinishing()) {
                 return;
             }
         }
-        super.show();
+        try {
+            super.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

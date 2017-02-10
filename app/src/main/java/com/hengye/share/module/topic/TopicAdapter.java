@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -203,7 +204,7 @@ public class TopicAdapter extends CommonAdapter<Topic>
 
     public void startPersonHomePage(int position) {
         Topic topic = getItem(position);
-        TopicDefaultViewHolder vh = (TopicDefaultViewHolder) mRecyclerView.findViewHolderForAdapterPosition(position);
+        TopicDefaultViewHolder vh = (TopicDefaultViewHolder) findViewHolderForLayoutPosition(position);
         if (topic == null || vh == null) {
             return;
         }
@@ -212,8 +213,10 @@ public class TopicAdapter extends CommonAdapter<Topic>
 
     public void startTopicDetail(boolean isRetweet, int position) {
         Topic topic = isRetweet ? getItem(position).getRetweetedTopic() : getItem(position);
-        TopicDefaultViewHolder vh = (TopicDefaultViewHolder) mRecyclerView.findViewHolderForAdapterPosition(position);
-        TopicViewHolder.startTopicDetail(getContext(), vh, isRetweet, topic);
+        TopicDefaultViewHolder vh = (TopicDefaultViewHolder) findViewHolderForLayoutPosition(position);
+        if(vh != null) {
+            TopicViewHolder.startTopicDetail(getContext(), vh, isRetweet, topic);
+        }
     }
 
     public static class TopicDefaultViewHolder extends TopicViewHolder<Topic> {
@@ -387,7 +390,8 @@ public class TopicAdapter extends CommonAdapter<Topic>
         public void initTopicContent(final Context context, Topic topic, boolean isRetweeted) {
 
             //不设置的话会被名字内容的点击事件覆盖，无法触发ItemView的onClick
-            mContent.setText(topic.getUrlSpannableString(mContent, isRetweeted));
+            mContent.setText(topic.getSpanned(mContent, isRetweeted));
+
 //            mContent.setMovementMethod(SimpleLinkMovementMethod.getInstance());
 //            mContent.setOnTouchListener(TopicUrlOnTouchListener.getInstance());
 

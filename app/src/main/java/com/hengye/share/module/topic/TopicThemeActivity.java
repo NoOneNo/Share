@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import com.hengye.share.R;
 import com.hengye.share.module.base.BaseActivity;
+import com.hengye.share.util.ResUtil;
 
 public class TopicThemeActivity extends BaseActivity{
 
@@ -53,6 +54,8 @@ public class TopicThemeActivity extends BaseActivity{
     private String mTopicTheme;
 
     private void initView(){
+
+        updateToolbarTitle(ResUtil.getString(R.string.label_hot_topic_modifier, mTopicTheme));
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content, TopicPageFragment.newInstance(TopicPagePresenter.TopicType.THEME, mTopicTheme))
                 .commit();

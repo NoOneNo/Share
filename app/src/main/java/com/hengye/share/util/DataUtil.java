@@ -2,10 +2,13 @@ package com.hengye.share.util;
 
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.util.Patterns;
@@ -21,7 +24,9 @@ import com.hengye.share.module.base.BaseApplication;
 import com.hengye.share.ui.support.textspan.CustomContentSpan;
 import com.hengye.share.ui.support.textspan.SimpleContentSpan;
 import com.hengye.share.ui.support.textspan.TopicContentUrlSpan;
+import com.hengye.share.ui.widget.emoticon.EmoticonSpan;
 import com.hengye.share.ui.widget.emoticon.EmoticonUtil;
+import com.hengye.share.util.thirdparty.WBUtil;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -63,25 +68,31 @@ public class DataUtil {
     public static final String TOPIC_SCHEME = BuildConfig.APPLICATION_ID + ".topic:";
     public static final String MENTION_SCHEME = BuildConfig.APPLICATION_ID + ".mention:";
 
-    public static boolean isTopic(String url) {
+    public static final String WEB_LONG_TEXT = "全文";
+
+    public static boolean isTopic(CharSequence url) {
         if (!TextUtils.isEmpty(url)) {
-            if (url.startsWith(TOPIC_SCHEME)) {
+            Matcher m = TOPIC_URL.matcher(url);
+            //noinspection LoopStatementThatDoesntLoop
+            while (m.find()) {
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean isMention(String url) {
+    public static boolean isMention(CharSequence url) {
         if (!TextUtils.isEmpty(url)) {
-            if (url.startsWith(MENTION_SCHEME)) {
+            Matcher m = MENTION_URL.matcher(url);
+            //noinspection LoopStatementThatDoesntLoop
+            while (m.find()) {
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean isHttpUrl(String url) {
+    public static boolean isHttpUrl(CharSequence url) {
         if (!TextUtils.isEmpty(url)) {
             Matcher m = WEB_URL.matcher(url);
             //noinspection LoopStatementThatDoesntLoop
@@ -102,34 +113,40 @@ public class DataUtil {
 //    }
 
     public static void addTopicContentHighLightLinks(int textSize, TopicComment topicComment) {
-        topicComment.setUrlSpannableString(convertNormalStringToSpannableString(textSize, topicComment, topicComment.getContent()));
+        topicComment.setSpanned(convertNormalStringToSpannableString(textSize, topicComment, topicComment.getContent()));
     }
 
     public static void addTopicContentHighLightLinks(int textSize, Topic topic, boolean isRetweeted) {
         String str = isRetweeted ? addRetweetedNamePrefix(topic) : topic.getContent();
-        topic.setUrlSpannableString(convertNormalStringToSpannableString(textSize, topic, str));
+        topic.setSpanned(convertNormalStringToSpannableString(textSize, topic, str, true, topic.isFromMobile()));
     }
 
-    public static <T extends TopicShortUrl & TopicId> SpannableString convertNormalStringToSpannableString(int textSize, @Nullable T topic, CharSequence source) {
-        return convertNormalStringToSpannableString(textSize, topic, source, true);
+    private static <T extends TopicShortUrl & TopicId> Spanned convertNormalStringToSpannableString(int textSize, @Nullable T topic, CharSequence source) {
+        return convertNormalStringToSpannableString(textSize, topic, source, true, false);
     }
 
-    public static <T extends TopicShortUrl & TopicId> SpannableString convertNormalStringToSpannableString(int textSize, @Nullable T topic, CharSequence source, boolean isReplaceWebUrl) {
+    private static <T extends TopicShortUrl & TopicId> Spanned convertNormalStringToSpannableString(int textSize, @Nullable T topic, CharSequence source, boolean isReplaceWebUrl, boolean isHtml) {
         //hack to fix android imagespan bug,see http://stackoverflow.com/questions/3253148/imagespan-is-cut-off-incorrectly-aligned
         //if string only contains emotion tags,add a empty char to the end
         if (source == null) {
             return null;
         }
 
-        String txt = source.toString();
-        String hackTxt;
-        if (txt.startsWith("[") && txt.endsWith("]")) {
-            hackTxt = txt + " ";
+        Spannable value;
+        if (isHtml) {
+            Spanned spanned = Html.fromHtml(source.toString());
+            value = SpannableStringBuilder.valueOf(spanned);
         } else {
-            hackTxt = txt;
-        }
+            String txt = source.toString();
+            String hackTxt;
+            if (txt.startsWith("[") && txt.endsWith("]")) {
+                hackTxt = txt + " ";
+            } else {
+                hackTxt = txt;
+            }
 
-        SpannableString value = SpannableString.valueOf(hackTxt);
+            value = SpannableString.valueOf(hackTxt);
+        }
 
         Linkify.addLinks(value, WEB_URL, WEB_SCHEME);
 //        Linkify.addLinks(value, WEB_URL, null);
@@ -140,6 +157,26 @@ public class DataUtil {
 
         //添加表情
         addEmotions(textSize, value);
+
+        if(isHtml){
+            //替换微博移动内容Html的图片资源
+            //必须在添加表情后再替换ImageSpan，因为添加表情时旧的EmoticonSpan会被清除
+            ImageSpan[] imageSpans = value.getSpans(0, value.length(), ImageSpan.class);
+            if (imageSpans != null && imageSpans.length != 0) {
+                for (ImageSpan imageSpan : imageSpans) {
+                    int start = value.getSpanStart(imageSpan);
+                    int end = value.getSpanEnd(imageSpan);
+
+                    if (start >= 0 && end >= 0 && value.length() >= end) {
+                        value.removeSpan(imageSpan);
+                        EmoticonSpan emoticonSpan = new EmoticonSpan(BaseApplication.getInstance(),
+                                R.drawable.ic_timeline_card_small_web_default,
+                                textSize, textSize, ImageSpan.ALIGN_BASELINE);
+                        value.setSpan(emoticonSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                }
+            }
+        }
 
         Linkify.addLinks(value, MENTION_URL, MENTION_SCHEME);
         Linkify.addLinks(value, TOPIC_URL, TOPIC_SCHEME);
@@ -164,7 +201,7 @@ public class DataUtil {
         return value;
     }
 
-    public static <T extends TopicShortUrl & TopicId> SpannableString replaceWebUrl(T topic, SpannableString value) {
+    private static <T extends TopicShortUrl & TopicId> Spannable replaceWebUrl(T topic, Spannable value) {
         URLSpan[] urlSpans = value.getSpans(0, value.length(), URLSpan.class);
         if (urlSpans != null && urlSpans.length != 0) {
             List<CustomContentSpan> sps = new ArrayList<>();
@@ -190,6 +227,21 @@ public class DataUtil {
                 for (CustomContentSpan sp : sps) {
                     sp.start -= totalIndentLength;
                     sp.end -= totalIndentLength;
+
+                    CharSequence spanValue = value.subSequence(sp.start, sp.end);
+                    if (!isHttpUrl(spanValue)) {
+                        if (isTopic(spanValue)) {
+                            sp.setContent(TOPIC_SCHEME + spanValue);
+                        } else if (isMention(spanValue)) {
+                            sp.setContent(MENTION_SCHEME + spanValue);
+                        } else if (WEB_LONG_TEXT.equals(spanValue.toString()) && !isHttpUrl(sp.getContent())) {
+                            //如果是点击全文，链接不是全链接，只有部分开头:/status/4073277108353952，需要拼接新浪移动的域名
+                            sp.setContent(WEB_SCHEME + WBUtil.URL_HTTP_MOBILE + sp.getContent());
+                        } else {
+                            sp.setContent(WEB_SCHEME + sp.getContent());
+                        }
+                        continue;
+                    }
 
                     CharSequence cs1 = value.subSequence(0, sp.start);
 
@@ -278,7 +330,7 @@ public class DataUtil {
     }
 
     private static void addEmotions(int textSize, Spannable value) {
-        EmoticonUtil.addEmoticon(BaseApplication.getInstance(), value , textSize);
+        EmoticonUtil.addEmoticon(BaseApplication.getInstance(), value, textSize);
     }
 
 //    private static void addCustomEmotions(Spannable value) {

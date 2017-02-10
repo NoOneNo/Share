@@ -94,7 +94,7 @@ public class TopicFragment extends StatusFragment<Topic> implements TopicContrac
         }
     }
 
-    public void setDataHandler(){
+    protected void setDataHandler(){
         setDataHandler(new TopicIdHandler<>(mAdapter));
     }
 

@@ -94,7 +94,8 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="title_drawer_homepage">个人主页</string>
+    <!--<string name="title_drawer_homepage">个人主页</string>-->
+    <string name="title_drawer_hot_topic_and_status">热门话题和微博</string>
     <string name="title_drawer_private_message">私信</string>
     <string name="title_drawer_at_me">提及</string>
     <string name="title_drawer_comment">评论</string>
@@ -114,6 +115,8 @@
     <string name="title_activity_group_manage">分组管理</string>
     <string name="title_activity_account_manage">账号管理</string>
     <string name="title_activity_topic_theme">相关话题</string>
+    <string name="title_activity_hot_topic_and_status">热门话题和微博</string>
+    <string name="title_activity_hot_topic">热门话题</string>
     <string name="title_activity_favorite">我收藏的微博</string>
     <string name="title_activity_web_view">浏览</string>
     <string name="title_activity_follower_list">粉丝列表</string>
@@ -261,18 +264,6 @@
     <string name="label_to_login">未发现已授权的账号，是否跳转到登录页面？</string>
     <!-- Strings related to account manage-->
 
-    <!-- Strings related to fragment title-->
-    <string name="title_fragment_setting">设置</string>
-    <string name="title_fragment_basic_setting">基本设置</string>
-    <string name="title_fragment_flow_control">流量控制</string>
-    <string name="title_fragment_sound_control">音效管理</string>
-    <string name="title_fragment_notify">通知设置</string>
-    <string name="title_fragment_theme">主题</string>
-    <string name="title_fragment_reading_habit">阅读习惯</string>
-    <string name="title_fragment_feedback">意见反馈</string>
-    <string name="title_fragment_about">关于</string>
-    <!-- Strings related to fragment title-->
-
     <!-- Strings related to WebView -->
     <string name="label_resolve_url_activity_fail">找不到可以打开此链接的应用</string>
     <string name="label_copy_url_to_clipboard_success">成功复制链接到剪切板</string>
@@ -290,6 +281,25 @@
     <string name="tip_locating">定位中</string>
     <string name="tip_location_fail">定位失败，点击重试</string>
     <!-- Strings related to activity around address -->
+
+    <!-- Strings related to activity hot topic -->
+    <string name="label_hot_topic">热门话题</string>
+    <string name="label_hot_status">热门微博</string>
+    <string name="label_hot_topic_modifier">#%s#</string>
+    <!-- Strings related to activity hot topic -->
+
+
+    <!-- Strings related to setting title-->
+    <string name="title_fragment_setting">设置</string>
+    <string name="title_fragment_basic_setting">基本设置</string>
+    <string name="title_fragment_flow_control">流量控制</string>
+    <string name="title_fragment_sound_control">音效管理</string>
+    <string name="title_fragment_notify">通知设置</string>
+    <string name="title_fragment_theme">主题</string>
+    <string name="title_fragment_reading_habit">阅读习惯</string>
+    <string name="title_fragment_feedback">意见反馈</string>
+    <string name="title_fragment_about">关于</string>
+    <!-- Strings related to setting title-->
 
     <!-- Strings related to setting -->
     <string name="title_setting_common">常规设置</string>

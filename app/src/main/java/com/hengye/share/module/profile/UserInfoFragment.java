@@ -84,7 +84,7 @@ public class UserInfoFragment extends BaseFragment
     public void onClick(View v) {
         int id = v.getId();
         if(id == R.id.btn_at_ta){
-            startActivity(TopicPublishActivity.getAtTaStartIntent(getContext(), mWbUserInfo.getName()));
+            startActivity(TopicPublishActivity.getAtTaStartIntent(getContext(), mWbUserInfo.getScreen_name()));
         }else{
             ToastUtil.showToBeAchievedToast();
         }

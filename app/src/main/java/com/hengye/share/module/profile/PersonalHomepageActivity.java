@@ -381,7 +381,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 
     private void initUserInfo(WBUserInfo wbUserInfo) {
         mWBUserInfo = wbUserInfo;
-        mCollapsingToolbarLayout.setTitle(" " + wbUserInfo.getName());
+        mCollapsingToolbarLayout.setTitle(" " + wbUserInfo.getScreen_name());
 //        mCover.setImageResource(R.drawable.bg_test);
         mCover.setImageUrl(wbUserInfo.getCover_image_phone());
         mAvatar.setImageUrl(wbUserInfo.getAvatar_large());

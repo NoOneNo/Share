@@ -24,12 +24,12 @@ public abstract class BaseFragmentActivity extends BaseActivity {
                 .findFragmentById(ActivityUtils.FRAGMENT_ID);
 
         if (fragment == null) {
-            fragment = getFragment();
+            fragment = createFragment();
             ActivityUtils.addFragmentToActivity(this,
                     fragment, ActivityUtils.FRAGMENT_ID);
         }
 
     }
-    protected abstract Fragment getFragment();
+    protected abstract Fragment createFragment();
 
 }

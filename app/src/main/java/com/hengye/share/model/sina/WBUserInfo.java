@@ -78,6 +78,7 @@ public class WBUserInfo implements Serializable{
     private String gender;
     private long followers_count;
     private long friends_count;
+    private long follow_count;//微博移动端用此字段表博士关注数量
     private long pagefriends_count;
     private long statuses_count;
     private long favourites_count;
@@ -194,6 +195,10 @@ public class WBUserInfo implements Serializable{
 
     public void setFriends_count(long friends_count) {
         this.friends_count = friends_count;
+    }
+
+    public void setFollow_count(long follow_count) {
+        this.follow_count = follow_count;
     }
 
     public void setPagefriends_count(long pagefriends_count) {
@@ -390,6 +395,10 @@ public class WBUserInfo implements Serializable{
 
     public long getFriends_count() {
         return friends_count;
+    }
+
+    public long getFollow_count() {
+        return follow_count;
     }
 
     public long getPagefriends_count() {

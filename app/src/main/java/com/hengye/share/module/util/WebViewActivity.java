@@ -1,12 +1,14 @@
 package com.hengye.share.module.util;
 
 import android.annotation.SuppressLint;
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -64,6 +66,11 @@ public class WebViewActivity extends BaseActivity {
     }
 
     @Override
+    public void onToolbarDoubleClick(Toolbar toolbar) {
+        mWebView.pageUp(true);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (mUrl == null) {
@@ -82,7 +89,12 @@ public class WebViewActivity extends BaseActivity {
         final Uri uri = Uri.parse(url);
         final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         if (IntentUtil.resolveActivity(intent)) {
-            startActivity(intent);
+            try {
+                startActivity(intent);
+            } catch (ActivityNotFoundException anfe) {
+                anfe.printStackTrace();
+                ToastUtil.showToastError(R.string.label_resolve_url_activity_fail);
+            }
         } else {
             ToastUtil.showToastError(R.string.label_resolve_url_activity_fail);
         }

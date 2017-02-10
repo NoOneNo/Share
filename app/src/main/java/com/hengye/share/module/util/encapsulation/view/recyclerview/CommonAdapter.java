@@ -134,7 +134,10 @@ public abstract class CommonAdapter<T> extends HeaderAdapter<ItemViewHolder>
      * @return 返回在RecyclerView里的RecyclerView.ViewHolder
      */
     public RecyclerView.ViewHolder findViewHolderForLayoutPosition(int basicItemPosition) {
-        return getRecyclerView().findViewHolderForLayoutPosition(getActualItemPosition(basicItemPosition));
+        if(getRecyclerView() != null) {
+            return getRecyclerView().findViewHolderForLayoutPosition(getActualItemPosition(basicItemPosition));
+        }
+        return null;
     }
 
     public T getLastItem() {

@@ -4,7 +4,6 @@
     android:id="@+id/rl_header"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/side_nav_bar"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingStart="@dimen/activity_horizontal_margin"
     android:paddingEnd="@dimen/activity_horizontal_margin"

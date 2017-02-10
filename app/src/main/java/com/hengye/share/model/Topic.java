@@ -1,6 +1,6 @@
 package com.hengye.share.model;
 
-import android.text.SpannableString;
+import android.text.Spanned;
 import android.widget.TextView;
 
 import com.hengye.share.model.sina.WBTopic;
@@ -22,11 +22,15 @@ import java.util.List;
 public class Topic extends ParentInherit implements TopicId, TopicShortUrl, Serializable{
 
     public static ArrayList<Topic> getTopics(WBTopics wbTopics){
-        if(wbTopics == null || CommonUtil.isEmpty(wbTopics.getStatuses())){
+        return getTopics(wbTopics != null ? wbTopics.getStatuses() : null);
+    }
+
+    public static ArrayList<Topic> getTopics(List<WBTopic> wbTopics){
+        if(CommonUtil.isEmpty(wbTopics)){
             return null;
         }
         ArrayList<Topic> topics = new ArrayList<>();
-        for(WBTopic entity : wbTopics.getStatuses()){
+        for(WBTopic entity : wbTopics){
             topics.add(getTopic(entity));
         }
         return topics;
@@ -38,11 +42,8 @@ public class Topic extends ParentInherit implements TopicId, TopicShortUrl, Seri
         if(entity == null){
             return topic;
         }
+        topic.setFromMobile(entity.isFromMobile());
         topic.setUserInfo(UserInfo.getUserInfo(entity.getUser()));
-//        if(entity.getUser() != null) {
-//            topic.setAvatar(entity.getUser().getAvatar_large());
-//            topic.setUsername(entity.getUser().getScreen_name());
-//        }
         topic.setDate(entity.getCreated_at());
         topic.setChannel(entity.getSource());
         topic.setContent(entity.getText());
@@ -87,10 +88,6 @@ public class Topic extends ParentInherit implements TopicId, TopicShortUrl, Seri
             return topic;
         }
         topic.setUserInfo(UserInfo.getUserInfo(entity.getUser()));
-//        if(entity.getUser() != null) {
-//            topic.setAvatar(entity.getUser().getAvatar_large());
-//            topic.setUsername(entity.getUser().getScreen_name());
-//        }
         topic.setDate(entity.getCreated_at());
         topic.setChannel(entity.getSource());
         topic.setContent(entity.getText());
@@ -162,7 +159,9 @@ public class Topic extends ParentInherit implements TopicId, TopicShortUrl, Seri
     private UserInfo userInfo;//用户信息
 
     private HashMap<String, TopicUrl> urlMap;
-    private transient SpannableString urlSpannableString;
+
+    private boolean fromMobile;//如果请求wap端的接口，格式是网页格式需要额外处理，创建日期也已经格式化；
+    private transient Spanned spanned;
     private transient String formatDate;
 
     public String toJson(){
@@ -292,24 +291,32 @@ public class Topic extends ParentInherit implements TopicId, TopicShortUrl, Seri
         this.commentsCount = commentsCount;
     }
 
-//    public SpannableString getUrlSpannableString() {
-//        return getUrlSpannableString(false);
-//    }
-
-    public SpannableString getUrlSpannableString(TextView textView, boolean isRetweeted) {
-        if (urlSpannableString == null) {
-            DataUtil.addTopicContentHighLightLinks((int)textView.getTextSize(), this, isRetweeted);
-        }
-        return urlSpannableString;
+    public boolean isFromMobile() {
+        return fromMobile;
     }
 
-    public void setUrlSpannableString(SpannableString urlSpannableString) {
-        this.urlSpannableString = urlSpannableString;
+    public void setFromMobile(boolean fromMobile) {
+        this.fromMobile = fromMobile;
+    }
+
+    //    public SpannableString getSpanned() {
+//        return getSpanned(false);
+//    }
+
+    public Spanned getSpanned(TextView textView, boolean isRetweeted) {
+        if (CommonUtil.isEmpty(spanned)) {
+            DataUtil.addTopicContentHighLightLinks((int)textView.getTextSize(), this, isRetweeted);
+        }
+        return spanned;
+    }
+
+    public void setSpanned(Spanned spanned) {
+        this.spanned = spanned;
     }
 
     public String getFormatDate() {
         if(formatDate == null){
-            formatDate = DateUtil.getEarlyDateFormat(getDate());
+            formatDate = isFromMobile() ? getDate() : DateUtil.getEarlyDateFormat(getDate());
         }
         return formatDate;
     }

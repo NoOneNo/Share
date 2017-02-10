@@ -6,6 +6,8 @@ import com.hengye.share.model.TopicShortUrl;
 import com.hengye.share.model.TopicUrl;
 import com.hengye.share.model.sina.WBShortUrl;
 import com.hengye.share.model.sina.WBShortUrls;
+import com.hengye.share.model.sina.WBTopicComments;
+import com.hengye.share.model.sina.WBTopics;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.UrlFactory;
@@ -38,6 +40,37 @@ import static com.hengye.share.util.DataUtil.WEB_URL;
 
 public class TopicRxUtil {
 
+    static Function<WBTopics, SingleSource<ArrayList<Topic>>> mFlatWBTopics;
+
+    /**
+     * 把微博实体转换成自定义的实体
+     * @return
+     */
+    public static Function<WBTopics, SingleSource<ArrayList<Topic>>> flatWBTopics() {
+        if (mFlatWBTopics == null) {
+            mFlatWBTopics = new Function<WBTopics, SingleSource<ArrayList<Topic>>>() {
+                @Override
+                public SingleSource<ArrayList<Topic>> apply(WBTopics wbTopics) {
+                    return SingleHelper.justArrayList(Topic.getTopics(wbTopics));
+                }
+            };
+        }
+        return mFlatWBTopics;
+    }
+
+    static Function<WBTopicComments, SingleSource<ArrayList<Topic>>> mFlatWBTopicComments;
+
+    public static Function<WBTopicComments, SingleSource<ArrayList<Topic>>> flatWBTopicComments() {
+        if (mFlatWBTopicComments == null) {
+            mFlatWBTopicComments = new Function<WBTopicComments, SingleSource<ArrayList<Topic>>>() {
+                @Override
+                public SingleSource<ArrayList<Topic>> apply(WBTopicComments wbComments) {
+                    return SingleHelper.justArrayList(Topic.getTopics(wbComments));
+                }
+            };
+        }
+        return mFlatWBTopicComments;
+    }
 
     static Function<ArrayList<Topic>, SingleSource<ArrayList<Topic>>> mFlatTopicShortUrl;
 

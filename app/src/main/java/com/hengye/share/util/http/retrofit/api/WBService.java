@@ -1,8 +1,10 @@
 package com.hengye.share.util.http.retrofit.api;
 
 import com.hengye.share.model.sina.WBAddresses;
+import com.hengye.share.model.sina.WBCards;
 import com.hengye.share.model.sina.WBGroup;
 import com.hengye.share.model.sina.WBGroups;
+import com.hengye.share.model.sina.WBHotTopic;
 import com.hengye.share.model.sina.WBResult;
 import com.hengye.share.model.sina.WBShortUrls;
 import com.hengye.share.model.sina.WBTopic;
@@ -239,4 +241,10 @@ public interface WBService {
 
     @GET(UrlFactory.WB_PLACE_NEARBY)
     Single<WBAddresses> getPlaceNearBy(@QueryMap Map<String, String> options);
+
+    @GET(UrlFactory.WB_HOT_STATUS)
+    Single<WBCards> listHotStatus(@QueryMap Map<String, String> options);
+
+    @GET(UrlFactory.WB_HOT_TOPIC)
+    Single<WBHotTopic> listHotTopic();
 }

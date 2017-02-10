@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/selector_ripple_white"
+    android:paddingTop="@dimen/content_margin_default_half"
+    android:paddingStart="@dimen/content_margin_default"
+    android:paddingEnd="@dimen/content_margin_default"
+    android:paddingBottom="@dimen/content_margin_default_half"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tv_headline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_grey"
+        android:textSize="@dimen/text_normal"
+        tool:text="热门话题" />
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content" />
+
+    <com.hengye.share.ui.widget.theme.CustomThemeTintImageButton
+        android:layout_width="@dimen/icon_size_small"
+        android:layout_height="@dimen/icon_size_small"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_keyboard_arrow_right_white_24dp"/>
+</LinearLayout>

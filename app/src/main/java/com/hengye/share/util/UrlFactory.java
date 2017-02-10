@@ -141,6 +141,13 @@ public class UrlFactory {
 
     //获取附近地点
     public static final String WB_PLACE_NEARBY = "place/nearby/pois.json";
+
+    //获取热门微博
+    public static final String WB_HOT_STATUS = "http://m.weibo.cn/container/getIndex?containerid=102803";
+
+    //获取热门话题
+    public static final String WB_HOT_TOPIC = "http://weicoapi.weico.cc/portal.php?a=get_topic_weibo&c=default&page=0";
+
     /**
      * 微博接口
      */

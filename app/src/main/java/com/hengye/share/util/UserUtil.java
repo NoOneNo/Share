@@ -203,7 +203,7 @@ public class UserUtil {
 //        List<User> users = ud.queryRaw("where UID = ? and PARENT_TYPE = ?", wbUserInfo.getIdstr(), Parent.TYPE_WEIBO + "");
         if (!CommonUtil.isEmpty(users)) {
             user = users.get(0);
-            user.setName(wbUserInfo.getName());
+            user.setName(wbUserInfo.getScreen_name());
             user.setAvatar(wbUserInfo.getAvatar_large());
             user.setCover(wbUserInfo.getCover_image_phone());
             user.setGender(wbUserInfo.getGender());

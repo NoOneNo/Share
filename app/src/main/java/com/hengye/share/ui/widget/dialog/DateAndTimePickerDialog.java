@@ -2,6 +2,7 @@ package com.hengye.share.ui.widget.dialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.DialogInterface;
@@ -105,13 +106,23 @@ public class DateAndTimePickerDialog extends AlertDialog {
     }
 
     private void showDatePickerDialog(){
-        getDatePickerDialog().show(getActivity().getFragmentManager(), "DatePickerDialog");
+        DatePickerDialog dialogFragment = getDatePickerDialog();
+        if (dialogFragment.isAdded()){
+            dialogFragment.dismiss();
+        }else {
+            dialogFragment.show(getActivity().getFragmentManager(), "DatePickerDialog");
+        }
     }
 
     private void showTimePickerDialog(){
         //TimerPickerDialog没有保留上一次选择的时间
-        getTimePickerDialog().setStartTime(mCalendar.get(Calendar.HOUR_OF_DAY), mCalendar.get(Calendar.MINUTE));
-        getTimePickerDialog().show(getActivity().getFragmentManager(), "TimePickerDialog");
+        TimePickerDialog dialogFragment = getTimePickerDialog();
+        dialogFragment.setStartTime(mCalendar.get(Calendar.HOUR_OF_DAY), mCalendar.get(Calendar.MINUTE));
+        if (dialogFragment.isAdded()){
+            dialogFragment.dismiss();
+        }else {
+            dialogFragment.show(getActivity().getFragmentManager(), "TimePickerDialog");
+        }
     }
 
     private Activity getActivity(){

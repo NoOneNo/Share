@@ -3,6 +3,7 @@ package com.hengye.share.module.topic;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -10,7 +11,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +30,7 @@ import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.module.draft.TopicDraftActivity;
 import com.hengye.share.module.groupmanage.GroupListFragment;
 import com.hengye.share.module.groupmanage.GroupManageActivity;
+import com.hengye.share.module.hottopic.HotTopicAndStatusActivity;
 import com.hengye.share.module.profile.PersonalHomepageActivity;
 import com.hengye.share.module.publish.TopicPublishActivity;
 import com.hengye.share.module.search.SearchActivity;
@@ -218,6 +219,15 @@ public class TopicActivity extends BaseActivity
         //修复因为布局使用fitsSystemWindows而导致DrawLayout内容间距不对的问题
         int contentPadding = getResources().getDimensionPixelSize(R.dimen.activity_vertical_margin);
         RelativeLayout navHeader = (RelativeLayout) header.findViewById(R.id.rl_header);
+
+        GradientDrawable gradientDrawable = new GradientDrawable();
+        int themeColor = ThemeUtil.getColor();
+        int themeDarkColor = ThemeUtil.getDarkColor();
+        int[] colors = new int[]{themeColor, themeColor, themeDarkColor};
+        gradientDrawable.setColors(colors);
+        gradientDrawable.setGradientType(GradientDrawable.LINEAR_GRADIENT);
+        gradientDrawable.setOrientation(GradientDrawable.Orientation.BR_TL);
+        navHeader.setBackground(gradientDrawable);
         navHeader.setPadding(contentPadding,
                 contentPadding + ViewUtil.getStatusBarHeight(),
                 contentPadding,
@@ -237,6 +247,7 @@ public class TopicActivity extends BaseActivity
         mUsername = (TextView) header.findViewById(R.id.tv_username);
         mSign = (TextView) header.findViewById(R.id.tv_sign);
 
+        mAvatar.setOnClickListener(this);
         mUsername.setOnClickListener(this);
         mSign.setOnClickListener(this);
     }
@@ -319,6 +330,13 @@ public class TopicActivity extends BaseActivity
             NetworkUtil.startSystemSetting(TopicActivity.this);
         } else if (id == R.id.fab) {
             startActivity(TopicPublishActivity.class);
+        } else if (id == R.id.iv_avatar) {
+            if (UserUtil.getCurrentUser() == null) {
+                Toast.makeText(this, "请先登录", Toast.LENGTH_SHORT).show();
+            }else{
+                mUpdateUserInfo = true;
+                PersonalHomepageActivity.start(this, mAvatar, UserInfo.getUserInfo(UserUtil.getCurrentUser()));
+            }
         } else if (id == R.id.iv_more_account) {
             startActivityForResult(AccountManageActivity.class, AccountManageActivity.ACCOUNT_CHANGE);
         } else if (id == R.id.tv_username || id == R.id.tv_sign) {
@@ -399,13 +417,14 @@ public class TopicActivity extends BaseActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_homepage) {
+            startActivity(HotTopicAndStatusActivity.class);
 //            UserInfo userInfo = getUserInfo();
-            if (UserUtil.getCurrentUser() == null) {
-                Toast.makeText(this, "请先登录", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-            mUpdateUserInfo = true;
-            PersonalHomepageActivity.start(this, mAvatar, UserInfo.getUserInfo(UserUtil.getCurrentUser()));
+//            if (UserUtil.getCurrentUser() == null) {
+//                Toast.makeText(this, "请先登录", Toast.LENGTH_SHORT).show();
+//                return false;
+//            }
+//            mUpdateUserInfo = true;
+//            PersonalHomepageActivity.start(this, mAvatar, UserInfo.getUserInfo(UserUtil.getCurrentUser()));
         } else if (id == R.id.nav_private_message) {
             startActivity(WebViewActivity.getStartIntent(this, WBUtil.URL_HTTP_MOBILE));
         } else if (id == R.id.nav_at_me) {

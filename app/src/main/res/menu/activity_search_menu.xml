@@ -4,17 +4,9 @@
     tools:context=".MainActivity">
 
     <item
-        android:id="@+id/action_publish"
-        android:icon="@drawable/ic_mode_edit_white_48dp"
-        android:orderInCategory="180"
-        android:title="@string/title_publish_topic"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/action_search"
         android:icon="@drawable/ic_search_white_48dp"
         android:orderInCategory="180"
         android:title="@string/label_search"
         app:showAsAction="ifRoom" />
-
 </menu>

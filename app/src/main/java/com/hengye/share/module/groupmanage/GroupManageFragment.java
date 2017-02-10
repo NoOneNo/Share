@@ -109,8 +109,8 @@ public class GroupManageFragment extends ShareRecyclerFragment implements GroupM
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.activity_group_manager_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.activity_group_manager_menu, menu);
     }
 
     @Override

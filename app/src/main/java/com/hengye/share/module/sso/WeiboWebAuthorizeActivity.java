@@ -121,6 +121,18 @@ public class WeiboWebAuthorizeActivity extends BaseActivity {
 //        mWebView.loadUrl(getOAuthUrl());
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mWebView.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mWebView.onResume();
+    }
+
     private void loadData() {
         Single
                 .create(new SingleOnSubscribe<String>() {

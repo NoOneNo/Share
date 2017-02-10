@@ -1,7 +1,6 @@
 package com.hengye.share.model;
 
-import android.text.SpannableString;
-import android.text.TextUtils;
+import android.text.Spanned;
 import android.widget.TextView;
 
 import com.hengye.share.model.sina.WBTopic;
@@ -140,7 +139,7 @@ public class TopicComment implements TopicId, TopicShortUrl, Serializable{
 
     private HashMap<String, TopicUrl> urlMap;
 
-    private transient SpannableString urlSpannableString;
+    private transient Spanned spanned;
 
     public void updateLiked(boolean isLiked){
         setLiked(isLiked);
@@ -162,7 +161,7 @@ public class TopicComment implements TopicId, TopicShortUrl, Serializable{
                 ", imageUrls=" + imageUrls +
                 ", imageLargeUrls=" + imageLargeUrls +
                 ", urlMap=" + urlMap +
-                ", urlSpannableString=" + urlSpannableString +
+                ", spanned=" + spanned +
                 '}';
     }
 
@@ -182,17 +181,15 @@ public class TopicComment implements TopicId, TopicShortUrl, Serializable{
         return null;
     }
 
-    public SpannableString getUrlSpannableString(TextView textView) {
-        if (!TextUtils.isEmpty(urlSpannableString)) {
-            return urlSpannableString;
-        } else {
+    public Spanned getSpanned(TextView textView) {
+        if(CommonUtil.isEmpty(spanned)){
             DataUtil.addTopicContentHighLightLinks((int)textView.getTextSize(), this);
-            return urlSpannableString;
         }
+        return spanned;
     }
 
-    public void setUrlSpannableString(SpannableString urlSpannableString) {
-        this.urlSpannableString = urlSpannableString;
+    public void setSpanned(Spanned spanned) {
+        this.spanned = spanned;
     }
 
     @Override

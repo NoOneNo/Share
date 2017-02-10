@@ -1,7 +1,6 @@
 package com.hengye.share.module.topicdetail;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.MotionEvent;
@@ -136,7 +135,7 @@ public class TopicCommentAdapter extends CommonAdapter<TopicComment> {
         }
 
         public void initCommentContent(final Context context, final TopicCommentViewHolder holder, TopicComment topicComment) {
-            holder.mTopic.mContent.setText(topicComment.getUrlSpannableString(holder.mTopic.mContent));
+            holder.mTopic.mContent.setText(topicComment.getSpanned(holder.mTopic.mContent));
         }
 
         @Override

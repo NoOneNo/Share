@@ -31,7 +31,7 @@
     <color name="divider_color">#ffdbdbdb</color>
 
     <color name="background_default">#eeeeee</color>
-    <color name="background_default_white">#fffafafa</color>
+    <color name="background_default_white">#fffcfcfc</color>
 
     <color name="transparent">@android:color/transparent</color>
     <color name="white">@android:color/white</color>

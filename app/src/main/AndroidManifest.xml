@@ -260,6 +260,11 @@
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:label="@string/title_activity_account_manage" />
 
+        <activity
+            android:name="com.hengye.share.module.hottopic.HotTopicAndStatusActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:label="@string/title_activity_hot_topic_and_status" />
+
         <activity android:name=".module.test.TestActivity" />
 
         <activity android:name=".module.test.SetTokenActivity" />

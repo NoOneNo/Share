@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -85,10 +86,22 @@ public class BaseActivity extends AppCompatActivity
     }
 
     public static BaseActivity getCurrentActivity() {
-        if (mInstance != null && !mInstance.isDestroyed()) {
+        if (mInstance != null && !mInstance.isOver()) {
             return mInstance;
         }
         return null;
+    }
+
+    /**
+     * 兼容旧版的api
+     * @return
+     */
+    public boolean isOver(){
+        if(Build.VERSION.SDK_INT < 17){
+            return mInstance.isFinishing();
+        }else{
+            return mInstance.isDestroyed();
+        }
     }
 
     @Override
@@ -338,7 +351,7 @@ public class BaseActivity extends AppCompatActivity
         }
     }
 
-    protected void initToolbar() {
+    public void initToolbar() {
         mToolbar = (CommonToolBar) findViewById(R.id.toolbar);
         if (mToolbar != null) {
             setSupportActionBar(mToolbar);

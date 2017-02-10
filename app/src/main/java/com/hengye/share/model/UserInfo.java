@@ -41,8 +41,8 @@ public class UserInfo extends ParentInherit implements Serializable{
         if(wbUserInfo == null){
             return userInfo;
         }
-        userInfo.setUid(wbUserInfo.getIdstr());
-        userInfo.setName(wbUserInfo.getName());
+        userInfo.setUid(wbUserInfo.getIdstr() == null ? String.valueOf(wbUserInfo.getId()) : wbUserInfo.getIdstr());
+        userInfo.setName(wbUserInfo.getScreen_name());
         userInfo.setAvatar(wbUserInfo.getAvatar_large());
         userInfo.setGender(wbUserInfo.getGender());
         userInfo.setSign(wbUserInfo.getDescription());

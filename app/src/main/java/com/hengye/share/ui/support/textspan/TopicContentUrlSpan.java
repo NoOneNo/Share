@@ -1,5 +1,6 @@
 package com.hengye.share.ui.support.textspan;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,8 +21,10 @@ import com.hengye.share.service.VideoPlayService;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
 import com.hengye.share.util.ClipboardUtil;
 import com.hengye.share.util.DataUtil;
+import com.hengye.share.util.IntentUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.ResUtil;
+import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
 
@@ -105,20 +108,31 @@ public class TopicContentUrlSpan extends CharacterStyle implements
             if (topicUrl != null) {
                 if (topicUrl.getType() == TopicUrl.VIDEO) {
                     VideoPlayService.start(context, topicUrl.getTopicId(), getURL());
-                } else if(topicUrl.getType() == TopicUrl.PHOTO){
-                    if(topicUrl.getAnnotation() != null && topicUrl.getAnnotation() instanceof String) {
+                } else if (topicUrl.getType() == TopicUrl.PHOTO) {
+                    if (topicUrl.getAnnotation() != null && topicUrl.getAnnotation() instanceof String) {
                         GalleryActivity.startWithIntent(context, (String) topicUrl.getAnnotation());
                     }
-                }else {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
-                    context.startActivity(intent);
+                } else {
+                    startExtraApplication(context, uri);
                 }
             } else {
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
-                context.startActivity(intent);
+                startExtraApplication(context, uri);
             }
+        }
+    }
+
+    private void startExtraApplication(Context context, Uri uri) {
+
+        final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        if (IntentUtil.resolveActivity(intent)) {
+            try {
+                context.startActivity(intent);
+            } catch (ActivityNotFoundException anfe) {
+                anfe.printStackTrace();
+                ToastUtil.showToastError(R.string.label_resolve_url_activity_fail);
+            }
+        } else {
+            ToastUtil.showToastError(R.string.label_resolve_url_activity_fail);
         }
     }
 
@@ -153,7 +167,7 @@ public class TopicContentUrlSpan extends CharacterStyle implements
                 }
             }).show();
             L.debug("long click path : %s", path);
-            if(topicUrl != null){
+            if (topicUrl != null) {
                 L.debug("long click topicUrl : %s", topicUrl);
             }
         }

@@ -39,6 +39,9 @@ import io.reactivex.SingleSource;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 
+import static com.hengye.share.module.topic.TopicRxUtil.flatWBTopicComments;
+import static com.hengye.share.module.topic.TopicRxUtil.flatWBTopics;
+
 public class TopicPresenter extends ListDataPresenter<Topic, TopicContract.View> {
 
     private TopicGroup mTopicGroup;
@@ -205,34 +208,34 @@ public class TopicPresenter extends ListDataPresenter<Topic, TopicContract.View>
         return new ListDataSingleObserver(isRefresh);
     }
 
-    Function<WBTopics, SingleSource<ArrayList<Topic>>> mFlatWBTopics;
+//    Function<WBTopics, SingleSource<ArrayList<Topic>>> mFlatWBTopics;
+//
+//    private Function<WBTopics, SingleSource<ArrayList<Topic>>> flatWBTopics() {
+//        if (mFlatWBTopics == null) {
+//            mFlatWBTopics = new Function<WBTopics, SingleSource<ArrayList<Topic>>>() {
+//                @Override
+//                public SingleSource<ArrayList<Topic>> apply(WBTopics wbTopics) {
+//                    return SingleHelper.justArrayList(Topic.getTopics(wbTopics));
+////                    return ObservableHelper.just(Topic.getTopics(wbTopics));
+//                }
+//            };
+//        }
+//        return mFlatWBTopics;
+//    }
 
-    private Function<WBTopics, SingleSource<ArrayList<Topic>>> flatWBTopics() {
-        if (mFlatWBTopics == null) {
-            mFlatWBTopics = new Function<WBTopics, SingleSource<ArrayList<Topic>>>() {
-                @Override
-                public SingleSource<ArrayList<Topic>> apply(WBTopics wbTopics) {
-                    return SingleHelper.justArrayList(Topic.getTopics(wbTopics));
-//                    return ObservableHelper.just(Topic.getTopics(wbTopics));
-                }
-            };
-        }
-        return mFlatWBTopics;
-    }
-
-    Function<WBTopicComments, SingleSource<ArrayList<Topic>>> mFlatWBTopicComments;
-
-    private Function<WBTopicComments, SingleSource<ArrayList<Topic>>> flatWBTopicComments() {
-        if (mFlatWBTopicComments == null) {
-            mFlatWBTopicComments = new Function<WBTopicComments, SingleSource<ArrayList<Topic>>>() {
-                @Override
-                public SingleSource<ArrayList<Topic>> apply(WBTopicComments wbComments) {
-                    return SingleHelper.justArrayList(Topic.getTopics(wbComments));
-                }
-            };
-        }
-        return mFlatWBTopicComments;
-    }
+//    Function<WBTopicComments, SingleSource<ArrayList<Topic>>> mFlatWBTopicComments;
+//
+//    private Function<WBTopicComments, SingleSource<ArrayList<Topic>>> flatWBTopicComments() {
+//        if (mFlatWBTopicComments == null) {
+//            mFlatWBTopicComments = new Function<WBTopicComments, SingleSource<ArrayList<Topic>>>() {
+//                @Override
+//                public SingleSource<ArrayList<Topic>> apply(WBTopicComments wbComments) {
+//                    return SingleHelper.justArrayList(Topic.getTopics(wbComments));
+//                }
+//            };
+//        }
+//        return mFlatWBTopicComments;
+//    }
 
     private Function<WBTopicIds, SingleSource<WBTopics>> flatWBTopicId(final String since_id) {
         return new Function<WBTopicIds, SingleSource<WBTopics>>() {

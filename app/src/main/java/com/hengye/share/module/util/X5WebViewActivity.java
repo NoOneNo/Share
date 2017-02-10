@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -63,6 +64,11 @@ public class X5WebViewActivity extends BaseActivity {
     @Override
     public int getLayoutResId() {
         return R.layout.activity_webview_x5;
+    }
+
+    @Override
+    public void onToolbarDoubleClick(Toolbar toolbar) {
+        mWebView.pageUp(true);
     }
 
     @Override
