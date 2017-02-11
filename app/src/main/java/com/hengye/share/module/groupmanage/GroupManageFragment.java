@@ -250,7 +250,7 @@ public class GroupManageFragment extends ShareRecyclerFragment implements GroupM
     public AlertDialog getEditGroupDialog() {
         if (mEditGroupDialog == null) {
             mEditGroupDialog = new AlertDialog.Builder(getContext())
-                    .setTitle(R.string.label_create_group)
+                    .setTitle(R.string.label_edit_group)
                     .setNegativeButton(R.string.dialog_text_cancel, null)
                     .setPositiveButton(R.string.dialog_text_confirm, null)//如果这里设置确定会对话框会自动取消，如果内容为空时应该提示不能为空，不自动取消对话框
                     .setView(R.layout.dialog_item_edit_group)

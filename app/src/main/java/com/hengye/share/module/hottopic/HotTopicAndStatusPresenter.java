@@ -4,9 +4,6 @@ import com.hengye.share.model.HotTopic;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.sina.WBCards;
 import com.hengye.share.model.sina.WBHotTopic;
-import com.hengye.share.model.sina.WBTopicComments;
-import com.hengye.share.model.sina.WBTopicReposts;
-import com.hengye.share.module.util.encapsulation.base.TaskState;
 import com.hengye.share.module.util.encapsulation.mvp.ListDataPresenter;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.http.retrofit.RetrofitManager;
@@ -79,41 +76,41 @@ public class HotTopicAndStatusPresenter extends ListDataPresenter<Topic, HotTopi
     }
 
 
-    Function<WBCards, SingleSource<ArrayList<Topic>>> mFlatWBTopics;
+    Function<WBCards, SingleSource<ArrayList<Topic>>> mFlatWBTopic;
 
     /**
      * 把微博实体转换成自定义的实体
      * @return
      */
-    public  Function<WBCards, SingleSource<ArrayList<Topic>>> flatWBTopics() {
-        if (mFlatWBTopics == null) {
-            mFlatWBTopics = new Function<WBCards, SingleSource<ArrayList<Topic>>>() {
+    private  Function<WBCards, SingleSource<ArrayList<Topic>>> flatWBTopics() {
+        if (mFlatWBTopic == null) {
+            mFlatWBTopic = new Function<WBCards, SingleSource<ArrayList<Topic>>>() {
                 @Override
                 public SingleSource<ArrayList<Topic>> apply(WBCards wbCards) {
                     return SingleHelper.justArrayList(Topic.getTopics(WBCards.listWBTopics(wbCards)));
                 }
             };
         }
-        return mFlatWBTopics;
+        return mFlatWBTopic;
     }
 
 
-    Function<WBHotTopic, SingleSource<ArrayList<HotTopic>>> mFlatWBHotTopics;
+    Function<WBHotTopic, SingleSource<ArrayList<HotTopic>>> mFlatWBHotTopic;
 
     /**
      * 把微博实体转换成自定义的实体
      * @return
      */
-    public  Function<WBHotTopic, SingleSource<ArrayList<HotTopic>>> flatWBHotTopics() {
-        if (mFlatWBHotTopics == null) {
-            mFlatWBHotTopics = new Function<WBHotTopic, SingleSource<ArrayList<HotTopic>>>() {
+    private  Function<WBHotTopic, SingleSource<ArrayList<HotTopic>>> flatWBHotTopics() {
+        if (mFlatWBHotTopic == null) {
+            mFlatWBHotTopic = new Function<WBHotTopic, SingleSource<ArrayList<HotTopic>>>() {
                 @Override
                 public SingleSource<ArrayList<HotTopic>> apply(WBHotTopic wbHotTopic) {
-                    return SingleHelper.justArrayList(HotTopic.getHotTopics(wbHotTopic));
+                    return SingleHelper.justArrayList(HotTopic.listHotTopics(wbHotTopic));
                 }
             };
         }
-        return mFlatWBHotTopics;
+        return mFlatWBHotTopic;
     }
 
 }

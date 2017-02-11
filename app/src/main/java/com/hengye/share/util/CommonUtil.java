@@ -155,6 +155,18 @@ public class CommonUtil {
         }
         return null;
     }
+
+    public static long getLongValue(String value){
+        if(value == null){
+            return 0L;
+        }
+        try {
+            return Long.valueOf(value);
+        }catch (NumberFormatException nfe){
+            nfe.printStackTrace();
+            return 0L;
+        }
+    }
 }
 
 

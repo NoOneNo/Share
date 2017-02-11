@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -23,6 +24,21 @@ import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.util.ViewUtil;
 
 public class SearchView extends FrameLayout implements View.OnClickListener{
+
+    public final static int MODE_ANIMATION = 1;//有动画
+    public final static int MODE_FINISH = 2;//没动画
+
+    private CardView mSearch;
+    private View  mBackBtn, mClearBtn;
+    private EditText mSearchContent;
+    private RecyclerView mSearchResult;
+    private View mSearchLayout;
+
+    private Activity mActivity;
+
+    private onSearchListener mSearchListener;
+
+    private int mMode = MODE_ANIMATION;
 
     public SearchView(Context context) {
         this(context, null, 0);
@@ -45,7 +61,10 @@ public class SearchView extends FrameLayout implements View.OnClickListener{
         mBackBtn = findViewById(R.id.iv_search_back);
         mClearBtn = findViewById(R.id.iv_clear_content);
         mSearchContent = (EditText) findViewById(R.id.et_search_content);
-        mSearchResult = (ListView) findViewById(R.id.list_view);
+        mSearchResult = (RecyclerView) findViewById(R.id.recycler_view);
+        mSearchLayout = findViewById(R.id.ll_search);
+        adjustSearchHeight();
+
 
         mBackBtn.setOnClickListener(this);
         mClearBtn.setOnClickListener(this);
@@ -87,19 +106,10 @@ public class SearchView extends FrameLayout implements View.OnClickListener{
 
     }
 
-    private CardView mSearch;
-    private View  mBackBtn, mClearBtn;
-    private EditText mSearchContent;
-    private ListView mSearchResult;
-
-    private Activity mActivity;
-
-    private onSearchListener mSearchListener;
-
-    private int mMode = MODE_ANIMATION;
-
-    public final static int MODE_ANIMATION = 1;
-    public final static int MODE_FINISH = 2;
+    private void adjustSearchHeight(){
+        mSearchLayout.getLayoutParams().height = ViewUtil.getActionBarHeight() - ViewUtil.dp2px(4f);
+        mSearchLayout.requestLayout();
+    }
 
     public void setMode(int mode, Activity activity){
         this.mMode = mode;
@@ -107,7 +117,7 @@ public class SearchView extends FrameLayout implements View.OnClickListener{
 
         mSearch.setVisibility(mode == MODE_ANIMATION ? View.GONE : View.VISIBLE);
 
-        if(activity instanceof BaseActivity) {
+        if(mode == MODE_ANIMATION && activity instanceof BaseActivity) {
             BaseActivity baseActivity = (BaseActivity) activity;
             baseActivity.getActivityHelper().registerActivityActionInterceptListener(new ActivityHelper.ActivityActionInterceptListener() {
                 @Override
@@ -136,6 +146,10 @@ public class SearchView extends FrameLayout implements View.OnClickListener{
 
     public void setSearchListener(onSearchListener searchListener) {
         this.mSearchListener = searchListener;
+    }
+
+    public RecyclerView getSearchResult(){
+        return mSearchResult;
     }
 
     @Override

@@ -142,6 +142,7 @@
     <!-- Strings related to GroupManager-->
     <string name="tip_update_group_order">是否更新分组顺序？</string>
     <string name="label_create_group">新建分组</string>
+    <string name="label_edit_group">编辑分组</string>
     <string name="label_group_count">%s人</string>
     <string name="tip_delete_group_confirm">是否删除该分组？</string>
     <string name="tip_delete_group_success">成功删除分组</string>
@@ -286,6 +287,7 @@
     <string name="label_hot_topic">热门话题</string>
     <string name="label_hot_status">热门微博</string>
     <string name="label_hot_topic_modifier">#%s#</string>
+    <string name="label_hot_search_count">%s次</string>
     <!-- Strings related to activity hot topic -->
 
 

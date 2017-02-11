@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,7 +23,7 @@ import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.module.profile.PersonalHomepageActivity;
 import com.hengye.share.module.publish.TopicPublishActivity;
-import com.hengye.share.module.topicdetail.TopicDetail2Activity;
+import com.hengye.share.module.topicdetail.TopicDetailActivity;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemLongClickListener;
 import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapter;
@@ -356,7 +355,7 @@ public class TopicAdapter extends CommonAdapter<Topic>
                 return;
             }
 
-            TopicDetail2Activity.start(context,
+            TopicDetailActivity.start(context,
                     isRetweet ? tvh.mRetweetTopic.mTopicLayout : tvh.mTopicTotalItem,
                     topic,
                     isRetweet);

@@ -148,6 +148,9 @@ public class UrlFactory {
     //获取热门话题
     public static final String WB_HOT_TOPIC = "http://weicoapi.weico.cc/portal.php?a=get_topic_weibo&c=default&page=0";
 
+    //获取热门搜索
+    public static final String WB_HOT_SEARCH = "http://weicoapi.weico.cc/portal.php?a=search_topic&c=default";
+
     /**
      * 微博接口
      */

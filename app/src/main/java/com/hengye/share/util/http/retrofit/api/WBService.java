@@ -4,6 +4,7 @@ import com.hengye.share.model.sina.WBAddresses;
 import com.hengye.share.model.sina.WBCards;
 import com.hengye.share.model.sina.WBGroup;
 import com.hengye.share.model.sina.WBGroups;
+import com.hengye.share.model.sina.WBHotSearch;
 import com.hengye.share.model.sina.WBHotTopic;
 import com.hengye.share.model.sina.WBResult;
 import com.hengye.share.model.sina.WBShortUrls;
@@ -247,4 +248,7 @@ public interface WBService {
 
     @GET(UrlFactory.WB_HOT_TOPIC)
     Single<WBHotTopic> listHotTopic();
+
+    @GET(UrlFactory.WB_HOT_SEARCH)
+    Single<WBHotSearch> listHotSearch();
 }

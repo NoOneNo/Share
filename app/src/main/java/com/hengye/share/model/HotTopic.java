@@ -16,7 +16,7 @@ public class HotTopic implements Serializable{
 
     private static final long serialVersionUID = 8827277671542720593L;
 
-    public static List<HotTopic> getHotTopics(WBHotTopic wbHotTopic) {
+    public static List<HotTopic> listHotTopics(WBHotTopic wbHotTopic) {
         if (wbHotTopic == null || CommonUtil.isEmpty(wbHotTopic.getTopics())) {
             return null;
         }
