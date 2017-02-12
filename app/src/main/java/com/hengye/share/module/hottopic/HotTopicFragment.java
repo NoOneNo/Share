@@ -36,6 +36,11 @@ public class HotTopicFragment extends ShareRecyclerFragment {
     ArrayList<HotTopic> mHotTopics;
 
     @Override
+    public int getEmptyResId() {
+        return R.layout.state_empty_no_button_center;
+    }
+
+    @Override
     public String getTitle() {
         return ResUtil.getString(R.string.title_activity_hot_topic);
     }
@@ -67,5 +72,9 @@ public class HotTopicFragment extends ShareRecyclerFragment {
                 startActivity(TopicThemeActivity.getStartIntent(getContext(), hotTopic.getTopic()));
             }
         });
+
+        if(mAdapter.isEmpty()){
+            showEmpty();
+        }
     }
 }

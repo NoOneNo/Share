@@ -7,8 +7,7 @@
     android:paddingTop="@dimen/content_margin_default_half"
     android:paddingStart="@dimen/content_margin_default"
     android:paddingEnd="@dimen/content_margin_default"
-    android:paddingBottom="@dimen/content_margin_default_half"
-    android:orientation="vertical">
+    android:paddingBottom="@dimen/content_margin_default_half">
 
     <com.hengye.share.ui.widget.image.SuperImageView
         android:id="@+id/iv_cover"

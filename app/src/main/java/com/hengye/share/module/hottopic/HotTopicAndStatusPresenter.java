@@ -12,9 +12,12 @@ import com.hengye.share.util.rxjava.ObjectConverter;
 import com.hengye.share.util.rxjava.datasource.SingleHelper;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
+import org.reactivestreams.Publisher;
+
 import java.util.ArrayList;
 import java.util.Map;
 
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.SingleSource;
 import io.reactivex.functions.Function;
@@ -42,7 +45,8 @@ public class HotTopicAndStatusPresenter extends ListDataPresenter<Topic, HotTopi
             Single.zip(
                     wbService
                             .listHotTopic()
-                            .flatMap(flatWBHotTopics()),
+                            .flatMap(flatWBHotTopics())
+                            .onErrorReturnItem(new ArrayList<HotTopic>()),
                     wbService
                             .listHotStatus(getWBAHotTopicParameter(id, true))
                             .flatMap(flatWBTopics()),
@@ -67,7 +71,7 @@ public class HotTopicAndStatusPresenter extends ListDataPresenter<Topic, HotTopi
         }
     }
 
-    public Map<String, String> getWBAHotTopicParameter(int id, final boolean isRefresh) {
+    private Map<String, String> getWBAHotTopicParameter(int id, final boolean isRefresh) {
         final UrlBuilder ub = new UrlBuilder();
         if (!isRefresh) {
             ub.addParameter("since_id", id);

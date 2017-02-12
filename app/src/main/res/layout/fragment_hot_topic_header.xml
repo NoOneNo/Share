@@ -12,14 +12,27 @@
     <View style="@style/horizontal_line" />
 
     <include
-        android:id="@+id/item_hot_topic_1"
-        layout="@layout/item_hot_topic" />
+        android:id="@+id/empty_layout"
+        layout="@layout/item_hot_topic_empty"
+        android:visibility="gone"/>
 
-    <View style="@style/horizontal_line" />
+    <LinearLayout
+        android:id="@+id/hot_topic_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    <include
-        android:id="@+id/item_hot_topic_2"
-        layout="@layout/item_hot_topic" />
+        <include
+            android:id="@+id/item_hot_topic_1"
+            layout="@layout/item_hot_topic" />
+
+        <View style="@style/horizontal_line" />
+
+        <include
+            android:id="@+id/item_hot_topic_2"
+            layout="@layout/item_hot_topic" />
+
+    </LinearLayout>
 
     <include
         android:id="@+id/item_hot_status_title"

@@ -35,8 +35,8 @@ ext {
     buildToolsVersion = "25.0.1"
     minSdkVersion = 21
     targetSdkVersion = 22
-    versionCode = 14
-    versionName = "1.4"
+    versionCode = 15
+    versionName = "1.5"
 
     // common dependencies for Android projects
 

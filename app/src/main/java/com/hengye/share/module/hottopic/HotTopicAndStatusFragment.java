@@ -38,7 +38,7 @@ public class HotTopicAndStatusFragment extends ShareRecyclerFragment<Topic>
     TopicAdapter mAdapter;
     HotTopicAndStatusContract.Presenter mPresenter;
     HotStatusPager mPager;
-    View mHeader;
+    View mHeader, mHotTopicContent, mHotTopicEmpty;
     ArrayList<HotTopic> mHotTopics;
 
     @Override
@@ -75,6 +75,8 @@ public class HotTopicAndStatusFragment extends ShareRecyclerFragment<Topic>
 
     private void initHeader(){
         mHeader = LayoutInflater.from(getContext()).inflate(R.layout.fragment_hot_topic_header, getRecyclerView(), false);
+        mHotTopicContent = mHeader.findViewById(R.id.hot_topic_content);
+        mHotTopicEmpty = mHeader.findViewById(R.id.empty_layout);
         mAdapter.setHeader(mHeader);
 
         setTitle(R.id.item_hot_topic_title, R.string.label_hot_topic);
@@ -83,10 +85,15 @@ public class HotTopicAndStatusFragment extends ShareRecyclerFragment<Topic>
 
     private void initHotTopic(){
         if(CommonUtil.size(mHotTopics) >= 2){
+            mHotTopicEmpty.setVisibility(View.GONE);
+            mHotTopicContent.setVisibility(View.VISIBLE);
             HotTopic hotTopic1 = mHotTopics.get(0);
             HotTopic hotTopic2 = mHotTopics.get(1);
             setHotTopic(R.id.item_hot_topic_1, hotTopic1);
             setHotTopic(R.id.item_hot_topic_2, hotTopic2);
+        }else{
+            mHotTopicEmpty.setVisibility(View.VISIBLE);
+            mHotTopicContent.setVisibility(View.GONE);
         }
     }
 
