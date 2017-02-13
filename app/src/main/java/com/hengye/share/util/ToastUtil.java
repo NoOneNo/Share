@@ -148,15 +148,19 @@ public class ToastUtil extends ApplicationUtil{
         }
         toastLayout.setBackground(drawableFrame);
 
-        if (iconResId != 0) {
-            toastIcon.setBackgroundResource(iconResId);
-        } else {
-            toastIcon.setVisibility(View.GONE);
+        if(toastIcon != null) {
+            if (iconResId != 0) {
+                toastIcon.setBackgroundResource(iconResId);
+            } else {
+                toastIcon.setVisibility(View.GONE);
+            }
         }
 
-        toastTextView.setTextColor(textColor);
-        toastTextView.setText(text);
-        toastTextView.setTypeface(Typeface.create(TOAST_TYPEFACE, Typeface.NORMAL));
+        if(toastTextView != null) {
+            toastTextView.setTextColor(textColor);
+            toastTextView.setText(text);
+            toastTextView.setTypeface(Typeface.create(TOAST_TYPEFACE, Typeface.NORMAL));
+        }
 
         currentToast.setDuration(duration);
         return currentToast;

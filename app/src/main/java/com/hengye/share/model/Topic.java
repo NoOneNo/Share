@@ -60,6 +60,17 @@ public class Topic extends ParentInherit implements TopicId, TopicShortUrl, Seri
             }
             topic.setImageUrls(imageUrls);
             topic.setImageLargeUrls(imageLargeUrls);
+        }else if(!CommonUtil.isEmpty(entity.getPic_ids())){
+            List<String> imageUrls = new ArrayList<>();
+            List<String> imageLargeUrls = new ArrayList<>();
+            for(String pic_id : entity.getPic_ids()){
+                String wbImgType = WBUtil.getWBImgType();
+                String wbImgUrl = WBUtil.getWBImgUrlById(pic_id);
+                imageUrls.add(WBUtil.getWBImgUrl(wbImgUrl, wbImgType));
+                imageLargeUrls.add(WBUtil.getWBLargeImgUrl(wbImgUrl));
+            }
+            topic.setImageUrls(imageUrls);
+            topic.setImageLargeUrls(imageLargeUrls);
         }
 
         if(entity.getRetweeted_status() != null){

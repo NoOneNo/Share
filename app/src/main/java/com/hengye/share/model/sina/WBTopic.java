@@ -118,6 +118,7 @@ public class WBTopic implements Serializable{
     private String rid;
     private int userType;
     private List<Pic_urlsEntity> pic_urls;
+    private List<String> pic_ids;
     private List<Integer> biz_ids;
     private List<?> darwin_tags;
 
@@ -268,6 +269,10 @@ public class WBTopic implements Serializable{
         this.pic_urls = pic_urls;
     }
 
+    public void setPic_ids(List<String> pic_ids) {
+        this.pic_ids = pic_ids;
+    }
+
     public void setBiz_ids(List<Integer> biz_ids) {
         this.biz_ids = biz_ids;
     }
@@ -374,6 +379,10 @@ public class WBTopic implements Serializable{
 
     public List<Pic_urlsEntity> getPic_urls() {
         return pic_urls;
+    }
+
+    public List<String> getPic_ids() {
+        return pic_ids;
     }
 
     public List<Integer> getBiz_ids() {

@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    android:fitsSystemWindows="true">
 
-    <FrameLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <include layout="@layout/widget_tool_bar" />
-
-        <com.hengye.share.ui.widget.SearchView
-            android:id="@+id/search_view"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="visible" />
+            android:layout_height="wrap_content">
 
-    </FrameLayout>
+            <include layout="@layout/widget_tool_bar" />
 
-    <include layout="@layout/fragment_content" />
+            <com.hengye.share.ui.widget.SearchView
+                android:id="@+id/search_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible" />
 
-</LinearLayout>
+        </FrameLayout>
+
+        <include layout="@layout/fragment_content" />
+    </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>

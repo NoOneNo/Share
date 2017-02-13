@@ -29,7 +29,9 @@ public class GalleryActivity extends ThemeActivity {
         ArrayList<Photo> totalPhotos = (ArrayList<Photo>) getIntent().getSerializableExtra(GalleryFragment.IMG_TOTAL_PHOTO);
         setSelectPhotos(totalPhotos);
         ArrayList<Photo> temp = new ArrayList<Photo>();
-        temp.addAll(totalPhotos);
+        if(totalPhotos != null) {
+            temp.addAll(totalPhotos);
+        }
         int indexStart = getIntent().getIntExtra(GalleryFragment.IMG_INDEX, 0);
         int[] imgLocationOnScreen = getIntent().getIntArrayExtra(GalleryFragment.IMG_LOCATION);
         int imgWidth = getIntent().getIntExtra(GalleryFragment.IMG_WIDTH, 0);
