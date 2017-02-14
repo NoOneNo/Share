@@ -326,6 +326,8 @@
     <string name="title_setting_click_photo_back">点击图片返回</string>
     <string name="title_setting_clear_photo_cache">清除图片缓存</string>
     <string name="title_setting_internal_browser">使用内置浏览器</string>
+    <string name="title_setting_custom_tabs">使用CustomTabs</string>
+    <string name="title_setting_custom_tabs_summary">当使用外部浏览器打开链接时，顶部标题背景颜色使用应用的主题色，需浏览器支持。(Chrome)</string>
 
     <string name="title_setting_preread">预读模式</string>
     <string name="title_setting_preread_summary">当内容快浏览到尽头时提前加载避免等待</string>

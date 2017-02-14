@@ -100,38 +100,35 @@ public class TopicContentUrlSpan extends CharacterStyle implements
         String url = uri.toString();
 
         L.debug("onClick url : %s", url);
-        if (WBUtil.isWBAccountIdLink(url)) {
-            Intent intent = new Intent(context, PersonalHomepageActivity.class);
-            intent.putExtra("id", WBUtil.getIdFromWBAccountLink(url));
-            context.startActivity(intent);
-        } else {
-            if (topicUrl != null) {
-                if (topicUrl.getType() == TopicUrl.VIDEO) {
-                    VideoPlayService.start(context, topicUrl.getTopicId(), getURL());
-                } else if (topicUrl.getType() == TopicUrl.PHOTO) {
-                    if (topicUrl.getAnnotation() != null && topicUrl.getAnnotation() instanceof String) {
-                        GalleryActivity.startWithIntent(context, (String) topicUrl.getAnnotation());
-                    }
-                } else {
-                    startExtraApplication(context, uri);
+//        if (WBUtil.isWBAccountIdLink(url)) {
+//            Intent intent = new Intent(context, PersonalHomepageActivity.class);
+//            intent.putExtra("id", WBUtil.getIdFromWBAccountLink(url));
+//            context.startActivity(intent);
+//        } else {
+        if (topicUrl != null) {
+            if (topicUrl.getType() == TopicUrl.VIDEO) {
+                VideoPlayService.start(context, topicUrl.getTopicId(), getURL());
+            } else if (topicUrl.getType() == TopicUrl.PHOTO) {
+                if (topicUrl.getAnnotation() != null && topicUrl.getAnnotation() instanceof String) {
+                    GalleryActivity.startWithIntent(context, (String) topicUrl.getAnnotation());
                 }
             } else {
                 startExtraApplication(context, uri);
             }
+        } else {
+            startExtraApplication(context, uri);
         }
+//        }
     }
 
     private void startExtraApplication(Context context, Uri uri) {
-
-        final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        if (IntentUtil.resolveActivity(intent)) {
-            try {
-                context.startActivity(intent);
-            } catch (ActivityNotFoundException anfe) {
-                anfe.printStackTrace();
-                ToastUtil.showToastError(R.string.label_resolve_url_activity_fail);
-            }
-        } else {
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        } catch (ActivityNotFoundException anfe) {
+            anfe.printStackTrace();
             ToastUtil.showToastError(R.string.label_resolve_url_activity_fail);
         }
     }

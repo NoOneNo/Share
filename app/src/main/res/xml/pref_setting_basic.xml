@@ -43,5 +43,11 @@
             android:title="@string/title_setting_internal_browser"
             android:defaultValue="true"/>
 
+        <SwitchPreference
+            android:key="custom_tabs_ui"
+            android:title="@string/title_setting_custom_tabs"
+            android:summary="@string/title_setting_custom_tabs_summary"
+            android:defaultValue="true"/>
+
     </PreferenceCategory>
 </PreferenceScreen>

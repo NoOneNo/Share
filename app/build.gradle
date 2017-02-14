@@ -90,8 +90,10 @@ dependencies {
     final RETROFIT_VERSION = '2.1.0'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile dep.design
-    compile dep.cardview
+    compile dep.appcompat
     compile dep.recyclerview
+    compile dep.cardview
+    compile dep.customtabs
     compile dep.nineoldandroids
     compile dep.gson
 

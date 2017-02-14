@@ -155,6 +155,8 @@ public class WBUtil {
         return url.replaceFirst(fromType, toType);
     }
 
+    //这样判断不太好，这种链接少。
+    @Deprecated
     public static boolean isWBAccountIdLink(String url) {
         url = convertWBCnToWBCom(url);
         return !TextUtils.isEmpty(url) && url.startsWith("http://weibo.com/u/");
@@ -174,6 +176,7 @@ public class WBUtil {
     }
 
     //todo need refactor
+    @Deprecated
     public static String getIdFromWBAccountLink(String url) {
         url = convertWBCnToWBCom(url);
         String id = url.substring("http://weibo.com/u/".length());

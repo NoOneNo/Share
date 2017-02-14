@@ -86,18 +86,7 @@ public class WebViewActivity extends BaseActivity {
     }
 
     private void openExternalBrowser(String url) {
-        final Uri uri = Uri.parse(url);
-        final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        if (IntentUtil.resolveActivity(intent)) {
-            try {
-                startActivity(intent);
-            } catch (ActivityNotFoundException anfe) {
-                anfe.printStackTrace();
-                ToastUtil.showToastError(R.string.label_resolve_url_activity_fail);
-            }
-        } else {
-            ToastUtil.showToastError(R.string.label_resolve_url_activity_fail);
-        }
+        IntentUtil.launchUrl(this, Uri.parse(url));
     }
 
     private String mUrl;

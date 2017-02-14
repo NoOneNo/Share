@@ -59,7 +59,7 @@ public class CheckUpdateMvpImpl implements CheckUpdateContract.View {
                         if (IntentUtil.resolveActivity(intent)) {
                             ApplicationUtil.getContext().startActivity(intent);
                         } else {
-                            ToastUtil.showToast(R.string.tip_no_app_store);
+                            ToastUtil.showToast(R.string.label_resolve_url_activity_fail);
                         }
                         dialog.dismiss();
                     }

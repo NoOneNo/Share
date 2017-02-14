@@ -24,6 +24,7 @@ public class SettingHelper {
     public final static String KEY_BASIC_CLICK_TO_CLOSE_GALLERY = "click_photo_back";
     public final static String KEY_BASIC_CLEAR_PHOTO_CACHE = "clear_photo_cache";
     public final static String KEY_BASIC_INTERNAL_BROWSER = "internal_browser";
+    public final static String KEY_BASIC_CUSTOM_TABS_UI = "custom_tabs_ui";
     public final static String KEY_BASIC_PHOTO_SAVE_PATH = "photo_save_path";
     //基本设置
 
@@ -161,6 +162,11 @@ public class SettingHelper {
     //是否使用内置的浏览器
     public static boolean isUseInternalBrowser(){
         return getBoolean(KEY_BASIC_INTERNAL_BROWSER, true);
+    }
+
+    //是否使用CustomTabs
+    public static boolean isUseCustomTabsUI(){
+        return getBoolean(KEY_BASIC_CUSTOM_TABS_UI, true);
     }
 
     //预读模式
