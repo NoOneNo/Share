@@ -72,9 +72,14 @@ public static java.lang.String TABLENAME;
 }
 ## eventbus
 
+## tencent bugly
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}
+## tencent bugly
+
 ## tencent x5
--keep class com.tencent.**
 -dontwarn com.tencent.**
+-keep class com.tencent.**
 #-libraryjars libs/tbs_sdk_thirdapp_v2.5.0.1031.jar
 ## tencent x5
 

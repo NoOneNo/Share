@@ -118,11 +118,12 @@ public class UrlFactory {
     public static final String WB_FOLLOW_DESTROY = "friendships/destroy.json";
     //短链转长链
     public static final String WB_EXPAND_URL = "short_url/info.json";
-    //微博点赞
+    //微博点赞创建
     public static final String WB_STATUS_LIKE = "attitudes/create.json";
-    //微博取消点赞
+    //微博点赞取消
     public static final String WB_STATUS_DISLIKE = "attitudes/destroy.json";
-
+    //获取附近地点
+    public static final String WB_PLACE_NEARBY = "place/nearby/pois.json";
 
     //以下接口前缀不一样的
     //token验证
@@ -138,16 +139,12 @@ public class UrlFactory {
     public static final String WB_UPDATE_LIKE = "http://api.weibo.cn/2/like/update";
     //评论取消点赞
     public static final String WB_DESTROY_LIKE = "http://api.weibo.cn/2/like/destroy";
-
-    //获取附近地点
-    public static final String WB_PLACE_NEARBY = "place/nearby/pois.json";
-
+    //微博点赞列表
+    public static final String WB_STATUS_LIKE_SHOW = "https://api.weibo.cn/2/like/show";
     //获取热门微博
     public static final String WB_HOT_STATUS = "http://m.weibo.cn/container/getIndex?containerid=102803";
-
     //获取热门话题
     public static final String WB_HOT_TOPIC = "http://weicoapi.weico.cc/portal.php?a=get_topic_weibo&c=default&page=0";
-
     //获取热门搜索
     public static final String WB_HOT_SEARCH = "http://weicoapi.weico.cc/portal.php?a=search_topic&c=default";
 

@@ -38,6 +38,7 @@ public class WBCards {
         wbTopic.setText(mblog.getText());
         wbTopic.setSource(mblog.getSource());
         wbTopic.setFavorited(mblog.isFavorited());
+        wbTopic.setLiked(mblog.isLiked());
         wbTopic.setLongText(mblog.isLongText());
 
         WBUserInfo wbUserInfo = mblog.getUser();
@@ -337,6 +338,7 @@ public class WBCards {
             private int textLength;
             private String source;
             private boolean favorited;
+            private boolean liked;
             private String thumbnail_pic;
             private String bmiddle_pic;
             private String original_pic;
@@ -393,6 +395,14 @@ public class WBCards {
 
             public void setFavorited(boolean favorited) {
                 this.favorited = favorited;
+            }
+
+            public boolean isLiked() {
+                return liked;
+            }
+
+            public void setLiked(boolean liked) {
+                this.liked = liked;
             }
 
             public String getThumbnail_pic() {

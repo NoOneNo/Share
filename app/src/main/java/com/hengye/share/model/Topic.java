@@ -3,12 +3,14 @@ package com.hengye.share.model;
 import android.text.Spanned;
 import android.widget.TextView;
 
+import com.hengye.share.R;
 import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.model.sina.WBTopicComment;
 import com.hengye.share.model.sina.WBTopicComments;
 import com.hengye.share.model.sina.WBTopics;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.DateUtil;
+import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.GsonUtil;
@@ -48,8 +50,11 @@ public class Topic extends ParentInherit implements TopicId, TopicShortUrl, Seri
         topic.setChannel(entity.getSource());
         topic.setContent(entity.getText());
         topic.setId(entity.getIdstr());
+        topic.setFavorited(entity.isFavorited());
+        topic.setLiked(entity.isLiked());
         topic.setRepostsCount(entity.getReposts_count());
         topic.setCommentsCount(entity.getComments_count());
+        topic.setAttitudesCount(entity.getAttitudes_count());
         if(!CommonUtil.isEmpty(entity.getPic_urls())){
             List<String> imageUrls = new ArrayList<>();
             List<String> imageLargeUrls = new ArrayList<>();
@@ -165,9 +170,13 @@ public class Topic extends ParentInherit implements TopicId, TopicShortUrl, Seri
     private List<String> imageLargeUrls;//原图
     private int repostsCount;
     private int commentsCount;
+    private int attitudesCount;
 
     private Topic retweetedTopic;//被转发的主题
     private UserInfo userInfo;//用户信息
+
+    private boolean favorited;
+    private boolean liked;
 
     private HashMap<String, TopicUrl> urlMap;
 
@@ -302,6 +311,30 @@ public class Topic extends ParentInherit implements TopicId, TopicShortUrl, Seri
         this.commentsCount = commentsCount;
     }
 
+    public int getAttitudesCount() {
+        return attitudesCount;
+    }
+
+    public void setAttitudesCount(int attitudesCount) {
+        this.attitudesCount = attitudesCount;
+    }
+
+    public boolean isLiked() {
+        return liked;
+    }
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
+    }
+
+    public boolean isFavorited() {
+        return favorited;
+    }
+
+    public void setFavorited(boolean favorited) {
+        this.favorited = favorited;
+    }
+
     public boolean isFromMobile() {
         return fromMobile;
     }
@@ -331,4 +364,19 @@ public class Topic extends ParentInherit implements TopicId, TopicShortUrl, Seri
         }
         return formatDate;
     }
+
+//    public String getfAttitudesCount() {
+//        if(fAttitudesCount == null){
+//            fAttitudesCount = ResUtil.getString(R.string.label_topic_repost_number, DataUtil.getCounter(getRepostsCount()));
+//        }
+//        return fAttitudesCount;
+//    }
+//
+//    public String getfCommentsCount() {
+//        return fCommentsCount;
+//    }
+//
+//    public String getfRepostsCount() {
+//        return fRepostsCount;
+//    }
 }

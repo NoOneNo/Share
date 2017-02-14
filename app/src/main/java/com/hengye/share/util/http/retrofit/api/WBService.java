@@ -1,6 +1,8 @@
 package com.hengye.share.util.http.retrofit.api;
 
 import com.hengye.share.model.sina.WBAddresses;
+import com.hengye.share.model.sina.WBAttitude;
+import com.hengye.share.model.sina.WBAttitudes;
 import com.hengye.share.model.sina.WBCards;
 import com.hengye.share.model.sina.WBGroup;
 import com.hengye.share.model.sina.WBGroups;
@@ -239,6 +241,15 @@ public interface WBService {
 
     @GET(UrlFactory.WB_DESTROY_LIKE)
     Single<WBResult> destroyLike(@QueryMap Map<String, String> options);
+
+    @GET(UrlFactory.WB_STATUS_LIKE)
+    Single<WBAttitude> createStatusLike(@QueryMap Map<String, String> options);
+
+    @GET(UrlFactory.WB_STATUS_DISLIKE)
+    Single<WBResult> destroyStatusLike(@QueryMap Map<String, String> options);
+
+    @GET(UrlFactory.WB_STATUS_LIKE_SHOW)
+    Single<WBAttitudes> listStatusLike(@QueryMap Map<String, String> options);
 
     @GET(UrlFactory.WB_PLACE_NEARBY)
     Single<WBAddresses> getPlaceNearBy(@QueryMap Map<String, String> options);

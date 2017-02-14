@@ -96,11 +96,15 @@ public class TopicAdapter extends CommonAdapter<Topic>
                 IntentUtil.startActivity(getContext(),
                         TopicPublishActivity.getStartIntent(getContext(), TopicDraftHelper.getWBTopicDraftByRepostComment(topic)));
                 break;
-            case DialogBuilder.LONG_CLICK_TOPIC_COLLECT:
-                WBTopic wbTopic = Topic.getWBTopic(topic);
-                if (wbTopic != null) {
-                    RequestManager.addToRequestQueue(getWBCollectTopicRequest(topic.getId(), wbTopic.isFavorited()));
-                }
+            case DialogBuilder.LONG_CLICK_TOPIC_LIKE:
+                //点赞
+                break;
+            case DialogBuilder.LONG_CLICK_TOPIC_FAVORITE:
+                RequestManager.addToRequestQueue(getWBCollectTopicRequest(topic));
+//                WBTopic wbTopic = Topic.getWBTopic(topic);
+//                if (wbTopic != null) {
+//                    RequestManager.addToRequestQueue(getWBCollectTopicRequest(topic.getId(), wbTopic.isFavorited()));
+//                }
                 break;
             case DialogBuilder.LONG_CLICK_TOPIC_COPY:
                 ClipboardUtil.copyWBContent(topic.getContent());
@@ -158,7 +162,7 @@ public class TopicAdapter extends CommonAdapter<Topic>
         if(showDeleteTopicOption && !mIsRetweetedLongClick){
             isMine = mLongClickTopic != null && mLongClickTopic.getUserInfo() != null && UserUtil.isCurrentUser(mLongClickTopic.getUserInfo().getUid());
         }
-        return DialogBuilder.getOnLongClickTopicDialog(getContext(), this, isMine);
+        return DialogBuilder.getOnLongClickTopicDialog(getContext(), this, mLongClickTopic, isMine);
     }
 
     private Handler mHandler = new Handler();
@@ -456,8 +460,9 @@ public class TopicAdapter extends CommonAdapter<Topic>
         }
     }
 
-    private GsonRequest getWBCollectTopicRequest(final String topicId, boolean isFavorite) {
+    private GsonRequest getWBCollectTopicRequest(final Topic topic) {
         final UrlBuilder ub;
+        final boolean isFavorite = topic.isFavorited();
         if (isFavorite) {
             ub = new UrlBuilder(UrlFactory.getInstance().getWBDestroyFavoritesUrl());
         } else {
@@ -465,7 +470,9 @@ public class TopicAdapter extends CommonAdapter<Topic>
         }
 
         ub.addParameter("access_token", UserUtil.getToken());
-        ub.addParameter("id", topicId);
+        ub.addParameter("id", topic.getId());
+        final String success = isFavorite ? "取消收藏成功" : "收藏成功";
+        final String fail = isFavorite ? "取消收藏失败" : "收藏失败";
         return new GsonRequest<WBTopic>(Request.Method.POST,
                 WBTopic.class,
                 ub.getUrl()
@@ -473,12 +480,13 @@ public class TopicAdapter extends CommonAdapter<Topic>
             @Override
             public void onResponse(WBTopic response) {
                 L.debug("request success , url : %s, data : %s", ub.getRequestUrl(), response);
-                ToastUtil.showToast(response != null ? "收藏成功" : "收藏失败");
+                topic.setFavorited(!isFavorite);
+                ToastUtil.showToast(response != null ? success : fail);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                ToastUtil.showToast("收藏失败");
+                ToastUtil.showToast(fail);
                 L.debug("request fail , url : %s, error : %s", ub.getRequestUrl(), volleyError);
             }
         }) {

@@ -43,6 +43,7 @@ public class WBTopic implements Serializable{
     private int source_type;
     private String source;
     private boolean favorited;
+    private boolean liked;
     private boolean truncated;
     private boolean isLongText;
     private String in_reply_to_status_id;
@@ -205,6 +206,10 @@ public class WBTopic implements Serializable{
         this.favorited = favorited;
     }
 
+    public void setLiked(boolean liked) {
+        this.liked = liked;
+    }
+
     public void setTruncated(boolean truncated) {
         this.truncated = truncated;
     }
@@ -315,6 +320,10 @@ public class WBTopic implements Serializable{
 
     public boolean isFavorited() {
         return favorited;
+    }
+
+    public boolean isLiked() {
+        return liked;
     }
 
     public boolean isTruncated() {

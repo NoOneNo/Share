@@ -14,6 +14,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
@@ -291,7 +292,7 @@ public class EmoticonPicker extends LinearLayout
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
                 convertView = new ImageView(mContext);
-                ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(mIconSize, mIconSize);
+                ViewGroup.LayoutParams lp = new AbsListView.LayoutParams(mIconSize, mIconSize);
                 convertView.setLayoutParams(lp);
             }
             bindData(position, convertView);

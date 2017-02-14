@@ -12,6 +12,7 @@ import com.hengye.share.module.topic.StatusFragment;
 import com.hengye.share.module.topic.TopicFragment;
 import com.hengye.share.module.util.encapsulation.fragment.TabLayoutFragment;
 import com.hengye.share.ui.widget.pulltorefresh.PullToRefreshLayout;
+import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.ResUtil;
 import com.hengye.swiperefresh.listener.SwipeListener;
 
@@ -74,15 +75,17 @@ public class TopicCommentAndRepostFragment extends TabLayoutFragment{
     @Override
     protected ArrayList<TabItem> generateTabs() {
         ArrayList<TabItem> tabItems = new ArrayList<>();
-        TabItem tabItem1 = new TabItem(0, ResUtil.getString(R.string.label_topic_comment_number, mTopic.getCommentsCount()));
-        TabItem tabItem2 = new TabItem(1, ResUtil.getString(R.string.label_topic_repost_number, mTopic.getRepostsCount()));
+        TabItem tabItem1 = new TabItem(0, ResUtil.getString(R.string.label_topic_comment_number, DataUtil.getCounter(mTopic.getCommentsCount())));
+        TabItem tabItem2 = new TabItem(1, ResUtil.getString(R.string.label_topic_repost_number, DataUtil.getCounter(mTopic.getRepostsCount())));
+        TabItem tabItem3 = new TabItem(2, ResUtil.getString(R.string.label_topic_attitude_number, DataUtil.getCounter(mTopic.getAttitudesCount())));
         tabItems.add(tabItem1);
         tabItems.add(tabItem2);
+        tabItems.add(tabItem3);
         return tabItems;
     }
 
     TopicCommentFragment mCommentFragment, mRepostFragment;
-
+    TopicLikeFragment mLikeFragment;
     PullToRefreshLayout mPullToRefresh;
 
     @Override
@@ -98,7 +101,9 @@ public class TopicCommentAndRepostFragment extends TabLayoutFragment{
                 fragment = mRepostFragment = TopicCommentFragment.newInstance(mTopic, false);
                 mRepostFragment.setLoadDataCallBack(getLoadDataCallBack(mRepostFragment));
                 break;
-
+            case 2:
+                fragment = mLikeFragment = new TopicLikeFragment();
+                mLikeFragment.setLoadDataCallBack(getLoadDataCallBack(mLikeFragment));
         }
         return fragment;
     }

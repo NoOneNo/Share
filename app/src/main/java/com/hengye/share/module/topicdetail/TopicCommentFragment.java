@@ -22,6 +22,7 @@ import com.hengye.share.ui.widget.dialog.DialogBuilder;
 import com.hengye.share.ui.widget.fab.FabAnimator;
 import com.hengye.share.util.ClipboardUtil;
 import com.hengye.share.util.DataUtil;
+import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.handler.TopicAdapterIdPager;
@@ -218,9 +219,9 @@ public class TopicCommentFragment extends StatusFragment<TopicComment> implement
     @Override
     public void onLoadTopicComments(TopicComments topicComments) {
         if (mTab != null) {
-            String str = String.format
-                    (getString(mIsComment ? R.string.label_topic_comment_number : R.string.label_topic_repost_number)
-                            , DataUtil.getCounter(topicComments.getTotalNumber()));
+            String str = ResUtil.getString(mIsComment ?
+                    R.string.label_topic_comment_number : R.string.label_topic_repost_number,
+                    DataUtil.getCounter(topicComments.getTotalNumber()));
             mTab.setText(str);
         }
     }

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 
 import com.hengye.share.R;
+import com.hengye.share.model.Topic;
 import com.hengye.share.util.DataUtil;
 
 public class DialogBuilder {
@@ -19,17 +20,28 @@ public class DialogBuilder {
 
     public final static int LONG_CLICK_TOPIC_REPOST = 0;
     public final static int LONG_CLICK_TOPIC_COMMENT = 1;
-    public final static int LONG_CLICK_TOPIC_COLLECT = 2;
-    public final static int LONG_CLICK_TOPIC_COPY = 3;
-    public final static int LONG_CLICK_TOPIC_DESTROY = 4;
-    public final static int LONG_CLICK_TOPIC_LENGTH = 4;
+    public final static int LONG_CLICK_TOPIC_LIKE = 2;
+    public final static int LONG_CLICK_TOPIC_FAVORITE = 3;
+    public final static int LONG_CLICK_TOPIC_COPY = 4;
+    public final static int LONG_CLICK_TOPIC_DESTROY = 5;
+    public final static int LONG_CLICK_TOPIC_LENGTH = 5;
 
-    public static Dialog getOnLongClickTopicDialog(Context context, DialogInterface.OnClickListener onClickListener, boolean isMine){
+    public static Dialog getOnLongClickTopicDialog(Context context, DialogInterface.OnClickListener onClickListener, Topic topic, boolean isMine){
 
         CharSequence[] cs = new String[isMine ? LONG_CLICK_TOPIC_LENGTH + 1 : LONG_CLICK_TOPIC_LENGTH];
-        cs[LONG_CLICK_TOPIC_REPOST] = context.getString(R.string.label_topic_repost);
-        cs[LONG_CLICK_TOPIC_COMMENT] = context.getString(R.string.label_topic_comment);
-        cs[LONG_CLICK_TOPIC_COLLECT] = context.getString(R.string.label_topic_collect);
+
+        String repost = context.getString(R.string.label_topic_repost_number, DataUtil.getCounter(topic.getRepostsCount()));
+        String comment = context.getString(R.string.label_topic_comment_number, DataUtil.getCounter(topic.getCommentsCount()));
+        String attitude = context.getString(
+                topic.isLiked() ?
+                R.string.label_topic_attitude_cancel_number :
+                R.string.label_topic_attitude_number, DataUtil.getCounter(topic.getAttitudesCount()));
+        String favorite = context.getString(topic.isFavorited() ? R.string.label_topic_collect_cancel : R.string.label_topic_collect);
+
+        cs[LONG_CLICK_TOPIC_REPOST] = repost;
+        cs[LONG_CLICK_TOPIC_COMMENT] = comment;
+        cs[LONG_CLICK_TOPIC_LIKE] = attitude;
+        cs[LONG_CLICK_TOPIC_FAVORITE] = favorite;
         cs[LONG_CLICK_TOPIC_COPY] = context.getString(R.string.label_topic_copy);
 
         if(isMine){
