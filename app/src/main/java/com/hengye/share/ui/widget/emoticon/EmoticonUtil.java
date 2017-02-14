@@ -406,7 +406,7 @@ public class EmoticonUtil {
         mWeiBoEmoticonMap.put("[女孩儿]", R.drawable.d_nvhaier);
         mWeiBoEmoticonMap.put("[肥皂]", R.drawable.d_feizao);
         mWeiBoEmoticonMap.put("[照相机]", R.drawable.o_zhaoxiangji);
-        mWeiBoEmoticonMap.put("[浪]", R.drawable.d_lang);
+        mWeiBoEmoticonMap.put("[微博]", R.drawable.d_lang);
         mWeiBoEmoticonMap.put("[沙尘暴]", R.drawable.w_shachenbao);
 
 
