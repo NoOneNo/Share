@@ -279,9 +279,9 @@ public class SelectorLoader {
         setDefaultRippleBackground(view, R.color.background_default);
     }
 
-//    public void setTransparentRippleBackground(View view){
-//        setDefaultRippleBackground(view, R.color.transparent);
-//    }
+    public void setTransparentRippleBackground(View view){
+        view.setBackgroundResource(R.drawable.selector_ripple_transparent);
+    }
 
     public void setDefaultRippleWhiteBackground(View view) {
         setDefaultRippleBackground(view, R.color.background_default_white);

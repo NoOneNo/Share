@@ -41,30 +41,37 @@ public abstract class ShareLoadDataCallbackFragment<T> extends ShareRecyclerFrag
         mLinearLayoutManager = (LinearLayoutManager) getRecyclerView().getLayoutManager();
 
         View fab = getActivity().findViewById(R.id.fab);
-        if(fab != null) {
+        if (fab != null) {
             FabAnimator.create(fab).attachToRecyclerView(getRecyclerView());
         }
 
         getLoadDataCallBack().initView();
     }
 
-    public LinearLayoutManager getLayoutManager(){
+    public LinearLayoutManager getLayoutManager() {
         return mLinearLayoutManager;
     }
 
     @Override
     public void onTaskComplete(boolean isRefresh, int taskState) {
         super.onTaskComplete(isRefresh, taskState);
-        if(isRefresh){
+        if (isRefresh) {
             getLoadDataCallBack().refresh(false);
         }
     }
 
     @Override
     public boolean canLoadMore(List<T> data, int type) {
-        if(data != null && data.size() < WBUtil.getWBTopicRequestCount() / 2){
+        int pageSize;
+        if (getPager() != null) {
+            pageSize = getPager().getPageSize();
+        } else {
+            pageSize = WBUtil.getWBTopicRequestCount();
+        }
+
+        if (data != null && data.size() < pageSize / 2) {
             return false;
-        }else {
+        } else {
             return super.canLoadMore(data, type);
         }
     }
@@ -90,9 +97,9 @@ public abstract class ShareLoadDataCallbackFragment<T> extends ShareRecyclerFrag
 
         @Override
         public void refresh(boolean isRefreshing) {
-            if(isRefreshing){
+            if (isRefreshing) {
                 onRefresh();
-            }else{
+            } else {
                 setRefreshing(false);
             }
         }

@@ -158,9 +158,9 @@
 
     <!-- Strings related to StatusAction -->
     <string name="tip_status_like_create_success">点赞成功</string>
-    <string name="tip_status_like_destroy_success">成功取消点赞</string>
+    <string name="tip_status_like_destroy_success">已取消点赞</string>
     <string name="tip_status_favorite_create_success">收藏成功</string>
-    <string name="tip_status_favorite_destroy_success">成功取消收藏</string>
+    <string name="tip_status_favorite_destroy_success">已取消收藏</string>
     <!-- Strings related to StatusAction -->
 
     <!-- Strings related to Topic -->
@@ -169,6 +169,8 @@
     <string name="label_topic_comment">评论</string>
     <string name="label_topic_collect">收藏</string>
     <string name="label_topic_collect_cancel">取消收藏</string>
+    <string name="label_topic_attitude">赞</string>
+    <string name="label_topic_attitude_cancel">取消赞</string>
     <string name="label_topic_repost_origin">转发原微博</string>
     <string name="label_topic_copy">复制</string>
     <string name="label_topic_destroy">删除</string>

@@ -18,8 +18,9 @@ public class DialogBuilder {
         return builder.create();
     }
 
-    public final static int LONG_CLICK_TOPIC_REPOST = 0;
-    public final static int LONG_CLICK_TOPIC_COMMENT = 1;
+
+    public final static int LONG_CLICK_TOPIC_COMMENT = 0;
+    public final static int LONG_CLICK_TOPIC_REPOST = 1;
     public final static int LONG_CLICK_TOPIC_LIKE = 2;
     public final static int LONG_CLICK_TOPIC_FAVORITE = 3;
     public final static int LONG_CLICK_TOPIC_COPY = 4;
@@ -30,16 +31,16 @@ public class DialogBuilder {
 
         CharSequence[] cs = new String[isMine ? LONG_CLICK_TOPIC_LENGTH + 1 : LONG_CLICK_TOPIC_LENGTH];
 
-        String repost = context.getString(R.string.label_topic_repost_number, DataUtil.getCounter(topic.getRepostsCount()));
         String comment = context.getString(R.string.label_topic_comment_number, DataUtil.getCounter(topic.getCommentsCount()));
+        String repost = context.getString(R.string.label_topic_repost_number, DataUtil.getCounter(topic.getRepostsCount()));
         String attitude = context.getString(
                 topic.isLiked() ?
                 R.string.label_topic_attitude_cancel_number :
                 R.string.label_topic_attitude_number, DataUtil.getCounter(topic.getAttitudesCount()));
         String favorite = context.getString(topic.isFavorited() ? R.string.label_topic_collect_cancel : R.string.label_topic_collect);
 
-        cs[LONG_CLICK_TOPIC_REPOST] = repost;
         cs[LONG_CLICK_TOPIC_COMMENT] = comment;
+        cs[LONG_CLICK_TOPIC_REPOST] = repost;
         cs[LONG_CLICK_TOPIC_LIKE] = attitude;
         cs[LONG_CLICK_TOPIC_FAVORITE] = favorite;
         cs[LONG_CLICK_TOPIC_COPY] = context.getString(R.string.label_topic_copy);
@@ -49,7 +50,7 @@ public class DialogBuilder {
         }
 //        cs[LONG_CLICK_TOPIC_REPOST_ORIGIN] = context.getString(R.string.label_topic_repost_origin);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context)
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_Light_Dialog_Alert)
                 .setItems(cs, onClickListener);
         return builder.create();
     }

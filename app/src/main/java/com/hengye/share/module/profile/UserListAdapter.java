@@ -43,7 +43,7 @@ public class UserListAdapter extends CommonAdapter<UserInfo> {
             mAvatar.setAutoClipBitmap(false);
             SelectorLoader
                     .getInstance()
-                    .setDefaultRippleWhiteBackground(v);
+                    .setTransparentRippleBackground(v);
         }
 
         @Override

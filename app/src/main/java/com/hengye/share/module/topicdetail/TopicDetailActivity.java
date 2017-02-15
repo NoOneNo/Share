@@ -12,6 +12,10 @@ import android.widget.TextView;
 import com.hengye.floatingactionbutton.FloatingActionButton;
 import com.hengye.floatingactionbutton.FloatingActionsMenu;
 import com.hengye.share.R;
+import com.hengye.share.module.topic.StatusActionContract;
+import com.hengye.share.module.topic.StatusActionMvpImpl;
+import com.hengye.share.module.topic.StatusActonPresenter;
+import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.TransitionHelper;
 import com.hengye.share.model.Topic;
@@ -26,7 +30,10 @@ import com.hengye.share.ui.widget.pulltorefresh.PullToRefreshLayout;
 import com.hengye.share.util.ClipboardUtil;
 import com.hengye.share.util.IntentUtil;
 
-public class TopicDetailActivity extends BaseActivity implements View.OnClickListener, AppBarLayout.OnOffsetChangedListener {
+public class TopicDetailActivity extends BaseActivity
+        implements View.OnClickListener,
+        AppBarLayout.OnOffsetChangedListener,
+        StatusActionContract.View{
 
     public static void start(Context context, View startView, Topic topic, boolean isRetweet) {
         Intent intent = getStartIntent(context, topic, isRetweet);
@@ -89,9 +96,11 @@ public class TopicDetailActivity extends BaseActivity implements View.OnClickLis
     View mTopicContentLayout;
     TextView mTopicContent;
     FloatingActionsMenu mActionsMenu;
-    FloatingActionButton mCopyBtn, mCommentBtn, mRepostBtn;
+    FloatingActionButton mCommentBtn, mRepostBtn, mAttitudeBtn, mCollectBtn, mCopyBtn;
     OverLayView mOverLay;
     TopicCommentAndRepostFragment mFragment;
+    StatusActionMvpImpl mStatusActionMvpImpl;
+    StatusActionContract.Presenter mStatusActionPresenter;
 
 //    TopicDetailPresenter mPresenter;
 
@@ -141,16 +150,23 @@ public class TopicDetailActivity extends BaseActivity implements View.OnClickLis
     private void initView() {
         mOverLay = (OverLayView) findViewById(R.id.over_lay);
         mActionsMenu = (FloatingActionsMenu) findViewById(R.id.fab);
-        mCopyBtn = (FloatingActionButton) findViewById(R.id.action_copy);
-        mRepostBtn = (FloatingActionButton) findViewById(R.id.action_repost);
         mCommentBtn = (FloatingActionButton) findViewById(R.id.action_comment);
+        mRepostBtn = (FloatingActionButton) findViewById(R.id.action_repost);
+        mAttitudeBtn = (FloatingActionButton) findViewById(R.id.action_attitude);
+        mCollectBtn = (FloatingActionButton) findViewById(R.id.action_collect);
+        mCopyBtn = (FloatingActionButton) findViewById(R.id.action_copy);
         mAppBarLayout = (AppBarLayout) findViewById(R.id.appbar);
         mTabLayout = (TabLayout) findViewById(R.id.tab);
 //        mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        mStatusActionPresenter = new StatusActonPresenter(this);
+        mStatusActionMvpImpl = new StatusActionMvpImpl(this, mStatusActionPresenter);
+
         mOverLay.setOnClickListener(this);
-        mCopyBtn.setOnClickListener(this);
-        mRepostBtn.setOnClickListener(this);
         mCommentBtn.setOnClickListener(this);
+        mRepostBtn.setOnClickListener(this);
+        mAttitudeBtn.setOnClickListener(this);
+        mCollectBtn.setOnClickListener(this);
+        mCopyBtn.setOnClickListener(this);
 
         FabAnimator.adjustFloatingActionsMenuUpdate(mActionsMenu, mOverLay);
         mFabAnimator = FabAnimator.create(mActionsMenu);
@@ -206,18 +222,39 @@ public class TopicDetailActivity extends BaseActivity implements View.OnClickLis
         int id = v.getId();
         if (id == R.id.over_lay) {
             mActionsMenu.collapse();
-        } else if (id == R.id.action_copy) {
-            ClipboardUtil.copyWBContent(mTopic.getContent());
+        } else {
             mActionsMenu.collapseImmediately();
-        } else if (id == R.id.action_repost) {
-            mActionsMenu.collapseImmediately();
-            IntentUtil.startActivity(this,
-                    TopicPublishActivity.getStartIntent(this, TopicDraftHelper.getWBTopicDraftByRepostRepost(mTopic)));
-        } else if (id == R.id.action_comment) {
-            mActionsMenu.collapseImmediately();
-            IntentUtil.startActivity(this,
-                    TopicPublishActivity.getStartIntent(this, TopicDraftHelper.getWBTopicDraftByRepostComment(mTopic)));
+            if (id == R.id.action_comment) {
+                IntentUtil.startActivity(this,
+                        TopicPublishActivity.getStartIntent(this, TopicDraftHelper.getWBTopicDraftByRepostComment(mTopic)));
+            }else if (id == R.id.action_repost) {
+                IntentUtil.startActivity(this,
+                        TopicPublishActivity.getStartIntent(this, TopicDraftHelper.getWBTopicDraftByRepostRepost(mTopic)));
+            }else if (id == R.id.action_attitude) {
+                mStatusActionPresenter.likeStatus(mTopic);
+            }else if (id == R.id.action_collect) {
+                mStatusActionPresenter.collectStatus(mTopic);
+            }else if (id == R.id.action_copy) {
+                ClipboardUtil.copyWBContent(mTopic.getContent());
+            }
         }
+    }
+
+    @Override
+    public void onLikeStatusComplete(Topic topic, int taskState) {
+        mStatusActionMvpImpl.onLikeStatusComplete(topic, taskState);
+        String attitude = getString(
+                topic.isLiked() ?
+                        R.string.label_topic_attitude_cancel :
+                        R.string.label_topic_attitude);
+        mAttitudeBtn.setTitle(attitude);
+    }
+
+    @Override
+    public void onCollectStatusComplete(Topic topic, int taskState) {
+        mStatusActionMvpImpl.onCollectStatusComplete(topic, taskState);
+        String favorite = getString(topic.isFavorited() ? R.string.label_topic_collect_cancel : R.string.label_topic_collect);
+        mCollectBtn.setTitle(favorite);
     }
 
     @Override

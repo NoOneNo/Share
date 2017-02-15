@@ -95,7 +95,6 @@ public class TopicCommentFragment extends ShareLoadDataCallbackFragment<TopicCom
         setPager(mTopicPager = new TopicAdapterIdPager(mAdapter));
         setDataHandler(new TopicRefreshIdHandler<>(mAdapter));
         mTopicPager.setForceRefresh(true);
-
         mPresenter = new TopicCommentPresenter(this, isLikeMode);
 
         initView();
@@ -130,6 +129,7 @@ public class TopicCommentFragment extends ShareLoadDataCallbackFragment<TopicCom
         }
     }
 
+    @Override
     protected void onLazyLoad() {
         if(isShowLoading()) {
             //如果调用了下拉刷新就没必要再懒加载了
@@ -157,7 +157,6 @@ public class TopicCommentFragment extends ShareLoadDataCallbackFragment<TopicCom
                         }
                     });
         }
-
     }
 
     @Override

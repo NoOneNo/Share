@@ -9,6 +9,7 @@ import com.hengye.share.util.GsonUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class UserInfo extends ParentInherit implements Serializable{
 
@@ -25,11 +26,18 @@ public class UserInfo extends ParentInherit implements Serializable{
     private String spell;//用户名拼音
 
     public static ArrayList<UserInfo> getUserInfos(WBUserInfos wbUserInfos){
-        if(wbUserInfos == null || CommonUtil.isEmpty(wbUserInfos.getUsers())){
+        if(wbUserInfos == null){
+            return null;
+        }
+        return getUserInfos(wbUserInfos.getUsers());
+    }
+
+    public static ArrayList<UserInfo> getUserInfos(List<WBUserInfo> wbUserInfos){
+        if(CommonUtil.isEmpty(wbUserInfos)){
             return null;
         }
         ArrayList<UserInfo> userInfos = new ArrayList<>();
-        for(WBUserInfo entity : wbUserInfos.getUsers()){
+        for(WBUserInfo entity : wbUserInfos){
             userInfos.add(getUserInfo(entity));
         }
         return userInfos;

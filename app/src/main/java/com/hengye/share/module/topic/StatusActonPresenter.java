@@ -1,4 +1,4 @@
-package com.hengye.share.module.topicdetail;
+package com.hengye.share.module.topic;
 
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.sina.WBAttitude;
@@ -36,8 +36,6 @@ public class StatusActonPresenter extends RxPresenter<StatusActionContract.View>
 
         final boolean liked = !topic.isLiked();
         topic.updateLiked(liked);
-        getMvpView().onLikeStatusStart(topic);
-
 
         final UrlBuilder ub = new UrlBuilder();
         ub.addParameter("id", topic.getId());
@@ -91,7 +89,6 @@ public class StatusActonPresenter extends RxPresenter<StatusActionContract.View>
 
         final boolean favorited = !topic.isFavorited();
         topic.setFavorited(favorited);
-        getMvpView().onCollectStatusStart(topic);
 
         final UrlBuilder ub;
         if (favorited) {

@@ -43,9 +43,9 @@ public class UserListFragment extends ShareRecyclerFragment<UserInfo> implements
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                UserInfo userInfo = mAdapter.getItem(position);
-                View avatar = view.findViewById(R.id.iv_avatar);
-                PersonalHomepageActivity.start(getContext(), avatar, userInfo);
+                PersonalHomepageActivity.start(getContext(),
+                        view.findViewById(R.id.iv_avatar),
+                        mAdapter.getItem(position));
             }
         });
     }

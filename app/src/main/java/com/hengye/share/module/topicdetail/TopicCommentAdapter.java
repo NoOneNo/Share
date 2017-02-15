@@ -185,7 +185,7 @@ public class TopicCommentAdapter extends CommonAdapter<TopicComment> {
 
             if (mIsLikeMode) {
                 int color = topicComment.isLiked() ? ThemeUtil.getColor() : ResUtil.getColor(R.color.grey_850);
-                mLikeBtn.setImageDrawable(DrawableLoader.setTintDrawable(R.drawable.ic_thumb_up_white_48dp, color));
+                mLikeBtn.setImageDrawable(DrawableLoader.setTintDrawable(R.drawable.ic_thumb_up_white_48dp, color).mutate());
                 mLikeCounts.setText(DataUtil.getCounter(topicComment.getLikeCounts()));
 
                 mLikeCounts.setVisibility(topicComment.getLikeCounts() < 1 ? View.INVISIBLE : View.VISIBLE);

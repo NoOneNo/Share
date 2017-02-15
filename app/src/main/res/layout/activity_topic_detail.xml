@@ -31,12 +31,12 @@
                     app:layout_scrollFlags="scroll" />
 
 
+                <!--android:theme="@style/Platform.V14.AppCompat.Light"-->
                 <com.hengye.share.ui.widget.common.CommonTabLayout
                     android:id="@+id/tab"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:color/white"
-                    android:theme="@style/Platform.V14.AppCompat.Light"
                     android:visibility="visible"
                     app:tabMode="scrollable" />
             </android.support.design.widget.AppBarLayout>
@@ -75,8 +75,28 @@
                 fab:fab_colorNormal="?attr/theme_color"
                 fab:fab_colorPressed="?attr/theme_dark_color"
                 fab:fab_icon="@drawable/ic_content_copy_white_48dp"
+                fab:fab_size="mini"
                 fab:fab_title="@string/label_topic_copy" />
 
+            <com.hengye.floatingactionbutton.FloatingActionButton
+                android:id="@+id/action_collect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_colorNormal="?attr/theme_color"
+                fab:fab_colorPressed="?attr/theme_dark_color"
+                fab:fab_icon="@drawable/ic_favorite_white_48dp"
+                fab:fab_size="mini"
+                fab:fab_title="@string/label_topic_collect" />
+
+            <com.hengye.floatingactionbutton.FloatingActionButton
+                android:id="@+id/action_attitude"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_colorNormal="?attr/theme_color"
+                fab:fab_colorPressed="?attr/theme_dark_color"
+                fab:fab_icon="@drawable/ic_thumb_up_white_48dp"
+                fab:fab_size="mini"
+                fab:fab_title="@string/label_topic_attitude" />
 
             <com.hengye.floatingactionbutton.FloatingActionButton
                 android:id="@+id/action_repost"
@@ -85,6 +105,7 @@
                 fab:fab_colorNormal="?attr/theme_color"
                 fab:fab_colorPressed="?attr/theme_dark_color"
                 fab:fab_icon="@drawable/ic_repost_white_48dp"
+                fab:fab_size="mini"
                 fab:fab_title="@string/label_topic_repost" />
 
             <com.hengye.floatingactionbutton.FloatingActionButton
@@ -94,6 +115,7 @@
                 fab:fab_colorNormal="?attr/theme_color"
                 fab:fab_colorPressed="?attr/theme_dark_color"
                 fab:fab_icon="@drawable/ic_comment_white_48dp"
+                fab:fab_size="mini"
                 fab:fab_title="@string/label_topic_comment" />
 
         </com.hengye.floatingactionbutton.FloatingActionsMenu>

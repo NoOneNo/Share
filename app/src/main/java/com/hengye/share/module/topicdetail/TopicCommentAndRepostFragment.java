@@ -10,6 +10,7 @@ import com.hengye.share.model.Topic;
 import com.hengye.share.module.util.encapsulation.fragment.BaseFragment;
 import com.hengye.share.module.topic.ShareLoadDataCallbackFragment;
 import com.hengye.share.module.topic.TopicFragment;
+import com.hengye.share.module.util.encapsulation.fragment.RecyclerRefreshFragment;
 import com.hengye.share.module.util.encapsulation.fragment.TabLayoutFragment;
 import com.hengye.share.ui.widget.pulltorefresh.PullToRefreshLayout;
 import com.hengye.share.util.DataUtil;
@@ -36,6 +37,10 @@ public class TopicCommentAndRepostFragment extends TabLayoutFragment{
         return fragment;
     }
 
+
+    TopicCommentFragment mCommentFragment, mRepostFragment;
+    StatusLikeFragment mLikeFragment;
+    PullToRefreshLayout mPullToRefresh;
     Topic mTopic;
 
     @Override
@@ -69,7 +74,7 @@ public class TopicCommentAndRepostFragment extends TabLayoutFragment{
 
     @Override
     protected int getOffscreenPageLimit() {
-        return super.getOffscreenPageLimit();
+        return 3;
     }
 
     @Override
@@ -83,10 +88,6 @@ public class TopicCommentAndRepostFragment extends TabLayoutFragment{
         tabItems.add(tabItem3);
         return tabItems;
     }
-
-    TopicCommentFragment mCommentFragment, mRepostFragment;
-    StatusLikeFragment mLikeFragment;
-    PullToRefreshLayout mPullToRefresh;
 
     @Override
     protected BaseFragment newFragment(TabItem tabItem) {
@@ -102,7 +103,7 @@ public class TopicCommentAndRepostFragment extends TabLayoutFragment{
                 mRepostFragment.setLoadDataCallBack(getLoadDataCallBack(mRepostFragment));
                 break;
             case 2:
-                fragment = mLikeFragment = new StatusLikeFragment();
+                fragment = mLikeFragment = StatusLikeFragment.newInstance(mTopic);
                 mLikeFragment.setLoadDataCallBack(getLoadDataCallBack(mLikeFragment));
         }
         return fragment;
@@ -145,12 +146,18 @@ public class TopicCommentAndRepostFragment extends TabLayoutFragment{
         mPullToRefresh.setOnRefreshListener(new SwipeListener.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(mCommentFragment != null) {
-                    mCommentFragment.onRefresh();
+
+                BaseFragment baseFragment = getCurrentFragment();
+                if(baseFragment instanceof RecyclerRefreshFragment){
+                    RecyclerRefreshFragment refreshFragment = (RecyclerRefreshFragment)baseFragment;
+                    refreshFragment.onRefresh();
                 }
-                if(mRepostFragment != null) {
-                    mRepostFragment.onRefresh();
-                }
+//                if(mCommentFragment != null) {
+//                    mCommentFragment.onRefresh();
+//                }
+//                if(mRepostFragment != null) {
+//                    mRepostFragment.onRefresh();
+//                }
             }
         });
     }

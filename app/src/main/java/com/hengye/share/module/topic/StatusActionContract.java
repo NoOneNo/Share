@@ -1,4 +1,4 @@
-package com.hengye.share.module.topicdetail;
+package com.hengye.share.module.topic;
 
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.TopicComment;
@@ -17,23 +17,11 @@ public interface StatusActionContract {
     interface View extends MvpView {
 
         /**
-         * 开始点赞微博
-         * @param topic
-         */
-        void onLikeStatusStart(Topic topic);
-
-        /**
          * 结束点赞微博
          * @param topic
          * @param taskState
          */
         void onLikeStatusComplete(Topic topic, int taskState);
-
-        /**
-         * 开始收藏微博
-         * @param topic
-         */
-        void onCollectStatusStart(Topic topic);
 
         /**
          * 结束收藏微博

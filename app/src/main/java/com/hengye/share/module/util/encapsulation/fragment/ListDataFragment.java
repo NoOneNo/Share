@@ -59,7 +59,7 @@ public abstract class ListDataFragment<T> extends StateFragment implements ListD
 //        }
     }
 
-    private Pager getPager() {
+    public Pager getPager() {
         return mPager;
     }
 

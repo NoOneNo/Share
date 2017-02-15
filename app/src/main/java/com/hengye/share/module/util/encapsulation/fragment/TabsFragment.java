@@ -42,6 +42,13 @@ public abstract class TabsFragment extends ViewPagerFragment {
         return mAdapter;
     }
 
+    public int getTabCounts(){
+        if(mAdapter != null){
+            return mAdapter.getCount();
+        }
+        return 0;
+    }
+
     TabsAdapter mAdapter;
     ArrayList<TabItem> mItems;
 

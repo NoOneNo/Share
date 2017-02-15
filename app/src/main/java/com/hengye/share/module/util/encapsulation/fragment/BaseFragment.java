@@ -129,6 +129,7 @@ public class BaseFragment extends Fragment
 
     public void markLazyLoadPrepared(){
         mPrepared = true;
+        mLazyLoaded = false;
     }
 
     public void markLazyLoadPreparedAndLazyLoadIfCan(){
