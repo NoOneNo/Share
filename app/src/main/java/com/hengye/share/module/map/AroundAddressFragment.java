@@ -88,7 +88,7 @@ public class AroundAddressFragment extends ShareRecyclerFragment<Address> implem
         setAdapter(mAdapter = new AroundAddressAdapter(getContext(), new ArrayList<Address>()));
         setPager(mNumberPager = new NumberPager());
         setDataHandler(new DefaultDataHandler<>(mAdapter));
-//        setPresenter(mPresenter = new AroundAddressPresenter(this));
+//        setTopicPresenter(mPresenter = new AroundAddressPresenter(this));
         mPresenter.setPager(mNumberPager);
         ViewUtil.hideKeyBoardOnScroll(getRecyclerView(), mKeywordsTxt);
 

@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.hengye.share.R;
 import com.hengye.share.model.sina.WBUserInfo;
-import com.hengye.share.module.topic.StatusFragment;
+import com.hengye.share.module.topic.ShareLoadDataCallbackFragment;
 import com.hengye.share.module.topic.TopicFragment;
 import com.hengye.share.module.util.encapsulation.fragment.BaseFragment;
 import com.hengye.share.module.util.encapsulation.fragment.TabLayoutFragment;
@@ -180,8 +180,8 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
         });
     }
 
-    public StatusFragment.LoadDataCallBack getLoadDataCallBack(final BaseFragment baseFragment){
-        return new StatusFragment.LoadDataCallBack(){
+    public ShareLoadDataCallbackFragment.LoadDataCallback getLoadDataCallBack(final BaseFragment baseFragment){
+        return new ShareLoadDataCallbackFragment.LoadDataCallback(){
             @Override
             public void initView() {
                 PullToRefreshLayout pullToRefresh = (PullToRefreshLayout) baseFragment.findViewById(R.id.pull_to_refresh);

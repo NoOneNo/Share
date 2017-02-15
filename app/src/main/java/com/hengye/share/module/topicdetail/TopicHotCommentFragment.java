@@ -14,7 +14,7 @@ import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.TopicComments;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.module.publish.TopicPublishActivity;
-import com.hengye.share.module.topic.StatusFragment;
+import com.hengye.share.module.topic.ShareLoadDataCallbackFragment;
 import com.hengye.share.module.topic.TopicTitleViewHolder;
 import com.hengye.share.module.util.FragmentActivity;
 import com.hengye.share.module.util.encapsulation.base.DefaultDataHandler;
@@ -28,7 +28,7 @@ import com.hengye.share.util.handler.TopicNumberPager;
 
 import java.util.ArrayList;
 
-public class TopicHotCommentFragment extends StatusFragment<TopicComment> implements TopicCommentContract.View, DialogInterface.OnClickListener {
+public class TopicHotCommentFragment extends ShareLoadDataCallbackFragment<TopicComment> implements TopicCommentContract.View, DialogInterface.OnClickListener {
 
     public static Bundle getStartBundle(Topic topic) {
         Bundle bundle = new Bundle();

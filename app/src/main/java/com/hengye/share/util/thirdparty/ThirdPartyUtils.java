@@ -68,6 +68,10 @@ public class ThirdPartyUtils {
         return APP_KEY_FOR_WEIBO;
     }
 
+    public static String getAppKeyForWeico() {
+        return APP_KEY_FOR_WEICO_WEIBO;
+    }
+
     public static String getAppSecretForWeibo() {
         return APP_SECRET_FOR_WEIBO;
     }

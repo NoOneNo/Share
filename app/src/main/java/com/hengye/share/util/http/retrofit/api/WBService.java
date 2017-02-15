@@ -236,17 +236,27 @@ public interface WBService {
     @POST("http://weicoapi.weico.cc/portal.php?a=get_video&c=default")
     Single<Object> getMediaPlayUrl(@Field("weibo_id") String weiboId);
 
-    @GET(UrlFactory.WB_UPDATE_LIKE)
-    Single<WBResult> updateLike(@QueryMap Map<String, String> options);
+    @FormUrlEncoded
+    @POST(UrlFactory.WB_STATUS_FAVORITE_CREATE)
+    Single<WBTopic> createStatusFavorited(@FieldMap Map<String, String> options);
 
-    @GET(UrlFactory.WB_DESTROY_LIKE)
-    Single<WBResult> destroyLike(@QueryMap Map<String, String> options);
+    @FormUrlEncoded
+    @POST(UrlFactory.WB_STATUS_FAVORITE_DESTROY)
+    Single<WBTopic> destroyStatusFavorited(@FieldMap Map<String, String> options);
 
-    @GET(UrlFactory.WB_STATUS_LIKE)
-    Single<WBAttitude> createStatusLike(@QueryMap Map<String, String> options);
+    @GET(UrlFactory.WB_COMMENT_LIKE)
+    Single<WBResult> createCommentLike(@QueryMap Map<String, String> options);
 
-    @GET(UrlFactory.WB_STATUS_DISLIKE)
-    Single<WBResult> destroyStatusLike(@QueryMap Map<String, String> options);
+    @GET(UrlFactory.WB_COMMENT_DISLIKE)
+    Single<WBResult> destroyCommentLike(@QueryMap Map<String, String> options);
+
+    @FormUrlEncoded
+    @POST(UrlFactory.WB_STATUS_LIKE)
+    Single<WBAttitude> createStatusLike(@FieldMap Map<String, String> options);
+
+    @FormUrlEncoded
+    @POST(UrlFactory.WB_STATUS_DISLIKE)
+    Single<WBResult> destroyStatusLike(@FieldMap Map<String, String> options);
 
     @GET(UrlFactory.WB_STATUS_LIKE_SHOW)
     Single<WBAttitudes> listStatusLike(@QueryMap Map<String, String> options);

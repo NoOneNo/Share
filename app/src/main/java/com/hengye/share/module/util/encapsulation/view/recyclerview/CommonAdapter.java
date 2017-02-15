@@ -113,6 +113,13 @@ public abstract class CommonAdapter<T> extends HeaderAdapter<ItemViewHolder>
         return mData.indexOf(item);
     }
 
+    public boolean contains(T item){
+        if(item == null){
+            return false;
+        }
+        return mData.contains(item);
+    }
+
     public int getFirstPosition(){
         return getActualItemPosition(0);
     }

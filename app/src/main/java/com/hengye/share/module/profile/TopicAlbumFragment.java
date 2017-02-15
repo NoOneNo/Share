@@ -6,12 +6,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.hengye.share.R;
 import com.hengye.share.model.Topic;
-import com.hengye.share.module.topic.StatusFragment;
+import com.hengye.share.module.topic.ShareLoadDataCallbackFragment;
 import com.hengye.share.module.base.ShareRecyclerFragment;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.module.util.image.GalleryActivity;
@@ -180,20 +179,20 @@ public class TopicAlbumFragment extends ShareRecyclerFragment<String> implements
         }
     }
 
-    StatusFragment.LoadDataCallBack mLoadDataCallBack;
+    ShareLoadDataCallbackFragment.LoadDataCallback mLoadDataCallback;
 
-    public StatusFragment.LoadDataCallBack getLoadDataCallBack() {
-        if(mLoadDataCallBack == null){
-            mLoadDataCallBack = new DefaultLoadDataCallBack();
+    public ShareLoadDataCallbackFragment.LoadDataCallback getLoadDataCallBack() {
+        if(mLoadDataCallback == null){
+            mLoadDataCallback = new DefaultLoadDataCallback();
         }
-        return mLoadDataCallBack;
+        return mLoadDataCallback;
     }
 
-    public void setLoadDataCallBack(StatusFragment.LoadDataCallBack loadDataCallBack) {
-        this.mLoadDataCallBack = loadDataCallBack;
+    public void setLoadDataCallBack(ShareLoadDataCallbackFragment.LoadDataCallback loadDataCallback) {
+        this.mLoadDataCallback = loadDataCallback;
     }
 
-    public class DefaultLoadDataCallBack implements StatusFragment.LoadDataCallBack {
+    public class DefaultLoadDataCallback implements ShareLoadDataCallbackFragment.LoadDataCallback {
         @Override
         public void initView() {
 

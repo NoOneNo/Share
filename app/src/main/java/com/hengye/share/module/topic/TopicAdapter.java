@@ -23,6 +23,7 @@ import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.model.sina.WBTopic;
 import com.hengye.share.module.profile.PersonalHomepageActivity;
 import com.hengye.share.module.publish.TopicPublishActivity;
+import com.hengye.share.module.topicdetail.StatusActionContract;
 import com.hengye.share.module.topicdetail.TopicDetailActivity;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemLongClickListener;
@@ -49,11 +50,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TopicAdapter extends CommonAdapter<Topic>
-        implements OnItemClickListener, OnItemLongClickListener, DialogInterface.OnClickListener {
+        implements OnItemClickListener,
+        OnItemLongClickListener,
+        DialogInterface.OnClickListener {
 
     private static int mGalleryMaxWidth;
 //    private Callback mCallback;
     private TopicPresenter mPresenter;
+    private StatusActionContract.Presenter mStatusActionPresenter;
     private boolean mShowDeleteTopicOption;
     private Topic mLongClickTopic;
     private boolean mIsRetweetedLongClick;
@@ -98,9 +102,16 @@ public class TopicAdapter extends CommonAdapter<Topic>
                 break;
             case DialogBuilder.LONG_CLICK_TOPIC_LIKE:
                 //点赞
+                if(mStatusActionPresenter != null){
+                    mStatusActionPresenter.likeStatus(topic);
+                }
                 break;
             case DialogBuilder.LONG_CLICK_TOPIC_FAVORITE:
-                RequestManager.addToRequestQueue(getWBCollectTopicRequest(topic));
+
+                if(mStatusActionPresenter != null){
+                    mStatusActionPresenter.collectStatus(topic);
+                }
+//                RequestManager.addToRequestQueue(getWBCollectTopicRequest(topic));
 //                WBTopic wbTopic = Topic.getWBTopic(topic);
 //                if (wbTopic != null) {
 //                    RequestManager.addToRequestQueue(getWBCollectTopicRequest(topic.getId(), wbTopic.isFavorited()));
@@ -122,8 +133,12 @@ public class TopicAdapter extends CommonAdapter<Topic>
         mShowDeleteTopicOption = show;
     }
 
-    public void setPresenter(TopicPresenter topicPresenter){
+    public void setTopicPresenter(TopicPresenter topicPresenter){
         mPresenter = topicPresenter;
+    }
+
+    public void setStatusActionPresenter(StatusActionContract.Presenter statusActionPresenter){
+        mStatusActionPresenter = statusActionPresenter;
     }
 
 //    public void setCallback(Callback callback){

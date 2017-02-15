@@ -14,14 +14,18 @@ import com.hengye.share.model.Topic;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopicPageFragment extends StatusFragment<Topic> implements TopicPageContract.View {
+public class TopicPageFragment extends StatusFragment implements TopicPageContract.View {
 
-    public static TopicPageFragment newInstance(TopicPagePresenter.TopicGroup topicGroup, String keyword) {
-        TopicPageFragment fragment = new TopicPageFragment();
+    public static Bundle getStartBundle(TopicPagePresenter.TopicGroup topicGroup, String keyword) {
         Bundle bundle = new Bundle();
         bundle.putSerializable("topicGroup", topicGroup);
         bundle.putString("keyword", keyword);
-        fragment.setArguments(bundle);
+        return bundle;
+    }
+
+    public static TopicPageFragment newInstance(TopicPagePresenter.TopicGroup topicGroup, String keyword) {
+        TopicPageFragment fragment = new TopicPageFragment();
+        fragment.setArguments(getStartBundle(topicGroup, keyword));
         return fragment;
     }
 
@@ -29,7 +33,6 @@ public class TopicPageFragment extends StatusFragment<Topic> implements TopicPag
         return newInstance(new TopicPagePresenter.TopicGroup(topicType), keyword);
     }
 
-    private TopicAdapter mAdapter;
     private TopicPagePresenter mPresenter;
     private TopicPagePresenter.TopicGroup topicGroup;
 
@@ -45,7 +48,6 @@ public class TopicPageFragment extends StatusFragment<Topic> implements TopicPag
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setAdapter(mAdapter = new TopicAdapter(getContext(), new ArrayList<Topic>(), getRecyclerView()));
         setPager(mPager = new TopicNumberPager());
         setDataHandler(new DefaultDataHandler<>(mAdapter));
         mPresenter = new TopicPagePresenter(this, topicGroup, mPager);

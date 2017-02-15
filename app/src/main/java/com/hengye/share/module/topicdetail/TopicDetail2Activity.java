@@ -458,8 +458,7 @@ public class TopicDetail2Activity extends BaseActivity implements TopicDetailMvp
                     } else {
                         resId = R.string.label_topic_reply_comment_fail;
                     }
-                    Snackbar sb = ToastUtil.getSnackBar(resId, mActionsMenu);
-                    sb.setDuration(Snackbar.LENGTH_LONG);
+                    Snackbar sb = Snackbar.make(mActionsMenu, resId, Snackbar.LENGTH_LONG);
                     sb.setAction(R.string.label_topic_publish_retry, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

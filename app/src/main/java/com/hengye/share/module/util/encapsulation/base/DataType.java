@@ -64,22 +64,22 @@ public class DataType {
     public static void handleSnackBar(int type, View v, int size) {
         switch (type) {
             case REFRESH_NO_MORE_DATA:
-                ToastUtil.showSnackBar("没有新的微博", v);
+                ToastUtil.showSnackBar(v, "没有新的微博");
                 break;
             case REFRESH_NO_DATA:
-                ToastUtil.showSnackBar("暂时没有微博", v);
+                ToastUtil.showSnackBar(v, "暂时没有微博");
                 break;
             case REFRESH_DATA_SIZE_LESS:
-                ToastUtil.showSnackBar(size + "条新微博", v);
+                ToastUtil.showSnackBar(v, size + "条新微博");
                 //存储数据
                 break;
             case REFRESH_DATA_SIZE_EQUAL:
-                ToastUtil.showSnackBar("超过" + WBUtil.getWBTopicRequestCount() + "条新微博", v);
+                ToastUtil.showSnackBar(v, "超过" + WBUtil.getWBTopicRequestCount() + "条新微博");
                 break;
             case LOAD_NO_MORE_DATA:
                 break;
             case LOAD_NO_DATA:
-                ToastUtil.showSnackBar("已经是最后内容", v);
+                ToastUtil.showSnackBar(v, "已经是最后内容");
                 break;
         }
     }

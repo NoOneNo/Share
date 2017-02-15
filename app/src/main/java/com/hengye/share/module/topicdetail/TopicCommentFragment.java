@@ -15,7 +15,7 @@ import com.hengye.share.model.TopicComment;
 import com.hengye.share.model.TopicComments;
 import com.hengye.share.model.greenrobot.TopicDraftHelper;
 import com.hengye.share.module.publish.TopicPublishActivity;
-import com.hengye.share.module.topic.StatusFragment;
+import com.hengye.share.module.topic.ShareLoadDataCallbackFragment;
 import com.hengye.share.module.topic.TopicTitleViewHolder;
 import com.hengye.share.module.util.encapsulation.base.TaskState;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
@@ -34,7 +34,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
-public class TopicCommentFragment extends StatusFragment<TopicComment> implements TopicCommentContract.View, DialogInterface.OnClickListener {
+public class TopicCommentFragment extends ShareLoadDataCallbackFragment<TopicComment> implements TopicCommentContract.View, DialogInterface.OnClickListener {
 
     public static Bundle getStartBundle(Topic topic, boolean isComment) {
         Bundle bundle = new Bundle();

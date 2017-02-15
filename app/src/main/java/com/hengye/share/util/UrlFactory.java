@@ -58,7 +58,7 @@ public class UrlFactory {
     public static final String WB_COMMENT_MENTION = "comments/mentions.json";
     //@我的微博
     public static final String WB_TOPIC_MENTION = "statuses/mentions.json";
-    //我收藏的微博
+    //我收藏的微博(支持page分页)
     public static final String WB_FAVORITES_TOPIC = "favorites.json";
     //发表微博
     public static final String WB_PUBLISH_TOPIC = "statuses/update.json";
@@ -90,9 +90,9 @@ public class UrlFactory {
     //搜索话题
     public static final String WB_SEARCH_TOPIC = "search/topics.json";
     //添加收藏微博
-    public static final String WB_FAVORITES_CREATE = "favorites/create.json";
+    public static final String WB_STATUS_FAVORITE_CREATE = "favorites/create.json";
     //删除收藏微博
-    public static final String WB_FAVORITES_DESTROY = "favorites/destroy.json";
+    public static final String WB_STATUS_FAVORITE_DESTROY = "favorites/destroy.json";
 
     //    获取好友的相册列表
 //    public static final String WB_USER_ALBUM = "friendships/groups.json";
@@ -136,10 +136,10 @@ public class UrlFactory {
     //获取某个微博的热门评论列表，带点赞数量，需要高级授权
     public static final String WB_HOT_COMMENT_SHOW_WITH_LIKE = "http://api.weibo.cn/2/comments/hot_timeline";
     //评论点赞
-    public static final String WB_UPDATE_LIKE = "http://api.weibo.cn/2/like/update";
+    public static final String WB_COMMENT_LIKE = "http://api.weibo.cn/2/like/update";
     //评论取消点赞
-    public static final String WB_DESTROY_LIKE = "http://api.weibo.cn/2/like/destroy";
-    //微博点赞列表
+    public static final String WB_COMMENT_DISLIKE = "http://api.weibo.cn/2/like/destroy";
+    //微博点赞列表(支持page分页)
     public static final String WB_STATUS_LIKE_SHOW = "https://api.weibo.cn/2/like/show";
     //获取热门微博
     public static final String WB_HOT_STATUS = "http://m.weibo.cn/container/getIndex?containerid=102803";
@@ -385,12 +385,12 @@ public class UrlFactory {
 
     //添加收藏微博
     public String getWBCreateFavoritesUrl() {
-        return getWBUrlPrefix() + WB_FAVORITES_CREATE;
+        return getWBUrlPrefix() + WB_STATUS_FAVORITE_CREATE;
     }
 
     //删除收藏微博
     public String getWBDestroyFavoritesUrl() {
-        return getWBUrlPrefix() + WB_FAVORITES_DESTROY;
+        return getWBUrlPrefix() + WB_STATUS_FAVORITE_DESTROY;
     }
 
 }

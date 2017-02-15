@@ -188,6 +188,11 @@ public class Topic extends ParentInherit implements TopicId, TopicShortUrl, Seri
         return GsonUtil.toJson(this);
     }
 
+    public void updateLiked(boolean liked){
+        setLiked(liked);
+        setAttitudesCount(getAttitudesCount() + (liked ? 1 : -1));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

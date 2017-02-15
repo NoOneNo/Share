@@ -20,7 +20,7 @@ public class TopicFavoriteActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content, TopicPageFragment.newInstance(TopicPagePresenter.TopicType.FAVORITES, null))
+                .replace(R.id.content, TopicFavoriteFragment.newInstance())
                 .commit();
     }
 }

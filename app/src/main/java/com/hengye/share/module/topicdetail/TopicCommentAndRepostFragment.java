@@ -8,7 +8,7 @@ import android.view.View;
 import com.hengye.share.R;
 import com.hengye.share.model.Topic;
 import com.hengye.share.module.util.encapsulation.fragment.BaseFragment;
-import com.hengye.share.module.topic.StatusFragment;
+import com.hengye.share.module.topic.ShareLoadDataCallbackFragment;
 import com.hengye.share.module.topic.TopicFragment;
 import com.hengye.share.module.util.encapsulation.fragment.TabLayoutFragment;
 import com.hengye.share.ui.widget.pulltorefresh.PullToRefreshLayout;
@@ -85,7 +85,7 @@ public class TopicCommentAndRepostFragment extends TabLayoutFragment{
     }
 
     TopicCommentFragment mCommentFragment, mRepostFragment;
-    TopicLikeFragment mLikeFragment;
+    StatusLikeFragment mLikeFragment;
     PullToRefreshLayout mPullToRefresh;
 
     @Override
@@ -102,7 +102,7 @@ public class TopicCommentAndRepostFragment extends TabLayoutFragment{
                 mRepostFragment.setLoadDataCallBack(getLoadDataCallBack(mRepostFragment));
                 break;
             case 2:
-                fragment = mLikeFragment = new TopicLikeFragment();
+                fragment = mLikeFragment = new StatusLikeFragment();
                 mLikeFragment.setLoadDataCallBack(getLoadDataCallBack(mLikeFragment));
         }
         return fragment;
@@ -155,8 +155,8 @@ public class TopicCommentAndRepostFragment extends TabLayoutFragment{
         });
     }
 
-    public StatusFragment.LoadDataCallBack getLoadDataCallBack(final BaseFragment baseFragment){
-        return new StatusFragment.LoadDataCallBack(){
+    public ShareLoadDataCallbackFragment.LoadDataCallback getLoadDataCallBack(final BaseFragment baseFragment){
+        return new ShareLoadDataCallbackFragment.LoadDataCallback(){
             @Override
             public void initView() {
                 PullToRefreshLayout pullToRefresh = (PullToRefreshLayout) baseFragment.findViewById(R.id.pull_to_refresh);

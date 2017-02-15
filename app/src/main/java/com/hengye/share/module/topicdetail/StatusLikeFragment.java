@@ -6,10 +6,9 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.hengye.share.model.UserInfo;
-import com.hengye.share.module.topic.StatusFragment;
-import com.hengye.share.module.util.encapsulation.fragment.BaseFragment;
+import com.hengye.share.module.topic.ShareLoadDataCallbackFragment;
 
-public class TopicLikeFragment extends StatusFragment<UserInfo> {
+public class StatusLikeFragment extends ShareLoadDataCallbackFragment<UserInfo> {
 
     @Override
     public int getLayoutResId() {

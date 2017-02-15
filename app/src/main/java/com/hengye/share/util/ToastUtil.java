@@ -20,20 +20,32 @@ import com.hengye.share.R;
 
 public class ToastUtil extends ApplicationUtil{
 
-    public static void showSnackBar(CharSequence text, View view){
-        getSnackBar(text, view).show();
+    public static void showSnackBar(View view, CharSequence text){
+        getSnackBar(view, text, null, null).show();
     }
 
-    public static void showSnackBar(@StringRes int resId, View view){
-        getSnackBar(resId, view).show();
+    public static void showSnackBar(View view, @StringRes int resId){
+        getSnackBar(view, getString(resId), null, null).show();
     }
 
-    public static Snackbar getSnackBar(@StringRes int resId, View view) {
-        return getSnackBar(ResUtil.getString(resId), view);
+    public static void showSnackBar(View view, @StringRes int textResId, @StringRes int actionResId, View.OnClickListener listener){
+        getSnackBar(view, getString(textResId), getString(actionResId), listener).show();
     }
 
-    public static Snackbar getSnackBar(CharSequence text, View view){
-        return Snackbar.make(view, text, Snackbar.LENGTH_SHORT);
+    public static void showSnackBar(View view, CharSequence text, CharSequence action, View.OnClickListener listener){
+        getSnackBar(view, text, action, listener).show();
+    }
+
+    private static Snackbar getSnackBar(View view, CharSequence text, CharSequence action, View.OnClickListener listener){
+        Snackbar snackbar = Snackbar.make(view, text, Snackbar.LENGTH_SHORT);
+        if(action != null){
+            snackbar.setAction(action, listener);
+        }
+        return snackbar;
+    }
+
+    private static String getString(@StringRes int resId){
+        return ResUtil.getString(resId);
     }
 
     private static Toast mToast;

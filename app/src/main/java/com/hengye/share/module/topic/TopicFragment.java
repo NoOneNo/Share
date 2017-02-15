@@ -18,7 +18,7 @@ import com.hengye.share.util.UserUtil;
 
 import java.util.ArrayList;
 
-public class TopicFragment extends StatusFragment<Topic> implements TopicContract.View{
+public class TopicFragment extends StatusFragment implements TopicContract.View{
 
     public static Bundle getBundle(TopicPresenter.TopicGroup topicGroup, String uid, String name) {
         return getBundle(topicGroup, false, uid, name);
@@ -51,7 +51,6 @@ public class TopicFragment extends StatusFragment<Topic> implements TopicContrac
 //        return newInstance(new TopicPresenter.TopicGroup(topicType), uid, name, false);
 //    }
 
-    TopicAdapter mAdapter;
     TopicPresenter mPresenter;
     TopicPresenter.TopicGroup topicGroup;
     String uid, name;
@@ -75,8 +74,6 @@ public class TopicFragment extends StatusFragment<Topic> implements TopicContrac
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        setAdapter(mAdapter = new TopicAdapter(getContext(), new ArrayList<Topic>(), getRecyclerView()));
         setPager(mTopicPager = new TopicAdapterIdPager(mAdapter));
         setDataHandler();
         mAdapter.setShowDeleteTopicOption(true);
@@ -84,7 +81,7 @@ public class TopicFragment extends StatusFragment<Topic> implements TopicContrac
         mPresenter = new TopicPresenter(this, topicGroup);
         mPresenter.setUid(uid);
         mPresenter.setName(name);
-        mAdapter.setPresenter(mPresenter);
+        mAdapter.setTopicPresenter(mPresenter);
 
         if (isRestore && !UserUtil.isUserEmpty()) {
             onRestore();

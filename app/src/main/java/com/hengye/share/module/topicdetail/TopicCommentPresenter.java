@@ -13,17 +13,12 @@ import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.http.retrofit.RetrofitManager;
 import com.hengye.share.util.http.retrofit.api.WBService;
-import com.hengye.share.util.rxjava.datasource.ObservableHelper;
-import com.hengye.share.util.rxjava.datasource.SingleHelper;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 import com.hengye.share.util.thirdparty.ThirdPartyUtils;
 import com.hengye.share.util.thirdparty.WBUtil;
 
 import java.util.Map;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.SingleSource;
@@ -93,7 +88,7 @@ public class TopicCommentPresenter extends ListTaskPresenter<TopicCommentContrac
                         .flatMap(flatWBTopicComments());
             } else {
                 Map<String, String> params = getParameter(UserUtil.getPriorToken(), topicId, id, isRefresh);
-                params.put("source", ThirdPartyUtils.getAppKeyForWeibo(ThirdPartyUtils.WeiboApp.WEICO));
+                params.put("source", ThirdPartyUtils.getAppKeyForWeico());
                 Single<TopicComments> topicCommentsObservable = service.listCommentWithLike(params).flatMap(flatWBTopicComments());
 
                 if (!isRefresh) {
@@ -140,7 +135,7 @@ public class TopicCommentPresenter extends ListTaskPresenter<TopicCommentContrac
      */
     private Single<TopicComments> getHotComment(String topicId, int page, int count) {
         final UrlBuilder ub = new UrlBuilder();
-        ub.addParameter("source", ThirdPartyUtils.getAppKeyForWeibo(ThirdPartyUtils.WeiboApp.WEICO));
+        ub.addParameter("source", ThirdPartyUtils.getAppKeyForWeico());
         ub.addParameter("access_token", UserUtil.getPriorToken());
         ub.addParameter("id", topicId);
         ub.addParameter("page", page);
@@ -210,14 +205,14 @@ public class TopicCommentPresenter extends ListTaskPresenter<TopicCommentContrac
         final boolean isLike = !topicComment.isLiked();
 
         final UrlBuilder ub = new UrlBuilder();
-        ub.addParameter("source", ThirdPartyUtils.getAppKeyForWeibo(ThirdPartyUtils.WeiboApp.WEICO));
+        ub.addParameter("source", ThirdPartyUtils.getAppKeyForWeico());
         ub.addParameter("access_token", UserUtil.getPriorToken());
         ub.addParameter("object_id", topicComment.getId());
         ub.addParameter("object_type", "comment");
         Map<String, String> params = ub.getParameters();
 
         WBService service = RetrofitManager.getWBService();
-        Single<WBResult> observable = isLike ? service.updateLike(params) : service.destroyLike(params);
+        Single<WBResult> observable = isLike ? service.createCommentLike(params) : service.destroyCommentLike(params);
 
         observable
                 .subscribeOn(SchedulerProvider.io())
