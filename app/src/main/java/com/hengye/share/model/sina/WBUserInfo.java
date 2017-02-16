@@ -78,7 +78,7 @@ public class WBUserInfo implements Serializable{
     private String gender;
     private long followers_count;
     private long friends_count;
-    private long follow_count;//微博移动端用此字段表博士关注数量
+    private long follow_count;//微博移动端用此字段表示关注数量
     private long pagefriends_count;
     private long statuses_count;
     private long favourites_count;

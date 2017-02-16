@@ -69,6 +69,7 @@ public class HotTopicAndStatusActivity extends BaseFragmentActivity implements H
 
     private void initSearch() {
         mSearchView = (SearchView) findViewById(R.id.search_view);
+        mSearchView.getSearchEditText().setHint(R.string.label_hot_topic_search);
         mSearchView.setMode(SearchView.MODE_ANIMATION, this);
         mSearchView.setSearchListener(new SearchView.onSearchListener() {
             @Override

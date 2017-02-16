@@ -13,6 +13,10 @@ public class TopicNumberPager extends NumberPager {
     }
 
     public TopicNumberPager(int firstNumber) {
-        super(firstNumber, WBUtil.getWBTopicRequestCount());
+        this(firstNumber, WBUtil.getWBTopicRequestCount());
+    }
+
+    public TopicNumberPager(int firstNumber, int pageSize){
+        super(firstNumber, pageSize);
     }
 }

@@ -65,6 +65,10 @@ public class ViewUtil extends ResUtil {
     }
 
     public static void hideKeyBoard(Activity activity) {
+        if(activity == null){
+            return;
+        }
+
         View view = activity.getCurrentFocus();
         if (view != null) {
             InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -73,6 +77,9 @@ public class ViewUtil extends ResUtil {
     }
 
     public static void hideKeyBoard(View paramEditText) {
+        if(paramEditText == null){
+            return;
+        }
         ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE))
                 .hideSoftInputFromWindow(paramEditText.getWindowToken(), 0);
     }

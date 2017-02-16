@@ -4,54 +4,63 @@ import com.hengye.share.model.Topic;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.sina.WBTopics;
 import com.hengye.share.model.sina.WBUserInfos;
-import com.hengye.share.module.util.encapsulation.base.TaskState;
-import com.hengye.share.module.util.encapsulation.mvp.RxPresenter;
-import com.hengye.share.util.ToastUtil;
+import com.hengye.share.module.util.encapsulation.mvp.ListDataPresenter;
 import com.hengye.share.util.UrlBuilder;
-import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.UserUtil;
-import com.hengye.share.util.rxjava.ObjectConverter;
 import com.hengye.share.util.http.retrofit.RetrofitManager;
 import com.hengye.share.util.http.retrofit.api.WBService;
+import com.hengye.share.util.rxjava.ObjectConverter;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
-import io.reactivex.Observable;
+import java.util.Map;
+
 import io.reactivex.Single;
 
-public class SearchPresenter extends RxPresenter<SearchContract.View> implements SearchContract.Presenter{
+public class SearchPresenter extends ListDataPresenter<Topic, SearchContract.View> implements SearchContract.Presenter{
 
     public SearchPresenter(SearchContract.View mvpView) {
         super(mvpView);
     }
 
     @Override
-    public void loadWBSearchContent(String content) {
-        final UrlBuilder ub = new UrlBuilder(UrlFactory.getInstance().getWBSearchUserUrl());
-        ub.addParameter("access_token", UserUtil.getPriorToken());
-        ub.addParameter("q", content);
-        ub.addParameter("sid", "o_weico");
+    public void searchWBContent(String content, boolean isRefresh, int page, int count) {
+
+        getMvpView().onTaskStart();
 
         WBService service = RetrofitManager.getWBService();
-
         Single.zip(
-                service.searchUser(ub.getParameters()),
-                service.searchPublic(ub.getParameters()),
+                service.searchUser(getSearchUserParams(content, count)),
+                service.searchPublic(getSearchStatusParams(content, page, count)),
                 ObjectConverter.getObjectConverter2())
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(new BaseSingleObserver<Object[]>() {
+                .subscribe(new ListTaskSingleObserver<Object[]>(isRefresh){
                     @Override
                     public void onSuccess(SearchContract.View view, Object[] objects) {
-                        view.handleSearchUserData(UserInfo.getUserInfos((WBUserInfos) objects[0]));
-                        view.handleSearchPublicData(Topic.getTopics((WBTopics) objects[1]));
-                        view.loadSuccess();
-                    }
-
-                    @Override
-                    public void onError(SearchContract.View view, Throwable e) {
-                        ToastUtil.showToast(TaskState.toString(TaskState.getFailState(e)));
-                        view.loadFail();
+                        super.onSuccess(view, objects);
+                        view.onLoadSearchUsers(UserInfo.getUserInfos((WBUserInfos) objects[0]));
+                        view.onLoadListData(isRefresh, Topic.getTopics((WBTopics) objects[1]));
                     }
                 });
+    }
+
+
+    public Map<String, String> getSearchUserParams(String content, int count){
+        final UrlBuilder ub = new UrlBuilder();
+        ub.addParameter("access_token", UserUtil.getPriorToken());
+        ub.addParameter("sid", "o_weico");
+        ub.addParameter("q", content);
+        ub.addParameter("count", count);
+        return ub.getParameters();
+    }
+
+    public Map<String, String> getSearchStatusParams(String content, int page, int count){
+        final UrlBuilder ub = new UrlBuilder();
+        ub.addParameter("access_token", UserUtil.getPriorToken());
+        ub.addParameter("sid", "o_weico");
+        ub.addParameter("q", content);
+        ub.addParameter("page", page);
+        ub.addParameter("count", count);
+        return ub.getParameters();
     }
 }

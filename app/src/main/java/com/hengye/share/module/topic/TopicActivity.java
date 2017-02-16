@@ -313,6 +313,7 @@ public class TopicActivity extends BaseActivity
 
     private void initSearch() {
         mSearchView = (SearchView) findViewById(R.id.search_view);
+        mSearchView.getSearchEditText().setHint(R.string.label_search_user_and_status_hint);
         mSearchView.setMode(SearchView.MODE_ANIMATION, this);
         mSearchView.setSearchListener(new SearchView.onSearchListener() {
             @Override

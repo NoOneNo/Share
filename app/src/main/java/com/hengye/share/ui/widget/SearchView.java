@@ -168,6 +168,10 @@ public class SearchView extends FrameLayout implements View.OnClickListener{
         }
     }
 
+    public EditText getSearchEditText(){
+        return mSearchContent;
+    }
+
     public String getSearchContent(){
         return mSearchContent.getText().toString();
     }

@@ -53,7 +53,7 @@
 
     <color name="text_light">@android:color/white</color>
     <color name="text_grey">#757575</color>
-    <color name="text_dark">#424242</color>
+    <color name="text_dark">#474e5e</color>
     <!--<color name="text_grey">#ff646464</color>-->
     <color name="text_grey_light">#ffa5a5a5</color>
     <color name="text_red_warn">#FFD50000</color>

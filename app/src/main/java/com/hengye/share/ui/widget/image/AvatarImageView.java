@@ -21,6 +21,10 @@ public class AvatarImageView extends SuperImageView{
     public AvatarImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
+        if(isInEditMode()){
+            setImageResource(R.drawable.ic_user_avatar);
+        }
+
         init();
     }
 

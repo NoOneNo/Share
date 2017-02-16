@@ -36,10 +36,9 @@ public class UserListFragment extends ShareRecyclerFragment<UserInfo> implements
         if(uid == null){
             uid = UserUtil.getUid();
         }
-        mPresenter = new UserListPresenter(this, uid);
         setAdapter(mAdapter = new UserListAdapter(getContext()));
         setDataHandler(new DefaultDataHandler<>(mAdapter));
-
+        mPresenter = new UserListPresenter(this, uid);
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {

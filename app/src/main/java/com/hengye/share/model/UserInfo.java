@@ -25,6 +25,9 @@ public class UserInfo extends ParentInherit implements Serializable{
     private String cover;//封面地址
     private String spell;//用户名拼音
 
+    private boolean followMe;//是否关注我
+    private boolean following;//是否已关注
+
     public static ArrayList<UserInfo> getUserInfos(WBUserInfos wbUserInfos){
         if(wbUserInfos == null){
             return null;
@@ -55,6 +58,9 @@ public class UserInfo extends ParentInherit implements Serializable{
         userInfo.setGender(wbUserInfo.getGender());
         userInfo.setSign(wbUserInfo.getDescription());
         userInfo.setCover(wbUserInfo.getCover_image_phone());
+
+        userInfo.setFollowMe(wbUserInfo.isFollow_me());
+        userInfo.setFollowing(wbUserInfo.isFollowing());
         return userInfo;
     }
 
@@ -131,6 +137,22 @@ public class UserInfo extends ParentInherit implements Serializable{
 
     public void setSpell(String spell) {
         this.spell = spell;
+    }
+
+    public boolean isFollowMe() {
+        return followMe;
+    }
+
+    public void setFollowMe(boolean followMe) {
+        this.followMe = followMe;
+    }
+
+    public boolean isFollowing() {
+        return following;
+    }
+
+    public void setFollowing(boolean following) {
+        this.following = following;
     }
 }
 //        返回字段说明

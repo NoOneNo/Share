@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.hengye.share.module.setting.SettingFragment;
 import com.hengye.share.module.topic.TopicAdapter;
 import com.hengye.share.model.Topic;
 import com.hengye.share.model.UserInfo;
@@ -18,6 +19,7 @@ import com.hengye.share.R;
 import com.hengye.share.ui.widget.SearchView;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
+import com.hengye.share.util.ActivityUtils;
 import com.hengye.share.util.L;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.ViewUtil;
@@ -25,7 +27,7 @@ import com.hengye.share.util.ViewUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchActivity extends BaseActivity implements SearchContract.View{
+public class SearchActivity extends BaseActivity {
 
     @Override
     protected String getRequestTag() {
@@ -70,6 +72,8 @@ public class SearchActivity extends BaseActivity implements SearchContract.View{
     }
 
     private String mKeywords;
+    private SearchView mSearchView;
+    private SearchFragment mSearchFragment;
 
     @Override
     protected void handleBundleExtra(Intent intent) {
@@ -80,91 +84,29 @@ public class SearchActivity extends BaseActivity implements SearchContract.View{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter = new SearchPresenter(this);
         initView();
-
         if(!TextUtils.isEmpty(mKeywords)){
             mSearchView.setSearchContent(mKeywords);
             search(mKeywords);
         }
     }
 
-    private SearchView mSearchView;
-    private RecyclerView mUserRV, mTopicRV;
-    private LoadingDialog mLoadingDialog;
-
-    private SearchUserAdapter mUserAdapter;
-    private TopicAdapter mTopicAdapter;
-
-    private SearchContract.Presenter mPresenter;
-
     private void initView(){
-        mUserRV = (RecyclerView) findViewById(R.id.recycler_view_user);
-        mUserRV.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        mUserRV.setAdapter(mUserAdapter = new SearchUserAdapter(this, new ArrayList<UserInfo>()));
-        mUserRV.setItemAnimator(new DefaultItemAnimator());
-        mTopicRV = (RecyclerView) findViewById(R.id.recycler_view_topic);
-        mTopicRV.setAdapter(mTopicAdapter = new TopicAdapter(this, new ArrayList<Topic>(), mTopicRV));
-        mTopicRV.setLayoutManager(new LinearLayoutManager(this));
-        mTopicRV.setItemAnimator(new DefaultItemAnimator());
-
-        mUserAdapter.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                View avatar = view.findViewById(R.id.iv_avatar);
-                PersonalHomepageActivity.start(SearchActivity.this, avatar, mUserAdapter.getItem(position));
-            }
-        });
-
-        mLoadingDialog = new LoadingDialog(this);
-
         mSearchView = (SearchView) findViewById(R.id.search_view);
-
+        mSearchView.getSearchEditText().setHint(R.string.label_search_user_and_status_hint);
         mSearchView.setMode(SearchView.MODE_FINISH, this);
-
         mSearchView.setSearchListener(new SearchView.onSearchListener() {
             @Override
             public void onSearch(String content) {
                 search(content);
             }
         });
+
+        mSearchFragment = (SearchFragment) getSupportFragmentManager().findFragmentById(R.id.search_content);
     }
 
     private void search(String content) {
-        if(!canSearchContent(content)){
-            ToastUtil.showToast(R.string.label_search_content_is_null);
-            return;
-        }
-
-        ViewUtil.hideKeyBoard(SearchActivity.this);
-        mLoadingDialog.show();
-        mPresenter.loadWBSearchContent(content.trim());
+        mSearchFragment.search(content);
     }
-
-    private boolean canSearchContent(String content){
-        return !TextUtils.isEmpty(content);
-    }
-
-    @Override
-    public void loadSuccess() {
-        mLoadingDialog.dismiss();
-    }
-
-    @Override
-    public void loadFail() {
-        mLoadingDialog.dismiss();
-    }
-
-    @Override
-    public void handleSearchUserData(List<UserInfo> userInfos) {
-        L.debug("handleSearchUserData invoke, userInfos : %s", userInfos);
-        mUserAdapter.refresh(userInfos);
-    }
-
-    @Override
-    public void handleSearchPublicData(List<Topic> topics) {
-        mTopicAdapter.refresh(topics);
-    }
-
 
 }

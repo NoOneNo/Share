@@ -6,8 +6,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/action_bar_default_size">
+        android:layout_gravity="center">
 
         <include
             layout="@layout/state_empty_no_button"/>

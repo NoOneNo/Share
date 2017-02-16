@@ -116,6 +116,7 @@
     <string name="title_activity_group_manage">分组管理</string>
     <string name="title_activity_account_manage">账号管理</string>
     <string name="title_activity_topic_theme">相关话题</string>
+    <string name="title_activity_search_user">搜索用户结果</string>
     <string name="title_activity_hot_topic_and_status">热门话题和微博</string>
     <string name="title_activity_hot_topic">热门话题</string>
     <string name="title_activity_favorite">我收藏的微博</string>
@@ -261,8 +262,9 @@
     <!-- Strings related to AtUser -->
 
     <!-- Strings related to Search -->
-    <string name="label_search_user">用户</string>
-    <string name="label_search_topic">微博</string>
+    <string name="label_search_user">用户搜索</string>
+    <string name="label_search_topic">微博搜索</string>
+    <string name="label_search_user_and_status_hint">搜索用户和微博</string>
     <string name="label_search_hint">搜索内容</string>
     <string name="label_search_content_is_null">搜索内容不能为空</string>
     <!-- Strings related to Search -->
@@ -298,6 +300,7 @@
 
     <!-- Strings related to activity hot topic -->
     <string name="label_hot_topic">热门话题</string>
+    <string name="label_hot_topic_search">搜索话题</string>
     <string name="label_hot_status">热门微博</string>
     <string name="label_hot_topic_modifier">#%s#</string>
     <string name="label_hot_search_count">%s次</string>
