@@ -7,17 +7,24 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.util.AttributeSet;
+import android.view.InflateException;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.view.inputmethod.BaseInputConnection;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -52,6 +59,7 @@ import com.hengye.share.util.EncodeUtil;
 import com.hengye.share.util.IntentUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.ResUtil;
+import com.hengye.share.util.ThemeUtil;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
@@ -127,7 +135,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     private View mContainer;
     private TextView mContentLengthTxt, mGroupVisibleStatusTxt, mLocationTxt;
     private ImageButton mEditLocationIcon, mCloseLocationBtn, mGroupVisibleStatusIcon;
-    private View mLocation, mLocationDivider, mGroupVisibleStatus;
+    private View mLocationParent, mLocation, mLocationDivider, mGroupVisibleStatus;
     private TopicEditText mContent;
     private ScrollView mScrollView;
     private CheckBox mPublishCB;
@@ -175,6 +183,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
         mGroupVisibleStatus.setOnClickListener(this);
         mGroupVisibleStatusIcon = (ImageButton) findViewById(R.id.ic_group_visible_status);
         mLocationTxt = (TextView) findViewById(R.id.tv_location);
+        mLocationParent = findViewById(R.id.layout_location_parent);
         mLocation = findViewById(R.id.layout_location);
         mLocation.setOnClickListener(this);
         mLocationDivider = findViewById(R.id.divider_location);
@@ -321,7 +330,9 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void performMenuClick() {
-        openOptionsMenu();
+        onOptionsItemSelected(mAssignGroupVisible);
+//        mAssignGroupVisible.expandActionView();
+//        openOptionsMenu();
     }
 
     MenuItem mAllGroupsVisible, mAssignGroupVisible, mPublishTiming, mCancelPublishTiming;
@@ -361,7 +372,6 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
 
         return true;
     }
-
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
@@ -453,7 +463,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
                 mPublishCB.setText(R.string.label_publish_comment_and_repost_to_me);
                 mPublishCB.setChecked(mTopicDraft.isCommentOrRepostConcurrently());
                 mGroupVisibleStatus.setVisibility(View.GONE);
-                mLocation.setVisibility(View.GONE);
+                mLocationParent.setVisibility(View.GONE);
                 mPhotoPickerBtn.setVisibility(View.GONE);
                 break;
             case TopicDraftHelper.REPOST_TOPIC:
@@ -462,7 +472,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
                 mPublishCB.setChecked(mTopicDraft.isCommentOrRepostConcurrently());
                 mGroupVisibleStatus.setVisibility(View.VISIBLE);
                 updateGroupVisibleStatus();
-                mLocation.setVisibility(View.GONE);
+                mLocationParent.setVisibility(View.GONE);
                 updateLocation(mTopicDraft.getAddressBean());
                 mPhotoPickerBtn.setVisibility(View.GONE);
                 break;
@@ -470,7 +480,7 @@ public class TopicPublishActivity extends BaseActivity implements View.OnClickLi
                 mPublishCB.setVisibility(View.GONE);
                 mGroupVisibleStatus.setVisibility(View.VISIBLE);
                 updateGroupVisibleStatus();
-                mLocation.setVisibility(View.VISIBLE);
+                mLocationParent.setVisibility(View.VISIBLE);
                 updateLocation(mTopicDraft.getAddressBean());
                 mPhotoPickerBtn.setVisibility(View.VISIBLE);
             default:

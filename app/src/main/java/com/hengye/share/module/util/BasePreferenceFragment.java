@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.hengye.share.module.base.BaseActivity;
+import com.hengye.share.util.ThemeUtil;
 
 public abstract class BasePreferenceFragment extends PreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener{
@@ -28,6 +29,7 @@ public abstract class BasePreferenceFragment extends PreferenceFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
+
         if(isHideScrollBar() && view != null){
             ListView listView = (ListView) view.findViewById(android.R.id.list);
             if(listView != null){

@@ -244,7 +244,8 @@ public class TopicDetail2Activity extends BaseActivity implements TopicDetailMvp
 
     @Override
     public void onBackPressed() {
-        finish();
+        super.onBackPressed();
+//        finish();
     }
 
     private void initView() {

@@ -46,6 +46,7 @@ import com.hengye.share.ui.widget.fab.AnimatedFloatingActionButton;
 import com.hengye.share.ui.widget.image.AvatarImageView;
 import com.hengye.share.ui.widget.sheetfab.MaterialSheetFab;
 import com.hengye.share.ui.widget.sheetfab.MaterialSheetFabEventListener;
+import com.hengye.share.ui.widget.util.DrawableLoader;
 import com.hengye.share.ui.widget.util.SelectorLoader;
 import com.hengye.share.util.L;
 import com.hengye.share.util.NetworkUtil;
@@ -213,6 +214,8 @@ public class TopicActivity extends BaseActivity
 
     private void initNavigationView() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setBackgroundColor(ThemeUtil.getBackgroundColor());
+
         navigationView.setNavigationItemSelectedListener(this);
 
         View header = navigationView.getHeaderView(0);
@@ -442,8 +445,6 @@ public class TopicActivity extends BaseActivity
 //            startActivityForResult(GroupManageActivity.class, GroupManageActivity.REQUEST_GROUP_UPDATE);
         } else if (id == R.id.nav_draft) {
             startActivity(TopicDraftActivity.class);
-        } else if (id == R.id.nav_share) {
-            startActivity(TopicPublishActivity.getStartIntent(this, "#Share#Share微博客户端, 非常好用[赞]"));
         }
 //        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 //        drawer.closeDrawer(GravityCompat.END);

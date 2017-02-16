@@ -288,15 +288,13 @@ public class EmoticonUtil {
     static{
         //微博表情
 
-        //哆啦A梦
-        mWeiBoEmoticonMap.put("[哆啦A梦吃惊]", R.drawable.dora_chijing);
-        mWeiBoEmoticonMap.put("[哆啦A梦花心]", R.drawable.dora_huaxin);
-        mWeiBoEmoticonMap.put("[哆啦A梦微笑]", R.drawable.dora_weixiao);
         //---
         mWeiBoEmoticonMap.put("[最右]", R.drawable.d_zuiyou);
         mWeiBoEmoticonMap.put("[摊手]", R.drawable.d_tanshou);
         mWeiBoEmoticonMap.put("[抱抱]", R.drawable.d_baobao);
         mWeiBoEmoticonMap.put("[二哈]", R.drawable.d_erha);
+        mWeiBoEmoticonMap.put("[doge]", R.drawable.d_doge);
+        mWeiBoEmoticonMap.put("[喵喵]", R.drawable.d_miao);
         mWeiBoEmoticonMap.put("[微笑]", R.drawable.d_hehe);
         mWeiBoEmoticonMap.put("[嘻嘻]", R.drawable.d_xixi);
         mWeiBoEmoticonMap.put("[哈哈]", R.drawable.d_haha);
@@ -316,8 +314,6 @@ public class EmoticonUtil {
         mWeiBoEmoticonMap.put("[钱]", R.drawable.d_qian);
         mWeiBoEmoticonMap.put("[偷笑]", R.drawable.d_touxiao);
         mWeiBoEmoticonMap.put("[笑cry]", R.drawable.d_xiaoku);
-        mWeiBoEmoticonMap.put("[doge]", R.drawable.d_doge);
-        mWeiBoEmoticonMap.put("[喵喵]", R.drawable.d_miao);
         mWeiBoEmoticonMap.put("[酷]", R.drawable.d_ku);
         mWeiBoEmoticonMap.put("[衰]", R.drawable.d_shuai);
         mWeiBoEmoticonMap.put("[闭嘴]", R.drawable.d_bizui);
@@ -331,14 +327,14 @@ public class EmoticonUtil {
         mWeiBoEmoticonMap.put("[亲亲]", R.drawable.d_qinqin);
         mWeiBoEmoticonMap.put("[怒骂]", R.drawable.d_numa);
         mWeiBoEmoticonMap.put("[太开心]", R.drawable.d_taikaixin);
-        mWeiBoEmoticonMap.put("[懒得理你]", R.drawable.d_landelini);
+        mWeiBoEmoticonMap.put("[白眼]", R.drawable.d_landelini);
         mWeiBoEmoticonMap.put("[右哼哼]", R.drawable.d_youhengheng);
         mWeiBoEmoticonMap.put("[左哼哼]", R.drawable.d_zuohengheng);
         mWeiBoEmoticonMap.put("[嘘]", R.drawable.d_xu);
         mWeiBoEmoticonMap.put("[委屈]", R.drawable.d_weiqu);
         mWeiBoEmoticonMap.put("[吐]", R.drawable.d_tu);
         mWeiBoEmoticonMap.put("[可怜]", R.drawable.d_kelian);
-        mWeiBoEmoticonMap.put("[打哈欠]", R.drawable.d_dahaqi);
+        mWeiBoEmoticonMap.put("[哈欠]", R.drawable.d_dahaqi);
         mWeiBoEmoticonMap.put("[挤眼]", R.drawable.d_jiyan);
         mWeiBoEmoticonMap.put("[失望]", R.drawable.d_shiwang);
         mWeiBoEmoticonMap.put("[顶]", R.drawable.d_ding);
@@ -350,15 +346,21 @@ public class EmoticonUtil {
         mWeiBoEmoticonMap.put("[阴险]", R.drawable.d_yinxian);
         mWeiBoEmoticonMap.put("[打脸]", R.drawable.d_dalian);
         mWeiBoEmoticonMap.put("[傻眼]", R.drawable.d_shayan);
-        //----
 //        mWeiBoEmoticonMap.put("[马到成功]", R.drawable.d_madaochenggong);
         mWeiBoEmoticonMap.put("[骷髅]", R.drawable.d_kulou);
         mWeiBoEmoticonMap.put("[坏笑]", R.drawable.d_huaixiao);
         //舔-舔屏
         mWeiBoEmoticonMap.put("[舔屏]", R.drawable.d_tian);
         mWeiBoEmoticonMap.put("[污]", R.drawable.d_wu);
-        //-----
         mWeiBoEmoticonMap.put("[互粉]", R.drawable.f_hufen);
+
+        //哆啦A梦
+        mWeiBoEmoticonMap.put("[哆啦A梦吃惊]", R.drawable.dora_chijing);
+        mWeiBoEmoticonMap.put("[哆啦A梦花心]", R.drawable.dora_huaxin);
+        mWeiBoEmoticonMap.put("[哆啦A梦微笑]", R.drawable.dora_weixiao);
+        mWeiBoEmoticonMap.put("[哆啦A梦汗]", R.drawable.dora_han);
+        mWeiBoEmoticonMap.put("[哆啦A梦害怕]", R.drawable.dora_haipa);
+
         mWeiBoEmoticonMap.put("[心]", R.drawable.l_xin);
         mWeiBoEmoticonMap.put("[伤心]", R.drawable.l_shangxin);
         mWeiBoEmoticonMap.put("[猪头]", R.drawable.d_zhutou);
@@ -385,7 +387,9 @@ public class EmoticonUtil {
         mWeiBoEmoticonMap.put("[太阳]", R.drawable.w_taiyang);
         mWeiBoEmoticonMap.put("[微风]", R.drawable.w_weifeng);
         mWeiBoEmoticonMap.put("[下雨]", R.drawable.w_xiayu);
+        mWeiBoEmoticonMap.put("[带着微博去旅行]", R.drawable.f_eventtravel);
         mWeiBoEmoticonMap.put("[给力]", R.drawable.f_geili);
+        mWeiBoEmoticonMap.put("[广告]", R.drawable.f_guanggao);
         mWeiBoEmoticonMap.put("[神马]", R.drawable.f_shenma);
         mWeiBoEmoticonMap.put("[围观]", R.drawable.o_weiguan);
         mWeiBoEmoticonMap.put("[话筒]", R.drawable.o_huatong);
@@ -395,6 +399,7 @@ public class EmoticonUtil {
         mWeiBoEmoticonMap.put("[囧]", R.drawable.f_jiong);
         mWeiBoEmoticonMap.put("[织]", R.drawable.f_zhi);
         mWeiBoEmoticonMap.put("[礼物]", R.drawable.o_liwu);
+        mWeiBoEmoticonMap.put("[发红包]", R.drawable.f_fahongbao);
         mWeiBoEmoticonMap.put("[囍]", R.drawable.f_xi);
         mWeiBoEmoticonMap.put("[围脖]", R.drawable.o_weibo);
         mWeiBoEmoticonMap.put("[音乐]", R.drawable.o_yinyue);
@@ -406,11 +411,13 @@ public class EmoticonUtil {
         mWeiBoEmoticonMap.put("[女孩儿]", R.drawable.d_nvhaier);
         mWeiBoEmoticonMap.put("[肥皂]", R.drawable.d_feizao);
         mWeiBoEmoticonMap.put("[照相机]", R.drawable.o_zhaoxiangji);
-        mWeiBoEmoticonMap.put("[微博]", R.drawable.d_lang);
+        mWeiBoEmoticonMap.put("[浪]", R.drawable.d_lang);
         mWeiBoEmoticonMap.put("[沙尘暴]", R.drawable.w_shachenbao);
 
 
         //浪小花表情
+        mLxhEmoticonMap.put("[爱红包]", R.drawable.lxh_aihongbao);
+        mLxhEmoticonMap.put("[拍照]", R.drawable.lxh_paizhao);
         mLxhEmoticonMap.put("[笑哈哈]", R.drawable.lxh_xiaohaha);
         mLxhEmoticonMap.put("[好爱哦]", R.drawable.lxh_haoaio);
         mLxhEmoticonMap.put("[噢耶]", R.drawable.lxh_oye);

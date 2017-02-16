@@ -40,6 +40,26 @@ public class StatusLikeFragment extends ShareLoadDataCallbackFragment<UserInfo>
     TabLayout.Tab mTab;
 
     @Override
+    public int getLoadingResId() {
+        return R.layout.state_loading_top;
+    }
+
+    @Override
+    public int getEmptyResId() {
+        return R.layout.state_empty_top;
+    }
+
+    @Override
+    public int getNoNetworkResId() {
+        return R.layout.state_no_network_top;
+    }
+
+    @Override
+    public int getServiceErrorResId() {
+        return R.layout.state_service_error_top;
+    }
+
+    @Override
     protected void handleBundleExtra(Bundle bundle) {
         mTopic = (Topic) bundle.getSerializable("topic");
     }

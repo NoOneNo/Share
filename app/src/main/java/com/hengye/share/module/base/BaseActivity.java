@@ -27,6 +27,7 @@ import com.hengye.share.module.util.encapsulation.view.listener.OnDoubleTapListe
 import com.hengye.share.ui.widget.common.CommonToolBar;
 import com.hengye.share.util.NetworkUtil;
 import com.hengye.share.util.RequestManager;
+import com.hengye.share.util.ThemeUtil;
 import com.hengye.skinloader.listener.OnSkinUpdateListener;
 
 import java.util.HashSet;
@@ -61,6 +62,10 @@ public class BaseActivity extends AppCompatActivity
 
     protected boolean observeNetworkChange() {
         return false;
+    }
+
+    protected boolean setBackground(){
+        return true;
     }
 
     private int mThemeResId = 0;
@@ -248,11 +253,13 @@ public class BaseActivity extends AppCompatActivity
     @Override
     public void setContentView(int layoutId) {
         setToolBarIfNeeded(View.inflate(this, layoutId, null));
+        setBackgroundIfNeed();
     }
 
     @Override
     public void setContentView(View view) {
         setToolBarIfNeeded(view);
+        setBackgroundIfNeed();
     }
 
 
@@ -313,9 +320,16 @@ public class BaseActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void setTheme(@StyleRes int resId) {
-        super.setTheme(resId);
+    protected void setBackgroundIfNeed(){
+        if(setBackground()){
+            View root = findViewById(android.R.id.content);
+            if(root == null){
+                root = findViewById(R.id.root_content);
+            }
+            if(root != null){
+                root.setBackgroundColor(ThemeUtil.getBackgroundColor());
+            }
+        }
     }
 
     protected void replaceCustomThemeIfNeeded() {

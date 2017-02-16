@@ -69,6 +69,9 @@ public class EmoticonPicker extends LinearLayout
 
         mViewPager.setAdapter(new EmoticonPageAdapter(emoticonPages = listEmoticonPages()));
 
+        if(isInEditMode()){
+            return;
+        }
         setupIndicators();
     }
 

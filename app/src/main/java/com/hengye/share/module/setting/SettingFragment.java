@@ -56,12 +56,15 @@ public class SettingFragment extends BasePreferenceFragment {
         }else if(title.equals(getString(R.string.title_setting_show_reading_habit))){
             //阅读习惯
             clazz = SettingReadingHabitFragment.class;
-        }else if(title.equals(getString(R.string.title_setting_other_feedback))){
-            //意见反馈
-            startActivity(TopicPublishActivity.getStartIntent(getActivity(), getFeedBackContent()));
         }else if(title.equals(getString(R.string.title_setting_other_about))){
             //关于
             clazz = SettingAboutFragment.class;
+        }else if(title.equals(getString(R.string.title_setting_other_feedback))){
+            //意见反馈
+            startActivity(TopicPublishActivity.getStartIntent(getActivity(), getFeedBackContent()));
+        }else if(title.equals(getString(R.string.title_setting_other_share))){
+            //意见反馈
+            startActivity(TopicPublishActivity.getStartIntent(getActivity(), getShareContent()));
         }else{
             L.debug("preference title not found");
         }
@@ -104,6 +107,10 @@ public class SettingFragment extends BasePreferenceFragment {
         String prefix = "#Share意见反馈# @我是一只小小小鸡仔 ";
         String suffix = "设备型号：" + Build.MODEL + "，Android版本号：" + Build.VERSION.RELEASE + "；";
         return prefix + suffix;
+    }
+
+    private String getShareContent(){
+        return "#Share#Share微博客户端, 非常好用[赞]";
     }
 
 

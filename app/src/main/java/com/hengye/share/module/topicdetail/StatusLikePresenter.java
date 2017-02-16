@@ -8,6 +8,7 @@ import com.hengye.share.model.sina.WBTopicComments;
 import com.hengye.share.module.topic.TopicRxUtil;
 import com.hengye.share.module.util.encapsulation.mvp.ListTaskPresenter;
 import com.hengye.share.module.util.encapsulation.mvp.RxPresenter;
+import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.http.retrofit.RetrofitManager;
@@ -50,7 +51,9 @@ public class StatusLikePresenter extends ListTaskPresenter<StatusLikeContract.Vi
                         super.onSuccess(view, objects);
                         ArrayList<UserInfo> userInfos = (ArrayList<UserInfo>) objects[0];
                         long totalNumber = (long) objects[1];
-                        view.onLoadStatusLikeCount(totalNumber);
+                        if(!CommonUtil.isEmpty(userInfos)) {
+                            view.onLoadStatusLikeCount(totalNumber);
+                        }
                         view.onLoadListData(isRefresh, userInfos);
                     }
                 });

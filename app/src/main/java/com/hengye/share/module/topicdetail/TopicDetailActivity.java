@@ -15,6 +15,7 @@ import com.hengye.share.R;
 import com.hengye.share.module.topic.StatusActionContract;
 import com.hengye.share.module.topic.StatusActionMvpImpl;
 import com.hengye.share.module.topic.StatusActonPresenter;
+import com.hengye.share.ui.widget.util.DrawableLoader;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.TransitionHelper;
@@ -30,10 +31,12 @@ import com.hengye.share.ui.widget.pulltorefresh.PullToRefreshLayout;
 import com.hengye.share.util.ClipboardUtil;
 import com.hengye.share.util.IntentUtil;
 
+import me.imid.swipebacklayout.lib.Utils;
+
 public class TopicDetailActivity extends BaseActivity
         implements View.OnClickListener,
         AppBarLayout.OnOffsetChangedListener,
-        StatusActionContract.View{
+        StatusActionContract.View {
 
     public static void start(Context context, View startView, Topic topic, boolean isRetweet) {
         Intent intent = getStartIntent(context, topic, isRetweet);
@@ -101,7 +104,7 @@ public class TopicDetailActivity extends BaseActivity
     TopicCommentAndRepostFragment mFragment;
     StatusActionMvpImpl mStatusActionMvpImpl;
     StatusActionContract.Presenter mStatusActionPresenter;
-
+    boolean mHeaderViewVisibleInScreen;
 //    TopicDetailPresenter mPresenter;
 
     private void initHeaderTopic(View headerView) {
@@ -157,9 +160,13 @@ public class TopicDetailActivity extends BaseActivity
         mCopyBtn = (FloatingActionButton) findViewById(R.id.action_copy);
         mAppBarLayout = (AppBarLayout) findViewById(R.id.appbar);
         mTabLayout = (TabLayout) findViewById(R.id.tab);
+        //评论的点赞是用黑色的按钮，有时候会导致这里的按钮也是黑色的，所以在着色一次
+        mAttitudeBtn.setIconDrawable(DrawableLoader.setTintResource(R.drawable.ic_thumb_up_white_48dp, R.color.white));
 //        mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         mStatusActionPresenter = new StatusActonPresenter(this);
         mStatusActionMvpImpl = new StatusActionMvpImpl(this, mStatusActionPresenter);
+        updateAttitudeBtn();
+        updateCollectBtn();
 
         mOverLay.setOnClickListener(this);
         mCommentBtn.setOnClickListener(this);
@@ -201,7 +208,9 @@ public class TopicDetailActivity extends BaseActivity
             mPullToRefresh.setRefreshEnable(false);
         }
 
-        if (!mHasSetSelection && Math.abs(verticalOffset) < mHeaderView.getHeight()) {
+        mHeaderViewVisibleInScreen = Math.abs(verticalOffset) < mHeaderView.getHeight();
+
+        if (!mHasSetSelection && mHeaderViewVisibleInScreen) {
             //看见头部，让viewpager其他tab也选中第一个位置;
             if (mFragment != null) {
                 mHasSetSelection = true;
@@ -227,14 +236,14 @@ public class TopicDetailActivity extends BaseActivity
             if (id == R.id.action_comment) {
                 IntentUtil.startActivity(this,
                         TopicPublishActivity.getStartIntent(this, TopicDraftHelper.getWBTopicDraftByRepostComment(mTopic)));
-            }else if (id == R.id.action_repost) {
+            } else if (id == R.id.action_repost) {
                 IntentUtil.startActivity(this,
                         TopicPublishActivity.getStartIntent(this, TopicDraftHelper.getWBTopicDraftByRepostRepost(mTopic)));
-            }else if (id == R.id.action_attitude) {
+            } else if (id == R.id.action_attitude) {
                 mStatusActionPresenter.likeStatus(mTopic);
-            }else if (id == R.id.action_collect) {
+            } else if (id == R.id.action_collect) {
                 mStatusActionPresenter.collectStatus(mTopic);
-            }else if (id == R.id.action_copy) {
+            } else if (id == R.id.action_copy) {
                 ClipboardUtil.copyWBContent(mTopic.getContent());
             }
         }
@@ -243,23 +252,46 @@ public class TopicDetailActivity extends BaseActivity
     @Override
     public void onLikeStatusComplete(Topic topic, int taskState) {
         mStatusActionMvpImpl.onLikeStatusComplete(topic, taskState);
-        String attitude = getString(
-                topic.isLiked() ?
-                        R.string.label_topic_attitude_cancel :
-                        R.string.label_topic_attitude);
-        mAttitudeBtn.setTitle(attitude);
+        updateAttitudeBtn();
     }
 
     @Override
     public void onCollectStatusComplete(Topic topic, int taskState) {
         mStatusActionMvpImpl.onCollectStatusComplete(topic, taskState);
-        String favorite = getString(topic.isFavorited() ? R.string.label_topic_collect_cancel : R.string.label_topic_collect);
+        updateCollectBtn();
+    }
+
+    private void updateAttitudeBtn() {
+        String attitude = getString(
+                mTopic.isLiked() ?
+                        R.string.label_topic_attitude_cancel :
+                        R.string.label_topic_attitude);
+        mAttitudeBtn.setTitle(attitude);
+    }
+
+    private void updateCollectBtn() {
+        String favorite = getString(mTopic.isFavorited() ?
+                R.string.label_topic_collect_cancel :
+                R.string.label_topic_collect);
         mCollectBtn.setTitle(favorite);
+    }
+
+    @Override
+    protected boolean canSwipeBack() {
+        return true;
     }
 
     @Override
     public void onBackPressed() {
         finish();
+        //不设置转场动画是因为跟滑动退出冲突，有滑动退出时，转场会黑屏
+//        if (mHeaderViewVisibleInScreen) {
+//            if (mTopicContentLayout != null && mTopicContent != null && mIsRetweet) {
+////                mTopicContent.setText(DataUtil.addRetweetedNamePrefix(mTopic));
+//                mTopicContentLayout.setBackgroundColor(getResources().getColor(R.color.grey_50));
+//            }
+//        }
+//        super.onBackPressed();
     }
 
 }

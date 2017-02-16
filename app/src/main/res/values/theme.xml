@@ -18,6 +18,7 @@
         <item name="windowActionModeOverlay">true</item>
 
         <!-- 设置菜单栏的样式 -->
+        <!--<item name="android:popupMenuStyle">@style/popupMenuStyle</item>-->
         <item name="actionMenuTextAppearance">@style/MenuTextStyle</item>
 
         <!--<item name="actionOverflowMenuStyle">@style/AppBaseActionOverflowMenuStyle</item>-->
@@ -31,8 +32,9 @@
         <!--<item name="android:statusBarColor">@android:color/transparent</item>-->
 
         <!-- 默认背景是设置在RootView上，但是大部分时候界面的布局又会设置不同背景颜色，为了防止重复绘制，不要设置colorBackground -->
-        <!--<item name="android:colorBackground">@null</item>-->
-        <item name="android:colorBackground">@color/background_default</item>
+        <item name="android:colorBackground">@null</item>
+        <!--<item name="android:colorBackground">@color/background_default</item>-->
+
 
         <!-- 如果需要调节状态栏和导航栏的颜色，设为true -->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
@@ -57,6 +59,11 @@
     <style name="MenuTextStyle">
         <item name="android:textColor">@color/grey_600</item>
         <item name="android:textSize">@dimen/text_small</item>
+        <item name="android:background">@color/background_default</item>
+    </style>
+
+    <style name="popupMenuStyle" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:colorBackground">@color/background_default</item>
     </style>
 
     <!--<style name="AppBaseActionOverflowMenuStyle" parent="@style/Widget.AppCompat.PopupMenu.Overflow">-->

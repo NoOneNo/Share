@@ -62,6 +62,7 @@ public class CommonToolBar extends Toolbar {
         setTitleTextColor(ThemeUtil.getTextColor());
         setSubtitleTextColor(ThemeUtil.getTextColor());
 
+        setPopupTheme(R.style.popupMenuStyle);
         //navigation的图标默认为24dp大小，因为toolbar高度一般在56dp；
 //        if (getNavigation() != null) {
 //            int size = getResources().getDimensionPixelSize(R.dimen.icon_size_small);

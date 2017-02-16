@@ -48,6 +48,9 @@ public class GridGalleryEditorView extends RecyclerView implements OnItemClickLi
     public GridGalleryEditorView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
+        if(isInEditMode()){
+            return;
+        }
         init();
     }
 

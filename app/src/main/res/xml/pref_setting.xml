@@ -33,10 +33,13 @@
 
     <PreferenceCategory android:title="@string/title_setting_other">
         <Preference
+            android:key="@string/title_setting_other_about"
+            android:title="@string/title_setting_other_about"/>
+        <Preference
             android:key="@string/title_setting_other_feedback"
             android:title="@string/title_setting_other_feedback"/>
         <Preference
-            android:key="@string/title_setting_other_about"
-            android:title="@string/title_setting_other_about"/>
+            android:key="@string/title_setting_other_share"
+            android:title="@string/title_setting_other_share"/>
     </PreferenceCategory>
 </PreferenceScreen>

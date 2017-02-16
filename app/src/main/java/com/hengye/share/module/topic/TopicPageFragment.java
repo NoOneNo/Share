@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.hengye.share.module.util.encapsulation.base.DefaultDataHandler;
+import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.handler.TopicNumberPager;
 import com.hengye.share.module.util.encapsulation.base.DataType;
 import com.hengye.share.model.Topic;
@@ -52,7 +53,13 @@ public class TopicPageFragment extends StatusFragment implements TopicPageContra
         setDataHandler(new DefaultDataHandler<>(mAdapter));
         mPresenter = new TopicPagePresenter(this, topicGroup, mPager);
         mPresenter.setKeyword(mKeyword);
+
         showLoading();
+        markLazyLoadPreparedAndLazyLoadIfCan();
+    }
+
+    @Override
+    protected void onLazyLoad() {
         mPresenter.loadWBTopic();
     }
 

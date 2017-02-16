@@ -24,6 +24,10 @@ public class ThemeUtil extends ResUtil{
         return ResUtil.getAttrColor(R.attr.theme_accent_color, 0);
     }
 
+    public static int getBackgroundColor(){
+        return getColor(R.color.background_default);
+    }
+
     public static int getTextColor(){
         return getUntingedColor();
     }

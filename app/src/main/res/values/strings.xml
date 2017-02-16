@@ -106,7 +106,6 @@
     <string name="title_drawer_draft">草稿箱</string>
     <string name="title_drawer_others">其他</string>
     <string name="title_drawer_setting">设置</string>
-    <string name="title_drawer_share">分享</string>
     <!-- Strings related to activity drawer-->
 
     <!-- Strings related to activity title-->
@@ -329,8 +328,9 @@
     <string name="title_setting_show_reading_habit">阅读习惯</string>
 
     <string name="title_setting_other">其他</string>
-    <string name="title_setting_other_feedback">意见反馈</string>
     <string name="title_setting_other_about">关于</string>
+    <string name="title_setting_other_feedback">意见反馈</string>
+    <string name="title_setting_other_share">分享</string>
 
     <string name="title_setting_launch_check_update">启动时检查更新</string>
     <string name="title_setting_home_back">首页按返回键退出</string>

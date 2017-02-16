@@ -45,7 +45,8 @@ public class TopicEditText extends AppCompatEditText {
     }
     
     private void init(){
-        addTextChangedListener(new TopicTextWatcher());
+        //暂时屏蔽
+//        addTextChangedListener(new TopicTextWatcher());
     }
 
     @Override
@@ -57,43 +58,47 @@ public class TopicEditText extends AppCompatEditText {
 
     @Override
     public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
-        return new HackInputConnection(super.onCreateInputConnection(outAttrs), true, this);
+        return super.onCreateInputConnection(outAttrs);
+        //暂时屏蔽
+//        return new HackInputConnection(super.onCreateInputConnection(outAttrs), true, this);
     }
 
     @Override
     protected void onSelectionChanged(int selStart, int selEnd) {
         super.onSelectionChanged(selStart, selEnd);
-        //avoid infinite recursion after calling setSelection()
-        if (mLastSelectedRange != null && mLastSelectedRange.isEqual(selStart, selEnd)) {
-            return;
-        }
 
-        //if user cancel a selection of mention string, reset the state of 'mIsSelected'
-        Range closestRange = getRangeOfClosestMentionString(selStart, selEnd);
-        if (closestRange != null && closestRange.end == selEnd) {
-            mIsSelected = false;
-        }
-
-        Range nearbyRange = getRangeOfNearbyMentionString(selStart, selEnd);
-        //if there is no mention string nearby the cursor, just skip
-        if (nearbyRange == null) {
-            return;
-        }
-
-        //forbid cursor located in the mention string.
-        if (selStart == selEnd) {
-            int position = nearbyRange.getAnchorPosition(selStart);
-            if(0 <= position && position <= getText().length()){
-                setSelection(position);
-            }
-        } else {
-            if (selEnd < nearbyRange.end) {
-                setSelection(selStart, nearbyRange.end);
-            }
-            if (selStart > nearbyRange.start) {
-                setSelection(nearbyRange.start, selEnd);
-            }
-        }
+        //暂时屏蔽
+//        //avoid infinite recursion after calling setSelection()
+//        if (mLastSelectedRange != null && mLastSelectedRange.isEqual(selStart, selEnd)) {
+//            return;
+//        }
+//
+//        //if user cancel a selection of mention string, reset the state of 'mIsSelected'
+//        Range closestRange = getRangeOfClosestMentionString(selStart, selEnd);
+//        if (closestRange != null && closestRange.end == selEnd) {
+//            mIsSelected = false;
+//        }
+//
+//        Range nearbyRange = getRangeOfNearbyMentionString(selStart, selEnd);
+//        //if there is no mention string nearby the cursor, just skip
+//        if (nearbyRange == null) {
+//            return;
+//        }
+//
+//        //forbid cursor located in the mention string.
+//        if (selStart == selEnd) {
+//            int position = nearbyRange.getAnchorPosition(selStart);
+//            if(0 <= position && position <= getText().length()){
+//                setSelection(position);
+//            }
+//        } else {
+//            if (selEnd < nearbyRange.end) {
+//                setSelection(selStart, nearbyRange.end);
+//            }
+//            if (selStart > nearbyRange.start) {
+//                setSelection(nearbyRange.start, selEnd);
+//            }
+//        }
     }
 
     /**

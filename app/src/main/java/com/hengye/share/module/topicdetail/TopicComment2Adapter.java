@@ -22,7 +22,7 @@ public class TopicComment2Adapter extends CommonAdapter<TopicComment, TopicComme
 
     @Override
     public int getItemLayoutResId() {
-        return R.layout.item_topic_total;
+        return R.layout.item_topic_comment;
     }
 
     @Override

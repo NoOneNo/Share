@@ -330,7 +330,7 @@ public class DataUtil {
     }
 
     private static void addEmotions(int textSize, Spannable value) {
-        EmoticonUtil.addEmoticon(BaseApplication.getInstance(), value, textSize);
+        EmoticonUtil.addEmoticon(BaseApplication.getInstance(), value, (int)(textSize * 1.5));
     }
 
 //    private static void addCustomEmotions(Spannable value) {

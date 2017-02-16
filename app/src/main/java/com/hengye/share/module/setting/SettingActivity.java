@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.R;
+import com.hengye.share.util.ThemeUtil;
 
 
 public class SettingActivity extends BaseActivity {
@@ -13,6 +14,7 @@ public class SettingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_fragment);
+//        findViewById(R.id.content).setBackgroundColor(ThemeUtil.getBackgroundColor());
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
