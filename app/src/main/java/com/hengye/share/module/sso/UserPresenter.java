@@ -2,6 +2,7 @@ package com.hengye.share.module.sso;
 
 import android.text.TextUtils;
 
+import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.module.util.encapsulation.mvp.MvpView;
@@ -44,17 +45,20 @@ public class UserPresenter extends RxPresenter<UserContract.View> implements Use
                 .flatMap(new Function<WBUserInfo, SingleSource<WBUserInfo>>() {
                     @Override
                     public SingleSource<WBUserInfo> apply(WBUserInfo wbUserInfo) throws Exception {
-                        UserUtil.updateUserInfo(wbUserInfo);
-                        return Single.just(wbUserInfo);
+                        if(wbUserInfo != null && UserUtil.isCurrentUser(wbUserInfo.getIdstr())){
+                            UserUtil.updateUserInfo(wbUserInfo);
+                        }
+                        return Single.just(wbUserInfo == null ? new WBUserInfo() : wbUserInfo);
                     }
                 })
+                .flatMap(flatWBUserInfo())
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
-                .subscribe(new BaseSingleObserver<WBUserInfo>(){
+                .subscribe(new BaseSingleObserver<UserInfo>(){
                     @Override
-                    public void onSuccess(UserContract.View view, WBUserInfo wbUserInfo) {
-                        view.handleUserInfo(wbUserInfo);
-                        view.loadSuccess(User.getUser(wbUserInfo));
+                    public void onSuccess(UserContract.View view, UserInfo userInfo) {
+                        view.handleUserInfo(userInfo);
+                        view.loadSuccess(User.getUser(userInfo));
                     }
 
                     @Override
@@ -74,5 +78,20 @@ public class UserPresenter extends RxPresenter<UserContract.View> implements Use
             ub.addParameter("screen_name", name);
         }
         return ub.getParameters();
+    }
+
+    Function<WBUserInfo, SingleSource<UserInfo>> mFlatWBUserInfo;
+
+    private Function<WBUserInfo, SingleSource<UserInfo>> flatWBUserInfo() {
+        if (mFlatWBUserInfo == null) {
+            mFlatWBUserInfo = new Function<WBUserInfo, SingleSource<UserInfo>>() {
+                @Override
+                public SingleSource<UserInfo> apply(WBUserInfo wbUserInfo) throws Exception {
+                    return Single
+                            .just(UserInfo.getUserInfo(wbUserInfo));
+                }
+            };
+        }
+        return mFlatWBUserInfo;
     }
 }

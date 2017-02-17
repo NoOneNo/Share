@@ -31,6 +31,7 @@ import com.hengye.share.module.publish.AtUserSortAdapter.Letter;
 import com.hengye.share.module.util.encapsulation.base.TaskState;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.lettersort.SideBar;
+import com.hengye.share.ui.widget.recyclerview.DividerItemDecoration;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.ThemeUtil;
@@ -121,6 +122,7 @@ public class AtUserActivity extends BaseActivity implements UserListContract.Vie
         mRVSelectResult.setItemAnimator(new DefaultItemAnimator());
 
         mRVSearchResult = (RecyclerView) findViewById(R.id.recycler_view_search_result);
+        mRVSearchResult.addItemDecoration(new DividerItemDecoration(this));
         mRVSearchResult.setLayoutManager(mSearchResultLayoutManager = new LinearLayoutManager(this));
 //        mRVSearchResult.setAdapter(mAtUserSearchAdapter = new AtUserSortAdapter(this, mSearchResultData = mPresenter.getSearchResultData()));
         mRVSearchResult.setAdapter(mAtUserSearchAdapter = new AtUserSortAdapter(this));

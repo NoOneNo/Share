@@ -48,15 +48,19 @@ public class ThemeUtil extends ResUtil{
         return getColor(getTintDarkBgResId());
     }
 
-    public static @ColorRes int getUntingedColorResId(){
+    public static int getDividerDrawable(){
+        return ResUtil.getAttrColor(R.attr.theme_divider, 0);
+    }
+
+    private static @ColorRes int getUntingedColorResId(){
         return R.color.theme_untinged;
     }
 
-    public static @ColorRes int getTintLightBgResId(){
+    private static @ColorRes int getTintLightBgResId(){
         return R.color.theme_tint_light_bg;
     }
 
-    public static @ColorRes int getTintDarkBgResId(){
+    private static @ColorRes int getTintDarkBgResId(){
         return R.color.theme_tint_dark_bg;
     }
 

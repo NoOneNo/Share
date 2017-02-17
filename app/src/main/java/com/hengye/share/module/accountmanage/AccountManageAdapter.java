@@ -103,7 +103,7 @@ public class AccountManageAdapter extends CommonAdapter<User> {
                 mSelectBtn.setVisibility(View.VISIBLE);
                 mCallBack.setAccountSelectBtn(mSelectBtn);
             }else{
-                mSelectBtn.setVisibility(View.GONE);
+                mSelectBtn.setVisibility(View.INVISIBLE);
             }
             mSelectBtn.setVisibility(mCallBack.getAccountSelectIndex() == position ? View.VISIBLE : View.GONE);
 

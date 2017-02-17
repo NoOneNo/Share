@@ -20,6 +20,7 @@
         android:layout_alignTop="@id/iv_avatar"
         android:layout_marginEnd="@dimen/content_margin_10dp"
         android:layout_toEndOf="@id/iv_avatar"
+        android:layout_toStartOf="@+id/btn_check"
         android:gravity="center_vertical"
         android:lines="1"
         android:textColor="@color/grey_600"
@@ -27,16 +28,16 @@
         tools:text="username" />
 
     <com.hengye.share.ui.widget.theme.CustomThemeTintImageButton
-        android:id="@+id/btn_check"
+        android:id="@id/btn_check"
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="@dimen/content_margin_10dp"
-        android:layout_width="@dimen/at_user_check"
-        android:layout_height="@dimen/at_user_check"
+        android:layout_marginEnd="@dimen/content_margin_default"
+        android:layout_width="@dimen/icon_size_small"
+        android:layout_height="@dimen/icon_size_small"
         android:background="@null"
         android:contentDescription="@null"
-        android:src="@drawable/ic_check_select"
-        android:visibility="gone"
+        android:src="@drawable/ic_check_white_48dp"
+        android:visibility="invisible"
         tools:visibility="visible"/>
 
     <View

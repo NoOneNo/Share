@@ -9,19 +9,13 @@
         <!-- 用于状态栏的颜色设置 -->
         <item name="colorPrimaryDark">?attr/theme_color</item>
 
-        <!-- 用于个人信息侧滑页的头部变换色 -->
-        <!--<item name="android:colorPressedHighlight">?attr/theme_dark_color</item>-->
-
         <item name="colorAccent">?attr/theme_accent_color</item>
 
         <!-- 解决选择文字时actionMode不和actionBar重叠的问题 -->
         <item name="windowActionModeOverlay">true</item>
 
         <!-- 设置菜单栏的样式 -->
-        <!--<item name="android:popupMenuStyle">@style/popupMenuStyle</item>-->
         <item name="actionMenuTextAppearance">@style/MenuTextStyle</item>
-
-        <!--<item name="actionOverflowMenuStyle">@style/AppBaseActionOverflowMenuStyle</item>-->
 
         <!--<item name="android:homeAsUpIndicator">@mipmap/btn_back</item>-->
 
@@ -34,7 +28,6 @@
         <!-- 默认背景是设置在RootView上，但是大部分时候界面的布局又会设置不同背景颜色，为了防止重复绘制，不要设置colorBackground -->
         <item name="android:colorBackground">@null</item>
         <!--<item name="android:colorBackground">@color/background_default</item>-->
-
 
         <!-- 如果需要调节状态栏和导航栏的颜色，设为true -->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
@@ -75,24 +68,24 @@
     <!--</style>-->
 
     <style name="AppTheme" parent="BaseAppTheme">
-
+        <item name="theme_divider">@drawable/list_divider</item>
     </style>
 
     <style name="AppTheme.Main">
         <item name="android:windowIsTranslucent">false</item>
     </style>
 
-    <style name="GuidanceTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="GuidanceTheme" parent="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
         <!--<item name="windowNoTitle">true</item>-->
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowIsTranslucent">false</item>
         <!--<item name="android:colorBackground">@color/background_launch</item>-->
         <item name="android:background">@drawable/guidance</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:windowTranslucentNavigation">false</item>
-        <item name="android:navigationBarColor">@color/background_launch</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <!--<item name="android:navigationBarColor">@color/background_launch</item>-->
         <item name="android:statusBarColor">@color/background_launch</item>
-        <!--<item name="android:windowTranslucentStatus">false</item>-->
     </style>
 
     <style name="ShareAppTheme" parent="AppTheme">

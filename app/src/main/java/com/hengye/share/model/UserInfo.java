@@ -1,11 +1,13 @@
 package com.hengye.share.model;
 
 
+import com.hengye.share.R;
 import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.model.sina.WBUserInfos;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.GsonUtil;
+import com.hengye.share.util.ResUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -24,6 +26,9 @@ public class UserInfo extends ParentInherit implements Serializable{
     private String sign;//签名
     private String cover;//封面地址
     private String spell;//用户名拼音
+
+    private long followerCount;//粉丝
+    private long friendCount;//关注
 
     private boolean followMe;//是否关注我
     private boolean following;//是否已关注
@@ -59,6 +64,8 @@ public class UserInfo extends ParentInherit implements Serializable{
         userInfo.setSign(wbUserInfo.getDescription());
         userInfo.setCover(wbUserInfo.getCover_image_phone());
 
+        userInfo.setFollowerCount(wbUserInfo.getFollowers_count());
+        userInfo.setFriendCount(wbUserInfo.getFriends_count());
         userInfo.setFollowMe(wbUserInfo.isFollow_me());
         userInfo.setFollowing(wbUserInfo.isFollowing());
         return userInfo;
@@ -73,7 +80,14 @@ public class UserInfo extends ParentInherit implements Serializable{
         if(user == null){
             return userInfo;
         }
-        userInfo.setParent(new Parent(user.getParentJson(), Parent.TYPE_WEIBO));
+        if(user.getParentType() == Parent.TYPE_WEIBO){
+            userInfo.setParent(new Parent(user.getParentJson(), Parent.TYPE_WEIBO));
+            WBUserInfo wbUserInfo = GsonUtil.fromJson(user.getParentJson(), WBUserInfo.class);
+            if(wbUserInfo != null){
+                return getUserInfo(wbUserInfo);
+            }
+        }
+
         userInfo.setUid(user.getUid());
         userInfo.setName(user.getName());
         userInfo.setAvatar(user.getAvatar());
@@ -81,6 +95,18 @@ public class UserInfo extends ParentInherit implements Serializable{
         userInfo.setSign(user.getSign());
         userInfo.setCover(user.getCover());
         return userInfo;
+    }
+
+    public String getFollowRelation(){
+        int resId;
+        if(following){
+            resId = followMe ?
+                    R.string.label_status_following_swap :
+                    R.string.label_status_following;
+        }else{
+            resId = R.string.label_status_unfollowing;
+        }
+        return ResUtil.getString(resId);
     }
 
     public String getUid() {
@@ -153,6 +179,22 @@ public class UserInfo extends ParentInherit implements Serializable{
 
     public void setFollowing(boolean following) {
         this.following = following;
+    }
+
+    public long getFollowerCount() {
+        return followerCount;
+    }
+
+    public void setFollowerCount(long followerCount) {
+        this.followerCount = followerCount;
+    }
+
+    public long getFriendCount() {
+        return friendCount;
+    }
+
+    public void setFriendCount(long friendCount) {
+        this.friendCount = friendCount;
     }
 }
 //        返回字段说明

@@ -1,45 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:background="@color/background_default"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:padding="@dimen/content_margin_default">
 
     <com.hengye.share.ui.widget.image.AvatarImageView
         android:id="@+id/iv_avatar"
         android:layout_width="@dimen/user_avatar"
-        android:layout_height="@dimen/user_avatar"
-        android:layout_margin="@dimen/content_margin_default" />
+        android:layout_height="@dimen/user_avatar"/>
 
-    <TextView
-        android:id="@+id/tv_username"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/layout_user_info"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="match_parent"
-        android:layout_alignBottom="@id/iv_avatar"
-        android:layout_alignTop="@id/iv_avatar"
+        android:layout_marginStart="@dimen/content_margin_10dp"
         android:layout_marginEnd="@dimen/content_margin_10dp"
-        android:layout_toEndOf="@id/iv_avatar"
         android:gravity="center_vertical"
-        android:lines="1"
-        android:textColor="@color/grey_600"
-        android:textSize="@dimen/text_normal"
-        tools:text="username" />
+        android:orientation="vertical">
 
-    <ImageButton
+        <TextView
+            android:id="@+id/tv_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textColor="@color/text_dark"
+            android:textSize="@dimen/text_normal"
+            tools:text="我是一只小小小鸡仔" />
+
+        <TextView
+            android:id="@+id/tv_sign"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textColor="@color/text_grey"
+            android:textSize="@dimen/text_small"
+            tools:text="捉紧 生命浓度 坦白流露 感情和态度。。。。。。" />
+
+    </LinearLayout>
+
+    <com.hengye.share.ui.widget.theme.CustomThemeTintImageButton
         android:id="@+id/btn_check"
-        android:layout_centerVertical="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="@dimen/content_margin_10dp"
+        android:layout_gravity="center_vertical"
         android:layout_width="@dimen/at_user_check"
         android:layout_height="@dimen/at_user_check"
         android:background="@drawable/ic_check_normal"
         android:contentDescription="@null"
-        android:src="@drawable/ic_check_select"
-        android:visibility="visible"/>
-
-    <View
-        style="@style/horizontal_line"
-        android:layout_below="@id/iv_avatar"/>
-
-</RelativeLayout>
+        android:src="@drawable/ic_done_black_36dp"/>
+</LinearLayout>

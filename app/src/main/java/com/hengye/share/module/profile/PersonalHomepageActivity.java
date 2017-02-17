@@ -50,7 +50,10 @@ import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 
-public class PersonalHomepageActivity extends BaseActivity implements View.OnClickListener, AppBarLayout.OnOffsetChangedListener, UserContract.View {
+public class PersonalHomepageActivity extends BaseActivity
+        implements View.OnClickListener,
+        AppBarLayout.OnOffsetChangedListener,
+        UserContract.View, UserAttentionContract.View {
 
     public static void start(Context context, View startView, UserInfo userInfo) {
         if (startView == null) {
@@ -113,6 +116,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
             PersonalHomepageActivity.this.finish();
         } else {
             mPresenter = new UserPresenter(this);
+            mUserAttentionPresenter = new UserAttentionPresenter(this);
             initView();
         }
     }
@@ -141,9 +145,10 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     private TabLayout mTab;
 
     private UserInfo mUserInfo;
-    private WBUserInfo mWBUserInfo;
+//    private WBUserInfo mWBUserInfo;
 
     private UserPresenter mPresenter;
+    private UserAttentionPresenter mUserAttentionPresenter;
 
     @SuppressWarnings("ConstantConditions")
     private void initView() {
@@ -209,21 +214,27 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
 
         mSwipeRefresh.setOnTouchListener(new SwipeRefreshOnTouchListener(mCollapsingToolbarLayout, ResUtil.getDimensionPixelSize(R.dimen.header_personal_homepage_height)));
 
-        if (mUserInfo.getParent().isWeiBo()) {
-            WBUserInfo wbUserInfo = mUserInfo.getWBUserInfoFromParent();
-            if (wbUserInfo != null) {
-                initUserInfo(wbUserInfo);
-            } else {
-                mSwipeRefresh.setRefreshing(true);
-                updateUserInfo();
-            }
 
-            //如果在刷新中代表前面自己信息是空的，已经在更新信息了；
-            if(!mSwipeRefresh.isRefreshing() && UserUtil.isCurrentUser(mUserInfo.getUid())){
-                updateUserInfo();
-            }
-
+        initUserInfo(mUserInfo);
+        if(UserUtil.isCurrentUser(mUserInfo.getUid())){
+            updateUserInfo();
         }
+
+//        if (mUserInfo.getParent().isWeiBo()) {
+//            WBUserInfo wbUserInfo = mUserInfo.getWBUserInfoFromParent();
+//            if (wbUserInfo != null) {
+//                initUserInfo(wbUserInfo);
+//            } else {
+//                mSwipeRefresh.setRefreshing(true);
+//                updateUserInfo();
+//            }
+//
+//            //如果在刷新中代表前面自己信息是空的，已经在更新信息了；
+//            if(!mSwipeRefresh.isRefreshing() && UserUtil.isCurrentUser(mUserInfo.getUid())){
+//                updateUserInfo();
+//            }
+//
+//        }
         postponeEnterTransition();
         mAvatar.setVisibility(View.INVISIBLE);
         setUpAvatar();
@@ -379,18 +390,18 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         }
     }
 
-    private void initUserInfo(WBUserInfo wbUserInfo) {
-        mWBUserInfo = wbUserInfo;
-        mCollapsingToolbarLayout.setTitle(" " + wbUserInfo.getScreen_name());
+    private void initUserInfo(UserInfo userInfo) {
+//        mWBUserInfo = wbUserInfo;
+        mCollapsingToolbarLayout.setTitle(" " + userInfo.getName());
 //        mCover.setImageResource(R.drawable.bg_test);
-        mCover.setImageUrl(wbUserInfo.getCover_image_phone());
-        mAvatar.setImageUrl(wbUserInfo.getAvatar_large());
+        mCover.setImageUrl(userInfo.getCover());
+        mAvatar.setImageUrl(userInfo.getAvatar());
         mDivision.setVisibility(View.VISIBLE);
-        mAttention.setText(String.format(getString(R.string.label_attention_count), DataUtil.getCounter(wbUserInfo.getFriends_count())));
-        mFans.setText(String.format(getString(R.string.label_fans_count), DataUtil.getCounter(wbUserInfo.getFollowers_count())));
+        mAttention.setText(String.format(getString(R.string.label_attention_count), DataUtil.getCounter(userInfo.getFriendCount())));
+        mFans.setText(String.format(getString(R.string.label_fans_count), DataUtil.getCounter(userInfo.getFollowerCount())));
 //        mSign.setText(wbUserInfo.getDescription());
 //        mFollowButton.setChecked(mWBUserInfo.isFollowing());
-        updateFollowButton(mWBUserInfo.isFollowing());
+        updateFollowButton();
         mUserDescription.setVisibility(View.VISIBLE);
         mUserDescription.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
@@ -411,21 +422,27 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
             }
         });
 
-        loadData(wbUserInfo);
+        loadData(userInfo);
     }
 
     public void updateUserInfo(){
         mPresenter.loadWBUserInfo(mUserInfo.getUid(), mUserInfo.getName());
     }
 
-    private void updateFollowButton(boolean isFollowing) {
-        mFollowButton.setText(isFollowing ? ResUtil.getString(R.string.label_status_following) : ResUtil.getString(R.string.label_status_unfollowing));
+    private void updateFollowButton() {
+        mFollowButton.setText(mUserInfo.getFollowRelation());
     }
 
-    private void loadData(final WBUserInfo wbUserInfo) {
-        if (wbUserInfo == null || UserUtil.isUserEmpty()) {
+    private void loadData(final UserInfo userInfo) {
+        if (userInfo == null || userInfo.getParent().getType() != Parent.TYPE_WEIBO) {
             return;
         }
+
+        final WBUserInfo wbUserInfo = userInfo.getWBUserInfoFromParent();
+        if(wbUserInfo == null){
+            return;
+        }
+
         if (mFragment == null) {
             if (coverShowAnimator != null && !coverShowAnimator.isRunning()) {
                 setupFragment(wbUserInfo);
@@ -449,17 +466,16 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
                 //当时闭合的时候，模拟点击toolbar的导航按钮
                 onNavigationClick(getToolbar());
             }
-        } else if (mWBUserInfo != null) {
+        } else if (mUserInfo!= null) {
             if (id == R.id.btn_attention) {
-                mFollowButton.setEnabled(false);
-                follow(!mWBUserInfo.isFollowing(), mWBUserInfo.getIdstr());
+                mUserAttentionPresenter.followUser(mUserInfo);
             } else if (id == R.id.tv_attention) {
-                if (mWBUserInfo.getIdstr() != null) {
-                    UserAttentionsFragment.start(this, mWBUserInfo.getIdstr());
+                if (mUserInfo.getUid() != null) {
+                    UserAttentionsFragment.start(this, mUserInfo.getUid());
                 }
             } else if (id == R.id.tv_fans) {
-                if (mWBUserInfo.getIdstr() != null) {
-                    UserFollowersFragment.start(this, mWBUserInfo.getIdstr());
+                if (mUserInfo.getUid() != null) {
+                    UserFollowersFragment.start(this, mUserInfo.getUid());
                 }
             }
         }
@@ -468,7 +484,7 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
     }
 
     @Override
-    public void handleUserInfo(WBUserInfo wbUserInfo) {
+    public void handleUserInfo(UserInfo wbUserInfo) {
         mSwipeRefresh.setRefreshing(false);
         if (wbUserInfo != null) {
             initUserInfo(wbUserInfo);
@@ -486,51 +502,28 @@ public class PersonalHomepageActivity extends BaseActivity implements View.OnCli
         mSwipeRefresh.setRefreshing(false);
     }
 
-    public void follow(final boolean isFollow, String uid) {
+    @Override
+    public void onFollowStart() {
+        mFollowButton.setEnabled(false);
+    }
 
-        Single<WBUserInfo> flowable;
+    @Override
+    public void onFollowComplete(int taskState) {
+        mFollowButton.setEnabled(true);
+        if(taskState == TaskState.STATE_SUCCESS){
+            if (mUserInfo.isFollowing()) {
+                ToastUtil.showToastSuccess(R.string.label_follow_create_success);
+            } else {
+                ToastUtil.showToastSuccess(R.string.label_follow_destroy_success);
+            }
+        }else {
+            TaskState.toastFailState(taskState);
+        }
+    }
 
-        flowable = isFollow ?
-                RetrofitManager
-                        .getWBService()
-                        .createFollow(UserUtil.getPriorToken(), uid) :
-                RetrofitManager
-                        .getWBService()
-                        .destroyFollow(UserUtil.getPriorToken(), uid);
-
-        flowable.subscribeOn(SchedulerProvider.io())
-                .observeOn(SchedulerProvider.ui())
-                .subscribe(new SingleObserver<WBUserInfo>() {
-
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        mFollowButton.setEnabled(true);
-                        if (TaskState.isNetworkException(e)) {
-                            ToastUtil.showNetWorkErrorToast();
-                        }
-                    }
-
-                    @Override
-                    public void onSuccess(WBUserInfo wbUserInfo) {
-                        if (wbUserInfo != null) {
-                            if (isFollow) {
-                                ToastUtil.showToastSuccess(R.string.label_follow_create_success);
-                            } else {
-                                ToastUtil.showToastSuccess(R.string.label_follow_destroy_success);
-                            }
-                            updateFollowButton(isFollow);
-                            if (mWBUserInfo != null) {
-                                mWBUserInfo.setFollowing(isFollow);
-                            }
-                        }
-                        mFollowButton.setEnabled(true);
-                    }
-                });
+    @Override
+    public void onFollowSuccess(UserInfo userInfo) {
+        updateFollowButton();
     }
 
     public static class SwipeRefreshOnTouchListener implements View.OnTouchListener {

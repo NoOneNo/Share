@@ -147,6 +147,13 @@ public abstract class CommonAdapter<T> extends HeaderAdapter<ItemViewHolder>
         return null;
     }
 
+    public void notifyItemChanged(T item){
+        int index = mData.indexOf(item);
+        if (index != -1) {
+            notifyItemChanged(index);
+        }
+    }
+
     public T getLastItem() {
         if (mData.isEmpty()) {
             return null;

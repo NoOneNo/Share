@@ -482,8 +482,7 @@ public class TopicActivity extends BaseActivity
     }
 
     @Override
-    public void handleUserInfo(WBUserInfo wbUserInfo) {
-        loadSuccess(User.getUser(wbUserInfo));
+    public void handleUserInfo(UserInfo wbUserInfo) {
     }
 
     @Override

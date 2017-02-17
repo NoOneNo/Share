@@ -262,33 +262,44 @@ public class SelectorLoader {
         return new ColorStateList(states, colors);
     }
 
-    public RippleDrawable getRippleDrawable(int normalColor, int pressColor, int background) {
+    public RippleDrawable getRippleDrawable(int normalColor, int pressColor, int backgroundColor) {
         return new RippleDrawable(
                 getColorStateListSelector(normalColor, pressColor)
-                , ShapeLoader.getInstance().getRectBackground(background)
+                , ShapeLoader.getInstance().getRectBackground(backgroundColor)
                 , null);
     }
 
-    public void setRippleBackground(View view, @ColorRes int normalColorResId, @ColorRes int pressColorResId, @ColorRes int backgroundResId) {
+    public void setRippleBackground(View view, int normalColor, int pressColor, int backgroundColor) {
+        view.setBackground(getRippleDrawable(normalColor, pressColor, backgroundColor));
+    }
+
+    public void setRippleBackgroundResource(View view, @ColorRes int normalColorResId, @ColorRes int pressColorResId, @ColorRes int backgroundResId) {
         Resources resources = view.getResources();
         view.setBackground(getRippleDrawable(resources.getColor(normalColorResId)
                 , resources.getColor(pressColorResId), resources.getColor(backgroundResId)));
     }
 
     public void setDefaultRippleBackground(View view) {
-        setDefaultRippleBackground(view, R.color.background_default);
+        setDefaultRippleBackgroundResource(view, R.color.background_default);
     }
 
-    public void setTransparentRippleBackground(View view){
+    public void setTransparentRippleBackground(View view) {
         view.setBackgroundResource(R.drawable.selector_ripple_transparent);
     }
 
     public void setDefaultRippleWhiteBackground(View view) {
-        setDefaultRippleBackground(view, R.color.background_default_white);
+        setDefaultRippleBackgroundResource(view, R.color.background_default_white);
     }
 
-    public void setDefaultRippleBackground(View view, @ColorRes int backgroundResId) {
-        setRippleBackground(view, R.color.grey_450, R.color.ripple_light, backgroundResId);
+    public void setDefaultRippleBackgroundResource(View view, @ColorRes int backgroundResId) {
+        setRippleBackgroundResource(view, R.color.grey_450, R.color.ripple_light, backgroundResId);
     }
 
+    public void setDefaultRippleBackground(View view, int backgroundColor) {
+        Resources resources = view.getResources();
+        setRippleBackground(view,
+                resources.getColor(R.color.grey_450),
+                resources.getColor(R.color.ripple_light),
+                backgroundColor);
+    }
 }

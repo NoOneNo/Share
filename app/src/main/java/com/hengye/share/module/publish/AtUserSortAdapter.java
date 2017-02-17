@@ -15,6 +15,7 @@ import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemViewHold
 import com.hengye.share.ui.widget.image.AvatarImageView;
 import com.hengye.share.ui.widget.lettersort.recyclerview.GroupAdapter;
 import com.hengye.share.ui.widget.util.SelectorLoader;
+import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.ResUtil;
 
 import java.util.ArrayList;
@@ -70,32 +71,36 @@ public class AtUserSortAdapter extends GroupAdapter<AtUserSortAdapter.Letter, At
     public static class ChildHolder extends ItemViewHolder<AtUser> {
 
         ImageButton mCheckBox;
-        TextView mUsername;
+        TextView mUsername, mSign;
         AvatarImageView mAvatar;
 
         public ChildHolder(View v) {
             super(v);
 
-            mCheckBox = (ImageButton) findViewById(R.id.btn_check);
+            SelectorLoader.getInstance().setDefaultRippleWhiteBackground(v);
             mUsername = (TextView) findViewById(R.id.tv_username);
+            mSign = (TextView) findViewById(R.id.tv_sign);
             mAvatar = (AvatarImageView) findViewById(R.id.iv_avatar);
-
-            SelectorLoader
-                    .getInstance()
-                    .setDefaultRippleWhiteBackground(v);
+            mCheckBox = (ImageButton) findViewById(R.id.btn_check);
         }
 
         @Override
         public void bindData(Context context, AtUser atUser, int position) {
             mCheckBox.setTag(position);
-            mCheckBox.setImageResource(atUser.isSelected() ? R.drawable.ic_check_select : 0);
+            mCheckBox.setImageResource(atUser.isSelected() ? R.drawable.ic_done_black_36dp : 0);
 
             UserInfo userInfo = atUser.getUserInfo();
             if (userInfo != null) {
                 mUsername.setText(userInfo.getName());
                 mAvatar.setImageUrl(userInfo.getAvatar());
-            } else {
-                mAvatar.setImageResource(0);
+
+                if (CommonUtil.isEmpty(userInfo.getSign())) {
+                    mSign.setText(null);
+                    mSign.setVisibility(View.GONE);
+                } else {
+                    mSign.setText(userInfo.getSign());
+                    mSign.setVisibility(View.VISIBLE);
+                }
             }
         }
     }

@@ -58,7 +58,7 @@ public class AtUserSearchAdapter extends CommonAdapter<AtUser> {
         @Override
         public void bindData(Context context, AtUser atUser, int position) {
             mCheckBox.setTag(position);
-            mCheckBox.setImageResource(atUser.isSelected() ? R.drawable.ic_check_select : 0);
+            mCheckBox.setImageResource(atUser.isSelected() ? R.drawable.ic_done_black_36dp : 0);
 
             UserInfo userInfo = atUser.getUserInfo();
             if (userInfo != null) {

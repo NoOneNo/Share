@@ -166,7 +166,7 @@ public class ListDialog extends Dialog {
             if(getBackground() != 0) {
                 SelectorLoader
                         .getInstance()
-                        .setRippleBackground(view, R.color.grey_300, R.color.grey_300, getBackground());
+                        .setRippleBackgroundResource(view, R.color.grey_300, R.color.grey_300, getBackground());
             }
             return new MainViewHolder(view);
         }

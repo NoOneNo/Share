@@ -72,4 +72,10 @@ public class TaskState {
                 break;
         }
     }
+
+    public static void toastFailState(int taskState){
+        if(taskState != STATE_SUCCESS){
+            toastState(taskState);
+        }
+    }
 }

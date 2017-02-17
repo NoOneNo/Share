@@ -10,6 +10,7 @@ import com.hengye.share.module.util.encapsulation.base.DefaultDataHandler;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.module.base.ShareRecyclerFragment;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
+import com.hengye.share.ui.widget.recyclerview.DividerItemDecoration;
 import com.hengye.share.util.UserUtil;
 
 public class UserListFragment extends ShareRecyclerFragment<UserInfo> implements UserListContract.View {
@@ -36,6 +37,7 @@ public class UserListFragment extends ShareRecyclerFragment<UserInfo> implements
         if(uid == null){
             uid = UserUtil.getUid();
         }
+        getRecyclerView().addItemDecoration(new DividerItemDecoration(getContext()));
         setAdapter(mAdapter = new UserListAdapter(getContext()));
         setDataHandler(new DefaultDataHandler<>(mAdapter));
         mPresenter = new UserListPresenter(this, uid);

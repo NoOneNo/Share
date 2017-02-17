@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:background="@color/background_default"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="@dimen/content_margin_default">
+    android:orientation="horizontal">
 
     <com.hengye.share.ui.widget.image.AvatarImageView
         android:id="@+id/iv_avatar"
         android:layout_width="@dimen/user_avatar"
-        android:layout_height="@dimen/user_avatar"/>
+        android:layout_height="@dimen/user_avatar"
+        android:layout_margin="@dimen/content_margin_default" />
 
     <LinearLayout
         android:id="@+id/layout_user_info"
-        android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/content_margin_10dp"
+        android:layout_alignTop="@id/iv_avatar"
+        android:layout_alignBottom="@id/iv_avatar"
         android:layout_marginEnd="@dimen/content_margin_10dp"
+        android:layout_toEndOf="@id/iv_avatar"
+        android:layout_toStartOf="@id/layout_attention"
         android:gravity="center_vertical"
         android:orientation="vertical">
 
@@ -43,27 +45,23 @@
             android:textSize="@dimen/text_small"
             tools:text="捉紧 生命浓度 坦白流露 感情和态度。。" />
 
-    </LinearLayout>
 
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/layout_attention"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingStart="@dimen/content_margin_8dp"
-        android:paddingEnd="@dimen/content_margin_8dp"
-        android:paddingTop="@dimen/content_margin_5dp"
-        android:paddingBottom="@dimen/content_margin_5dp"
-        android:layout_gravity="center_vertical"
+        android:layout_height="match_parent"
+        android:background="?attr/theme_color"
+        android:layout_alignTop="@id/iv_avatar"
+        android:layout_alignBottom="@id/iv_avatar"
+        android:layout_alignParentEnd="true"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        tools:background="?attr/theme_color">
+        android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/iv_attention"
             android:layout_width="@dimen/icon_size_small"
             android:layout_height="@dimen/icon_size_small"
-            android:contentDescription="@null"
             android:src="@drawable/ic_add_black_36dp"/>
 
         <TextView
@@ -73,6 +71,12 @@
             android:textSize="@dimen/text_normal"
             android:textColor="@color/white"
             tools:text="关注"/>
+
+
     </LinearLayout>
 
-</LinearLayout>
+    <View
+        style="@style/horizontal_line"
+        android:layout_below="@id/iv_avatar"/>
+
+</RelativeLayout>

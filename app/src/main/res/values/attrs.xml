@@ -6,4 +6,6 @@
     <attr name="theme_font_color" format="reference|color"/>
     <attr name="theme_assist_color" format="reference|color"/>
     <attr name="theme_accent_color" format="reference|color"/>
+
+    <attr name="theme_divider" format="reference|integer"/>
 </resources>

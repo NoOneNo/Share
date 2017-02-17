@@ -2,6 +2,7 @@ package com.hengye.share.model.greenrobot;
 
 import org.greenrobot.greendao.annotation.*;
 
+import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.greenrobot.DaoSession;
 import org.greenrobot.greendao.DaoException;
 
@@ -323,6 +324,22 @@ public class User implements java.io.Serializable {
         user.setGender(wbUserInfo.getGender());
         user.setSign(wbUserInfo.getDescription());
         user.setCover(wbUserInfo.getCover_image_phone());
+        return user;
+    }
+
+    public static User getUser(UserInfo userInfo) {
+        User user = new User();
+        if (userInfo == null) {
+            return user;
+        }
+        user.setParentType(userInfo.getParent().getType());
+        user.setParentJson(userInfo.getParent().getJson());
+        user.setUid(userInfo.getUid());
+        user.setName(userInfo.getName());
+        user.setAvatar(userInfo.getAvatar());
+        user.setGender(userInfo.getGender());
+        user.setSign(userInfo.getSign());
+        user.setCover(userInfo.getCover());
         return user;
     }
 

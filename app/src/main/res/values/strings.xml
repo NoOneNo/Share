@@ -197,18 +197,21 @@
     <string name="label_attention_count">关注 %s</string>
     <string name="label_division">|</string>
     <string name="label_fans_count">粉丝 %s</string>
-    <string name="label_status_following">已关注</string>
-    <string name="label_status_unfollowing">添加关注</string>
-    <string name="label_follow_create_success">关注成功</string>
-    <string name="label_follow_destroy_success">成功取消关注</string>
     <string name="label_tab_about">关于</string>
     <string name="label_tab_topic">微博(%s)</string>
     <string name="label_tab_album">相册</string>
-
     <string name="label_at_ta">\@TA</string>
     <string name="label_private_message">私信</string>
     <string name="label_detail_info">详细资料</string>
     <!-- Strings related to PersonalHomePage -->
+
+    <!-- Strings related to Action -->
+    <string name="label_status_following">已关注</string>
+    <string name="label_status_following_swap">相互关注</string>
+    <string name="label_status_unfollowing">关注</string>
+    <string name="label_follow_create_success">关注成功</string>
+    <string name="label_follow_destroy_success">成功取消关注</string>
+    <!-- Strings related to Action -->
 
     <!-- Strings related to TopicPublish -->
     <string name="title_publish_topic">发微博</string>
