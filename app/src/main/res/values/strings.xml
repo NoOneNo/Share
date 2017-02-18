@@ -393,6 +393,9 @@
     <string name="title_setting_read_order">阅读顺序</string>
     <string name="title_setting_read_order_summary">「顺序阅读」表示刷新时总是从最新微博开始阅读，「逆序阅读」表示刷新时保留上次的阅读位置，从加载新微博的最后一条向最新阅读</string>
     <string name="title_setting_auto_night_mode">自动进入夜间模式</string>
+    <string name="title_setting_show_drawer_from_left">首页抽屉菜单从左侧展开</string>
+    <string name="title_setting_show_drawer_from_left_summary">需要重启应用后生效</string>
+    <string name="tip_show_drawer_from_left_summary">该选项需要重启应用后才生效，是否立即重启？</string>
 
     <string name="title_setting_check_update">检查更新 / 给我评分</string>
     <string name="title_setting_version_code">版本号</string>

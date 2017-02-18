@@ -113,7 +113,8 @@ public class TopicCommentPresenter extends ListTaskPresenter<TopicCommentContrac
                                                         }
                                                         return Single.just(topicComments);
                                                     }
-                                                });
+                                                })
+                                                .onErrorReturnItem(topicComments);
                                     }
                                     return Single.just(topicComments == null ? new TopicComments() : topicComments);
                                 }

@@ -1,5 +1,8 @@
 package com.hengye.share.module.setting;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 
@@ -9,6 +12,11 @@ import com.hengye.share.module.util.BasePreferenceFragment;
 import com.hengye.share.util.ToastUtil;
 
 public class SettingReadingHabitFragment extends BasePreferenceFragment{
+
+    @Override
+    protected boolean isRegisterOnSharedPreferenceChangeListener() {
+        return true;
+    }
 
     @Override
     public String getTitle(){
@@ -34,4 +42,21 @@ public class SettingReadingHabitFragment extends BasePreferenceFragment{
         findPreference(SettingHelper.KEY_HABIT_FONT_ZOOM).setOnPreferenceClickListener(onClickListener);
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+        if (key.equals(SettingHelper.KEY_HABIT_SHOW_DRAWER_FROM_LEFT)) {
+            new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.dialog_text_tip)
+                    .setMessage(R.string.tip_show_drawer_from_left_summary)
+                    .setNegativeButton(R.string.dialog_text_no, null)
+                    .setPositiveButton(R.string.dialog_text_yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            getActivity().recreate();
+                        }
+                    })
+                    .show();
+        }
+    }
 }

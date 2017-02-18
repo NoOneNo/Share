@@ -60,5 +60,10 @@
         android:summary="%s"
         android:title="@string/title_setting_load_count" />
 
+    <CheckBoxPreference
+        android:key="show_drawer_from_left"
+        android:title="@string/title_setting_show_drawer_from_left"
+        android:summary="@string/title_setting_show_drawer_from_left_summary"
+        android:defaultValue="false"/>
 
 </PreferenceScreen>

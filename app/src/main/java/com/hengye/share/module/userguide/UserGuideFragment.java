@@ -32,7 +32,6 @@ public class UserGuideFragment extends RecyclerFragment<UserGuide>
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        getRecyclerView().addItemDecoration(new DividerItemDecoration(getContext()));
         setAdapter(mAdapter = new UserGuideAdapter(getContext()));
         setDataHandler(new DefaultDataHandler<>(mAdapter));
         mPresenter = new UserGuidePresenter(this);

@@ -29,6 +29,7 @@
         android:id="@+id/tv_topic_username"
         android:layout_alignTop="@id/iv_topic_avatar"
         android:layout_toEndOf="@id/space_avatar_to_name"
+        android:layout_toStartOf="@+id/layout_like_assist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="我是一只小小小鸡仔"
@@ -40,6 +41,7 @@
     <TextView
         android:id="@+id/tv_topic_description"
         android:layout_alignStart="@id/tv_topic_username"
+        android:layout_toStartOf="@id/layout_like_assist"
         android:layout_below="@id/tv_topic_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -53,22 +55,22 @@
         android:id="@+id/layout_like_assist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingStart="@dimen/activity_horizontal_margin"
-        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin_half"
+        android:paddingStart="@dimen/activity_horizontal_margin_half"
+        android:paddingEnd="@dimen/activity_horizontal_margin_half"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true">
 
         <LinearLayout
             android:id="@+id/layout_like"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/topic_comment_like_height"
             android:background="@drawable/selector_ripple_transparent"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingBottom="@dimen/spacing_normal"
-            android:paddingEnd="@dimen/spacing_big"
-            android:paddingStart="@dimen/spacing_big"
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            android:paddingStart="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/spacing_normal">
 
             <TextView

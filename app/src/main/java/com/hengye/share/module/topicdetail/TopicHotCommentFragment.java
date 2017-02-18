@@ -81,7 +81,6 @@ public class TopicHotCommentFragment extends ShareLoadDataCallbackFragment<Topic
     }
 
     private void initView() {
-        setRefreshEnable(false);
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(final View view, final int position) {

@@ -12,9 +12,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,7 +26,6 @@ import android.widget.Toast;
 import com.hengye.share.R;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.greenrobot.User;
-import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.module.accountmanage.AccountManageActivity;
 import com.hengye.share.module.base.ActivityHelper;
 import com.hengye.share.module.base.BaseActivity;
@@ -46,7 +48,6 @@ import com.hengye.share.ui.widget.fab.AnimatedFloatingActionButton;
 import com.hengye.share.ui.widget.image.AvatarImageView;
 import com.hengye.share.ui.widget.sheetfab.MaterialSheetFab;
 import com.hengye.share.ui.widget.sheetfab.MaterialSheetFabEventListener;
-import com.hengye.share.ui.widget.util.DrawableLoader;
 import com.hengye.share.ui.widget.util.SelectorLoader;
 import com.hengye.share.util.L;
 import com.hengye.share.util.NetworkUtil;
@@ -104,6 +105,8 @@ public class TopicActivity extends BaseActivity
     protected void onResume() {
         super.onResume();
         mAppBar.addOnOffsetChangedListener(this);
+        adjustDrawerOrientation();
+
         if (mUpdateUserInfo) {
             mUpdateUserInfo = false;
             if (UserUtil.isUserNameEmpty()) {
@@ -145,6 +148,8 @@ public class TopicActivity extends BaseActivity
     TextView mUsername, mSign;
     View mNoNetwork;
     DrawerLayout mDrawer;
+    NavigationView mNavigationView;
+    ActionBarDrawerToggleCustom mActionBarDrawerToggle;
     AnimatedFloatingActionButton mFab;
 
     GroupListFragment mGroupsFragment;
@@ -169,7 +174,7 @@ public class TopicActivity extends BaseActivity
         mAppBar = (AppBarLayout) findViewById(R.id.appbar);
         mFab = (AnimatedFloatingActionButton) findViewById(R.id.fab);
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-
+        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         initToolbar();
         initToolBarButton();
         initNavigationView();
@@ -193,15 +198,15 @@ public class TopicActivity extends BaseActivity
 //            getToolbar().getNavigation().setScaleType(ImageView.ScaleType.MATRIX);
 //        }
 
-        ActionBarDrawerToggleCustom toggle = new ActionBarDrawerToggleCustom(
+        mActionBarDrawerToggle = new ActionBarDrawerToggleCustom(
                 this, mDrawer, getToolbar(), R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        if (toggle.getDrawerArrowDrawable() != null) {
-            toggle.getDrawerArrowDrawable().setColor(ThemeUtil.getUntingedColor());
+        if (mActionBarDrawerToggle.getDrawerArrowDrawable() != null) {
+            mActionBarDrawerToggle.getDrawerArrowDrawable().setColor(ThemeUtil.getUntingedColor());
         }
 
-        toggle.setGravityCompat(GravityCompat.END);
-        mDrawer.addDrawerListener(toggle);
-        toggle.setDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+        adjustDrawerOrientation();
+        mDrawer.addDrawerListener(mActionBarDrawerToggle);
+        mActionBarDrawerToggle.setDrawerListener(new DrawerLayout.SimpleDrawerListener() {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
@@ -209,16 +214,15 @@ public class TopicActivity extends BaseActivity
             }
         });
 
-        toggle.syncState();
+        mActionBarDrawerToggle.syncState();
     }
 
     private void initNavigationView() {
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setBackgroundColor(ThemeUtil.getBackgroundColor());
+        mNavigationView.setBackgroundColor(ThemeUtil.getBackgroundColor());
 
-        navigationView.setNavigationItemSelectedListener(this);
+        mNavigationView.setNavigationItemSelectedListener(this);
 
-        View header = navigationView.getHeaderView(0);
+        View header = mNavigationView.getHeaderView(0);
         //修复因为布局使用fitsSystemWindows而导致DrawLayout内容间距不对的问题
         int contentPadding = getResources().getDimensionPixelSize(R.dimen.activity_vertical_margin);
         RelativeLayout navHeader = (RelativeLayout) header.findViewById(R.id.rl_header);
@@ -253,6 +257,18 @@ public class TopicActivity extends BaseActivity
         mAvatar.setOnClickListener(this);
         mUsername.setOnClickListener(this);
         mSign.setOnClickListener(this);
+    }
+
+    private void adjustDrawerOrientation(){
+        DrawerLayout.LayoutParams lp = (DrawerLayout.LayoutParams) mNavigationView.getLayoutParams();
+        if(SettingHelper.isShowDrawerFromLeft()){
+            lp.gravity = Gravity.START;
+            mActionBarDrawerToggle.setGravityCompat(GravityCompat.START);
+        }else{
+            lp.gravity = Gravity.END;
+            mActionBarDrawerToggle.setGravityCompat(GravityCompat.END);
+        }
+        mNavigationView.requestLayout();
     }
 
     private void initFab() {
@@ -357,8 +373,8 @@ public class TopicActivity extends BaseActivity
 
     @Override
     public void onBackPressed() {
-        if (mDrawer.isDrawerOpen(GravityCompat.END)) {
-            mDrawer.closeDrawer(GravityCompat.END);
+        if (mDrawer.isDrawerOpen(mNavigationView)) {
+            mDrawer.closeDrawer(mNavigationView);
         } else if (mSearchView.isSearchShow()) {
             mSearchView.handleSearch(false);
         } else {
@@ -422,13 +438,6 @@ public class TopicActivity extends BaseActivity
 
         if (id == R.id.nav_homepage) {
             startActivity(HotTopicAndStatusActivity.class);
-//            UserInfo userInfo = getUserInfo();
-//            if (UserUtil.getCurrentUser() == null) {
-//                Toast.makeText(this, "请先登录", Toast.LENGTH_SHORT).show();
-//                return false;
-//            }
-//            mUpdateUserInfo = true;
-//            PersonalHomepageActivity.start(this, mAvatar, UserInfo.getUserInfo(UserUtil.getCurrentUser()));
         } else if (id == R.id.nav_private_message) {
             startActivity(WebViewActivity.getStartIntent(this, WBUtil.URL_HTTP_MOBILE));
         } else if (id == R.id.nav_at_me) {
@@ -436,19 +445,14 @@ public class TopicActivity extends BaseActivity
         } else if (id == R.id.nav_comment) {
             startActivity(TopicCommentActivity.class);
         } else if (id == R.id.nav_favorites) {
-//            startActivity(FragmentActivity.getStartIntent(this, TopicFavoritesFragment.class));
             startActivity(TopicFavoriteActivity.class);
         } else if (id == R.id.nav_setting) {
-//            mDrawer.closeDrawer(GravityCompat.END);
             startActivity(SettingActivity.class);
         } else if (id == R.id.nav_group_manage) {
             getAdTokenInterceptor().setAction(mStartGroup).start();
-//            startActivityForResult(GroupManageActivity.class, GroupManageActivity.REQUEST_GROUP_UPDATE);
         } else if (id == R.id.nav_draft) {
             startActivity(TopicDraftActivity.class);
         }
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        drawer.closeDrawer(GravityCompat.END);
         return false;
     }
 

@@ -124,7 +124,9 @@ public class TopicCommentAdapter extends CommonAdapter<TopicComment> {
         private View.OnTouchListener mOnTouchLikeAssistListener = new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                return mTopicTitle.mLikeLayout.onTouchEvent(event);
+                mTopicTitle.mLikeLayout.onTouchEvent(event);
+                return true;
+//                return mTopicTitle.mLikeLayout.onTouchEvent(event);
             }
         };
 

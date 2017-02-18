@@ -62,6 +62,7 @@ public class SettingHelper {
     public final static String KEY_HABIT_SHOW_AVATAR = "show_avatar";
     public final static String KEY_HABIT_AUTO_NIGHT = "auto_night_mode";
     public final static String KEY_HABIT_READ_ORDER = "read_order";
+    public final static String KEY_HABIT_SHOW_DRAWER_FROM_LEFT = "show_drawer_from_left";
     //阅读习惯
 
     //关于
@@ -306,6 +307,10 @@ public class SettingHelper {
     //阅读顺序
     public static String getReadingOrder(){
         return getString(KEY_HABIT_READ_ORDER);
+    }
+
+    public static boolean isShowDrawerFromLeft(){
+        return getBoolean(KEY_HABIT_SHOW_DRAWER_FROM_LEFT, false);
     }
 
     public static boolean isOrderReading(){
