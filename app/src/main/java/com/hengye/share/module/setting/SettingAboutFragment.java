@@ -10,6 +10,8 @@ import android.preference.PreferenceScreen;
 
 import com.hengye.share.BuildConfig;
 import com.hengye.share.R;
+import com.hengye.share.module.userguide.UserGuideFragment;
+import com.hengye.share.module.util.FragmentActivity;
 import com.hengye.share.module.util.WebViewActivity;
 import com.hengye.share.module.util.BasePreferenceFragment;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
@@ -42,7 +44,11 @@ public class SettingAboutFragment extends BasePreferenceFragment {
             startMarket();
         } else if (title.equals(getString(R.string.title_setting_version_code))) {
 
-        } else if (title.equals(getString(R.string.title_setting_donate_to_developer))) {
+        } else if (title.equals(getString(R.string.title_setting_user_guide))) {
+
+            getActivity().startActivity(FragmentActivity.getStartIntent(getActivity(), UserGuideFragment.class));
+
+        }else if (title.equals(getString(R.string.title_setting_donate_to_developer))) {
             ClipboardUtil.copy("1240001796@qq.com");
             showDialog();
         }
@@ -59,8 +65,7 @@ public class SettingAboutFragment extends BasePreferenceFragment {
             stbd.setPositiveButtonClickListener(new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-
-                    startActivity(WebViewActivity.getStartIntent(getActivity(), "http://auth.alipay.com"));
+                    getActivity().startActivity(WebViewActivity.getStartIntent(getActivity(), "http://auth.alipay.com"));
                 }
             });
             mDialog = stbd.create(getActivity());
@@ -69,12 +74,12 @@ public class SettingAboutFragment extends BasePreferenceFragment {
         mDialog.show();
     }
 
-    public static void startMarket() {
+    private void startMarket() {
         Uri uri = Uri.parse(String.format("market://details?id=%s", BuildConfig.APPLICATION_ID));
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if (IntentUtil.resolveActivity(intent)) {
-            ApplicationUtil.getContext().startActivity(intent);
+            startActivity(intent);
         } else {
             ToastUtil.showToast(R.string.tip_no_app_store);
         }

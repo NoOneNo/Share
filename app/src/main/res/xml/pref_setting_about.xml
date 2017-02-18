@@ -12,6 +12,10 @@
         android:title="@string/title_setting_version_code" />
 
     <Preference
+        android:key="user_guide"
+        android:title="@string/title_setting_user_guide" />
+
+    <Preference
         android:key="donate_to_developer"
         android:title="@string/title_setting_donate_to_developer" />
 

@@ -36,7 +36,7 @@ public class SearchUserFragment extends ShareRecyclerFragment<UserInfo>
     private String mKeywords;
     private ArrayList<UserInfo> mUserInfos;
     private SearchUserPresenter mPresenter;
-    private UserAttentionPresenter mUserAttentionPresenter;
+    private UserAttentionContract.Presenter mUserAttentionPresenter;
     private TopicNumberPager mPager;
     private boolean mRequesting = false;
 
@@ -46,8 +46,8 @@ public class SearchUserFragment extends ShareRecyclerFragment<UserInfo>
     }
 
     @Override
-    public int getContentResId() {
-        return R.layout.fragment_recycler_refresh_vertical;
+    protected boolean isShowScrollbars() {
+        return true;
     }
 
     @Override

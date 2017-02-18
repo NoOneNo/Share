@@ -54,8 +54,8 @@ public class AroundAddressFragment extends ShareRecyclerFragment<Address> implem
     }
 
     @Override
-    public int getContentResId() {
-        return R.layout.fragment_recycler_refresh_vertical;
+    protected boolean isShowScrollbars() {
+        return true;
     }
 
     @Override

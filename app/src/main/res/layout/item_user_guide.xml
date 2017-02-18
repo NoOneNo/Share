@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:background="@color/background_default"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/content_margin_default"
+    android:orientation="horizontal">
+
+    <com.hengye.share.ui.widget.ExpandIconView
+        android:id="@+id/expand_icon"
+        android:layout_width="@dimen/icon_size_small"
+        android:layout_height="@dimen/icon_size_small"
+        android:layout_marginEnd="@dimen/content_margin_default"
+        app:eiv_animationDuration="300"
+        app:eiv_color="#000"
+        app:eiv_colorLess="?attr/theme_color"
+        app:eiv_colorMore="?attr/theme_dark_color"
+        app:eiv_roundedCorners="false"
+        app:eiv_switchColor="true"/>
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_normal"
+        android:textColor="@color/text_grey"
+        android:ellipsize="end"
+        tools:text="1.hhhhhhhhhhhhhhhhhh"/>
+
+</LinearLayout>

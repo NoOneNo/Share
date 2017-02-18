@@ -25,8 +25,8 @@ public class UserListFragment extends ShareRecyclerFragment<UserInfo> implements
     UserListAdapter mAdapter;
 
     @Override
-    public int getContentResId() {
-        return R.layout.fragment_recycler_refresh_vertical;
+    protected boolean isShowScrollbars() {
+        return true;
     }
 
     @Override

@@ -18,11 +18,11 @@ import static com.hengye.share.module.util.encapsulation.base.TaskState.isSucces
 /**
  * Created by yuhy on 16/7/27.
  */
-public abstract class RecyclerRefreshFragment<T> extends RecyclerFragment<T>{
+public abstract class RecyclerRefreshFragment<T> extends RecyclerFragment<T> {
 
     @Override
     public int getContentResId() {
-        return R.layout.fragment_recycler_refresh;
+        return isShowScrollbars() ? R.layout.fragment_recycler_refresh_vertical : R.layout.fragment_recycler_refresh;
     }
 
     public
@@ -61,7 +61,7 @@ public abstract class RecyclerRefreshFragment<T> extends RecyclerFragment<T>{
         startRefresh();
     }
 
-    public void startRefresh(){
+    public void startRefresh() {
         showLoading();
         onRefresh();
     }
@@ -126,23 +126,24 @@ public abstract class RecyclerRefreshFragment<T> extends RecyclerFragment<T>{
 
     @Override
     public boolean canLoadMore(List<T> data, int type) {
-        if(isLEChildCount()){
+        if (isLEChildCount()) {
             return false;
-        }else {
+        } else {
             return super.canLoadMore(data, type);
         }
     }
 
     /**
      * adapter的内容是否都已经显示完；
+     *
      * @return
      */
-    protected boolean isLEChildCount(){
-        if(getRecyclerView().getLayoutManager() != null){
+    protected boolean isLEChildCount() {
+        if (getRecyclerView().getLayoutManager() != null) {
             RecyclerView.LayoutManager layoutManager = getRecyclerView().getLayoutManager();
 
 //            L.debug("childCount : {}, itemCount : {}", layoutManager.getChildCount(), layoutManager.getItemCount());
-            if(layoutManager.getChildCount() >= layoutManager.getItemCount()){
+            if (layoutManager.getChildCount() >= layoutManager.getItemCount()) {
                 return true;
             }
         }

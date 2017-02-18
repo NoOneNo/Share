@@ -20,9 +20,13 @@ import com.hengye.share.module.util.encapsulation.view.listener.OnScrollToTopAnd
 public abstract class RecyclerFragment<T> extends ListDataFragment<T>
         implements OnItemClickListener, OnItemLongClickListener, OnScrollToTopAndBottomListener{
 
+    protected boolean isShowScrollbars(){
+        return true;
+    }
+
     @Override
     public int getContentResId() {
-        return R.layout.fragment_recycler;
+        return isShowScrollbars() ? R.layout.fragment_recycler_vertical : R.layout.fragment_recycler;
     }
 
     public @IdRes int getRecyclerViewId(){

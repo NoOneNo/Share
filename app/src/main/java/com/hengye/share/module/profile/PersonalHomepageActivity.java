@@ -147,8 +147,8 @@ public class PersonalHomepageActivity extends BaseActivity
     private UserInfo mUserInfo;
 //    private WBUserInfo mWBUserInfo;
 
-    private UserPresenter mPresenter;
-    private UserAttentionPresenter mUserAttentionPresenter;
+    private UserContract.Presenter mPresenter;
+    private UserAttentionContract.Presenter mUserAttentionPresenter;
 
     @SuppressWarnings("ConstantConditions")
     private void initView() {
