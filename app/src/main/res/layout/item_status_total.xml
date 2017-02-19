@@ -1,23 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:background="@color/background_default"
     android:id="@+id/item_status_total"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:background="@color/background_default">
 
     <include layout="@layout/item_status_basic" />
 
     <include
-        layout="@layout/item_status_content"
-        android:id="@+id/item_status_retweeted_content"/>
+        android:id="@+id/item_status_retweeted_content"
+        layout="@layout/item_status_content" />
 
-    <include
-        android:id="@+id/item_status_options"
-        layout="@layout/item_status_options"
+    <LinearLayout
+        android:id="@+id/layout_status_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible" >
 
+        <include
+            layout="@layout/item_status_options"/>
+
+        <View style="@style/horizontal_line" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/content_margin_default_half"
+            android:background="@color/background_default_deep" />
+
+    </LinearLayout>
 </LinearLayout>

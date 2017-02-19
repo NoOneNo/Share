@@ -42,7 +42,7 @@ public class StatusActionMvpImpl implements StatusActionContract.View {
     }
 
     @Override
-    public void onLikeStatusComplete(final Status topic, int taskState) {
+    public void onLikeStatusComplete(final Status status, int taskState) {
 
         View parent = this.parent;
         if(parent == null){
@@ -52,7 +52,7 @@ public class StatusActionMvpImpl implements StatusActionContract.View {
         final boolean isSuccess = TaskState.isSuccess(taskState);
         if (isSuccess) {
             tip = ResUtil.getString(
-                    topic.isLiked() ?
+                    status.isLiked() ?
                             R.string.tip_status_like_create_success :
                             R.string.tip_status_like_destroy_success);
         } else {
@@ -68,7 +68,7 @@ public class StatusActionMvpImpl implements StatusActionContract.View {
                     if (isSuccess) {
                         likeStatusAction = false;
                     }
-                    mStatusActionPresenter.likeStatus(topic);
+                    mStatusActionPresenter.likeStatus(status);
                 }
             });
         } else {
@@ -78,7 +78,7 @@ public class StatusActionMvpImpl implements StatusActionContract.View {
     }
 
     @Override
-    public void onCollectStatusComplete(final Status topic, int taskState) {
+    public void onCollectStatusComplete(final Status status, int taskState) {
 
         View parent = this.parent;
         if(parent == null){
@@ -88,7 +88,7 @@ public class StatusActionMvpImpl implements StatusActionContract.View {
         final boolean isSuccess = TaskState.isSuccess(taskState);
         if (isSuccess) {
             tip = ResUtil.getString(
-                    topic.isFavorited() ?
+                    status.isFavorited() ?
                             R.string.tip_status_favorite_create_success :
                             R.string.tip_status_favorite_destroy_success);
         } else {
@@ -104,7 +104,7 @@ public class StatusActionMvpImpl implements StatusActionContract.View {
                     if(isSuccess) {
                         collectStatusAction = false;
                     }
-                    mStatusActionPresenter.collectStatus(topic);
+                    mStatusActionPresenter.collectStatus(status);
                 }
             });
         }else{

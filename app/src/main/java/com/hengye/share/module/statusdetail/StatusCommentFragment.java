@@ -187,7 +187,7 @@ public class StatusCommentFragment extends ShareLoadDataCallbackFragment<StatusC
             if (StatusTitleViewHolder.isClickStatusTitle(id)) {
                 //点击头像标题
                 StatusTitleViewHolder.onClickStatusTitle(getActivity(), mAdapter, view, position, mAdapter.getItem(position).getUserInfo());
-            } else if (id == R.id.layout_like) {
+            } else if (id == R.id.layout_attitude) {
                 //点赞
                 StatusComment topicComment = mAdapter.getItem(position);
                 mPresenter.likeComment(topicComment);

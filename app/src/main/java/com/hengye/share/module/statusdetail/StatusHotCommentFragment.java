@@ -88,7 +88,7 @@ public class StatusHotCommentFragment extends ShareLoadDataCallbackFragment<Stat
 
                 if (StatusTitleViewHolder.isClickStatusTitle(id)) {
                     StatusTitleViewHolder.onClickStatusTitle(getActivity(), mAdapter, view, position, mAdapter.getItem(position).getUserInfo());
-                } else if (id == R.id.layout_like) {
+                } else if (id == R.id.layout_attitude) {
                     //点赞
                     StatusComment topicComment = mAdapter.getItem(position);
                     mPresenter.likeComment(topicComment);

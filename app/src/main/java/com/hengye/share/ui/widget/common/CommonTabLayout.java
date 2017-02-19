@@ -41,7 +41,7 @@ public class CommonTabLayout extends TabLayout {
     void init(){
         if(isAutoTintThemeColor()){
             setBackgroundColor(ThemeUtil.getColor());
-            setTabTextColors(ThemeUtil.getTintLightBgColor(), ThemeUtil.getTintDarkBgColor());
+            setTabTextColors(ThemeUtil.getTextTintLightBgColor(), ThemeUtil.getTextTintDarkBgColor());
         }
     }
 

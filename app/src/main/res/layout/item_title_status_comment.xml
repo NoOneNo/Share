@@ -29,7 +29,7 @@
         android:id="@+id/tv_status_username"
         android:layout_alignTop="@id/iv_status_avatar"
         android:layout_toEndOf="@id/space_avatar_to_name"
-        android:layout_toStartOf="@+id/layout_like_assist"
+        android:layout_toStartOf="@+id/layout_attitude_assist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="我是一只小小小鸡仔"
@@ -41,7 +41,7 @@
     <TextView
         android:id="@+id/tv_status_description"
         android:layout_alignStart="@id/tv_status_username"
-        android:layout_toStartOf="@id/layout_like_assist"
+        android:layout_toStartOf="@id/layout_attitude_assist"
         android:layout_below="@id/tv_status_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
         android:ellipsize="end" />
 
     <FrameLayout
-        android:id="@+id/layout_like_assist"
+        android:id="@+id/layout_attitude_assist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingStart="@dimen/activity_horizontal_margin_half"
@@ -61,7 +61,7 @@
         android:layout_alignParentTop="true">
 
         <LinearLayout
-            android:id="@+id/layout_like"
+            android:id="@+id/layout_attitude"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/status_comment_like_height"
             android:background="@drawable/selector_ripple_transparent"
@@ -73,7 +73,7 @@
             android:paddingTop="@dimen/spacing_normal">
 
             <TextView
-                android:id="@+id/tv_like_counts"
+                android:id="@+id/tv_attitude_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/status_content"

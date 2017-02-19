@@ -82,7 +82,7 @@
         <!--<item name="android:colorBackground">@color/background_launch</item>-->
         <item name="android:background">@drawable/guidance</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowTranslucentNavigation">false</item>
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:navigationBarColor">@color/background_launch</item>
         <item name="android:statusBarColor">@color/background_launch</item>

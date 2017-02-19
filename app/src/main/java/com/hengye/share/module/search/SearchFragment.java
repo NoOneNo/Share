@@ -18,6 +18,7 @@ import com.hengye.share.model.Status;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.module.base.ShareRecyclerFragment;
 import com.hengye.share.module.profile.PersonalHomepageActivity;
+import com.hengye.share.module.status.StatusActionFragment;
 import com.hengye.share.module.status.StatusAdapter;
 import com.hengye.share.module.util.FragmentActivity;
 import com.hengye.share.module.util.encapsulation.base.DefaultDataHandler;
@@ -31,11 +32,10 @@ import com.hengye.share.util.handler.StatusNumberPager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchFragment extends ShareRecyclerFragment<Status>
+public class SearchFragment extends StatusActionFragment
         implements SearchContract.View, View.OnClickListener {
 
     private SearchUserBriefAdapter mUserAdapter;
-    private StatusAdapter mStatusAdapter;
     private NumberPager mPager;
     private SearchContract.Presenter mPresenter;
     private View mHeader, mUserListContent, mUserListEmpty, mStatusEmpty;
@@ -49,8 +49,7 @@ public class SearchFragment extends ShareRecyclerFragment<Status>
     }
 
     private void initView() {
-        setAdapter(mStatusAdapter = new StatusAdapter(getContext(), new ArrayList<Status>(), getRecyclerView()));
-        setDataHandler(new DefaultDataHandler<>(mStatusAdapter));
+        setDataHandler(new DefaultDataHandler<>(mAdapter));
         setPager(mPager = new StatusNumberPager(1, 15));
         setRefreshEnable(false);
         mPresenter = new SearchPresenter(this);
@@ -63,7 +62,7 @@ public class SearchFragment extends ShareRecyclerFragment<Status>
         mUserListContent = mHeader.findViewById(R.id.user_list_content);
         mUserListEmpty = mHeader.findViewById(R.id.empty_user_list);
         mStatusEmpty = mHeader.findViewById(R.id.empty_status);
-        mStatusAdapter.setHeader(mHeader);
+        mAdapter.setHeader(mHeader);
 
         setTitle(R.id.item_user_list_title, R.string.label_search_user);
         setTitle(R.id.item_status_list_title, R.string.label_search_status);

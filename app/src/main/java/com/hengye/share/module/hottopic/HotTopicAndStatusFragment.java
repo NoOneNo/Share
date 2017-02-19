@@ -13,6 +13,7 @@ import com.hengye.share.R;
 import com.hengye.share.model.HotTopic;
 import com.hengye.share.model.Status;
 import com.hengye.share.module.base.ShareRecyclerFragment;
+import com.hengye.share.module.status.StatusActionFragment;
 import com.hengye.share.module.status.StatusAdapter;
 import com.hengye.share.module.status.StatusTopicActivity;
 import com.hengye.share.util.CommonUtil;
@@ -21,7 +22,7 @@ import com.hengye.share.util.handler.StatusRefreshIdHandler;
 
 import java.util.ArrayList;
 
-public class HotTopicAndStatusFragment extends ShareRecyclerFragment<Status>
+public class HotTopicAndStatusFragment extends StatusActionFragment
         implements HotTopicAndStatusContract.View, View.OnClickListener{
 
     @Override
@@ -29,7 +30,6 @@ public class HotTopicAndStatusFragment extends ShareRecyclerFragment<Status>
         return false;
     }
 
-    StatusAdapter mAdapter;
     HotTopicAndStatusContract.Presenter mPresenter;
     HotStatusPager mPager;
     View mHeader, mHotTopicContent, mHotTopicEmpty;
@@ -39,7 +39,6 @@ public class HotTopicAndStatusFragment extends ShareRecyclerFragment<Status>
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        setAdapter(mAdapter = new StatusAdapter(getContext(), new ArrayList<Status>(), getRecyclerView()));
         setDataHandler(new StatusRefreshIdHandler<>(mAdapter));
         setPager(mPager = new HotStatusPager());
         mPresenter = new HotTopicAndStatusPresenter(this);

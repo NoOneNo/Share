@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/background_default"
+    tools:background="@color/background_default"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal">
@@ -20,11 +20,12 @@
         android:padding="@dimen/content_margin_default_half">
 
         <ImageView
-            android:layout_width="@dimen/icon_size_small"
-            android:layout_height="@dimen/icon_size_small"
+            android:id="@+id/iv_repost"
+            android:layout_width="@dimen/icon_size_tiny"
+            android:layout_height="@dimen/icon_size_tiny"
             android:contentDescription="@null"
             android:src="@drawable/ic_repost_white_48dp"
-            android:tint="@color/status_content_light"/>
+            tools:tint="@color/status_content_light"/>
 
         <Space
             android:layout_width="@dimen/content_margin_3dp"
@@ -34,7 +35,7 @@
             android:id="@+id/tv_repost_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_small"
+            android:textSize="@dimen/text_micro"
             android:textColor="@color/status_content_light"
             tools:text="13000"/>
     </LinearLayout>
@@ -48,11 +49,12 @@
         android:padding="@dimen/content_margin_default_half">
 
         <ImageView
-            android:layout_width="@dimen/icon_size_small"
-            android:layout_height="@dimen/icon_size_small"
+            android:id="@+id/iv_comment"
+            android:layout_width="@dimen/icon_size_tiny"
+            android:layout_height="@dimen/icon_size_tiny"
             android:contentDescription="@null"
             android:src="@drawable/ic_comment_white_48dp"
-            android:tint="@color/status_content_light"/>
+            tools:tint="@color/status_content_light"/>
 
         <Space
             android:layout_width="@dimen/content_margin_3dp"
@@ -62,13 +64,13 @@
             android:id="@+id/tv_comment_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_small"
+            android:textSize="@dimen/text_micro"
             android:textColor="@color/status_content_light"
             tools:text="13000"/>
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/layout_like"
+        android:id="@+id/layout_attitude"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -76,23 +78,28 @@
         android:padding="@dimen/content_margin_default_half">
 
         <ImageView
-            android:layout_width="@dimen/icon_size_small"
-            android:layout_height="@dimen/icon_size_small"
+            android:id="@+id/iv_attitude"
+            android:layout_width="@dimen/icon_size_tiny"
+            android:layout_height="@dimen/icon_size_tiny"
             android:contentDescription="@null"
             android:src="@drawable/ic_thumb_up_white_48dp"
-            android:tint="@color/status_content_light"/>
+            tools:tint="@color/status_content_light"/>
 
         <Space
             android:layout_width="@dimen/content_margin_3dp"
             android:layout_height="0dp"/>
 
         <TextView
-            android:id="@+id/tv_like_count"
+            android:id="@+id/tv_attitude_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_small"
+            android:textSize="@dimen/text_micro"
             android:textColor="@color/status_content_light"
             tools:text="13000"/>
     </LinearLayout>
+
+    <Space
+        android:layout_width="@dimen/content_margin_default"
+        android:layout_height="0dp" />
 
 </LinearLayout>

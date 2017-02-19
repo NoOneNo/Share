@@ -148,7 +148,7 @@ public class StatusComment implements StatusId, StatusShortUrl, Serializable{
 
     @Override
     public String toString() {
-        return "TopicComment{" +
+        return "StatusComment{" +
                 "parent=" + parent +
                 ", userInfo=" + userInfo +
                 ", date='" + date + '\'' +

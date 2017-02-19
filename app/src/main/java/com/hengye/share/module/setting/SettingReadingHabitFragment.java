@@ -45,7 +45,8 @@ public class SettingReadingHabitFragment extends BasePreferenceFragment{
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
-        if (key.equals(SettingHelper.KEY_HABIT_SHOW_DRAWER_FROM_LEFT)) {
+        if (key.equals(SettingHelper.KEY_HABIT_SHOW_DRAWER_FROM_LEFT) ||
+                key.equals(SettingHelper.KEY_HABIT_SHOW_STATUS_OPTIONS)) {
             new AlertDialog.Builder(getActivity())
                     .setTitle(R.string.dialog_text_tip)
                     .setMessage(R.string.tip_show_drawer_from_left_summary)

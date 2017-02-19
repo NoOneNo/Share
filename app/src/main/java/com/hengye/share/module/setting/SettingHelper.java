@@ -60,6 +60,7 @@ public class SettingHelper {
     public final static String KEY_HABIT_FONT_ZOOM = "font_zoom";
     public final static String KEY_HABIT_MENU_STYLE = "menu_show_style";
     public final static String KEY_HABIT_SHOW_AVATAR = "show_avatar";
+    public final static String KEY_HABIT_SHOW_STATUS_OPTIONS = "show_status_options";
     public final static String KEY_HABIT_AUTO_NIGHT = "auto_night_mode";
     public final static String KEY_HABIT_READ_ORDER = "read_order";
     public final static String KEY_HABIT_SHOW_DRAWER_FROM_LEFT = "show_drawer_from_left";
@@ -283,11 +284,12 @@ public class SettingHelper {
         return getString(KEY_HABIT_MENU_STYLE);
     }
 
-    //显示头像
+    //显示头像(微博、评论转发)
     private static Set<String> isShowAvatar(){
         return getStringSet(KEY_HABIT_SHOW_AVATAR);
     }
 
+    //显示头像
     public static boolean isShowStatusAvatar(){
         Set<String> value = isShowAvatar();
         return value == null || !value.contains("1");
@@ -297,6 +299,10 @@ public class SettingHelper {
     public static boolean isShowCommentAndRepostAvatar(){
         Set<String> value = isShowAvatar();
         return value == null || !value.contains("2");
+    }
+
+    public static boolean isShowStatusOptions(){
+        return getBoolean(KEY_HABIT_SHOW_STATUS_OPTIONS, false);
     }
 
     //自动进入夜间模式

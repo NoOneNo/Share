@@ -114,6 +114,9 @@ public class StatusDetailActivity extends BaseActivity
         }
         final StatusAdapter.StatusDefaultViewHolder statusViewHolder = new StatusAdapter.StatusDefaultViewHolder(statusLayout);
         statusViewHolder.bindData(this, mStatus, 0);
+        if(statusViewHolder.mStatusOptions != null){
+            statusViewHolder.mStatusOptions.mStatusOptionsLayout.setVisibility(View.GONE);
+        }
         statusViewHolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

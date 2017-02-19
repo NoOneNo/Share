@@ -16,14 +16,14 @@ public class StatusFavoriteFragment extends StatusPageFragment {
     }
 
     @Override
-    public void onCollectStatusComplete(Status topic, int taskState) {
-        super.onCollectStatusComplete(topic, taskState);
-        if(!topic.isFavorited()){
-            mAdapter.removeItem(topic);
+    public void onCollectStatusComplete(Status status, int taskState) {
+        super.onCollectStatusComplete(status, taskState);
+        if(!status.isFavorited()){
+            mAdapter.removeItem(status);
         }else{
-            if(!mAdapter.contains(topic)){
+            if(!mAdapter.contains(status)){
                 onScrollToTop(false);
-                mAdapter.addItem(0, topic);
+                mAdapter.addItem(0, status);
             }
         }
     }

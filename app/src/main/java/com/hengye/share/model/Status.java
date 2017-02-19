@@ -213,7 +213,7 @@ public class Status extends ParentInherit implements StatusId, StatusShortUrl, S
 
     @Override
     public String toString() {
-        return "Topic{" +
+        return "Status{" +
                 ", date='" + date + '\'' +
                 ", channel='" + channel + '\'' +
                 ", content='" + content + '\'' +

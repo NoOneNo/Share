@@ -71,7 +71,7 @@ public class StatusCommentAdapter extends CommonAdapter<StatusComment> {
             mStatusTotalItem = findViewById(R.id.item_status_total);
 
             //不设置的话会被名字内容的点击事件覆盖，无法触发ItemView的onClick
-            registerOnClickListener(mStatusTitle.mLikeLayout);
+            registerOnClickListener(mStatusTitle.mAttitudeLayout);
             registerOnClickListener(mStatusTitle.mAvatar);
             registerOnClickListener(mStatusTitle.mUsername);
             registerOnClickListener(mStatusTitle.mDescription);
@@ -92,7 +92,7 @@ public class StatusCommentAdapter extends CommonAdapter<StatusComment> {
             SelectorLoader.getInstance().setDefaultRippleBackground(mStatusTotalItem);
 
             //扩大点赞按钮触摸区域
-            mStatusTitle.mLikeAssist.setOnTouchListener(mOnTouchLikeAssistListener);
+            mStatusTitle.mAttitudeAssist.setOnTouchListener(mOnTouchLikeAssistListener);
 
             mStatusTitle.mAvatar.setOnTouchListener(mStatusOnTouchListener);
             mStatusTitle.mUsername.setOnTouchListener(mStatusOnTouchListener);
@@ -124,9 +124,9 @@ public class StatusCommentAdapter extends CommonAdapter<StatusComment> {
         private View.OnTouchListener mOnTouchLikeAssistListener = new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                mStatusTitle.mLikeLayout.onTouchEvent(event);
+                mStatusTitle.mAttitudeLayout.onTouchEvent(event);
                 return true;
-//                return mStatusTitle.mLikeLayout.onTouchEvent(event);
+//                return mStatusTitle.mAttitudeLayout.onTouchEvent(event);
             }
         };
 
@@ -148,21 +148,21 @@ public class StatusCommentAdapter extends CommonAdapter<StatusComment> {
 
     public static class StatusCommentTitleViewHolder extends StatusTitleViewHolder {
 
-        public View mLikeLayout, mLikeAssist;
-        public ImageButton mLikeBtn;
-        public TextView mLikeCounts;
+        public View mAttitudeLayout, mAttitudeAssist;
+        public ImageButton mAttitudeBtn;
+        public TextView mAttitudeCount;
         public boolean mIsLikeMode;
 
         public StatusCommentTitleViewHolder(View v, boolean isLikeMode) {
             super(v);
             mIsLikeMode = isLikeMode;
-            mLikeAssist = v.findViewById(R.id.layout_like_assist);
-            mLikeLayout = v.findViewById(R.id.layout_like);
-            mLikeBtn = (ImageButton) v.findViewById(R.id.btn_like);
-            mLikeCounts = (TextView) v.findViewById(R.id.tv_like_counts);
+            mAttitudeAssist = v.findViewById(R.id.layout_attitude_assist);
+            mAttitudeLayout = v.findViewById(R.id.layout_attitude);
+            mAttitudeBtn = (ImageButton) v.findViewById(R.id.btn_like);
+            mAttitudeCount = (TextView) v.findViewById(R.id.tv_attitude_count);
 
             if (!isLikeMode) {
-                mLikeLayout.setVisibility(View.GONE);
+                mAttitudeLayout.setVisibility(View.GONE);
             }
         }
 
@@ -187,10 +187,10 @@ public class StatusCommentAdapter extends CommonAdapter<StatusComment> {
 
             if (mIsLikeMode) {
                 int color = topicComment.isLiked() ? ThemeUtil.getColor() : ResUtil.getColor(R.color.grey_850);
-                mLikeBtn.setImageDrawable(DrawableLoader.setTintDrawable(R.drawable.ic_thumb_up_white_48dp, color).mutate());
-                mLikeCounts.setText(DataUtil.getCounter(topicComment.getLikeCounts()));
+                mAttitudeBtn.setImageDrawable(DrawableLoader.setTintDrawable(R.drawable.ic_thumb_up_white_48dp, color).mutate());
+                mAttitudeCount.setText(DataUtil.getCounter(topicComment.getLikeCounts()));
 
-                mLikeCounts.setVisibility(topicComment.getLikeCounts() < 1 ? View.INVISIBLE : View.VISIBLE);
+                mAttitudeCount.setVisibility(topicComment.getLikeCounts() < 1 ? View.INVISIBLE : View.VISIBLE);
             }
         }
     }

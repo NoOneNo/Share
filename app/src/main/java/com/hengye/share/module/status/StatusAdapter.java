@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import com.hengye.share.R;
 import com.hengye.share.model.Status;
 import com.hengye.share.model.greenrobot.StatusDraftHelper;
 import com.hengye.share.module.publish.StatusPublishActivity;
+import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.module.statusdetail.StatusDetailActivity;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemLongClickListener;
@@ -28,10 +28,13 @@ import com.hengye.share.ui.support.textspan.StatusUrlOnTouchListener;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
 import com.hengye.share.ui.widget.image.GridGalleryView;
 import com.hengye.share.ui.widget.image.SuperImageView;
+import com.hengye.share.ui.widget.util.DrawableLoader;
 import com.hengye.share.ui.widget.util.SelectorLoader;
 import com.hengye.share.util.ClipboardUtil;
 import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.IntentUtil;
+import com.hengye.share.util.ThemeUtil;
 import com.hengye.share.util.UserUtil;
 
 import java.util.ArrayList;
@@ -43,7 +46,7 @@ public class StatusAdapter extends CommonAdapter<Status>
         DialogInterface.OnClickListener {
 
     private static int mGalleryMaxWidth;
-//    private Callback mCallback;
+    //    private Callback mCallback;
     private StatusPresenter mPresenter;
     private StatusActionContract.Presenter mStatusActionPresenter;
     private boolean mShowDeleteStatusOption;
@@ -68,7 +71,7 @@ public class StatusAdapter extends CommonAdapter<Status>
 
     @Override
     public StatusDefaultViewHolder onCreateBasicItemViewHolder(ViewGroup parent, int viewType) {
-        return new StatusDefaultViewHolder(LayoutInflater.from(getContext()).inflate(R.layout.item_status_total, parent, false));
+        return new StatusDefaultViewHolder(inflate(R.layout.item_status_total, parent));
     }
 
 
@@ -81,46 +84,36 @@ public class StatusAdapter extends CommonAdapter<Status>
 
         switch (which) {
             case DialogBuilder.LONG_CLICK_TOPIC_REPOST:
-                IntentUtil.startActivity(getContext(),
-                        StatusPublishActivity.getStartIntent(getContext(), StatusDraftHelper.getWBStatusDraftByRepostRepost(status)));
+                repostStatus(status);
                 break;
             case DialogBuilder.LONG_CLICK_TOPIC_COMMENT:
-                IntentUtil.startActivity(getContext(),
-                        StatusPublishActivity.getStartIntent(getContext(), StatusDraftHelper.getWBStatusDraftByRepostComment(status)));
+                commentStatus(status);
                 break;
             case DialogBuilder.LONG_CLICK_TOPIC_LIKE:
-                //点赞
-                if(mStatusActionPresenter != null){
-                    mStatusActionPresenter.likeStatus(status);
-                }
+                likeStatus(status);
                 break;
             case DialogBuilder.LONG_CLICK_TOPIC_FAVORITE:
-
-                if(mStatusActionPresenter != null){
-                    mStatusActionPresenter.collectStatus(status);
-                }
+                collectStatus(status);
                 break;
             case DialogBuilder.LONG_CLICK_TOPIC_COPY:
-                ClipboardUtil.copyWBContent(status.getContent());
+                copyStatus(status);
                 break;
             case DialogBuilder.LONG_CLICK_TOPIC_DESTROY:
-                if(mPresenter != null){
-                    mPresenter.deleteStatus(status);
-                }
+                destroyStatus(status);
             default:
                 break;
         }
     }
 
-    public void setShowDeleteStatusOption(boolean show){
+    public void setShowDeleteStatusOption(boolean show) {
         mShowDeleteStatusOption = show;
     }
 
-    public void setStatusPresenter(StatusPresenter statusPresenter){
+    public void setStatusPresenter(StatusPresenter statusPresenter) {
         mPresenter = statusPresenter;
     }
 
-    public void setStatusActionPresenter(StatusActionContract.Presenter statusActionPresenter){
+    public void setStatusActionPresenter(StatusActionContract.Presenter statusActionPresenter) {
         mStatusActionPresenter = statusActionPresenter;
     }
 
@@ -149,7 +142,7 @@ public class StatusAdapter extends CommonAdapter<Status>
     private Dialog getLongClickDialog() {
         boolean showDeleteStatusOption = mShowDeleteStatusOption;
         boolean isMine = false;
-        if(showDeleteStatusOption && !mIsRetweetedLongClick){
+        if (showDeleteStatusOption && !mIsRetweetedLongClick) {
             isMine = mLongClickStatus != null && mLongClickStatus.getUserInfo() != null && UserUtil.isCurrentUser(mLongClickStatus.getUserInfo().getUid());
         }
         return DialogBuilder.getOnLongClickStatusDialog(getContext(), this, mLongClickStatus, isMine);
@@ -170,16 +163,54 @@ public class StatusAdapter extends CommonAdapter<Status>
                 } else if (id == R.id.tv_status_content || id == R.id.gl_status_gallery || id == R.id.rl_status_title || id == R.id.ll_status_content || id == R.id.item_status_retweeted_content) {
                     final boolean isRetweeted = (Boolean) view.getTag();
                     startStatusDetail(isRetweeted, position);
+                } else if (id == R.id.layout_repost) {
+                    repostStatus(getItem(position));
+                } else if (id == R.id.layout_comment) {
+                    commentStatus(getItem(position));
+                } else if (id == R.id.layout_attitude) {
+                    likeStatus(getItem(position));
                 }
 
             }
         }, 150);
     }
 
+    private void repostStatus(Status status) {
+        IntentUtil.startActivity(getContext(),
+                StatusPublishActivity.getStartIntent(getContext(), StatusDraftHelper.getWBStatusDraftByRepostRepost(status)));
+    }
+
+    private void commentStatus(Status status) {
+        IntentUtil.startActivity(getContext(),
+                StatusPublishActivity.getStartIntent(getContext(), StatusDraftHelper.getWBStatusDraftByRepostComment(status)));
+    }
+
+    private void likeStatus(Status status) {
+        if (mStatusActionPresenter != null) {
+            mStatusActionPresenter.likeStatus(status);
+        }
+    }
+
+    private void collectStatus(Status status) {
+        if (mStatusActionPresenter != null) {
+            mStatusActionPresenter.collectStatus(status);
+        }
+    }
+
+    private void copyStatus(Status status) {
+        ClipboardUtil.copyWBContent(status.getContent());
+    }
+
+    private void destroyStatus(Status status) {
+        if (mPresenter != null) {
+            mPresenter.deleteStatus(status);
+        }
+    }
+
     private void startStatusDetail(boolean isRetweet, int position) {
         Status status = isRetweet ? getItem(position).getRetweetedStatus() : getItem(position);
         StatusDefaultViewHolder vh = (StatusDefaultViewHolder) findViewHolderForLayoutPosition(position);
-        if(vh != null) {
+        if (vh != null) {
             StatusViewHolder.startStatusDetail(getContext(), vh, isRetweet, status);
         }
     }
@@ -205,6 +236,10 @@ public class StatusAdapter extends CommonAdapter<Status>
             } else {
                 mRetweetStatus.mStatusLayout.setVisibility(View.GONE);
             }
+
+            if (mStatusOptions != null) {
+                mStatusOptions.initStatusOptions(context, status);
+            }
         }
     }
 
@@ -212,6 +247,7 @@ public class StatusAdapter extends CommonAdapter<Status>
 
         public StatusTitleViewHolder mStatusTitle;
         public StatusContentViewHolder mStatus, mRetweetStatus;
+        public StatusOptionsViewHolder mStatusOptions;
         public View mStatusTotalItem, mStatusItem;
 
         public StatusViewHolder(View v) {
@@ -225,6 +261,14 @@ public class StatusAdapter extends CommonAdapter<Status>
 
             mStatusItem = findViewById(R.id.item_status);
             mStatusTotalItem = findViewById(R.id.item_status_total);
+
+            View statusOptions = findViewById(R.id.layout_status_options);
+            if (statusOptions != null) {
+                mStatusOptions = new StatusOptionsViewHolder(statusOptions);
+                registerOnClickListener(mStatusOptions.mRepostCount);
+                registerOnClickListener(mStatusOptions.mCommentCount);
+                registerOnClickListener(mStatusOptions.mAttitudeCount);
+            }
 
             registerOnClickListener(mStatusTitle.mAvatar);
             registerOnClickListener(mStatusTitle.mUsername);
@@ -265,6 +309,7 @@ public class StatusAdapter extends CommonAdapter<Status>
             mRetweetStatus.mGallery.setOnTouchListener(mRetweetedStatusOnTouchListener);
 
             SelectorLoader.getInstance().setDefaultRippleBackground(mStatusItem);
+//            SelectorLoader.getInstance().setDefaultRippleBackground(mStatusTotalItem);
             SelectorLoader.getInstance().setDefaultRippleWhiteBackground(mRetweetStatus.mStatusLayout);
         }
 
@@ -420,6 +465,72 @@ public class StatusAdapter extends CommonAdapter<Status>
                 mGallery.setVisibility(View.GONE);
             }
         }
+    }
+
+    public static class StatusOptionsViewHolder {
+
+        public View mStatusOptionsLayout;
+        public View mRepostCount, mCommentCount, mAttitudeCount;
+        public TextView mRepostCountTxt, mCommentCountTxt, mAttitudeCountTxt;
+        public ImageView mRepostIcon, mCommentIcon, mAttitudeIcon;
+
+        public StatusOptionsViewHolder(View v) {
+            mStatusOptionsLayout = v;
+
+            mRepostCount = v.findViewById(R.id.layout_repost);
+            mCommentCount = v.findViewById(R.id.layout_comment);
+            mAttitudeCount = v.findViewById(R.id.layout_attitude);
+            SelectorLoader.getInstance().setTransparentRippleBackground(mRepostCount);
+            SelectorLoader.getInstance().setTransparentRippleBackground(mCommentCount);
+            SelectorLoader.getInstance().setTransparentRippleBackground(mAttitudeCount);
+            mRepostCountTxt = (TextView) v.findViewById(R.id.tv_repost_count);
+            mCommentCountTxt = (TextView) v.findViewById(R.id.tv_comment_count);
+            mAttitudeCountTxt = (TextView) v.findViewById(R.id.tv_attitude_count);
+            mRepostIcon = (ImageView) v.findViewById(R.id.iv_repost);
+            mCommentIcon = (ImageView) v.findViewById(R.id.iv_comment);
+            mAttitudeIcon = (ImageView) v.findViewById(R.id.iv_attitude);
+
+            mRepostIcon.setImageDrawable(
+                    DrawableLoader.setTintResource(R.drawable.ic_repost_white_48dp,
+                            R.color.icon_grey));
+
+            mCommentIcon.setImageDrawable(
+                    DrawableLoader.setTintResource(R.drawable.ic_comment_white_48dp,
+                            R.color.icon_grey));
+        }
+
+        public void initStatusOptions(final Context context, Status status) {
+
+            if (!SettingHelper.isShowStatusOptions()) {
+                mStatusOptionsLayout.setVisibility(View.GONE);
+                return;
+            } else {
+                mStatusOptionsLayout.setVisibility(View.VISIBLE);
+            }
+
+            mAttitudeIcon.setImageDrawable(
+                    DrawableLoader.setTintDrawable(R.drawable.ic_thumb_up_white_48dp,
+                    status.isLiked() ? ThemeUtil.getColor() : ThemeUtil.getIconTintColor()));
+
+            if (status.getRepostsCount() <= 0) {
+                mRepostCountTxt.setText(R.string.label_status_repost);
+            } else {
+                mRepostCountTxt.setText(DataUtil.getCounter(status.getRepostsCount()));
+            }
+
+            if (status.getCommentsCount() <= 0) {
+                mCommentCountTxt.setText(R.string.label_status_comment);
+            } else {
+                mCommentCountTxt.setText(DataUtil.getCounter(status.getCommentsCount()));
+            }
+
+            if (status.getAttitudesCount() <= 0) {
+                mAttitudeCountTxt.setText(R.string.label_status_attitude);
+            } else {
+                mAttitudeCountTxt.setText(DataUtil.getCounter(status.getAttitudesCount()));
+            }
+        }
+
     }
 }
 

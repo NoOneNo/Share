@@ -7,7 +7,6 @@
         <item
             android:id="@+id/nav_homepage"
             android:icon="@drawable/ic_whatshot_white_48dp"
-
             android:title="@string/title_drawer_hot_topic_and_status" />
         <item
             android:id="@+id/nav_private_message"

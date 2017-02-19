@@ -40,12 +40,16 @@ public class ThemeUtil extends ResUtil{
         return getColor(getUntingedColorResId());
     }
 
-    public static int getTintLightBgColor(){
-        return getColor(getTintLightBgResId());
+    public static int getIconTintColor(){
+        return getColor(R.color.icon_grey);
     }
 
-    public static int getTintDarkBgColor(){
-        return getColor(getTintDarkBgResId());
+    public static int getTextTintLightBgColor(){
+        return getColor(getTextTintLightBgResId());
+    }
+
+    public static int getTextTintDarkBgColor(){
+        return getColor(getTextTintDarkBgResId());
     }
 
     public static int getDividerDrawable(){
@@ -56,12 +60,11 @@ public class ThemeUtil extends ResUtil{
         return R.color.theme_untinged;
     }
 
-    private static @ColorRes int getTintLightBgResId(){
+    private static @ColorRes int getTextTintLightBgResId(){
         return R.color.theme_tint_light_bg;
     }
 
-    private static @ColorRes int getTintDarkBgResId(){
+    private static @ColorRes int getTextTintDarkBgResId(){
         return R.color.theme_tint_dark_bg;
     }
-
 }

@@ -28,12 +28,13 @@ public class StatusActionFragment extends ShareLoadDataCallbackFragment<Status> 
     }
 
     @Override
-    public void onLikeStatusComplete(Status topic, int taskState) {
-        mStatusActionMvpImpl.onLikeStatusComplete(topic, taskState);
+    public void onLikeStatusComplete(Status status, int taskState) {
+        mStatusActionMvpImpl.onLikeStatusComplete(status, taskState);
+        mAdapter.updateItem(status);
     }
 
     @Override
-    public void onCollectStatusComplete(Status topic, int taskState) {
-        mStatusActionMvpImpl.onCollectStatusComplete(topic, taskState);
+    public void onCollectStatusComplete(Status status, int taskState) {
+        mStatusActionMvpImpl.onCollectStatusComplete(status, taskState);
     }
 }

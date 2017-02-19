@@ -389,6 +389,8 @@
     <string name="title_setting_menu_show_style">功能菜单显示风格</string>
     <string name="title_setting_show_avatar_off">不显示头像</string>
     <string name="title_setting_show_avatar_summary">关闭可以节省流量</string>
+    <string name="title_setting_show_status_options">微博显示选项按钮</string>
+    <string name="title_setting_show_status_options_summary">微博内容下方显示转发、评论、赞等按钮</string>
     <string name="title_setting_browse">浏览设置</string>
     <string name="title_setting_read_order">阅读顺序</string>
     <string name="title_setting_read_order_summary">「顺序阅读」表示刷新时总是从最新微博开始阅读，「逆序阅读」表示刷新时保留上次的阅读位置，从加载新微博的最后一条向最新阅读</string>
