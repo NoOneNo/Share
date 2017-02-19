@@ -27,7 +27,7 @@ public class WBAttitude {
     private String source;
 
     private WBUserInfo user;
-    private WBTopic status;
+    private WBStatus status;
 
     public long getId() {
         return id;
@@ -101,11 +101,11 @@ public class WBAttitude {
         this.user = user;
     }
 
-    public WBTopic getStatus() {
+    public WBStatus getStatus() {
         return status;
     }
 
-    public void setStatus(WBTopic status) {
+    public void setStatus(WBStatus status) {
         this.status = status;
     }
 }

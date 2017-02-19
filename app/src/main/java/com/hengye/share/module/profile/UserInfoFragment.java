@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.hengye.share.R;
 import com.hengye.share.model.sina.WBUserInfo;
-import com.hengye.share.module.publish.TopicPublishActivity;
+import com.hengye.share.module.publish.StatusPublishActivity;
 import com.hengye.share.module.util.encapsulation.fragment.BaseFragment;
 import com.hengye.share.module.util.encapsulation.view.listener.OnScrollToTopAndBottomListener;
 import com.hengye.share.util.CommonUtil;
@@ -84,7 +84,7 @@ public class UserInfoFragment extends BaseFragment
     public void onClick(View v) {
         int id = v.getId();
         if(id == R.id.btn_at_ta){
-            startActivity(TopicPublishActivity.getAtTaStartIntent(getContext(), mWbUserInfo.getScreen_name()));
+            startActivity(StatusPublishActivity.getAtTaStartIntent(getContext(), mWbUserInfo.getScreen_name()));
         }else{
             ToastUtil.showToBeAchievedToast();
         }

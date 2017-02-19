@@ -7,7 +7,7 @@ import android.widget.TextView;
 import com.hengye.share.R;
 import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.module.setting.SettingHelper;
-import com.hengye.share.module.topic.TopicActivity;
+import com.hengye.share.module.status.StatusActivity;
 import com.hengye.share.module.update.CheckUpdateMvpImpl;
 import com.hengye.share.module.update.CheckUpdatePresenter;
 import com.hengye.share.util.L;
@@ -50,7 +50,7 @@ public class GuidanceActivity extends BaseActivity {
 //        mShimmerViewContainer.startShimmerAnimation();
         createShortcutIfNeed();
         checkUpdateIfNeed();
-        startActivity(TopicActivity.class);
+        startActivity(StatusActivity.class);
         finish();
     }
 
@@ -84,7 +84,7 @@ public class GuidanceActivity extends BaseActivity {
                 waitTime = 0;
             }
             L.debug("GuidanceActivity init consume : %s", consume);
-            startActivity(TopicActivity.class);
+            startActivity(StatusActivity.class);
             finish();
 //            getHandler().postDelayed(new Runnable() {
 //                @Override

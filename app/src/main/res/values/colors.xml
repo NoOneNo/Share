@@ -61,15 +61,17 @@
     <color name="ripple_dark">#42ffffff</color>
     <color name="ripple_light">#1f000000</color>
 
-    <color name="topic_username">#FF4081</color>
-    <color name="topic_description">#9a9a9a</color>
-    <!--<color name="topic_content">#646464</color>-->
-    <color name="topic_content">#474e5e</color>
-    <!--6a7081-->
-    <color name="topic_name_at">#5061BB</color>
+    <color name="status_username">#FF4081</color>
+    <color name="status_description">#9a9a9a</color>
+    <!--<color name="status_content">#646464</color>-->
+    <color name="status_content">#474e5e</color>
 
-    <color name="topic_press_bg">#FFFF4081</color>
-    <color name="topic_content_span">#FF5061BB</color>
+    <color name="status_content_light">#4d5159</color>
+    <!--6a7081-->
+    <color name="status_name_at">#5061BB</color>
+
+    <color name="status_press_bg">#FFFF4081</color>
+    <color name="status_content_span">#FF5061BB</color>
 
 
     <color name="image_default_bg">#ffe0e0e0</color>

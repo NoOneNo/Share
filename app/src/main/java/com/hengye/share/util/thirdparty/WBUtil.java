@@ -43,7 +43,7 @@ public class WBUtil {
     public static String IMAGE_TYPE_LARGE = "large";//原图
     public static String IMAGE_TYPE_ORIGINAL = "woriginal";//原图, 新浪微博gif用这个，
 
-    public static int getWBTopicRequestCount() {
+    public static int getWBStatusRequestCount() {
 //        return 2;
         return SettingHelper.getLoadCount();
     }

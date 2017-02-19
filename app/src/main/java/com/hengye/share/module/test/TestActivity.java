@@ -13,8 +13,7 @@ import com.android.volley.cache.BitmapCache;
 import com.hengye.share.R;
 import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.module.base.BaseActivity;
-import com.hengye.share.module.map.AroundAddressFragment;
-import com.hengye.share.module.publish.TopicPublishActivity;
+import com.hengye.share.module.publish.StatusPublishActivity;
 import com.hengye.share.module.sso.ThirdPartyLoginActivity;
 import com.hengye.share.module.util.FragmentActivity;
 import com.hengye.share.module.util.WebViewActivity;
@@ -142,7 +141,7 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
             mAdTokenInterceptor = new AdTokenInterceptor(this, new Action() {
                 @Override
                 public void run() {
-                    startActivity(TopicPublishActivity.getStartIntent(TestActivity.this, "test"));
+                    startActivity(StatusPublishActivity.getStartIntent(TestActivity.this, "test"));
                 }
             });
         }

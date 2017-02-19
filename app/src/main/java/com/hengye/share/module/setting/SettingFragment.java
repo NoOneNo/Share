@@ -8,7 +8,7 @@ import android.preference.Preference;
 import android.preference.PreferenceScreen;
 
 import com.hengye.share.R;
-import com.hengye.share.module.publish.TopicPublishActivity;
+import com.hengye.share.module.publish.StatusPublishActivity;
 import com.hengye.share.module.base.BaseApplication;
 import com.hengye.share.module.util.BasePreferenceFragment;
 import com.hengye.share.util.L;
@@ -61,10 +61,10 @@ public class SettingFragment extends BasePreferenceFragment {
             clazz = SettingAboutFragment.class;
         }else if(title.equals(getString(R.string.title_setting_other_feedback))){
             //意见反馈
-            startActivity(TopicPublishActivity.getStartIntent(getActivity(), getFeedBackContent()));
+            startActivity(StatusPublishActivity.getStartIntent(getActivity(), getFeedBackContent()));
         }else if(title.equals(getString(R.string.title_setting_other_share))){
             //意见反馈
-            startActivity(TopicPublishActivity.getStartIntent(getActivity(), getShareContent()));
+            startActivity(StatusPublishActivity.getStartIntent(getActivity(), getShareContent()));
         }else{
             L.debug("preference title not found");
         }

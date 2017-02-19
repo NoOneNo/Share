@@ -6,11 +6,10 @@ import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.greenrobot.ShareJson;
 import com.hengye.share.model.sina.WBUserInfos;
 import com.hengye.share.module.util.encapsulation.mvp.ListDataPresenter;
-import com.hengye.share.module.util.encapsulation.mvp.RxPresenter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
-import com.hengye.share.util.handler.TopicNumberPager;
+import com.hengye.share.util.handler.StatusNumberPager;
 import com.hengye.share.util.http.retrofit.RetrofitManager;
 import com.hengye.share.util.rxjava.datasource.SingleHelper;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
@@ -28,13 +27,13 @@ import java.util.Map;
 public class UserListPresenter extends ListDataPresenter<UserInfo, UserListContract.View> {
 
     private String mUid;
-    private TopicNumberPager mPager;
+    private StatusNumberPager mPager;
 
     public UserListPresenter(UserListContract.View mvpView, String uid) {
         super(mvpView);
 
         mUid = uid;
-        mPager = new TopicNumberPager(0);
+        mPager = new StatusNumberPager(0);
     }
 
     public ArrayList<AtUser> getSelectResultData() {
@@ -130,7 +129,7 @@ public class UserListPresenter extends ListDataPresenter<UserInfo, UserListContr
 
         ub.addParameter("uid", mUid);
 
-        ub.addParameter("count", loadAll ? 200 : WBUtil.getWBTopicRequestCount());
+        ub.addParameter("count", loadAll ? 200 : WBUtil.getWBStatusRequestCount());
         return ub.getParameters();
     }
 
@@ -158,7 +157,7 @@ public class UserListPresenter extends ListDataPresenter<UserInfo, UserListContr
             @Override
             public void onSuccess(UserListContract.View view, List<UserInfo> listData) {
                 super.onSuccess(view, listData);
-                mPager.setPageNumber(mPager.getPageNumber() + WBUtil.getWBTopicRequestCount());
+                mPager.setPageNumber(mPager.getPageNumber() + WBUtil.getWBStatusRequestCount());
             }
         };
     }

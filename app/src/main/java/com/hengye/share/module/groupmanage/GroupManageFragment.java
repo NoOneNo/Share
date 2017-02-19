@@ -258,7 +258,7 @@ public class GroupManageFragment extends ShareRecyclerFragment implements GroupM
             mEditGroupDialog.setOnShowListener(new DialogInterface.OnShowListener() {
                 @Override
                 public void onShow(DialogInterface d) {
-                    if (mCreateGroupName == null) {
+                    if (mEditGroupName == null) {
                         //还没初始化
                         mEditGroupName = (EditText) mEditGroupDialog.findViewById(R.id.et_name);
                         mEditGroupDesc = (EditText) mEditGroupDialog.findViewById(R.id.et_desc);

@@ -5,29 +5,23 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.hengye.share.R;
 import com.hengye.share.model.HotTopic;
-import com.hengye.share.model.Topic;
-import com.hengye.share.module.base.BaseActivity;
+import com.hengye.share.model.Status;
 import com.hengye.share.module.base.ShareRecyclerFragment;
-import com.hengye.share.module.topic.TopicAdapter;
-import com.hengye.share.module.topic.TopicThemeActivity;
-import com.hengye.share.ui.widget.SearchView;
+import com.hengye.share.module.status.StatusAdapter;
+import com.hengye.share.module.status.StatusTopicActivity;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
-import com.hengye.share.util.handler.TopicRefreshIdHandler;
+import com.hengye.share.util.handler.StatusRefreshIdHandler;
 
 import java.util.ArrayList;
 
-public class HotTopicAndStatusFragment extends ShareRecyclerFragment<Topic>
+public class HotTopicAndStatusFragment extends ShareRecyclerFragment<Status>
         implements HotTopicAndStatusContract.View, View.OnClickListener{
 
     @Override
@@ -35,7 +29,7 @@ public class HotTopicAndStatusFragment extends ShareRecyclerFragment<Topic>
         return false;
     }
 
-    TopicAdapter mAdapter;
+    StatusAdapter mAdapter;
     HotTopicAndStatusContract.Presenter mPresenter;
     HotStatusPager mPager;
     View mHeader, mHotTopicContent, mHotTopicEmpty;
@@ -45,8 +39,8 @@ public class HotTopicAndStatusFragment extends ShareRecyclerFragment<Topic>
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        setAdapter(mAdapter = new TopicAdapter(getContext(), new ArrayList<Topic>(), getRecyclerView()));
-        setDataHandler(new TopicRefreshIdHandler<>(mAdapter));
+        setAdapter(mAdapter = new StatusAdapter(getContext(), new ArrayList<Status>(), getRecyclerView()));
+        setDataHandler(new StatusRefreshIdHandler<>(mAdapter));
         setPager(mPager = new HotStatusPager());
         mPresenter = new HotTopicAndStatusPresenter(this);
 
@@ -122,7 +116,7 @@ public class HotTopicAndStatusFragment extends ShareRecyclerFragment<Topic>
 //            dd
         }else if(id == R.id.item_hot_topic_1 || id == R.id.item_hot_topic_2){
             HotTopic hotTopic = (HotTopic) v.getTag();
-            startActivity(TopicThemeActivity.getStartIntent(getContext(), hotTopic.getTopic()));
+            startActivity(StatusTopicActivity.getStartIntent(getContext(), hotTopic.getTopic()));
         }
     }
 }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_status_retweeted_content"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/grey_50"
+    android:paddingTop="@dimen/content_margin_5dp"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingBottom="@dimen/content_margin_5dp"
+    android:orientation="vertical"
+    android:visibility="gone"
+    tools:visibility="visible"
+    tools:showIn="@layout/item_status_total">
+
+    <TextView
+        android:id="@+id/tv_status_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="这是一条微博转发的内容"
+        android:textSize="17sp"
+        android:textColor="@color/status_content" />
+
+    <com.hengye.share.ui.widget.image.GridGalleryView
+        android:id="@+id/gl_status_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/content_margin_5dp"/>
+
+</LinearLayout>

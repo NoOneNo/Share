@@ -13,8 +13,8 @@ import android.widget.TextView;
 import com.hengye.share.R;
 import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapter;
 import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemViewHolder;
-import com.hengye.share.module.topic.TopicPresenter.TopicGroup;
-import com.hengye.share.module.topic.TopicPresenter.TopicType;
+import com.hengye.share.module.status.StatusPresenter.StatusGroup;
+import com.hengye.share.module.status.StatusPresenter.StatusType;
 import com.hengye.share.module.base.ShareRecyclerFragment;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.ViewUtil;
@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Created by yuhy on 16/9/8.
  */
-public class GroupListFragment extends ShareRecyclerFragment<TopicGroup> {
+public class GroupListFragment extends ShareRecyclerFragment<StatusGroup> {
 
     @Override
     protected boolean isShowScrollbars() {
@@ -36,7 +36,7 @@ public class GroupListFragment extends ShareRecyclerFragment<TopicGroup> {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        setAdapter(mAdapter = new GroupListAdapter(getContext(), new ArrayList<TopicGroup>()));
+        setAdapter(mAdapter = new GroupListAdapter(getContext(), new ArrayList<StatusGroup>()));
         mAdapter.setOnItemClickListener(this);
         mLayoutManager = (LinearLayoutManager)getRecyclerView().getLayoutManager();
         getRecyclerView().setScrollbarFadingEnabled(true);
@@ -78,9 +78,9 @@ public class GroupListFragment extends ShareRecyclerFragment<TopicGroup> {
     }
 
     public void load(boolean isRefresh, boolean selected){
-        List<TopicGroup> groups = TopicGroup.getAllTopicGroups();
-        TopicGroup tg = new TopicGroup(TopicType.NONE);
-        groups.add(tg);
+        List<StatusGroup> groups = StatusGroup.getAllStatusGroups();
+        StatusGroup sg = new StatusGroup(StatusType.NONE);
+        groups.add(sg);
 
         mAdapter.refresh(groups);
         adjustSize();
@@ -128,13 +128,13 @@ public class GroupListFragment extends ShareRecyclerFragment<TopicGroup> {
 
     public interface OnGroupSelectedCallback {
 
-        void onGroupSelected(int position, TopicGroup group);
+        void onGroupSelected(int position, StatusGroup group);
 
     }
 
-    public static class GroupListAdapter extends CommonAdapter<TopicGroup> {
+    public static class GroupListAdapter extends CommonAdapter<StatusGroup> {
 
-        public GroupListAdapter(Context context, List<TopicGroup> data) {
+        public GroupListAdapter(Context context, List<StatusGroup> data) {
             super(context, data);
         }
 
@@ -149,7 +149,7 @@ public class GroupListFragment extends ShareRecyclerFragment<TopicGroup> {
             holder.itemView.setBackgroundResource(isSelectPosition(position) ? R.drawable.ripple_grey : R.drawable.ripple_white);
         }
 
-        public static class GroupListViewHolder extends ItemViewHolder<TopicGroup> {
+        public static class GroupListViewHolder extends ItemViewHolder<StatusGroup> {
 
             TextView text;
 
@@ -159,8 +159,8 @@ public class GroupListFragment extends ShareRecyclerFragment<TopicGroup> {
             }
 
             @Override
-            public void bindData(Context context, TopicGroup topicGroup, int position) {
-                text.setText(topicGroup.getName());
+            public void bindData(Context context, StatusGroup statusGroup, int position) {
+                text.setText(statusGroup.getName());
 
             }
         }

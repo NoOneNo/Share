@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
@@ -21,13 +20,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 
 import com.google.gson.JsonObject;
 import com.hengye.share.R;
 import com.hengye.share.module.base.BaseActivity;
-import com.hengye.share.module.base.BaseApplication;
-import com.hengye.share.module.util.encapsulation.base.TaskState;
 import com.hengye.share.ui.widget.media.MediaController;
 import com.hengye.share.ui.widget.media.VideoView;
 import com.hengye.share.util.ApplicationUtil;
@@ -35,7 +31,6 @@ import com.hengye.share.util.GsonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.ViewUtil;
 import com.hengye.share.util.http.retrofit.RetrofitManager;
-import com.hengye.share.util.rxjava.DefaultSubscriber;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
 import io.reactivex.SingleObserver;
@@ -49,7 +44,7 @@ public class VideoPlayService extends Service implements View.OnClickListener {
 
     public static void start(Context context, String topicId, String url) {
         Intent intent = new Intent(context, VideoPlayService.class);
-        intent.putExtra("topicId", topicId);
+        intent.putExtra("statusId", topicId);
         intent.putExtra("url", url);
         context.startService(intent);
     }
@@ -65,7 +60,7 @@ public class VideoPlayService extends Service implements View.OnClickListener {
     WindowManager mWindowManager;
     LayoutInflater mLayoutInflater;
     Handler mHandler = new Handler();
-    String mTopicUrl;
+    String mStatusUrl;
 
     public Handler getHandler() {
         if (mHandler == null) {
@@ -90,14 +85,14 @@ public class VideoPlayService extends Service implements View.OnClickListener {
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
 
-        String topicId = intent.getStringExtra("topicId");
-        mTopicUrl = intent.getStringExtra("url");
-        L.debug("onStartCommand, topicId : %s, url : %s", topicId, mTopicUrl);
-        if (topicId == null) {
+        String statusId = intent.getStringExtra("statusId");
+        mStatusUrl = intent.getStringExtra("url");
+        L.debug("onStartCommand, topicId : %s, url : %s", statusId, mStatusUrl);
+        if (statusId == null) {
             handleFail();
         } else {
             mLoading.setVisibility(View.VISIBLE);
-            requestMediaPlay(topicId);
+            requestMediaPlay(statusId);
         }
         return START_NOT_STICKY;
     }
@@ -332,7 +327,7 @@ public class VideoPlayService extends Service implements View.OnClickListener {
                     .setPositiveButton(R.string.dialog_text_confirm, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mTopicUrl));
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mStatusUrl));
                             intent.putExtra(Browser.EXTRA_APPLICATION_ID, activity.getPackageName());
                             activity.startActivity(intent);
                         }

@@ -32,7 +32,7 @@ public class DataType {
                 } else {
                     status = REFRESH_NO_MORE_DATA;
                 }
-            } else if (data.size() < WBUtil.getWBTopicRequestCount() / 2) {
+            } else if (data.size() < WBUtil.getWBStatusRequestCount() / 2) {
                 //结果小于请求条数的一半， 不跟全部比较，因为微博开放接口返回数据不准确
                 status = REFRESH_DATA_SIZE_LESS;
             } else {
@@ -46,7 +46,7 @@ public class DataType {
                 status = LOAD_NO_DATA;
             } else {
                 //成功加载更多
-                if (data.size() < WBUtil.getWBTopicRequestCount()) {
+                if (data.size() < WBUtil.getWBStatusRequestCount()) {
                     //没有更多的数据可供加载
                     status = LOAD_NO_MORE_DATA;
                 } else {
@@ -74,7 +74,7 @@ public class DataType {
                 //存储数据
                 break;
             case REFRESH_DATA_SIZE_EQUAL:
-                ToastUtil.showSnackBar(v, "超过" + WBUtil.getWBTopicRequestCount() + "条新微博");
+                ToastUtil.showSnackBar(v, "超过" + WBUtil.getWBStatusRequestCount() + "条新微博");
                 break;
             case LOAD_NO_MORE_DATA:
                 break;

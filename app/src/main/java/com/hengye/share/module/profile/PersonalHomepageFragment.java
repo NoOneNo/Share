@@ -7,11 +7,11 @@ import android.view.View;
 
 import com.hengye.share.R;
 import com.hengye.share.model.sina.WBUserInfo;
-import com.hengye.share.module.topic.ShareLoadDataCallbackFragment;
-import com.hengye.share.module.topic.TopicFragment;
+import com.hengye.share.module.status.ShareLoadDataCallbackFragment;
+import com.hengye.share.module.status.StatusFragment;
 import com.hengye.share.module.util.encapsulation.fragment.BaseFragment;
 import com.hengye.share.module.util.encapsulation.fragment.TabLayoutFragment;
-import com.hengye.share.module.topic.TopicPresenter;
+import com.hengye.share.module.status.StatusPresenter;
 import com.hengye.share.ui.widget.ScrollChildSwipeRefreshLayout;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.ResUtil;
@@ -69,7 +69,7 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
     protected ArrayList<TabItem> generateTabs() {
         ArrayList<TabItem> tabItems = new ArrayList<>();
         TabItem tabItem1 = new TabItem(0, ResUtil.getString(R.string.label_tab_about));
-        TabItem tabItem2 = new TabItem(1, ResUtil.getString(R.string.label_tab_topic, DataUtil.getCounter(mWbUserInfo.getStatuses_count())));
+        TabItem tabItem2 = new TabItem(1, ResUtil.getString(R.string.label_tab_status, DataUtil.getCounter(mWbUserInfo.getStatuses_count())));
         TabItem tabItem3 = new TabItem(2, ResUtil.getString(R.string.label_tab_album));
 
         tabItems.add(tabItem1);
@@ -80,8 +80,8 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
     }
 
     UserInfoFragment mPersonalHomepageAboutFragment;
-    TopicFragment mTopicFragment;
-    TopicAlbumFragment mTopicAlbumFragment;
+    StatusFragment mStatusFragment;
+    StatusAlbumFragment mStatusAlbumFragment;
 
     ScrollChildSwipeRefreshLayout mSwipeRefresh;
 
@@ -94,15 +94,15 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
                 fragment = mPersonalHomepageAboutFragment;
                 break;
             case 1:
-                mTopicFragment = PersonalTopicFragment.newInstance(TopicPresenter.TopicType.HOMEPAGE, mWbUserInfo.getIdstr(), mWbUserInfo.getScreen_name());
-                mTopicFragment.setLoadDataCallBack(getLoadDataCallBack(mTopicFragment));
-                fragment = mTopicFragment;
+                mStatusFragment = PersonalStatusFragment.newInstance(StatusPresenter.StatusType.HOMEPAGE, mWbUserInfo.getIdstr(), mWbUserInfo.getScreen_name());
+                mStatusFragment.setLoadDataCallBack(getLoadDataCallBack(mStatusFragment));
+                fragment = mStatusFragment;
                 break;
             case 2:
             default:
-                mTopicAlbumFragment = TopicAlbumFragment.newInstance(mWbUserInfo.getIdstr(), mWbUserInfo.getScreen_name());
-                mTopicAlbumFragment.setLoadDataCallBack(getLoadDataCallBack(mTopicAlbumFragment));
-                fragment = mTopicAlbumFragment;
+                mStatusAlbumFragment = StatusAlbumFragment.newInstance(mWbUserInfo.getIdstr(), mWbUserInfo.getScreen_name());
+                mStatusAlbumFragment.setLoadDataCallBack(getLoadDataCallBack(mStatusAlbumFragment));
+                fragment = mStatusAlbumFragment;
                 break;
 
         }
@@ -135,10 +135,10 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
             @Override
             public void onPageSelected(int position) {
                 //解决切换页面时，头部已经滑动到顶部
-                if(position == 1 && mTopicFragment != null) {
-                    mSwipeRefresh.setScrollUpChild(mTopicFragment.getRecyclerView());
-                }else if(position == 2 && mTopicAlbumFragment != null){
-                    mSwipeRefresh.setScrollUpChild(mTopicAlbumFragment.getRecyclerView());
+                if(position == 1 && mStatusFragment != null) {
+                    mSwipeRefresh.setScrollUpChild(mStatusFragment.getRecyclerView());
+                }else if(position == 2 && mStatusAlbumFragment != null){
+                    mSwipeRefresh.setScrollUpChild(mStatusAlbumFragment.getRecyclerView());
                 }else{
                     mSwipeRefresh.setScrollUpChild(null);
                 }
@@ -160,15 +160,15 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
                         }
                         break;
                     case 1:
-                        if(mTopicFragment != null) {
-                            mTopicFragment.getPullToRefresh().getOnRefreshListener().onRefresh();
+                        if(mStatusFragment != null) {
+                            mStatusFragment.getPullToRefresh().getOnRefreshListener().onRefresh();
                         }else{
                             mSwipeRefresh.setRefreshing(false);
                         }
                         break;
                     case 2:
-                        if(mTopicAlbumFragment != null) {
-                            mTopicAlbumFragment.onRefresh();
+                        if(mStatusAlbumFragment != null) {
+                            mStatusAlbumFragment.onRefresh();
                         }else{
                             mSwipeRefresh.setRefreshing(false);
                         }
@@ -197,8 +197,8 @@ public class PersonalHomepageFragment extends TabLayoutFragment{
 //                    mSwipeRefresh.setRefreshing(true, false);
                     if(baseFragment instanceof SwipeListener.OnRefreshListener){
                         ((SwipeListener.OnRefreshListener) baseFragment).onRefresh();
-                    }else if(baseFragment instanceof TopicFragment){
-                        ((TopicFragment) baseFragment).getPullToRefresh().getOnRefreshListener().onRefresh();
+                    }else if(baseFragment instanceof StatusFragment){
+                        ((StatusFragment) baseFragment).getPullToRefresh().getOnRefreshListener().onRefresh();
                     }else{
                         mSwipeRefresh.getOnRefreshListener().onRefresh();
                     }

@@ -5,6 +5,6 @@
     <solid
         android:color="@color/white"/>
     <corners
-        android:radius="@dimen/topic_publish_options_tip_height"/>
+        android:radius="@dimen/status_publish_options_tip_height"/>
 
 </shape>

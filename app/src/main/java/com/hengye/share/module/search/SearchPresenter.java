@@ -1,8 +1,8 @@
 package com.hengye.share.module.search;
 
-import com.hengye.share.model.Topic;
+import com.hengye.share.model.Status;
 import com.hengye.share.model.UserInfo;
-import com.hengye.share.model.sina.WBTopics;
+import com.hengye.share.model.sina.WBStatuses;
 import com.hengye.share.model.sina.WBUserInfos;
 import com.hengye.share.module.util.encapsulation.mvp.ListDataPresenter;
 import com.hengye.share.util.UrlBuilder;
@@ -16,7 +16,7 @@ import java.util.Map;
 
 import io.reactivex.Single;
 
-public class SearchPresenter extends ListDataPresenter<Topic, SearchContract.View> implements SearchContract.Presenter{
+public class SearchPresenter extends ListDataPresenter<Status, SearchContract.View> implements SearchContract.Presenter{
 
     public SearchPresenter(SearchContract.View mvpView) {
         super(mvpView);
@@ -39,7 +39,7 @@ public class SearchPresenter extends ListDataPresenter<Topic, SearchContract.Vie
                     public void onSuccess(SearchContract.View view, Object[] objects) {
                         super.onSuccess(view, objects);
                         view.onLoadSearchUsers(UserInfo.getUserInfos((WBUserInfos) objects[0]));
-                        view.onLoadListData(isRefresh, Topic.getTopics((WBTopics) objects[1]));
+                        view.onLoadListData(isRefresh, Status.getStatuses((WBStatuses) objects[1]));
                     }
                 });
     }

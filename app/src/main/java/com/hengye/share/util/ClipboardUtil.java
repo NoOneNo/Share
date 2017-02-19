@@ -42,6 +42,6 @@ public class ClipboardUtil extends ApplicationUtil{
 
     public static void copyWBContent(String content){
         copy(content);
-        ToastUtil.showToastSuccess(R.string.tip_copy_topic_to_clipboard_success);
+        ToastUtil.showToastSuccess(R.string.tip_copy_status_to_clipboard_success);
     }
 }

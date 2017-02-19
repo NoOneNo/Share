@@ -76,11 +76,11 @@
         <!-- 高德定位 -->
 
         <service android:name="com.hengye.share.service.ShareService" />
-        <service android:name="com.hengye.share.service.TopicPublishService" />
+        <service android:name="com.hengye.share.service.StatusPublishService" />
         <service android:name="com.hengye.share.service.VideoPlayService" />
 
         <!-- 定时发布广播 -->
-        <receiver android:name="com.hengye.share.service.TopicPublishTimingBroadcastReceiver">
+        <receiver android:name="com.hengye.share.service.PublishTimingStatusBroadcastReceiver">
             <intent-filter>
                 <action android:name="com.hengye.share.ACTION_TIMING_PUBLISH" />
 
@@ -114,7 +114,7 @@
         </activity-alias>
 
         <activity
-            android:name=".module.topic.TopicActivity"
+            android:name=".module.status.StatusActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.Main" />
@@ -122,11 +122,11 @@
         <activity
             android:name=".module.sso.LoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:parentActivityName=".module.topic.TopicActivity"
+            android:parentActivityName=".module.status.StatusActivity"
             android:windowSoftInputMode="adjustResize|stateVisible">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".module.topic.TopicActivity" />
+                android:value=".module.status.StatusActivity" />
         </activity>
 
         <activity
@@ -173,9 +173,9 @@
         </activity>
 
         <activity
-            android:name=".module.topic.TopicThemeActivity"
+            android:name=".module.status.StatusTopicActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
-            android:label="@string/title_activity_topic_theme">
+            android:label="@string/title_activity_status_topic">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="android.intent.action.VIEW" />
@@ -210,33 +210,33 @@
         </activity>
 
         <activity
-            android:name=".module.publish.TopicPublishActivity"
+            android:name=".module.publish.StatusPublishActivity"
             android:configChanges="screenSize|keyboardHidden|orientation" />
 
         <activity
-            android:name=".module.draft.TopicDraftActivity"
+            android:name=".module.draft.StatusDraftActivity"
             android:launchMode="singleTop"
-            android:label="@string/title_activity_topic_draft" />
+            android:label="@string/title_activity_status_draft" />
 
         <activity
-            android:name=".module.topicdetail.TopicDetail2Activity"
+            android:name=".module.statusdetail.StatusDetail2Activity"
             android:configChanges="screenSize|keyboardHidden|orientation" />
 
         <activity
-            android:name=".module.topicdetail.TopicDetailActivity"
+            android:name=".module.statusdetail.StatusDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_topic_body" />
+            android:label="@string/title_activity_status_body" />
 
         <activity
-            android:name=".module.topic.TopicMentionActivity"
+            android:name=".module.status.StatusMentionActivity"
             android:configChanges="screenSize|keyboardHidden|orientation" />
 
         <activity
-            android:name=".module.topic.TopicCommentActivity"
+            android:name=".module.status.StatusCommentActivity"
             android:configChanges="screenSize|keyboardHidden|orientation" />
 
         <activity
-            android:name=".module.topic.TopicFavoriteActivity"
+            android:name=".module.status.StatusFavoriteActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:label="@string/title_activity_favorite" />
 

@@ -98,7 +98,7 @@ public class WBUserInfo implements Serializable{
      * deleted : 1
      */
 
-    private WBTopic status;
+    private WBStatus status;
     private int ptype;
     private boolean allow_all_comment;
     private String avatar_large;
@@ -241,7 +241,7 @@ public class WBUserInfo implements Serializable{
         this.remark = remark;
     }
 
-    public void setStatus(WBTopic status) {
+    public void setStatus(WBStatus status) {
         this.status = status;
     }
 
@@ -441,7 +441,7 @@ public class WBUserInfo implements Serializable{
         return remark;
     }
 
-    public WBTopic getStatus() {
+    public WBStatus getStatus() {
         return status;
     }
 

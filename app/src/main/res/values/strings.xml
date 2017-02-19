@@ -24,7 +24,7 @@
     <string name="tip_repeal">撤销</string>
     <string name="tip_retry">重试</string>
     <string name="tip_copy_content_to_clipboard_success">内容已复制到剪切板</string>
-    <string name="tip_copy_topic_to_clipboard_success">微博内容已复制到剪切板</string>
+    <string name="tip_copy_status_to_clipboard_success">微博内容已复制到剪切板</string>
     <string name="label_no_network">无法连接到服务器，请检查你的网络设置。</string>
     <string name="tip_null">无</string>
     <string name="tip_load_video_fail">加载视频失败，是否直接打开链接？</string>
@@ -58,7 +58,7 @@
     <!-- Strings related to time-->
 
     <!-- Strings related to TransitionName-->
-    <string name="transition_name_topic">transition:topic</string>
+    <string name="transition_name_status">transition:status</string>
     <string name="transition_name_avatar">transition:avatar</string>
     <!-- Strings related to TransitionName-->
 
@@ -110,12 +110,12 @@
 
     <!-- Strings related to activity title-->
     <string name="title_activity_setting">设置</string>
-    <string name="title_activity_topic_notify">通知</string>
+    <string name="title_activity_status_notify">通知</string>
     <string name="title_activity_at_user">选择用户</string>
-    <string name="title_activity_topic_draft">草稿箱</string>
+    <string name="title_activity_status_draft">草稿箱</string>
     <string name="title_activity_group_manage">分组管理</string>
     <string name="title_activity_account_manage">账号管理</string>
-    <string name="title_activity_topic_theme">相关话题</string>
+    <string name="title_activity_status_topic">相关话题</string>
     <string name="title_activity_search_user">搜索用户结果</string>
     <string name="title_activity_hot_topic_and_status">热门话题和微博</string>
     <string name="title_activity_hot_topic">热门话题</string>
@@ -123,24 +123,24 @@
     <string name="title_activity_web_view">浏览</string>
     <string name="title_activity_follower_list">粉丝列表</string>
     <string name="title_activity_attention_list">关注列表</string>
-    <string name="title_activity_topic_body">微博正文</string>
+    <string name="title_activity_status_body">微博正文</string>
     <string name="title_activity_hot_comment">热门评论</string>
     <string name="title_activity_wb_web_login">微博登录</string>
     <string name="title_activity_around_address">选择附近地点</string>
     <string name="title_activity_user_guide">用户使用手册</string>
     <!-- Strings related to activity title-->
 
-    <!-- Strings related to TopicGroup-->
+    <!-- Strings related to StatusGroup-->
     <string name="title_page_all">全部微博</string>
     <string name="title_page_bilateral">互相关注</string>
     <string name="title_page_comment">评论</string>
     <string name="title_page_comment_to_me">我收到的评论</string>
     <string name="title_page_comment_by_me">我发出的评论</string>
-    <string name="title_page_topic">微博</string>
+    <string name="title_page_status">微博</string>
     <string name="title_page_mention">提及</string>
     <string name="title_page_theme">相关话题</string>
     <string name="title_page_favorites">我收藏的微博</string>
-    <!-- Strings related to TopicGroup-->
+    <!-- Strings related to StatusGroup-->
 
     <!-- Strings related to GroupManager-->
     <string name="tip_update_group_order">是否更新分组顺序？</string>
@@ -164,18 +164,18 @@
     <string name="tip_status_favorite_destroy_success">已取消收藏</string>
     <!-- Strings related to StatusAction -->
 
-    <!-- Strings related to Topic -->
+    <!-- Strings related to Status -->
     <string name="label_time_and_from">%1$s 来自 %2$s</string>
-    <string name="label_topic_repost">转发</string>
-    <string name="label_topic_comment">评论</string>
-    <string name="label_topic_collect">收藏</string>
-    <string name="label_topic_collect_cancel">取消收藏</string>
-    <string name="label_topic_attitude">赞</string>
-    <string name="label_topic_attitude_cancel">取消赞</string>
-    <string name="label_topic_repost_origin">转发原微博</string>
-    <string name="label_topic_copy">复制</string>
-    <string name="label_topic_destroy">删除</string>
-    <string name="label_topic_destroy_success">成功删除微博</string>
+    <string name="label_status_repost">转发</string>
+    <string name="label_status_comment">评论</string>
+    <string name="label_status_collect">收藏</string>
+    <string name="label_status_collect_cancel">取消收藏</string>
+    <string name="label_status_attitude">赞</string>
+    <string name="label_status_attitude_cancel">取消赞</string>
+    <string name="label_status_repost_origin">转发原微博</string>
+    <string name="label_status_copy">复制</string>
+    <string name="label_status_destroy">删除</string>
+    <string name="label_status_destroy_success">成功删除微博</string>
     <string name="label_comment_reply">回复</string>
     <string name="label_repost_detail">查看该微博</string>
     <string name="label_url_at_user">\@TA</string>
@@ -183,23 +183,23 @@
     <string name="label_url_open_link">打开链接</string>
     <string name="label_url_copy_content">复制内容</string>
     <string name="label_url_copy_link">复制链接</string>
-    <string name="label_url_open_current_topic">查看微博</string>
-    <!-- Strings related to Topic -->
+    <string name="label_url_open_current_status">查看微博</string>
+    <!-- Strings related to Status -->
 
-    <!-- Strings related to TopicDetail -->
-    <string name="label_topic_repost_number">转发 (%s)</string>
-    <string name="label_topic_comment_number">评论 (%s)</string>
-    <string name="label_topic_attitude_number">赞 (%s)</string>
-    <string name="label_topic_attitude_cancel_number">取消赞 (%s)</string>
-    <string name="label_topic_comment_hot_label">以上为热门评论，点击查看更多</string>
-    <!-- Strings related to TopicDetail -->
+    <!-- Strings related to StatusDetail -->
+    <string name="label_status_repost_number">转发 (%s)</string>
+    <string name="label_status_comment_number">评论 (%s)</string>
+    <string name="label_status_attitude_number">赞 (%s)</string>
+    <string name="label_status_attitude_cancel_number">取消赞 (%s)</string>
+    <string name="label_status_comment_hot_label">以上为热门评论，点击查看更多</string>
+    <!-- Strings related to StatusDetail -->
 
     <!-- Strings related to PersonalHomePage -->
     <string name="label_attention_count">关注 %s</string>
     <string name="label_division">|</string>
     <string name="label_fans_count">粉丝 %s</string>
     <string name="label_tab_about">关于</string>
-    <string name="label_tab_topic">微博(%s)</string>
+    <string name="label_tab_status">微博(%s)</string>
     <string name="label_tab_album">相册</string>
     <string name="label_at_ta">\@TA</string>
     <string name="label_private_message">私信</string>
@@ -214,38 +214,38 @@
     <string name="label_follow_destroy_success">成功取消关注</string>
     <!-- Strings related to Action -->
 
-    <!-- Strings related to TopicPublish -->
-    <string name="title_publish_topic">发微博</string>
-    <string name="title_repost_topic">转发微博</string>
-    <string name="title_publish_comment">发评论</string>
-    <string name="title_reply_comment">回复评论</string>
-    <string name="label_topic_publish_hint">说点什么吧……</string>
-    <string name="label_topic_publish_start">正在发送……</string>
-    <string name="label_topic_publish_success">发表成功</string>
-    <string name="label_topic_publish_fail">发表失败</string>
-    <string name="label_topic_publish">@string/app_name</string>
-    <string name="label_topic_publish_retry">重试</string>
-    <string name="label_topic_publish_comment_fail">评论微博失败</string>
-    <string name="label_topic_reply_comment_fail">回复评论失败</string>
-    <string name="label_topic_publish_repost_fail">转发微博失败</string>
-    <string name="label_topic_publish_field_empty">请填写内容或选择图片</string>
-    <string name="label_topic_picture_publish_content_empty">分享图片</string>
-    <string name="label_topic_publish_content_length_less">最多还能输入%s个字</string>
-    <string name="label_topic_publish_content_length_more">你已超了%s个字</string>
+    <!-- Strings related to StatusPublish -->
+    <string name="title_status_publish">发微博</string>
+    <string name="title_status_repost">转发微博</string>
+    <string name="title_comment_publish">发评论</string>
+    <string name="title_comment_reply">回复评论</string>
+    <string name="label_status_publish_hint">说点什么吧……</string>
+    <string name="label_status_publish_start">正在发送……</string>
+    <string name="label_status_publish_success">发表成功</string>
+    <string name="label_status_publish_fail">发表失败</string>
+    <string name="label_status_publish">@string/app_name</string>
+    <string name="label_status_publish_retry">重试</string>
+    <string name="label_status_publish_comment_fail">评论微博失败</string>
+    <string name="label_status_reply_comment_fail">回复评论失败</string>
+    <string name="label_status_publish_repost_fail">转发微博失败</string>
+    <string name="label_status_publish_field_empty">请填写内容或选择图片</string>
+    <string name="label_status_picture_publish_content_empty">分享图片</string>
+    <string name="label_status_publish_content_length_less">最多还能输入%s个字</string>
+    <string name="label_status_publish_content_length_more">你已超了%s个字</string>
     <string name="label_publish_comment_and_repost_to_me">同时转发到我的微博</string>
-    <string name="label_repost_topic_and_commend_to_author">同时评论给作者</string>
-    <string name="tip_topic_publish_content_length_error">发送字数已超出限制</string>
+    <string name="label_repost_status_and_commend_to_author">同时评论给作者</string>
+    <string name="tip_status_publish_content_length_error">发送字数已超出限制</string>
     <string name="label_all_groups_visible">所有人可见</string>
     <string name="label_assign_group_visible">指定分组可见</string>
     <string name="label_assign_group_inexistent">指定分组不存在</string>
     <string name="label_publish_on_time">定时发送</string>
     <string name="label_publish_on_time_cancel">取消定时</string>
     <string name="label_show_location">显示位置</string>
-    <string name="tip_topic_publish_setting">发送选项</string>
+    <string name="tip_status_publish_setting">发送选项</string>
     <string name="tip_publish_on_time_options_invalid">发送时间不能早于当前时间</string>
-    <!-- Strings related to TopicPublish -->
+    <!-- Strings related to StatusPublish -->
 
-    <!-- Strings related to TopicDraft -->
+    <!-- Strings related to StatusDraft -->
     <string name="label_save_to_draft">是否保存到草稿箱？</string>
     <string name="label_save_to_draft_override">发现草稿已存在，是否覆盖？</string>
     <string name="label_save_to_draft_success">保存成功</string>
@@ -256,7 +256,7 @@
     <string name="label_edit_when">编辑于 %s</string>
     <string name="label_publish_when">将于%s发送</string>
     <string name="label_timing_expire">定时发送已过期</string>
-    <!-- Strings related to TopicDraft -->
+    <!-- Strings related to StatusDraft -->
 
     <!-- Strings related to AtUser -->
     <string name="label_confirm">确定</string>
@@ -267,7 +267,7 @@
 
     <!-- Strings related to Search -->
     <string name="label_search_user">用户搜索</string>
-    <string name="label_search_topic">微博搜索</string>
+    <string name="label_search_status">微博搜索</string>
     <string name="label_search_user_and_status_hint">搜索用户和微博</string>
     <string name="label_search_hint">搜索内容</string>
     <string name="label_search_content_is_null">搜索内容不能为空</string>
@@ -302,13 +302,13 @@
     <string name="tip_location_fail">定位失败，点击重试</string>
     <!-- Strings related to activity around address -->
 
-    <!-- Strings related to activity hot topic -->
+    <!-- Strings related to activity hot status -->
     <string name="label_hot_topic">热门话题</string>
     <string name="label_hot_topic_search">搜索话题</string>
     <string name="label_hot_status">热门微博</string>
     <string name="label_hot_topic_modifier">#%s#</string>
     <string name="label_hot_search_count">%s次</string>
-    <!-- Strings related to activity hot topic -->
+    <!-- Strings related to activity hot status -->
 
 
     <!-- Strings related to setting title-->

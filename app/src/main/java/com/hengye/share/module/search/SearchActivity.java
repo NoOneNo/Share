@@ -3,29 +3,11 @@ package com.hengye.share.module.search;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.View;
 
-import com.hengye.share.module.setting.SettingFragment;
-import com.hengye.share.module.topic.TopicAdapter;
-import com.hengye.share.model.Topic;
-import com.hengye.share.model.UserInfo;
-import com.hengye.share.module.profile.PersonalHomepageActivity;
 import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.R;
 import com.hengye.share.ui.widget.SearchView;
-import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
-import com.hengye.share.ui.widget.dialog.LoadingDialog;
-import com.hengye.share.util.ActivityUtils;
-import com.hengye.share.util.L;
-import com.hengye.share.util.ToastUtil;
-import com.hengye.share.util.ViewUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SearchActivity extends BaseActivity {
 

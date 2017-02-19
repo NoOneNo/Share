@@ -15,15 +15,15 @@ import android.util.Patterns;
 
 import com.hengye.share.BuildConfig;
 import com.hengye.share.R;
-import com.hengye.share.model.Topic;
-import com.hengye.share.model.TopicComment;
-import com.hengye.share.model.TopicId;
-import com.hengye.share.model.TopicShortUrl;
-import com.hengye.share.model.TopicUrl;
+import com.hengye.share.model.Status;
+import com.hengye.share.model.StatusComment;
+import com.hengye.share.model.StatusId;
+import com.hengye.share.model.StatusShortUrl;
+import com.hengye.share.model.StatusUrl;
 import com.hengye.share.module.base.BaseApplication;
 import com.hengye.share.ui.support.textspan.CustomContentSpan;
 import com.hengye.share.ui.support.textspan.SimpleContentSpan;
-import com.hengye.share.ui.support.textspan.TopicContentUrlSpan;
+import com.hengye.share.ui.support.textspan.StatusContentUrlSpan;
 import com.hengye.share.ui.widget.emoticon.EmoticonSpan;
 import com.hengye.share.ui.widget.emoticon.EmoticonUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
@@ -54,7 +54,7 @@ public class DataUtil {
     public static final Pattern WEB_URL = Pattern
             .compile("(http|https|Http|Https|rtsp|Rtsp)://[a-zA-Z0-9+&@#/%?=~_\\-|!:,\\.;]*[a-zA-Z0-9+&@#/%=~_|]");
     public static final Pattern WEB_URL2 = Patterns.WEB_URL;
-    public static final Pattern TOPIC_URL = Pattern
+    public static final Pattern STATUS_URL = Pattern
             .compile("#[\\p{Print}\\p{InCJKUnifiedIdeographs}&&[^#]]+#");
     public static final Pattern MENTION_URL = Pattern
             .compile("@[\\w\\p{InCJKUnifiedIdeographs}-]{1,26}");
@@ -70,9 +70,9 @@ public class DataUtil {
 
     public static final String WEB_LONG_TEXT = "全文";
 
-    public static boolean isTopic(CharSequence url) {
+    public static boolean isStatus(CharSequence url) {
         if (!TextUtils.isEmpty(url)) {
-            Matcher m = TOPIC_URL.matcher(url);
+            Matcher m = STATUS_URL.matcher(url);
             //noinspection LoopStatementThatDoesntLoop
             while (m.find()) {
                 return true;
@@ -112,20 +112,20 @@ public class DataUtil {
 //                Linkify.sUrlMatchFilter, null);
 //    }
 
-    public static void addTopicContentHighLightLinks(int textSize, TopicComment topicComment) {
-        topicComment.setSpanned(convertNormalStringToSpannableString(textSize, topicComment, topicComment.getContent()));
+    public static void addStatusContentHighLightLinks(int textSize, StatusComment statusComment) {
+        statusComment.setSpanned(convertNormalStringToSpannableString(textSize, statusComment, statusComment.getContent()));
     }
 
-    public static void addTopicContentHighLightLinks(int textSize, Topic topic, boolean isRetweeted) {
-        String str = isRetweeted ? addRetweetedNamePrefix(topic) : topic.getContent();
-        topic.setSpanned(convertNormalStringToSpannableString(textSize, topic, str, true, topic.isFromMobile()));
+    public static void addStatusContentHighLightLinks(int textSize, Status status, boolean isRetweeted) {
+        String str = isRetweeted ? addRetweetedNamePrefix(status) : status.getContent();
+        status.setSpanned(convertNormalStringToSpannableString(textSize, status, str, true, status.isFromMobile()));
     }
 
-    private static <T extends TopicShortUrl & TopicId> Spanned convertNormalStringToSpannableString(int textSize, @Nullable T topic, CharSequence source) {
+    private static <T extends StatusShortUrl & StatusId> Spanned convertNormalStringToSpannableString(int textSize, @Nullable T topic, CharSequence source) {
         return convertNormalStringToSpannableString(textSize, topic, source, true, false);
     }
 
-    private static <T extends TopicShortUrl & TopicId> Spanned convertNormalStringToSpannableString(int textSize, @Nullable T topic, CharSequence source, boolean isReplaceWebUrl, boolean isHtml) {
+    private static <T extends StatusShortUrl & StatusId> Spanned convertNormalStringToSpannableString(int textSize, @Nullable T status, CharSequence source, boolean isReplaceWebUrl, boolean isHtml) {
         //hack to fix android imagespan bug,see http://stackoverflow.com/questions/3253148/imagespan-is-cut-off-incorrectly-aligned
         //if string only contains emotion tags,add a empty char to the end
         if (source == null) {
@@ -152,7 +152,7 @@ public class DataUtil {
 //        Linkify.addLinks(value, WEB_URL, null);
 
         if (isReplaceWebUrl) {
-            value = replaceWebUrl(topic, value);
+            value = replaceWebUrl(status, value);
         }
 
         //添加表情
@@ -179,7 +179,7 @@ public class DataUtil {
         }
 
         Linkify.addLinks(value, MENTION_URL, MENTION_SCHEME);
-        Linkify.addLinks(value, TOPIC_URL, TOPIC_SCHEME);
+        Linkify.addLinks(value, STATUS_URL, TOPIC_SCHEME);
 
         URLSpan[] urlSpans = value.getSpans(0, value.length(), URLSpan.class);
         if (urlSpans == null || urlSpans.length == 0) {
@@ -192,16 +192,16 @@ public class DataUtil {
 
             if (start >= 0 && end >= 0 && value.length() >= end) {
                 value.removeSpan(urlSpan);
-                TopicContentUrlSpan topicContentUrlSpan = new TopicContentUrlSpan(start, end, urlSpan.getURL());
-                setTopicContentUrl(topic, topicContentUrlSpan);
-                value.setSpan(topicContentUrlSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                StatusContentUrlSpan statusContentUrlSpan = new StatusContentUrlSpan(start, end, urlSpan.getURL());
+                setStatusContentUrl(status, statusContentUrlSpan);
+                value.setSpan(statusContentUrlSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
 
         return value;
     }
 
-    private static <T extends TopicShortUrl & TopicId> Spannable replaceWebUrl(T topic, Spannable value) {
+    private static <T extends StatusShortUrl & StatusId> Spannable replaceWebUrl(T topic, Spannable value) {
         URLSpan[] urlSpans = value.getSpans(0, value.length(), URLSpan.class);
         if (urlSpans != null && urlSpans.length != 0) {
             List<CustomContentSpan> sps = new ArrayList<>();
@@ -230,7 +230,7 @@ public class DataUtil {
 
                     CharSequence spanValue = value.subSequence(sp.start, sp.end);
                     if (!isHttpUrl(spanValue)) {
-                        if (isTopic(spanValue)) {
+                        if (isStatus(spanValue)) {
                             sp.setContent(TOPIC_SCHEME + spanValue);
                         } else if (isMention(spanValue)) {
                             sp.setContent(MENTION_SCHEME + spanValue);
@@ -254,8 +254,8 @@ public class DataUtil {
                 }
 
                 for (CustomContentSpan sp : sps) {
-                    TopicContentUrlSpan topicContentUrlSpan = new TopicContentUrlSpan(sp);
-                    setTopicContentUrl(topic, topicContentUrlSpan);
+                    StatusContentUrlSpan topicContentUrlSpan = new StatusContentUrlSpan(sp);
+                    setStatusContentUrl(topic, topicContentUrlSpan);
                     value.setSpan(topicContentUrlSpan, sp.start, sp.end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }
@@ -263,24 +263,24 @@ public class DataUtil {
         return value;
     }
 
-    private static void setTopicContentUrl(TopicShortUrl topicShortUrl, TopicContentUrlSpan topicContentUrlSpan) {
+    private static void setStatusContentUrl(StatusShortUrl topicShortUrl, StatusContentUrlSpan topicContentUrlSpan) {
         if (topicShortUrl != null && topicShortUrl.getUrlMap() != null) {
             String url = topicContentUrlSpan.getPath();
 //            if(url != null && url.startsWith(WEB_SCHEME) && url.length() > WEB_SCHEME.length()){
 //                url = url.substring(WEB_SCHEME.length());
 //            }
-            TopicUrl topicUrl = topicShortUrl.getUrlMap().get(url);
-            topicContentUrlSpan.setTopicUrl(topicUrl);
+            StatusUrl topicUrl = topicShortUrl.getUrlMap().get(url);
+            topicContentUrlSpan.setStatusUrl(topicUrl);
         }
     }
 
-    private static String getReplaceUrlContent(TopicShortUrl topicShortUrl, String url) {
+    private static String getReplaceUrlContent(StatusShortUrl topicShortUrl, String url) {
         if (topicShortUrl != null && topicShortUrl.getUrlMap() != null) {
-            TopicUrl topicUrl = topicShortUrl.getUrlMap().get(url);
+            StatusUrl topicUrl = topicShortUrl.getUrlMap().get(url);
             if (topicUrl != null) {
                 String prefix, suffix;
                 switch (topicUrl.getType()) {
-                    case TopicUrl.LOCATION:
+                    case StatusUrl.LOCATION:
                         prefix = "➷地点:";
                         break;
                     default:
@@ -291,10 +291,10 @@ public class DataUtil {
                     suffix = topicUrl.getDisplayName();
                 } else {
                     switch (topicUrl.getType()) {
-                        case TopicUrl.VIDEO:
+                        case StatusUrl.VIDEO:
                             suffix = "视频";
                             break;
-                        case TopicUrl.MUSIC:
+                        case StatusUrl.MUSIC:
                             suffix = "音乐";
                             break;
                         default:
@@ -307,7 +307,7 @@ public class DataUtil {
         return WEB_URL_REPLACE;
     }
 
-    public static String addRetweetedNamePrefix(Topic topic) {
+    public static String addRetweetedNamePrefix(Status topic) {
         String str;
         if (!TextUtils.isEmpty(topic.getUserInfo().getName())) {
             //如果微博已经被删除，则名字为空
@@ -318,7 +318,7 @@ public class DataUtil {
         return str;
     }
 
-    public static String addRetweetedNamePrefix(TopicComment topic) {
+    public static String addRetweetedNamePrefix(StatusComment topic) {
         String str;
         if (!TextUtils.isEmpty(topic.getUserInfo().getName())) {
             //如果微博已经被删除，则名字为空
@@ -366,7 +366,7 @@ public class DataUtil {
         addEmotions(textSize, value);
 
         Linkify.addLinks(value, MENTION_URL, MENTION_SCHEME);
-        Linkify.addLinks(value, TOPIC_URL, TOPIC_SCHEME);
+        Linkify.addLinks(value, STATUS_URL, TOPIC_SCHEME);
 
         URLSpan[] urlSpans = value.getSpans(0, value.length(), URLSpan.class);
         if (urlSpans == null || urlSpans.length == 0) {
@@ -380,7 +380,7 @@ public class DataUtil {
 
             if (start >= 0 && end >= 0 && value.length() >= end) {
                 value.removeSpan(urlSpan);
-                TopicContentUrlSpan topicContentUrlSpan = new TopicContentUrlSpan(start, end, urlSpan.getURL());
+                StatusContentUrlSpan topicContentUrlSpan = new StatusContentUrlSpan(start, end, urlSpan.getURL());
                 simpleContentSpans.add(topicContentUrlSpan);
                 value.setSpan(topicContentUrlSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }

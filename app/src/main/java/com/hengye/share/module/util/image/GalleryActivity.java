@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.hengye.share.model.Topic;
+import com.hengye.share.model.Status;
 import com.hengye.share.module.util.FragmentActivity;
-import com.hengye.share.module.profile.TopicGalleryFragment;
+import com.hengye.share.module.profile.StatusGalleryFragment;
 import com.hengye.share.ui.support.AnimationRect;
 
 import java.util.ArrayList;
@@ -49,9 +49,9 @@ public class GalleryActivity extends FragmentActivity {
 
 
     public static void startWithIntent(Context context, ArrayList<String> urls,
-                                       int index, ArrayList<AnimationRect> rectList, ArrayList<Topic> topics) {
-        Bundle bundle = TopicGalleryFragment.getStartArguments(urls, index, rectList, topics);
-        context.startActivity(FragmentActivity.getStartIntent(context, TopicGalleryFragment.class, bundle, GalleryActivity.class));
+                                       int index, ArrayList<AnimationRect> rectList, ArrayList<Status> statuses) {
+        Bundle bundle = StatusGalleryFragment.getStartArguments(urls, index, rectList, statuses);
+        context.startActivity(FragmentActivity.getStartIntent(context, StatusGalleryFragment.class, bundle, GalleryActivity.class));
 
         if (rectList != null && context instanceof Activity) {
             ((Activity) context).overridePendingTransition(0, 0);

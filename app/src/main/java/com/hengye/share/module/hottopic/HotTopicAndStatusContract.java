@@ -1,10 +1,9 @@
 package com.hengye.share.module.hottopic;
 
 import com.hengye.share.model.HotTopic;
-import com.hengye.share.model.Topic;
+import com.hengye.share.model.Status;
 import com.hengye.share.module.util.encapsulation.mvp.ListDataMvpView;
 import com.hengye.share.module.util.encapsulation.mvp.MvpPresenter;
-import com.hengye.share.module.util.encapsulation.mvp.MvpView;
 
 import java.util.ArrayList;
 
@@ -14,7 +13,7 @@ import java.util.ArrayList;
 
 public interface HotTopicAndStatusContract {
 
-    interface View extends ListDataMvpView<Topic> {
+    interface View extends ListDataMvpView<Status> {
 
         void onLoadHotTopic(ArrayList<HotTopic> hotTopics);
     }

@@ -59,12 +59,12 @@
     <!--<dimen name="user_avatar">45dp</dimen>-->
     <dimen name="user_avatar">42dp</dimen>
 
-    <dimen name="topic_username">14sp</dimen>
-    <dimen name="topic_avatar">35dp</dimen>
-    <dimen name="topic_description">11sp</dimen>
-    <dimen name="topic_content">16sp</dimen>
-    <dimen name="topic_gallery_iv_margin">4dp</dimen>
-    <dimen name="topic_comment_like_height">43dp</dimen>
+    <dimen name="status_username">14sp</dimen>
+    <dimen name="status_avatar">35dp</dimen>
+    <dimen name="status_description">11sp</dimen>
+    <dimen name="status_content">16sp</dimen>
+    <dimen name="status_gallery_iv_margin">4dp</dimen>
+    <dimen name="status_comment_like_height">51dp</dimen>
 
     <dimen name="header_personal_fab_margin">16dp</dimen>
     <dimen name="header_personal_homepage_height">270dp</dimen>
@@ -80,9 +80,9 @@
     <dimen name="at_user_check">22dp</dimen>
     <dimen name="at_user_et_search_margin_start">25dp</dimen>
 
-    <dimen name="topic_publish_tool_bar_height">50dp</dimen>
-    <dimen name="topic_publish_options_tip_height">26dp</dimen>
-    <dimen name="topic_publish_options_tip_radius">15dp</dimen>
+    <dimen name="status_publish_tool_bar_height">50dp</dimen>
+    <dimen name="status_publish_options_tip_height">26dp</dimen>
+    <dimen name="status_publish_options_tip_radius">15dp</dimen>
 
     <dimen name="hot_topic_cover">65dp</dimen>
 </resources>

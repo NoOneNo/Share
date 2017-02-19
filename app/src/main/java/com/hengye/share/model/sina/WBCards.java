@@ -12,13 +12,13 @@ import java.util.List;
 
 public class WBCards {
 
-    public static List<WBTopic> listWBTopics(WBCards wbCards) {
+    public static List<WBStatus> listWBStatuses(WBCards wbCards) {
         if (wbCards != null && !CommonUtil.isEmpty(wbCards.getCards())) {
             List<CardsBean> cards = wbCards.getCards();
-            List<WBTopic> topics = new ArrayList<>();
+            List<WBStatus> topics = new ArrayList<>();
             for (CardsBean cardsBean : cards) {
                 if (cardsBean != null && cardsBean.getMblog() != null) {
-                    topics.add(getWBTopic(cardsBean.getMblog()));
+                    topics.add(getWBStatus(cardsBean.getMblog()));
                 }
             }
             return topics;
@@ -26,20 +26,20 @@ public class WBCards {
         return null;
     }
 
-    public static WBTopic getWBTopic(CardsBean.MBlog mblog) {
+    public static WBStatus getWBStatus(CardsBean.MBlog mblog) {
         if (mblog == null) {
             return null;
         }
 
-        WBTopic wbTopic = new WBTopic();
+        WBStatus wbStatus = new WBStatus();
 
-        wbTopic.setCreated_at(mblog.getCreated_at());
-        wbTopic.setIdstr(mblog.getId());
-        wbTopic.setText(mblog.getText());
-        wbTopic.setSource(mblog.getSource());
-        wbTopic.setFavorited(mblog.isFavorited());
-        wbTopic.setLiked(mblog.isLiked());
-        wbTopic.setLongText(mblog.isLongText());
+        wbStatus.setCreated_at(mblog.getCreated_at());
+        wbStatus.setIdstr(mblog.getId());
+        wbStatus.setText(mblog.getText());
+        wbStatus.setSource(mblog.getSource());
+        wbStatus.setFavorited(mblog.isFavorited());
+        wbStatus.setLiked(mblog.isLiked());
+        wbStatus.setLongText(mblog.isLongText());
 
         WBUserInfo wbUserInfo = mblog.getUser();
         if(wbUserInfo.getIdstr() == null){
@@ -51,23 +51,23 @@ public class WBCards {
 
         wbUserInfo.setFriends_count(wbUserInfo.getFollow_count());
 
-        wbTopic.setUser(mblog.getUser());
-        wbTopic.setReposts_count(mblog.getReposts_count());
-        wbTopic.setComments_count(mblog.getComments_count());
-        wbTopic.setAttitudes_count(mblog.getAttitudes_count());
-        wbTopic.setFromMobile(true);
+        wbStatus.setUser(mblog.getUser());
+        wbStatus.setReposts_count(mblog.getReposts_count());
+        wbStatus.setComments_count(mblog.getComments_count());
+        wbStatus.setAttitudes_count(mblog.getAttitudes_count());
+        wbStatus.setFromMobile(true);
 
         //解析图片
         if (!CommonUtil.isEmpty(mblog.getPics())) {
-            List<WBTopic.Pic_urlsEntity> pic_urls = new ArrayList<>();
+            List<WBStatus.Pic_urlsEntity> pic_urls = new ArrayList<>();
             for (CardsBean.MBlog.Pics pics : mblog.getPics()) {
-                WBTopic.Pic_urlsEntity pic_urlsEntity = new WBTopic.Pic_urlsEntity();
+                WBStatus.Pic_urlsEntity pic_urlsEntity = new WBStatus.Pic_urlsEntity();
                 pic_urlsEntity.setThumbnail_pic(WBUtil.getWBImgUrl(pics.getUrl(), pics.getSize(), WBUtil.IMAGE_TYPE_OR_480));
                 pic_urls.add(pic_urlsEntity);
             }
-            wbTopic.setPic_urls(pic_urls);
+            wbStatus.setPic_urls(pic_urls);
         }
-        return wbTopic;
+        return wbStatus;
     }
 
     /**

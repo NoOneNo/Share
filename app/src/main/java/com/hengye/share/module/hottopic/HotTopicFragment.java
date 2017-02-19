@@ -4,15 +4,12 @@ package com.hengye.share.module.hottopic;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.hengye.share.R;
 import com.hengye.share.model.HotTopic;
 import com.hengye.share.module.base.ShareRecyclerFragment;
-import com.hengye.share.module.topic.TopicThemeActivity;
+import com.hengye.share.module.status.StatusTopicActivity;
 import com.hengye.share.module.util.FragmentActivity;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.util.ResUtil;
@@ -69,7 +66,7 @@ public class HotTopicFragment extends ShareRecyclerFragment {
             @Override
             public void onItemClick(View view, int position) {
                 HotTopic hotTopic = mAdapter.getItem(position);
-                startActivity(TopicThemeActivity.getStartIntent(getContext(), hotTopic.getTopic()));
+                startActivity(StatusTopicActivity.getStartIntent(getContext(), hotTopic.getTopic()));
             }
         });
 

@@ -2,7 +2,6 @@ package com.hengye.share.model.greenrobot;
 
 import org.greenrobot.greendao.annotation.*;
 
-import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.greenrobot.DaoSession;
 import org.greenrobot.greendao.DaoException;
 
@@ -14,7 +13,7 @@ import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.model.sina.WBUserInfos;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.GsonUtil;
-
+import com.hengye.share.model.UserInfo;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 

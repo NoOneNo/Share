@@ -7,7 +7,7 @@
         android:id="@+id/action_publish"
         android:icon="@drawable/ic_mode_edit_white_48dp"
         android:orderInCategory="180"
-        android:title="@string/title_publish_topic"
+        android:title="@string/title_status_publish"
         app:showAsAction="ifRoom" />
 
     <item

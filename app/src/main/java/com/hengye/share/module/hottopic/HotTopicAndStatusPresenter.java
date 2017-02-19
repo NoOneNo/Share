@@ -1,7 +1,7 @@
 package com.hengye.share.module.hottopic;
 
 import com.hengye.share.model.HotTopic;
-import com.hengye.share.model.Topic;
+import com.hengye.share.model.Status;
 import com.hengye.share.model.sina.WBCards;
 import com.hengye.share.model.sina.WBHotTopic;
 import com.hengye.share.module.util.encapsulation.mvp.ListDataPresenter;
@@ -12,17 +12,14 @@ import com.hengye.share.util.rxjava.ObjectConverter;
 import com.hengye.share.util.rxjava.datasource.SingleHelper;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
-import org.reactivestreams.Publisher;
-
 import java.util.ArrayList;
 import java.util.Map;
 
-import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.SingleSource;
 import io.reactivex.functions.Function;
 
-public class HotTopicAndStatusPresenter extends ListDataPresenter<Topic, HotTopicAndStatusContract.View>
+public class HotTopicAndStatusPresenter extends ListDataPresenter<Status, HotTopicAndStatusContract.View>
         implements HotTopicAndStatusContract.Presenter {
 
     public HotTopicAndStatusPresenter(HotTopicAndStatusContract.View mvpView) {
@@ -58,7 +55,7 @@ public class HotTopicAndStatusPresenter extends ListDataPresenter<Topic, HotTopi
                         public void onSuccess(HotTopicAndStatusContract.View view, Object[] objects) {
                             super.onSuccess(view, objects);
                             ArrayList<HotTopic> obj1 = (ArrayList<HotTopic>) objects[0];
-                            ArrayList<Topic> obj2 = (ArrayList<Topic>) objects[1];
+                            ArrayList<Status> obj2 = (ArrayList<Status>) objects[1];
                             view.onLoadHotTopic(obj1);
                             view.onLoadListData(isRefresh, obj2);
                         }
@@ -80,18 +77,18 @@ public class HotTopicAndStatusPresenter extends ListDataPresenter<Topic, HotTopi
     }
 
 
-    Function<WBCards, SingleSource<ArrayList<Topic>>> mFlatWBTopic;
+    Function<WBCards, SingleSource<ArrayList<Status>>> mFlatWBTopic;
 
     /**
      * 把微博实体转换成自定义的实体
      * @return
      */
-    private  Function<WBCards, SingleSource<ArrayList<Topic>>> flatWBTopics() {
+    private  Function<WBCards, SingleSource<ArrayList<Status>>> flatWBTopics() {
         if (mFlatWBTopic == null) {
-            mFlatWBTopic = new Function<WBCards, SingleSource<ArrayList<Topic>>>() {
+            mFlatWBTopic = new Function<WBCards, SingleSource<ArrayList<Status>>>() {
                 @Override
-                public SingleSource<ArrayList<Topic>> apply(WBCards wbCards) {
-                    return SingleHelper.justArrayList(Topic.getTopics(WBCards.listWBTopics(wbCards)));
+                public SingleSource<ArrayList<Status>> apply(WBCards wbCards) {
+                    return SingleHelper.justArrayList(Status.getStatuses(WBCards.listWBStatuses(wbCards)));
                 }
             };
         }

@@ -10,13 +10,13 @@ import com.hengye.share.model.sina.WBHotSearch;
 import com.hengye.share.model.sina.WBHotTopic;
 import com.hengye.share.model.sina.WBResult;
 import com.hengye.share.model.sina.WBShortUrls;
-import com.hengye.share.model.sina.WBTopic;
-import com.hengye.share.model.sina.WBTopicComment;
-import com.hengye.share.model.sina.WBTopicComments;
-import com.hengye.share.model.sina.WBTopicFavorites;
-import com.hengye.share.model.sina.WBTopicIds;
-import com.hengye.share.model.sina.WBTopicReposts;
-import com.hengye.share.model.sina.WBTopics;
+import com.hengye.share.model.sina.WBStatus;
+import com.hengye.share.model.sina.WBStatusComment;
+import com.hengye.share.model.sina.WBStatusComments;
+import com.hengye.share.model.sina.WBStatusFavorites;
+import com.hengye.share.model.sina.WBStatusIds;
+import com.hengye.share.model.sina.WBStatusReposts;
+import com.hengye.share.model.sina.WBStatuses;
 import com.hengye.share.model.sina.WBUploadPicture;
 import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.model.sina.WBUserInfos;
@@ -50,56 +50,56 @@ public interface WBService {
     Single<HashMap<String, String>> oauthToken(@FieldMap Map<String, String> options);
 
     @GET(UrlFactory.WB_COMMENT_SHOW)
-    Single<WBTopicComments> listComment(@QueryMap Map<String, String> options);
+    Single<WBStatusComments> listComment(@QueryMap Map<String, String> options);
 
     @GET(UrlFactory.WB_COMMENT_SHOW_WITH_LIKE)
-    Single<WBTopicComments> listCommentWithLike(@QueryMap Map<String, String> options);
+    Single<WBStatusComments> listCommentWithLike(@QueryMap Map<String, String> options);
 
     @GET(UrlFactory.WB_HOT_COMMENT_SHOW_WITH_LIKE)
-    Single<WBTopicComments> listHotCommentWithLike(@QueryMap Map<String, String> options);
+    Single<WBStatusComments> listHotCommentWithLike(@QueryMap Map<String, String> options);
 
     @GET(UrlFactory.WB_REPOST_SHOW)
-    Single<WBTopicReposts> listRepost(@QueryMap Map<String, String> options);
+    Single<WBStatusReposts> listRepost(@QueryMap Map<String, String> options);
 
     @FormUrlEncoded
-    @POST(UrlFactory.WB_PUBLISH_TOPIC)
-    Single<WBTopic> publishTopic
+    @POST(UrlFactory.WB_PUBLISH_STATUS)
+    Single<WBStatus> publishStatus
     (@Field("access_token") String token,
      @Field("status") String status);
 
 
     @FormUrlEncoded
-    @POST(UrlFactory.WB_PUBLISH_TOPIC)
-    Single<WBTopic> publishTopic
+    @POST(UrlFactory.WB_PUBLISH_STATUS)
+    Single<WBStatus> publishStatus
             (@FieldMap Map<String, Object> fieldMap);
 
     @FormUrlEncoded
-    @POST(UrlFactory.WB_DESTROY_TOPIC)
-    Single<WBTopic> destroyTopic
+    @POST(UrlFactory.WB_DESTROY_STATUS)
+    Single<WBStatus> destroyStatus
             (@Field("access_token") String token,
              @Field("id") String id);
 //    @Multipart
-//    @POST(UrlFactory.WB_PUBLISH_TOPIC_UPLOAD)
-//    Observable<WBTopic> publishTopicWithSinglePhoto
+//    @POST(UrlFactory.WB_PUBLISH_STATUS_UPLOAD)
+//    Observable<WBStatus> publishStatusWithSinglePhoto
 //    (@Part("access_token") RequestBody token,
 //     @Part("status") RequestBody status,
 //     @Part MultipartBody.Part file);
 
     @Multipart
-    @POST(UrlFactory.WB_PUBLISH_TOPIC_UPLOAD)
-    Single<WBTopic> publishTopicWithSinglePhoto
+    @POST(UrlFactory.WB_PUBLISH_STATUS_UPLOAD)
+    Single<WBStatus> publishStatusWithSinglePhoto
             (@PartMap Map<String, RequestBody> partyMap,
              @Part MultipartBody.Part file);
 
 
 //    @FormUrlEncoded
-//    @POST(UrlFactory.WB_PUBLISH_TOPIC_PICTURE)
-//    Observable<WBTopic> publishTopicWithMultiplePhoto
+//    @POST(UrlFactory.WB_PUBLISH_STATUS_PICTURE)
+//    Observable<WBStatus> publishStatusWithMultiplePhoto
 //            (@Field("access_token") String token, @Field("status") String status, @Field("pic_id") String pic_id);
 
     @FormUrlEncoded
-    @POST(UrlFactory.WB_PUBLISH_TOPIC_PICTURE)
-    Single<WBTopic> publishTopicWithMultiplePhoto
+    @POST(UrlFactory.WB_PUBLISH_STATUS_PICTURE)
+    Single<WBStatus> publishStatusWithMultiplePhoto
             (@FieldMap Map<String, Object> fieldMap);
 
     @Multipart
@@ -109,16 +109,16 @@ public interface WBService {
              @Part MultipartBody.Part file);
 
     @FormUrlEncoded
-    @POST(UrlFactory.WB_COMMENT_TOPIC)
-    Single<WBTopicComment> publishComment
+    @POST(UrlFactory.WB_COMMENT_STATUS)
+    Single<WBStatusComment> publishComment
             (@Field("access_token") String token,
              @Field("comment") String comment,
              @Field("id") String id,
-             @Field("comment_ori") Integer isForOriginalTopic);
+             @Field("comment_ori") Integer isForOriginalStatus);
 
     @FormUrlEncoded
-    @POST(UrlFactory.WB_REPOST_TOPIC)
-    Single<WBTopic> repostTopic
+    @POST(UrlFactory.WB_REPOST_STATUS)
+    Single<WBStatus> repostStatus
             (@Field("access_token") String token,
              @Field("status") String status,
              @Field("id") String id,
@@ -126,57 +126,57 @@ public interface WBService {
 
     @FormUrlEncoded
     @POST(UrlFactory.WB_COMMENT_REPLY)
-    Single<WBTopicComment> replyComment
+    Single<WBStatusComment> replyComment
             (@Field("access_token") String token,
              @Field("comment") String comment,
              @Field("id") String id,
              @Field("cid") String cid,
-             @Field("comment_ori") Integer isForOriginalTopic);
+             @Field("comment_ori") Integer isForOriginalStatus);
 
     @GET(UrlFactory.WB_SEARCH_USER)
     Single<WBUserInfos> searchUser(@QueryMap Map<String, String> options);
 
     @GET(UrlFactory.WB_SEARCH_PUBLIC)
-    Single<WBTopics> searchPublic(@QueryMap Map<String, String> options);
+    Single<WBStatuses> searchPublic(@QueryMap Map<String, String> options);
 
-    @GET(UrlFactory.WB_SEARCH_TOPIC)
-    Single<WBTopics> searchTopic(@QueryMap Map<String, String> options);
+    @GET(UrlFactory.WB_SEARCH_TOPICS)
+    Single<WBStatuses> searchStatus(@QueryMap Map<String, String> options);
 
-    @GET(UrlFactory.WB_FRIEND_TOPIC)
-    Single<WBTopics> listTopic(@QueryMap Map<String, String> options);
+    @GET(UrlFactory.WB_FRIEND_STATUS)
+    Single<WBStatuses> listStatus(@QueryMap Map<String, String> options);
 
-    @GET(UrlFactory.WB_FRIEND_TOPIC_IDS)
-    Single<WBTopicIds> listTopicIds(@QueryMap Map<String, String> options);
+    @GET(UrlFactory.WB_FRIEND_STATUS_IDS)
+    Single<WBStatusIds> listStatusIds(@QueryMap Map<String, String> options);
 
-    @GET(UrlFactory.WB_BILATERAL_TOPIC)
-    Single<WBTopics> listBilateralTopic(@QueryMap Map<String, String> options);
+    @GET(UrlFactory.WB_BILATERAL_STATUS)
+    Single<WBStatuses> listBilateralStatus(@QueryMap Map<String, String> options);
 
-    @GET(UrlFactory.WB_BILATERAL_TOPIC_IDS)
-    Single<WBTopicIds> listBilateralTopicIds(@QueryMap Map<String, String> options);
+    @GET(UrlFactory.WB_BILATERAL_STATUS_IDS)
+    Single<WBStatusIds> listBilateralStatusIds(@QueryMap Map<String, String> options);
 
-    @GET(UrlFactory.WB_FAVORITES_TOPIC)
-    Single<WBTopicFavorites> listFavoritesTopic(@QueryMap Map<String, String> options);
+    @GET(UrlFactory.WB_FAVORITES_STATUS)
+    Single<WBStatusFavorites> listFavoritesStatus(@QueryMap Map<String, String> options);
 
-    @GET(UrlFactory.WB_GROUP_TOPIC)
-    Single<WBTopics> listGroupTopic(@QueryMap Map<String, String> options);
+    @GET(UrlFactory.WB_GROUP_STATUS)
+    Single<WBStatuses> listGroupStatus(@QueryMap Map<String, String> options);
 
-    @GET(UrlFactory.WB_GROUP_TOPIC_IDS)
-    Single<WBTopicIds> listGroupTopicIds(@QueryMap Map<String, String> options);
+    @GET(UrlFactory.WB_GROUP_STATUS_IDS)
+    Single<WBStatusIds> listGroupStatusIds(@QueryMap Map<String, String> options);
 
     @GET(UrlFactory.WB_COMMENT_MENTION)
-    Single<WBTopicComments> listCommentAtMeTopic(@QueryMap Map<String, String> options);
+    Single<WBStatusComments> listCommentAtMeStatus(@QueryMap Map<String, String> options);
 
-    @GET(UrlFactory.WB_TOPIC_MENTION)
-    Single<WBTopics> listTopicAtMeTopic(@QueryMap Map<String, String> options);
+    @GET(UrlFactory.WB_STATUS_MENTION)
+    Single<WBStatuses> listAtMeStatus(@QueryMap Map<String, String> options);
 
     @GET(UrlFactory.WB_COMMENT_TO_ME)
-    Single<WBTopicComments> listCommentToMeTopic(@QueryMap Map<String, String> options);
+    Single<WBStatusComments> listCommentToMeStatus(@QueryMap Map<String, String> options);
 
     @GET(UrlFactory.WB_COMMENT_BY_ME)
-    Single<WBTopicComments> listCommentByMeTopic(@QueryMap Map<String, String> options);
+    Single<WBStatusComments> listCommentByMeStatus(@QueryMap Map<String, String> options);
 
-    @GET(UrlFactory.WB_USER_TOPIC)
-    Single<WBTopics> listUserTopic(@QueryMap Map<String, String> options);
+    @GET(UrlFactory.WB_USER_STATUS)
+    Single<WBStatuses> listUserStatus(@QueryMap Map<String, String> options);
 
     @GET(UrlFactory.WB_USER_INFO)
     Single<WBUserInfo> listUserInfo(@QueryMap Map<String, String> options);
@@ -238,11 +238,11 @@ public interface WBService {
 
     @FormUrlEncoded
     @POST(UrlFactory.WB_STATUS_FAVORITE_CREATE)
-    Single<WBTopic> createStatusFavorited(@FieldMap Map<String, String> options);
+    Single<WBStatus> createStatusFavorited(@FieldMap Map<String, String> options);
 
     @FormUrlEncoded
     @POST(UrlFactory.WB_STATUS_FAVORITE_DESTROY)
-    Single<WBTopic> destroyStatusFavorited(@FieldMap Map<String, String> options);
+    Single<WBStatus> destroyStatusFavorited(@FieldMap Map<String, String> options);
 
     @GET(UrlFactory.WB_COMMENT_LIKE)
     Single<WBResult> createCommentLike(@QueryMap Map<String, String> options);

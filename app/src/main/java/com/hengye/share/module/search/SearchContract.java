@@ -1,10 +1,9 @@
 package com.hengye.share.module.search;
 
-import com.hengye.share.model.Topic;
+import com.hengye.share.model.Status;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.module.util.encapsulation.mvp.ListDataMvpView;
 import com.hengye.share.module.util.encapsulation.mvp.MvpPresenter;
-import com.hengye.share.module.util.encapsulation.mvp.MvpView;
 
 import java.util.List;
 
@@ -14,7 +13,7 @@ import java.util.List;
 
 public interface SearchContract {
 
-    interface View extends ListDataMvpView<Topic> {
+    interface View extends ListDataMvpView<Status> {
         void onLoadSearchUsers(List<UserInfo> userInfos);
     }
 

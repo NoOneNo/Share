@@ -1,8 +1,8 @@
 package com.hengye.share.util;
 
 import com.hengye.share.model.Address;
-import com.hengye.share.model.TopicPublish;
-import com.hengye.share.model.greenrobot.TopicDraft;
+import com.hengye.share.model.StatusPublish;
+import com.hengye.share.model.greenrobot.StatusDraft;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,19 +29,19 @@ public class UrlFactory {
      * 微博接口
      */
     //获得微博
-    public static final String WB_USER_TOPIC = "statuses/user_timeline.json";
+    public static final String WB_USER_STATUS = "statuses/user_timeline.json";
     //获得微博
-    public static final String WB_FRIEND_TOPIC = "statuses/friends_timeline.json";
+    public static final String WB_FRIEND_STATUS = "statuses/friends_timeline.json";
     //获得微博ID列表
-    public static final String WB_FRIEND_TOPIC_IDS = "statuses/friends_timeline/ids.json";
+    public static final String WB_FRIEND_STATUS_IDS = "statuses/friends_timeline/ids.json";
     //获得好友圈微博
-    public static final String WB_BILATERAL_TOPIC = "statuses/bilateral_timeline.json";
+    public static final String WB_BILATERAL_STATUS = "statuses/bilateral_timeline.json";
     //获得好友圈微博ID列表
-    public static final String WB_BILATERAL_TOPIC_IDS = "statuses/bilateral_timeline/ids.json";
+    public static final String WB_BILATERAL_STATUS_IDS = "statuses/bilateral_timeline/ids.json";
     //获得某一分组的微博列表
-    public static final String WB_GROUP_TOPIC = "friendships/groups/timeline.json";
+    public static final String WB_GROUP_STATUS = "friendships/groups/timeline.json";
     //获得某一分组的微博ID列表
-    public static final String WB_GROUP_TOPIC_IDS = "friendships/groups/timeline/ids.json";
+    public static final String WB_GROUP_STATUS_IDS = "friendships/groups/timeline/ids.json";
     //获取某个用户的各种消息未读数
     public static final String WB_UNREAD_COUNT = "remind/unread_count.json";
     //获取用户信息
@@ -57,30 +57,30 @@ public class UrlFactory {
     //@我的评论列表
     public static final String WB_COMMENT_MENTION = "comments/mentions.json";
     //@我的微博
-    public static final String WB_TOPIC_MENTION = "statuses/mentions.json";
+    public static final String WB_STATUS_MENTION = "statuses/mentions.json";
     //我收藏的微博(支持page分页)
-    public static final String WB_FAVORITES_TOPIC = "favorites.json";
+    public static final String WB_FAVORITES_STATUS = "favorites.json";
     //发表微博
-    public static final String WB_PUBLISH_TOPIC = "statuses/update.json";
+    public static final String WB_PUBLISH_STATUS = "statuses/update.json";
     //发表微博
-    public static final String WB_DESTROY_TOPIC = "statuses/destroy.json";
+    public static final String WB_DESTROY_STATUS = "statuses/destroy.json";
     //发表微博,并且上传一张图片
-    public static final String WB_PUBLISH_TOPIC_UPLOAD = "statuses/upload.json";
+    public static final String WB_PUBLISH_STATUS_UPLOAD = "statuses/upload.json";
     //上传一张图片
     public static final String WB_UPLOAD_PICTURE = "statuses/upload_pic.json";
     //发表微博, 可上传多张图片,高级接口
-    public static final String WB_PUBLISH_TOPIC_PICTURE = "statuses/upload_url_text.json";
+    public static final String WB_PUBLISH_STATUS_PICTURE = "statuses/upload_url_text.json";
     //获取用户的关注列表
     public static final String WB_USER_ATTENTIONS = "friendships/friends.json";
     //获取用户的关注列表
     public static final String WB_USER_FOLLOWERS = "friendships/followers.json";
     //对微博进行评论
-    public static final String WB_COMMENT_TOPIC = "comments/create.json";
+    public static final String WB_COMMENT_STATUS = "comments/create.json";
     //回复评论
     public static final String WB_COMMENT_REPLY = "comments/reply.json";
     //转发微博
 //    is_comment 是否在转发的同时发表评论，0：否、1：评论给当前微博、2：评论给原微博、3：都评论，默认为0 。
-    public static final String WB_REPOST_TOPIC = "statuses/repost.json";
+    public static final String WB_REPOST_STATUS = "statuses/repost.json";
     //搜索用户
     public static final String WB_SEARCH_USER = "search/users.json";
     //    https://api.weibo.com/2/search/users.json?q=uu&user_id=2207519004&count=20&page=1&filter_ori=0&filter_pic=0&access_token=2.00OXW56C06XASOc5a146b1b0pVluLB
@@ -88,7 +88,7 @@ public class UrlFactory {
     public static final String WB_SEARCH_PUBLIC = "search/public.json";
     //    https://api.weibo.com/2/search/public.json?q=uu&sid=o_weico&sort=social&source=211160679&user_id=2207519004&count=20&page=1&access_token=2.00OXW56C06XASOc5a146b1b0pVluLB
     //搜索话题
-    public static final String WB_SEARCH_TOPIC = "search/topics.json";
+    public static final String WB_SEARCH_TOPICS = "search/topics.json";
     //添加收藏微博
     public static final String WB_STATUS_FAVORITE_CREATE = "favorites/create.json";
     //删除收藏微博
@@ -157,24 +157,24 @@ public class UrlFactory {
     }
 
 
-    public static Map<String, Object> getPublishTopicParams(TopicPublish tp) {
-        return getPublishTopicParams(tp, null);
+    public static Map<String, Object> getPublishStatusParams(StatusPublish sp) {
+        return getPublishStatusParams(sp, null);
     }
 
-    public static Map<String, Object> getPublishTopicParams(TopicPublish tp, String picUrls) {
+    public static Map<String, Object> getPublishStatusParams(StatusPublish sp, String picUrls) {
         Map<String, Object> map = new HashMap<>();
-        TopicDraft td = tp.getTopicDraft();
-        map.put("access_token", tp.getToken());
-        map.put("status", td.getContent());
-        if (td.isAssignGroupVisible()) {
+        StatusDraft sd = sp.getStatusDraft();
+        map.put("access_token", sp.getToken());
+        map.put("status", sd.getContent());
+        if (sd.isAssignGroupVisible()) {
             map.put("visible", "3");
-            map.put("list_id", td.getAssignGroupIdStr());
+            map.put("list_id", sd.getAssignGroupIdStr());
         }
         if(picUrls != null){
             map.put("pic_id", picUrls);
         }
 
-        Address address = td.getAddressBean();
+        Address address = sd.getAddressBean();
         if(address != null){
             map.put("long", address.getLongitude());
             map.put("lat", address.getLatitude());
@@ -182,12 +182,12 @@ public class UrlFactory {
         return map;
     }
 
-    public static Map<String, RequestBody> getPublishTopicParamsWrapToMultiPart(TopicPublish tp) {
-        return getPublishTopicParamsWrapToMultiPart(tp, null);
+    public static Map<String, RequestBody> getPublishStatusParamsWrapToMultiPart(StatusPublish sp) {
+        return getPublishStatusParamsWrapToMultiPart(sp, null);
     }
 
-    public static Map<String, RequestBody> getPublishTopicParamsWrapToMultiPart(TopicPublish tp, String picUrls) {
-        return convertMultiPartFormDataFromMap(getPublishTopicParams(tp, picUrls));
+    public static Map<String, RequestBody> getPublishStatusParamsWrapToMultiPart(StatusPublish sp, String picUrls) {
+        return convertMultiPartFormDataFromMap(getPublishStatusParams(sp, picUrls));
     }
 
     public static Map<String, RequestBody> convertMultiPartFormDataFromMap(Map<String, ?> map){
@@ -203,8 +203,8 @@ public class UrlFactory {
     }
 
 
-    public String getWBUserTopicUrl() {
-        return getWBUrlPrefix() + WB_USER_TOPIC;
+    public String getWBUserStatusUrl() {
+        return getWBUrlPrefix() + WB_USER_STATUS;
     }
 
     //    必选 	类型及范围 	说明
@@ -218,13 +218,13 @@ public class UrlFactory {
 //    feature 	false 	int 	过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。
 //    trim_user 	false 	int 	返回值中user字段开关，0：返回完整user字段、1：user字段仅返回user_id，默认为0。
 //    获得微博
-    public String getWBFriendTopicUrl() {
-        return getWBUrlPrefix() + WB_FRIEND_TOPIC;
+    public String getWBFriendStatusUrl() {
+        return getWBUrlPrefix() + WB_FRIEND_STATUS;
     }
 
     //获得好友圈微博
-    public String getWBBilateralTopicUrl() {
-        return getWBUrlPrefix() + WB_BILATERAL_TOPIC;
+    public String getWBBilateralStatusUrl() {
+        return getWBUrlPrefix() + WB_BILATERAL_STATUS;
     }
 
     //    必选 	类型及范围 	说明
@@ -237,13 +237,13 @@ public class UrlFactory {
 //    base_app 	false 	int 	是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。
 //    feature 	false 	int 	过滤类型ID，0：全部、1：原创、2：图片、3：视频、4：音乐，默认为0。
 //    获得微博的ID数
-    public String getWBFriendTopicIdsUrl() {
-        return getWBUrlPrefix() + WB_FRIEND_TOPIC_IDS;
+    public String getWBFriendStatusIdsUrl() {
+        return getWBUrlPrefix() + WB_FRIEND_STATUS_IDS;
     }
 
     //获得某一分组的微博列表
-    public String getWBGroupTopicUrl() {
-        return getWBUrlPrefix() + WB_GROUP_TOPIC;
+    public String getWBGroupStatusUrl() {
+        return getWBUrlPrefix() + WB_GROUP_STATUS;
     }
 
     //    必选	类型及范围	说明
@@ -313,23 +313,23 @@ public class UrlFactory {
     }
 
     //@我的微博
-    public String getWBTopicMentionUrl() {
-        return getWBUrlPrefix() + WB_TOPIC_MENTION;
+    public String getWBStatusMentionUrl() {
+        return getWBUrlPrefix() + WB_STATUS_MENTION;
     }
 
     //我收藏的微博
-    public String getWBTopicFavoritesUrl() {
-        return getWBUrlPrefix() + WB_FAVORITES_TOPIC;
+    public String getWBStatusFavoritesUrl() {
+        return getWBUrlPrefix() + WB_FAVORITES_STATUS;
     }
 
     //发表微博
-    public String getWBTopicPublishUrl() {
-        return getWBUrlPrefix() + WB_PUBLISH_TOPIC;
+    public String getWBStatusPublishUrl() {
+        return getWBUrlPrefix() + WB_PUBLISH_STATUS;
     }
 
     //发表微博,并且上传一张图片
-    public String getWBTopicPublishPhotoUrl() {
-        return getWBUrlPrefix() + WB_PUBLISH_TOPIC_UPLOAD;
+    public String getWBStatusPublishPhotoUrl() {
+        return getWBUrlPrefix() + WB_PUBLISH_STATUS_UPLOAD;
     }
 
     //获取用户的关注列表
@@ -341,8 +341,8 @@ public class UrlFactory {
     //    id	true	int64	需要评论的微博ID。
     //    comment_ori	false	int	当评论转发微博时，是否评论给原微博，0：否、1：是，默认为0。
     //对微博进行评论
-    public String getWBTopicCommentCreateUrl() {
-        return getWBUrlPrefix() + WB_COMMENT_TOPIC;
+    public String getWBStatusCommentCreateUrl() {
+        return getWBUrlPrefix() + WB_COMMENT_STATUS;
     }
 
     //    cid	true	int64	需要回复的评论ID。
@@ -351,7 +351,7 @@ public class UrlFactory {
     //    without_mention	false	int	回复中是否自动加入“回复@用户名”，0：是、1：否，默认为0。
     //    comment_ori	false	int	当评论转发微博时，是否评论给原微博，0：否、1：是，默认为0。
     //回复评论
-    public String getWBTopicCommentReplyUrl() {
+    public String getWBStatusCommentReplyUrl() {
         return getWBUrlPrefix() + WB_COMMENT_REPLY;
     }
 
@@ -359,8 +359,8 @@ public class UrlFactory {
 //    status	false	string	添加的转发文本，必须做URLencode，内容不超过140个汉字，不填则默认为“转发微博”。
 //    is_comment	false	int	是否在转发的同时发表评论，0：否、1：评论给当前微博、2：评论给原微博、3：都评论，默认为0 。
     //转发微博
-    public String getWBTopicRepostUrl() {
-        return getWBUrlPrefix() + WB_REPOST_TOPIC;
+    public String getWBStatusRepostUrl() {
+        return getWBUrlPrefix() + WB_REPOST_STATUS;
     }
 
     //搜索用户
@@ -379,8 +379,8 @@ public class UrlFactory {
     }
 
     //搜索话题
-    public String getWBSearchTopicUrl() {
-        return getWBUrlPrefix() + WB_SEARCH_TOPIC;
+    public String getWBSearchStatusUrl() {
+        return getWBUrlPrefix() + WB_SEARCH_TOPICS;
     }
 
     //添加收藏微博

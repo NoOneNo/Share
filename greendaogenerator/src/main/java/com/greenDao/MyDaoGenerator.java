@@ -11,7 +11,7 @@ import org.greenrobot.greendao.generator.Schema;
 public class MyDaoGenerator {
 
     public static void main(String[] args) throws Exception {
-        Schema schema = new Schema(5, "com.hengye.share.model.greenrobot");
+        Schema schema = new Schema(6, "com.hengye.share.model.greenrobot");
 
         schema.enableKeepSectionsByDefault();
         schema.enableActiveEntitiesByDefault();
@@ -45,16 +45,16 @@ public class MyDaoGenerator {
     }
 
 
-    private static void addTopicDraft(Schema schema) {
-        Entity entity = schema.addEntity("TopicDraft");
+    private static void addStatusDraft(Schema schema) {
+        Entity entity = schema.addEntity("StatusDraft");
         entity.implementsSerializable();
         entity.addIdProperty().autoincrement().primaryKeyAsc();
         entity.addStringProperty("content").notNull();
         entity.addDateProperty("date");
         entity.addStringProperty("urls");
         entity.addStringProperty("uid");
-        entity.addStringProperty("targetTopicJson");
-        entity.addStringProperty("targetTopicId");
+        entity.addStringProperty("targetStatusJson");
+        entity.addStringProperty("targetStatusId");
         entity.addStringProperty("targetCommentId");
         entity.addStringProperty("targetCommentUserName");
         entity.addStringProperty("targetCommentContent");
@@ -136,7 +136,7 @@ public class MyDaoGenerator {
     }
 
     private static void addEntity(Schema schema){
-        addTopicDraft(schema);
+        addStatusDraft(schema);
         addUser(schema);
         addGroupList(schema);
         addGroupMember(schema);

@@ -11,14 +11,12 @@ import com.hengye.share.module.base.ShareRecyclerFragment;
 import com.hengye.share.module.profile.PersonalHomepageActivity;
 import com.hengye.share.module.profile.UserAttentionContract;
 import com.hengye.share.module.profile.UserAttentionPresenter;
-import com.hengye.share.module.profile.UserListContract;
 import com.hengye.share.module.util.encapsulation.base.DefaultDataHandler;
 import com.hengye.share.module.util.encapsulation.base.TaskState;
-import com.hengye.share.module.util.encapsulation.fragment.BaseFragment;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.recyclerview.DividerItemDecoration;
 import com.hengye.share.util.ResUtil;
-import com.hengye.share.util.handler.TopicNumberPager;
+import com.hengye.share.util.handler.StatusNumberPager;
 
 import java.util.ArrayList;
 
@@ -37,7 +35,7 @@ public class SearchUserFragment extends ShareRecyclerFragment<UserInfo>
     private ArrayList<UserInfo> mUserInfos;
     private SearchUserPresenter mPresenter;
     private UserAttentionContract.Presenter mUserAttentionPresenter;
-    private TopicNumberPager mPager;
+    private StatusNumberPager mPager;
     private boolean mRequesting = false;
 
     @Override
@@ -63,7 +61,7 @@ public class SearchUserFragment extends ShareRecyclerFragment<UserInfo>
 
         getRecyclerView().addItemDecoration(new DividerItemDecoration(getContext()));
         setAdapter(mAdapter = new SearchUserAdapter(getContext(), mUserInfos));
-        setPager(mPager = new TopicNumberPager(1, 15));
+        setPager(mPager = new StatusNumberPager(1, 15));
         //已经存在数据
         mPager.handlePage(true);
         setDataHandler(new DefaultDataHandler<>(mAdapter));

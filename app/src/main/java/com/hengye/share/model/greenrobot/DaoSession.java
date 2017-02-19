@@ -8,14 +8,14 @@ import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.identityscope.IdentityScopeType;
 import org.greenrobot.greendao.internal.DaoConfig;
 
-import com.hengye.share.model.greenrobot.TopicDraft;
+import com.hengye.share.model.greenrobot.StatusDraft;
 import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.model.greenrobot.GroupList;
 import com.hengye.share.model.greenrobot.GroupMember;
 import com.hengye.share.model.greenrobot.Follower;
 import com.hengye.share.model.greenrobot.ShareJson;
 
-import com.hengye.share.model.greenrobot.TopicDraftDao;
+import com.hengye.share.model.greenrobot.StatusDraftDao;
 import com.hengye.share.model.greenrobot.UserDao;
 import com.hengye.share.model.greenrobot.GroupListDao;
 import com.hengye.share.model.greenrobot.GroupMemberDao;
@@ -31,14 +31,14 @@ import com.hengye.share.model.greenrobot.ShareJsonDao;
  */
 public class DaoSession extends AbstractDaoSession {
 
-    private final DaoConfig topicDraftDaoConfig;
+    private final DaoConfig statusDraftDaoConfig;
     private final DaoConfig userDaoConfig;
     private final DaoConfig groupListDaoConfig;
     private final DaoConfig groupMemberDaoConfig;
     private final DaoConfig followerDaoConfig;
     private final DaoConfig shareJsonDaoConfig;
 
-    private final TopicDraftDao topicDraftDao;
+    private final StatusDraftDao statusDraftDao;
     private final UserDao userDao;
     private final GroupListDao groupListDao;
     private final GroupMemberDao groupMemberDao;
@@ -49,8 +49,8 @@ public class DaoSession extends AbstractDaoSession {
             daoConfigMap) {
         super(db);
 
-        topicDraftDaoConfig = daoConfigMap.get(TopicDraftDao.class).clone();
-        topicDraftDaoConfig.initIdentityScope(type);
+        statusDraftDaoConfig = daoConfigMap.get(StatusDraftDao.class).clone();
+        statusDraftDaoConfig.initIdentityScope(type);
 
         userDaoConfig = daoConfigMap.get(UserDao.class).clone();
         userDaoConfig.initIdentityScope(type);
@@ -67,14 +67,14 @@ public class DaoSession extends AbstractDaoSession {
         shareJsonDaoConfig = daoConfigMap.get(ShareJsonDao.class).clone();
         shareJsonDaoConfig.initIdentityScope(type);
 
-        topicDraftDao = new TopicDraftDao(topicDraftDaoConfig, this);
+        statusDraftDao = new StatusDraftDao(statusDraftDaoConfig, this);
         userDao = new UserDao(userDaoConfig, this);
         groupListDao = new GroupListDao(groupListDaoConfig, this);
         groupMemberDao = new GroupMemberDao(groupMemberDaoConfig, this);
         followerDao = new FollowerDao(followerDaoConfig, this);
         shareJsonDao = new ShareJsonDao(shareJsonDaoConfig, this);
 
-        registerDao(TopicDraft.class, topicDraftDao);
+        registerDao(StatusDraft.class, statusDraftDao);
         registerDao(User.class, userDao);
         registerDao(GroupList.class, groupListDao);
         registerDao(GroupMember.class, groupMemberDao);
@@ -83,7 +83,7 @@ public class DaoSession extends AbstractDaoSession {
     }
     
     public void clear() {
-        topicDraftDaoConfig.clearIdentityScope();
+        statusDraftDaoConfig.clearIdentityScope();
         userDaoConfig.clearIdentityScope();
         groupListDaoConfig.clearIdentityScope();
         groupMemberDaoConfig.clearIdentityScope();
@@ -91,8 +91,8 @@ public class DaoSession extends AbstractDaoSession {
         shareJsonDaoConfig.clearIdentityScope();
     }
 
-    public TopicDraftDao getTopicDraftDao() {
-        return topicDraftDao;
+    public StatusDraftDao getStatusDraftDao() {
+        return statusDraftDao;
     }
 
     public UserDao getUserDao() {

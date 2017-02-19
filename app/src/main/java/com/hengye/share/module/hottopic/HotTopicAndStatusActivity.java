@@ -5,15 +5,13 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.hengye.share.R;
 import com.hengye.share.model.HotSearch;
-import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.module.base.BaseFragmentActivity;
-import com.hengye.share.module.topic.TopicThemeActivity;
+import com.hengye.share.module.status.StatusTopicActivity;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.SearchView;
 
@@ -75,7 +73,7 @@ public class HotTopicAndStatusActivity extends BaseFragmentActivity implements H
             @Override
             public void onSearch(String content) {
                 if (!TextUtils.isEmpty(content.trim())) {
-                    startActivity(TopicThemeActivity.getStartIntent(HotTopicAndStatusActivity.this, content));
+                    startActivity(StatusTopicActivity.getStartIntent(HotTopicAndStatusActivity.this, content));
                 }
             }
         });

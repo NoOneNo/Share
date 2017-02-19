@@ -288,7 +288,7 @@ public class SettingHelper {
         return getStringSet(KEY_HABIT_SHOW_AVATAR);
     }
 
-    public static boolean isShowTopicAvatar(){
+    public static boolean isShowStatusAvatar(){
         Set<String> value = isShowAvatar();
         return value == null || !value.contains("1");
     }
