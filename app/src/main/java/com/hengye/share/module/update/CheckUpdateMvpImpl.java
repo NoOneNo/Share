@@ -10,6 +10,8 @@ import android.support.annotation.NonNull;
 import com.hengye.share.BuildConfig;
 import com.hengye.share.R;
 import com.hengye.share.module.base.BaseActivity;
+import com.hengye.share.module.userguide.UserGuideFragment;
+import com.hengye.share.module.util.FragmentActivity;
 import com.hengye.share.module.util.encapsulation.base.TaskState;
 import com.hengye.share.module.util.encapsulation.mvp.MvpPresenter;
 import com.hengye.share.util.ApplicationUtil;
@@ -18,6 +20,8 @@ import com.hengye.share.util.L;
 import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.ToastUtil;
+
+import static com.hengye.share.util.SPUtil.getBoolean;
 
 /**
  * Created by yuhy on 2016/11/21.
@@ -42,6 +46,24 @@ public class CheckUpdateMvpImpl implements CheckUpdateContract.View {
         if(activity == null){
             return;
         }
+
+        if(updateBean.getAppUrl() != null){
+            //更新
+            showUpdateDialog(activity, updateBean);
+        }else{
+            //打开用户手册
+            showUserGuide(activity);
+        }
+
+
+    }
+
+    @Override
+    public void onCheckUpdateFail(int taskState) {
+        ToastUtil.showToast(TaskState.toString(taskState));
+    }
+
+    private void showUpdateDialog(Activity activity, final UpdateBean updateBean){
 
         String message = updateBean.getUpdateInfo() != null ? updateBean.getUpdateInfo() : ResUtil.getString(R.string.tip_new_version, BuildConfig.VERSION_NAME, updateBean.getVersionName());
         //防止转义不能换行
@@ -71,18 +93,27 @@ public class CheckUpdateMvpImpl implements CheckUpdateContract.View {
                         dialog.dismiss();
                     }
                 })
-                .setNegativeButton(R.string.tip_cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
+                .setNegativeButton(R.string.tip_cancel, null)
                 .show();
-
     }
 
-    @Override
-    public void onCheckUpdateFail(int taskState) {
-        ToastUtil.showToast(TaskState.toString(taskState));
+    private void showUserGuide(final Activity activity){
+        boolean showUserGuide = SPUtil.getBoolean("showUserGuide", true);
+
+        if(showUserGuide){
+            SPUtil.putBoolean("showUserGuide", false);
+            new AlertDialog.Builder(activity)
+                    .setCancelable(true)
+                    .setTitle(R.string.dialog_text_tip)
+                    .setMessage(R.string.tip_start_user_guide)
+                    .setPositiveButton(activity.getString(R.string.dialog_text_yes), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            activity.startActivity(FragmentActivity.getStartIntent(activity, UserGuideFragment.class));
+                        }
+                    })
+                    .setNegativeButton(R.string.dialog_text_no, null)
+                    .show();
+        }
     }
 }

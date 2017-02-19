@@ -28,6 +28,7 @@
     <string name="label_no_network">无法连接到服务器，请检查你的网络设置。</string>
     <string name="tip_null">无</string>
     <string name="tip_load_video_fail">加载视频失败，是否直接打开链接？</string>
+    <string name="tip_start_user_guide">是否查看用户使用手册，了解一下应用的特点？</string>
     <!-- Strings related to Tip-->
 
     <!-- Strings related to ServiceError -->

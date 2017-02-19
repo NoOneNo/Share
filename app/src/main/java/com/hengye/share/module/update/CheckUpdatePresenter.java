@@ -59,7 +59,7 @@ public class CheckUpdatePresenter extends RxPresenter<CheckUpdateContract.View> 
                 .subscribe(new BaseSingleObserver<UpdateBean>() {
                     @Override
                     public void onSuccess(CheckUpdateContract.View checkUpdateMvpView, UpdateBean updateBean) {
-                        if (updateBean != null && updateBean.getAppUrl() != null) {
+                        if (updateBean != null) {
                             checkUpdateMvpView.onCheckUpdateComplete(updateBean);
                         }
                     }
