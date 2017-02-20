@@ -4,8 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 
-import java.io.File;
-
 public class ImageUtil {
 
     public static int getBitmapMaxSize() {
@@ -17,11 +15,7 @@ public class ImageUtil {
         BitmapFactory.decodeFile(path, options);
         int width = options.outWidth;
         int height = options.outHeight;
-        if (width > getBitmapMaxSize() || height > getBitmapMaxSize()) {
-            return true;
-        } else {
-            return false;
-        }
+        return width > getBitmapMaxSize() || height > getBitmapMaxSize();
     }
 
     public static boolean isNoSuffixImg(String url){

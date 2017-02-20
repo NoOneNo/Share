@@ -9,7 +9,6 @@ import com.hengye.share.R;
 import com.hengye.share.module.util.encapsulation.base.DefaultDataHandler;
 import com.hengye.share.module.util.encapsulation.fragment.RecyclerFragment;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
-import com.hengye.share.ui.widget.recyclerview.DividerItemDecoration;
 import com.hengye.share.util.ResUtil;
 
 public class UserGuideFragment extends RecyclerFragment<UserGuide>

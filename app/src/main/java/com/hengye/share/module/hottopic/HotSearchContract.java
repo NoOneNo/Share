@@ -2,7 +2,6 @@ package com.hengye.share.module.hottopic;
 
 import com.hengye.share.model.HotSearch;
 import com.hengye.share.module.util.encapsulation.mvp.MvpPresenter;
-import com.hengye.share.module.util.encapsulation.mvp.MvpView;
 import com.hengye.share.module.util.encapsulation.mvp.TaskMvpView;
 
 import java.util.List;

@@ -1,5 +1,6 @@
 package com.hengye.share.service;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Service;
@@ -186,6 +187,7 @@ public class VideoPlayService extends Service implements View.OnClickListener {
     View mLoading;
     WindowManager.LayoutParams mParentParams;
 
+    @SuppressLint("InflateParams")
     private void initView() {
 
         mWindowManager = ((WindowManager) getSystemService(Context.WINDOW_SERVICE));

@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.hengye.share.module.base.BaseActivity;
-import com.hengye.share.util.ThemeUtil;
 
 public abstract class BasePreferenceFragment extends PreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener{

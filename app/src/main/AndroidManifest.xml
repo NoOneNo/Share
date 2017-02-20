@@ -80,7 +80,8 @@
         <service android:name="com.hengye.share.service.VideoPlayService" />
 
         <!-- 定时发布广播 -->
-        <receiver android:name="com.hengye.share.service.PublishTimingStatusBroadcastReceiver">
+        <receiver android:name="com.hengye.share.service.PublishTimingStatusBroadcastReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.hengye.share.ACTION_TIMING_PUBLISH" />
 

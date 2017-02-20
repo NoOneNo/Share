@@ -16,7 +16,6 @@ import com.hengye.share.ui.widget.image.AvatarImageView;
 import com.hengye.share.ui.widget.util.DrawableLoader;
 import com.hengye.share.ui.widget.util.SelectorLoader;
 import com.hengye.share.util.CommonUtil;
-import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.ThemeUtil;
 
 import java.util.ArrayList;

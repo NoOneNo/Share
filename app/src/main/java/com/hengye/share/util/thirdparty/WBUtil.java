@@ -211,13 +211,10 @@ public class WBUtil {
             return false;
         }
 
-        if (url.contains(URL_HTTP_PHOTO)
+        return url.contains(URL_HTTP_PHOTO)
                 || url.contains(URL_HTTPS_PHOTO)
                 || url.contains(URL_HTTP_MOBILE)
-                || url.contains(URL_HTTPS_MOBILE)) {
-            return true;
-        }
-        return false;
+                || url.contains(URL_HTTPS_MOBILE);
     }
 
 }

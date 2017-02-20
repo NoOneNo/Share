@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.R;
-import com.hengye.share.util.ThemeUtil;
 
 
 public class SettingActivity extends BaseActivity {

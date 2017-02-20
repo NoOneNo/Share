@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingStart="@dimen/activity_horizontal_margin"
-    tools:showIn="@layout/item_status_comment">
+    tools:showIn="@layout/item_status_comment"
+    tools:ignore="RtlSymmetry">
 
     <Space
         android:id="@+id/space_top"

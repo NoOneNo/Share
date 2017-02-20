@@ -15,7 +15,6 @@ import com.hengye.share.module.util.FragmentActivity;
 import com.hengye.share.module.util.WebViewActivity;
 import com.hengye.share.module.util.BasePreferenceFragment;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
-import com.hengye.share.util.ApplicationUtil;
 import com.hengye.share.util.ClipboardUtil;
 import com.hengye.share.util.IntentUtil;
 import com.hengye.share.util.ToastUtil;

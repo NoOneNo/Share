@@ -235,11 +235,7 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
         Fragment fragment = getChildFragmentManager().findFragmentById(R.id.content);
         if (fragment instanceof ImageNormalFragment) {
             return ((ImageNormalFragment) fragment).canAnimatedOut();
-        } else if (fragment instanceof ImageGifFragment) {
-            return true;
-        } else {
-            return false;
-        }
+        } else return fragment instanceof ImageGifFragment;
     }
 
     /**

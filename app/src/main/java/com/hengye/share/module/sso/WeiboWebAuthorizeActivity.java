@@ -25,7 +25,6 @@ import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.Utility;
 import com.hengye.share.util.http.retrofit.RetrofitManager;
-import com.hengye.share.util.rxjava.DefaultSubscriber;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 import com.hengye.share.util.thirdparty.ThirdPartyUtils;
 import com.hengye.share.util.thirdparty.ThirdPartyUtils.WeiboApp;
@@ -38,9 +37,6 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
 import io.reactivex.SingleObserver;

@@ -1,7 +1,6 @@
 package com.hengye.share.module.util;
 
 import android.annotation.SuppressLint;
-import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;

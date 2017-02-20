@@ -15,7 +15,6 @@ import android.view.ViewAnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.hengye.share.R;

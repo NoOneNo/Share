@@ -8,7 +8,6 @@ import android.os.Bundle;
 import com.hengye.share.R;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.greenrobot.User;
-import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
 import com.hengye.share.util.ToastUtil;

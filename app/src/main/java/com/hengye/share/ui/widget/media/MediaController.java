@@ -1,6 +1,7 @@
 package com.hengye.share.ui.widget.media;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Handler;
@@ -238,6 +239,7 @@ public class MediaController extends FrameLayout {
      * @return The controller view.
      * @hide This doesn't work as advertised
      */
+    @SuppressLint("InflateParams")
     protected View makeControllerView() {
         LayoutInflater inflate = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mRoot = inflate.inflate(R.layout.widget_media_controller, null);

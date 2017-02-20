@@ -11,10 +11,7 @@ import android.widget.TextView;
 
 import com.hengye.share.R;
 import com.hengye.share.model.HotTopic;
-import com.hengye.share.model.Status;
-import com.hengye.share.module.base.ShareRecyclerFragment;
 import com.hengye.share.module.status.StatusActionFragment;
-import com.hengye.share.module.status.StatusAdapter;
 import com.hengye.share.module.status.StatusTopicActivity;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;

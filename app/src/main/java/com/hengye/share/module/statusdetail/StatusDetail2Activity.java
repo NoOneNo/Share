@@ -1,5 +1,6 @@
 package com.hengye.share.module.statusdetail;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -270,8 +271,10 @@ public class StatusDetail2Activity extends BaseActivity implements StatusDetailM
         mTabLayoutAssist.getTabAt(0).select();
         mTabLayoutAssist.setOnTabSelectedListener(mOnTabSelectedListener);
 
+        @SuppressLint("InflateParams")
         View headerView = LayoutInflater.from(this).inflate(R.layout.item_status_total, null);
 
+        @SuppressLint("InflateParams")
         View headerViewAssist = LayoutInflater.from(this).inflate(R.layout.header_status_detail, null);
 
         initHeaderStatus(headerView);

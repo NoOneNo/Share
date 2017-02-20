@@ -9,8 +9,6 @@ import com.hengye.share.util.http.retrofit.RetrofitManager;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
 import io.reactivex.Single;
-import io.reactivex.SingleSource;
-import io.reactivex.functions.Function;
 
 public class UserAttentionPresenter extends RxPresenter<UserAttentionContract.View>
         implements UserAttentionContract.Presenter {

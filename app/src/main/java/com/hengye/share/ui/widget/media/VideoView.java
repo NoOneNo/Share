@@ -7,8 +7,6 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PixelFormat;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -324,8 +322,6 @@ public class VideoView extends SurfaceView implements MediaPlayerControl {
             mCurrentState = STATE_ERROR;
             mTargetState = STATE_ERROR;
             mErrorListener.onError(mMediaPlayer, MediaPlayer.MEDIA_ERROR_UNKNOWN, 0);
-        } finally {
-//            mPendingSubtitleTracks.clear();
         }
     }
 

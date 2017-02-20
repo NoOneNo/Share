@@ -9,7 +9,6 @@ import io.reactivex.Single;
 import okhttp3.ResponseBody;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
-import io.reactivex.Observable;
 import retrofit2.http.QueryMap;
 import retrofit2.http.Streaming;
 import retrofit2.http.Url;

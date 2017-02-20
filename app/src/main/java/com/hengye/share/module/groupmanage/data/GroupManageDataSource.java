@@ -5,7 +5,6 @@ import com.hengye.share.model.greenrobot.GroupList;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
 import io.reactivex.Single;
 
 /**

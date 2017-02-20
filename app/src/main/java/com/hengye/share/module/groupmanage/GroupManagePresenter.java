@@ -8,7 +8,6 @@ import com.hengye.share.model.sina.WBGroup;
 import com.hengye.share.module.groupmanage.data.GroupManageDataSource;
 import com.hengye.share.module.util.encapsulation.base.TaskState;
 import com.hengye.share.module.util.encapsulation.mvp.ListTaskPresenter;
-import com.hengye.share.module.util.encapsulation.mvp.TaskPresenter;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.http.retrofit.RetrofitManager;

@@ -2,12 +2,10 @@ package com.hengye.share.module.groupmanage.data;
 
 import com.hengye.share.model.greenrobot.GroupList;
 import com.hengye.share.util.rxjava.RxUtil;
-import com.hengye.share.util.rxjava.datasource.ObservableHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;

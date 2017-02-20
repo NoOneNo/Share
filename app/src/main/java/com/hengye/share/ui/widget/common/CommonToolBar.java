@@ -3,7 +3,6 @@ package com.hengye.share.ui.widget.common;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.MotionEvent;

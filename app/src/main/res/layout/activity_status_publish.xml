@@ -178,7 +178,8 @@
                         android:ellipsize="end"
                         android:maxEms="6"
                         android:maxLines="1"
-                        tools:text="所有人可见"/>
+                        tools:text="所有人可见"
+                        tools:ignore="RtlSymmetry" />
                 </LinearLayout>
             </LinearLayout>
 

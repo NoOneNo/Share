@@ -399,10 +399,7 @@ public class AtUserActivity extends BaseActivity implements UserListContract.Vie
         if (mSearchMarginStart > mSelectResultData.size() * mSearchItemWidth) {
             return true;
         }
-        if (mSearchMarginStart >= mRVSelectResult.getWidth()) {
-            return true;
-        }
-        return false;
+        return mSearchMarginStart >= mRVSelectResult.getWidth();
     }
 
     private void updateSelectItemCount() {

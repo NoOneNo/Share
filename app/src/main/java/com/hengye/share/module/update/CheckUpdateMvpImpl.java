@@ -21,8 +21,6 @@ import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.SPUtil;
 import com.hengye.share.util.ToastUtil;
 
-import static com.hengye.share.util.SPUtil.getBoolean;
-
 /**
  * Created by yuhy on 2016/11/21.
  */
@@ -54,8 +52,6 @@ public class CheckUpdateMvpImpl implements CheckUpdateContract.View {
             //打开用户手册
             showUserGuide(activity);
         }
-
-
     }
 
     @Override

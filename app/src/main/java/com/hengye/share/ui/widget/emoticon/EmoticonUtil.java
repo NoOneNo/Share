@@ -2,7 +2,6 @@ package com.hengye.share.ui.widget.emoticon;
 
 import android.content.Context;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.support.annotation.StringDef;
 import android.text.Spannable;
 import android.text.style.DynamicDrawableSpan;
@@ -100,8 +99,8 @@ public class EmoticonUtil {
     public static void addEmoticon(Context context, Spannable text, int size, int textSize, int alignment, int index, int length, boolean useSystemDefault) {
         // remove spans throughout all text
         EmoticonSpan[] oldSpans = text.getSpans(0, text.length(), EmoticonSpan.class);
-        for (int i = 0; i < oldSpans.length; i++) {
-            text.removeSpan(oldSpans[i]);
+        for (EmoticonSpan oldSpan : oldSpans) {
+            text.removeSpan(oldSpan);
         }
 
         addCustomEmoticon(context, text, size, textSize, alignment);
@@ -204,7 +203,7 @@ public class EmoticonUtil {
         return mEmojiEmoticons;
     }
 
-    private static final String newEmojiStr(int codePoint) {
+    private static String newEmojiStr(int codePoint) {
         if (Character.charCount(codePoint) == 1) {
             return String.valueOf(codePoint);
         } else {

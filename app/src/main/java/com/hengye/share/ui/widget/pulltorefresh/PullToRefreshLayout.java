@@ -8,12 +8,10 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AbsListView;
 
-import com.hengye.share.R;
 import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.module.util.encapsulation.view.recyclerview.HeaderAdapter;
 import com.hengye.share.ui.widget.FooterLoadStateView;
 import com.hengye.share.ui.widget.common.CommonListView;
-import com.hengye.share.util.L;
 
 /**
  * Created by yuhy on 2016/10/12.
@@ -50,11 +48,7 @@ public class PullToRefreshLayout extends com.hengye.swiperefresh.PullToRefreshLa
             } else {
                 return false;
             }
-        } else if (mListView != null) {
-            return true;
-        } else {
-            return false;
-        }
+        } else return mListView != null;
     }
 
     private boolean needLoading(RecyclerView recyclerView) {

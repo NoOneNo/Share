@@ -4,17 +4,13 @@ import com.hengye.share.module.util.encapsulation.base.TaskState;
 import com.hengye.share.module.util.encapsulation.mvp.RxPresenter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.http.retrofit.RetrofitManager;
-import com.hengye.share.util.rxjava.datasource.ObservableHelper;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Observable;
 import io.reactivex.Single;
-import io.reactivex.SingleObserver;
 import io.reactivex.SingleSource;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 
 /**
  * Created by yuhy on 2016/11/21.

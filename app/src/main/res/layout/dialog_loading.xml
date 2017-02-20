@@ -22,5 +22,5 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:textColor="@color/grey_600"
-        android:text="正在加载中..."/>
+        android:text="@string/tip_loading_2"/>
 </RelativeLayout>

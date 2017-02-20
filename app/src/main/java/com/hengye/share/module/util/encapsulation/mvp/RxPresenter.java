@@ -1,11 +1,9 @@
 package com.hengye.share.module.util.encapsulation.mvp;
 
 import io.reactivex.MaybeObserver;
-import io.reactivex.MaybeSource;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.observers.DisposableObserver;
 
 public class RxPresenter<V extends MvpView> extends BasePresenter<V> {
 

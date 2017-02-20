@@ -3,12 +3,6 @@ package com.hengye.share.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.text.TextUtils;
-
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSyntaxException;
-
-import java.lang.reflect.Type;
 
 public class SPUtil extends ApplicationUtil{
 

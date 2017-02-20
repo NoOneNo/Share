@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.model.sina.WBUserInfo;
-import com.hengye.share.module.util.encapsulation.mvp.MvpView;
 import com.hengye.share.module.util.encapsulation.mvp.RxPresenter;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.UrlBuilder;
@@ -16,10 +15,8 @@ import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 import java.util.Map;
 
 import io.reactivex.Single;
-import io.reactivex.SingleObserver;
 import io.reactivex.SingleSource;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 
 public class UserPresenter extends RxPresenter<UserContract.View> implements UserContract.Presenter{
 

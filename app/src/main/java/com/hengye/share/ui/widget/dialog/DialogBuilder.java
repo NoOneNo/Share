@@ -50,7 +50,7 @@ public class DialogBuilder {
         }
 //        cs[LONG_CLICK_TOPIC_REPOST_ORIGIN] = context.getString(R.string.label_topic_repost_origin);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_Light_Dialog_Alert)
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_Light_Dialog)
                 .setItems(cs, onClickListener);
         return builder.create();
     }

@@ -1,6 +1,5 @@
 package com.hengye.share.ui.widget.fab;
 
-import android.annotation.SuppressLint;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

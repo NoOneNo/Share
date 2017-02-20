@@ -3,7 +3,6 @@ package com.hengye.share.module.profile;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.module.util.encapsulation.mvp.MvpPresenter;
 import com.hengye.share.module.util.encapsulation.mvp.MvpView;
-import com.hengye.share.module.util.encapsulation.mvp.TaskMvpView;
 
 /**
  * Created by yuhy on 2017/1/16.

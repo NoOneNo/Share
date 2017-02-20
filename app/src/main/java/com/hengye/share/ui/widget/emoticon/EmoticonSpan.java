@@ -87,7 +87,7 @@ public class EmoticonSpan extends DynamicDrawableSpan {
 
     private Drawable getCachedDrawable() {
         if (mDrawableRef == null || mDrawableRef.get() == null) {
-            mDrawableRef = new WeakReference<Drawable>(getDrawable());
+            mDrawableRef = new WeakReference<>(getDrawable());
         }
         return mDrawableRef.get();
     }

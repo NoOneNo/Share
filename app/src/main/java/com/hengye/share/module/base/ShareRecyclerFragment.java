@@ -1,24 +1,14 @@
 package com.hengye.share.module.base;
 
 import android.os.Bundle;
-import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.hengye.share.R;
 import com.hengye.share.module.base.BaseActivity;
-import com.hengye.share.module.util.encapsulation.base.PagingConfig;
 import com.hengye.share.module.util.encapsulation.fragment.RecyclerRefreshFragment;
 import com.hengye.share.module.util.encapsulation.view.listener.OnDoubleTapListener;
 import com.hengye.share.ui.widget.common.CommonToolBar;
-import com.hengye.share.ui.widget.pulltorefresh.PullToRefreshLayout;
-import com.hengye.swiperefresh.listener.SwipeListener;
-
-import java.util.List;
-
-import static com.hengye.share.module.util.encapsulation.base.TaskState.*;
 
 /**
  * Created by yuhy on 16/7/27.

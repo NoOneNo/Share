@@ -5,8 +5,6 @@ import android.support.annotation.NonNull;
 import com.hengye.share.model.greenrobot.GroupList;
 import com.hengye.share.module.util.encapsulation.mvp.ListTaskMvpView;
 import com.hengye.share.module.util.encapsulation.mvp.MvpPresenter;
-import com.hengye.share.module.util.encapsulation.mvp.MvpView;
-import com.hengye.share.module.util.encapsulation.mvp.TaskMvpView;
 
 import java.util.ArrayList;
 import java.util.List;

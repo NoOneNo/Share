@@ -14,12 +14,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.hengye.share.R;
-import com.hengye.share.model.Status;
 import com.hengye.share.model.UserInfo;
-import com.hengye.share.module.base.ShareRecyclerFragment;
 import com.hengye.share.module.profile.PersonalHomepageActivity;
 import com.hengye.share.module.status.StatusActionFragment;
-import com.hengye.share.module.status.StatusAdapter;
 import com.hengye.share.module.util.FragmentActivity;
 import com.hengye.share.module.util.encapsulation.base.DefaultDataHandler;
 import com.hengye.share.module.util.encapsulation.base.NumberPager;

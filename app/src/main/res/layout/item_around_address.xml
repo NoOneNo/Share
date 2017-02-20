@@ -8,10 +8,13 @@
 
     <TextView
         android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/tv_distance"
         android:textSize="@dimen/text_small"
         android:textColor="@color/text_dark"
+        android:maxLines="1"
+        android:ellipsize="end"
         tools:text="广东药学院"/>
 
     <TextView
@@ -22,10 +25,12 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_micro"
         android:textColor="@color/text_grey"
+        android:maxLines="1"
+        android:ellipsize="end"
         tools:text="广州市海珠区江海大道中广东药学院赤岗校区"/>
 
     <TextView
-        android:id="@+id/tv_distance"
+        android:id="@id/tv_distance"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:layout_width="wrap_content"

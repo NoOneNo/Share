@@ -47,11 +47,7 @@ public class PullToRefreshLayoutBackup extends com.hengye.swiperefresh.PullToRef
             } else {
                 return false;
             }
-        }else if(mListView != null){
-            return true;
-        } else {
-            return false;
-        }
+        }else return mListView != null;
     }
 
     @Override
