@@ -460,7 +460,7 @@ public class StatusPresenter extends ListDataPresenter<Status, StatusContract.Vi
                     return resources.getString(R.string.title_page_status);
                 case GROUP_LIST:
                     if (statusGroup.groupList == null) {
-                        return "未知分组";
+                        return resources.getString(R.string.title_page_unknown);
                     } else {
                         return statusGroup.groupList.getName();
                     }

@@ -28,10 +28,13 @@ import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.module.profile.UserListContract;
 import com.hengye.share.module.profile.UserListPresenter;
 import com.hengye.share.module.publish.AtUserSortAdapter.Letter;
+import com.hengye.share.module.search.SearchUserFragment;
+import com.hengye.share.module.util.FragmentActivity;
 import com.hengye.share.module.util.encapsulation.base.TaskState;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.lettersort.SideBar;
 import com.hengye.share.ui.widget.recyclerview.DividerItemDecoration;
+import com.hengye.share.ui.widget.util.SelectorLoader;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.ThemeUtil;
@@ -48,7 +51,7 @@ import java.util.Map;
 
 import static com.hengye.share.module.util.encapsulation.base.TaskState.isSuccess;
 
-public class AtUserActivity extends BaseActivity implements UserListContract.View  {
+public class AtUserActivity extends BaseActivity implements UserListContract.View {
 
     @Override
     protected String getRequestTag() {
@@ -79,21 +82,25 @@ public class AtUserActivity extends BaseActivity implements UserListContract.Vie
         initListener();
     }
 
+    private final int REQUEST_SEARCH_USE = 1;
+
     private PullToRefreshLayout mPullToRefreshLayout;
     private RecyclerView mRVSelectResult, mRVSearchResult;
     private EditText mSearch;
     private SideBar mSideBar;
     private View mSearchIcon, mLetter;
     private TextView mLetterTV;
+    private View mSearchByRemote;
 
     private AtUserSelectAdapter mAtUserSelectAdapter;
-
     private AtUserSortAdapter mAtUserSearchAdapter;
     private ArrayList<AtUser> mSelectResultData, mSearchResultData;
     private List<Object> mSearchResultTotalData;
     private LinearLayoutManager mSelectResultLayoutManager, mSearchResultLayoutManager;
 
     private UserListPresenter mPresenter;
+
+    private String mSearchContent;
 
     private void initView() {
 
@@ -132,7 +139,7 @@ public class AtUserActivity extends BaseActivity implements UserListContract.Vie
         mSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId == EditorInfo.IME_ACTION_SEARCH){
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     search();
                 }
                 return false;
@@ -152,9 +159,9 @@ public class AtUserActivity extends BaseActivity implements UserListContract.Vie
 
         int count = mAtUserSelectAdapter.getSelectSize();
         if (count == 0) {
-            menuItem.setTitle(getResources().getString(R.string.label_confirm));
+            menuItem.setTitle(getResources().getString(R.string.label_at_user_confirm));
         } else {
-            menuItem.setTitle(getResources().getString(R.string.label_confirm_count, count + ""));
+            menuItem.setTitle(getResources().getString(R.string.label_at_user_confirm_count, count + ""));
         }
         return true;
     }
@@ -168,7 +175,7 @@ public class AtUserActivity extends BaseActivity implements UserListContract.Vie
             if (handleAtUser()) {
                 finish();
             } else {
-                ToastUtil.showToast(R.string.label_select_at_user_null);
+                ToastUtil.showToast(R.string.label_at_user_select_null);
             }
         }
         return super.onOptionsItemSelected(item);
@@ -192,7 +199,7 @@ public class AtUserActivity extends BaseActivity implements UserListContract.Vie
             public void onItemClick(View view, int position) {
 //                AtUser select = mAtUserSearchAdapter.getItem(position);
                 Object obj = mAtUserSearchAdapter.getItem(position);
-                if(!(obj instanceof AtUser)){
+                if (!(obj instanceof AtUser)) {
                     return;
                 }
 
@@ -298,9 +305,14 @@ public class AtUserActivity extends BaseActivity implements UserListContract.Vie
         });
     }
 
-    private void search(){
+    private void search() {
+        mSearchContent = mSearch.getText().toString();
         mAtUserSelectAdapter.setLastItemPrepareDelete(false);
-        mAtUserSearchAdapter.showSearchResult(mSearch.getText().toString(), mSearchResultTotalData, mSearchResultData);
+        mAtUserSearchAdapter.showSearchResult(mSearchContent, mSearchResultTotalData, mSearchResultData);
+
+        boolean isEmpty = CommonUtil.isEmpty(mSearchContent);
+        mPullToRefreshLayout.setRefreshEnable(isEmpty);
+        toggleSearchByRemote(!isEmpty);
     }
 
     private void notifySelectResultFirstItem() {
@@ -406,24 +418,51 @@ public class AtUserActivity extends BaseActivity implements UserListContract.Vie
         invalidateOptionsMenu();
     }
 
+    private void toggleSearchByRemote(boolean visible) {
+        if (mSearchByRemote == null) {
+            //init
+            mSearchByRemote = findViewById(R.id.layout_search_by_remote);
+            SelectorLoader.getInstance().setTransparentRippleBackground(mSearchByRemote);
+            mSearchByRemote.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //searchByRemote;
+                    if (CommonUtil.isEmpty(mSearchContent)) {
+                        return;
+                    }
+                    startActivityForResult(
+                            FragmentActivity.getStartIntent(AtUserActivity.this,
+                                    SearchUserFragment.class,
+                                    SearchUserFragment.getStartBundle(mSearchContent,
+                                            null, true))
+                            , REQUEST_SEARCH_USE);
+
+                }
+            });
+        }
+
+        mSearchByRemote.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
     @Override
     public void onLoadListData(boolean isRefresh, List<UserInfo> data) {
         mSearchResultData = AtUser.getAtUser(data);
 
         ShareJson.saveListData(AtUser.class.getSimpleName() + UserUtil.getUid(), mSearchResultData, false);
         mAtUserSearchAdapter.refresh(convertUserList(mSearchResultData));
-        if(!isRefresh && CommonUtil.isEmpty(data)){
+        if (!isRefresh && CommonUtil.isEmpty(data)) {
             mPullToRefreshLayout.setLoadEnable(false);
         }
     }
 
     @Override
-    public void onTaskStart() {}
+    public void onTaskStart() {
+    }
 
     @Override
     public void onTaskComplete(boolean isRefresh, int taskState) {
         mPullToRefreshLayout.setTaskComplete(isSuccess(taskState));
-        if(!TaskState.isSuccess(taskState)) {
+        if (!TaskState.isSuccess(taskState)) {
             TaskState.toastState(taskState);
         }
     }
@@ -452,12 +491,12 @@ public class AtUserActivity extends BaseActivity implements UserListContract.Vie
                 temp.add(atUser);
             }
 
-            if(!sortUsers.isEmpty()){
+            if (!sortUsers.isEmpty()) {
                 Map<Letter, List<AtUser>> result = new LinkedHashMap<>();
                 Letter letter;
-                for(String str : data){
+                for (String str : data) {
                     letter = new Letter(str);
-                    if(sortUsers.containsKey(letter)){
+                    if (sortUsers.containsKey(letter)) {
                         result.put(letter, sortUsers.get(letter));
                     }
                 }
@@ -469,6 +508,18 @@ public class AtUserActivity extends BaseActivity implements UserListContract.Vie
         }
 
         return mSearchResultTotalData = mAtUserSearchAdapter.convertMapToList(sortUsers);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_SEARCH_USE && resultCode == RESULT_OK && data != null) {
+            UserInfo userInfo = (UserInfo) data.getSerializableExtra("user");
+            AtUser select = new AtUser(userInfo);
+            updateSelectItems(select);
+            mRVSelectResult.post(mRVSelectResultScrollToEnd);
+        }
     }
 }
 

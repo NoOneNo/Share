@@ -60,22 +60,6 @@ public abstract class ShareLoadDataCallbackFragment<T> extends ShareRecyclerFrag
         }
     }
 
-    @Override
-    public boolean canLoadMore(List<T> data, int type) {
-        int pageSize;
-        if (getPager() != null) {
-            pageSize = getPager().getPageSize();
-        } else {
-            pageSize = WBUtil.getWBStatusRequestCount();
-        }
-
-        if (data != null && data.size() < pageSize / 2) {
-            return false;
-        } else {
-            return super.canLoadMore(data, type);
-        }
-    }
-
     private LoadDataCallback mLoadDataCallback;
 
     public LoadDataCallback getLoadDataCallBack() {

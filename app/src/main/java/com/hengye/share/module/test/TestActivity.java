@@ -15,6 +15,8 @@ import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.module.publish.StatusPublishActivity;
 import com.hengye.share.module.sso.ThirdPartyLoginActivity;
+import com.hengye.share.module.update.CheckUpdateMvpImpl;
+import com.hengye.share.module.update.CheckUpdatePresenter;
 import com.hengye.share.module.util.FragmentActivity;
 import com.hengye.share.module.util.WebViewActivity;
 import com.hengye.share.ui.widget.dialog.ListDialog;
@@ -90,7 +92,7 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
             }
         } else if (v.getId() == R.id.btn_test5) {
 //            mListDialog.show();
-
+            new CheckUpdatePresenter(new CheckUpdateMvpImpl(), false).checkUpdate();
         } else if (v.getId() == R.id.btn_test6) {
 //            testInterceptor();
 

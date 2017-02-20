@@ -55,6 +55,10 @@
             android:maxLines="1" />
     </FrameLayout>
 
+    <include
+        android:id="@+id/layout_search_by_remote"
+        layout="@layout/item_at_user_search_by_remote"
+        android:visibility="gone"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

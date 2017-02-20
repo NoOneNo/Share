@@ -41,6 +41,9 @@ public abstract class CommonAdapter<T> extends HeaderAdapter<ItemViewHolder>
 
     public void init(Context context, List<T> data) {
         this.mContext = context;
+        if(data == null){
+            data = new ArrayList<>();
+        }
         this.mData = data;
     }
 

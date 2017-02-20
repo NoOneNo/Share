@@ -15,6 +15,7 @@ import com.hengye.share.module.util.FragmentActivity;
 import com.hengye.share.module.util.encapsulation.base.TaskState;
 import com.hengye.share.module.util.encapsulation.mvp.MvpPresenter;
 import com.hengye.share.util.ApplicationUtil;
+import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.IntentUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.ResUtil;
@@ -63,12 +64,11 @@ public class CheckUpdateMvpImpl implements CheckUpdateContract.View {
 
         String message = updateBean.getUpdateInfo() != null ? updateBean.getUpdateInfo() : ResUtil.getString(R.string.tip_new_version, BuildConfig.VERSION_NAME, updateBean.getVersionName());
         //防止转义不能换行
-        message = message.replace("\\n", "\n");
         new AlertDialog.Builder(activity)
                 .setCancelable(true)
-                .setTitle(R.string.title_find_update)
+                .setTitle(activity.getString(R.string.title_find_update, updateBean.getVersionName()))
                 .setMessage(message)
-                .setPositiveButton(activity.getString(R.string.dialog_text_confirm), new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.tip_update_now, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Uri uri = Uri.parse(updateBean.getAppUrl());

@@ -9,6 +9,9 @@ import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.module.util.encapsulation.fragment.RecyclerRefreshFragment;
 import com.hengye.share.module.util.encapsulation.view.listener.OnDoubleTapListener;
 import com.hengye.share.ui.widget.common.CommonToolBar;
+import com.hengye.share.util.thirdparty.WBUtil;
+
+import java.util.List;
 
 /**
  * Created by yuhy on 16/7/27.
@@ -64,6 +67,23 @@ public abstract class ShareRecyclerFragment<T> extends RecyclerRefreshFragment<T
             }
         }
         return null;
+    }
+
+
+    @Override
+    public boolean canLoadMore(List<T> data, int type) {
+        int pageSize;
+        if (getPager() != null) {
+            pageSize = getPager().getPageSize();
+        } else {
+            pageSize = WBUtil.getWBStatusRequestCount();
+        }
+
+        if (data != null && data.size() < pageSize / 2) {
+            return false;
+        } else {
+            return super.canLoadMore(data, type);
+        }
     }
 }
 

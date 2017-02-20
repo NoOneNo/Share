@@ -44,6 +44,7 @@ public class CheckUpdatePresenter extends RxPresenter<CheckUpdateContract.View> 
                         }
 
                         if(updateBean != null && updateBean.isNeedUpdate(mIsForce)){
+                            updateBean.setUpdateInfo(filterText(updateBean.getUpdateInfo()));
                             return Single.just(updateBean);
                         }else{
                             return Single.just(new UpdateBean());
@@ -61,11 +62,44 @@ public class CheckUpdatePresenter extends RxPresenter<CheckUpdateContract.View> 
                     }
 
                     @Override
-                    public void onError(CheckUpdateContract.View checkUpdateMvpView, Throwable e) {
+                    public void onError(CheckUpdateContract.View view, Throwable e) {
                         if(mIsForce) {
-                            checkUpdateMvpView.onCheckUpdateFail(TaskState.getFailState(e));
+                            view.onCheckUpdateFail(TaskState.getFailState(e));
                         }
                     }
                 });
+    }
+
+    //更新信息增加自动换行
+    private String filterText(String text){
+        if(CommonUtil.isEmpty(text)){
+            return text;
+        }
+
+        String enter = "\n";
+        //换行符转义
+        text = text.replace("\\n", "");
+        text = text.replace("\n", "");
+        text = addSpecifiedStr(text, "；", enter);
+        text = addSpecifiedStr(text, ";", enter);
+        return text;
+    }
+
+    private String addSpecifiedStr(String str, String specifiedStr, String addContent){
+        if(CommonUtil.hasEmpty(str, specifiedStr, addContent)){
+            return str;
+        }
+
+        StringBuilder sb = new StringBuilder(str);
+        int fromIndex = 0;
+        int findIndex;
+        while((findIndex = sb.indexOf(specifiedStr, fromIndex)) != -1){
+            int start = findIndex + specifiedStr.length();
+            int end = start + addContent.length();
+            sb.insert(start, addContent);
+//            sb.append(addContent, start, end);
+            fromIndex = end;
+        }
+        return sb.toString();
     }
 }

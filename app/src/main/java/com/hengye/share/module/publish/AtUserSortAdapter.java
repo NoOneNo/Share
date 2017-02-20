@@ -1,7 +1,6 @@
 package com.hengye.share.module.publish;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +32,7 @@ public class AtUserSortAdapter extends GroupAdapter<AtUserSortAdapter.Letter, At
     }
 
     public void showSearchResult(String str, List<Object> totalData, List<AtUser> atUsers) {
-        if (TextUtils.isEmpty(str)) {
+        if (CommonUtil.isEmpty(str)) {
             refresh(totalData);
         } else {
             List<Object> objects = new ArrayList<>();

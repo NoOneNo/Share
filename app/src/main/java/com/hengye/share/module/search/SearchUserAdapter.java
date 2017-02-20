@@ -22,8 +22,11 @@ import java.util.ArrayList;
 
 public class SearchUserAdapter extends CommonAdapter<UserInfo> {
 
-    public SearchUserAdapter(Context context, ArrayList<UserInfo> userInfos) {
+    private boolean selectMode;
+
+    public SearchUserAdapter(Context context, ArrayList<UserInfo> userInfos, boolean selectMode) {
         super(context, userInfos);
+        this.selectMode = selectMode;
     }
 
     @Override
@@ -33,14 +36,14 @@ public class SearchUserAdapter extends CommonAdapter<UserInfo> {
                 .inflate(R.layout.item_search_user, parent, false));
     }
 
-    public static class MainViewHolder extends ItemViewHolder<UserInfo> {
+    private class MainViewHolder extends ItemViewHolder<UserInfo> {
 
         TextView mUsername, mSign, mAttention;
         ImageView mAttentionIcon;
         View mAttentionLayout;
         AvatarImageView mAvatar;
 
-        public MainViewHolder(View v) {
+        MainViewHolder(View v) {
             super(v);
 
             SelectorLoader.getInstance().setTransparentRippleBackground(v);
@@ -57,6 +60,9 @@ public class SearchUserAdapter extends CommonAdapter<UserInfo> {
             mAvatar = (AvatarImageView) findViewById(R.id.iv_avatar);
             mAvatar.setAutoClipBitmap(false);
 
+            mAttentionLayout.setVisibility(selectMode ? View.GONE : View.VISIBLE);
+
+            registerOnClickListener(mAvatar);
             registerOnClickListener(mAttentionLayout);
         }
 
@@ -79,17 +85,16 @@ public class SearchUserAdapter extends CommonAdapter<UserInfo> {
                 mSign.setVisibility(View.VISIBLE);
             }
         }
+    }
 
-        public static
-        @DrawableRes
-        int getAttentionResId(UserInfo userInfo) {
-            if (userInfo.isFollowing()) {
-                return userInfo.isFollowMe() ?
-                        R.drawable.ic_swap_horiz_black_36dp :
-                        R.drawable.ic_done_black_36dp;
-            } else {
-                return R.drawable.ic_add_black_36dp;
-            }
+    @DrawableRes
+    private static int getAttentionResId(UserInfo userInfo) {
+        if (userInfo.isFollowing()) {
+            return userInfo.isFollowMe() ?
+                    R.drawable.ic_swap_horiz_black_36dp :
+                    R.drawable.ic_done_black_36dp;
+        } else {
+            return R.drawable.ic_add_black_36dp;
         }
     }
 }

@@ -12,7 +12,7 @@
     <string name="tip_load_success">请求成功</string>
     <string name="tip_unpredictable_error">出现不可预知的错误</string>
     <string name="tip_loading">加载中</string>
-    <string name="tip_loading_2">正在加载中...</string>
+    <string name="tip_loading_2">正在加载中…</string>
     <string name="tip_load_ending">已经到底了！(ಥ_ಥ)</string>
     <string name="tip_load_fail">加载失败，点击重试  (●ﾟωﾟ●)</string>
     <string name="tip_load_more">显示更多内容 ─=≡Σ(((つ•̀ω•́)つ</string>
@@ -33,6 +33,7 @@
     <string name="tip_null">无</string>
     <string name="tip_load_video_fail">加载视频失败，是否直接打开链接？</string>
     <string name="tip_start_user_guide">是否查看用户使用手册，了解一下应用的特点？</string>
+    <string name="label_search">搜索</string>
     <!-- Strings related to Tip-->
 
     <!-- Strings related to ServiceError -->
@@ -136,6 +137,7 @@
     <!-- Strings related to activity title-->
 
     <!-- Strings related to StatusGroup-->
+    <string name="title_page_unknown">未知分组</string>
     <string name="title_page_all">全部微博</string>
     <string name="title_page_bilateral">互相关注</string>
     <string name="title_page_comment">评论</string>
@@ -264,10 +266,10 @@
     <!-- Strings related to StatusDraft -->
 
     <!-- Strings related to AtUser -->
-    <string name="label_confirm">确定</string>
-    <string name="label_search">搜索</string>
-    <string name="label_confirm_count">确定(%s)</string>
-    <string name="label_select_at_user_null">还没有选择用户</string>
+    <string name="label_at_user_confirm">确定</string>
+    <string name="label_at_user_confirm_count">确定(%s)</string>
+    <string name="label_at_user_search_by_remote">在网络上搜索</string>
+    <string name="label_at_user_select_null">还没有选择用户</string>
     <!-- Strings related to AtUser -->
 
     <!-- Strings related to Search -->
@@ -296,7 +298,7 @@
     <!-- Strings related to WebView-->
 
     <!-- Strings related to CheckUpdate -->
-    <string name="title_find_update">发现新的版本</string>
+    <string name="title_find_update">发现新的版本（%s）</string>
     <string name="tip_update_now">现在更新</string>
     <string name="tip_new_version">当前app版本为%1$s，是否更新到%2$s版本？</string>
     <!-- Strings related to CheckUpdate -->
