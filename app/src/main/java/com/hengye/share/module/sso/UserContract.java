@@ -12,11 +12,9 @@ import com.hengye.share.module.util.encapsulation.mvp.MvpView;
 public interface UserContract {
 
     interface View extends MvpView {
-        void loadSuccess(User user);
+        void loadUserInfoFail();
 
-        void loadFail();
-
-        void handleUserInfo(UserInfo userInfo);
+        void loadUserInfoSuccess(UserInfo userInfo);
     }
 
     interface Presenter extends MvpPresenter<View> {

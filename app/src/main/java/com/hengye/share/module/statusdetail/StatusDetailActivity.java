@@ -159,7 +159,9 @@ public class StatusDetailActivity extends BaseActivity
         mCopyBtn = (FloatingActionButton) findViewById(R.id.action_copy);
         mAppBarLayout = (AppBarLayout) findViewById(R.id.appbar);
         mTabLayout = (TabLayout) findViewById(R.id.tab);
-        //评论的点赞是用黑色的按钮，有时候会导致这里的按钮也是黑色的，所以在着色一次
+        //转发、评论、点赞在外部用过的话可能不是白色，所以需要着色
+        mRepostBtn.setIconDrawable(DrawableLoader.setTintResource(R.drawable.ic_repost_white_48dp, R.color.white));
+        mCommentBtn.setIconDrawable(DrawableLoader.setTintResource(R.drawable.ic_comment_white_48dp, R.color.white));
         mAttitudeBtn.setIconDrawable(DrawableLoader.setTintResource(R.drawable.ic_thumb_up_white_48dp, R.color.white));
 //        mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         mStatusActionPresenter = new StatusActonPresenter(this);

@@ -25,7 +25,6 @@ import android.widget.TextView;
 import com.hengye.share.R;
 import com.hengye.share.model.Parent;
 import com.hengye.share.model.UserInfo;
-import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.model.sina.WBUserInfo;
 import com.hengye.share.module.base.BaseActivity;
 import com.hengye.share.module.sso.UserContract;
@@ -208,8 +207,14 @@ public class PersonalHomepageActivity extends BaseActivity
 
 
         initUserInfo(mUserInfo);
-        if(UserUtil.isCurrentUser(mUserInfo.getUid())){
-            updateUserInfo();
+        if (UserUtil.isCurrentUser(mUserInfo.getUid())) {
+            //不延迟更新太快会导致头像转场动画还没完毕就更新造成抖动
+            getHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    updateUserInfo();
+                }
+            }, 500);
         }
 
 //        if (mUserInfo.getParent().isWeiBo()) {
@@ -370,9 +375,9 @@ public class PersonalHomepageActivity extends BaseActivity
         if (isDestroyed() || isFinishing()) {
             return;
         }
-        if(mFragment != null){
+        if (mFragment != null) {
             mFragment.updateUserInfo(wbUserInfo);
-        }else{
+        } else {
             mFragment = PersonalHomepageFragment.newInstance(wbUserInfo);
             mFragment.setSwipeRefresh(mSwipeRefresh);
             getSupportFragmentManager()
@@ -417,7 +422,7 @@ public class PersonalHomepageActivity extends BaseActivity
         loadData(userInfo);
     }
 
-    public void updateUserInfo(){
+    public void updateUserInfo() {
         mPresenter.loadWBUserInfo(mUserInfo.getUid(), mUserInfo.getName());
     }
 
@@ -431,11 +436,11 @@ public class PersonalHomepageActivity extends BaseActivity
         }
 
         final WBUserInfo wbUserInfo = userInfo.getWBUserInfoFromParent();
-        if(wbUserInfo == null){
+        if (wbUserInfo == null) {
             return;
         }
 
-        if (mFragment == null) {
+//        if (mFragment == null) {
             if (coverShowAnimator != null && !coverShowAnimator.isRunning()) {
                 setupFragment(wbUserInfo);
             } else {
@@ -446,7 +451,7 @@ public class PersonalHomepageActivity extends BaseActivity
                     }
                 }, 500);
             }
-        }
+//        }
     }
 
     @Override
@@ -458,7 +463,7 @@ public class PersonalHomepageActivity extends BaseActivity
                 //当时闭合的时候，模拟点击toolbar的导航按钮
                 onNavigationClick(getToolbar());
             }
-        } else if (mUserInfo!= null) {
+        } else if (mUserInfo != null) {
             if (id == R.id.btn_attention) {
                 mUserAttentionPresenter.followUser(mUserInfo);
             } else if (id == R.id.tv_attention) {
@@ -476,21 +481,16 @@ public class PersonalHomepageActivity extends BaseActivity
     }
 
     @Override
-    public void handleUserInfo(UserInfo wbUserInfo) {
+    public void loadUserInfoSuccess(UserInfo userInfo) {
         mSwipeRefresh.setRefreshing(false);
-        if (wbUserInfo != null) {
-            initUserInfo(wbUserInfo);
+        if (userInfo != null) {
+            initUserInfo(userInfo);
             setUpAvatar();
         }
     }
 
     @Override
-    public void loadSuccess(User user) {
-
-    }
-
-    @Override
-    public void loadFail() {
+    public void loadUserInfoFail() {
         mSwipeRefresh.setRefreshing(false);
     }
 
@@ -502,13 +502,13 @@ public class PersonalHomepageActivity extends BaseActivity
     @Override
     public void onFollowComplete(int taskState) {
         mFollowButton.setEnabled(true);
-        if(taskState == TaskState.STATE_SUCCESS){
+        if (taskState == TaskState.STATE_SUCCESS) {
             if (mUserInfo.isFollowing()) {
                 ToastUtil.showToastSuccess(R.string.label_follow_create_success);
             } else {
                 ToastUtil.showToastSuccess(R.string.label_follow_destroy_success);
             }
-        }else {
+        } else {
             TaskState.toastFailState(taskState);
         }
     }

@@ -25,12 +25,13 @@
         <include
             layout="@layout/item_status_options"/>
 
-        <View style="@style/horizontal_line" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/content_margin_default_half"
-            android:background="@color/background_default_deep" />
-
     </LinearLayout>
+
+
+    <View style="@style/horizontal_line" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/content_margin_default_half"
+        android:background="@android:drawable/divider_horizontal_bright" />
 </LinearLayout>

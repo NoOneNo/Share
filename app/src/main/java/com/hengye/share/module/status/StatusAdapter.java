@@ -308,9 +308,11 @@ public class StatusAdapter extends CommonAdapter<Status>
             mRetweetStatus.mContent.setOnTouchListener(mRetweetedStatusOnTouchListener);
             mRetweetStatus.mGallery.setOnTouchListener(mRetweetedStatusOnTouchListener);
 
-            SelectorLoader.getInstance().setDefaultRippleBackground(mStatusItem);
-//            SelectorLoader.getInstance().setDefaultRippleBackground(mStatusTotalItem);
-            SelectorLoader.getInstance().setDefaultRippleWhiteBackground(mRetweetStatus.mStatusLayout);
+//            SelectorLoader.getInstance().setDefaultRippleBackground(mStatusItem);
+//            SelectorLoader.getInstance().setDefaultRippleWhiteBackground(mRetweetStatus.mStatusLayout);
+
+            SelectorLoader.getInstance().setDefaultRippleBackground(mRetweetStatus.mStatusLayout);
+            SelectorLoader.getInstance().setDefaultRippleWhiteBackground(mStatusItem);
         }
 
         private View.OnTouchListener mStatusOnTouchListener = new View.OnTouchListener() {

@@ -97,7 +97,7 @@ dependencies {
     compile dep.nineoldandroids
     compile dep.gson
 
-    compile 'com.android.support:multidex:1.0.1'
+//    compile 'com.android.support:multidex:1.0.1'
 
     //-- okhttp
     compile "com.squareup.okhttp3:okhttp:$OKHTTP_VERSION"

@@ -51,7 +51,7 @@ public class CheckUpdateMvpImpl implements CheckUpdateContract.View {
             showUpdateDialog(activity, updateBean);
         }else{
             //打开用户手册
-//            showUserGuide(activity);
+            showUserGuide(activity);
         }
     }
 

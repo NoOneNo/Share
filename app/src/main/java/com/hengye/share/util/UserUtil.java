@@ -3,6 +3,7 @@ package com.hengye.share.util;
 import android.graphics.Bitmap;
 
 import com.hengye.share.model.Parent;
+import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.greenrobot.GreenDaoManager;
 import com.hengye.share.model.greenrobot.GroupList;
 import com.hengye.share.model.greenrobot.GroupListDao;
@@ -30,7 +31,7 @@ public class UserUtil {
         return mCurrentUser;
     }
 
-    public static User updateCurrentUser() {
+    private static User updateCurrentUser() {
         return mCurrentUser = getDefaultUser();
     }
 
@@ -46,6 +47,10 @@ public class UserUtil {
         }
         UserDao ud = GreenDaoManager.getDaoSession().getUserDao();
         ud.delete(user);
+    }
+
+    public static UserInfo getCurrentUserInfo(){
+        return UserInfo.getUserInfo(getCurrentUser());
     }
 
     public static String getUid() {

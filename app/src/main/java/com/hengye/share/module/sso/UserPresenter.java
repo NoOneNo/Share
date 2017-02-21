@@ -32,7 +32,7 @@ public class UserPresenter extends RxPresenter<UserContract.View> implements Use
     @Override
     public void loadWBUserInfo(String uid, String name){
         if(CommonUtil.isEmpty(uid, name)){
-            getMvpView().loadSuccess(null);
+            getMvpView().loadUserInfoFail();
             return;
         }
 
@@ -54,13 +54,13 @@ public class UserPresenter extends RxPresenter<UserContract.View> implements Use
                 .subscribe(new BaseSingleObserver<UserInfo>(){
                     @Override
                     public void onSuccess(UserContract.View view, UserInfo userInfo) {
-                        view.handleUserInfo(userInfo);
-                        view.loadSuccess(User.getUser(userInfo));
+                        view.loadUserInfoSuccess(userInfo);
+//                        view.loadSuccess(User.getUser(userInfo));
                     }
 
                     @Override
                     public void onError(UserContract.View view, Throwable e) {
-                        view.loadFail();
+                        view.loadUserInfoFail();
                     }
                 });
     }

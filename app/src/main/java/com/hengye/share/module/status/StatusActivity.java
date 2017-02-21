@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.os.Debug;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
@@ -24,7 +23,6 @@ import android.widget.Toast;
 
 import com.hengye.share.R;
 import com.hengye.share.model.UserInfo;
-import com.hengye.share.model.greenrobot.User;
 import com.hengye.share.module.accountmanage.AccountManageActivity;
 import com.hengye.share.module.base.ActivityHelper;
 import com.hengye.share.module.base.BaseActivity;
@@ -97,7 +95,7 @@ public class StatusActivity extends BaseActivity
         } else if (UserUtil.isUserNameEmpty()) {
             mPresenter.loadWBUserInfo();
         } else {
-            loadSuccess(UserUtil.getCurrentUser());
+            loadUserInfoSuccess(UserUtil.getCurrentUserInfo());
         }
     }
 
@@ -112,7 +110,7 @@ public class StatusActivity extends BaseActivity
             if (UserUtil.isUserNameEmpty()) {
                 mPresenter.loadWBUserInfo();
             } else {
-                loadSuccess(UserUtil.getCurrentUser());
+                loadUserInfoSuccess(UserUtil.getCurrentUserInfo());
             }
         }
     }
@@ -159,6 +157,8 @@ public class StatusActivity extends BaseActivity
 
     SearchView mSearchView;
     String mContent;
+
+    UserInfo mUserInfo;
 
     UserPresenter mPresenter;
 
@@ -355,7 +355,7 @@ public class StatusActivity extends BaseActivity
                 Toast.makeText(this, "请先登录", Toast.LENGTH_SHORT).show();
             }else{
                 mUpdateUserInfo = true;
-                PersonalHomepageActivity.start(this, mAvatar, UserInfo.getUserInfo(UserUtil.getCurrentUser()));
+                PersonalHomepageActivity.start(this, mAvatar, mUserInfo);
             }
         } else if (id == R.id.iv_more_account) {
             startActivityForResult(AccountManageActivity.class, AccountManageActivity.ACCOUNT_CHANGE);
@@ -462,36 +462,47 @@ public class StatusActivity extends BaseActivity
         if (UserUtil.getCurrentUser() == null) {
             return;
         }
-        String uid = mUsername.getText().toString();
-        if (!TextUtils.isEmpty(uid) && uid.equals(UserUtil.getUid())) {
+        String username = mUsername.getText().toString();
+        if (!TextUtils.isEmpty(username) && username.equals(UserUtil.getName())) {
             //此ID数据已经更新过
             L.debug("updateNavigationView invoke, UserInfo has updated");
         } else if (UserUtil.isUserNameEmpty()) {
             mPresenter.loadWBUserInfo();
         } else {
-            loadSuccess(UserUtil.getCurrentUser());
+            loadUserInfoSuccess(UserUtil.getCurrentUserInfo());
         }
     }
 
+//    @Override
+//    public void loadSuccess(User user) {
+//        if (user != null) {
+//            mAvatar.setImageUrl(user.getAvatar());
+//            mUsername.setText(user.getName());
+//            mSign.setText(user.getSign());
+//        } else {
+//            mAvatar.setImageResource(R.drawable.ic_user_avatar);
+//            mUsername.setText("");
+//            mSign.setText("");
+//        }
+//    }
+
     @Override
-    public void loadSuccess(User user) {
-        if (user != null) {
-            mAvatar.setImageUrl(user.getAvatar());
-            mUsername.setText(user.getName());
-            mSign.setText(user.getSign());
+    public void loadUserInfoSuccess(UserInfo userInfo) {
+        mUserInfo = userInfo;
+        if (userInfo != null) {
+            mAvatar.setImageUrl(userInfo.getAvatar());
+            mUsername.setText(userInfo.getName());
+            mSign.setText(userInfo.getSign());
         } else {
             mAvatar.setImageResource(R.drawable.ic_user_avatar);
             mUsername.setText("");
             mSign.setText("");
         }
+
     }
 
     @Override
-    public void handleUserInfo(UserInfo wbUserInfo) {
-    }
-
-    @Override
-    public void loadFail() {
+    public void loadUserInfoFail() {
 
     }
 
@@ -511,7 +522,7 @@ public class StatusActivity extends BaseActivity
     }
 
     private void updateView() {
-        loadSuccess(UserUtil.getCurrentUser());
+        loadUserInfoSuccess(UserUtil.getCurrentUserInfo());
         mGroupsFragment.load(true, true);
     }
 

@@ -84,22 +84,17 @@ public class ThirdPartyLoginActivity extends BaseActivity implements UserContrac
     }
 
     @Override
-    public void loadSuccess(User user) {
-        mLoadingDialog.dismiss();
-        setResult(Activity.RESULT_OK);
-        finish();
-    }
-
-    @Override
-    public void loadFail() {
+    public void loadUserInfoFail() {
         mLoadingDialog.dismiss();
         ToastUtil.showToastError(R.string.label_get_user_info_fail);
         finish();
     }
 
     @Override
-    public void handleUserInfo(UserInfo wbUserInfo) {
-
+    public void loadUserInfoSuccess(UserInfo wbUserInfo) {
+        mLoadingDialog.dismiss();
+        setResult(Activity.RESULT_OK);
+        finish();
     }
 
     @Override
@@ -151,8 +146,10 @@ public class ThirdPartyLoginActivity extends BaseActivity implements UserContrac
                         UserUtil.updateUser(user);
                     }
                     ToastUtil.showToastSuccess(R.string.tip_authorize_success);
-                    setResult(Activity.RESULT_OK);
-                    finish();
+
+                    mPresenter.loadWBUserInfo();
+//                    setResult(Activity.RESULT_OK);
+//                    finish();
                 }
 
             } else {

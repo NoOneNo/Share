@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.os.Debug;
-import android.support.multidex.MultiDex;
 
 import com.hengye.share.BuildConfig;
 import com.hengye.share.service.VideoPlayService;
@@ -18,7 +16,6 @@ import com.hengye.share.util.RequestManager;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import com.tencent.bugly.crashreport.CrashReport;
-import com.tencent.smtt.sdk.QbSdk;
 
 public class BaseApplication extends Application{
 
@@ -66,10 +63,10 @@ public class BaseApplication extends Application{
 		if(BuildConfig.DEBUG){
 			//监控内存泄漏
 			refWatcher = LeakCanary.install(this);
-		}else{
-			//初始化腾讯bugly
-			CrashReport.initCrashReport(BaseApplication.getInstance(), "900019432", false);
 		}
+
+		//初始化腾讯bugly
+		CrashReport.initCrashReport(BaseApplication.getInstance(), "900019432", false);
 
 		//初始化腾讯x5
 //		QbSdk.initX5Environment(BaseApplication.getInstance(), null);
