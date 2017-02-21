@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
@@ -91,6 +92,7 @@ public class StatusActivity extends BaseActivity
         initView();
 
         if (UserUtil.isUserEmpty()) {
+//            startActivity(HotTopicAndStatusActivity.class);
             startActivityForResult(AccountManageActivity.class, AccountManageActivity.ACCOUNT_CHANGE);
         } else if (UserUtil.isUserNameEmpty()) {
             mPresenter.loadWBUserInfo();
@@ -431,6 +433,7 @@ public class StatusActivity extends BaseActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+//        Debug.stopMethodTracing();
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 

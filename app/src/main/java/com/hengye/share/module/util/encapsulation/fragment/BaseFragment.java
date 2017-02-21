@@ -102,7 +102,7 @@ public class BaseFragment extends Fragment
         cancelPendingRequestsIfNeeded();
         detachMvpView();
         //监控内存泄漏
-        BaseApplication.getRefWatcher(getContext()).watch(this);
+        BaseApplication.getInstance().watchRefIfNeed(this);
     }
 
     @Override

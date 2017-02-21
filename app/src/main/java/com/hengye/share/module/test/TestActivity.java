@@ -24,6 +24,7 @@ import com.hengye.share.ui.widget.dialog.LoadingDialog;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
 import com.hengye.share.ui.widget.loading.FramesLoadingView;
 import com.hengye.share.util.L;
+import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.intercept.Action;
 import com.hengye.share.util.intercept.AdTokenInterceptor;
@@ -76,7 +77,7 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_test) {
-            BitmapCache.getInstance().clearCacheFromMemory();
+            RequestManager.clearImageBitmapCache();
 //            onRunSchedulerExampleButtonClicked();
         } else if (v.getId() == R.id.btn_test2) {
             User user = UserUtil.getCurrentUser();

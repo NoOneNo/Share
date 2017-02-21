@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.multidex.MultiDex;
 
 import com.hengye.share.BuildConfig;
@@ -32,6 +33,8 @@ public class BaseApplication extends Application{
 	@Override
 	public void onCreate(){
 		super.onCreate();
+//		Debug.startMethodTracing("share");
+
 		long start = System.currentTimeMillis();
 		init();
 		long end = System.currentTimeMillis();
@@ -42,7 +45,7 @@ public class BaseApplication extends Application{
 	@Override
 	protected void attachBaseContext(Context base) {
 		super.attachBaseContext(base);
-		MultiDex.install(this);
+//		MultiDex.install(this);
 	}
 
 	private void init() {
@@ -55,26 +58,30 @@ public class BaseApplication extends Application{
 		//监听网络变化
 		IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
 		registerReceiver(new NetworkUtil.ObserveNetworkReceiver(), intentFilter);
-		//监控内存泄漏
-		refWatcher = LeakCanary.install(this);
 //		SkinManager.setup(this);
 		//如果程序是从被销毁恢复，栈中GuidanceActivity已不存在，所以不是所有初始化都可以放到GuidanceActivity
 		//放到GuidanceActivity初始化
 		//初始化volley
 		RequestManager.init(this, null, MAX_NETWORK_CACHE_SIZE);
-//		//初始化腾讯bugly
-		if(!BuildConfig.DEBUG) {
+		if(BuildConfig.DEBUG){
+			//监控内存泄漏
+			refWatcher = LeakCanary.install(this);
+		}else{
+			//初始化腾讯bugly
 			CrashReport.initCrashReport(BaseApplication.getInstance(), "900019432", false);
 		}
+
 		//初始化腾讯x5
-		QbSdk.initX5Environment(BaseApplication.getInstance(), null);
+//		QbSdk.initX5Environment(BaseApplication.getInstance(), null);
+	}
+
+	public void watchRefIfNeed(Object watchedReference){
+		if(refWatcher != null){
+			refWatcher.watch(watchedReference);
+		}
 	}
 
 	private RefWatcher refWatcher;
-	public static RefWatcher getRefWatcher(Context context){
-		BaseApplication baseApplication = (BaseApplication) context.getApplicationContext();
-		return baseApplication.refWatcher;
-	}
 
 	private void registerActivityLifecycleCallbacks(){
 		registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks(){

@@ -10,12 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.android.volley.cache.BitmapCache;
-import com.android.volley.toolbox.BitmapUtil;
+import com.android.volley.toolbox.ImageKey;
 import com.hengye.share.R;
 import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.ui.widget.image.ClipImageView;
+import com.hengye.share.util.RequestManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -95,13 +95,15 @@ public class ImageGifFragment extends ImageBaseFragment {
     }
 
     private void setBitmapToPhotoView(){
-        Bitmap bitmap = BitmapCache.getInstance().getBitmap(mPath);
-        if(bitmap == null){
-            bitmap = BitmapUtil.getSuitableBitmap(mPath, mScreenWidth, 0, BitmapUtil.DEFAULT_CONFIG, ImageView.ScaleType.FIT_XY);
-            if(bitmap != null){
-                BitmapCache.getInstance().putBitmap(mPath, bitmap);
-            }
-        }
+        ImageKey imageKey = new ImageKey(mPath, mScreenWidth, 0, ImageView.ScaleType.FIT_XY);
+        Bitmap bitmap = RequestManager.getBitmapByLocalPath(imageKey);
+//        Bitmap bitmap = BitmapCache.getInstance().getBitmap(mPath);
+//        if(bitmap == null){
+//            bitmap = BitmapUtil.getSuitableBitmap(mPath, mScreenWidth, 0, BitmapUtil.DEFAULT_CONFIG, ImageView.ScaleType.FIT_XY);
+//            if(bitmap != null){
+//                BitmapCache.getInstance().putBitmap(mPath, bitmap);
+//            }
+//        }
         mPhotoView.setImageBitmap(bitmap);
     }
 

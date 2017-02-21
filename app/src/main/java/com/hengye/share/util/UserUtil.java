@@ -1,5 +1,7 @@
 package com.hengye.share.util;
 
+import android.graphics.Bitmap;
+
 import com.hengye.share.model.Parent;
 import com.hengye.share.model.greenrobot.GreenDaoManager;
 import com.hengye.share.model.greenrobot.GroupList;
@@ -68,6 +70,10 @@ public class UserUtil {
             return token;
         }
         return getToken();
+    }
+
+    public static Bitmap getUserAvatarBitmap() {
+        return RequestManager.getBitmapByUrl(getCurrentUser().getAvatar());
     }
 
     public static boolean isUserEmpty() {

@@ -64,6 +64,9 @@ public class HotTopicAndStatusFragment extends StatusActionFragment
     }
 
     private void initHeader(){
+        if(mAdapter.isAddHeaderView()){
+            return;
+        }
         mHeader = LayoutInflater.from(getContext()).inflate(R.layout.fragment_hot_topic_header, getRecyclerView(), false);
         mHotTopicContent = mHeader.findViewById(R.id.hot_topic_content);
         mHotTopicEmpty = mHeader.findViewById(R.id.empty_layout);

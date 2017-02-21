@@ -164,6 +164,10 @@ public class DataUtil {
             ImageSpan[] imageSpans = value.getSpans(0, value.length(), ImageSpan.class);
             if (imageSpans != null && imageSpans.length != 0) {
                 for (ImageSpan imageSpan : imageSpans) {
+//                    String imageSpanSource = imageSpan.getSource();
+//                    if(imageSpanSource != null && imageSpanSource.startsWith("//")){
+//                        imageSpan.ge
+//                    }
                     int start = value.getSpanStart(imageSpan);
                     int end = value.getSpanEnd(imageSpan);
 

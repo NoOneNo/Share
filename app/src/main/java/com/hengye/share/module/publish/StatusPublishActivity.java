@@ -146,7 +146,7 @@ public class StatusPublishActivity extends BaseActivity implements View.OnClickL
     private void initView() {
         changeTitleStyle(mStatusDraft.getType());
 
-        Bitmap avatarBitmap = UserUtil.getCurrentUser().getUserAvatarBitmap();
+        Bitmap avatarBitmap = UserUtil.getUserAvatarBitmap();
         if (avatarBitmap != null) {
             int size = ResUtil.getDimensionPixelSize(R.dimen.icon_size_normal);
 //            int sample = BitmapUtil.findBestSampleSize(avatarBitmap.getWidth(), avatarBitmap.getHeight(), size, size);
@@ -157,12 +157,16 @@ public class StatusPublishActivity extends BaseActivity implements View.OnClickL
             getToolbar().setContentInsetStartWithNavigation(ViewUtil.dp2px(10.0f));
             getToolbar().setNavigationIcon(bd, true);
         }else{
-            getToolbar().setNavigationIcon(null);
+//            getToolbar().setNavigationIcon(null);
         }
 
         String space = "";
         getToolbar().setTitle(space + getToolbar().getTitle());
-        getToolbar().setSubtitle(space + UserUtil.getName());
+        String name = UserUtil.getName();
+        if(CommonUtil.isEmpty(name)){
+            name = "";
+        }
+        getToolbar().setSubtitle(space + name);
 
         mContainer = findViewById(R.id.rl_container);
         mContent = (StatusEditText) findViewById(R.id.et_status_publish);

@@ -175,7 +175,9 @@ public class StatusAlbumFragment extends ShareRecyclerFragment<String> implement
             mStatuses = statuses;
             mStatusPager.refreshIds(mStatuses);
         }else{
-            mStatuses.addAll(statuses);
+            if(statuses != null) {
+                mStatuses.addAll(statuses);
+            }
         }
     }
 

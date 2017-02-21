@@ -51,7 +51,7 @@ public class SettingBasicFragment extends BasePreferenceFragment{
     }
 
     private void updatePhotoCacheSize(){
-        mClearPhotoCache.setSummary(Formatter.formatShortFileSize(getActivity(), RequestManager.getImageCacheSize()));
+        mClearPhotoCache.setSummary(Formatter.formatShortFileSize(getActivity(), RequestManager.getImageDiskCacheSize()));
     }
 
     private Dialog mDialog;
@@ -62,7 +62,7 @@ public class SettingBasicFragment extends BasePreferenceFragment{
             stbd.setPositiveButtonClickListener(new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    RequestManager.clearImageCache();
+                    RequestManager.clearImageDiskCache();
                     getView().postDelayed(new Runnable() {
                         @Override
                         public void run() {

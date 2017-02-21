@@ -30,6 +30,7 @@ import com.hengye.share.util.ApplicationUtil;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.L;
 import com.hengye.share.util.NotificationUtil;
+import com.hengye.share.util.RequestManager;
 import com.hengye.share.util.UrlFactory;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
@@ -574,7 +575,7 @@ public class StatusPublishService extends Service {
             builder.setLights(Color.WHITE, 2000, 2000);
         }
 
-        Bitmap bitmap = UserUtil.getCurrentUser().getUserAvatarBitmap();
+        Bitmap bitmap = UserUtil.getUserAvatarBitmap();
         if (bitmap != null) {
             builder.setLargeIcon(bitmap);
         }

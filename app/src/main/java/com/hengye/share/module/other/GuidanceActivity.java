@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import com.hengye.share.R;
 import com.hengye.share.module.base.BaseActivity;
+import com.hengye.share.module.hottopic.HotTopicAndStatusActivity;
 import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.module.status.StatusActivity;
 import com.hengye.share.module.update.CheckUpdateMvpImpl;
@@ -71,8 +72,8 @@ public class GuidanceActivity extends BaseActivity {
 //        init();
     }
 
-    private void init(){
-        if(!isInit) {
+    private void init() {
+        if (!isInit) {
             isInit = true;
 
             long start = System.currentTimeMillis();
@@ -84,6 +85,7 @@ public class GuidanceActivity extends BaseActivity {
                 waitTime = 0;
             }
             L.debug("GuidanceActivity init consume : %s", consume);
+//            startActivity(HotTopicAndStatusActivity.class);
             startActivity(StatusActivity.class);
             finish();
 //            getHandler().postDelayed(new Runnable() {
@@ -98,7 +100,7 @@ public class GuidanceActivity extends BaseActivity {
 
     private static final long DEFAULT_WAIT_DURATION = 2000;
 
-    private void showUsername(){
+    private void showUsername() {
         TextView welcomeTV = (TextView) findViewById(R.id.tv_welcome);
 //        String name = UserUtil.getName();
 //        if(CommonUtil.isEmpty(name)){
@@ -110,9 +112,10 @@ public class GuidanceActivity extends BaseActivity {
 
     public static final String ACTION_ADD_SHORTCUT = "com.android.launcher.action.INSTALL_SHORTCUT";
     public static final String ACTION_REMOVE_SHORTCUT = "com.android.launcher.action.UNINSTALL_SHORTCUT";
+
     private void createShortcutIfNeed() {
 
-        if(SPUtil.getBoolean("isShortcutCreate2.0", false)){
+        if (SPUtil.getBoolean("isShortcutCreate2.0", false)) {
             L.debug("shortcut is exist");
             return;
         }
@@ -138,10 +141,8 @@ public class GuidanceActivity extends BaseActivity {
         SPUtil.putBoolean("isShortcutCreate2.0", true);
     }
 
-    private void checkUpdateIfNeed(){
-        if(SettingHelper.isLaunchCheckUpdate()) {
-            //启动时检查更新
-            new CheckUpdatePresenter(new CheckUpdateMvpImpl(), false).checkUpdate();
-        }
+    private void checkUpdateIfNeed() {
+        //启动时检查更新
+        new CheckUpdatePresenter(new CheckUpdateMvpImpl(), false).checkUpdate();
     }
 }

@@ -11,12 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.android.volley.cache.BitmapCache;
-import com.android.volley.toolbox.BitmapUtil;
+import com.android.volley.toolbox.ImageKey;
 import com.hengye.share.R;
 import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.util.ImageUtil;
+import com.hengye.share.util.RequestManager;
 
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
@@ -66,13 +66,15 @@ public class ImageNormalFragment extends ImageBaseFragment {
         int screenWidth = dm.widthPixels;
         int screenHeight = dm.heightPixels;
 
-        Bitmap bitmap = BitmapCache.getInstance().getBitmap(mPath);
-        if (bitmap == null) {
-            bitmap = BitmapUtil.getSuitableBitmap(mPath, screenWidth, 0, BitmapUtil.DEFAULT_CONFIG, ImageView.ScaleType.FIT_XY);
-            if (bitmap != null) {
-                BitmapCache.getInstance().putBitmap(mPath, bitmap);
-            }
-        }
+        ImageKey imageKey = new ImageKey(mPath, screenWidth, 0, ImageView.ScaleType.FIT_XY);
+        Bitmap bitmap = RequestManager.getBitmapByLocalPath(imageKey);
+//        Bitmap bitmap = BitmapCache.getInstance().getBitmap(mPath);
+//        if (bitmap == null) {
+//            bitmap = BitmapUtil.getSuitableBitmap(mPath, screenWidth, 0, BitmapUtil.DEFAULT_CONFIG, ImageView.ScaleType.FIT_XY);
+//            if (bitmap != null) {
+//                BitmapCache.getInstance().putBitmap(mPath, bitmap);
+//            }
+//        }
 
         mCanAnimatedIn = true;
         if(bitmap != null){
@@ -129,6 +131,10 @@ public class ImageNormalFragment extends ImageBaseFragment {
     }
 
     private void setImageBitmap(Bitmap bitmap){
+        if(bitmap == null){
+            mPhotoView.setImageBitmap(null);
+            return;
+        }
         int MAX_HEIGHT_WIDTH = ImageUtil.getBitmapMaxSize();
         if (bitmap.getWidth() < bitmap.getHeight() && bitmap.getHeight() > MAX_HEIGHT_WIDTH) {
             mPhotoView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() * MAX_HEIGHT_WIDTH / bitmap.getHeight(), MAX_HEIGHT_WIDTH, true));

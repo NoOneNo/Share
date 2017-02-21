@@ -10,15 +10,15 @@ import android.widget.ImageView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.cache.BitmapCache;
-import com.android.volley.cache.ImageDiskLruCache;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.ImageRequest;
-import com.android.volley.toolbox.Util;
+import com.android.volley.toolbox.BitmapUtil;
+import com.android.volley.toolbox.ImageKey;
 import com.hengye.share.R;
 import com.hengye.share.module.util.encapsulation.fragment.BaseFragment;
 import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.util.AnimationUtil;
+import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.FileUtil;
 import com.hengye.share.util.ImageUtil;
 import com.hengye.share.util.RequestManager;
@@ -68,12 +68,12 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
         mProgress = findViewById(R.id.progress_bar);
         if (mUrl != null) {
             String path;
-            boolean isLocalPath = !Util.isHttpUrl(mUrl);
+            boolean isLocalPath = !DataUtil.isHttpUrl(mUrl);
             if (isLocalPath) {
                 //本地图片地址，如果是草稿的话
                 path = mUrl;
             } else {
-                path = ImageDiskLruCache.getInstance().getDiskCachePath(mUrl);
+                path = RequestManager.getImageDiskCachePath(mUrl);
             }
 
             if (isLocalPath || !mUrl.endsWith("gif")) {
@@ -84,10 +84,10 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
                 if (!isLocalPath) {
                     String largeUrl = WBUtil.getWBLargeImgUrl(mUrl);
 
-                    String largeUrlPath = ImageDiskLruCache.getInstance().getDiskCachePath(largeUrl);
+                    String largeUrlPath = RequestManager.getImageDiskCachePath(largeUrl);
                     if (largeUrlPath == null) {
                         middleUrl = WBUtil.getWBMiddleImgUrl(mUrl);
-                        largeUrlPath = ImageDiskLruCache.getInstance().getDiskCachePath(middleUrl);
+                        largeUrlPath = RequestManager.getImageDiskCachePath(middleUrl);
                     }
                     isThumbnail = largeUrlPath == null && WBUtil.isWBThumbnailUrl(mUrl);
                     if (largeUrlPath != null) {
@@ -110,7 +110,7 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
                 }
             } else {
                 String gifUrl = WBUtil.getWBGifUrl(mUrl);
-                String gifPath = ImageDiskLruCache.getInstance().getDiskCachePath(gifUrl);
+                String gifPath = RequestManager.getImageDiskCachePath(gifUrl);
                 if (gifPath != null) {
                     //本地有gif缓存，直接显示
                     displayImage(gifUrl, gifPath, mAnimateIn);
@@ -161,7 +161,7 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
         if (mUrl != null) {
             if (!WBUtil.isWBLargeUrl(mUrl)) {
                 String largeUrl = WBUtil.getWBLargeImgUrl(mUrl);
-                String path = ImageDiskLruCache.getInstance().getDiskCachePath(largeUrl);
+                String path = RequestManager.getImageDiskCachePath(largeUrl);
 
                 if (path != null) {
                     if (path.equals(mPath)) {
@@ -250,11 +250,13 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
      */
     protected Request<Bitmap> makeImageRequest(final boolean isDelay, final String requestUrl, int maxWidth, int maxHeight,
                                                ImageView.ScaleType scaleType) {
-        return new ImageRequest(requestUrl, new Response.Listener<Bitmap>() {
+        final ImageKey imageKey = new ImageKey(requestUrl, 0, 0, maxWidth, maxHeight, scaleType);
+        return new ImageRequest(new Response.Listener<Bitmap>() {
             @Override
             public void onResponse(Bitmap response) {
-                final String path = ImageDiskLruCache.getInstance().getDiskCachePath(requestUrl);
+                final String path = RequestManager.getImageDiskCachePath(requestUrl);
                 if (path != null) {
+                    RequestManager.putBitmapToCache(path, response);
                     if (isDelay) {
                         getHandler().postDelayed(new Runnable() {
                             @Override
@@ -265,11 +267,10 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
                     } else {
                         displayImage(requestUrl, path, false);
                     }
-                    BitmapCache.getInstance().putBitmap(path, response);
                 }
                 hideProgress();
             }
-        }, maxWidth, maxHeight, scaleType, Bitmap.Config.RGB_565, new Response.ErrorListener() {
+        }, imageKey, BitmapUtil.DEFAULT_CONFIG, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 hideProgress();

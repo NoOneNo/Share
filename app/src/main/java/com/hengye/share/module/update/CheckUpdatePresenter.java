@@ -1,5 +1,6 @@
 package com.hengye.share.module.update;
 
+import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.module.util.encapsulation.base.TaskState;
 import com.hengye.share.module.util.encapsulation.mvp.RxPresenter;
 import com.hengye.share.util.CommonUtil;
@@ -16,7 +17,7 @@ import io.reactivex.functions.Function;
  * Created by yuhy on 2016/11/21.
  */
 
-public class CheckUpdatePresenter extends RxPresenter<CheckUpdateContract.View> implements CheckUpdateContract.Presenter{
+public class CheckUpdatePresenter extends RxPresenter<CheckUpdateContract.View> implements CheckUpdateContract.Presenter {
 
     public CheckUpdatePresenter(CheckUpdateContract.View mvpView, boolean isForce) {
         super(mvpView);
@@ -31,10 +32,22 @@ public class CheckUpdatePresenter extends RxPresenter<CheckUpdateContract.View> 
     @Override
     public void checkUpdate() {
         getMvpView().onCheckUpdateStart();
-        RetrofitManager
-                .getShareService()
-                .checkUpdate()
-                .delay(5000, TimeUnit.MILLISECONDS)
+
+        Single
+                .just(0)
+                .delay(10000, TimeUnit.MILLISECONDS)
+                .flatMap(new Function<Integer, SingleSource<UpdateBombBean>>() {
+                    @Override
+                    public SingleSource<UpdateBombBean> apply(Integer integer) throws Exception {
+
+                        if(SettingHelper.isLaunchCheckUpdate()) {
+                            return RetrofitManager
+                                    .getShareService()
+                                    .checkUpdate();
+                        }
+                        return Single.just(new UpdateBombBean());
+                    }
+                })
                 .flatMap(new Function<UpdateBombBean, SingleSource<UpdateBean>>() {
                     @Override
                     public SingleSource<UpdateBean> apply(UpdateBombBean updateBombBean) {
@@ -43,10 +56,10 @@ public class CheckUpdatePresenter extends RxPresenter<CheckUpdateContract.View> 
                             updateBean = updateBombBean.getResults().get(0);
                         }
 
-                        if(updateBean != null && updateBean.isNeedUpdate(mIsForce)){
+                        if (updateBean != null && updateBean.isNeedUpdate(mIsForce)) {
                             updateBean.setUpdateInfo(filterText(updateBean.getUpdateInfo()));
                             return Single.just(updateBean);
-                        }else{
+                        } else {
                             return Single.just(new UpdateBean());
                         }
                     }
@@ -63,7 +76,7 @@ public class CheckUpdatePresenter extends RxPresenter<CheckUpdateContract.View> 
 
                     @Override
                     public void onError(CheckUpdateContract.View view, Throwable e) {
-                        if(mIsForce) {
+                        if (mIsForce) {
                             view.onCheckUpdateFail(TaskState.getFailState(e));
                         }
                     }
@@ -71,8 +84,8 @@ public class CheckUpdatePresenter extends RxPresenter<CheckUpdateContract.View> 
     }
 
     //更新信息增加自动换行
-    private String filterText(String text){
-        if(CommonUtil.isEmpty(text)){
+    private String filterText(String text) {
+        if (CommonUtil.isEmpty(text)) {
             return text;
         }
 
@@ -85,15 +98,15 @@ public class CheckUpdatePresenter extends RxPresenter<CheckUpdateContract.View> 
         return text;
     }
 
-    private String addSpecifiedStr(String str, String specifiedStr, String addContent){
-        if(CommonUtil.hasEmpty(str, specifiedStr, addContent)){
+    private String addSpecifiedStr(String str, String specifiedStr, String addContent) {
+        if (CommonUtil.hasEmpty(str, specifiedStr, addContent)) {
             return str;
         }
 
         StringBuilder sb = new StringBuilder(str);
         int fromIndex = 0;
         int findIndex;
-        while((findIndex = sb.indexOf(specifiedStr, fromIndex)) != -1){
+        while ((findIndex = sb.indexOf(specifiedStr, fromIndex)) != -1) {
             int start = findIndex + specifiedStr.length();
             int end = start + addContent.length();
             sb.insert(start, addContent);
