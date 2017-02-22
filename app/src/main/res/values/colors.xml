@@ -30,9 +30,17 @@
 
     <color name="divider_color">#ffdbdbdb</color>
 
-    <color name="background_default">#eeeeee</color>
-    <color name="background_default_deep">#fafafa</color>
-    <color name="background_default_white">#fffcfcfc</color>
+    <color name="background_default">#f0f0f0</color>
+    <color name="background_default_deep">#eeeeee</color>
+    <color name="background_default_white">#fbfbfb</color>
+
+    <!--<color name="background_default">#f5f6f8</color>-->
+    <!--<color name="background_default_deep">#eeeeee</color>-->
+    <!--<color name="background_default_white">#ffffff</color>-->
+
+    <!--<color name="background_default">#eeeeee</color>-->
+    <!--<color name="background_default_deep">#fafafa</color>-->
+    <!--<color name="background_default_white">#fffcfcfc</color>-->
 
     <color name="transparent">@android:color/transparent</color>
     <color name="white">@android:color/white</color>

@@ -35,6 +35,7 @@
     <dimen name="text_large_2">20sp</dimen>
 
     <dimen name="icon_size_tiny">18dp</dimen>
+    <dimen name="icon_size_tiny_2">20dp</dimen>
     <dimen name="icon_size_small">24dp</dimen>
     <dimen name="icon_size_normal">36dp</dimen>
     <dimen name="icon_size_large">48dp</dimen>
@@ -48,11 +49,10 @@
 
     <dimen name="action_bar_default_size">48dp</dimen>
 
-    <dimen name="divider_height">1dp</dimen>
+    <dimen name="divider_height">0.5dp</dimen>
 
     <dimen name="emotion_size">20dp</dimen>
     <dimen name="icon_emoticon_padding">10dp</dimen>
-
 
     <dimen name="search_user_avatar">60dp</dimen>
 

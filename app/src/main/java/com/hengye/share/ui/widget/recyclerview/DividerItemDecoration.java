@@ -1,43 +1,84 @@
 package com.hengye.share.ui.widget.recyclerview;
 
+/*
+ * Copyright (C) 2016 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.hengye.share.R;
+import com.hengye.share.util.L;
 
 /**
- * Created by yuhy on 2017/2/17.
+ * DividerItemDecoration is a {@link RecyclerView.ItemDecoration} that can be used as a divider
+ * between items of a {@link LinearLayoutManager}. It supports both {@link #HORIZONTAL} and
+ * {@link #VERTICAL} orientations.
+ *
+ * <pre>
+ *     mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+ *             mLayoutManager.getOrientation());
+ *     recyclerView.addItemDecoration(mDividerItemDecoration);
+ * </pre>
  */
-
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
+    public static final int HORIZONTAL = LinearLayout.HORIZONTAL;
+    public static final int VERTICAL = LinearLayout.VERTICAL;
+
+    private static final int[] ATTRS = new int[]{ R.attr.theme_divider };
 
     private Drawable mDivider;
+
+    /**
+     * Current orientation. Either {@link #HORIZONTAL} or {@link #VERTICAL}.
+     */
     private int mOrientation;
 
-    //我们通过获取系统属性中的listDivider来添加，在系统中的AppTheme中设置
-    private static final int[] ATRRS = new int[]{
-            R.attr.theme_divider
-    };
+    private boolean mIgnoreLastItem = false;
+
+    private final Rect mBounds = new Rect();
 
     public DividerItemDecoration(Context context) {
-        this(context, LinearLayoutManager.HORIZONTAL);
+        this(context, VERTICAL);
     }
 
+    /**
+     * Creates a divider {@link RecyclerView.ItemDecoration} that can be used with a
+     * {@link LinearLayoutManager}.
+     *
+     * @param context Current context, it will be used to access resources.
+     * @param orientation Divider orientation. Should be {@link #HORIZONTAL} or {@link #VERTICAL}.
+     */
     public DividerItemDecoration(Context context, int orientation) {
-        final TypedArray ta = context.obtainStyledAttributes(ATRRS);
-        this.mDivider = ta.getDrawable(0);
-        ta.recycle();
+        final TypedArray a = context.obtainStyledAttributes(ATTRS);
+        mDivider = a.getDrawable(0);
+        a.recycle();
         setOrientation(orientation);
     }
 
     public DividerItemDecoration(Drawable divider) {
-        this(divider, LinearLayoutManager.HORIZONTAL);
+        this(divider, VERTICAL);
     }
 
     public DividerItemDecoration(Drawable divider, int orientation) {
@@ -45,67 +86,142 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         setOrientation(orientation);
     }
 
-    //设置屏幕的方向
+    /**
+     * Sets the orientation for this divider. This should be called if
+     * {@link RecyclerView.LayoutManager} changes orientation.
+     *
+     * @param orientation {@link #HORIZONTAL} or {@link #VERTICAL}
+     */
     public void setOrientation(int orientation) {
-        if (orientation != LinearLayoutManager.HORIZONTAL && orientation != LinearLayoutManager.VERTICAL) {
-            throw new IllegalArgumentException("invalid orientation");
+        if (orientation != HORIZONTAL && orientation != VERTICAL) {
+            throw new IllegalArgumentException(
+                    "Invalid orientation. It should be either HORIZONTAL or VERTICAL");
         }
         mOrientation = orientation;
     }
 
+    /**
+     * Sets the {@link Drawable} for this divider.
+     *
+     * @param drawable Drawable that should be used as a divider.
+     */
+    public void setDrawable(@NonNull Drawable drawable) {
+        if (drawable == null) {
+            throw new IllegalArgumentException("Drawable cannot be null.");
+        }
+        mDivider = drawable;
+    }
+
     @Override
     public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-        if (mOrientation == LinearLayoutManager.VERTICAL) {
-            drawVerticalLine(c, parent, state);
+        if (parent.getLayoutManager() == null) {
+            return;
+        }
+        if (mOrientation == VERTICAL) {
+            drawVertical(c, parent);
         } else {
-            drawHorizontalLine(c, parent, state);
+            drawHorizontal(c, parent);
         }
     }
 
-    //画横线, 这里的parent其实是显示在屏幕显示的这部分
-    private void drawHorizontalLine(Canvas c, RecyclerView parent, RecyclerView.State state) {
-        int left = parent.getPaddingLeft();
-        int right = parent.getWidth() - parent.getPaddingRight();
+    private void drawVertical(Canvas canvas, RecyclerView parent) {
+        canvas.save();
+        final int left;
+        final int right;
+        if (parent.getClipToPadding()) {
+            left = parent.getPaddingLeft();
+            right = parent.getWidth() - parent.getPaddingRight();
+            canvas.clipRect(left, parent.getPaddingTop(), right,
+                    parent.getHeight() - parent.getPaddingBottom());
+        } else {
+            left = 0;
+            right = parent.getWidth();
+        }
+
         final int childCount = parent.getChildCount();
         for (int i = 0; i < childCount; i++) {
             final View child = parent.getChildAt(i);
 
-            //获得child的布局信息
-            final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
-            final int top = child.getBottom() + params.bottomMargin;
-            final int bottom = top + mDivider.getIntrinsicHeight();
+            //----
+            if(mIgnoreLastItem && isLastPosition(child, parent)){
+                continue;
+            }
+            //----
+
+            parent.getDecoratedBoundsWithMargins(child, mBounds);
+            final int bottom = mBounds.bottom + Math.round(ViewCompat.getTranslationY(child));
+            final int top = bottom - mDivider.getIntrinsicHeight();
             mDivider.setBounds(left, top, right, bottom);
-            mDivider.draw(c);
-            //Log.d("wnw", left + " " + top + " "+right+"   "+bottom+" "+i);
+            mDivider.draw(canvas);
         }
+        canvas.restore();
     }
 
-    //画竖线
-    private void drawVerticalLine(Canvas c, RecyclerView parent, RecyclerView.State state) {
-        int top = parent.getPaddingTop();
-        int bottom = parent.getHeight() - parent.getPaddingBottom();
+    private void drawHorizontal(Canvas canvas, RecyclerView parent) {
+        canvas.save();
+        final int top;
+        final int bottom;
+        if (parent.getClipToPadding()) {
+            top = parent.getPaddingTop();
+            bottom = parent.getHeight() - parent.getPaddingBottom();
+            canvas.clipRect(parent.getPaddingLeft(), top,
+                    parent.getWidth() - parent.getPaddingRight(), bottom);
+        } else {
+            top = 0;
+            bottom = parent.getHeight();
+        }
+
         final int childCount = parent.getChildCount();
         for (int i = 0; i < childCount; i++) {
             final View child = parent.getChildAt(i);
 
-            //获得child的布局信息
-            final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
-            final int left = child.getRight() + params.rightMargin;
-            final int right = left + mDivider.getIntrinsicWidth();
+            //----
+            if(mIgnoreLastItem && isLastPosition(child, parent)){
+                continue;
+            }
+            //----
+
+            parent.getLayoutManager().getDecoratedBoundsWithMargins(child, mBounds);
+            final int right = mBounds.right + Math.round(ViewCompat.getTranslationX(child));
+            final int left = right - mDivider.getIntrinsicWidth();
             mDivider.setBounds(left, top, right, bottom);
-            mDivider.draw(c);
+            mDivider.draw(canvas);
         }
+        canvas.restore();
     }
 
-    //由于Divider也有长宽高，每一个Item需要向下或者向右偏移
     @Override
-    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-        if (mOrientation == LinearLayoutManager.HORIZONTAL) {
-            //画横线，就是往下偏移一个分割线的高度
+    public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
+                               RecyclerView.State state) {
+        //----
+        if(mIgnoreLastItem && isLastPosition(view, parent)){
+            L.debug("find lastItem");
+            outRect.set(0, 0, 0, 0);
+            return;
+        }
+        //----
+
+        if (mOrientation == VERTICAL) {
             outRect.set(0, 0, 0, mDivider.getIntrinsicHeight());
         } else {
-            //画竖线，就是往右偏移一个分割线的宽度
             outRect.set(0, 0, mDivider.getIntrinsicWidth(), 0);
         }
+    }
+
+    private boolean isLastPosition(View view, RecyclerView parent){
+        if(parent.getLayoutManager() == null){
+            return false;
+        }
+        final int position = parent.getChildAdapterPosition(view);
+        if(position == parent.getLayoutManager().getItemCount() - 1){
+            //last item
+            return true;
+        }
+
+        return false;
+    }
+
+    public void ignoreLastItem(boolean ignore){
+        mIgnoreLastItem = ignore;
     }
 }

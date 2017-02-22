@@ -147,9 +147,9 @@ public class ThirdPartyLoginActivity extends BaseActivity implements UserContrac
                     }
                     ToastUtil.showToastSuccess(R.string.tip_authorize_success);
 
-                    mPresenter.loadWBUserInfo();
-//                    setResult(Activity.RESULT_OK);
-//                    finish();
+//                    mPresenter.loadWBUserInfo();
+                    setResult(Activity.RESULT_OK);
+                    finish();
                 }
 
             } else {

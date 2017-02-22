@@ -20,8 +20,8 @@
             android:entries="@array/show_avatar_entries"
             android:entryValues="@array/show_avatar_values"
             android:key="show_avatar"
-            android:summary="@string/title_setting_show_avatar_summary"
-            android:title="@string/title_setting_show_avatar_off" />
+            android:summary="@string/title_setting_show_photo_summary"
+            android:title="@string/title_setting_show_photo_off" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/title_setting_photo">

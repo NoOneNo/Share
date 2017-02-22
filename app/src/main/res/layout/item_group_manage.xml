@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="49dp"
     android:background="@drawable/ripple_white"
-    android:paddingStart="@dimen/content_margin_10dp"
-    android:paddingEnd="@dimen/content_margin_10dp">
+    android:padding="@dimen/content_margin_10dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/drag_handle"
         android:layout_width="@dimen/icon_size_small"
         android:layout_height="@dimen/icon_size_small"
-        android:layout_centerVertical="true"
         android:contentDescription="@null"
         android:src="@drawable/ic_format_list_bulleted_white_48dp"
         android:tint="?attr/colorPrimaryDark"
@@ -20,11 +20,9 @@
 
     <TextView
         android:id="@+id/tv_group_name"
-        android:layout_toEndOf="@id/drag_handle"
-        android:layout_toStartOf="@+id/tv_group_count"
-        android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/content_margin_10dp"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_small"
         android:textColor="@color/grey_850"
@@ -34,8 +32,7 @@
 
     <TextView
         android:id="@+id/tv_group_count"
-        android:layout_toStartOf="@+id/btn_edit"
-        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/content_margin_10dp"
         android:layout_marginEnd="@dimen/content_margin_10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,33 +42,25 @@
         tools:text="5人"/>
 
     <ImageButton
-        android:id="@id/btn_edit"
-        android:layout_toStartOf="@+id/btn_delete"
+        android:id="@+id/btn_edit"
         android:layout_width="@dimen/icon_size_normal"
         android:layout_height="@dimen/icon_size_normal"
         android:padding="@dimen/spacing_micro"
-        android:layout_centerVertical="true"
         android:contentDescription="@null"
         android:src="@drawable/ic_mode_edit_white_48dp"
-        android:tint="?attr/colorPrimaryDark"
+        android:tint="?attr/theme_color"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:scaleType="fitXY"/>
 
     <ImageView
-        android:id="@id/btn_delete"
+        android:id="@+id/btn_delete"
         android:layout_width="@dimen/icon_size_normal"
         android:layout_height="@dimen/icon_size_normal"
         android:padding="@dimen/spacing_micro"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
         android:contentDescription="@null"
         android:src="@drawable/ic_delete_white_48dp"
-        android:tint="?attr/colorPrimaryDark"
+        android:tint="?attr/theme_color"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:scaleType="fitXY"/>
 
-    <View
-        style="@style/horizontal_line"
-        android:layout_toEndOf="@id/drag_handle"
-        android:layout_alignParentBottom="true"/>
-</RelativeLayout>
+</LinearLayout>

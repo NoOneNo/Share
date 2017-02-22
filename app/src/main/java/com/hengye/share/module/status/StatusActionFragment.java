@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.hengye.share.R;
 import com.hengye.share.model.Status;
+import com.hengye.share.ui.widget.recyclerview.DividerItemDecoration;
 
 import java.util.ArrayList;
 
@@ -21,6 +23,9 @@ public class StatusActionFragment extends ShareLoadDataCallbackFragment<Status> 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        DividerItemDecoration decoration = new DividerItemDecoration(getResources().getDrawable(R.drawable.status_divider_light));
+        decoration.ignoreLastItem(true);
+        getRecyclerView().addItemDecoration(decoration);
         setAdapter(mAdapter = new StatusAdapter(getContext(), new ArrayList<Status>(), getRecyclerView()));
         mStatusActionPresenter = new StatusActonPresenter(this);
         mStatusActionMvpImpl = new StatusActionMvpImpl(this, mStatusActionPresenter);

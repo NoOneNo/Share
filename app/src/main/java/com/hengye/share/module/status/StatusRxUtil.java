@@ -1,6 +1,7 @@
 package com.hengye.share.module.status;
 
 import com.hengye.share.model.Status;
+import com.hengye.share.model.StatusComment;
 import com.hengye.share.model.StatusComments;
 import com.hengye.share.model.StatusShortUrl;
 import com.hengye.share.model.StatusUrl;
@@ -79,10 +80,10 @@ public class StatusRxUtil {
         if (mFlatStatusShortUrl == null) {
             mFlatStatusShortUrl = new Function<ArrayList<Status>, SingleSource<ArrayList<Status>>>() {
                 @Override
-                public SingleSource<ArrayList<Status>> apply(ArrayList<Status> topics) {
+                public SingleSource<ArrayList<Status>> apply(ArrayList<Status> statues) {
                     //获得所有微博，再转换短链，因为微博可能包含转发的微博
-                    flatShortUrl(Status.getAllStatus(topics));
-                    return SingleHelper.justArrayList(topics);
+                    flatShortUrl(Status.getAllStatus(statues));
+                    return SingleHelper.justArrayList(statues);
                 }
             };
         }
@@ -92,21 +93,45 @@ public class StatusRxUtil {
     static Function<StatusComments, SingleSource<StatusComments>> mFlatStatusCommentsShortUrl;
 
     /**
-     * 把微博的短链转换成长链
+     * 把微博评论的短链转换成长链
      */
     public static Function<StatusComments, SingleSource<StatusComments>> flatStatusCommentsShortUrl() {
         if (mFlatStatusCommentsShortUrl == null) {
             mFlatStatusCommentsShortUrl = new Function<StatusComments, SingleSource<StatusComments>>() {
                 @Override
-                public SingleSource<StatusComments> apply(StatusComments topicComments) {
-                    if(topicComments != null && !CommonUtil.isEmpty(topicComments.getComments())) {
-                        flatShortUrl(topicComments.getComments());
+                public SingleSource<StatusComments> apply(StatusComments statusComments) {
+                    if(statusComments != null && !CommonUtil.isEmpty(statusComments.getComments())) {
+                        flatShortUrl(statusComments.getComments());
                     }
 
-                    if(topicComments == null){
-                        topicComments = new StatusComments();
+                    if(statusComments == null){
+                        statusComments = new StatusComments();
                     }
-                    return Single.just(topicComments);
+
+                    if(!CommonUtil.isEmpty(statusComments.getComments())){
+                        //把短链里的属于图片的提取出来
+
+                        for(StatusComment sc : statusComments.getComments()){
+                            if(CommonUtil.isEmpty(sc.getUrlMap())){
+                                continue;
+                            }
+
+                            for(StatusUrl statusUrl : sc.getUrlMap().values()){
+                                if(statusUrl.getType() == StatusUrl.PHOTO &&
+                                        statusUrl.getAnnotation() != null &&
+                                        statusUrl.getAnnotation() instanceof String){
+                                    //图片
+                                    List<String> imageUrls = sc.getImageUrls();
+                                    if(imageUrls == null){
+                                        sc.setImageUrls(imageUrls = new ArrayList<>());
+                                    }
+                                    imageUrls.add((String)statusUrl.getAnnotation());
+                                }
+                            }
+                        }
+                    }
+
+                    return Single.just(statusComments);
                 }
             };
         }

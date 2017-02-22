@@ -21,6 +21,7 @@ import com.hengye.share.module.util.encapsulation.base.DefaultDataHandler;
 import com.hengye.share.module.util.encapsulation.base.TaskState;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
+import com.hengye.share.ui.widget.recyclerview.DividerItemDecoration;
 import com.hengye.share.util.ClipboardUtil;
 import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.ToastUtil;
@@ -66,8 +67,9 @@ public class StatusHotCommentFragment extends ShareLoadDataCallbackFragment<Stat
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-
         super.onViewCreated(view, savedInstanceState);
+
+        getRecyclerView().addItemDecoration(new DividerItemDecoration(getContext()));
         setAdapter(mAdapter = new StatusCommentAdapter(getContext(), new ArrayList<StatusComment>(), true));
         setPager(mStatusNumberPager = new StatusNumberPager());
         setDataHandler(new DefaultDataHandler<>(mAdapter));
@@ -75,7 +77,6 @@ public class StatusHotCommentFragment extends ShareLoadDataCallbackFragment<Stat
         mPresenter = new StatusCommentPresenter(this, true);
 
         onRefresh();
-
         initView();
         mStatusCommentDialog = DialogBuilder.getStatusCommentDialog(getContext(), this);
     }

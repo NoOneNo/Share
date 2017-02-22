@@ -63,10 +63,10 @@ public class BaseApplication extends Application{
 		if(BuildConfig.DEBUG){
 			//监控内存泄漏
 			refWatcher = LeakCanary.install(this);
+		}else {
+			//初始化腾讯bugly
+			CrashReport.initCrashReport(BaseApplication.getInstance(), "900019432", false);
 		}
-
-		//初始化腾讯bugly
-		CrashReport.initCrashReport(BaseApplication.getInstance(), "900019432", false);
 
 		//初始化腾讯x5
 //		QbSdk.initX5Environment(BaseApplication.getInstance(), null);

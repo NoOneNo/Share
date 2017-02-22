@@ -40,6 +40,7 @@ import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.TransitionHelper;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.ViewUtil;
+import com.hengye.swiperefresh.SwipeRefreshLayout;
 
 public class PersonalHomepageActivity extends BaseActivity
         implements View.OnClickListener,
@@ -215,6 +216,15 @@ public class PersonalHomepageActivity extends BaseActivity
                     updateUserInfo();
                 }
             }, 500);
+        } else if (mUserInfo.getUid() == null) {
+            //用户信息为空，子fragment加载后会覆盖刷新事件
+            mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    updateUserInfo();
+                }
+            });
+            mSwipeRefresh.setRefreshing(true, true);
         }
 
 //        if (mUserInfo.getParent().isWeiBo()) {
@@ -388,7 +398,7 @@ public class PersonalHomepageActivity extends BaseActivity
     }
 
     private void initUserInfo(UserInfo userInfo) {
-//        mWBUserInfo = wbUserInfo;
+        mUserInfo = userInfo;
         mCollapsingToolbarLayout.setTitle(" " + userInfo.getName());
 //        mCover.setImageResource(R.drawable.bg_test);
         mCover.setImageUrl(userInfo.getCover());
@@ -431,26 +441,27 @@ public class PersonalHomepageActivity extends BaseActivity
     }
 
     private void loadData(final UserInfo userInfo) {
-        if (userInfo == null || userInfo.getParent().getType() != Parent.TYPE_WEIBO) {
-            return;
+        WBUserInfo wbUserInfoTemp = null;
+        if (userInfo != null && userInfo.getParent().getType() == Parent.TYPE_WEIBO) {
+            wbUserInfoTemp = userInfo.getWBUserInfoFromParent();
         }
 
-        final WBUserInfo wbUserInfo = userInfo.getWBUserInfoFromParent();
-        if (wbUserInfo == null) {
+        final WBUserInfo wbUserInfo = wbUserInfoTemp;
+
+        if(wbUserInfo == null){
             return;
         }
-
 //        if (mFragment == null) {
-            if (coverShowAnimator != null && !coverShowAnimator.isRunning()) {
-                setupFragment(wbUserInfo);
-            } else {
-                getHandler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        setupFragment(wbUserInfo);
-                    }
-                }, 500);
-            }
+        if (coverShowAnimator != null && !coverShowAnimator.isRunning()) {
+            setupFragment(wbUserInfo);
+        } else {
+            getHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    setupFragment(wbUserInfo);
+                }
+            }, 500);
+        }
 //        }
     }
 

@@ -142,12 +142,14 @@
 
     <!-- 显示头像 -->
     <string-array name="show_avatar_entries">
-        <item>微博</item>
-        <item>评论, 转发</item>
+        <item>微博头像</item>
+        <item>评论、转发头像</item>
+        <item>微博评论图片</item>
     </string-array>
     <string-array name="show_avatar_values">
         <item>1</item>
         <item>2</item>
+        <item>3</item>
     </string-array>
     <!-- 显示头像 -->
 </resources>

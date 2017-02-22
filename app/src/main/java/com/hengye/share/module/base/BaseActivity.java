@@ -261,7 +261,6 @@ public class BaseActivity extends AppCompatActivity
         setBackgroundIfNeed();
     }
 
-
     protected void overridePendingTransitionOnStart() {
         if (!isShowAnimationOnStart()) {
             setShowAnimationOnStart();
@@ -269,7 +268,6 @@ public class BaseActivity extends AppCompatActivity
         }
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
-
 
     protected void overridePendingTransitionOnFinish() {
         if (setFinishPendingTransition()) {

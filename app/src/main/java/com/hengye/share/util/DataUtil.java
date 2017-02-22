@@ -233,6 +233,7 @@ public class DataUtil {
                     sp.end -= totalIndentLength;
 
                     CharSequence spanValue = value.subSequence(sp.start, sp.end);
+                    //主要处理如果是热门微博，接口获取的数据是html。
                     if (!isHttpUrl(spanValue)) {
                         if (isStatus(spanValue)) {
                             sp.setContent(TOPIC_SCHEME + spanValue);

@@ -301,6 +301,13 @@ public class SettingHelper {
         return value == null || !value.contains("2");
     }
 
+    //显示评论图片
+    public static boolean isShowCommentPhoto(){
+        Set<String> value = isShowAvatar();
+        return value == null || !value.contains("3");
+    }
+
+    //微博下方显示选项按钮
     public static boolean isShowStatusOptions(){
         return getBoolean(KEY_HABIT_SHOW_STATUS_OPTIONS, false);
     }

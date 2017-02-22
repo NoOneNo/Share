@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:background="@color/background_default"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="horizontal">
 
     <Space
@@ -21,8 +21,8 @@
 
         <ImageView
             android:id="@+id/iv_repost"
-            android:layout_width="@dimen/icon_size_tiny"
-            android:layout_height="@dimen/icon_size_tiny"
+            android:layout_width="@dimen/icon_size_tiny_2"
+            android:layout_height="@dimen/icon_size_tiny_2"
             android:contentDescription="@null"
             android:src="@drawable/ic_repost_white_48dp"
             tools:tint="@color/status_content_light"/>
@@ -50,8 +50,8 @@
 
         <ImageView
             android:id="@+id/iv_comment"
-            android:layout_width="@dimen/icon_size_tiny"
-            android:layout_height="@dimen/icon_size_tiny"
+            android:layout_width="@dimen/icon_size_tiny_2"
+            android:layout_height="@dimen/icon_size_tiny_2"
             android:contentDescription="@null"
             android:src="@drawable/ic_comment_white_48dp"
             tools:tint="@color/status_content_light"/>
@@ -79,8 +79,8 @@
 
         <ImageView
             android:id="@+id/iv_attitude"
-            android:layout_width="@dimen/icon_size_tiny"
-            android:layout_height="@dimen/icon_size_tiny"
+            android:layout_width="@dimen/icon_size_tiny_2"
+            android:layout_height="@dimen/icon_size_tiny_2"
             android:contentDescription="@null"
             android:src="@drawable/ic_thumb_up_white_48dp"
             tools:tint="@color/status_content_light"/>

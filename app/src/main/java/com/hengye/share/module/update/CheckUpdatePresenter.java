@@ -1,16 +1,22 @@
 package com.hengye.share.module.update;
 
+import com.hengye.share.module.base.BaseApplication;
 import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.module.util.encapsulation.base.TaskState;
 import com.hengye.share.module.util.encapsulation.mvp.RxPresenter;
 import com.hengye.share.util.CommonUtil;
+import com.hengye.share.util.L;
 import com.hengye.share.util.http.retrofit.RetrofitManager;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
+import com.tencent.smtt.sdk.QbSdk;
 
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Single;
 import io.reactivex.SingleSource;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
 /**
@@ -72,6 +78,7 @@ public class CheckUpdatePresenter extends RxPresenter<CheckUpdateContract.View> 
                         if (updateBean != null) {
                             checkUpdateMvpView.onCheckUpdateComplete(updateBean);
                         }
+                        L.debug("check update do onSuccess ");
                     }
 
                     @Override
@@ -79,6 +86,16 @@ public class CheckUpdatePresenter extends RxPresenter<CheckUpdateContract.View> 
                         if (mIsForce) {
                             view.onCheckUpdateFail(TaskState.getFailState(e));
                         }
+                        L.debug("check update do onError ");
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        super.onComplete();
+//                        if(SettingHelper.isUseInternalBrowser()){
+//                            L.debug("initX5Environment");
+//                            QbSdk.initX5Environment(BaseApplication.getInstance(), null);
+//                        }
                     }
                 });
     }

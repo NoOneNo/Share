@@ -44,6 +44,7 @@ public class RxPresenter<V extends MvpView> extends BasePresenter<V> {
             if (isViewAttached()) {
                 onSuccess(getMvpView(), t);
             }
+            onComplete();
         }
 
         @Override
@@ -52,7 +53,11 @@ public class RxPresenter<V extends MvpView> extends BasePresenter<V> {
             if (isViewAttached()) {
                 onError(getMvpView(), e);
             }
+            onComplete();
         }
+
+        @Override
+        public void onComplete(){}
 
         @Override
         abstract public void onSuccess(V v, T t);

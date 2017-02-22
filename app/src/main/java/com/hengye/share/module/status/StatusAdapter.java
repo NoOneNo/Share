@@ -160,7 +160,12 @@ public class StatusAdapter extends CommonAdapter<Status>
             public void run() {
                 if (StatusTitleViewHolder.isClickStatusTitle(id)) {
                     StatusTitleViewHolder.onClickStatusTitle(getContext(), StatusAdapter.this, view, position, getItem(position).getUserInfo());
-                } else if (id == R.id.tv_status_content || id == R.id.gl_status_gallery || id == R.id.rl_status_title || id == R.id.ll_status_content || id == R.id.item_status_retweeted_content) {
+                } else if (id == R.id.tv_status_content ||
+                        id == R.id.gl_status_gallery ||
+                        id == R.id.rl_status_title ||
+                        id == R.id.ll_status_content ||
+                        id == R.id.item_status_retweeted_content ||
+                        id == R.id.layout_status_options) {
                     final boolean isRetweeted = (Boolean) view.getTag();
                     startStatusDetail(isRetweeted, position);
                 } else if (id == R.id.layout_repost) {
@@ -268,6 +273,9 @@ public class StatusAdapter extends CommonAdapter<Status>
                 registerOnClickListener(mStatusOptions.mRepostCount);
                 registerOnClickListener(mStatusOptions.mCommentCount);
                 registerOnClickListener(mStatusOptions.mAttitudeCount);
+                statusOptions.setTag(false);
+                registerOnClickListener(statusOptions);
+                statusOptions.setOnTouchListener(mStatusOnTouchListener);
             }
 
             registerOnClickListener(mStatusTitle.mAvatar);
@@ -312,7 +320,8 @@ public class StatusAdapter extends CommonAdapter<Status>
 //            SelectorLoader.getInstance().setDefaultRippleWhiteBackground(mRetweetStatus.mStatusLayout);
 
             SelectorLoader.getInstance().setDefaultRippleBackground(mRetweetStatus.mStatusLayout);
-            SelectorLoader.getInstance().setDefaultRippleWhiteBackground(mStatusItem);
+            SelectorLoader.getInstance().setDefaultRippleWhiteBackground(mStatusTotalItem);
+//            SelectorLoader.getInstance().setDefaultRippleWhiteBackground(mStatusItem);
         }
 
         private View.OnTouchListener mStatusOnTouchListener = new View.OnTouchListener() {
@@ -331,13 +340,13 @@ public class StatusAdapter extends CommonAdapter<Status>
 
                     boolean result = StatusUrlOnTouchListener.getInstance().onTouch(v, event);
                     if (!result) {
-                        mStatusItem.onTouchEvent(event);
+                        mStatusTotalItem.onTouchEvent(event);
                         return false;
                     } else {
                         return true;
                     }
                 } else {
-                    mStatusItem.onTouchEvent(event);
+                    mStatusTotalItem.onTouchEvent(event);
                     return false;
                 }
             }
@@ -397,6 +406,55 @@ public class StatusAdapter extends CommonAdapter<Status>
             mContent.setTag(isRetweeted);
             mGallery.setTag(isRetweeted);
             mStatusLayout.setTag(isRetweeted);
+
+            initGallery();
+        }
+
+        private void initGallery() {
+            final Context context = mGallery.getContext();
+            mGallery.setMargin(context.getResources().getDimensionPixelSize(R.dimen.status_gallery_iv_margin));
+            mGallery.setMaxWidth(mGalleryMaxWidth);
+            mGallery.setHandleData(new GridGalleryView.HandleData() {
+                @Override
+                public ImageView getImageView() {
+                    SuperImageView iv = new SuperImageView(context);
+                    iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    iv.setBackgroundColor(context.getResources().getColor(R.color.image_default_bg));
+                    iv.setTag(mGallery);
+                    iv.setId(View.NO_ID);
+                    return iv;
+                }
+
+                @Override
+                public void handleChildItem(ImageView imageView, int position) {
+                    ArrayList<String> urls = (ArrayList<String>) mGallery.getTag(View.NO_ID);
+                    SuperImageView iv = (SuperImageView) imageView;
+                    iv.setImageUrl(urls.get(position));
+                }
+            });
+            mGallery.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    int id = view.getId();
+                    if (id == View.NO_ID) {
+                        GridLayout gridLayout = (GridLayout) view.getTag();
+                        //noinspection unchecked
+                        ArrayList<String> urls = (ArrayList<String>) gridLayout.getTag(View.NO_ID);
+                        ArrayList<AnimationRect> animationRectArrayList
+                                = new ArrayList<>();
+                        for (int i = 0; i < urls.size(); i++) {
+                            final ImageView imageView = (ImageView) gridLayout
+                                    .getChildAt(i);
+                            if (imageView.getVisibility() == View.VISIBLE) {
+                                AnimationRect rect = AnimationRect.buildFromImageView(imageView);
+                                animationRectArrayList.add(rect);
+                            }
+                        }
+                        GalleryActivity
+                                .startWithIntent(context, urls, position, animationRectArrayList);
+                    }
+                }
+            });
         }
 
         public void initStatusContent(final Context context, Status status, boolean isRetweeted) {
@@ -407,66 +465,22 @@ public class StatusAdapter extends CommonAdapter<Status>
 //            mContent.setMovementMethod(SimpleLinkMovementMethod.getInstance());
 //            mContent.setOnTouchListener(StatusUrlOnTouchListener.getInstance());
 
+            initStatusGallery(status.getImageUrls());
+        }
 
-            if (!CommonUtil.isEmpty(status.getImageUrls())) {
+        public void initStatusGallery(List<String> urls) {
+            if (!CommonUtil.isEmpty(urls)) {
                 //加载图片
-                final List<String> urls = status.getImageUrls();
                 mGallery.removeAllViews();
                 mGallery.setTag(View.NO_ID, urls);
-                mGallery.setMargin(context.getResources().getDimensionPixelSize(R.dimen.status_gallery_iv_margin));
-                mGallery.setMaxWidth(mGalleryMaxWidth);
                 mGallery.setGridCount(urls.size());
-                mGallery.setHandleData(new GridGalleryView.HandleData() {
-                    @Override
-                    public ImageView getImageView() {
-                        SuperImageView iv = new SuperImageView(context);
-//                                iv.setFadeInImage(mIsFadeInImage);
-                        iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//                        iv.setScaleType(ImageView.ScaleType.FIT_XY);
-                        iv.setBackgroundColor(context.getResources().getColor(R.color.image_default_bg));
-                        iv.setTag(mGallery);
-                        iv.setId(View.NO_ID);
-                        return iv;
-                    }
-
-                    @Override
-                    public void handleChildItem(ImageView imageView, int position) {
-                        SuperImageView iv = (SuperImageView) imageView;
-                        iv.setImageUrl(urls.get(position));
-                    }
-                });
-                mGallery.setOnItemClickListener(new OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        int id = view.getId();
-                        if (id == View.NO_ID) {
-                            GridLayout gridLayout = (GridLayout) view.getTag();
-                            //noinspection unchecked
-                            ArrayList<String> urls = (ArrayList<String>) gridLayout.getTag(View.NO_ID);
-                            ArrayList<AnimationRect> animationRectArrayList
-                                    = new ArrayList<>();
-                            for (int i = 0; i < urls.size(); i++) {
-                                final ImageView imageView = (ImageView) gridLayout
-                                        .getChildAt(i);
-                                if (imageView.getVisibility() == View.VISIBLE) {
-                                    AnimationRect rect = AnimationRect.buildFromImageView(imageView);
-                                    animationRectArrayList.add(rect);
-                                }
-                            }
-
-//                            StatusGalleryActivity
-//                                    .startWithIntent(context, urls, position, animationRectArrayList);
-                            GalleryActivity
-                                    .startWithIntent(context, urls, position, animationRectArrayList);
-                        }
-                    }
-                });
                 mGallery.reset();
                 mGallery.setVisibility(View.VISIBLE);
-            } else {
+            } else{
                 mGallery.setVisibility(View.GONE);
             }
         }
+
     }
 
     public static class StatusOptionsViewHolder {
@@ -512,7 +526,7 @@ public class StatusAdapter extends CommonAdapter<Status>
 
             mAttitudeIcon.setImageDrawable(
                     DrawableLoader.setTintDrawable(R.drawable.ic_thumb_up_white_48dp,
-                    status.isLiked() ? ThemeUtil.getColor() : ThemeUtil.getIconTintColor()));
+                            status.isLiked() ? ThemeUtil.getColor() : ThemeUtil.getIconTintColor()));
 
             if (status.getRepostsCount() <= 0) {
                 mRepostCountTxt.setText(R.string.label_status_repost);

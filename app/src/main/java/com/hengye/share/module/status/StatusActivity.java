@@ -284,8 +284,20 @@ public class StatusActivity extends BaseActivity
             }
 
         });
-
         mMaterialSheetFab.showFab();
+
+        mFab.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if(mCurrentStatusFragment != null){
+                    mCurrentStatusFragment.onScrollToTop(false);
+                    mCurrentStatusFragment.setRefreshing(true);
+                    return true;
+                }
+                return false;
+            }
+        });
+
         mGroupsFragment = (GroupListFragment) getSupportFragmentManager().findFragmentById(R.id.group_list_fragment);
         //刷新当前选中的fragment
 

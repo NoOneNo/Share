@@ -21,6 +21,7 @@ import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListe
 import com.hengye.share.ui.widget.dialog.LoadingDialog;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
 import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemTouchUtil;
+import com.hengye.share.ui.widget.recyclerview.DividerItemDecoration;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.ToastUtil;
 import com.hengye.share.util.UserUtil;
@@ -56,6 +57,9 @@ public class GroupManageFragment extends ShareRecyclerFragment implements GroupM
 
     private void initView() {
         setHasOptionsMenu(true);
+        DividerItemDecoration decoration = new DividerItemDecoration(getContext());
+        decoration.ignoreLastItem(true);
+        getRecyclerView().addItemDecoration(decoration);
         setAdapter(mAdapter = new GroupManageAdapter(getContext(), new ArrayList<GroupList>()));
 
         ItemTouchUtil.attachByDrag(getRecyclerView(), mAdapter);

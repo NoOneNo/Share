@@ -20,6 +20,7 @@ import com.hengye.share.module.status.StatusTitleViewHolder;
 import com.hengye.share.module.util.encapsulation.base.TaskState;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
 import com.hengye.share.ui.widget.fab.FabAnimator;
+import com.hengye.share.ui.widget.recyclerview.DividerItemDecoration;
 import com.hengye.share.util.ClipboardUtil;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.ResUtil;
@@ -88,8 +89,9 @@ public class StatusCommentFragment extends ShareLoadDataCallbackFragment<StatusC
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-
         super.onViewCreated(view, savedInstanceState);
+
+        getRecyclerView().addItemDecoration(new DividerItemDecoration(getContext()));
         boolean isLikeMode = mIsComment && !UserUtil.isAdTokenEmpty();
         setAdapter(mAdapter = new StatusCommentAdapter(getContext(), new ArrayList<StatusComment>(), isLikeMode), true);
         setPager(mStatusPager = new StatusAdapterIdPager(mAdapter));

@@ -16,6 +16,7 @@ import com.hengye.share.module.status.ShareLoadDataCallbackFragment;
 import com.hengye.share.module.util.encapsulation.base.NumberPager;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.ui.widget.fab.FabAnimator;
+import com.hengye.share.ui.widget.recyclerview.DividerItemDecoration;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.handler.StatusNumberPager;
@@ -67,6 +68,7 @@ public class StatusLikeFragment extends ShareLoadDataCallbackFragment<UserInfo>
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        getRecyclerView().addItemDecoration(new DividerItemDecoration(getContext()));
         setAdapter(mAdapter = new UserListAdapter(getContext()));
         setPager(mPager = new StatusNumberPager());
         setDataHandler(new StatusRefreshIdHandler<>(mAdapter));
