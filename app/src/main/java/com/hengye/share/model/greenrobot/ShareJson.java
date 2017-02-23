@@ -10,7 +10,6 @@ import org.greenrobot.greendao.DaoException;
 import android.support.annotation.NonNull;
 
 import com.hengye.share.util.GsonUtil;
-import com.hengye.share.util.rxjava.datasource.ObservableHelper;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 import com.hengye.share.util.thirdparty.WBUtil;
 
@@ -18,7 +17,8 @@ import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.SingleSource;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 // KEEP INCLUDES END
@@ -131,22 +131,22 @@ public class ShareJson implements java.io.Serializable {
         if (data == null) {
             data = Collections.emptyList();
         }
-        ObservableHelper
+        Single
                 .just(data)
-                .flatMap(new Function<List, Observable<List>>() {
+                .flatMap(new Function<List, SingleSource<List>>() {
                     @Override
-                    public Observable<List> apply(@NonNull List data) {
+                    public SingleSource<List> apply(@NonNull List data) {
                         int requestCount = WBUtil.getWBStatusRequestCount();
                         int maxCacheCount = requestCount * 2;
                         if (requestCount > 0 && !data.isEmpty() && data.size() > maxCacheCount) {
                             data = data.subList(0, maxCacheCount);
                         }
-                        return ObservableHelper.just(data);
+                        return Single.just(data);
                     }
                 })
-                .doOnNext(new Consumer<List>() {
+                .doOnSuccess(new Consumer<List>() {
                     @Override
-                    public void accept(List data) {
+                    public void accept(List data) throws Exception {
                         GreenDaoManager
                                 .getDaoSession()
                                 .getShareJsonDao()

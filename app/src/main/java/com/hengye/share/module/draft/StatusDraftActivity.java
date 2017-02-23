@@ -114,7 +114,7 @@ public class StatusDraftActivity extends BaseActivity implements DialogInterface
 //                    TopicDraftHelper.saveStatusDraft(topicDraft, TopicDraft.SENDING);
                     mAdapter.removeItem(position);
                     StatusPublishService.publish(StatusDraftActivity.this, statusDraft, UserUtil.getToken());
-                } else if (id == R.id.tv_status_content || id == R.id.gl_status_gallery || id == R.id.rl_status_title || id == R.id.ll_status_content || id == R.id.item_status_retweeted_content) {
+                } else if (id == R.id.tv_status_content || id == R.id.gl_status_gallery || id == R.id.layout_status_title || id == R.id.ll_status_content || id == R.id.item_status_retweeted_content) {
                     final boolean isRetweeted = (Boolean) view.getTag();
                     if (!isRetweeted) {
                         startPublishStatus(position);

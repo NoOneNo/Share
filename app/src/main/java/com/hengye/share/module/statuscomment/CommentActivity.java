@@ -1,4 +1,4 @@
-package com.hengye.share.module.status;
+package com.hengye.share.module.statuscomment;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -6,12 +6,14 @@ import android.support.v4.view.ViewPager;
 
 import com.hengye.share.R;
 import com.hengye.share.module.base.BaseActivity;
+import com.hengye.share.module.status.StatusNotifyFragmentPager;
+import com.hengye.share.module.status.StatusPresenter;
 import com.hengye.share.util.ResUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StatusCommentActivity extends BaseActivity{
+public class CommentActivity extends BaseActivity{
 
     @Override
     protected boolean setToolBar() {

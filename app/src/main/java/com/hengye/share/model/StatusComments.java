@@ -1,5 +1,6 @@
 package com.hengye.share.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,7 +21,7 @@ public class StatusComments {
     private long totalNumber;
     private long hotTotalNumber;
 
-    private List<StatusComment> comments;
+    private ArrayList<StatusComment> comments;
 
     public long getTotalNumber() {
         return totalNumber;
@@ -38,11 +39,11 @@ public class StatusComments {
         this.hotTotalNumber = hotTotalNumber;
     }
 
-    public List<StatusComment> getComments() {
+    public ArrayList<StatusComment> getComments() {
         return comments;
     }
 
-    public void setComments(List<StatusComment> comments) {
+    public void setComments(ArrayList<StatusComment> comments) {
         this.comments = comments;
     }
 

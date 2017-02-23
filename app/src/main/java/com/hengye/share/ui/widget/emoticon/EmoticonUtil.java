@@ -40,7 +40,7 @@ public class EmoticonUtil {
 //    private static final SparseIntArray mEmojiMap = new SparseIntArray(101);
     private static final SparseIntArray mSoftbankMap = new SparseIntArray(89);
     private static final Map<Integer, Integer> mEmojiMap = new LinkedHashMap<>(101);
-    private static Map<String, Integer> mWeiBoEmoticonMap = new LinkedHashMap<>();
+    private static Map<WBKey, Integer> mWeiBoEmoticonMap = new LinkedHashMap<>();
     private static Map<String, Integer> mLxhEmoticonMap = new LinkedHashMap<>();
 
     private static List<Emoticon> mWeiboEmoticons = null;
@@ -118,7 +118,7 @@ public class EmoticonUtil {
             int end = localMatcher.end();
             if (end - start < 10) {
                 //表情文字描述长度都小于10
-                Integer emoticonResId = mWeiBoEmoticonMap.get(key);
+                Integer emoticonResId = mWeiBoEmoticonMap.get(new WBKey(key));
                 if(emoticonResId == null){
                     emoticonResId = mLxhEmoticonMap.get(key);
                 }
@@ -173,8 +173,12 @@ public class EmoticonUtil {
         }
 
         mWeiboEmoticons = new ArrayList<>();
-        for(Map.Entry<String, Integer> entry : mWeiBoEmoticonMap.entrySet()){
-            mWeiboEmoticons.add(new Emoticon(entry.getKey(), entry.getValue()));
+        for(Map.Entry<WBKey, Integer> entry : mWeiBoEmoticonMap.entrySet()){
+            WBKey emoticonKey = entry.getKey();
+            if(emoticonKey.isTraditional()){
+                continue;
+            }
+            mWeiboEmoticons.add(new Emoticon(emoticonKey.getKey(), entry.getValue()));
         }
         return mWeiboEmoticons;
     }
@@ -284,135 +288,231 @@ public class EmoticonUtil {
         }
     }
 
+    private static class WBKey {
+
+        public WBKey(String key) {
+            this(key, false);
+        }
+
+        public WBKey(String key, boolean traditional) {
+            this.key = key;
+            this.traditional = traditional;
+        }
+
+        private String key;//简体或者繁体，解决IOS使用繁体字发表情时发出来的是繁体字
+
+        private boolean traditional;//是否繁體，或者旧版的key
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            WBKey that = (WBKey) o;
+
+            return key.equals(that.key);
+
+        }
+
+        @Override
+        public int hashCode() {
+            return key.hashCode();
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        public boolean isTraditional() {
+            return traditional;
+        }
+    }
+
     static{
         //微博表情
-
-        //---
-        mWeiBoEmoticonMap.put("[最右]", R.drawable.d_zuiyou);
-        mWeiBoEmoticonMap.put("[摊手]", R.drawable.d_tanshou);
-        mWeiBoEmoticonMap.put("[抱抱]", R.drawable.d_baobao);
-        mWeiBoEmoticonMap.put("[二哈]", R.drawable.d_erha);
-        mWeiBoEmoticonMap.put("[doge]", R.drawable.d_doge);
-        mWeiBoEmoticonMap.put("[喵喵]", R.drawable.d_miao);
-        mWeiBoEmoticonMap.put("[微笑]", R.drawable.d_hehe);
-        mWeiBoEmoticonMap.put("[嘻嘻]", R.drawable.d_xixi);
-        mWeiBoEmoticonMap.put("[哈哈]", R.drawable.d_haha);
-        mWeiBoEmoticonMap.put("[爱你]", R.drawable.d_aini);
-        mWeiBoEmoticonMap.put("[挖鼻]", R.drawable.d_wabishi);
-        mWeiBoEmoticonMap.put("[吃惊]", R.drawable.d_chijing);
-        mWeiBoEmoticonMap.put("[晕]", R.drawable.d_yun);
-        mWeiBoEmoticonMap.put("[泪]", R.drawable.d_lei);
-        mWeiBoEmoticonMap.put("[馋嘴]", R.drawable.d_chanzui);
-        mWeiBoEmoticonMap.put("[抓狂]", R.drawable.d_zhuakuang);
-        mWeiBoEmoticonMap.put("[哼]", R.drawable.d_heng);
-        mWeiBoEmoticonMap.put("[可爱]", R.drawable.d_keai);
-        mWeiBoEmoticonMap.put("[怒]", R.drawable.d_nu);
-        mWeiBoEmoticonMap.put("[汗]", R.drawable.d_han);
-        mWeiBoEmoticonMap.put("[害羞]", R.drawable.d_haixiu);
-        mWeiBoEmoticonMap.put("[睡]", R.drawable.d_shuijiao);
-        mWeiBoEmoticonMap.put("[钱]", R.drawable.d_qian);
-        mWeiBoEmoticonMap.put("[偷笑]", R.drawable.d_touxiao);
-        mWeiBoEmoticonMap.put("[笑cry]", R.drawable.d_xiaoku);
-        mWeiBoEmoticonMap.put("[酷]", R.drawable.d_ku);
-        mWeiBoEmoticonMap.put("[衰]", R.drawable.d_shuai);
-        mWeiBoEmoticonMap.put("[闭嘴]", R.drawable.d_bizui);
-        mWeiBoEmoticonMap.put("[鄙视]", R.drawable.d_bishi);
+        mWeiBoEmoticonMap.put(new WBKey("[最右]"), R.drawable.d_zuiyou);
+        mWeiBoEmoticonMap.put(new WBKey("[摊手]"), R.drawable.d_tanshou);
+        mWeiBoEmoticonMap.put(new WBKey("[攤手]", true), R.drawable.d_tanshou);
+        mWeiBoEmoticonMap.put(new WBKey("[抱抱]"), R.drawable.d_baobao);
+        mWeiBoEmoticonMap.put(new WBKey("[二哈]"), R.drawable.d_erha);
+        mWeiBoEmoticonMap.put(new WBKey("[doge]"), R.drawable.d_doge);
+        mWeiBoEmoticonMap.put(new WBKey("[喵喵]"), R.drawable.d_miao);
+        mWeiBoEmoticonMap.put(new WBKey("[微笑]"), R.drawable.d_hehe);
+        mWeiBoEmoticonMap.put(new WBKey("[呵呵]", true), R.drawable.d_hehe);//旧版本
+        mWeiBoEmoticonMap.put(new WBKey("[嘻嘻]"), R.drawable.d_xixi);
+        mWeiBoEmoticonMap.put(new WBKey("[哈哈]"), R.drawable.d_haha);
+        mWeiBoEmoticonMap.put(new WBKey("[爱你]"), R.drawable.d_aini);
+        mWeiBoEmoticonMap.put(new WBKey("[愛你]", true), R.drawable.d_aini);
+        mWeiBoEmoticonMap.put(new WBKey("[挖鼻]"), R.drawable.d_wabishi);
+        mWeiBoEmoticonMap.put(new WBKey("[吃惊]"), R.drawable.d_chijing);
+        mWeiBoEmoticonMap.put(new WBKey("[吃驚]", true), R.drawable.d_chijing);
+        mWeiBoEmoticonMap.put(new WBKey("[晕]"), R.drawable.d_yun);
+        mWeiBoEmoticonMap.put(new WBKey("[暈]", true), R.drawable.d_yun);
+        mWeiBoEmoticonMap.put(new WBKey("[泪]"), R.drawable.d_lei);
+        mWeiBoEmoticonMap.put(new WBKey("[淚]", true), R.drawable.d_lei);
+        mWeiBoEmoticonMap.put(new WBKey("[馋嘴]"), R.drawable.d_chanzui);
+        mWeiBoEmoticonMap.put(new WBKey("[饞嘴]", true), R.drawable.d_chanzui);
+        mWeiBoEmoticonMap.put(new WBKey("[抓狂]"), R.drawable.d_zhuakuang);
+        mWeiBoEmoticonMap.put(new WBKey("[哼]"), R.drawable.d_heng);
+        mWeiBoEmoticonMap.put(new WBKey("[可爱]"), R.drawable.d_keai);
+        mWeiBoEmoticonMap.put(new WBKey("[可愛]", true), R.drawable.d_keai);
+        mWeiBoEmoticonMap.put(new WBKey("[怒]"), R.drawable.d_nu);
+        mWeiBoEmoticonMap.put(new WBKey("[汗]"), R.drawable.d_han);
+        mWeiBoEmoticonMap.put(new WBKey("[害羞]"), R.drawable.d_haixiu);
+        mWeiBoEmoticonMap.put(new WBKey("[睡]"), R.drawable.d_shuijiao);
+        mWeiBoEmoticonMap.put(new WBKey("[钱]"), R.drawable.d_qian);
+        mWeiBoEmoticonMap.put(new WBKey("[錢]", true), R.drawable.d_qian);
+        mWeiBoEmoticonMap.put(new WBKey("[偷笑]"), R.drawable.d_touxiao);
+        mWeiBoEmoticonMap.put(new WBKey("[笑cry]"), R.drawable.d_xiaoku);
+        mWeiBoEmoticonMap.put(new WBKey("[酷]"), R.drawable.d_ku);
+        mWeiBoEmoticonMap.put(new WBKey("[衰]"), R.drawable.d_shuai);
+        mWeiBoEmoticonMap.put(new WBKey("[闭嘴]"), R.drawable.d_bizui);
+        mWeiBoEmoticonMap.put(new WBKey("[閉嘴]", true), R.drawable.d_bizui);
+        mWeiBoEmoticonMap.put(new WBKey("[鄙视]"), R.drawable.d_bishi);
+        mWeiBoEmoticonMap.put(new WBKey("[鄙視]", true), R.drawable.d_bishi);
         //花心->色
-        mWeiBoEmoticonMap.put("[色]", R.drawable.d_huaxin);
-        mWeiBoEmoticonMap.put("[鼓掌]", R.drawable.d_guzhang);
-        mWeiBoEmoticonMap.put("[悲伤]", R.drawable.d_beishang);
-        mWeiBoEmoticonMap.put("[思考]", R.drawable.d_sikao);
-        mWeiBoEmoticonMap.put("[生病]", R.drawable.d_shengbing);
-        mWeiBoEmoticonMap.put("[亲亲]", R.drawable.d_qinqin);
-        mWeiBoEmoticonMap.put("[怒骂]", R.drawable.d_numa);
-        mWeiBoEmoticonMap.put("[太开心]", R.drawable.d_taikaixin);
-        mWeiBoEmoticonMap.put("[白眼]", R.drawable.d_landelini);
-        mWeiBoEmoticonMap.put("[右哼哼]", R.drawable.d_youhengheng);
-        mWeiBoEmoticonMap.put("[左哼哼]", R.drawable.d_zuohengheng);
-        mWeiBoEmoticonMap.put("[嘘]", R.drawable.d_xu);
-        mWeiBoEmoticonMap.put("[委屈]", R.drawable.d_weiqu);
-        mWeiBoEmoticonMap.put("[吐]", R.drawable.d_tu);
-        mWeiBoEmoticonMap.put("[可怜]", R.drawable.d_kelian);
-        mWeiBoEmoticonMap.put("[哈欠]", R.drawable.d_dahaqi);
-        mWeiBoEmoticonMap.put("[挤眼]", R.drawable.d_jiyan);
-        mWeiBoEmoticonMap.put("[失望]", R.drawable.d_shiwang);
-        mWeiBoEmoticonMap.put("[顶]", R.drawable.d_ding);
-        mWeiBoEmoticonMap.put("[疑问]", R.drawable.d_yiwen);
-        mWeiBoEmoticonMap.put("[困]", R.drawable.d_kun);
-        mWeiBoEmoticonMap.put("[感冒]", R.drawable.d_ganmao);
-        mWeiBoEmoticonMap.put("[拜拜]", R.drawable.d_baibai);
-        mWeiBoEmoticonMap.put("[黑线]", R.drawable.d_heixian);
-        mWeiBoEmoticonMap.put("[阴险]", R.drawable.d_yinxian);
-        mWeiBoEmoticonMap.put("[打脸]", R.drawable.d_dalian);
-        mWeiBoEmoticonMap.put("[傻眼]", R.drawable.d_shayan);
-//        mWeiBoEmoticonMap.put("[马到成功]", R.drawable.d_madaochenggong);
-        mWeiBoEmoticonMap.put("[骷髅]", R.drawable.d_kulou);
-        mWeiBoEmoticonMap.put("[坏笑]", R.drawable.d_huaixiao);
+        mWeiBoEmoticonMap.put(new WBKey("[色]"), R.drawable.d_huaxin);
+        mWeiBoEmoticonMap.put(new WBKey("[鼓掌]"), R.drawable.d_guzhang);
+        mWeiBoEmoticonMap.put(new WBKey("[悲伤]"), R.drawable.d_beishang);
+        mWeiBoEmoticonMap.put(new WBKey("[悲傷]", true), R.drawable.d_beishang);
+        mWeiBoEmoticonMap.put(new WBKey("[思考]"), R.drawable.d_sikao);
+        mWeiBoEmoticonMap.put(new WBKey("[生病]"), R.drawable.d_shengbing);
+        mWeiBoEmoticonMap.put(new WBKey("[亲亲]"), R.drawable.d_qinqin);
+        mWeiBoEmoticonMap.put(new WBKey("[親親]", true), R.drawable.d_qinqin);
+        mWeiBoEmoticonMap.put(new WBKey("[怒骂]"), R.drawable.d_numa);
+        mWeiBoEmoticonMap.put(new WBKey("[怒罵]", true), R.drawable.d_numa);
+        mWeiBoEmoticonMap.put(new WBKey("[太开心]"), R.drawable.d_taikaixin);
+        mWeiBoEmoticonMap.put(new WBKey("[太開心]", true), R.drawable.d_taikaixin);
+        mWeiBoEmoticonMap.put(new WBKey("[白眼]"), R.drawable.d_landelini);
+        mWeiBoEmoticonMap.put(new WBKey("[右哼哼]"), R.drawable.d_youhengheng);
+        mWeiBoEmoticonMap.put(new WBKey("[左哼哼]"), R.drawable.d_zuohengheng);
+        mWeiBoEmoticonMap.put(new WBKey("[嘘]"), R.drawable.d_xu);
+        mWeiBoEmoticonMap.put(new WBKey("[委屈]"), R.drawable.d_weiqu);
+        mWeiBoEmoticonMap.put(new WBKey("[吐]"), R.drawable.d_tu);
+        mWeiBoEmoticonMap.put(new WBKey("[可怜]"), R.drawable.d_kelian);
+        mWeiBoEmoticonMap.put(new WBKey("[可憐]", true), R.drawable.d_kelian);
+        mWeiBoEmoticonMap.put(new WBKey("[哈欠]"), R.drawable.d_dahaqi);
+        mWeiBoEmoticonMap.put(new WBKey("[挤眼]"), R.drawable.d_jiyan);
+        mWeiBoEmoticonMap.put(new WBKey("[擠眼]", true), R.drawable.d_jiyan);
+        mWeiBoEmoticonMap.put(new WBKey("[失望]"), R.drawable.d_shiwang);
+        mWeiBoEmoticonMap.put(new WBKey("[顶]"), R.drawable.d_ding);
+        mWeiBoEmoticonMap.put(new WBKey("[頂]", true), R.drawable.d_ding);
+        mWeiBoEmoticonMap.put(new WBKey("[疑问]"), R.drawable.d_yiwen);
+        mWeiBoEmoticonMap.put(new WBKey("[疑問]", true), R.drawable.d_yiwen);
+        mWeiBoEmoticonMap.put(new WBKey("[困]"), R.drawable.d_kun);
+        mWeiBoEmoticonMap.put(new WBKey("[感冒]"), R.drawable.d_ganmao);
+        mWeiBoEmoticonMap.put(new WBKey("[拜拜]"), R.drawable.d_baibai);
+        mWeiBoEmoticonMap.put(new WBKey("[黑线]"), R.drawable.d_heixian);
+        mWeiBoEmoticonMap.put(new WBKey("[黑線]", true), R.drawable.d_heixian);
+        mWeiBoEmoticonMap.put(new WBKey("[阴险]"), R.drawable.d_yinxian);
+        mWeiBoEmoticonMap.put(new WBKey("[陰險]", true), R.drawable.d_yinxian);
+        mWeiBoEmoticonMap.put(new WBKey("[打脸]"), R.drawable.d_dalian);
+        mWeiBoEmoticonMap.put(new WBKey("[打臉]", true), R.drawable.d_dalian);
+        mWeiBoEmoticonMap.put(new WBKey("[傻眼]"), R.drawable.d_shayan);
+//        mWeiBoEmoticonMap.put(new WBEmoticonKey("[马到成功]), R.drawable.d_madaochenggong);
+        mWeiBoEmoticonMap.put(new WBKey("[骷髅]"), R.drawable.d_kulou);
+        mWeiBoEmoticonMap.put(new WBKey("[骷髏]", true), R.drawable.d_kulou);
+        mWeiBoEmoticonMap.put(new WBKey("[坏笑]"), R.drawable.d_huaixiao);
+        mWeiBoEmoticonMap.put(new WBKey("[壞笑]", true), R.drawable.d_huaixiao);
         //舔-舔屏
-        mWeiBoEmoticonMap.put("[舔屏]", R.drawable.d_tian);
-        mWeiBoEmoticonMap.put("[污]", R.drawable.d_wu);
-        mWeiBoEmoticonMap.put("[互粉]", R.drawable.f_hufen);
+        mWeiBoEmoticonMap.put(new WBKey("[舔屏]"), R.drawable.d_tian);
+        mWeiBoEmoticonMap.put(new WBKey("[污]"), R.drawable.d_wu);
+        mWeiBoEmoticonMap.put(new WBKey("[互粉]"), R.drawable.f_hufen);
 
         //哆啦A梦
-        mWeiBoEmoticonMap.put("[哆啦A梦吃惊]", R.drawable.dora_chijing);
-        mWeiBoEmoticonMap.put("[哆啦A梦花心]", R.drawable.dora_huaxin);
-        mWeiBoEmoticonMap.put("[哆啦A梦微笑]", R.drawable.dora_weixiao);
-        mWeiBoEmoticonMap.put("[哆啦A梦汗]", R.drawable.dora_han);
-        mWeiBoEmoticonMap.put("[哆啦A梦害怕]", R.drawable.dora_haipa);
+        mWeiBoEmoticonMap.put(new WBKey("[哆啦A梦吃惊]"), R.drawable.dora_chijing);
+        mWeiBoEmoticonMap.put(new WBKey("[哆啦A夢吃驚]", true), R.drawable.dora_chijing);
+        mWeiBoEmoticonMap.put(new WBKey("[哆啦A梦花心]"), R.drawable.dora_huaxin);
+        mWeiBoEmoticonMap.put(new WBKey("[哆啦A夢花心]", true), R.drawable.dora_huaxin);
+        mWeiBoEmoticonMap.put(new WBKey("[哆啦A梦微笑]"), R.drawable.dora_weixiao);
+        mWeiBoEmoticonMap.put(new WBKey("[哆啦A夢微笑]", true), R.drawable.dora_weixiao);
+        mWeiBoEmoticonMap.put(new WBKey("[哆啦A梦汗]"), R.drawable.dora_han);
+        mWeiBoEmoticonMap.put(new WBKey("[哆啦A夢汗]", true), R.drawable.dora_han);
+        mWeiBoEmoticonMap.put(new WBKey("[哆啦A梦害怕]"), R.drawable.dora_haipa);
+        mWeiBoEmoticonMap.put(new WBKey("[哆啦A夢害怕]", true), R.drawable.dora_haipa);
 
-        mWeiBoEmoticonMap.put("[心]", R.drawable.l_xin);
-        mWeiBoEmoticonMap.put("[伤心]", R.drawable.l_shangxin);
-        mWeiBoEmoticonMap.put("[猪头]", R.drawable.d_zhutou);
-        mWeiBoEmoticonMap.put("[熊猫]", R.drawable.d_xiongmao);
-        mWeiBoEmoticonMap.put("[兔子]", R.drawable.d_tuzi);
-        mWeiBoEmoticonMap.put("[握手]", R.drawable.h_woshou);
-        mWeiBoEmoticonMap.put("[作揖]", R.drawable.h_zuoyi);
-        mWeiBoEmoticonMap.put("[赞]", R.drawable.h_zan);
-        mWeiBoEmoticonMap.put("[耶]", R.drawable.h_ye);
-        mWeiBoEmoticonMap.put("[good]", R.drawable.h_good);
-        mWeiBoEmoticonMap.put("[弱]", R.drawable.h_ruo);
-        mWeiBoEmoticonMap.put("[NO]", R.drawable.h_buyao);
-        mWeiBoEmoticonMap.put("[ok]", R.drawable.h_ok);
-        mWeiBoEmoticonMap.put("[haha]", R.drawable.h_haha);
-        mWeiBoEmoticonMap.put("[来]", R.drawable.h_lai);
-        mWeiBoEmoticonMap.put("[拳头]", R.drawable.h_quantou);
-        mWeiBoEmoticonMap.put("[加油]", R.drawable.h_jiayou);
-        mWeiBoEmoticonMap.put("[威武]", R.drawable.f_v5);
-        mWeiBoEmoticonMap.put("[鲜花]", R.drawable.w_xianhua);
-        mWeiBoEmoticonMap.put("[钟]", R.drawable.o_zhong);
-        mWeiBoEmoticonMap.put("[浮云]", R.drawable.w_fuyun);
-        mWeiBoEmoticonMap.put("[飞机]", R.drawable.o_feiji);
-        mWeiBoEmoticonMap.put("[月亮]", R.drawable.w_yueliang);
-        mWeiBoEmoticonMap.put("[太阳]", R.drawable.w_taiyang);
-        mWeiBoEmoticonMap.put("[微风]", R.drawable.w_weifeng);
-        mWeiBoEmoticonMap.put("[下雨]", R.drawable.w_xiayu);
-        mWeiBoEmoticonMap.put("[带着微博去旅行]", R.drawable.f_eventtravel);
-        mWeiBoEmoticonMap.put("[给力]", R.drawable.f_geili);
-        mWeiBoEmoticonMap.put("[广告]", R.drawable.f_guanggao);
-        mWeiBoEmoticonMap.put("[神马]", R.drawable.f_shenma);
-        mWeiBoEmoticonMap.put("[围观]", R.drawable.o_weiguan);
-        mWeiBoEmoticonMap.put("[话筒]", R.drawable.o_huatong);
-        mWeiBoEmoticonMap.put("[奥特曼]", R.drawable.d_aoteman);
-        mWeiBoEmoticonMap.put("[草泥马]", R.drawable.d_shenshou);
-        mWeiBoEmoticonMap.put("[萌]", R.drawable.f_meng);
-        mWeiBoEmoticonMap.put("[囧]", R.drawable.f_jiong);
-        mWeiBoEmoticonMap.put("[织]", R.drawable.f_zhi);
-        mWeiBoEmoticonMap.put("[礼物]", R.drawable.o_liwu);
-        mWeiBoEmoticonMap.put("[发红包]", R.drawable.f_fahongbao);
-        mWeiBoEmoticonMap.put("[囍]", R.drawable.f_xi);
-        mWeiBoEmoticonMap.put("[围脖]", R.drawable.o_weibo);
-        mWeiBoEmoticonMap.put("[音乐]", R.drawable.o_yinyue);
-        mWeiBoEmoticonMap.put("[绿丝带]", R.drawable.o_lvsidai);
-        mWeiBoEmoticonMap.put("[蛋糕]", R.drawable.o_dangao);
-        mWeiBoEmoticonMap.put("[蜡烛]", R.drawable.o_lazhu);
-        mWeiBoEmoticonMap.put("[干杯]", R.drawable.o_ganbei);
-        mWeiBoEmoticonMap.put("[男孩儿]", R.drawable.d_nanhaier);
-        mWeiBoEmoticonMap.put("[女孩儿]", R.drawable.d_nvhaier);
-        mWeiBoEmoticonMap.put("[肥皂]", R.drawable.d_feizao);
-        mWeiBoEmoticonMap.put("[照相机]", R.drawable.o_zhaoxiangji);
-        mWeiBoEmoticonMap.put("[浪]", R.drawable.d_lang);
-        mWeiBoEmoticonMap.put("[沙尘暴]", R.drawable.w_shachenbao);
-
+        mWeiBoEmoticonMap.put(new WBKey("[心]"), R.drawable.l_xin);
+        mWeiBoEmoticonMap.put(new WBKey("[伤心]"), R.drawable.l_shangxin);
+        mWeiBoEmoticonMap.put(new WBKey("[傷心]", true), R.drawable.l_shangxin);
+        mWeiBoEmoticonMap.put(new WBKey("[猪头]"), R.drawable.d_zhutou);
+        mWeiBoEmoticonMap.put(new WBKey("[豬頭]", true), R.drawable.d_zhutou);
+        mWeiBoEmoticonMap.put(new WBKey("[熊猫]"), R.drawable.d_xiongmao);
+        mWeiBoEmoticonMap.put(new WBKey("[熊貓]", true), R.drawable.d_xiongmao);
+        mWeiBoEmoticonMap.put(new WBKey("[兔子]"), R.drawable.d_tuzi);
+        mWeiBoEmoticonMap.put(new WBKey("[握手]"), R.drawable.h_woshou);
+        mWeiBoEmoticonMap.put(new WBKey("[作揖]"), R.drawable.h_zuoyi);
+        mWeiBoEmoticonMap.put(new WBKey("[赞]"), R.drawable.h_zan);
+        mWeiBoEmoticonMap.put(new WBKey("[贊]", true), R.drawable.h_zan);
+        mWeiBoEmoticonMap.put(new WBKey("[耶]"), R.drawable.h_ye);
+        mWeiBoEmoticonMap.put(new WBKey("[good]"), R.drawable.h_good);
+        mWeiBoEmoticonMap.put(new WBKey("[弱]"), R.drawable.h_ruo);
+        mWeiBoEmoticonMap.put(new WBKey("[NO]"), R.drawable.h_buyao);
+        mWeiBoEmoticonMap.put(new WBKey("[ok]"), R.drawable.h_ok);
+        mWeiBoEmoticonMap.put(new WBKey("[haha]"), R.drawable.h_haha);
+        mWeiBoEmoticonMap.put(new WBKey("[来]"), R.drawable.h_lai);
+        mWeiBoEmoticonMap.put(new WBKey("[拳头]"), R.drawable.h_quantou);
+        mWeiBoEmoticonMap.put(new WBKey("[拳頭]", true), R.drawable.h_quantou);
+        mWeiBoEmoticonMap.put(new WBKey("[加油]"), R.drawable.h_jiayou);
+        mWeiBoEmoticonMap.put(new WBKey("[威武]"), R.drawable.f_v5);
+        mWeiBoEmoticonMap.put(new WBKey("[鲜花]"), R.drawable.w_xianhua);
+        mWeiBoEmoticonMap.put(new WBKey("[鮮花]", true), R.drawable.w_xianhua);
+        mWeiBoEmoticonMap.put(new WBKey("[钟]"), R.drawable.o_zhong);
+        mWeiBoEmoticonMap.put(new WBKey("[鐘]", true), R.drawable.o_zhong);
+        mWeiBoEmoticonMap.put(new WBKey("[浮云]"), R.drawable.w_fuyun);
+        mWeiBoEmoticonMap.put(new WBKey("[浮雲]", true), R.drawable.w_fuyun);
+        mWeiBoEmoticonMap.put(new WBKey("[飞机]"), R.drawable.o_feiji);
+        mWeiBoEmoticonMap.put(new WBKey("[飛機]", true), R.drawable.o_feiji);
+        mWeiBoEmoticonMap.put(new WBKey("[月亮]"), R.drawable.w_yueliang);
+        mWeiBoEmoticonMap.put(new WBKey("[太阳]"), R.drawable.w_taiyang);
+        mWeiBoEmoticonMap.put(new WBKey("[太陽]", true), R.drawable.w_taiyang);
+        mWeiBoEmoticonMap.put(new WBKey("[微风]"), R.drawable.w_weifeng);
+        mWeiBoEmoticonMap.put(new WBKey("[微風]", true), R.drawable.w_weifeng);
+        mWeiBoEmoticonMap.put(new WBKey("[下雨]"), R.drawable.w_xiayu);
+        mWeiBoEmoticonMap.put(new WBKey("[带着微博去旅行]"), R.drawable.f_eventtravel);
+        mWeiBoEmoticonMap.put(new WBKey("[帶著微博去旅行]", true), R.drawable.f_eventtravel);
+        mWeiBoEmoticonMap.put(new WBKey("[给力]"), R.drawable.f_geili);
+        mWeiBoEmoticonMap.put(new WBKey("[給力]", true), R.drawable.f_geili);
+        mWeiBoEmoticonMap.put(new WBKey("[广告]"), R.drawable.f_guanggao);
+        mWeiBoEmoticonMap.put(new WBKey("[廣告]", true), R.drawable.f_guanggao);
+        mWeiBoEmoticonMap.put(new WBKey("[神马]"), R.drawable.f_shenma);
+        mWeiBoEmoticonMap.put(new WBKey("[神馬]", true), R.drawable.f_shenma);
+        mWeiBoEmoticonMap.put(new WBKey("[围观]"), R.drawable.o_weiguan);
+        mWeiBoEmoticonMap.put(new WBKey("[圍觀]", true), R.drawable.o_weiguan);
+        mWeiBoEmoticonMap.put(new WBKey("[话筒]"), R.drawable.o_huatong);
+        mWeiBoEmoticonMap.put(new WBKey("[話筒]", true), R.drawable.o_huatong);
+        mWeiBoEmoticonMap.put(new WBKey("[奥特曼]"), R.drawable.d_aoteman);
+        mWeiBoEmoticonMap.put(new WBKey("[奧特曼]", true), R.drawable.d_aoteman);
+        mWeiBoEmoticonMap.put(new WBKey("[草泥马]"), R.drawable.d_shenshou);
+        mWeiBoEmoticonMap.put(new WBKey("[草泥馬]", true), R.drawable.d_shenshou);
+        mWeiBoEmoticonMap.put(new WBKey("[萌]"), R.drawable.f_meng);
+        mWeiBoEmoticonMap.put(new WBKey("[囧]"), R.drawable.f_jiong);
+        mWeiBoEmoticonMap.put(new WBKey("[织]"), R.drawable.f_zhi);
+        mWeiBoEmoticonMap.put(new WBKey("[礼物]"), R.drawable.o_liwu);
+        mWeiBoEmoticonMap.put(new WBKey("[禮物]", true), R.drawable.o_liwu);
+        mWeiBoEmoticonMap.put(new WBKey("[发红包]"), R.drawable.f_fahongbao);
+        mWeiBoEmoticonMap.put(new WBKey("[發紅包]", true), R.drawable.f_fahongbao);
+        mWeiBoEmoticonMap.put(new WBKey("[囍]"), R.drawable.f_xi);
+        mWeiBoEmoticonMap.put(new WBKey("[围脖]"), R.drawable.o_weibo);
+        mWeiBoEmoticonMap.put(new WBKey("[圍脖]", true), R.drawable.o_weibo);
+        mWeiBoEmoticonMap.put(new WBKey("[音乐]"), R.drawable.o_yinyue);
+        mWeiBoEmoticonMap.put(new WBKey("[音樂]", true), R.drawable.o_yinyue);
+        mWeiBoEmoticonMap.put(new WBKey("[绿丝带]"), R.drawable.o_lvsidai);
+        mWeiBoEmoticonMap.put(new WBKey("[綠絲帶]", true), R.drawable.o_lvsidai);
+        mWeiBoEmoticonMap.put(new WBKey("[蛋糕]"), R.drawable.o_dangao);
+        mWeiBoEmoticonMap.put(new WBKey("[蜡烛]"), R.drawable.o_lazhu);
+        mWeiBoEmoticonMap.put(new WBKey("[蠟燭]", true), R.drawable.o_lazhu);
+        mWeiBoEmoticonMap.put(new WBKey("[干杯]"), R.drawable.o_ganbei);
+        mWeiBoEmoticonMap.put(new WBKey("[乾杯]", true), R.drawable.o_ganbei);
+        mWeiBoEmoticonMap.put(new WBKey("[男孩儿]"), R.drawable.d_nanhaier);
+        mWeiBoEmoticonMap.put(new WBKey("[男孩兒]", true), R.drawable.d_nanhaier);
+        mWeiBoEmoticonMap.put(new WBKey("[女孩儿]"), R.drawable.d_nvhaier);
+        mWeiBoEmoticonMap.put(new WBKey("[女孩兒]", true), R.drawable.d_nvhaier);
+        mWeiBoEmoticonMap.put(new WBKey("[肥皂]"), R.drawable.d_feizao);
+        mWeiBoEmoticonMap.put(new WBKey("[照相机]"), R.drawable.o_zhaoxiangji);
+        mWeiBoEmoticonMap.put(new WBKey("[照相機]", true), R.drawable.o_zhaoxiangji);
+        mWeiBoEmoticonMap.put(new WBKey("[浪]"), R.drawable.d_lang);
+        mWeiBoEmoticonMap.put(new WBKey("[沙尘暴]"), R.drawable.w_shachenbao);
+        mWeiBoEmoticonMap.put(new WBKey("[沙塵暴]", true), R.drawable.w_shachenbao);
 
         //浪小花表情
         mLxhEmoticonMap.put("[爱红包]", R.drawable.lxh_aihongbao);

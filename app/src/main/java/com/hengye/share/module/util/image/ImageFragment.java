@@ -202,17 +202,24 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
         }
 
         Fragment fragment;
-        //如果是评论配图，url地址没有图片文件后缀，无法区分是不是gif显示，就统一用webview显示
-        boolean isNoSuffix = ImageUtil.isNoSuffixImg(url);
-        if (isNoSuffix || ImageUtil.isThisBitmapTooLargeToRead(path)) {
+        if(ImageUtil.isThisBitmapTooLargeToRead(path)){
+            fragment = ImageBigFragment.newInstance(path);
+        }else if (ImageUtil.isNoSuffixImg(url)) {
+            //如果是评论配图，url地址没有图片文件后缀，无法区分是不是gif显示，就统一用webview显示
             fragment = ImageWebViewFragment.newInstance(path, animateIn);
-        } else {
-            if (WBUtil.isWBGifUrl(url)) {
-                fragment = ImageGifFragment.newInstance(path, mRect, animateIn);
-            } else {
-                fragment = ImageNormalFragment.newInstance(path, mRect, animateIn);
-            }
+        }else if(WBUtil.isWBGifUrl(url)){
+            fragment = ImageGifFragment.newInstance(path, mRect, animateIn);
+        }else{
+            fragment = ImageNormalFragment.newInstance(path, mRect, animateIn);
         }
+
+//        else {
+//            if (WBUtil.isWBGifUrl(url)) {
+//                fragment = ImageGifFragment.newInstance(path, mRect, animateIn);
+//            } else {
+//                fragment = ImageNormalFragment.newInstance(path, mRect, animateIn);
+//            }
+//        }
         getChildFragmentManager().beginTransaction().replace(R.id.content, fragment)
                 .commitAllowingStateLoss();
     }
@@ -256,6 +263,8 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
             public void onResponse(Bitmap response) {
                 final String path = RequestManager.getImageDiskCachePath(requestUrl);
                 if (path != null) {
+                    //// TODO: 2017/2/22
+                    //如果是大图不适用，，这里需要判断处理
                     RequestManager.putBitmapToCache(path, response);
                     if (isDelay) {
                         getHandler().postDelayed(new Runnable() {

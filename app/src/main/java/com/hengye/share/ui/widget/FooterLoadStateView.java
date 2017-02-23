@@ -7,6 +7,7 @@ import android.widget.FrameLayout;
 
 import com.hengye.share.R;
 import com.hengye.share.module.util.encapsulation.base.StateLayoutManager;
+import com.hengye.share.ui.widget.util.SelectorLoader;
 
 /**
  * Created by yuhy on 2016/12/14.
@@ -70,6 +71,7 @@ public class FooterLoadStateView extends FrameLayout implements
     @Override
     public void onFindStateView(final View stateView, final int state) {
         if(onLoadStateClickListener != null) {
+            SelectorLoader.getInstance().setTransparentRippleBackground(stateView);
             stateView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {

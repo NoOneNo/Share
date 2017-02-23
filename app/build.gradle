@@ -130,6 +130,8 @@ dependencies {
     //-- bugly
     compile 'com.tencent.bugly:crashreport:latest.release'
     //其中latest.release指代最新版本号，也可以指定明确的版本号，例如1.2.8
+    //-- subsampling-scale-image-view 大图
+    compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.6.0'
 
 //    compile 'me.imid.swipebacklayout.lib:library:1.0.0'
 //    compile 'com.getbase:floatingactionbutton:1.10.1'
@@ -140,7 +142,7 @@ dependencies {
     compile(name: 'volleyplus-release', ext: 'aar')
     compile(name: 'skinloader-release', ext: 'aar')
 //    compile(name: 'photopicker-release', ext: 'aar')
-    compile files('libs/tbs_sdk_thirdapp_v2.5.0.1031.jar')
+    compile files('libs/tbs_sdk_thirdapp_v3.0.0.1038.jar')
     compile files('libs/AMap_Location_V3.2.0_20161205.jar')
 
     compile project(':datetimerpicker')

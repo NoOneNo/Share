@@ -162,7 +162,7 @@ public class StatusAdapter extends CommonAdapter<Status>
                     StatusTitleViewHolder.onClickStatusTitle(getContext(), StatusAdapter.this, view, position, getItem(position).getUserInfo());
                 } else if (id == R.id.tv_status_content ||
                         id == R.id.gl_status_gallery ||
-                        id == R.id.rl_status_title ||
+                        id == R.id.layout_status_title ||
                         id == R.id.ll_status_content ||
                         id == R.id.item_status_retweeted_content ||
                         id == R.id.layout_status_options) {

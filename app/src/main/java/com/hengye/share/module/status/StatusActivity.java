@@ -37,6 +37,7 @@ import com.hengye.share.module.setting.SettingActivity;
 import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.module.sso.UserContract;
 import com.hengye.share.module.sso.UserPresenter;
+import com.hengye.share.module.statuscomment.CommentActivity;
 import com.hengye.share.module.test.TestActivity;
 import com.hengye.share.module.util.WebViewActivity;
 import com.hengye.share.ui.support.actionbar.ActionBarDrawerToggleCustom;
@@ -456,7 +457,7 @@ public class StatusActivity extends BaseActivity
         } else if (id == R.id.nav_at_me) {
             startActivity(StatusMentionActivity.class);
         } else if (id == R.id.nav_comment) {
-            startActivity(StatusCommentActivity.class);
+            startActivity(CommentActivity.class);
         } else if (id == R.id.nav_favorites) {
             startActivity(StatusFavoriteActivity.class);
         } else if (id == R.id.nav_setting) {

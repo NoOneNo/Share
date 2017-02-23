@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:background="@color/background_default"
+    android:id="@+id/item_comment_repost_content"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/content_margin_default"
+    android:paddingEnd="@dimen/content_margin_default"
+    android:paddingBottom="@dimen/content_margin_default"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_retweeted_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/content_margin_default_half"
+        android:paddingBottom="@dimen/content_margin_default_half"
+        tools:text="\@JaydenYu: haha"
+        android:textSize="@dimen/text_small"
+        android:textColor="@color/status_content"
+        android:lines="1"
+        android:ellipsize="end"
+        android:visibility="visible"/>
+
+    <include
+        layout="@layout/item_comment_content"/>
+
+</LinearLayout>

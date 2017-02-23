@@ -23,6 +23,7 @@ public class SingleHelper {
         return t == null ? Single.just(new ArrayList<T>()) : Single.just(t);
     }
 
+
 //    public static <T> Single<T> just(T t){
 //        return t == null ? Single.<T>empty() : Single.just(t);
 //    }

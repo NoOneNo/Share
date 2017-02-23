@@ -19,16 +19,21 @@ import com.hengye.share.util.http.retrofit.RetrofitManager;
 import com.hengye.share.util.rxjava.datasource.SingleHelper;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 
+import org.reactivestreams.Publisher;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.SingleSource;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 
 public class StatusPagePresenter extends ListDataPresenter<Status, StatusPageContract.View> {
 
@@ -121,30 +126,52 @@ public class StatusPagePresenter extends ListDataPresenter<Status, StatusPageCon
     }
 
     /**
-     * 先检测有没有缓存，没有再请求服务器
+     * 如果请求失败再使用缓存
      */
     public void loadWBStatus() {
         getMvpView().onTaskStart();
 
-
-        SingleHelper
-                .justArrayList(findData())
-                .flatMap(new Function<ArrayList<Status>, SingleSource<ArrayList<Status>>>() {
+        getStatuses(true)
+                .onErrorReturn(new Function<Throwable, ArrayList<Status>>() {
                     @Override
-                    public SingleSource<ArrayList<Status>> apply(ArrayList<Status> topics) {
-                        if (CommonUtil.isEmpty(topics)) {
-                            return getStatuses(true);
-                        } else {
-                            return Single
-                                    .just(topics)
-                                    .delay(400, TimeUnit.MILLISECONDS);
+                    public ArrayList<Status> apply(Throwable throwable) throws Exception {
+                        ArrayList<Status> statuses = findData();
+                        if(statuses != null){
+                            return statuses;
                         }
+                        throw new Exception(throwable);
                     }
                 })
                 .subscribeOn(SchedulerProvider.io())
                 .observeOn(SchedulerProvider.ui())
                 .subscribeWith(getStatusesSubscriber(true));
     }
+
+//    /**
+//     * 先检测有没有缓存，没有再请求服务器
+//     */
+//    public void loadWBStatus() {
+//        getMvpView().onTaskStart();
+//
+//
+//        SingleHelper
+//                .justArrayList(findData())
+//                .flatMap(new Function<ArrayList<Status>, SingleSource<ArrayList<Status>>>() {
+//                    @Override
+//                    public SingleSource<ArrayList<Status>> apply(ArrayList<Status> topics) {
+//                        if (CommonUtil.isEmpty(topics)) {
+//                            return getStatuses(true);
+//                        } else {
+//                            return Single
+//                                    .just(topics)
+//                                    .delay(400, TimeUnit.MILLISECONDS);
+//                        }
+//                    }
+//                })
+//                .subscribeOn(SchedulerProvider.io())
+//                .observeOn(SchedulerProvider.ui())
+//                .subscribeWith(getStatusesSubscriber(true));
+//    }
 
     public ArrayList<Status> findData() {
         if (mStatusGroup.getStatusType() == StatusType.FAVORITES) {

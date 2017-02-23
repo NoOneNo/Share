@@ -25,7 +25,7 @@ public class StatusFragment extends StatusActionFragment implements StatusContra
 
     public static Bundle getBundle(StatusPresenter.StatusGroup statusGroup, boolean isRestore, String uid, String name) {
         Bundle bundle = new Bundle();
-        bundle.putSerializable("topicGroup", statusGroup);
+        bundle.putSerializable("statusGroup", statusGroup);
         bundle.putBoolean("isRestore", isRestore);
         bundle.putString("uid", uid);
         bundle.putString("name", name);
@@ -73,7 +73,7 @@ public class StatusFragment extends StatusActionFragment implements StatusContra
 
     @Override
     protected void handleBundleExtra(Bundle bundle) {
-        statusGroup = (StatusPresenter.StatusGroup) bundle.getSerializable("topicGroup");
+        statusGroup = (StatusPresenter.StatusGroup) bundle.getSerializable("statusGroup");
         isRestore = bundle.getBoolean("isRestore");
         uid = bundle.getString("uid");
         name = bundle.getString("name");

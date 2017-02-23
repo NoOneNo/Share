@@ -233,7 +233,7 @@
             android:configChanges="screenSize|keyboardHidden|orientation" />
 
         <activity
-            android:name=".module.status.StatusCommentActivity"
+            android:name=".module.statuscomment.CommentActivity"
             android:configChanges="screenSize|keyboardHidden|orientation" />
 
         <activity

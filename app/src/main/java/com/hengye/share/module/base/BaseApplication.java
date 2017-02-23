@@ -16,6 +16,7 @@ import com.hengye.share.util.RequestManager;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import com.tencent.bugly.crashreport.CrashReport;
+import com.tencent.smtt.sdk.QbSdk;
 
 public class BaseApplication extends Application{
 
@@ -68,7 +69,7 @@ public class BaseApplication extends Application{
 			CrashReport.initCrashReport(BaseApplication.getInstance(), "900019432", false);
 		}
 
-		//初始化腾讯x5
+		//初始化腾讯x5，太占用启动时间，不放在启动的时候初始化。
 //		QbSdk.initX5Environment(BaseApplication.getInstance(), null);
 	}
 

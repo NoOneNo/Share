@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="这是一条微博的内容"
-        android:textSize="17sp"
+        android:textSize="@dimen/status_content"
         android:textColor="@color/status_content" />
 
     <Space
@@ -26,5 +26,6 @@
     <com.hengye.share.ui.widget.image.GridGalleryView
         android:id="@+id/gl_status_gallery"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 </LinearLayout>

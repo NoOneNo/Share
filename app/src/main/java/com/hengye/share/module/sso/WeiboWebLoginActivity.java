@@ -20,6 +20,7 @@ import com.hengye.share.util.rxjava.DefaultSubscriber;
 import com.hengye.share.util.rxjava.schedulers.SchedulerProvider;
 import com.hengye.share.util.thirdparty.ThirdPartyUtils.WeiboApp;
 import com.hengye.share.util.thirdparty.WBUtil;
+import com.tencent.smtt.export.external.interfaces.WebResourceError;
 import com.tencent.smtt.export.external.interfaces.WebResourceRequest;
 import com.tencent.smtt.sdk.CookieManager;
 import com.tencent.smtt.sdk.WebChromeClient;
@@ -122,8 +123,8 @@ public class WeiboWebLoginActivity extends BaseActivity {
         }
 
         @Override
-        public void onReceivedError(WebView webView, WebResourceRequest webResourceRequest, WebViewClient.a a) {
-            super.onReceivedError(webView, webResourceRequest, a);
+        public void onReceivedError(WebView webView, WebResourceRequest webResourceRequest, WebResourceError webResourceError) {
+            super.onReceivedError(webView, webResourceRequest, webResourceError);
             ToastUtil.showToast("出现错误");
         }
     }

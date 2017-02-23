@@ -176,7 +176,7 @@ public class StatusNotifyAdapter extends CommonAdapter<Status>
             public void run() {
                 if (StatusTitleViewHolder.isClickStatusTitle(id)) {
                     StatusTitleViewHolder.onClickStatusTitle(getContext(), StatusNotifyAdapter.this, view, position, getItem(position).getUserInfo());
-                } else if (id == R.id.tv_status_content || id == R.id.gl_status_gallery || id == R.id.rl_status_title || id == R.id.ll_status_content || id == R.id.item_status_retweeted_content) {
+                } else if (id == R.id.tv_status_content || id == R.id.gl_status_gallery || id == R.id.layout_status_title || id == R.id.ll_status_content || id == R.id.item_status_retweeted_content) {
                     final boolean isRetweeted = (Boolean) view.getTag();
                     startStatusDetail(isRetweeted, position);
                 }

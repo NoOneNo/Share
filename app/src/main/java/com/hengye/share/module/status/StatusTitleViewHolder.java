@@ -28,7 +28,7 @@ public class StatusTitleViewHolder {
     }
 
     public StatusTitleViewHolder(View v) {
-        mTitle = v.findViewById(R.id.rl_status_title);
+        mTitle = v.findViewById(R.id.layout_status_title);
         mAvatar = (AvatarImageView) v.findViewById(R.id.iv_status_avatar);
         mUsername = (TextView) v.findViewById(R.id.tv_status_username);
         mDescription = (TextView) v.findViewById(R.id.tv_status_description);
@@ -36,15 +36,15 @@ public class StatusTitleViewHolder {
 //            mTitle.setTag(false);
     }
 
-    public void initStatusTitle(final Context context, Status topic) {
-        if (TextUtils.isEmpty(topic.getChannel())) {
-            mDescription.setText(topic.getFormatDate());
+    public void initStatusTitle(final Context context, Status status) {
+        if (TextUtils.isEmpty(status.getChannel())) {
+            mDescription.setText(status.getFormatDate());
         } else {
-            String str = String.format(context.getString(R.string.label_time_and_from), topic.getFormatDate(), Html.fromHtml(topic.getChannel()));
+            String str = String.format(context.getString(R.string.label_time_and_from), status.getFormatDate(), Html.fromHtml(status.getChannel()));
             mDescription.setText(str);
         }
 
-        UserInfo userInfo = topic.getUserInfo();
+        UserInfo userInfo = status.getUserInfo();
         if (userInfo != null) {
             mUsername.setText(userInfo.getName());
             if (SettingHelper.isShowStatusAvatar()) {

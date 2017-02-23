@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:background="@color/white"
+    android:id="@+id/item_comment_content"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/icon_size_large_2"
+    android:orientation="horizontal">
+
+    <com.hengye.share.ui.widget.image.AvatarImageView
+        android:id="@+id/iv_cover"
+        android:layout_width="@dimen/icon_size_large_2"
+        android:layout_height="@dimen/icon_size_large_2"
+        android:src="@drawable/ic_user_avatar"/>
+
+    <LinearLayout
+        android:id="@+id/item_comment_content_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="@dimen/content_margin_default"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/tv_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="\@我是一只小小小鸡仔"
+            android:textSize="@dimen/text_small"
+            android:textColor="@color/status_content"
+            android:lines="1"
+            android:ellipsize="end"/>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="@dimen/spacing_micro" />
+
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="讲一个你最近看到的，让你当场笑成狗的笑话————————"
+            android:textSize="@dimen/text_micro"
+            android:textColor="@color/text_grey"
+            android:maxLines="2"
+            android:ellipsize="end"/>
+
+    </LinearLayout>
+
+</LinearLayout>
