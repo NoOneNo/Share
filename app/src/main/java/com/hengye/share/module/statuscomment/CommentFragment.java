@@ -5,18 +5,18 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import com.hengye.share.model.Status;
+import com.hengye.share.R;
+import com.hengye.share.model.StatusComment;
 import com.hengye.share.module.status.ShareLoadDataCallbackFragment;
-import com.hengye.share.module.status.StatusNotifyAdapter;
-import com.hengye.share.module.status.StatusPresenter;
 import com.hengye.share.module.util.encapsulation.base.DataType;
+import com.hengye.share.ui.widget.recyclerview.DividerItemDecoration;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.handler.StatusAdapterIdPager;
 import com.hengye.share.util.handler.StatusIdHandler;
 
 import java.util.ArrayList;
 
-public class CommentToMeFragment extends ShareLoadDataCallbackFragment<Status> implements CommentContract.View {
+public class CommentFragment extends ShareLoadDataCallbackFragment<StatusComment> implements CommentContract.View {
 
     public static Bundle getBundle(CommentPresenter.CommentGroup commentGroup) {
         Bundle bundle = new Bundle();
@@ -24,8 +24,8 @@ public class CommentToMeFragment extends ShareLoadDataCallbackFragment<Status> i
         return bundle;
     }
 
-    public static CommentToMeFragment newInstance(CommentPresenter.CommentGroup commentGroup) {
-        CommentToMeFragment fragment = new CommentToMeFragment();
+    public static CommentFragment newInstance(CommentPresenter.CommentGroup commentGroup) {
+        CommentFragment fragment = new CommentFragment();
         fragment.setArguments(getBundle(commentGroup));
         return fragment;
     }
@@ -34,10 +34,10 @@ public class CommentToMeFragment extends ShareLoadDataCallbackFragment<Status> i
     CommentPresenter.CommentGroup commentGroup;
 
     StatusAdapterIdPager mStatusPager;
-    StatusNotifyAdapter mAdapter;
+    CommentAdapter mAdapter;
 
     @Override
-    public StatusNotifyAdapter getAdapter() {
+    public CommentAdapter getAdapter() {
         return mAdapter;
     }
 
@@ -49,18 +49,16 @@ public class CommentToMeFragment extends ShareLoadDataCallbackFragment<Status> i
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setAdapter(mAdapter = new StatusNotifyAdapter(getContext(), new ArrayList<Status>(), getRecyclerView()));
+        DividerItemDecoration decoration = new DividerItemDecoration(getResources().getDrawable(R.drawable.status_divider_light));
+        decoration.ignoreLastItem(true);
+        getRecyclerView().addItemDecoration(decoration);
+        setAdapter(mAdapter = new CommentAdapter(getContext(), new ArrayList<StatusComment>(), getRecyclerView()));
         setPager(mStatusPager = new StatusAdapterIdPager(mAdapter));
-        setDataHandler();
-        mAdapter.setShowDeleteStatusOption(true);
+        setDataHandler(new StatusIdHandler<>(mAdapter));
 
         mPresenter = new CommentPresenter(this, commentGroup);
         showLoading();
         markLazyLoadPreparedAndLazyLoadIfCan();
-    }
-
-    protected void setDataHandler() {
-        setDataHandler(new StatusIdHandler<>(mAdapter));
     }
 
     @Override

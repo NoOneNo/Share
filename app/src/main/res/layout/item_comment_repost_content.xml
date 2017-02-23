@@ -17,10 +17,8 @@
         android:paddingTop="@dimen/content_margin_default_half"
         android:paddingBottom="@dimen/content_margin_default_half"
         tools:text="\@JaydenYu: haha"
-        android:textSize="@dimen/text_small"
+        android:textSize="@dimen/text_micro"
         android:textColor="@color/status_content"
-        android:lines="1"
-        android:ellipsize="end"
         android:visibility="visible"/>
 
     <include

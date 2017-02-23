@@ -42,13 +42,13 @@ public class StatusComment2Adapter extends CommonAdapter<StatusComment, StatusCo
                 mStatusTitle = new StatusCommentAdapter.StatusCommentTitleViewHolder(v, false);
             }
             if (mStatus == null) {
-                mStatus = new StatusAdapter.StatusContentViewHolder(findViewById(R.id.ll_status_content));
+                mStatus = new StatusAdapter.StatusContentViewHolder(findViewById(R.id.layout_status_content));
             }
             findViewById(R.id.item_status_retweeted_content).setVisibility(View.GONE);
 
             mStatusItem = findViewById(R.id.item_status);
-//            mStatus.mContent = (TextView) findViewById(R.id.tv_topic_content);
-//            mStatus.mGallery = (GridGalleryView) findViewById(R.id.gl_topic_gallery);
+//            mComment.mContent = (TextView) findViewById(R.id.tv_topic_content);
+//            mComment.mGallery = (GridGalleryView) findViewById(R.id.gl_topic_gallery);
 
             //不设置的话会被名字内容的点击事件覆盖，无法触发ItemView的onClick
             mStatus.mContent.setTag(v);
@@ -57,17 +57,17 @@ public class StatusComment2Adapter extends CommonAdapter<StatusComment, StatusCo
             registerChildViewItemClick(mStatusTitle.mUsername);
             registerChildViewItemClick(mStatusTitle.mDescription);
 
-//            registerOnClickListener(mStatus.mGallery);
+//            registerOnClickListener(mComment.mGallery);
 
             SelectorLoader.getInstance().setDefaultRippleBackground(mStatusItem);
 
             mStatusTitle.mAvatar.setOnTouchListener(mStatusOnTouchListener);
             mStatusTitle.mUsername.setOnTouchListener(mStatusOnTouchListener);
             mStatusTitle.mDescription.setOnTouchListener(mStatusOnTouchListener);
-//            mStatusTitle.mTitle.setOnTouchListener(mStatusOnTouchListener);
+//            mCommentTitle.mTitle.setOnTouchListener(mStatusOnTouchListener);
             mStatus.mContent.setOnTouchListener(mStatusOnTouchListener);
-//            mStatus.mGallery.setOnTouchListener(mStatusOnTouchListener);
-//            mStatus.mContent.setOnTouchListener(TopicUrlOnTouchListener.getInstance());
+//            mComment.mGallery.setOnTouchListener(mStatusOnTouchListener);
+//            mComment.mContent.setOnTouchListener(TopicUrlOnTouchListener.getInstance());
         }
 
         private View.OnTouchListener mStatusOnTouchListener = new View.OnTouchListener() {

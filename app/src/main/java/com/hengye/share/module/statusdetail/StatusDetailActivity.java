@@ -106,7 +106,7 @@ public class StatusDetailActivity extends BaseActivity
     private void initHeaderStatus(View headerView) {
         View statusLayout = headerView.findViewById(R.id.item_status_total);
         if (mIsRetweet) {
-            mStatusContentLayout = headerView.findViewById(R.id.ll_status_content);
+            mStatusContentLayout = headerView.findViewById(R.id.layout_status_content);
             mStatusContent = (TextView) headerView.findViewById(R.id.tv_status_content);
             mStatusContentLayout.setTransitionName(getString(R.string.transition_name_status));
         } else {
@@ -288,7 +288,7 @@ public class StatusDetailActivity extends BaseActivity
         //不设置转场动画是因为跟滑动退出冲突，有滑动退出时，转场会黑屏
 //        if (mHeaderViewVisibleInScreen) {
 //            if (mStatusContentLayout != null && mStatusContent != null && mIsRetweet) {
-////                mStatusContent.setText(DataUtil.addRetweetedNamePrefix(mStatus));
+////                mStatusContent.setText(DataUtil.addRetweetedStatusNamePrefix(mComment));
 //                mStatusContentLayout.setBackgroundColor(getResources().getColor(R.color.grey_50));
 //            }
 //        }

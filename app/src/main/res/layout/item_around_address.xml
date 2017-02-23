@@ -23,7 +23,7 @@
         android:layout_marginTop="@dimen/spacing_micro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_micro"
+        android:textSize="@dimen/text_nano"
         android:textColor="@color/text_grey"
         android:maxLines="1"
         android:ellipsize="end"
@@ -35,7 +35,7 @@
         android:layout_alignParentTop="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_micro"
+        android:textSize="@dimen/text_nano"
         android:textColor="@color/text_grey"
         tools:text="距离800米"/>
 </RelativeLayout>

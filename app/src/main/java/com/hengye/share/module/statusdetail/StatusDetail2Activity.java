@@ -202,7 +202,7 @@ public class StatusDetail2Activity extends BaseActivity implements StatusDetailM
     private void initHeaderStatus(View headerView) {
         View topicLayout = headerView.findViewById(R.id.item_status_total);
         if (mIsRetweet) {
-            mStatusContentLayout = headerView.findViewById(R.id.ll_status_content);
+            mStatusContentLayout = headerView.findViewById(R.id.layout_status_content);
             mStatusContent = (TextView) headerView.findViewById(R.id.tv_status_content);
             mStatusContentLayout.setTransitionName(getString(R.string.transition_name_status));
         } else {

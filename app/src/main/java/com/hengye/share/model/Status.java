@@ -40,6 +40,7 @@ public class Status extends ParentInherit implements StatusId, StatusShortUrl, S
         Status status = new Status();
         status.setParent(new Parent(GsonUtil.toJson(entity), Parent.TYPE_WEIBO));
         if(entity == null){
+            status.setUserInfo(new UserInfo());
             return status;
         }
         status.setFromMobile(entity.isFromMobile());
@@ -351,8 +352,15 @@ public class Status extends ParentInherit implements StatusId, StatusShortUrl, S
 //    }
 
     public Spanned getSpanned(TextView textView, boolean isRetweeted) {
+        return getSpanned(textView, isRetweeted, true);
+    }
+
+    public Spanned getSpanned(TextView textView, boolean isRetweeted, boolean largeEmoticon) {
         if (CommonUtil.isEmpty(spanned)) {
-            DataUtil.addStatusContentHighLightLinks((int)textView.getTextSize(), this, isRetweeted);
+            int textSize = largeEmoticon ?
+                    (int)(textView.getTextSize() * 1.5) :
+                    (int)textView.getTextSize();
+            DataUtil.addStatusContentHighLightLinks(textSize, this, isRetweeted);
         }
         return spanned;
     }

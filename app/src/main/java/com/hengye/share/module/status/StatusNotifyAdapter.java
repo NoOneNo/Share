@@ -176,7 +176,7 @@ public class StatusNotifyAdapter extends CommonAdapter<Status>
             public void run() {
                 if (StatusTitleViewHolder.isClickStatusTitle(id)) {
                     StatusTitleViewHolder.onClickStatusTitle(getContext(), StatusNotifyAdapter.this, view, position, getItem(position).getUserInfo());
-                } else if (id == R.id.tv_status_content || id == R.id.gl_status_gallery || id == R.id.layout_status_title || id == R.id.ll_status_content || id == R.id.item_status_retweeted_content) {
+                } else if (id == R.id.tv_status_content || id == R.id.gl_status_gallery || id == R.id.layout_status_title || id == R.id.layout_status_content || id == R.id.item_status_retweeted_content) {
                     final boolean isRetweeted = (Boolean) view.getTag();
                     startStatusDetail(isRetweeted, position);
                 }
@@ -254,7 +254,7 @@ public class StatusNotifyAdapter extends CommonAdapter<Status>
         public StatusViewHolder(View v) {
             super(v);
             mStatusTitle = new StatusTitleViewHolder(v);
-            mStatus = new StatusContentViewHolder(findViewById(R.id.ll_status_content));
+            mStatus = new StatusContentViewHolder(findViewById(R.id.layout_status_content));
             mRetweetStatus = new StatusContentViewHolder(findViewById(R.id.item_status_retweeted_content), true);
 
             //布尔值，如果false则表示点击的不是转发的微博
@@ -278,10 +278,10 @@ public class StatusNotifyAdapter extends CommonAdapter<Status>
 
             //不设置长按没法解决点击效果
             //如果设置多个点击事件，则会造成重复点击；
-//            registerOnLongClickListener(mStatusTitle.mTitle);
-//            registerOnLongClickListener(mStatus.mContent);
-//            registerOnLongClickListener(mStatus.mGallery);
-//            registerOnLongClickListener(mStatus.mStatusLayout);
+//            registerOnLongClickListener(mCommentTitle.mTitle);
+//            registerOnLongClickListener(mComment.mContent);
+//            registerOnLongClickListener(mComment.mGallery);
+//            registerOnLongClickListener(mComment.mStatusLayout);
 
             //如果其他部位也设置长按会导致发生两次长按
             registerOnLongClickListener(mStatusItem);
@@ -313,7 +313,7 @@ public class StatusNotifyAdapter extends CommonAdapter<Status>
                 if (id == R.id.tv_status_content) {
                     //如果需要拦截长按关键字（比如@名字）则这样返回；
 //                    if(!StatusUrlOnTouchListener.getInstance().onTouch(v, event)) {
-//                        mStatusTotalItem.onTouchEvent(event);
+//                        mCommentTotalItem.onTouchEvent(event);
 //                        return false;
 //                    }else{
 //                        return true;

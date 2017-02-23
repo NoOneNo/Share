@@ -82,26 +82,26 @@ public class StatusDraftAdapter extends CommonAdapter<StatusDraft> {
 
 //    public static class TopicDraftViewHolder extends CommonAdapter.ItemViewHolder<TopicDraft> {
 //
-//        TopicAdapter.TopicTitleViewHolder mStatusTitle;
-//        TopicAdapter.TopicContentViewHolder mStatus, mTargetTopic;
+//        TopicAdapter.TopicTitleViewHolder mCommentTitle;
+//        TopicAdapter.TopicContentViewHolder mComment, mTargetTopic;
 //        Button mSendAgain;
 //
 //        public TopicDraftViewHolder(View v) {
 //            super(v);
 //
-//            if (mStatusTitle == null) {
-//                mStatusTitle = new TopicAdapter.TopicTitleViewHolder(v);
+//            if (mCommentTitle == null) {
+//                mCommentTitle = new TopicAdapter.TopicTitleViewHolder(v);
 //            }
-//            if (mStatus == null) {
-//                mStatus = new TopicAdapter.TopicContentViewHolder(findViewById(R.id.ll_topic_content));
+//            if (mComment == null) {
+//                mComment = new TopicAdapter.TopicContentViewHolder(findViewById(R.id.ll_topic_content));
 //            }
 //
 //            if(mTargetTopic == null){
 //                mTargetTopic = new TopicAdapter.TopicContentViewHolder(findViewById(R.id.ll_topic_retweeted_content), true);
 //            }
 //
-////            mStatus.mContent = (TextView) findViewById(R.id.tv_topic_content);
-////            mStatus.mGallery = (GridGalleryView) findViewById(R.id.gl_topic_gallery);
+////            mComment.mContent = (TextView) findViewById(R.id.tv_topic_content);
+////            mComment.mGallery = (GridGalleryView) findViewById(R.id.gl_topic_gallery);
 //            mSendAgain = (Button) findViewById(R.id.btn_topic_send_again);
 //            mSendAgain.setVisibility(View.VISIBLE);
 //        }
@@ -112,12 +112,12 @@ public class StatusDraftAdapter extends CommonAdapter<StatusDraft> {
 //            registerOnClickListener(mSendAgain);
 //            Topic topic = topicDraft.getStatus();
 //            if (topic != null) {
-//                mStatusTitle.initStatusTitle(context, topic);
-//                String time = mStatusTitle.mDescription.getText().toString();
+//                mCommentTitle.initStatusTitle(context, topic);
+//                String time = mCommentTitle.mDescription.getText().toString();
 //                if (!CommonUtil.isEmpty(time)) {
-//                    mStatusTitle.mDescription.setText(ResUtil.getString(R.string.label_edit_when, time));
+//                    mCommentTitle.mDescription.setText(ResUtil.getString(R.string.label_edit_when, time));
 //                }
-//                mStatus.initTopicContent(context, topic, false);
+//                mComment.initTopicContent(context, topic, false);
 //            }
 //
 //            if(topicDraft.getTargetStatus() == null){

@@ -1,10 +1,11 @@
 package com.hengye.share.module.statuscomment;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,9 +15,11 @@ import android.widget.TextView;
 import com.hengye.share.R;
 import com.hengye.share.model.Status;
 import com.hengye.share.model.StatusComment;
+import com.hengye.share.model.UserInfo;
 import com.hengye.share.model.greenrobot.StatusDraftHelper;
 import com.hengye.share.module.publish.StatusPublishActivity;
-import com.hengye.share.module.status.StatusPresenter;
+import com.hengye.share.module.setting.SettingHelper;
+import com.hengye.share.module.status.StatusAdapter;
 import com.hengye.share.module.status.StatusTitleViewHolder;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemLongClickListener;
@@ -24,11 +27,12 @@ import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapte
 import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemViewHolder;
 import com.hengye.share.ui.support.textspan.StatusUrlOnTouchListener;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
-import com.hengye.share.ui.widget.image.AvatarImageView;
+import com.hengye.share.ui.widget.image.SuperImageView;
 import com.hengye.share.ui.widget.util.SelectorLoader;
 import com.hengye.share.util.ClipboardUtil;
+import com.hengye.share.util.DateUtil;
 import com.hengye.share.util.IntentUtil;
-import com.hengye.share.util.ThemeUtil;
+import com.hengye.share.util.ResUtil;
 
 import java.util.List;
 
@@ -37,15 +41,19 @@ public class CommentAdapter extends CommonAdapter<StatusComment>
         OnItemLongClickListener,
         DialogInterface.OnClickListener {
 
-//    private StatusPresenter mPresenter;
+    private static int mGalleryMaxWidth;
+
+    //    private StatusPresenter mPresenter;
     private StatusComment mLongClickStatus;
     private boolean mIsRetweetedLongClick;
     private RecyclerView mRecyclerView;
 
     public CommentAdapter(Context context, List<StatusComment> data, RecyclerView recyclerView) {
         super(context, data);
-        mRecyclerView = recyclerView;
 
+        mGalleryMaxWidth = context.getResources().getDisplayMetrics().widthPixels / 3 * 2;
+
+        mRecyclerView = recyclerView;
         setOnItemClickListener(this);
         setOnItemLongClickListener(this);
     }
@@ -123,7 +131,7 @@ public class CommentAdapter extends CommonAdapter<StatusComment>
             public void run() {
                 if (StatusTitleViewHolder.isClickStatusTitle(id)) {
                     StatusTitleViewHolder.onClickStatusTitle(getContext(), CommentAdapter.this, view, position, getItem(position).getUserInfo());
-                } else if (id == R.id.tv_status_content || id == R.id.gl_status_gallery || id == R.id.layout_status_title || id == R.id.ll_status_content || id == R.id.item_status_retweeted_content) {
+                } else if (id == R.id.tv_status_content || id == R.id.gl_status_gallery || id == R.id.layout_status_title || id == R.id.layout_status_content || id == R.id.item_status_retweeted_content) {
                     final boolean isRetweeted = (Boolean) view.getTag();
                 }
 
@@ -133,69 +141,78 @@ public class CommentAdapter extends CommonAdapter<StatusComment>
 
     public static class CommentViewHolder extends ItemViewHolder<StatusComment> implements StatusTitleViewHolder.StatusTitle {
 
-        public StatusTitleViewHolder mStatusTitle;
-        public CommentContentViewHolder mStatus;
-        public View mStatusTotalItem, mStatusItem;
+        public CommentTitleViewHolder mCommentTitle;
+        public StatusAdapter.StatusContentViewHolder mStatus;//评论内容以及评论图片
+        public CommentContentViewHolder mComment;
+        public View mStatusTotalItem;
+        private boolean mShowCommentPhoto;
 
         public CommentViewHolder(View v) {
             super(v);
-            mStatusTitle = new StatusTitleViewHolder(v.findViewById(R.id.layout_status_title));
-            mStatus = new CommentContentViewHolder(findViewById(R.id.item_comment_repost_content));
+            mCommentTitle = new CommentTitleViewHolder(v.findViewById(R.id.layout_status_title));
+            mStatus = new StatusAdapter.StatusContentViewHolder(findViewById(R.id.layout_status_content));
+            mComment = new CommentContentViewHolder(findViewById(R.id.item_comment_repost_content));
+            mStatusTotalItem = v;
 
+            mShowCommentPhoto = SettingHelper.isShowCommentPhoto();
+            mStatus.mContent.setTextSize(ResUtil.getDimenFloatValue(R.dimen.text_small));
+            mStatus.mGallery.setMaxWidth(mGalleryMaxWidth);
             //布尔值，如果false则表示点击的不是转发的微博
-            mStatusTitle.mTitle.setTag(false);
+            mCommentTitle.mTitle.setTag(false);
 
-            mStatusItem = findViewById(R.id.item_status);
-            mStatusTotalItem = findViewById(R.id.item_status_total);
+//            mStatusItem = findViewById(R.id.item_status);
+//            mCommentTotalItem = findViewById(R.id.item_status_total);
 
-            registerOnClickListener(mStatusTitle.mAvatar);
-            registerOnClickListener(mStatusTitle.mUsername);
-            registerOnClickListener(mStatusTitle.mDescription);
-            registerOnClickListener(mStatusTitle.mTitle);
+            registerOnClickListener(mCommentTitle.mAvatar);
+            registerOnClickListener(mCommentTitle.mUsername);
+            registerOnClickListener(mCommentTitle.mDescription);
+            registerOnClickListener(mCommentTitle.mTitle);
 
-            registerOnLongClickListener(mStatusItem);
 
-//            registerOnLongClickListener(mRetweetStatus.mContent);
-//            registerOnLongClickListener(mRetweetStatus.mGallery);
+            registerOnClickListener(mStatus.mContent);
+            registerOnClickListener(mStatus.mGallery);
+            registerOnClickListener(mStatus.mStatusLayout);
             //如果其他部位也设置长按会导致发生两次长按
 
-            mStatusTitle.mAvatar.setOnTouchListener(mStatusOnTouchListener);
-            mStatusTitle.mUsername.setOnTouchListener(mStatusOnTouchListener);
-            mStatusTitle.mDescription.setOnTouchListener(mStatusOnTouchListener);
-            mStatusTitle.mTitle.setOnTouchListener(mStatusOnTouchListener);
+            mCommentTitle.mAvatar.setOnTouchListener(mStatusOnTouchListener);
+            mCommentTitle.mUsername.setOnTouchListener(mStatusOnTouchListener);
+            mCommentTitle.mDescription.setOnTouchListener(mStatusOnTouchListener);
+            mCommentTitle.mTitle.setOnTouchListener(mStatusOnTouchListener);
+            mStatus.mContent.setOnTouchListener(mStatusOnTouchListener);
+            mStatus.mGallery.setOnTouchListener(mStatusOnTouchListener);
 
+            mComment.retweetedContent.setOnTouchListener(mStatusOnTouchListener);
+            mComment.content.setOnTouchListener(mStatusOnTouchListener);
             SelectorLoader.getInstance().setDefaultRippleWhiteBackground(v);
         }
 
         @Override
         public void bindData(Context context, StatusComment statusComment, int position) {
 
-            mStatusTitle.initStatusTitle();
+            mCommentTitle.initCommentTitle(context, statusComment);
+            mStatus.mContent.setText(statusComment.getSpanned(mStatus.mContent));
+            if(mShowCommentPhoto) {
+                mStatus.initStatusGallery(statusComment.getImageUrls());
+            }
+            mComment.initCommentContent(context, statusComment);
         }
 
         private View.OnTouchListener mStatusOnTouchListener = new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-
                 int id = v.getId();
-                if (id == R.id.tv_status_content) {
-                    //如果需要拦截长按关键字（比如@名字）则这样返回；
-//                    if(!StatusUrlOnTouchListener.getInstance().onTouch(v, event)) {
-//                        mStatusTotalItem.onTouchEvent(event);
-//                        return false;
-//                    }else{
-//                        return true;
-//                    }
-
+                if (id == R.id.tv_status_content ||
+                        id == R.id.tv_retweeted_content ||
+                        id == R.id.tv_content) {
                     boolean result = StatusUrlOnTouchListener.getInstance().onTouch(v, event);
                     if (!result) {
-                        mStatusItem.onTouchEvent(event);
+                        mStatusTotalItem.onTouchEvent(event);
                         return false;
                     } else {
                         return true;
                     }
                 } else {
-                    mStatusItem.onTouchEvent(event);
+                    mStatusTotalItem.onTouchEvent(event);
                     return false;
                 }
             }
@@ -207,25 +224,26 @@ public class CommentAdapter extends CommonAdapter<StatusComment>
 //            }
 //
 //            StatusDetailActivity.start(context,
-//                    isRetweet ? tvh.mRetweetStatus.mStatusLayout : tvh.mStatusTotalItem,
+//                    isRetweet ? tvh.mRetweetStatus.mStatusLayout : tvh.mCommentTotalItem,
 //                    status,
 //                    isRetweet);
 //        }
 
         @Override
         public StatusTitleViewHolder getStatusTitleViewHolder() {
-            return mStatusTitle;
+            return mCommentTitle;
         }
     }
 
-    public static class CommentContentViewHolder{
+    public static class CommentContentViewHolder {
 
         public TextView retweetedContent, content, username;
-        public AvatarImageView cover;
+        public SuperImageView cover;
         public View retweetedContentLayout, contentTxtLayout;
 
         public CommentContentViewHolder(View v) {
-            cover = (AvatarImageView) v.findViewById(R.id.iv_status_avatar);
+            cover = (SuperImageView) v.findViewById(R.id.iv_cover);
+            cover.setDefaultImageResId(R.drawable.ic_user_avatar);
             retweetedContent = (TextView) v.findViewById(R.id.tv_retweeted_content);
             content = (TextView) v.findViewById(R.id.tv_content);
             username = (TextView) v.findViewById(R.id.tv_username);
@@ -233,38 +251,55 @@ public class CommentAdapter extends CommonAdapter<StatusComment>
             contentTxtLayout = v.findViewById(R.id.item_comment_content_text);
         }
 
-        public void initCommentContentTitle(final Context context, StatusComment statusComment) {
+        public void initCommentContent(final Context context, StatusComment statusComment) {
 
-            Status status = statusComment.getStatus();
-
-            if(status == null){
-                return;
-            }
-
-            if(status.getRetweetedStatus() != null){
-                //有抓发的内容，
+            cover.setImageUrl(statusComment.getCoverUrl());
+            if (statusComment.getReplyComment() != null) {
+                //属于回复别人的评论的评论，
                 retweetedContent.setVisibility(View.VISIBLE);
 
-                Status retweetedStatus = status.getRetweetedStatus();
-                retweetedContent.setText(retweetedStatus.getContent());
-
-
-                username.setText(retweetedStatus.getUserInfo().getName());
-                content.setText(retweetedStatus.getContent());
+                StatusComment replyComment = statusComment.getReplyComment();
+                retweetedContent.setText(replyComment.getSpanned(retweetedContent, true));
 
                 SelectorLoader.getInstance().setDefaultRippleBackground(retweetedContentLayout);
-                contentTxtLayout.setBackgroundColor(ThemeUtil.getUntingedColor());
-            }else{
+                contentTxtLayout.setBackgroundResource(R.color.background_default_white);
+            } else {
                 retweetedContent.setVisibility(View.GONE);
 
-                username.setText(status.getUserInfo().getName());
-                content.setText(status.getContent());
-
                 retweetedContentLayout.setBackgroundResource(0);
-                contentTxtLayout.setBackgroundResource(0);
+                contentTxtLayout.setBackgroundResource(R.color.background_default);
             }
 
+            Status status = statusComment.getStatus();
+            username.setText(status.getUserInfo().getAtName());
+            content.setText(status.getSpanned(content, false, false));
+        }
+    }
 
+    public static class CommentTitleViewHolder extends StatusTitleViewHolder {
+
+        public CommentTitleViewHolder(View v) {
+            super(v);
+        }
+
+        public void initCommentTitle(final Context context, StatusComment topicComment) {
+            String time = DateUtil.getEarlyDateFormat(topicComment.getDate());
+            if (TextUtils.isEmpty(topicComment.getChannel())) {
+                mDescription.setText(time);
+            } else {
+                String str = String.format(context.getString(R.string.label_time_and_from), time, Html.fromHtml(topicComment.getChannel()));
+                mDescription.setText(str);
+            }
+
+            UserInfo userInfo = topicComment.getUserInfo();
+            if (userInfo != null) {
+                mUsername.setText(userInfo.getName());
+                if (SettingHelper.isShowCommentAndRepostAvatar()) {
+                    mAvatar.setImageUrl(userInfo.getAvatar());
+                } else {
+                    mAvatar.setImageResource(R.drawable.ic_user_avatar);
+                }
+            }
         }
     }
 

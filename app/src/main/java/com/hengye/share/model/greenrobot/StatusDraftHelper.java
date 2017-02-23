@@ -64,7 +64,7 @@ public class StatusDraftHelper {
         Status targetStatus;
         if (status.getRetweetedStatus() != null) {
             //添加转发微博时微博A的内容;
-            statusDraft.setContent(DataUtil.addRetweetedNamePrefix(status));
+            statusDraft.setContent(DataUtil.addRetweetedStatusNamePrefix(status));
         }
         if (status.getRetweetedStatus() != null) {
             targetStatus = status.getRetweetedStatus();
@@ -114,7 +114,7 @@ public class StatusDraftHelper {
     public static StatusDraft getWBStatusDraftByRepostRepost(StatusComment statusComment) {
         StatusDraft statusDraft = new StatusDraft();
         //添加转发微博时微博A的内容;
-        statusDraft.setContent(DataUtil.addRetweetedNamePrefix(statusComment));
+        statusDraft.setContent(DataUtil.addRetweetedStatusNamePrefix(statusComment));
         statusDraft.setTargetStatusId(statusComment.getId());
         statusDraft.setTargetStatusJson(statusComment.toStatusJson());
         statusDraft.setType(StatusDraftHelper.REPOST_TOPIC);
@@ -151,7 +151,7 @@ public class StatusDraftHelper {
     public static StatusDraft getWBStatusDraftByCommentRepost(Status status, StatusComment statusComment) {
         StatusDraft statusDraft = new StatusDraft();
         //添加转发微博时微博A的内容;
-        statusDraft.setContent(DataUtil.addRetweetedNamePrefix(statusComment));
+        statusDraft.setContent(DataUtil.addRetweetedStatusNamePrefix(statusComment));
         statusDraft.setTargetStatusId(status.getId());
         statusDraft.setTargetStatusJson(status.toJson());
         statusDraft.setType(StatusDraftHelper.REPOST_TOPIC);

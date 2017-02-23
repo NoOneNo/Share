@@ -11,6 +11,7 @@ import com.hengye.share.model.greenrobot.ShareJson;
 import com.hengye.share.model.sina.WBStatusComments;
 import com.hengye.share.module.status.StatusRxUtil;
 import com.hengye.share.module.util.encapsulation.mvp.ListDataPresenter;
+import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.UrlBuilder;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.http.retrofit.RetrofitManager;
@@ -42,9 +43,6 @@ public class CommentPresenter extends ListDataPresenter<StatusComment, CommentCo
 
     @Override
     public void loadWBComment(String id, final boolean isRefresh) {
-        if(id == null){
-            id = "0";
-        }
         getMvpView().onTaskStart();
         getComments(id, isRefresh)
                 .subscribeOn(SchedulerProvider.io())
@@ -69,6 +67,9 @@ public class CommentPresenter extends ListDataPresenter<StatusComment, CommentCo
     private Map<String, String> getWBCommentParameter(String id, final boolean isRefresh) {
         final UrlBuilder ub = new UrlBuilder();
         ub.addParameter("access_token", UserUtil.getToken());
+        if(id == null){
+            id = "0";
+        }
         if (isRefresh) {
             ub.addParameter("since_id", id);
         } else {
@@ -179,6 +180,10 @@ public class CommentPresenter extends ListDataPresenter<StatusComment, CommentCo
         @Override
         public String toString() {
             return commentType.toString();
+        }
+
+        public String getName() {
+            return getName(this, ResUtil.getResources());
         }
 
         public static String getName(CommentGroup commentGroup, Resources resources) {

@@ -6,8 +6,6 @@ import android.support.v4.view.ViewPager;
 
 import com.hengye.share.R;
 import com.hengye.share.module.base.BaseActivity;
-import com.hengye.share.module.status.StatusNotifyFragmentPager;
-import com.hengye.share.module.status.StatusPresenter;
 import com.hengye.share.util.ResUtil;
 
 import java.util.ArrayList;
@@ -43,22 +41,20 @@ public class CommentActivity extends BaseActivity{
 
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
-    private StatusNotifyFragmentPager mAdapter;
+    private CommentFragmentPager mAdapter;
 
     private void initView(){
-
         initToolbar();
         mTabLayout = (TabLayout) findViewById(R.id.tab);
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
-        mViewPager.setAdapter(mAdapter = new StatusNotifyFragmentPager(getSupportFragmentManager(), this, getStatusGroups()));
-//        mViewPager.setAdapter(new StatusNotifyFragmentPager());
+        mViewPager.setAdapter(mAdapter = new CommentFragmentPager(getSupportFragmentManager(), this, getCommentGroups()));
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
-    private List<StatusPresenter.StatusGroup> getStatusGroups(){
-        ArrayList<StatusPresenter.StatusGroup> statusGroupGroups = new ArrayList<>();
-        statusGroupGroups.add(new StatusPresenter.StatusGroup(StatusPresenter.StatusType.COMMENT_TO_ME));
-        statusGroupGroups.add(new StatusPresenter.StatusGroup(StatusPresenter.StatusType.COMMENT_BY_ME));
+    private List<CommentPresenter.CommentGroup> getCommentGroups(){
+        ArrayList<CommentPresenter.CommentGroup> statusGroupGroups = new ArrayList<>();
+        statusGroupGroups.add(new CommentPresenter.CommentGroup(CommentPresenter.CommentType.COMMENT_TO_ME));
+        statusGroupGroups.add(new CommentPresenter.CommentGroup(CommentPresenter.CommentType.COMMENT_BY_ME));
         return statusGroupGroups;
     }
 }

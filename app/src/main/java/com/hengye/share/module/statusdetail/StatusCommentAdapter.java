@@ -6,9 +6,7 @@ import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hengye.share.R;
@@ -16,25 +14,18 @@ import com.hengye.share.model.StatusComments;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.module.setting.SettingHelper;
 import com.hengye.share.module.status.StatusTitleViewHolder;
-import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
 import com.hengye.share.module.util.encapsulation.view.recyclerview.CommonAdapter;
 import com.hengye.share.module.util.encapsulation.view.recyclerview.ItemViewHolder;
 import com.hengye.share.model.StatusComment;
 import com.hengye.share.module.status.StatusAdapter;
-import com.hengye.share.module.util.image.GalleryActivity;
-import com.hengye.share.ui.support.AnimationRect;
 import com.hengye.share.ui.support.textspan.StatusUrlOnTouchListener;
-import com.hengye.share.ui.widget.image.GridGalleryView;
-import com.hengye.share.ui.widget.image.SuperImageView;
 import com.hengye.share.ui.widget.util.DrawableLoader;
 import com.hengye.share.ui.widget.util.SelectorLoader;
-import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DataUtil;
 import com.hengye.share.util.DateUtil;
 import com.hengye.share.util.ResUtil;
 import com.hengye.share.util.ThemeUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class StatusCommentAdapter extends CommonAdapter<StatusComment> {
@@ -80,8 +71,8 @@ public class StatusCommentAdapter extends CommonAdapter<StatusComment> {
         public StatusCommentViewHolder(View v, boolean isLikeMode) {
             super(v);
             mStatusTitle = new StatusCommentTitleViewHolder(v, isLikeMode);
-            mStatus = new StatusAdapter.StatusContentViewHolder(findViewById(R.id.ll_status_content));
-            mStatusTotalItem = findViewById(R.id.item_status_total);
+            mStatus = new StatusAdapter.StatusContentViewHolder(findViewById(R.id.layout_status_content));
+            mStatusTotalItem = v;
 
             mShowCommentPhoto = SettingHelper.isShowCommentPhoto();
             mStatus.mGallery.setMaxWidth(mGalleryMaxWidth);
@@ -137,7 +128,7 @@ public class StatusCommentAdapter extends CommonAdapter<StatusComment> {
             public boolean onTouch(View v, MotionEvent event) {
                 mStatusTitle.mAttitudeLayout.onTouchEvent(event);
                 return true;
-//                return mStatusTitle.mAttitudeLayout.onTouchEvent(event);
+//                return mCommentTitle.mAttitudeLayout.onTouchEvent(event);
             }
         };
 

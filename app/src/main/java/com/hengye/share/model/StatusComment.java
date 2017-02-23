@@ -16,37 +16,37 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class StatusComment implements StatusId, StatusShortUrl, Serializable{
+public class StatusComment implements StatusId, StatusShortUrl, Serializable {
 
-    public static StatusComments getComments(WBStatusComments wbStatusComments){
+    public static StatusComments getComments(WBStatusComments wbStatusComments) {
         StatusComments statusComments = new StatusComments();
         statusComments.setComments(getCommentArrayList(wbStatusComments));
         statusComments.setTotalNumber(wbStatusComments.getTotal_number());
         return statusComments;
     }
 
-    public static StatusComments getComments(WBStatusReposts wbStatusReposts){
+    public static StatusComments getComments(WBStatusReposts wbStatusReposts) {
         StatusComments statusComments = new StatusComments();
         statusComments.setComments(getCommentArrayList(wbStatusReposts));
         statusComments.setTotalNumber(wbStatusReposts.getTotal_number());
         return statusComments;
     }
 
-    public static ArrayList<StatusComment> getCommentArrayList(WBStatusComments wbStatusComments){
-        if(wbStatusComments == null || CommonUtil.isEmpty(wbStatusComments.getComments())){
+    public static ArrayList<StatusComment> getCommentArrayList(WBStatusComments wbStatusComments) {
+        if (wbStatusComments == null || CommonUtil.isEmpty(wbStatusComments.getComments())) {
             return null;
         }
         ArrayList<StatusComment> statusComments = new ArrayList<>();
-        for(WBStatusComment entity : wbStatusComments.getComments()){
+        for (WBStatusComment entity : wbStatusComments.getComments()) {
             statusComments.add(getComment(entity));
         }
         return statusComments;
     }
 
-    public static StatusComment getComment(WBStatusComment entity){
+    public static StatusComment getComment(WBStatusComment entity) {
         StatusComment statusComment = new StatusComment();
         statusComment.setParent(new Parent(GsonUtil.toJson(entity), Parent.TYPE_WEIBO));
-        if(entity == null){
+        if (entity == null) {
             return statusComment;
         }
         statusComment.setUserInfo(UserInfo.getUserInfo(entity.getUser()));
@@ -54,38 +54,49 @@ public class StatusComment implements StatusId, StatusShortUrl, Serializable{
         statusComment.setChannel(entity.getSource());
         statusComment.setContent(entity.getText());
         statusComment.setId(entity.getIdstr());
-        statusComment.setStatus(Status.getStatus(entity.getStatus()));
         statusComment.setLiked(entity.isLiked());
         statusComment.setLikeCounts(entity.getLike_counts());
-//        if(!CommonUtil.isEmpty(entity.getPic_urls())){
-//            List<String> imageUrls = new ArrayList<>();
-//            List<String> imageLargeUrls = new ArrayList<>();
-//            for(WBTopic.Pic_urlsEntity urlsEntity : entity.getPic_urls()){
-//                imageUrls.add(WBUtil.getWBImgUrl(urlsEntity.getThumbnail_pic(), WBUtil.IMAGE_TYPE_BMIDDLE));
-//                imageLargeUrls.add(WBUtil.getWBImgUrl(urlsEntity.getThumbnail_pic(), WBUtil.IMAGE_TYPE_LARGE));
-//            }
-//            statusComment.setImageUrls(imageUrls);
-//            statusComment.setImageLargeUrls(imageLargeUrls);
-//        }
+
+        if (entity.getReply_comment() != null) {
+            entity.getReply_comment().setReply_comment(null);
+            statusComment.setReplyComment(getComment(entity.getReply_comment()));
+            statusComment.setReplyed(true);
+        } else {
+            //判断是否是回复别人的评论，显示的时候要做区分；
+            //如果不是根楼层，则是回复别人的评论，旧版是没有rootid的
+            statusComment.setReplyed(entity.getText() != null && entity.getText().startsWith(REPLY_START_LABEL));
+        }
+
+        Status status = Status.getStatus(entity.getStatus());
+        if (status.getRetweetedStatus() != null) {
+            //这里拼接这条微博的内容+转发微博的内容
+            Status retweetedStatus = status.getRetweetedStatus();
+            status.setContent(status.getContent() +
+                    "//@" + retweetedStatus.getUserInfo().getName() + ":" +
+                    retweetedStatus.getContent());
+        }
+        statusComment.setStatus(status);
 
         return statusComment;
     }
 
-    public static ArrayList<StatusComment> getCommentArrayList(WBStatusReposts wbStatusReposts){
-        if(wbStatusReposts == null || CommonUtil.isEmpty(wbStatusReposts.getReposts())){
+    private static final String REPLY_START_LABEL = "回复";
+
+    public static ArrayList<StatusComment> getCommentArrayList(WBStatusReposts wbStatusReposts) {
+        if (wbStatusReposts == null || CommonUtil.isEmpty(wbStatusReposts.getReposts())) {
             return null;
         }
         ArrayList<StatusComment> statusComments = new ArrayList<>();
-        for(WBStatus entity : wbStatusReposts.getReposts()){
+        for (WBStatus entity : wbStatusReposts.getReposts()) {
             statusComments.add(getComment(entity));
         }
         return statusComments;
     }
 
-    public static StatusComment getComment(WBStatus entity){
+    public static StatusComment getComment(WBStatus entity) {
         StatusComment statusComment = new StatusComment();
         statusComment.setParent(new Parent(GsonUtil.toJson(entity), Parent.TYPE_WEIBO));
-        if(entity == null){
+        if (entity == null) {
             return statusComment;
         }
         statusComment.setUserInfo(UserInfo.getUserInfo(entity.getUser()));
@@ -129,19 +140,26 @@ public class StatusComment implements StatusId, StatusShortUrl, Serializable{
     private UserInfo userInfo;//用户信息
     private String date;//创建日期
     private String channel;//渠道，通过什么发表
-    private String content;//内容
+    private String content;//评论内容, 如果是回复的话带"回复@XXX:"
     private String id;//评论或转发的唯一id
     private long likeCounts;//评论点赞数
     private boolean isLiked;//是否已经点赞
     private Status status;//评论或转发的主题
+    private StatusComment replyComment;//回复的评论
+    //是否是回复别人的评论，如果replyComment为空，但也可能是回复别人的评论
+    //内容为"回复@XXX:"
+    private boolean isReplyed;
     private List<String> imageUrls;//缩略图
     private List<String> imageLargeUrls;//原图
 
     private HashMap<String, StatusUrl> urlMap;
 
     private transient Spanned spanned;
+    //评论微博的图片地址，如果是评论转发的微博，则是转发的微博的图片地址
+    //如果没有则用评论微博用户的头像
+    private transient String coverUrl;
 
-    public void updateLiked(boolean isLiked){
+    public void updateLiked(boolean isLiked) {
         setLiked(isLiked);
         setLikeCounts(getLikeCounts() + (isLiked ? 1 : -1));
     }
@@ -165,31 +183,62 @@ public class StatusComment implements StatusId, StatusShortUrl, Serializable{
                 '}';
     }
 
-    public Status toStatus(){
+    public Status toStatus() {
         WBStatus wbStatus = GsonUtil.fromJson(getParent().getJson(), WBStatus.class);
-        if(wbStatus != null){
+        if (wbStatus != null) {
             return Status.getStatus(wbStatus);
         }
         return null;
     }
 
-    public String toStatusJson(){
+    public String toStatusJson() {
         Status status = toStatus();
-        if(status != null){
+        if (status != null) {
             return status.toJson();
         }
         return null;
     }
 
     public Spanned getSpanned(TextView textView) {
-        if(CommonUtil.isEmpty(spanned)){
-            DataUtil.addStatusContentHighLightLinks((int)textView.getTextSize(), this);
+        return getSpanned(textView, false);
+    }
+
+
+    public Spanned getSpanned(TextView textView, boolean isReply) {
+        return getSpanned(textView, isReply, true);
+    }
+
+    public Spanned getSpanned(TextView textView, boolean isReply, boolean largeEmoticon) {
+        if (CommonUtil.isEmpty(spanned)) {
+            int textSize = largeEmoticon ?
+                    (int)(textView.getTextSize() * 1.5) :
+                    (int)textView.getTextSize();
+            DataUtil.addStatusContentHighLightLinks(textSize, this, isReply);
         }
         return spanned;
     }
 
     public void setSpanned(Spanned spanned) {
         this.spanned = spanned;
+    }
+
+    public String getCoverUrl() {
+        if (coverUrl == null) {
+            if (!CommonUtil.isEmpty(status.getImageUrls())) {
+                coverUrl = status.getImageUrls().get(0);
+            } else if (status.getRetweetedStatus() != null &&
+                    !CommonUtil.isEmpty(status.getRetweetedStatus().getImageUrls())) {
+                coverUrl = status.getRetweetedStatus().getImageUrls().get(0);
+            } else {
+                coverUrl = status.getUserInfo().getAvatar();
+            }
+
+            //避免重复获取
+            if (coverUrl == null) {
+                coverUrl = "";
+            }
+        }
+        return coverUrl;
     }
 
     @Override
@@ -263,6 +312,22 @@ public class StatusComment implements StatusId, StatusShortUrl, Serializable{
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public StatusComment getReplyComment() {
+        return replyComment;
+    }
+
+    public void setReplyComment(StatusComment replyComment) {
+        this.replyComment = replyComment;
+    }
+
+    public boolean isReplyed() {
+        return isReplyed;
+    }
+
+    public void setReplyed(boolean replyed) {
+        isReplyed = replyed;
     }
 
     public List<String> getImageUrls() {

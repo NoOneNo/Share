@@ -33,6 +33,8 @@ public class UserInfo extends ParentInherit implements Serializable{
     private boolean followMe;//是否关注我
     private boolean following;//是否已关注
 
+    private transient String atName;//@+name
+
     public static ArrayList<UserInfo> getUserInfos(WBUserInfos wbUserInfos){
         if(wbUserInfos == null){
             return null;
@@ -107,6 +109,13 @@ public class UserInfo extends ParentInherit implements Serializable{
             resId = R.string.label_status_unfollowing;
         }
         return ResUtil.getString(resId);
+    }
+
+    public String getAtName(){
+        if(atName == null){
+            atName = "@" + name;
+        }
+        return atName;
     }
 
     public String getUid() {

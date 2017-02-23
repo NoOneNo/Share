@@ -14,7 +14,7 @@ import java.util.List;
 
 public class CommentFragmentPager extends FragmentPagerAdapter {
 
-    public CommentFragmentPager(FragmentManager fm, Context context, List<StatusPresenter.StatusGroup> statusGroupGroups) {
+    public CommentFragmentPager(FragmentManager fm, Context context, List<CommentPresenter.CommentGroup> statusGroupGroups) {
         super(fm);
         mContext = context;
         mStatusGroupGroups = statusGroupGroups;
@@ -23,13 +23,13 @@ public class CommentFragmentPager extends FragmentPagerAdapter {
     }
 
     private Context mContext;
-    private List<StatusPresenter.StatusGroup> mStatusGroupGroups;
+    private List<CommentPresenter.CommentGroup> mStatusGroupGroups;
     private SparseArray<String> mFragmentTags;
-    SparseArray<CommentToMeFragment> mFragments;
+    SparseArray<CommentFragment> mFragments;
 
     @Override
     public CharSequence getPageTitle(int position) {
-        StatusPresenter.StatusGroup statusGroup = mStatusGroupGroups.get(position);
+        CommentPresenter.CommentGroup statusGroup = mStatusGroupGroups.get(position);
         return statusGroup.getName();
     }
 
@@ -44,16 +44,16 @@ public class CommentFragmentPager extends FragmentPagerAdapter {
     }
 
     @Override
-    public CommentToMeFragment getItem(int position) {
-        CommentToMeFragment fragment = mFragments.get(position);
+    public CommentFragment getItem(int position) {
+        CommentFragment fragment = mFragments.get(position);
         if (fragment == null) {
-            fragment = CommentToMeFragment.newInstance(mStatusGroupGroups.get(position));
+            fragment = CommentFragment.newInstance(mStatusGroupGroups.get(position));
             mFragments.put(position, fragment);
         }
         return fragment;
     }
 
-    public void refresh(List<StatusPresenter.StatusGroup> data) {
+    public void refresh(List<CommentPresenter.CommentGroup> data) {
         if (data == null) {
             this.mStatusGroupGroups.clear();
         } else {
@@ -65,15 +65,7 @@ public class CommentFragmentPager extends FragmentPagerAdapter {
 
     @Override
     public long getItemId(int position) {
-        long itemId;
-        try {
-            GroupList gl = mStatusGroupGroups.get(position).getGroupList();
-            itemId = gl == null ? position : Long.valueOf(gl.getGid());
-        }catch (Exception e){
-            e.printStackTrace();
-            itemId = position;
-        }
-        return itemId;
+        return position;
     }
 
     @Override

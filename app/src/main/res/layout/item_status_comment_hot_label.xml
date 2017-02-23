@@ -23,7 +23,7 @@
         android:layout_marginEnd="@dimen/content_margin_default"
         android:text="@string/label_status_comment_hot_label"
         android:textColor="@color/status_name_at"
-        android:textSize="@dimen/text_micro"/>
+        android:textSize="@dimen/text_nano"/>
 
     <View
         android:layout_width="0dp"

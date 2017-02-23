@@ -112,13 +112,14 @@ public class DataUtil {
 //                Linkify.sUrlMatchFilter, null);
 //    }
 
-    public static void addStatusContentHighLightLinks(int textSize, StatusComment statusComment) {
-        statusComment.setSpanned(convertNormalStringToSpannableString(textSize, statusComment, statusComment.getContent()));
+    public static void addStatusContentHighLightLinks(int textSize, StatusComment statusComment, boolean isReply) {
+        String content = isReply ? addReplyCommentNamePrefix(statusComment) : statusComment.getContent();
+        statusComment.setSpanned(convertNormalStringToSpannableString(textSize, statusComment, content));
     }
 
     public static void addStatusContentHighLightLinks(int textSize, Status status, boolean isRetweeted) {
-        String str = isRetweeted ? addRetweetedNamePrefix(status) : status.getContent();
-        status.setSpanned(convertNormalStringToSpannableString(textSize, status, str, true, status.isFromMobile()));
+        String content = isRetweeted ? addRetweetedStatusNamePrefix(status) : status.getContent();
+        status.setSpanned(convertNormalStringToSpannableString(textSize, status, content, true, status.isFromMobile()));
     }
 
     private static <T extends StatusShortUrl & StatusId> Spanned convertNormalStringToSpannableString(int textSize, @Nullable T topic, CharSequence source) {
@@ -312,30 +313,43 @@ public class DataUtil {
         return WEB_URL_REPLACE;
     }
 
-    public static String addRetweetedNamePrefix(Status topic) {
+    public static String addRetweetedStatusNamePrefix(Status status) {
         String str;
-        if (!TextUtils.isEmpty(topic.getUserInfo().getName())) {
+        if (!TextUtils.isEmpty(status.getUserInfo().getName())) {
             //如果微博已经被删除，则名字为空
-            str = "@" + topic.getUserInfo().getName() + ":" + topic.getContent();
+            str = "@" + status.getUserInfo().getName() + ":" + status.getContent();
         } else {
-            str = topic.getContent();
+            str = status.getContent();
         }
         return str;
     }
 
-    public static String addRetweetedNamePrefix(StatusComment topic) {
+    public static String addRetweetedStatusNamePrefix(StatusComment statusComment) {
         String str;
-        if (!TextUtils.isEmpty(topic.getUserInfo().getName())) {
+        if (!TextUtils.isEmpty(statusComment.getUserInfo().getName())) {
             //如果微博已经被删除，则名字为空
-            str = "@" + topic.getUserInfo().getName() + ":" + topic.getContent();
+            str = "@" + statusComment.getUserInfo().getName() + ":" + statusComment.getContent();
         } else {
-            str = topic.getContent();
+            str = statusComment.getContent();
+        }
+        return str;
+    }
+
+    public static String addReplyCommentNamePrefix(StatusComment statusComment) {
+        String str;
+        if (!TextUtils.isEmpty(statusComment.getUserInfo().getName())) {
+            //如果不是回复别人的评论-@XXXXX:
+            //如果是回复别人的评论-@XXXX 回复@XXX
+            str = "@" + statusComment.getUserInfo().getName() +
+                    (statusComment.isReplyed() ? " " : ":") + statusComment.getContent();
+        } else {
+            str = statusComment.getContent();
         }
         return str;
     }
 
     private static void addEmotions(int textSize, Spannable value) {
-        EmoticonUtil.addEmoticon(BaseApplication.getInstance(), value, (int)(textSize * 1.5));
+        EmoticonUtil.addEmoticon(BaseApplication.getInstance(), value, textSize);
     }
 
 //    private static void addCustomEmotions(Spannable value) {

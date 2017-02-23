@@ -3,6 +3,7 @@ package com.hengye.share.model.sina;
 public class WBStatusComment {
     private String created_at;
     private long id;
+    private long rootid;
     private String text;
     private int source_allowclick;
     private int source_type;
@@ -130,6 +131,14 @@ public class WBStatusComment {
 
     public void setLike_counts(long like_counts) {
         this.like_counts = like_counts;
+    }
+
+    public long getRootid() {
+        return rootid;
+    }
+
+    public void setRootid(long rootid) {
+        this.rootid = rootid;
     }
 
     @Override
