@@ -378,6 +378,13 @@ public class PersonalHomepageActivity extends BaseActivity
         mAppBarLayout.removeOnOffsetChangedListener(this);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mSwipeRefresh.setOnTouchListener(null);
+        mUserInfoLayout.setOnTouchListener(null);
+    }
+
     //    TopicFragment mTopicFragment;
     PersonalHomepageFragment mFragment;
 

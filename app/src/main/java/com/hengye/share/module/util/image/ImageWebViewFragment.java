@@ -21,6 +21,12 @@ import com.hengye.share.util.L;
 
 import java.io.File;
 
+/**
+ * 如果是长图(不管是不是gif)都使用ImageBigFragment；
+ * 没有后缀不确定是不是gif的都用ImageGifFragment；
+ * 这个用WebView显示图片的已弃用。
+ */
+@Deprecated
 public class ImageWebViewFragment extends ImageBaseFragment {
 
     private static final float MAX_SCALE = 10.0f;
@@ -165,7 +171,7 @@ public class ImageWebViewFragment extends ImageBaseFragment {
 
                         @Override
                         public boolean onSingleTapConfirmed(MotionEvent e) {
-                            getActivity().onBackPressed();
+                            ImageWebViewFragment.this.onClick(view);
                             return false;
                         }
 

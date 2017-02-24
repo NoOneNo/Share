@@ -77,16 +77,16 @@ public class ImageNormalFragment extends ImageBaseFragment {
 //        }
 
         mCanAnimatedIn = true;
-        if(bitmap != null){
+        if (bitmap != null) {
             //如果宽度比高度长，并且宽度至少有屏幕宽度的1/3，则扩充宽度
-            if(bitmap.getHeight() > bitmap.getWidth() && bitmap.getWidth() > screenWidth / 3){
-                float scale = (float)screenWidth / bitmap.getWidth();
-                int actualHeight = (int)(bitmap.getHeight() * scale);
-                if(actualHeight > screenHeight * 1.2){
+            if (bitmap.getHeight() > bitmap.getWidth() && bitmap.getWidth() > screenWidth / 3) {
+                float scale = (float) screenWidth / bitmap.getWidth();
+                int actualHeight = (int) (bitmap.getHeight() * scale);
+                if (actualHeight > screenHeight * 1.2) {
                     mPhotoView.setCustomScaleType(ScaleType.FIT_TOP);
                 }
 
-                if(bitmap.getHeight() > screenHeight){
+                if (bitmap.getHeight() > screenHeight) {
                     //如果原图高度已经高过屏幕高度，不执行动画
                     mCanAnimatedIn = false;
                 }
@@ -104,11 +104,11 @@ public class ImageNormalFragment extends ImageBaseFragment {
 //        });
 //        mPhotoView.getDisplayRect()
 
-        if(SettingHelper.isClickToCloseGallery()) {
+        if (SettingHelper.isClickToCloseGallery()) {
             mPhotoView.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
                 @Override
                 public void onViewTap(View view, float x, float y) {
-                    getActivity().onBackPressed();
+                    ImageNormalFragment.this.onClick(view);
                 }
             });
         }
@@ -130,8 +130,8 @@ public class ImageNormalFragment extends ImageBaseFragment {
         AnimationRect.runExitAnimation(mPhotoView, rect, backgroundAnimator);
     }
 
-    private void setImageBitmap(Bitmap bitmap){
-        if(bitmap == null){
+    private void setImageBitmap(Bitmap bitmap) {
+        if (bitmap == null) {
             mPhotoView.setImageBitmap(null);
             return;
         }
@@ -145,7 +145,7 @@ public class ImageNormalFragment extends ImageBaseFragment {
         }
     }
 
-    public boolean canAnimatedOut(){
+    public boolean canAnimatedOut() {
         return mCanAnimatedIn;
     }
 }

@@ -27,6 +27,7 @@ import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListe
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemLongClickListener;
 import com.hengye.share.ui.widget.dialog.DialogBuilder;
 import com.hengye.share.ui.widget.dialog.SimpleTwoBtnDialog;
+import com.hengye.share.ui.widget.recyclerview.DividerItemDecoration;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.IntentUtil;
 import com.hengye.share.util.UserUtil;
@@ -54,6 +55,11 @@ public class StatusDraftActivity extends BaseActivity implements DialogInterface
     @Override
     public int getLayoutResId() {
         return R.layout.activity_status_draft;
+    }
+
+    @Override
+    protected boolean setBackground() {
+        return false;
     }
 
     @Override
@@ -104,6 +110,10 @@ public class StatusDraftActivity extends BaseActivity implements DialogInterface
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter = new StatusDraftAdapter(this, getStatusDraftData()));
+
+        DividerItemDecoration decoration = new DividerItemDecoration(getResources().getDrawable(R.drawable.status_divider_light));
+        decoration.ignoreLastItem(true);
+        mRecyclerView.addItemDecoration(decoration);
 
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override

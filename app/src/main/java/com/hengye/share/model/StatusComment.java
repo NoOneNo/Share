@@ -72,8 +72,11 @@ public class StatusComment implements StatusId, StatusShortUrl, Serializable {
             //这里拼接这条微博的内容+转发微博的内容
             Status retweetedStatus = status.getRetweetedStatus();
             status.setContent(status.getContent() +
-                    "//@" + retweetedStatus.getUserInfo().getName() + ":" +
-                    retweetedStatus.getContent());
+                    "//" +
+                    DataUtil.addRetweetedStatusNamePrefix(retweetedStatus));
+//            status.setContent(status.getContent() +
+//                    "//@" + retweetedStatus.getUserInfo().getName() + ":" +
+//                    retweetedStatus.getContent());
         }
         statusComment.setStatus(status);
 

@@ -57,7 +57,7 @@ public class ImageBigFragment extends ImageBaseFragment {
             mPhotoView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    getActivity().onBackPressed();
+                    ImageBigFragment.this.onClick(v);
                 }
             });
         }

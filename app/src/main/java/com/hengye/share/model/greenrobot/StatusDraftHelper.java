@@ -6,12 +6,14 @@ import com.hengye.share.model.StatusComment;
 import com.hengye.share.model.UserInfo;
 import com.hengye.share.util.CommonUtil;
 import com.hengye.share.util.DataUtil;
+import com.hengye.share.util.DateUtil;
 import com.hengye.share.util.UserUtil;
 import com.hengye.share.util.thirdparty.WBUtil;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -23,10 +25,13 @@ public class StatusDraftHelper {
     public final static int REPOST_TOPIC = 3;
 
     public static Status getStatus(StatusDraft statusDraft) {
-        Status topic = new Status();
-        topic.setContent(statusDraft.getContent());
-        topic.setDate(statusDraft.getDate().toString());
-        topic.setUserInfo(UserInfo.getUserInfo(UserUtil.getCurrentUser()));
+        Status status = new Status();
+        status.setContent(statusDraft.getContent());
+        Date date = statusDraft.getDate() == null ?
+                DateUtil.getChinaGMTDate() :
+                statusDraft.getDate();
+        status.setDate(date.toString());
+        status.setUserInfo(UserInfo.getUserInfo(UserUtil.getCurrentUser()));
 
         List<String> imageUrls = new ArrayList<>();
         List<String> imageLargeUrls = new ArrayList<>();
@@ -38,10 +43,10 @@ public class StatusDraftHelper {
                 imageUrls.add(WBUtil.getWBImgUrl(url, wbImgType));
                 imageLargeUrls.add(WBUtil.getWBLargeImgUrl(url));
             }
-            topic.setImageUrls(imageUrls);
-            topic.setImageLargeUrls(imageLargeUrls);
+            status.setImageUrls(imageUrls);
+            status.setImageLargeUrls(imageLargeUrls);
         }
-        return topic;
+        return status;
     }
 
     public static StatusDraft getWBStatusDraftByStatusPublish(String content) {

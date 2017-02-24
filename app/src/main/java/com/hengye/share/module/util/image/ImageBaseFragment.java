@@ -8,7 +8,8 @@ import com.hengye.share.module.util.encapsulation.fragment.BaseFragment;
  * Created by yuhy on 2016/11/23.
  */
 
-public class ImageBaseFragment extends BaseFragment implements View.OnLongClickListener {
+public class ImageBaseFragment extends BaseFragment
+        implements View.OnLongClickListener, View.OnClickListener {
 
     @Override
     public boolean onLongClick(View v) {
@@ -16,5 +17,12 @@ public class ImageBaseFragment extends BaseFragment implements View.OnLongClickL
             return ((ImageFragment)getParentFragment()).onLongClick(v);
         }
         return false;
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(getActivity() != null){
+            getActivity().onBackPressed();
+        }
     }
 }

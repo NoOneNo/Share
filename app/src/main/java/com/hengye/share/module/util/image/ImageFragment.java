@@ -206,7 +206,8 @@ public class ImageFragment extends BaseFragment implements View.OnLongClickListe
             fragment = ImageBigFragment.newInstance(path);
         }else if (ImageUtil.isNoSuffixImg(url)) {
             //如果是评论配图，url地址没有图片文件后缀，无法区分是不是gif显示，就统一用webview显示
-            fragment = ImageWebViewFragment.newInstance(path, animateIn);
+//            fragment = ImageWebViewFragment.newInstance(path, animateIn);
+            fragment = ImageGifFragment.newInstance(path, mRect, animateIn);
         }else if(WBUtil.isWBGifUrl(url)){
             fragment = ImageGifFragment.newInstance(path, mRect, animateIn);
         }else{

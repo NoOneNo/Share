@@ -261,7 +261,7 @@ public class CommentAdapter extends CommonAdapter<StatusComment>
                 StatusComment replyComment = statusComment.getReplyComment();
                 retweetedContent.setText(replyComment.getSpanned(retweetedContent, true));
 
-                SelectorLoader.getInstance().setDefaultRippleBackground(retweetedContentLayout);
+                retweetedContentLayout.setBackgroundResource(R.color.background_default);
                 contentTxtLayout.setBackgroundResource(R.color.background_default_white);
             } else {
                 retweetedContent.setVisibility(View.GONE);

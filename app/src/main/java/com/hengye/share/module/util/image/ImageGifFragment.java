@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 
 import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifIOException;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -63,7 +64,7 @@ public class ImageGifFragment extends ImageBaseFragment {
         View view = inflater.inflate(R.layout.fragment_image_gif, container, false);
 
         mGifView = (PhotoView) view.findViewById(R.id.iv_normal);
-        mPhotoView = (ClipImageView) view.findViewById(R.id.cover);
+        mPhotoView = (ClipImageView) view.findViewById(R.id.iv_assist);
         mScreenWidth = getResources().getDisplayMetrics().widthPixels;
 
         mGifView.setOnLongClickListener(this);
@@ -72,12 +73,15 @@ public class ImageGifFragment extends ImageBaseFragment {
         try {
             GifDrawable gifFromFile = new GifDrawable(gifFile);
             mGifView.setImageDrawable(gifFromFile);
-        } catch (IOException e) {
+        }catch (GifIOException gIOE) {
+//            gIOE.printStackTrace();
+            //不是gif
+            setBitmapToImageView(mGifView);
+        }catch (IOException e) {
             e.printStackTrace();
         }
 
-
-        setBitmapToPhotoView();
+        setBitmapToImageView(mPhotoView);
         if (mAnimateIn) {
             mAnimateIn = false;
             runEnterAnimation();
@@ -87,24 +91,17 @@ public class ImageGifFragment extends ImageBaseFragment {
             mGifView.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
                 @Override
                 public void onViewTap(View view, float x, float y) {
-                    getActivity().onBackPressed();
+                    ImageGifFragment.this.onClick(view);
                 }
             });
         }
         return view;
     }
 
-    private void setBitmapToPhotoView(){
+    private void setBitmapToImageView(ImageView iv){
         ImageKey imageKey = new ImageKey(mPath, mScreenWidth, 0, ImageView.ScaleType.FIT_XY);
         Bitmap bitmap = RequestManager.getBitmapByLocalPath(imageKey);
-//        Bitmap bitmap = BitmapCache.getInstance().getBitmap(mPath);
-//        if(bitmap == null){
-//            bitmap = BitmapUtil.getSuitableBitmap(mPath, mScreenWidth, 0, BitmapUtil.DEFAULT_CONFIG, ImageView.ScaleType.FIT_XY);
-//            if(bitmap != null){
-//                BitmapCache.getInstance().putBitmap(mPath, bitmap);
-//            }
-//        }
-        mPhotoView.setImageBitmap(bitmap);
+        iv.setImageBitmap(bitmap);
     }
 
     private void runEnterAnimation() {

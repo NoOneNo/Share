@@ -9,6 +9,7 @@ import com.hengye.share.R;
 import com.hengye.share.module.util.encapsulation.base.DefaultDataHandler;
 import com.hengye.share.module.util.encapsulation.fragment.RecyclerFragment;
 import com.hengye.share.module.util.encapsulation.view.listener.OnItemClickListener;
+import com.hengye.share.ui.widget.recyclerview.DividerItemDecoration;
 import com.hengye.share.util.ResUtil;
 
 public class UserGuideFragment extends RecyclerFragment<UserGuide>
@@ -31,6 +32,9 @@ public class UserGuideFragment extends RecyclerFragment<UserGuide>
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+//        DividerItemDecoration decoration = new DividerItemDecoration(getContext());
+//        decoration.ignoreLastItem(true);
+//        getRecyclerView().addItemDecoration(decoration);
         setAdapter(mAdapter = new UserGuideAdapter(getContext()));
         setDataHandler(new DefaultDataHandler<>(mAdapter));
         mPresenter = new UserGuidePresenter(this);

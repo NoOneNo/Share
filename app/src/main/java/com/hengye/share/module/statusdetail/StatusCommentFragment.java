@@ -90,8 +90,9 @@ public class StatusCommentFragment extends ShareLoadDataCallbackFragment<StatusC
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        getRecyclerView().addItemDecoration(new DividerItemDecoration(getContext()));
+        DividerItemDecoration decoration = new DividerItemDecoration(getContext());
+        decoration.ignoreLastItem(true);
+        getRecyclerView().addItemDecoration(decoration);
         boolean isLikeMode = mIsComment && !UserUtil.isAdTokenEmpty();
         setAdapter(mAdapter = new StatusCommentAdapter(getContext(), new ArrayList<StatusComment>(), isLikeMode), true);
         setPager(mStatusPager = new StatusAdapterIdPager(mAdapter));
