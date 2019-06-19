@@ -18,7 +18,7 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
     defaultConfig {
-        applicationId "com.hengye.share"
+        applicationId "com.hengye.share.custom"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
@@ -33,15 +33,15 @@ android {
 
 
     signingConfigs {
-        release {
-            def propsFile = rootProject.file('keystore.properties')
-            def props = new Properties()
-            props.load(new FileInputStream(propsFile))
-            storeFile = rootProject.file(props['storeFile'])
-            storePassword = props['storePassword']
-            keyAlias = props['keyAlias']
-            keyPassword = props['keyPassword']
-        }
+//        release {
+//            def propsFile = rootProject.file('keystore.properties')
+//            def props = new Properties()
+//            props.load(new FileInputStream(propsFile))
+//            storeFile = rootProject.file(props['storeFile'])
+//            storePassword = props['storePassword']
+//            keyAlias = props['keyAlias']
+//            keyPassword = props['keyPassword']
+//        }
     }
 
     buildTypes {
@@ -50,13 +50,13 @@ android {
             //是否开启混淆
             minifyEnabled true
             zipAlignEnabled true
-            signingConfig signingConfigs.release
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            signingConfig signingConfigs.release
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
             debuggable true
-            signingConfig signingConfigs.release
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            signingConfig signingConfigs.release
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
